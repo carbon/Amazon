@@ -3,11 +3,11 @@
   "description": "A simple wrapper around the S3 service.",
   "authors": [ "iamcarbon" ],
 
-  "version": "0.3.3",
+  "version": "4.0.0",
 
   "dependencies": {
     "Amazon.Core": "0.3.2",
-    "Carbon.Storage": "0.8.1"
+    "Carbon.Storage": "1.0.0"
   }, 
 
   "frameworks": {
