@@ -1,0 +1,39 @@
+{
+  "title": "Amazon S3",
+  "description": "A simple wrapper around the S3 service.",
+  "authors": [ "iamcarbon" ],
+
+  "version": "0.3.3",
+
+  "dependencies": {
+    "Amazon.Core": "0.3.2",
+    "Carbon.Storage": "0.8.1"
+  }, 
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "System.Runtime": "4.1.0",
+        "System.Xml.XDocument": "4.0.11",
+        "System.Xml.XmlSerializer": "4.0.11",
+        "System.Security.Cryptography.Algorithms": "4.2.0",
+        "System.Net.Http": "4.1.0",
+        "System.Collections": "4.0.11"
+
+      }
+    },
+    "net461": {
+      "frameworkAssemblies": {
+        "System.Xml": "4.0.0.0",
+        "System.Xml.Linq": "4.0.0.0"
+      }
+    }
+  },
+
+  "packOptions": {
+    "tags": [ "aws", "s3" ],
+    "requireLicenseAcceptance": false,
+    "licenseUrl": "https://opensource.org/licenses/MIT"
+  }
+}
