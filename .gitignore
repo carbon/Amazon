@@ -1,3 +1,10 @@
 .DS_Store
+restore.dg
 /Amazon.suo
 /build
+/snapshots
+*.suo
+*.user
+*.lock.json
+bin/
+obj/
