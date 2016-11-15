@@ -1,0 +1,26 @@
+{
+  "title": "Amazon Kinesis",
+  "description": "A simple wrapper around the Kinesis service.",
+  "authors": [ "iamcarbon" ],
+
+  "version": "0.3.2",
+
+  "dependencies": {
+    "Amazon.Core": "0.3.2",
+    "Carbon.Data.Streams": "0.7.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net461": {}
+  },
+
+  "packOptions": {
+    "tags": [ "aws", "kinesis" ]
+  }
+}
