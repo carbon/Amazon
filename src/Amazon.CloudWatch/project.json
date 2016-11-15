@@ -1,0 +1,31 @@
+﻿{
+  "title": "Amazon CloudWatch",
+  "description": "A simple wrapper around the CloudWatch service.",
+
+  "authors": [ "iamcarbon" ],
+  "version": "0.3.2",
+
+  "dependencies": {
+    "Amazon.Core": "0.3.2"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net461": {
+      "frameworkAssemblies": {
+        "System.Xml.Linq": "4.0.0.0"
+      }
+    }
+  },
+
+  "packOptions": {
+    "tags": [ "cloudwatch", "aws", "carbon" ],
+    "requireLicenseAcceptance": false,
+    "licenseUrl": "https://opensource.org/licenses/MIT"
+  }
+}
