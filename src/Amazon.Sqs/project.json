@@ -1,0 +1,33 @@
+{
+  "title": "Amazon Simple Queue Service",
+  "description": "A simple wrapper around the Amazon SQS service.",
+  "authors": [ "iamcarbon" ],
+  "copyright": "© Jason Nelson",
+
+  "version": "0.3.2",
+
+  "dependencies": {
+    "Amazon.Core": "0.3.2",
+    "Carbon.Messaging": "0.8.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net461": {
+      "frameworkAssemblies": {
+        "System.Xml.Linq": "4.0.0.0"
+      }
+    }
+  },
+
+  "packOptions": {
+    "tags": [ "aws", "sqs" ],
+    "requireLicenseAcceptance": false,
+    "licenseUrl": "https://opensource.org/licenses/MIT"
+  }
+}
