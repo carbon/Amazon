@@ -27,6 +27,12 @@
   },
 
   "packOptions": {
-    "tags": [ "aws" ]
+    "tags": [ "aws" ],
+    "requireLicenseAcceptance": false,
+    "licenseUrl": "https://github.com/carbon/Amazon/blob/master/LICENSE",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/carbon/Amazon"
+    }
   }
 }

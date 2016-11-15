@@ -28,6 +28,10 @@
   "packOptions": {
     "tags": [ "aws", "sqs" ],
     "requireLicenseAcceptance": false,
-    "licenseUrl": "https://opensource.org/licenses/MIT"
+    "licenseUrl": "https://github.com/carbon/Amazon/blob/master/LICENSE",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/carbon/Amazon"
+    }
   }
 }
