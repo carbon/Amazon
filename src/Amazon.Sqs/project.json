@@ -4,11 +4,11 @@
   "authors": [ "iamcarbon" ],
   "copyright": "© Jason Nelson",
 
-  "version": "0.3.2",
+  "version": "0.4.0",
 
   "dependencies": {
     "Amazon.Core": "0.3.2",
-    "Carbon.Messaging": "0.8.0"
+    "Carbon.Messaging": "1.0.0"
   },
 
   "frameworks": {
@@ -26,7 +26,7 @@
   },
 
   "packOptions": {
-    "tags": [ "aws", "sqs" ],
+    "tags": [ "aws", "sqs", "carbon" ],
     "requireLicenseAcceptance": false,
     "licenseUrl": "https://github.com/carbon/Amazon/blob/master/LICENSE",
     "repository": {
