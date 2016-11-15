@@ -1,0 +1,34 @@
+{
+  "title": "Amazon DynamoDB",
+  "description": "A simple wrapper around the DynamoDB service.",
+  "authors": [ "iamcarbon" ],
+
+  "version": "0.3.4",
+
+  "dependencies": {
+    "Amazon.Core": "0.3.2",
+    "Carbon.Collections": "1.0.0",
+    "Carbon.Data": "0.8.2",
+    "System.Text.Encodings.Web": "4.0.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net461": {
+      "frameworkAssemblies": {
+        "System.IO": { "type": "build" }
+      }
+    }
+  },
+
+  "packOptions": {
+    "tags": [ "dynamodb", "aws", "carbon", "async" ],
+    "requireLicenseAcceptance": false,
+    "licenseUrl": "https://opensource.org/licenses/MIT"
+  }
+}
