@@ -1,0 +1,27 @@
+﻿{
+  "title": "Amazon Simple Email Service",
+  "description": "A simple wrapper around the SES service.",
+  "version": "0.3.3",
+
+  "dependencies": {
+    "Amazon.Core": "0.3.2"
+  },
+
+  "frameworks": {
+    "net461": {
+      "frameworkAssemblies": {
+        "System": "4.0.0.0",
+        "System.Net": "4.0.0.0",
+        "System.Xml.Linq": "4.0.0.0",
+        "System.Xml": "4.0.0.0",
+        "System.Xml.Serialization": "4.0.0.0"
+      }
+    }
+  },
+
+  "packOptions": {
+    "tags": [ "aws", "ses" ],
+    "requireLicenseAcceptance": false,
+    "licenseUrl": "https://opensource.org/licenses/MIT"
+  }
+}
