@@ -1,0 +1,32 @@
+﻿{
+  "title": "Amazon EC2",
+  "description": "A simple wrapper around the EC2 service.",
+  "authors": [ "iamcarbon" ],
+
+  "version": "0.3.2",
+
+  "dependencies": {
+    "Amazon.Core": "0.3.2"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "System.Xml.XmlSerializer": "4.0.11"
+      }
+    },
+    "net461": {
+      "frameworkAssemblies": {
+        "System.Xml": "4.0.0.0",
+        "System.Xml.Serialization": "4.0.0.0",
+        "System.Xml.Linq": "4.0.0.0"
+      }
+    }
+  },
+
+  "packOptions": {
+    "tags": [ "aws" ]
+  }
+}
