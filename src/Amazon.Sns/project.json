@@ -1,0 +1,28 @@
+﻿{
+  "title": "Amazon Simple Notification Service",
+  "description": "Simple wrapper around the Amazon SNS service.",
+  "authors": [ "iamcarbon" ],
+
+  "version": "0.3.2",
+
+  "dependencies": {
+    "Amazon.Core": "0.3.2",
+    "Carbon.Messaging": "0.8.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net461": {}
+  },
+
+  "packOptions": {
+    "tags": [ "aws", "sns" ],
+    "requireLicenseAcceptance": false,
+    "licenseUrl": "https://opensource.org/licenses/MIT"
+  }
+}
