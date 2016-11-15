@@ -3,7 +3,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 
-using Carbon.Data.Annotations;
 using Carbon.Collections;
 
 namespace Amazon.Kms
@@ -120,7 +119,7 @@ namespace Amazon.Kms
 
         public string KeyId { get; set; }
 
-        [MaxSize(6144)]
+        // [MaxSize(6144)]
         public byte[] CiphertextBlob { get; set; }
     }
 
