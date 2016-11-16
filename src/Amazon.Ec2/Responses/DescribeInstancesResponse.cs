@@ -33,7 +33,6 @@ namespace Amazon.Ec2
     }
 }
 
-
 /*
 <DescribeInstancesResponse xmlns="http://ec2.amazonaws.com/doc/2016-09-15/">
     <requestId>8f7724cf-496f-496e-8fe3-example</requestId>

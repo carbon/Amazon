@@ -1,12 +1,12 @@
 ﻿{
-  "title": "Amazon Simple Notification Service",
-  "description": "Simple wrapper around the Amazon SNS service.",
+  "title": "Amazon SNS",
+  "description": "Simple wrapper around Amazon's Simple Notification Service service.",
   "authors": [ "iamcarbon" ],
 
   "version": "0.4.0",
 
   "dependencies": {
-    "Amazon.Core": "0.3.2",
+    "Amazon.Core": "0.4.0",
     "Carbon.Messaging": "1.0.0"
   },
 
@@ -14,7 +14,7 @@
     "netstandard1.6": {
       "imports": "dnxcore50",
       "dependencies": {
-        "NETStandard.Library": "1.6.0"
+        "System.Runtime": "4.3.0"
       }
     },
     "net461": {}

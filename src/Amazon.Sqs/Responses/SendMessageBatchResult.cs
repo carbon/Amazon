@@ -1,8 +1,8 @@
-﻿namespace Amazon.Sqs
-{
-    using System.Collections.Generic;
-    using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 
+namespace Amazon.Sqs
+{
     public class SendMessageBatchResult
     {
         public static List<SendMessageBatchResultEntry> Parse(string xmlText)

@@ -6,7 +6,7 @@
   "authors": [ "iamcarbon" ],
 
   "dependencies": {
-    "Amazon.Core": "0.3.2",
+    "Amazon.Core": "0.4.0",
     "Carbon.Collections": "1.0.0"
   },
 
@@ -14,7 +14,7 @@
     "netstandard1.6": {
       "imports": "dnxcore50",
       "dependencies": {
-        "System.Runtime": "4.1.0"
+        "System.Runtime": "4.3.0"
       }
     },
     "net461": {}

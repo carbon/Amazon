@@ -1,16 +1,17 @@
-﻿namespace Amazon.Sqs.Models
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
+
+using Carbon.Messaging;
+
+namespace Amazon.Sqs.Models
 {
-    using System.Collections.Generic;
-    using System.Xml.Linq;
-
-    using Carbon.Messaging;
-
     public static class RecieveMessageResponse
     {
         public static IEnumerable<SqsMessage> Parse(string xmlText)
         {
-            var receiveMessageResponseEl = XElement.Parse(xmlText);
-            var receiveMessageResultEl = receiveMessageResponseEl.Element(SqsClient.NS + "ReceiveMessageResult");
+            var rootEl = XElement.Parse(xmlText); // <ReceiveMessageResponse>
+
+            var receiveMessageResultEl = rootEl.Element(SqsClient.NS + "ReceiveMessageResult");
 
             foreach (var messageEl in receiveMessageResultEl.Elements(SqsClient.NS + "Message"))
             {

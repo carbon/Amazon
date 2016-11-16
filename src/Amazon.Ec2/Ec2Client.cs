@@ -12,7 +12,6 @@ namespace Amazon.Ec2
         public static string Version = "2016-09-15";
         public static readonly XNamespace NS = "http://ec2.amazonaws.com/doc/2016-09-15/";
 
-
         public Ec2Client(AwsRegion region, IAwsCredentials credentials)
             : base(AwsService.Ec2, region, credentials)
         { }
@@ -28,9 +27,6 @@ namespace Amazon.Ec2
 
             return DescribeInstancesResponse.Parse(responseText);
         }
-
-    
-
 
         #region Helpers
 

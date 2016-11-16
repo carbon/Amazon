@@ -3,18 +3,19 @@
   "description": "A simple wrapper around the EC2 service.",
   "authors": [ "iamcarbon" ],
 
-  "version": "0.3.2",
+  "version": "0.4.0",
 
   "dependencies": {
-    "Amazon.Core": "0.3.2"
+    "Amazon.Core": "0.4.0"
   },
 
   "frameworks": {
     "netstandard1.6": {
       "imports": "dnxcore50",
       "dependencies": {
-        "NETStandard.Library": "1.6.0",
-        "System.Xml.XmlSerializer": "4.0.11"
+        "System.Runtime": "4.3.0",
+        "System.Xml.XmlSerializer": "4.3.0",
+        "System.Xml.XDocument": "4.3.0"
       }
     },
     "net461": {

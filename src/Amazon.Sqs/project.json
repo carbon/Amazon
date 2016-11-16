@@ -1,13 +1,13 @@
 {
-  "title": "Amazon Simple Queue Service",
-  "description": "A simple wrapper around the Amazon SQS service.",
+  "title": "Amazon SQS",
+  "description": "A simple wrapper around Amazon's Simple Queue Service service.",
   "authors": [ "iamcarbon" ],
   "copyright": "© Jason Nelson",
 
-  "version": "0.4.0",
+  "version": "0.4.1",
 
   "dependencies": {
-    "Amazon.Core": "0.3.2",
+    "Amazon.Core": "0.4.0",
     "Carbon.Messaging": "1.0.0"
   },
 
@@ -15,7 +15,8 @@
     "netstandard1.6": {
       "imports": "dnxcore50",
       "dependencies": {
-        "NETStandard.Library": "1.6.0"
+        "System.Runtime": "4.3.0",
+        "System.Xml.XDocument": "4.3.0"
       }
     },
     "net461": {

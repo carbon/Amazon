@@ -3,10 +3,10 @@
   "description": "A simple wrapper around the Kinesis service.",
   "authors": [ "iamcarbon" ],
 
-  "version": "0.3.2",
+  "version": "0.4.0",
 
   "dependencies": {
-    "Amazon.Core": "0.3.2",
+    "Amazon.Core": "0.4.0",
     "Carbon.Data.Streams": "0.7.0"
   },
 
@@ -21,6 +21,13 @@
   },
 
   "packOptions": {
-    "tags": [ "aws", "kinesis" ]
+    "tags": [ "aws", "kinesis" ],
+    "requireLicenseAcceptance": false,
+    "licenseUrl": "https://github.com/carbon/Amazon/blob/master/LICENSE",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/carbon/Amazon"
+    }
   }
 }
+

@@ -1,12 +1,12 @@
 {
   "title": "Amazon S3",
-  "description": "A simple wrapper around the S3 service.",
+  "description": "A simple wrapper around Amazon's Simple Storage Service.",
   "authors": [ "iamcarbon" ],
 
-  "version": "4.0.0",
+  "version": "0.4.1",
 
   "dependencies": {
-    "Amazon.Core": "0.3.2",
+    "Amazon.Core": "0.4.0",
     "Carbon.Storage": "1.0.0"
   }, 
 
@@ -14,12 +14,12 @@
     "netstandard1.6": {
       "imports": "dnxcore50",
       "dependencies": {
-        "System.Runtime": "4.1.0",
-        "System.Xml.XDocument": "4.0.11",
-        "System.Xml.XmlSerializer": "4.0.11",
-        "System.Security.Cryptography.Algorithms": "4.2.0",
-        "System.Net.Http": "4.1.0",
-        "System.Collections": "4.0.11"
+        "System.Runtime": "4.3.0",
+        "System.Xml.XDocument": "4.3.0",
+        "System.Xml.XmlSerializer": "4.3.0",
+        "System.Security.Cryptography.Algorithms": "4.3.0",
+        "System.Net.Http": "4.3.0",
+        "System.Collections": "4.3.0"
 
       }
     },
