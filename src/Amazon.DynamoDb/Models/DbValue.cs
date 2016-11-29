@@ -104,12 +104,15 @@ namespace Amazon.DynamoDb
 				switch (Type.GetTypeCode(t))
 				{
 					// String
-					case TypeCode.String: 
-						if(value.ToString() == string.Empty) throw new ArgumentException(paramName: nameof(value), message: "Must not be empty");
-						
-							this.kind = DbValueType.S;
+					case TypeCode.String:
+                        if (value.ToString() == string.Empty)
+                        {
+                            throw new ArgumentException(paramName: nameof(value), message: "Must not be empty");
+                        }
 
-							break;
+						this.kind = DbValueType.S;
+
+						break;
 
 					// Numbers
 					case TypeCode.Decimal:
@@ -143,20 +146,30 @@ namespace Amazon.DynamoDb
 							this.kind = dbValue.Kind;
 							this.value = dbValue.Value;
 
-							return;
 						}
                         else if (t == typeof(AttributeCollection))
                         {
                            this.value = value;
-                           this.kind = DbValueType.M;
-
-                            return;
+                           this.kind = DbValueType.M;        
                         }
 						else
 						{
-							throw new Exception("Unexpected value type. Was: " + t.Name);
-						}
+                            IDbValueConverter converter;
 
+                            if (!DbValueConverterFactory.TryGet(t, out converter))
+                            {
+                                throw new Exception("Unexpected value type. Was: " + t.Name);
+                            }
+
+                            var result = converter.FromObject(value, null);
+
+                            this.value = result.Value;
+                            this.kind = result.Kind;
+
+                            
+                        }
+
+                        break;
 					}
 				}
 			}
@@ -272,11 +285,11 @@ namespace Amazon.DynamoDb
 
 		public float ToSingle() => Convert.ToSingle(value);
 
-		public Int16 ToInt16() => Convert.ToInt16(value);
+		public short ToInt16() => Convert.ToInt16(value);
 
-		public Int32 ToInt() => Convert.ToInt32(value);
+		public int ToInt() => Convert.ToInt32(value);
 
-		public Int64 ToInt64() => Convert.ToInt64(value);
+		public long ToInt64() => Convert.ToInt64(value);
 
 		public double ToDouble() => Convert.ToDouble(value);
 
@@ -349,7 +362,9 @@ namespace Amazon.DynamoDb
 			}
 			else if (kind == DbValueType.BOOL)
 			{
-				node = new XBoolean((bool)value);
+                var val = (bool)value;
+
+                node = val ? JsonBoolean.True : JsonBoolean.False;
 			}
 			else
 			{
@@ -365,10 +380,10 @@ namespace Amazon.DynamoDb
 		{
 			switch (value.Type)
 			{
-				case JsonType.Binary    : return new DbValue(((XBinary)value).Value,	DbValueType.B);		// byte[]
-				case JsonType.Boolean	: return new DbValue(((XBoolean)value).Value,	DbValueType.BOOL);	// bool
-				case JsonType.Number	: return new DbValue(value.ToString(),			DbValueType.N);
-				case JsonType.String	: return new DbValue((string)value,			    DbValueType.S);
+				case JsonType.Binary    : return new DbValue(((XBinary)value).Value,	    DbValueType.B);		// byte[]
+				case JsonType.Boolean	: return new DbValue(((JsonBoolean)value).Value,	DbValueType.BOOL);	// bool
+				case JsonType.Number	: return new DbValue(value.ToString(),			    DbValueType.N);
+				case JsonType.String	: return new DbValue((string)value,			        DbValueType.S);
 		
 				default: throw new Exception("Unexpected value type:" + value.Type);
 			}

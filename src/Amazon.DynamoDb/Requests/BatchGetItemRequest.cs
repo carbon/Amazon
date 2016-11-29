@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Carbon.Json;
@@ -41,7 +42,7 @@ namespace Amazon.DynamoDb
 
     public class TableKeys
     {
-        public TableKeys(string tableName, params RecordKey[] keys)
+        public TableKeys(string tableName, params IEnumerable<KeyValuePair<string, object>>[] keys)
         {
             TableName = tableName;
             Keys = keys;
@@ -49,7 +50,7 @@ namespace Amazon.DynamoDb
 
         public string TableName { get; }
 
-        public RecordKey[] Keys { get; }
+        public IEnumerable<KeyValuePair<string, object>>[] Keys { get; }
 
         public string[] AttributesToGet { get; set; }
 

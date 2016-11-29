@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Carbon.Data;
 using Carbon.Json;
@@ -7,7 +8,7 @@ namespace Amazon.DynamoDb
 {
     public class DeleteItemRequest
     {
-        public DeleteItemRequest(string tableName, RecordKey key)
+        public DeleteItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key)
         {
             #region Preconditions
 
@@ -39,7 +40,7 @@ namespace Amazon.DynamoDb
 
         public string TableName { get; }
 
-        public RecordKey Key { get; }
+        public IEnumerable<KeyValuePair<string, object>> Key { get; }
 
         public ReturnValues ReturnValues { get; set; }
 

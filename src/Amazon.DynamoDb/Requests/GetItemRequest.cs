@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
-using Carbon.Data;
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
     public class GetItemRequest
     {
-        public GetItemRequest(string tableName, RecordKey key)
+        public GetItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key)
         {
             #region Preconditions
 
@@ -22,8 +22,8 @@ namespace Amazon.DynamoDb
         // [Required]
         public string TableName { get; }
 
-       //  [Required]
-        public RecordKey Key { get; }
+        // [Required]
+        public IEnumerable<KeyValuePair<string, object>> Key { get; }
 
         public bool ConsistentRead { get; set; }
 

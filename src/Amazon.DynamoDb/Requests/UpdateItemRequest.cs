@@ -8,7 +8,7 @@ namespace Amazon.DynamoDb
 {
     public class UpdateItemRequest
     {
-        public UpdateItemRequest(string tableName, RecordKey key, IList<Change> changes)
+        public UpdateItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key, IList<Change> changes)
         {
             #region Preconditions
 
@@ -27,7 +27,7 @@ namespace Amazon.DynamoDb
 
         public string TableName { get; }
 
-        public RecordKey Key { get; }
+        public IEnumerable<KeyValuePair<string, object>> Key { get; }
 
         public IList<Change> Changes { get; }
 

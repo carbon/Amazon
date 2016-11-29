@@ -59,8 +59,8 @@ namespace Amazon.DynamoDb
         public IKeyInfo PrimaryKey 
             => metadata.PrimaryKey;
 
-        public RecordKey GetKey(params object[] keyValues) 
-            => PrimaryKey.WithValues(keyValues);
+        public Key<T> GetKey(params object[] keyValues) 
+            => Key<T>.FromValues(keyValues);
 
         public async Task<bool> ExistsAsync(RecordKey key)
         {
@@ -73,7 +73,7 @@ namespace Amazon.DynamoDb
             return result != null;
         }
 
-        public Task<T> FindAsync(RecordKey key)
+        public Task<T> FindAsync(Key<T> key)
             => FindAsync(key, consistent: false);
 
         public Task<T> FindAsync(object hash)
@@ -82,7 +82,7 @@ namespace Amazon.DynamoDb
         public Task<T> FindAsync(object hash, object range)
             => FindAsync(GetKey(hash, range), consistent: false);
 
-        public Task<T> FindAsync(RecordKey key, bool consistent)
+        public Task<T> FindAsync(Key<T> key, bool consistent)
             => FindAsync(new GetItemRequest(tableName, key) {
                 ConsistentRead = true,
                 ReturnConsumedCapacity = false
@@ -122,7 +122,7 @@ namespace Amazon.DynamoDb
             throw new Exception(errorMessage, lastException);
         }
 
-        public async Task<IList<T>> FindAllAsync(params RecordKey[] keys)
+        public async Task<IList<T>> FindAllAsync(params IEnumerable<KeyValuePair<string, object>>[] keys)
         {
             #region Preconditions
 
@@ -256,7 +256,7 @@ namespace Amazon.DynamoDb
             while (result.LastEvaluatedKey != null);
         }
 
-        public async Task<IList<T>> ScanAsync(RecordKey? startKey = null,
+        public async Task<IList<T>> ScanAsync(IEnumerable<KeyValuePair<string, object>> startKey = null,
             Expression[] conditions = null,
             int take = 1000)
         {
@@ -272,7 +272,7 @@ namespace Amazon.DynamoDb
 
             if (startKey != null)
             {
-                request.ExclusiveStartKey = AttributeCollection.FromJson(startKey.Value.ToJson());
+                request.ExclusiveStartKey = AttributeCollection.FromJson(startKey.ToJson());
             }
 
             var result = await client.Scan(request).ConfigureAwait(false);
@@ -329,7 +329,7 @@ namespace Amazon.DynamoDb
             return result;
         }
 
-        public async Task<UpdateItemResult> PatchAsync(RecordKey key, params Change[] changes)
+        public async Task<UpdateItemResult> PatchAsync(Key<T> key, params Change[] changes)
         {
             #region Preconditions
 
@@ -344,7 +344,7 @@ namespace Amazon.DynamoDb
         }
 
         // Conditional patch
-        public Task<UpdateItemResult> PatchAsync(RecordKey key,
+        public Task<UpdateItemResult> PatchAsync(Key<T> key,
             IList<Change> changes,
             Expression[] conditions,
             ReturnValues? returnValues = null)
@@ -371,7 +371,7 @@ namespace Amazon.DynamoDb
             return client.UpdateItemWithRetryPolicy(request, retryPolicy);
         }
 
-        public Task<UpdateItemResult> PatchAsync(RecordKey key, IList<Change> changes, ReturnValues returnValues)
+        public Task<UpdateItemResult> PatchAsync(Key<T> key, IList<Change> changes, ReturnValues returnValues)
         {
             var request = new UpdateItemRequest(tableName, key, changes)  {
                 ReturnValues = returnValues
@@ -380,28 +380,61 @@ namespace Amazon.DynamoDb
             return client.UpdateItemWithRetryPolicy(request, retryPolicy);
         }
 
-        public Task<DeleteItemResult> DeleteAsync(RecordKey key, ReturnValues returnValues)
-            => DeleteAsync(key, null, returnValues);
+        public Task<DeleteItemResult> DeleteAsync(T record)
+        {
+            var request = new DeleteItemRequest(
+                tableName : tableName,
+                key       : Key<T>.FromObject(record)
+            );
 
-        public Task<DeleteItemResult> DeleteAsync(RecordKey key, params Expression[] conditions)
-            => DeleteAsync(key, conditions, ReturnValues.NONE);
+            return InternalDelete(request);
+        }
 
-        public async Task<DeleteItemResult> DeleteAsync(RecordKey key, Expression[] conditions, ReturnValues returnValues)
+        public Task<DeleteItemResult> DeleteAsync(Key<T> key)
         {
             var request = new DeleteItemRequest(tableName, key);
 
-            if (conditions != null && conditions.Length > 0)
+            return InternalDelete(request);
+        }
+
+        public Task<DeleteItemResult> DeleteAsync(Key<T> key, ReturnValues returnValues)
+        {
+            var request = new DeleteItemRequest(tableName, key) {
+                ReturnValues = returnValues
+            };
+       
+            return InternalDelete(request);
+        }
+
+        public Task<DeleteItemResult> DeleteAsync(Key<T> key, params Expression[] conditions)
+            => DeleteAsync(key, conditions, ReturnValues.NONE);
+
+        public Task<DeleteItemResult> DeleteAsync(Key<T> key, Expression[] conditions, ReturnValues returnValues)
+        {
+            #region Preconditions
+
+            if (conditions == null) throw new ArgumentNullException(nameof(conditions));
+
+            #endregion
+
+            var request = new DeleteItemRequest(tableName, key) {
+                ReturnValues = returnValues
+            };
+
+            if (conditions.Length > 0)
             {
                 request.SetConditions(conditions);
             }
 
-            if (returnValues != ReturnValues.NONE)
-            {
-                request.ReturnValues = returnValues;
-            }
+            return InternalDelete(request);
+        }
 
+        private async Task<DeleteItemResult> InternalDelete(DeleteItemRequest request)
+        {
             var retryCount = 0;
             Exception lastError = null;
+
+            // TODO: Move retry logic to client...
 
             do
             {

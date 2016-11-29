@@ -77,7 +77,7 @@ namespace Amazon.DynamoDb.Models
                 case JsonType.Number   : WriteValue("N", value.ToString()); break;
                 case JsonType.String   : WriteString(value.ToString()); break;
                 case JsonType.Binary   : WriteValue("B", value.ToString()); break;
-                case JsonType.Boolean  : WriteBool((value as XBoolean).Value); break;
+                case JsonType.Boolean  : WriteBool((value as JsonBoolean).Value); break;
 
                 case JsonType.Array:
                     var array = (JsonArray)value;

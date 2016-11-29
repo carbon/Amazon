@@ -22,10 +22,9 @@ namespace Amazon.DynamoDb
             Add<decimal>(new DecimalConverter());
             Add<double>(new DoubleConverter());
             Add<float>(new SingleConverter());
-            Add<Guid>(new GuidConverter());
+            Add(new GuidConverter());
             Add<Int32>(new Int32Converter());
             Add<Int64>(new Int64Converter());
-            Add<IPAddress>(new IPAddressConverter());
             Add<string>(new StringConverter());
             Add<TimeSpan>(new TimeSpanConverter());
 
@@ -48,12 +47,13 @@ namespace Amazon.DynamoDb
             // Add<UInt32>(new UInt32Converter());
             // Add<UInt64>(new UInt64Converter());
 
-            Add<Version>(new VersionConverter());
-            Add<Uri>(new UriConverter());
+            Add(new VersionConverter());
+            Add(new UriConverter());
+            Add(new IPAddressConverter());
 
             // Custom
             Add<JsonObject>(new JsonObjectConverter());
-            Add<JsonArray>(new XArrayConverter());
+            Add<JsonArray>(new JsonArrayConverter());
 
             Add<Int32List>(new Int32ListDbConverter());
             Add<StringList>(new StringListDbConverter());
@@ -89,9 +89,13 @@ namespace Amazon.DynamoDb
 
             return converters.TryGetValue(details.NonNullType, out converter);
         }
-      
 
-        public static void Add<T>(IDbValueConverter converter)
+        public static void Add<T>(DbTypeConverter<T> converter)
+        {
+            converters.Add(typeof(T), converter);
+        }
+
+        internal static void Add<T>(IDbValueConverter converter)
         {
             converters.Add(typeof(T), converter);
         }
@@ -126,22 +130,23 @@ namespace Amazon.DynamoDb
         }
     }
 
-    internal class StringArrayConverter : IDbValueConverter
+    internal class StringArrayConverter : DbTypeConverter<string[]>
     {
-        public DbValue FromObject(object value, IMember member)
-            => new DbValue((string[])value);
+        public override string[] Parse(DbValue dbValue)
+            => dbValue.ToArray<string>();
+            // item.ToStringSet().ToArray();
 
-        public object ToObject(DbValue item, IMember member)
-            => item.ToStringSet().ToArray();
+        public override DbValue ToDbValue(string[] value)
+            => new DbValue(value);
     }
 
-    internal class GuidConverter : IDbValueConverter
+    internal class GuidConverter : DbTypeConverter<Guid>
     {
-        public DbValue FromObject(object value, IMember member)
-            => new DbValue(((Guid)value).ToByteArray());
+        public override Guid Parse(DbValue item)
+           => new Guid(item.ToBinary());
 
-        public object ToObject(DbValue item, IMember member)
-            => new Guid(item.ToBinary());
+        public override DbValue ToDbValue(Guid value)
+            => new DbValue(value.ToByteArray());
     }
 
     internal class ArrayConverter<T> : IDbValueConverter
@@ -186,44 +191,41 @@ namespace Amazon.DynamoDb
             => item.ToBinary();
     }
 
-    internal class UriConverter : IDbValueConverter
+    internal class UriConverter : DbTypeConverter<Uri>
     {
-        public DbValue FromObject(object value, IMember member)
-            => new DbValue(value.ToString());
+        public override Uri Parse(DbValue item)
+          => new Uri(item.ToString());
 
-        public object ToObject(DbValue item, IMember member)
-            => new Uri(item.ToString());
+        public override DbValue ToDbValue(Uri value)
+            => new DbValue(value.ToString());
     }
 
-    internal class VersionConverter : IDbValueConverter
-    {
-        public DbValue FromObject(object value, IMember member)
-            => new DbValue(value.ToString());
 
-        public object ToObject(DbValue item, IMember member)
-            => Version.Parse(item.ToString());
+    internal class VersionConverter : DbTypeConverter<Version>
+    {
+        public override Version Parse(DbValue item)
+           => Version.Parse(item.ToString());
+
+        public override DbValue ToDbValue(Version value)
+            => new DbValue(value.ToString());
     }
 
-    // Serialize IP addresses as bytes
 
-    internal class IPAddressConverter : IDbValueConverter
+    internal class IPAddressConverter : DbTypeConverter<IPAddress>
     {
-        public DbValue FromObject(object value, IMember member)
-        {
-            var ip = (IPAddress)value;
-
-            return new DbValue(ip.GetAddressBytes());
-        }
-
-        public object ToObject(DbValue item, IMember member)
+        public override IPAddress Parse(DbValue item)
         {
             switch (item.Kind)
             {
-                case DbValueType.S: return IPAddress.Parse(item.ToString());
-                case DbValueType.B: return new IPAddress(item.ToBinary());
-                default: throw new Exception("Unexpected DB type:" + item.Kind.ToString());
+                case DbValueType.S : return IPAddress.Parse(item.ToString());
+                case DbValueType.B : return new IPAddress(item.ToBinary());
+                default            : throw new ConversionException($"Cannot DB type: {item.Kind} to IPAddress");
             }
         }
+
+        // Serialize IP addresses as bytes
+        public override DbValue ToDbValue(IPAddress value)
+           => new DbValue(value.GetAddressBytes());
     }
 
     internal class StringConverter : IDbValueConverter
@@ -273,7 +275,7 @@ namespace Amazon.DynamoDb
     {
         public DbValue FromObject(object value, IMember member)
         {
-            return new DbValue((Decimal)value);
+            return new DbValue((decimal)value);
         }
 
         public object ToObject(DbValue item, IMember member)
@@ -309,7 +311,7 @@ namespace Amazon.DynamoDb
     internal class Int64Converter : IDbValueConverter
     {
         public DbValue FromObject(object value, IMember member)
-            => new DbValue((Int64)value);
+            => new DbValue((long)value);
 
         public object ToObject(DbValue item, IMember member)
             => item.ToInt64();
@@ -320,14 +322,12 @@ namespace Amazon.DynamoDb
         public DbValue FromObject(object value, IMember member)
         {
             var date = (DateTime)value;
-
+            
             return new DbValue(new XDate(date).ToUnixTime());
         }
 
         public object ToObject(DbValue item, IMember member)
-        {
-            return XDate.FromUnixTime(item.ToInt()).ToUtcDateTime();
-        }
+            => DateTimeOffset.FromUnixTimeSeconds(item.ToInt64()).UtcDateTime;
     }
 
     internal class TimeSpanConverter : IDbValueConverter
@@ -359,9 +359,7 @@ namespace Amazon.DynamoDb
     internal class JsonObjectConverter : IDbValueConverter
     {
         public DbValue FromObject(object value, IMember member)
-        {
-            return new DbValue(value.ToString());
-        }
+            => new DbValue(value.ToString());
 
         public object ToObject(DbValue item, IMember member)
         {
@@ -371,7 +369,7 @@ namespace Amazon.DynamoDb
         }
     }
 
-    internal class XArrayConverter : IDbValueConverter
+    internal class JsonArrayConverter : IDbValueConverter
     {
         public DbValue FromObject(object value, IMember member)
         {

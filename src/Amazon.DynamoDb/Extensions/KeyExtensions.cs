@@ -1,17 +1,20 @@
-﻿using Carbon.Data;
+﻿using System.Collections.Generic;
+
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
     internal static class KeyExtensions
     {
-        internal static JsonObject ToJson(this RecordKey key)
+        internal static JsonObject ToJson(this IEnumerable<KeyValuePair<string, object>> key)
         {
             var json = new JsonObject();
 
-            foreach (var attribute in key.Attributes)
+            foreach (var item in key)
             {
-                json.Add(attribute.Key, new DbValue(attribute.Value).ToJson());
+                // Get converter?
+
+                json.Add(item.Key, new DbValue(item.Value).ToJson());
             }
 
             return json;
