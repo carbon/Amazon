@@ -15,19 +15,19 @@ namespace Amazon.S3
         private readonly Dictionary<string, string> headers = new Dictionary<string, string>();
         private readonly HttpResponseMessage response;
 
-        public S3Object(string name, HttpResponseMessage response)
+        public S3Object(string key, HttpResponseMessage response)
         {
             #region Preconditions
 
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
 
             if (response == null)
                 throw new ArgumentNullException(nameof(response));
 
             #endregion
 
-            Name = name;
+            Key = key;
 
             foreach (var header in response.Headers)
             {
@@ -44,7 +44,7 @@ namespace Amazon.S3
 
         #region Header Aliases
 
-        public string Name { get; }
+        public string Key { get; }
 
         public string ContentType
         {
@@ -85,6 +85,8 @@ namespace Amazon.S3
         public Dictionary<string, string> Headers => headers;
 
         #region IBlob
+
+        string IBlob.Name => Key;
 
         long IBlob.Size => ContentLength;
 

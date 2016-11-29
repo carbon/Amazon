@@ -1,63 +1,59 @@
-﻿using Carbon.Storage;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Amazon.S3
 {
-    public class ListBucketResult : IReadOnlyList<IBlob>
+    [XmlRoot("ListBucketResult", Namespace = "http://s3.amazonaws.com/doc/2006-03-01/")]
+    public class ListBucketResult // : IReadOnlyList<IBlob>
     {
-        private static readonly XNamespace ns = S3Client.NS;
+        [XmlElement("Name")]
+        public string Name { get; set; }
 
-        public string BucketName { get; set; }
-
+        [XmlElement("Marker")]
         public string Marker { get; set; }
 
+        [XmlElement("MaxKeys")]
         public int MaxKeys { get; set; }
 
+        [XmlElement("Prefix")]
         public string Prefix { get; set; }
 
-        public List<S3ObjectInfo> Items { get; } = new List<S3ObjectInfo>();
+        [XmlElement("NextContinuationToken")]
+        public string NextContinuationToken { get; set; }
+
+        [XmlElement("IsTruncated")]
+        public bool IsTruncated { get; set; }
+
+        [XmlElement("Contents")]
+        public List<ListBucketObject> Items { get; set; }
+
+        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(ListBucketResult));
 
         public static ListBucketResult ParseXml(string xmlText)
         {
-            var result = new ListBucketResult();
+            var rootEl = XElement.Parse(xmlText); // <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
 
-            var rootEl = XElement.Parse(xmlText);                   // <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+            var serializer = new XmlSerializer(typeof(ListBucketResult));
 
-            result.BucketName   = rootEl.Element(ns + "Name").Value;
-            result.Prefix       = rootEl.Element(ns + "Prefix").Value;
-            result.Marker       = rootEl.Element(ns + "Marker").Value;
-            result.MaxKeys      = (int)rootEl.Element(ns + "MaxKeys");
-
-            foreach (var el in rootEl.Elements(ns + "Contents"))
-            {
-                var a = new S3ObjectInfo(
-                    name : el.Element(ns + "Key").Value,
-                    size : (long)el.Element(ns + "Size")
-                );
-
-                result.Items.Add(a);
-            }
-
-            return result;
+            return (ListBucketResult)serializer.Deserialize(rootEl.CreateReader());
         }
 
         #region IReadOnlyCollection<IBlob>
 
-        int IReadOnlyCollection<IBlob>.Count => Items.Count;
+        // int IReadOnlyCollection<IBlob>.Count => Items.Count;
 
-        IBlob IReadOnlyList<IBlob>.this[int index] => Items[index];
+        // IBlob IReadOnlyList<IBlob>.this[int index] => Items[index];
 
         #endregion
 
         #region IEnumerable<IBlobInfo>
 
-        IEnumerator<IBlob> IEnumerable<IBlob>.GetEnumerator()
-            => Items.GetEnumerator();
+        // IEnumerator<IBlob> IEnumerable<IBlob>.GetEnumerator()
+        //     => Items.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-            => Items.GetEnumerator();
+        // IEnumerator IEnumerable.GetEnumerator()
+        //     => Items.GetEnumerator();
 
         #endregion
     }
@@ -71,6 +67,7 @@ namespace Amazon.S3
 	<Marker></Marker>
 	<MaxKeys>100</MaxKeys>
 	<IsTruncated>true</IsTruncated>
+    <NextContinuationToken>1ueGcxLPRx1Tr/XYExHnhbYLgveDs2J/wm36Hy4vbOwM=</NextContinuationToken>
 	<Contents>
 		<Key>100000/800x600.jpeg</Key>
 		<LastModified>2009-06-20T09:54:05.000Z</LastModified>

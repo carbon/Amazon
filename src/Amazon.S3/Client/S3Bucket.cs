@@ -51,18 +51,18 @@ namespace Amazon.S3
 
         public Task<IReadOnlyList<IBlob>> ListAsync(string prefix)
             => ListAsync(prefix, null, 1000);
-
-        public async Task<IReadOnlyList<IBlob>> ListAsync(string prefix, string marker, int take = 1000)
+        
+        public async Task<IReadOnlyList<IBlob>> ListAsync(string prefix, string continuationToken, int take = 1000)
         {
             var request = new ListBucketOptions {
-                Prefix = prefix,
-                KeyMarker = marker,
-                MaxKeys = take
+                Prefix            = prefix,
+                ContinuationToken = continuationToken,
+                MaxKeys           = take
             };
 
             var result = await s3.ListBucket(bucketName, request).ConfigureAwait(false);
 
-            return result;
+            return result.Items;
         }
 
         public async Task<IBlob> GetRange(string key, long start, long end)

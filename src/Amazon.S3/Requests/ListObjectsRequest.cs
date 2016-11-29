@@ -11,9 +11,11 @@ namespace Amazon.S3
         public ListBucketRequest(AwsRegion region, string bucketName, ListBucketOptions options)
             : base(HttpMethod.Get, region, bucketName, null)
         {
+            options.QueryList.Add("list-type", "2");
+
             if (options.QueryList.Count > 0)
             {
-                RequestUri = new Uri(this.RequestUri.ToString() + options.QueryList.ToQueryString());
+                RequestUri = new Uri(RequestUri.ToString() + options.QueryList.ToQueryString());
             }
 
             CompletionOption = HttpCompletionOption.ResponseContentRead;
@@ -32,25 +34,45 @@ namespace Amazon.S3
         public string Delimiter
         {
             get { return QueryList["delimiter"]; }
-            set { QueryList["delimiter"] = value; }
+            set { Set("delimiter", value); }
         }
 
         public string Prefix
         {
             get { return QueryList["prefix"]; }
-            set { QueryList["prefix"] = value; }
+            set { Set("prefix", value); }
         }
 
-        public string KeyMarker
+        // continuation-token	
+
+        public string ContinuationToken
         {
-            get { return QueryList["key-marker"]; }
-            set { QueryList["key-marker"] = value; }
+            get { return QueryList["continuation-token"]; }
+            set { Set("continuation-token", value); }
+        }
+
+        public string StartAfter
+        {
+            get { return QueryList["start-after"]; }
+            set { Set("start-after", value); }
         }
 
         public int MaxKeys
         {
             get { return int.Parse(QueryList["max-keys"]); }
             set { QueryList["max-keys"] = value.ToString(); }
+        }
+
+        private void Set(string name, string value)
+        {
+            if (value == null)
+            {
+                QueryList.Remove(name);
+            }
+            else
+            {
+                QueryList[name] = value;
+            }
         }
 
         public Dictionary<string, string> QueryList { get; } = new Dictionary<string, string>();

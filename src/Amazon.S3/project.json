@@ -3,11 +3,11 @@
   "description": "A simple wrapper around Amazon's Simple Storage Service.",
   "authors": [ "iamcarbon" ],
 
-  "version": "0.4.1",
+  "version": "0.5.3",
 
   "dependencies": {
-    "Amazon.Core": "0.4.0",
-    "Carbon.Storage": "1.0.0"
+    "Amazon.Core": "0.5.0",
+    "Carbon.Storage": "1.1.0"
   }, 
 
   "frameworks": {
@@ -33,7 +33,10 @@
 
   "packOptions": {
     "tags": [ "aws", "s3" ],
-    "requireLicenseAcceptance": false,
-    "licenseUrl": "https://opensource.org/licenses/MIT"
+    "licenseUrl": "https://github.com/carbon/Amazon/blob/master/LICENSE",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/carbon/Amazon"
+    }
   }
 }
