@@ -2,4 +2,4 @@
 
 [assembly: AssemblyTitle("Amazon.Ses")]
 [assembly: AssemblyCopyright("© Jason Nelson")]
-[assembly: AssemblyVersion("0.3.0")]
+[assembly: AssemblyVersion("0.5.0")]

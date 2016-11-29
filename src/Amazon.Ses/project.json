@@ -1,16 +1,15 @@
 ﻿{
-  "title": "Amazon Simple Email Service",
-  "description": "A simple wrapper around the SES service.",
-  "version": "0.4.0",
+  "title": "Amazon SES",
+  "description": "A simple wrapper around Amazon's Simple Email Service.",
+  "version": "0.5.0",
 
   "dependencies": {
-    "Amazon.Core": "0.4.0"
+    "Amazon.Core": "0.5.0"
   },
 
   "frameworks": {
     "net461": {
       "frameworkAssemblies": {
-        "System": "4.0.0.0",
         "System.Net": "4.0.0.0",
         "System.Xml.Linq": "4.0.0.0",
         "System.Xml": "4.0.0.0",
@@ -21,7 +20,6 @@
 
   "packOptions": {
     "tags": [ "aws", "ses" ],
-    "requireLicenseAcceptance": false,
     "licenseUrl": "https://github.com/carbon/Amazon/blob/master/LICENSE",
     "repository": {
       "type": "git",

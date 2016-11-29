@@ -2,4 +2,4 @@
 
 [assembly: AssemblyTitle("Amazon.Kms")]
 [assembly: AssemblyCopyright("© Jason Nelson")]
-[assembly: AssemblyVersion("0.4.0")]
+[assembly: AssemblyVersion("0.5.1")]

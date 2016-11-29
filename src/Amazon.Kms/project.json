@@ -1,13 +1,13 @@
 {
-  "title": "Amazon Key Management Service",
-  "description": "Simple wrapper around the the Amazon KMS Service.",
+  "title": "Amazon KMS",
+  "description": "Simple wrapper around the Amazon's Key Management Service Service.",
 
-  "version": "0.4.0",
+  "version": "0.5.1",
   "authors": [ "iamcarbon" ],
 
   "dependencies": {
-    "Amazon.Core": "0.4.0",
-    "Carbon.Collections": "1.0.0"
+    "Amazon.Core": "0.5.0",
+    "Carbon.Collections": "1.1.0"
   },
 
   "frameworks": {
@@ -21,6 +21,11 @@
   },
 
   "packOptions": {
-    "tags": [ "aws", "kms" ]
+    "tags": [ "aws", "kms" ],
+    "licenseUrl": "https://github.com/carbon/Amazon/blob/master/LICENSE",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/carbon/Amazon"
+    }
   }
 }
