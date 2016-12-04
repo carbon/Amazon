@@ -34,8 +34,6 @@ namespace Amazon.S3
         {
             var rootEl = XElement.Parse(xmlText); // <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
 
-            var serializer = new XmlSerializer(typeof(ListBucketResult));
-
             return (ListBucketResult)serializer.Deserialize(rootEl.CreateReader());
         }
 

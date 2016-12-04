@@ -19,6 +19,8 @@ namespace Amazon.S3
         [XmlElement]
         public string RequestId { get; set; }
 
+        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(S3Error));
+
         public static S3Error ParseXml(string xmlText)
         {
             #region Preconditions
@@ -31,8 +33,6 @@ namespace Amazon.S3
             {
                 using (var reader = new StringReader(xmlText))
                 {
-                    var serializer = new XmlSerializer(typeof(S3Error));
-
                     return (S3Error)serializer.Deserialize(reader);
                 }
             }

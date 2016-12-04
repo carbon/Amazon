@@ -19,6 +19,8 @@ namespace Amazon.S3
         [XmlElement]
         public string ETag { get; set; }
 
+        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(CompleteMultipartUploadResult));
+
         public static CompleteMultipartUploadResult ParseXml(string xmlText)
         {
             #region Preconditions
@@ -30,8 +32,6 @@ namespace Amazon.S3
 
             using (var reader = new StringReader(xmlText))
             {
-                var serializer = new XmlSerializer(typeof(CompleteMultipartUploadResult));
-
                 return (CompleteMultipartUploadResult)serializer.Deserialize(reader);
             }
 

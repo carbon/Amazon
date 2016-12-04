@@ -16,6 +16,8 @@ namespace Amazon.S3
         [XmlElement]
         public string UploadId { get; set; }
 
+        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(InitiateMultipartUploadResult));
+
         public static InitiateMultipartUploadResult ParseXml(string xmlText)
         {
             #region Preconditions
@@ -27,8 +29,6 @@ namespace Amazon.S3
 
             using (var reader = new StringReader(xmlText))
             {
-                var serializer = new XmlSerializer(typeof(InitiateMultipartUploadResult));
-
                 return (InitiateMultipartUploadResult)serializer.Deserialize(reader);
             }
         }
