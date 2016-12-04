@@ -4,12 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Amazon.Helpers;
-
 using Carbon.Data;
+using Carbon.Data.Expressions;
 
 namespace Amazon.DynamoDb
-{    
+{
+    using Helpers;
     using Scheduling;
 
     using static Expression;
@@ -22,7 +22,7 @@ namespace Amazon.DynamoDb
 
         private static readonly DatasetInfo metadata = DatasetInfo.Get<T>();
 
-        // TODO: Historgram of consumed capasity
+        // TODO: Historgram of consumed capsity
 
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
             initialDelay : TimeSpan.FromMilliseconds(100),

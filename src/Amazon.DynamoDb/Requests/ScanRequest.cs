@@ -1,8 +1,8 @@
-﻿using Carbon.Json;
+﻿using Carbon.Data.Expressions;
+using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    using Carbon.Data;
 
     public class ScanRequest
     {

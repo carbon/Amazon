@@ -3,12 +3,12 @@
   "description": "A simple wrapper around the DynamoDB service.",
   "authors": [ "iamcarbon" ],
 
-  "version": "0.5.1",
+  "version": "0.5.3",
 
   "dependencies": {
     "Amazon.Core": "0.5.0",
     "Carbon.Collections": "1.1.0",
-    "Carbon.Data": "0.8.7",
+    "Carbon.Data": "0.9.0",
     "System.Text.Encodings.Web": "4.3.0"
   },
 
