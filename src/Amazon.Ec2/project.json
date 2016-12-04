@@ -3,7 +3,7 @@
   "description": "A simple wrapper around the EC2 service.",
   "authors": [ "iamcarbon" ],
 
-  "version": "0.5.0",
+  "version": "0.5.1",
 
   "dependencies": {
     "Amazon.Core": "0.5.0"

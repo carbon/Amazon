@@ -62,11 +62,16 @@ namespace Amazon.Ec2
         [XmlElement("vpcId")]
         public string VpcId { get; set; }
 
+        private static readonly XmlSerializer serializer = new XmlSerializer(
+            typeof(Instance),
+            new XmlRootAttribute {
+                ElementName = "item",
+                Namespace = "http://ec2.amazonaws.com/doc/2016-09-15/"
+            }
+        );
+
         public static Instance Deserialize(XElement element)
         {
-            var serializer = new XmlSerializer(typeof(Instance),
-                new XmlRootAttribute { ElementName = "item", Namespace = "http://ec2.amazonaws.com/doc/2016-09-15/" });
-
             return (Instance)serializer.Deserialize(element.CreateReader());
         }
     }

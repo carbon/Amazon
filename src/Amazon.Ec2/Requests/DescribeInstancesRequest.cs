@@ -2,35 +2,15 @@
 
 namespace Amazon.Ec2
 {
-    public class DescribeInstancesRequest
+    public class DescribeInstancesRequest : DescribeRequest
     {
-        public int? MaxResults { get; set; }
-
-        public string NextToken { get; set; }
-
         public List<string> InstanceIds { get; } = new List<string>();
-
-        public List<Filter> Filters { get; } = new List<Filter>();
 
         public AwsRequest ToParams()
         {
-            var parameters = new AwsRequest {
-                { "Action", "DescribeInstances" }
-            };
+            var parameters = GetParameters("DescribeInstances");
 
             var i = 1;
-
-            foreach (var filter in Filters)
-            {
-                var prefix = "Filter." + i + ".";
-
-                parameters.Add(prefix + "Name", filter.Name);
-                parameters.Add(prefix + "Value", filter.Value);
-
-                i++;
-            }
-
-            i = 1;
 
             foreach (var instanceId in InstanceIds)
             {
@@ -41,24 +21,8 @@ namespace Amazon.Ec2
                 i++;
             }
 
-            if (MaxResults != null) parameters.Add("MaxResults", MaxResults.Value);
-            if (NextToken != null)  parameters.Add("NextToken", NextToken);
-
             return parameters;
         }
-    }
-
-    public struct Filter
-    {
-        public Filter(string name, string value)
-        {
-            Name = name;
-            Value = value;
-        }
-
-        public string Name { get; }
-
-        public string Value { get; }
     }
 }
 
