@@ -19,13 +19,13 @@ namespace Amazon.Kinesis
         public KinesisStream GetStream(string name)
             => new KinesisStream(name, this);
 
-        public Task<KinesisResponse> MergeShards(MergeShardsRequest request)
+        public Task<KinesisResponse> MergeShardsAsync(MergeShardsRequest request)
             => SendAsync<KinesisResponse>("MergeShards", request);
 
-        public Task<PutRecordResult> PutRecord(Record record)
+        public Task<PutRecordResult> PutRecordAsync(Record record)
             => SendAsync<PutRecordResult>("PutRecord", record);
 
-        public Task<PutRecordsResult> PutRecords(string streamName, Record[] records)
+        public Task<PutRecordsResult> PutRecordsAsync(string streamName, Record[] records)
         {
             var request = new PutRecordsRequest(streamName, records);
 
@@ -34,13 +34,13 @@ namespace Amazon.Kinesis
             return SendAsync<PutRecordsResult>("PutRecords", request);
         }
 
-        public Task<DescribeStreamResult> DescribeStream(DescribeStreamRequest request)
+        public Task<DescribeStreamResult> DescribeStreamAsync(DescribeStreamRequest request)
             => SendAsync<DescribeStreamResult>("DescribeStream", request);
 
-        public Task<GetShardIteratorResponse> GetShardIterator(GetShardIteratorRequest request)
+        public Task<GetShardIteratorResponse> GetShardIteratorAsync(GetShardIteratorRequest request)
             => SendAsync<GetShardIteratorResponse>("GetShardIterator", request);
 
-        public Task<GetRecordsResponse> GetRecords(GetRecordsRequest request)
+        public Task<GetRecordsResponse> GetRecordsAsync(GetRecordsRequest request)
             => SendAsync<GetRecordsResponse>("GetRecords", request);
 
         #region Helpers

@@ -22,9 +22,11 @@ namespace Amazon.Kinesis
         {
             #region Preconditions
 
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
 
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client == null)
+                throw new ArgumentNullException(nameof(client));
 
             #endregion
 
@@ -41,7 +43,7 @@ namespace Amazon.Kinesis
                 PartitionKey = partitionKey
             };
 
-            return retryPolicy.ExecuteAsync(async () => await client.PutRecord(record).ConfigureAwait(false));
+            return retryPolicy.ExecuteAsync(async () => await client.PutRecordAsync(record).ConfigureAwait(false));
         }
 
         public Task<IReadOnlyList<IShard>> GetShardsAsync()
@@ -50,7 +52,7 @@ namespace Amazon.Kinesis
 
             return retryPolicy.ExecuteAsync<IReadOnlyList<IShard>>(async () => {
 
-                var result = await client.DescribeStream(request).ConfigureAwait(false);
+                var result = await client.DescribeStreamAsync(request).ConfigureAwait(false);
 
                 var shards = new List<IShard>(result.StreamDescription.Shards.Count);
 
@@ -73,7 +75,7 @@ namespace Amazon.Kinesis
             );
 
             return retryPolicy.ExecuteAsync<IIterator>(async ()
-                => await client.GetShardIterator(request).ConfigureAwait(false)
+                => await client.GetShardIteratorAsync(request).ConfigureAwait(false)
             );
         }
 
@@ -82,7 +84,7 @@ namespace Amazon.Kinesis
             var request = new GetRecordsRequest(iterator.Value, take);
 
             return retryPolicy.ExecuteAsync<IRecordList>(async ()
-                => await client.GetRecords(request).ConfigureAwait(false));
+                => await client.GetRecordsAsync(request).ConfigureAwait(false));
         }
 
         public IDisposable Subscribe(IShard shard, IObserver<IRecord> observer)
