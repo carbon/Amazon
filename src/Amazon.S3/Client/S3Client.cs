@@ -14,28 +14,30 @@ namespace Amazon.S3
     {
         public static readonly XNamespace NS = "http://s3.amazonaws.com/doc/2006-03-01/";
 
-        private readonly AwsRegion region;
         private readonly AwsCredentials credentials;
 
         private readonly HttpClient httpClient = new HttpClient();
+
+        public S3Client(AwsCredentials credentials)
+            : this(AwsRegion.Standard, credentials) { }
 
         public S3Client(AwsRegion region, AwsCredentials credentials)
         {
             #region Preconditions
 
-            if (credentials == null) throw new ArgumentNullException("credentials");
+            if (region == null)
+                throw new ArgumentNullException(nameof(region));
+
+            if (credentials == null)
+                throw new ArgumentNullException(nameof(credentials));
 
             #endregion
 
-            this.region = region;
+            Region = region;
             this.credentials = credentials;
-
-            #if dotnet451
-            ServicePointManager.DefaultConnectionLimit = 5000;
-            #endif
         }
 
-        public AwsRegion Region => region;
+        public AwsRegion Region { get; }
 
         public void SetTimeout(TimeSpan timeout)
         {
@@ -43,13 +45,13 @@ namespace Amazon.S3
         }
 
         public Task<HttpResponseMessage> CreateBucket(string bucketName)
-            => Send(new AddBucketRequest(region, bucketName));
+            => SendAsync(new AddBucketRequest(Region, bucketName));
 
-        public async Task<ListBucketResult> ListBucket(string bucketName, ListBucketOptions options)
+        public async Task<ListBucketResult> ListBucketAsync(string bucketName, ListBucketOptions options)
         {
-            var request = new ListBucketRequest(region, bucketName, options);
+            var request = new ListBucketRequest(Region, bucketName, options);
 
-            using (var response = await Send(request).ConfigureAwait(false))
+            using (var response = await SendAsync(request).ConfigureAwait(false))
             {
                 var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -59,9 +61,9 @@ namespace Amazon.S3
 
         #region Multipart Uploads
 
-        public async Task<InitiateMultipartUploadResult> InitiateMultipartUpload(InitiateMultipartUploadRequest request)
+        public async Task<InitiateMultipartUploadResult> InitiateMultipartUploadAsync(InitiateMultipartUploadRequest request)
         {
-            using (var response = await Send(request).ConfigureAwait(false))
+            using (var response = await SendAsync(request).ConfigureAwait(false))
             {
                 var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -69,21 +71,21 @@ namespace Amazon.S3
             }
         }
 
-        public async Task<UploadPartResult> UploadPart(UploadPartRequest request)
+        public async Task<UploadPartResult> UploadPartAsync(UploadPartRequest request)
         {
-            using (var response = await Send(request).ConfigureAwait(false))
+            using (var response = await SendAsync(request).ConfigureAwait(false))
             {
                 return new UploadPartResult(
-                    partNumber: request.PartNumber,
-                    uploadId: request.UploadId,
-                    eTag: response.Headers.ETag.Tag
+                    partNumber  : request.PartNumber,
+                    uploadId    : request.UploadId,
+                    eTag        : response.Headers.ETag.Tag
                 );
             }
         }
 
         public async Task<CompleteMultipartUploadResult> CompleteMultipartUpload(CompleteMultipartUploadRequest request)
         {
-            using (var response = await Send(request).ConfigureAwait(false))
+            using (var response = await SendAsync(request).ConfigureAwait(false))
             {
                 var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -93,17 +95,17 @@ namespace Amazon.S3
 
         #endregion
 
-        public async Task<PutObjectResult> PutObject(PutObjectRequest request)
+        public async Task<PutObjectResult> PutObjectAsync(PutObjectRequest request)
         {
-            using (var response = await Send(request).ConfigureAwait(false))
+            using (var response = await SendAsync(request).ConfigureAwait(false))
             {
                 return new PutObjectResult(response);
             }
         }
 
-        public async Task<CopyObjectResult> CopyObject(CopyObjectRequest request)
+        public async Task<CopyObjectResult> CopyObjectAsync(CopyObjectRequest request)
         {
-            using (var response = await Send(request).ConfigureAwait(false))
+            using (var response = await SendAsync(request).ConfigureAwait(false))
             {
                 var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -111,9 +113,9 @@ namespace Amazon.S3
             }
         }
 
-        public async Task DeleteObject(DeleteObjectRequest request)
+        public async Task DeleteObjectAsync(DeleteObjectRequest request)
         {
-            using (var response = await Send(request).ConfigureAwait(false))
+            using (var response = await SendAsync(request).ConfigureAwait(false))
             {
                 if (response.StatusCode != HttpStatusCode.NoContent)
                 {
@@ -122,9 +124,9 @@ namespace Amazon.S3
             }
         }
 
-        public async Task<DeleteResult> DeleteObjects(BatchDeleteRequest request)
+        public async Task<DeleteResult> DeleteObjectsAsync(BatchDeleteRequest request)
         {
-            using (var response = await Send(request).ConfigureAwait(false))
+            using (var response = await SendAsync(request).ConfigureAwait(false))
             {
                 var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -132,24 +134,24 @@ namespace Amazon.S3
             }
         }
 
-        public async Task<RestoreObjectResult> RestoreObject(RestoreObjectRequest request)
+        public async Task<RestoreObjectResult> RestoreObjectAsync(RestoreObjectRequest request)
         {
-            using (var response = await Send(request).ConfigureAwait(false))
+            using (var response = await SendAsync(request).ConfigureAwait(false))
             {
                 return new RestoreObjectResult(response);
             }
         }
 
-        public async Task<S3Object> GetObject(GetObjectRequest request)
+        public async Task<S3Object> GetObjectAsync(GetObjectRequest request)
         {
-            var response = await Send(request).ConfigureAwait(false);
+            var response = await SendAsync(request).ConfigureAwait(false);
 
             return new S3Object(request.Key, response);
         }
 
-        public async Task<S3ObjectInfo> GetObjectHead(ObjectHeadRequest request)
+        public async Task<S3ObjectInfo> GetObjectHeadAsync(ObjectHeadRequest request)
         {
-            using (var response = await Send(request).ConfigureAwait(false))
+            using (var response = await SendAsync(request).ConfigureAwait(false))
             {
                 return new S3ObjectInfo(
                     bucketName : request.BucketName,
@@ -159,6 +161,8 @@ namespace Amazon.S3
             }
         }
 
+        private static readonly Dictionary<string, string> emptyStringDictionary = new Dictionary<string, string>();
+
         public string GetSignedUrl(GetUrlRequest request)
         {
             // You can specify any future expiration time in epoch or UNIX time (number of seconds since January 1, 1970).
@@ -166,18 +170,18 @@ namespace Amazon.S3
             long expires = S3Helper.GetSecondsSince1970() + (long)request.ExpiresIn.TotalSeconds;
 
             string stringToSign = S3Helper.ConstructStringToSign(
-                httpVerb: HttpMethod.Get,
-                contentType: "",
-                bucketName: request.BucketName,
-                key: request.Key,
-                headers: new Dictionary<string, string>(),
-                query: "",
-                expiresOrDate: expires.ToString()
+                httpVerb      : HttpMethod.Get,
+                contentType   : "",
+                bucketName    : request.BucketName,
+                key           : request.Key,
+                headers       : emptyStringDictionary,
+                query         : "",
+                expiresOrDate : expires.ToString()
             );
 
             var signature = S3Helper.ComputeSignature(credentials.SecretAccessKey, stringToSign);
 
-            var urlBuilder = new StringBuilder()
+            return new StringBuilder()
                 .Append("https://")
                 .Append(request.BucketName)
                 .Append(".s3.amazonaws.com/")
@@ -187,14 +191,13 @@ namespace Amazon.S3
                 .Append("&Expires=")
                 .Append(expires)
                 .Append("&Signature=")
-                .Append(signature.UrlEncodeX2());
-
-            return urlBuilder.ToString();
+                .Append(signature.UrlEncodeX2())
+                .ToString();
         }
 
         #region Helpers
 
-        private async Task<HttpResponseMessage> Send(S3Request request)
+        private async Task<HttpResponseMessage> SendAsync(S3Request request)
         {
             ConfigureWebRequest(request);
 

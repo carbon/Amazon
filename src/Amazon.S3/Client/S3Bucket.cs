@@ -26,20 +26,20 @@ namespace Amazon.S3
             : this(AwsRegion.Standard, bucketName, credentials) { }
               
         public S3Bucket(AwsRegion region, string bucketName, AwsCredentials credentials)
+            : this(bucketName, client: new S3Client(region, credentials)) { }
+
+        public S3Bucket(string bucketName, S3Client client)
         {
             #region Preconditions
 
             if (bucketName == null)
                 throw new ArgumentNullException(nameof(bucketName));
 
-            if (credentials == null)
-                throw new ArgumentNullException(nameof(credentials));
-
             #endregion
 
             this.bucketName = bucketName;
 
-            this.s3 = new S3Client(region, credentials);
+            this.s3 = client;
         }
 
         public S3Bucket WithTimeout(TimeSpan timeout)
@@ -60,7 +60,7 @@ namespace Amazon.S3
                 MaxKeys           = take
             };
 
-            var result = await s3.ListBucket(bucketName, request).ConfigureAwait(false);
+            var result = await s3.ListBucketAsync(bucketName, request).ConfigureAwait(false);
 
             return result.Items;
         }
@@ -71,14 +71,14 @@ namespace Amazon.S3
 
             request.SetRange(start, end);
 
-            return await s3.GetObject(request).ConfigureAwait(false);
+            return await s3.GetObjectAsync(request).ConfigureAwait(false);
         }
 
         public async Task<IBlob> GetAsync(string key)
         {
             var request = new GetObjectRequest(s3.Region, bucketName, key: key);
 
-            return await s3.GetObject(request).ConfigureAwait(false);
+            return await s3.GetObjectAsync(request).ConfigureAwait(false);
         }
 
         public async Task<IBlob> GetBufferedAsync(string key)
@@ -87,20 +87,20 @@ namespace Amazon.S3
 
             request.CompletionOption = HttpCompletionOption.ResponseContentRead;
 
-            return await s3.GetObject(request).ConfigureAwait(false);
+            return await s3.GetObjectAsync(request).ConfigureAwait(false);
         }
 
         public async Task<IDictionary<string, string>> GetMetadataAsync(string key)
         {
             var headRequest = new ObjectHeadRequest(s3.Region, bucketName, key: key);
 
-            var result = await s3.GetObjectHead(headRequest).ConfigureAwait(false);
+            var result = await s3.GetObjectHeadAsync(headRequest).ConfigureAwait(false);
 
             return result.Headers;
         }
 
         public Task<RestoreObjectResult> InitiateRestoreAsync(string key, int days)
-            => s3.RestoreObject(new RestoreObjectRequest(s3.Region, bucketName, key, days));
+            => s3.RestoreObjectAsync(new RestoreObjectRequest(s3.Region, bucketName, key, days));
 
         public async Task<CopyObjectResult> PutAsync(string key, S3ObjectLocation sourceLocation, IDictionary<string, string> metadata = null)
         {
@@ -148,7 +148,7 @@ namespace Amazon.S3
                 }
             }
 
-            return s3.CopyObject(request);
+            return s3.CopyObjectAsync(request);
         }
 
         public async Task PutAsync(string key, Blob blob)
@@ -216,7 +216,7 @@ namespace Amazon.S3
                 request.Content.Headers.ContentMD5 = ComputeMD5(stream);
             }
 
-            await s3.PutObject(request).ConfigureAwait(false);
+            await s3.PutObjectAsync(request).ConfigureAwait(false);
         }
 
         const int chunkSize = 1024 * 1025 * 5; // 5MB
@@ -254,7 +254,7 @@ namespace Amazon.S3
                 }
             }
 
-            var session = await s3.InitiateMultipartUpload(initiateRequest).ConfigureAwait(false);
+            var session = await s3.InitiateMultipartUploadAsync(initiateRequest).ConfigureAwait(false);
 
             using (var slicer = new BlobSlicer(stream, chunkSize))
             {
@@ -272,7 +272,7 @@ namespace Amazon.S3
 
                         partRequest.SetStream(slice.Stream);
 
-                        var part = await s3.UploadPart(partRequest).ConfigureAwait(false);
+                        var part = await s3.UploadPartAsync(partRequest).ConfigureAwait(false);
 
                         parts.Add(part);
                     }
@@ -285,7 +285,7 @@ namespace Amazon.S3
         }
 
         public Task DeleteAsync(string key, string version = null)
-            => s3.DeleteObject(new DeleteObjectRequest(bucketName, key, version));
+            => s3.DeleteObjectAsync(new DeleteObjectRequest(bucketName, key, version));
 
         public async Task DeleteAsync(string[] keys)
         {
@@ -293,7 +293,7 @@ namespace Amazon.S3
 
             var request = new BatchDeleteRequest(s3.Region, bucketName, batch);
 
-            var result = await s3.DeleteObjects(request).ConfigureAwait(false);
+            var result = await s3.DeleteObjectsAsync(request).ConfigureAwait(false);
 
             if (result.HasErrors)
             {

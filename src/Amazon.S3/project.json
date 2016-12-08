@@ -3,10 +3,10 @@
   "description": "A simple wrapper around Amazon's Simple Storage Service.",
   "authors": [ "iamcarbon" ],
 
-  "version": "0.5.3",
+  "version": "0.6.0",
 
   "dependencies": {
-    "Amazon.Core": "0.5.0",
+    "Amazon.Core": "0.6.0",
     "Carbon.Storage": "1.1.0"
   }, 
 
@@ -25,8 +25,14 @@
     },
     "net461": {
       "frameworkAssemblies": {
-        "System.Xml": "4.0.0.0",
-        "System.Xml.Linq": "4.0.0.0"
+        "System.Xml": {
+          "type": "build",
+          "version": "4.0.0.0"
+        },
+        "System.Xml.Linq": {
+          "type": "build",
+          "version": "4.0.0.0"
+        }
       }
     }
   },
