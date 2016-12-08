@@ -149,11 +149,11 @@ namespace Amazon.Ses
 		&Timestamp=2011-08-18T22%3A25%3A27.000Z
 		*/
 
+        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(SesEmail));
+
         public XDocument ToXml()
         {
             var sb = new StringBuilder();
-
-            var serializer = new XmlSerializer(typeof(SesEmail));
 
             var namespaces = new XmlSerializerNamespaces();
 

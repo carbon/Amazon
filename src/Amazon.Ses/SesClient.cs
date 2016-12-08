@@ -21,12 +21,10 @@ namespace Amazon.Ses
              : base(AwsService.Ses, AwsRegion.USEast1, credentials)
         { }
 
-        public Task<SendEmailResult> SendEmail(MailMessage message)
-        {
-            return SendEmail(SesEmail.FromMailMessage(message));
-        }
+        public Task<SendEmailResult> SendEmailAsync(MailMessage message)
+            => SendEmailAsync(SesEmail.FromMailMessage(message));
 
-        public async Task<SendEmailResult> SendEmail(SesEmail message)
+        public async Task<SendEmailResult> SendEmailAsync(SesEmail message)
         {
             var request = new SesRequest("SendEmail");
 
@@ -40,7 +38,7 @@ namespace Amazon.Ses
             return SendEmailResponse.Parse(text).SendEmailResult;
         }
 
-        public async Task<GetSendQuotaResult> GetSendQuota(SesEmail message)
+        public async Task<GetSendQuotaResult> GetSendQuotaAsync(SesEmail message)
         {
             var request = new SesRequest("GetSendQuota");
 

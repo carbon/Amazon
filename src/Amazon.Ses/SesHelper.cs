@@ -7,9 +7,7 @@ namespace Amazon.Ses
     public static class SesHelper
     {
         public static string EncodeEmail(MailAddress email)
-        {
-            return EncodeEmail(email.ToString());
-        }
+            => EncodeEmail(email.ToString());
 
         public static string EncodeEmail(string email)
         {

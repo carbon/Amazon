@@ -1,10 +1,10 @@
 ﻿{
   "title": "Amazon SES",
   "description": "A simple wrapper around Amazon's Simple Email Service.",
-  "version": "0.5.0",
+  "version": "0.6.0",
 
   "dependencies": {
-    "Amazon.Core": "0.5.0"
+    "Amazon.Core": "0.6.0"
   },
 
   "frameworks": {
