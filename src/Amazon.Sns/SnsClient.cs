@@ -12,7 +12,7 @@ namespace Amazon.Sns
             : base(AwsService.Sns, region, credentials)
         { }
 
-        public async Task<string> Publish(PublishRequest request)
+        public async Task<string> PublishAsync(PublishRequest request)
         {
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Content = GetFormContent(request.ToParams())

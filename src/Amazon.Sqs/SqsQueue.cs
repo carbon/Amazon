@@ -49,7 +49,7 @@ namespace Amazon.Sqs
 
             while (!cancelationToken.IsCancellationRequested)
             {
-                var result = await client.ReceiveMessages(url, new RecieveMessagesRequest(take, lockTime, TimeSpan.FromSeconds(20))).ConfigureAwait(false);
+                var result = await client.ReceiveMessagesAsync(url, new RecieveMessagesRequest(take, lockTime, TimeSpan.FromSeconds(20))).ConfigureAwait(false);
 
                 if (result.Length > 0)
                 {
@@ -61,7 +61,7 @@ namespace Amazon.Sqs
         }
 
         public async Task<IReadOnlyList<IQueueMessage<string>>> GetAsync(int take, TimeSpan? lockTime)
-            => (await client.ReceiveMessages(url, new RecieveMessagesRequest(take, lockTime)).ConfigureAwait(false));
+            => (await client.ReceiveMessagesAsync(url, new RecieveMessagesRequest(take, lockTime)).ConfigureAwait(false));
 
         public async Task PutAsync(params IMessage<string>[] messages)
         {
@@ -69,7 +69,7 @@ namespace Amazon.Sqs
 
             foreach (var batch in messages.Batch(10))
             {
-                await client.SendMessageBatch(url, batch.Select(b => b.Body).ToArray()).ConfigureAwait(false);
+                await client.SendMessageBatchAsync(url, batch.Select(b => b.Body).ToArray()).ConfigureAwait(false);
             }
         }
 
@@ -84,7 +84,7 @@ namespace Amazon.Sqs
             {
                 try
                 {
-                    await client.DeleteMessageBatch(url, handles).ConfigureAwait(false);
+                    await client.DeleteMessageBatchAsync(url, handles).ConfigureAwait(false);
 
                     return;
                 }

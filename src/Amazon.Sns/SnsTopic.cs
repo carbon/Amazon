@@ -41,7 +41,7 @@ namespace Amazon.Sns
                 Message = message
             };
 
-            return await client.Publish(request).ConfigureAwait(false);
+            return await client.PublishAsync(request).ConfigureAwait(false);
         }
 
         public Task PublishAsync(IMessage<string> message)

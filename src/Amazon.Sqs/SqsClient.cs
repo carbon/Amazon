@@ -21,7 +21,7 @@ namespace Amazon.Sqs
             : base(AwsService.Sqs, region, credentials)
         { }
 
-        public async Task<CreateQueueResult> CreateQueue(string queueName, int defaultVisibilityTimeout = 30)
+        public async Task<CreateQueueResult> CreateQueueAsync(string queueName, int defaultVisibilityTimeout = 30)
         {
             var parameters = new SqsRequest {
                 { "Action", "CreateQueue" },
@@ -43,7 +43,7 @@ namespace Amazon.Sqs
             throw new NotImplementedException();
         }
 
-        public async Task<List<SendMessageBatchResultEntry>> SendMessageBatch(Uri queueUrl, string[] messages)
+        public async Task<List<SendMessageBatchResultEntry>> SendMessageBatchAsync(Uri queueUrl, string[] messages)
         {
             #region Preconditions
 
@@ -51,7 +51,7 @@ namespace Amazon.Sqs
                 throw new ArgumentNullException(nameof(messages));
 
             if (messages.Length > 10)
-                throw new ArgumentException("Must be 10 or fewer.", "messages.Length");
+                throw new ArgumentException("Must be 10 or fewer.", nameof(messages));
 
             // Max payload = 256KB (262,144 bytes)
 
@@ -83,7 +83,7 @@ namespace Amazon.Sqs
             return SendMessageBatchResult.Parse(responseText);
         }
 
-        public async Task<SendMessageResult> SendMessage(Uri queueUrl, SendMessageRequest request)
+        public async Task<SendMessageResult> SendMessageAsync(Uri queueUrl, SendMessageRequest request)
         {
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl)
             {
@@ -95,7 +95,7 @@ namespace Amazon.Sqs
             return SendMessageResult.Parse(responseText);
         }
 
-        public async Task<SqsMessage[]> ReceiveMessages(Uri queueUrl, RecieveMessagesRequest request)
+        public async Task<SqsMessage[]> ReceiveMessagesAsync(Uri queueUrl, RecieveMessagesRequest request)
         {
             #region Preconditions
 
@@ -113,7 +113,7 @@ namespace Amazon.Sqs
             return RecieveMessageResponse.Parse(responseText).ToArray();
         }
 
-        public async Task<string> DeleteMessage(Uri queueUrl, string recieptHandle)
+        public async Task<string> DeleteMessageAsync(Uri queueUrl, string recieptHandle)
         {
             var parameters = new SqsRequest {
                 { "Action", "DeleteMessage" },
@@ -128,13 +128,15 @@ namespace Amazon.Sqs
             return await SendAsync(httpRequest).ConfigureAwait(false);
         }
 
-        public async Task<List<DeleteMessageBatchResultEntry>> DeleteMessageBatch(Uri queueUrl, string[] recieptHandles)
+        public async Task<List<DeleteMessageBatchResultEntry>> DeleteMessageBatchAsync(Uri queueUrl, string[] recieptHandles)
         {
             #region Preconditions
 
-            if (recieptHandles == null) throw new ArgumentNullException(nameof(recieptHandles));
+            if (recieptHandles == null)
+                throw new ArgumentNullException(nameof(recieptHandles));
 
-            if (recieptHandles.Length > 10) throw new ArgumentException("Must be 10 or fewer.", "messages.Length");
+            if (recieptHandles.Length > 10)
+                throw new ArgumentException("Must be 10 or fewer.", "messages.Length");
 
             // Max payload = 64KB (65,536 bytes)
 
