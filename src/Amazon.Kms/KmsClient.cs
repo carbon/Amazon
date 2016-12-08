@@ -14,13 +14,13 @@ namespace Amazon.Kms
             : base(AwsService.Kms, region, credentials)
         { }
 
-        public Task<CreateGrantResponse> CreateGrant(CreateGrantRequest request)
+        public Task<CreateGrantResponse> CreateGrantAsync(CreateGrantRequest request)
             => SendAsync<CreateGrantResponse>("CreateGrant", request);
 
-        public Task<RetireGrantResponse> RetireGrant(RetireGrantRequest request)
+        public Task<RetireGrantResponse> RetireGrantAsync(RetireGrantRequest request)
             => SendAsync<RetireGrantResponse>("RetireGrant", request);
 
-        public Task<ListGrantsResponse> ListGrants(ListGrantsRequest request)
+        public Task<ListGrantsResponse> ListGrantsAsync(ListGrantsRequest request)
             => SendAsync<ListGrantsResponse>("ListGrants", request);
 
         public Task<EncryptResponse> EncryptAsync(EncryptRequest request)

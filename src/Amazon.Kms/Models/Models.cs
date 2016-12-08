@@ -3,7 +3,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 
-using Carbon.Collections;
+using Carbon.Json;
 
 namespace Amazon.Kms
 {
@@ -46,11 +46,11 @@ namespace Amazon.Kms
     {
         // Match all
         [DataMember(EmitDefaultValue = false)]
-        public StringMap EncryptionContextEquals { get; set; }
+        public JsonObject EncryptionContextEquals { get; set; }
 
         // Match any
         [DataMember(EmitDefaultValue = false)]
-        public StringMap EncryptionContextSubset { get; set; }
+        public JsonObject EncryptionContextSubset { get; set; }
     }
 
     public class CreateGrantResponse : KmsResponse
@@ -111,8 +111,9 @@ namespace Amazon.Kms
 
     public class DecryptRequest : KmsRequest
     {
+        // String Map
         [DataMember(EmitDefaultValue = false)]
-        public StringMap EncryptionContext { get; set; }
+        public JsonObject EncryptionContext { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public string[] GrantTokens { get; set; }
@@ -146,7 +147,7 @@ namespace Amazon.Kms
         /// The encryption context is logged by using CloudTrail.
         /// </summary>
         [DataMember(EmitDefaultValue = false)]
-        public StringMap EncryptionContext { get; set; }
+        public JsonObject EncryptionContext { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public string[] GrantTokens { get; set; }
@@ -166,7 +167,7 @@ namespace Amazon.Kms
     public class GenerateDataKeyRequest : KmsRequest
     {
         [DataMember(EmitDefaultValue = false)]
-        public StringMap EncryptionContext { get; set; }
+        public JsonObject EncryptionContext { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public string[] GrantTokens { get; set; }
