@@ -15,7 +15,7 @@ namespace Amazon.CloudWatch
 
 
         public CloudWatchClient(AwsRegion region, IAwsCredentials credentials)
-            : base(AwsService.Cloudwatch, region, credentials)
+            : base(AwsService.Monitoring, region, credentials)
         { }
 
         /*
