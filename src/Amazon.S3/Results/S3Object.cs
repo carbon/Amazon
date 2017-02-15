@@ -58,8 +58,8 @@ namespace Amazon.S3
             set { headers["Content-Length"] = value.ToString(); }
         }
 
-        public DateTimeOffset? LastModified
-            => DateTime.ParseExact(headers["Last-Modified"], "r", null).ToUniversalTime();
+        public DateTimeOffset? LastModified => 
+            DateTime.ParseExact(headers["Last-Modified"], "r", null).ToUniversalTime();
 
         public CacheControlHeaderValue CacheControl
         {
@@ -69,8 +69,7 @@ namespace Amazon.S3
 
         #endregion
 
-        public Stream Open()
-            => OpenAsync().Result;
+        public Stream Open() => OpenAsync().Result;
 
         public async Task<Stream> OpenAsync()
         {

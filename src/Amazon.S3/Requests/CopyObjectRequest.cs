@@ -1,7 +1,7 @@
+using System.Net.Http;
+
 namespace Amazon.S3
 {
-    using System.Net.Http;
-
     public class CopyObjectRequest : S3Request
     {
         public CopyObjectRequest(AwsRegion region, S3ObjectLocation source, S3ObjectLocation target)

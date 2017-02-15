@@ -3,10 +3,10 @@
   "description": "A simple wrapper around Amazon's Simple Storage Service.",
   "authors": [ "iamcarbon" ],
 
-  "version": "0.6.2",
+  "version": "0.7.0",
 
   "dependencies": {
-    "Amazon.Core": "0.6.1",
+    "Amazon.Core": "0.7.0",
     "Carbon.Storage": "1.3.0"
   }, 
 

@@ -29,11 +29,5 @@ namespace Amazon.S3
         public string UploadId { get; }
 
         public string ETag { get; }
-
-        #region Helpers
-
-        // public byte[] MD5 => HexString.ToBytes(ETag.Trim('"'));
-
-        #endregion
     }
 }

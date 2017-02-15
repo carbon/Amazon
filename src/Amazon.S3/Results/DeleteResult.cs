@@ -32,11 +32,11 @@ namespace Amazon.S3
 
             foreach (var el in deleteResultEl.Elements(ns + "Error"))
             {
-                var error = new BatchItemError {
-                    Key = el.Element(ns + "Key").Value,
-                    Code = el.Element(ns + "Code").Value,
-                    Message = el.Element(ns + "Message").Value
-                };
+                var error = new BatchItemError(
+                    key     : el.Element(ns + "Key").Value,
+                    code    : el.Element(ns + "Code").Value,
+                    message : el.Element(ns + "Message").Value
+                );
 
                 result.Errors.Add(error);
             }
@@ -47,11 +47,18 @@ namespace Amazon.S3
 
     public class BatchItemError
     {
-        public string Key { get; set; }
+        public BatchItemError(string key, string code, string message)
+        {
+            Key = key;
+            Code = code;
+            Message = message;
+        }
 
-        public string Code { get; set; }
+        public string Key { get; }
 
-        public string Message { get; set; }
+        public string Code { get; }
+
+        public string Message { get; }
     }
 }
 

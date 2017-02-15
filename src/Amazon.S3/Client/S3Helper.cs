@@ -1,18 +1,50 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace Amazon.S3
 {
-    internal class S3Helper
+    public class S3Helper
     {
-        public const string AmazonMetadataHeaderPrefix = "x-amz-meta-";
-        public const string AmazonHeaderPrefix = "x-amz-";
+        private static readonly Dictionary<string, string> emptyStringDictionary = new Dictionary<string, string>();
 
-        public static string ConstructStringToSign(HttpMethod httpVerb, string contentType, string bucketName, string key,
+        public static string GetSignedUrl(GetUrlRequest request, AwsCredentials credentials)
+        {
+            // You can specify any future expiration time in epoch or UNIX time (number of seconds since January 1, 1970).
+
+            var unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+            long expires = unixTime + (long)request.ExpiresIn.TotalSeconds;
+
+            var stringToSign = ConstructStringToSign(
+                httpVerb      : HttpMethod.Get,
+                contentType   : string.Empty,
+                bucketName    : request.BucketName,
+                key           : request.Key,
+                headers       : emptyStringDictionary,
+                query         : string.Empty,
+                expiresOrDate : expires.ToString()
+            );
+
+            var signature = ComputeSignature(credentials.SecretAccessKey, stringToSign);
+
+            return new StringBuilder()
+                .Append("https://")
+                .Append(request.BucketName)
+                .Append(".s3.amazonaws.com/")
+                .Append(request.Key)
+                .Append("?AWSAccessKeyId=")
+                .Append(credentials.AccessKeyId.UrlEncodeX2())
+                .Append("&Expires=")
+                .Append(expires)
+                .Append("&Signature=")
+                .Append(signature.UrlEncodeX2())
+                .ToString();
+        }
+
+        private static string ConstructStringToSign(HttpMethod httpVerb, string contentType, string bucketName, string key,
             Dictionary<string, string> headers, string query, string expiresOrDate)
         {
             #region Preconditions
@@ -27,57 +59,17 @@ namespace Amazon.S3
 
             var sb = new StringBuilder();
 
-            sb.AppendFormat("{0}\n", httpVerb.ToString());                                              // HTTP-VERB + \n + 
-            sb.AppendFormat("{0}\n", headers.ContainsKey("Content-MD5") ? headers["Content-MD5"] : ""); // Content-MD5 + \n + 
-            sb.AppendFormat("{0}\n", contentType);                                                      // Content-Type+ \n + 
-            sb.AppendFormat("{0}\n", expiresOrDate);                                                    // Expires/ Date + \n + 
-            sb.Append(CanonicalizeAmzHeaders(headers));                                                 // CanonicalizedAmzHeaders
-            sb.Append(CanonicalizeResource(bucketName, key, query));									// CanonicalizedResource
+            sb.Append(httpVerb.ToString()).Append("\n");              // HTTP-VERB + \n + 
+            sb.Append("\n");                                          // Content-MD5 + \n + 
+            sb.Append(contentType).Append("\n");                      // Content-Type+ \n + 
+            sb.Append(expiresOrDate).Append("\n");                    // Expires/ Date + \n + 
+            sb.Append(string.Empty);                                  // CanonicalizedAmzHeaders
+            sb.Append(CanonicalizeResource(bucketName, key, query));  // CanonicalizedResource
 
             return sb.ToString();
         }
 
-        public static string CanonicalizeAmzHeaders(Dictionary<string, string> headers)
-        {
-            // To construct the CanonicalizedAmzHeaders part of StringToSign, select all HTTP request headers that start with 'x-amz-' 
-            // (using a case-insensitive comparison) and use the following process. 
-
-            // 1. Convert each HTTP header name to lower-case. For example, 'X-Amz-Date' becomes 'x-amz-date'.
-
-            // 2. Sort the collection of headers lexicographically by header name.
-
-            // 3. Combine header fields with the same name into one "header-name:comma-separated-value-list" 
-            // pair as prescribed by RFC 2616, section 4.2, without any white-space between values. 
-            // For example, the two metadata headers 'x-amz-meta-username: fred' and 'x-amz-meta-username: barney' 
-            // would be combined into the single header 'x-amz-meta-username: fred,barney'.
-
-            // 4. "Un-fold" long headers that span multiple lines (as allowed by RFC 2616, section 4.2) 
-            // by replacing the folding white-space (including new-line) by a single space.
-
-            // 5. Trim any white-space around the colon in the header. 
-            // For example, the header 'x-amz-meta-username: fred,barney' would become 'x-amz-meta-username:fred,barney'
-
-            // 6. Finally, append a new-line (U+000A) to each canonicalized header in the resulting list. 
-            // Construct the CanonicalizedResource element by concatenating all headers in this list into a single string.
-
-            var amazonHeaders = headers
-                .Where(pair => pair.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
-                .OrderBy(pair => pair.Key);
-
-            var sb = new StringBuilder();
-
-            foreach (var pair in amazonHeaders)
-            {
-                sb.Append(pair.Key.ToLower());
-                sb.Append(":");
-                sb.Append(pair.Value);
-                sb.Append("\n");
-            }
-
-            return sb.ToString();
-        }
-
-        public static string CanonicalizeResource(string bucketName, string key, string query)
+        private static string CanonicalizeResource(string bucketName, string key, string query)
         {
             #region Preconditions
 
@@ -126,13 +118,15 @@ namespace Amazon.S3
             return sb.ToString();
         }
 
-        public static string ComputeSignature(string secret, string stringToSign)
+        private static string ComputeSignature(string secret, string stringToSign)
         {
             #region Preconditions
 
-            if (secret == null) throw new ArgumentNullException("secret");
+            if (secret == null)
+                throw new ArgumentNullException(nameof(secret));
 
-            if (stringToSign == null) throw new ArgumentNullException("stringToSign");
+            if (stringToSign == null)
+                throw new ArgumentNullException(nameof(stringToSign));
 
             #endregion
 
@@ -145,12 +139,6 @@ namespace Amazon.S3
                 return Convert.ToBase64String(hashBytes);
             }
         }
-
-        public static long GetSecondsSince1970()
-            => DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
-        public static long GetMillisecondsSince1970()
-            => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     }
 }
 

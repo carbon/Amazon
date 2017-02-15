@@ -4,8 +4,9 @@ using System.Xml.Serialization;
 
 namespace Amazon.S3
 {
+    // <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
     [XmlRoot("ListBucketResult", Namespace = "http://s3.amazonaws.com/doc/2006-03-01/")]
-    public class ListBucketResult // : IReadOnlyList<IBlob>
+    public class ListBucketResult
     {
         [XmlElement("Name")]
         public string Name { get; set; }
@@ -32,28 +33,10 @@ namespace Amazon.S3
 
         public static ListBucketResult ParseXml(string xmlText)
         {
-            var rootEl = XElement.Parse(xmlText); // <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+            var rootEl = XElement.Parse(xmlText);
 
             return (ListBucketResult)serializer.Deserialize(rootEl.CreateReader());
         }
-
-        #region IReadOnlyCollection<IBlob>
-
-        // int IReadOnlyCollection<IBlob>.Count => Items.Count;
-
-        // IBlob IReadOnlyList<IBlob>.this[int index] => Items[index];
-
-        #endregion
-
-        #region IEnumerable<IBlobInfo>
-
-        // IEnumerator<IBlob> IEnumerable<IBlob>.GetEnumerator()
-        //     => Items.GetEnumerator();
-
-        // IEnumerator IEnumerable.GetEnumerator()
-        //     => Items.GetEnumerator();
-
-        #endregion
     }
 }
 

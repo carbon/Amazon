@@ -18,27 +18,6 @@ namespace Amazon.S3
         public string ETag { get; }
 
         public string VersionId { get; }
-
-        #region Helpers
-
-        /*
-        public byte[] MD5
-        {
-            get
-            {
-                try
-                {
-                    return HexString.ToBytes(ETag.Replace("\"", ""));
-                }
-                catch
-                {
-                    throw new Exception("Could not convert to MD5:" + ETag);
-                }
-            }
-        }
-        */
-
-        #endregion
     }
 
     // NOTES: 

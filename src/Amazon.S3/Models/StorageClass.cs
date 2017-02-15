@@ -2,8 +2,8 @@
 {
     public enum StorageClass
     {
-        STANDARD,
-        STANDARD_IA,
-        REDUCED_REDUNDANCY
+        STANDARD           = 1,
+        STANDARD_IA        = 2,
+        REDUCED_REDUNDANCY = 3
     }
 }

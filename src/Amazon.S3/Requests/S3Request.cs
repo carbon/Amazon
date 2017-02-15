@@ -1,6 +1,8 @@
 using System;
 using System.Text;
 using System.Net.Http;
+using System.IO;
+using System.Security.Cryptography;
 
 namespace Amazon.S3
 {
@@ -10,7 +12,11 @@ namespace Amazon.S3
         {
             #region Preconditions
 
-            if (bucketName == null) throw new ArgumentNullException(nameof(bucketName));
+            if (region == null)
+                throw new ArgumentNullException(nameof(region));
+
+            if (bucketName == null)
+                throw new ArgumentNullException(nameof(bucketName));
 
             #endregion
 
@@ -19,16 +25,12 @@ namespace Amazon.S3
 
             // https://{bucket}.s3.amazonaws.com/{key}
 
-            // s3-external-1.amazonaws.com
-            // storage.googleapis.com
-
-            var urlBuilder = new StringBuilder();
-
-            urlBuilder.Append("https://");
-            urlBuilder.Append(bucketName);
-            urlBuilder.Append(".");
-            urlBuilder.Append(S3Host.Get(region));
-            urlBuilder.Append("/");
+            var urlBuilder = new StringBuilder()
+                .Append("https://")
+                .Append(bucketName)
+                .Append(".")
+                .Append(S3Host.Get(region))
+                .Append("/");
 
             if (objectKey != null)
             {
@@ -58,18 +60,36 @@ namespace Amazon.S3
         public string Key { get; }
 
         public HttpCompletionOption CompletionOption { get; set; }
+
+        #region Helpers
+
+
+        protected byte[] ComputeSHA256(Stream stream)
+        {
+            using (var sha = SHA256.Create())
+            {
+                var data = sha.ComputeHash(stream);
+
+                stream.Position = 0;
+
+                return data;
+            }
+        }
+
+        #endregion
     }
 
     internal static class S3Host
     {
         public static string Get(AwsRegion region)
         {
-            switch (region.Name)
+            if (region.Name == "google")
             {
-                case "google"     : return "storage.googleapis.com";
-                case "us-east-1"  : return "s3-external-1.amazonaws.com";
-                default           : return $"s3-{region.Name}.amazonaws.com";
+                return "storage.googleapis.com";
             }
+          
+            // Use dualstack to support IP6 in the future
+            return $"s3.dualstack.{region.Name}.amazonaws.com";
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Amazon.S3
 {
+    [XmlRoot(Namespace = "http://s3.amazonaws.com/doc/2006-03-01/")]
     public class CopyObjectResult
     {
         private static readonly XNamespace ns = "http://s3.amazonaws.com/doc/2006-03-01/";

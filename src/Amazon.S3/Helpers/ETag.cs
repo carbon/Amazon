@@ -25,8 +25,7 @@ namespace Amazon.S3
 
         public string Value { get; }
 
-        public static implicit operator string(ETag tag)
-            => tag.Value;
+        public static implicit operator string(ETag tag) => tag.Value;
 
         #region Private Helpers
 

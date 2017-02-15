@@ -5,12 +5,14 @@ using System.Net.Http.Headers;
 
 namespace Amazon.S3
 {
+    using Helpers;
+
     public class PutObjectRequest : S3Request
     {
         public PutObjectRequest(AwsRegion region, string bucketName, string key)
             : base(HttpMethod.Put, region, bucketName, key)
         {
-            this.CompletionOption = HttpCompletionOption.ResponseContentRead;
+            CompletionOption = HttpCompletionOption.ResponseContentRead;
         }
 
         public void SetStream(Stream stream, string mediaType = "application/octet-stream")
@@ -18,32 +20,58 @@ namespace Amazon.S3
             #region Preconditions
 
             if (stream == null)
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
 
-            if (stream.Length <= 0)
-                throw new ArgumentException("Must be greater than 0. Key: " + Key, "stream.Length");
+            if (stream.Length == 0)
+                throw new ArgumentException("Must not be empty", nameof(stream));
+
+            if (mediaType == null)
+                throw new ArgumentNullException(nameof(mediaType));
 
             #endregion
 
-            this.Content = new StreamContent(stream);
+            Content = new StreamContent(stream);
 
-            this.Content.Headers.ContentLength = stream.Length;
-            this.Content.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+            Content.Headers.ContentLength = stream.Length;
+            Content.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+            
+            Headers.Add("x-amz-content-sha256",
+                stream.CanSeek 
+                ? HexString.FromBytes(ComputeSHA256(stream))
+                : "UNSIGNED-PAYLOAD");
         }
 
-        public void SetStream(Stream stream, int length, string mediaType = "application/octet-stream")
+        //  TODO: Support chunked streaming...
+
+        // x-amz-content-sha256: STREAMING-AWS4-HMAC-SHA256-PAYLOAD
+        // Content-Encoding: aws-chunked,gzip
+        // x-amz-decoded-content-length: ?
+        // Content-Length: include metadata
+
+        // public bool UseChunkedStreamWrapper { get; set; } = false;
+
+        public void SetStream(Stream stream, long length, string mediaType = "application/octet-stream")
         {
             #region Preconditions
 
-            if (stream == null) throw new ArgumentNullException("stream");
-            if (length <= 0) throw new ArgumentException("Must be greater than 0.", "length");
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (length <= 0)
+                throw new ArgumentException("Must be greater than 0.", nameof(length));
 
             #endregion
+            
+            Content = new StreamContent(stream);
+            Content.Headers.ContentLength = length;
+            Content.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
 
-            this.Content = new StreamContent(stream);
+            // TODO: Support chunked streaming...
 
-            this.Content.Headers.ContentLength = length;
-            this.Content.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+            Headers.Add("x-amz-content-sha256",
+                stream.CanSeek
+                ? HexString.FromBytes(ComputeSHA256(stream))
+                : "UNSIGNED-PAYLOAD");
         }
     }
 }
