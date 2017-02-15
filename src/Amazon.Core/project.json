@@ -1,10 +1,10 @@
 ﻿{
   "description": "Shared library for Amazon API implementations.",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "authors": [ "iamcarbon" ],
 
   "dependencies": {
-    "Carbon.Json": "1.2.0",
+    "Carbon.Json": "1.2.1",
     "System.Text.Encodings.Web": "4.3.0"
   },
 

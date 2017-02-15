@@ -32,30 +32,27 @@ namespace Amazon
 
         public string SecurityToken => Token;
 
-        public async Task<IAwsCredentials> RenewAsync()
-            => await GetAsync(RoleName).ConfigureAwait(false);
+        public async Task<IAwsCredentials> RenewAsync() => 
+            await GetAsync(RoleName).ConfigureAwait(false);
 
         public static async Task<InstanceRoleCredentials> GetAsync(string roleName)
         {
             var url = "http://169.254.169.254/latest/meta-data/iam/security-credentials/" + roleName;
 
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
 
             using (var http = new HttpClient())
+            using (var response = await http.SendAsync(request).ConfigureAwait(false))
             {
-                using (var response = await http.SendAsync(httpRequest).ConfigureAwait(false))
-                {
-                    var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                    var json = JsonObject.Parse(responseText);
+                var result = JsonObject.Parse(responseText).As<InstanceRoleCredentials>();
 
-                    var result = json.As<InstanceRoleCredentials>();
+                result.RoleName = roleName;
 
-                    result.RoleName = roleName;
-
-                    return result;
-                }
+                return result;
             }
+            
         }
     }
 }

@@ -28,8 +28,8 @@ namespace Amazon
         public AwsService Service { get; }
 
         // 20120228/us-east-1/iam/aws4_request
-        public override string ToString()
-            => $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request";
+        public override string ToString() => 
+            $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request";
     }
 
     // http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
@@ -44,25 +44,42 @@ namespace Amazon
 
         public override string ToString() => Name;
 
-        public bool Equals(AwsService other) => Name == other.Name;
+        public static readonly AwsService Cloudfront       = new AwsService("cloudfront");
+        public static readonly AwsService CloudwatchEvents = new AwsService("events");
+        public static readonly AwsService DynamoDb         = new AwsService("dynamodb");
+        public static readonly AwsService Ec2              = new AwsService("ec2");
+        public static readonly AwsService Elb              = new AwsService("elasticloadbalancing");
+        public static readonly AwsService ElastiCache      = new AwsService("elasticache");
+        public static readonly AwsService Glacier          = new AwsService("glacier");
+        public static readonly AwsService Iam              = new AwsService("iam");
+        public static readonly AwsService Kinesis          = new AwsService("kinesis");
+        public static readonly AwsService Kms              = new AwsService("kms");
+        public static readonly AwsService Lambda           = new AwsService("lambda");
+        public static readonly AwsService Monitoring       = new AwsService("monitoring"); // Cloudwatch monitoring
+        public static readonly AwsService Ses              = new AwsService("email");
+        public static readonly AwsService S3               = new AwsService("s3");
+        public static readonly AwsService Sns              = new AwsService("sns");
+        public static readonly AwsService Sts              = new AwsService("sts");
+        public static readonly AwsService Sqs              = new AwsService("sqs");
 
-        public static readonly AwsService Cloudfront        = new AwsService("cloudfront");
-        public static readonly AwsService CloudwatchEvents  = new AwsService("events");
-        public static readonly AwsService DynamoDb          = new AwsService("dynamodb");
-        public static readonly AwsService Ec2               = new AwsService("ec2");
-        public static readonly AwsService Elb               = new AwsService("elasticloadbalancing");
-        public static readonly AwsService ElastiCache       = new AwsService("elasticache");
-        public static readonly AwsService Glacier           = new AwsService("glacier");
-        public static readonly AwsService Iam               = new AwsService("iam");
-        public static readonly AwsService Kinesis           = new AwsService("kinesis");
-        public static readonly AwsService Kms               = new AwsService("kms");
-        public static readonly AwsService Lambda            = new AwsService("lambda");
-        public static readonly AwsService Monitoring        = new AwsService("monitoring"); // Cloudwatch monitoring
-        public static readonly AwsService Ses               = new AwsService("email");
-        public static readonly AwsService S3                = new AwsService("s3");
-        public static readonly AwsService Sns               = new AwsService("sns");
-        public static readonly AwsService Sts               = new AwsService("sts");
-        public static readonly AwsService Sqs               = new AwsService("sqs");
+        #region Equality
+
+        public bool Equals(AwsService other) =>
+            other != null && Name == other.Name;
+
+        public override bool Equals(object obj) =>
+            this.Equals(obj as AwsService);
+
+        public static bool operator ==(AwsService lhs, AwsService rhs) =>
+            lhs?.Name == rhs?.Name;
+
+        public static bool operator !=(AwsService lhs, AwsService rhs) =>
+            lhs?.Name != rhs?.Name;
+
+        public override int GetHashCode() =>
+            Name.GetHashCode();
+
+        #endregion
 
         public static implicit operator AwsService(string name)
            => new AwsService(name);
@@ -85,20 +102,19 @@ namespace Amazon
             other != null && Name == other.Name;
 
         public override bool Equals(object obj) =>
-            return this.Equals(obj as AwsRegion);
+            this.Equals(obj as AwsRegion);
 
         public static bool operator ==(AwsRegion lhs, AwsRegion rhs) =>
-            lhs.Name == rhs.Name;
+            lhs?.Name == rhs?.Name;
 
         public static bool operator !=(AwsRegion lhs, AwsRegion rhs) =>
-            lhs.Name != rhs.Name;
+            lhs?.Name != rhs?.Name;
         
         public override int GetHashCode() =>    
             Name.GetHashCode();
 
         #endregion
 
-        public static readonly AwsRegion Standard     = USEast1;       
         public static readonly AwsRegion USEast1      = new AwsRegion("us-east-1");      // US East (N. Virginia)
         public static readonly AwsRegion USEast2      = new AwsRegion("us-east-2");      // US East (Ohio)
         public static readonly AwsRegion USWest1      = new AwsRegion("us-west-1");      // US West (N. California)
@@ -113,6 +129,8 @@ namespace Amazon
         public static readonly AwsRegion EUWest1      = new AwsRegion("eu-west-1");      // EU (Ireland)
         public static readonly AwsRegion EUWest2      = new AwsRegion("eu-west-2");      // EU (London)
         public static readonly AwsRegion SAEast1      = new AwsRegion("sa-east-1");      // South America (São Paulo)
+
+        public static readonly AwsRegion Standard     = USEast1;
 
         public static AwsRegion Get(string name)
         {
@@ -145,7 +163,5 @@ namespace Amazon
 
             return new AwsRegion(name);
         }
-
-        public static implicit operator AwsRegion(string name) => Get(name);
     }
 }

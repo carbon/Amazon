@@ -2,7 +2,7 @@
 
 namespace Amazon.Helpers
 {
-    internal static class HexString
+    public static class HexString
     {
         // Based on: http://stackoverflow.com/questions/623104/byte-to-hex-string/3974535#3974535
         public static string FromBytes(this byte[] bytes)

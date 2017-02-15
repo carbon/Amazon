@@ -10,8 +10,6 @@ namespace Amazon
 
     public abstract class AwsClient : IDisposable
     {
-        private static readonly SignerV4 signer = new SignerV4();
-
         protected readonly HttpClient httpClient = new HttpClient(
             new HttpClientHandler {
                 AutomaticDecompression = DecompressionMethods.GZip
@@ -19,7 +17,7 @@ namespace Amazon
         );
 
         private readonly AwsService service;
-        private readonly AwsRegion region;
+        protected readonly AwsRegion region;
         private IAwsCredentials credentials;
         private readonly SemaphoreSlim mutex = new SemaphoreSlim(1);
 
@@ -39,6 +37,8 @@ namespace Amazon
         }
 
         public string Endpoint { get; }
+
+        public AwsRegion Region => region;
 
         protected virtual async Task<Exception> GetException(HttpResponseMessage response)
         {
@@ -62,7 +62,7 @@ namespace Amazon
             }
         }
 
-        private async Task SignAsync(HttpRequestMessage httpRequest)
+        protected async Task SignAsync(HttpRequestMessage httpRequest)
         {
             if (credentials.ShouldRenew)
             {
@@ -93,12 +93,11 @@ namespace Amazon
 
             var scope = GetCredentialScope(httpRequest);
 
-            signer.Sign(credentials, scope, httpRequest);
+            SignerV4.Default.Sign(credentials, scope, httpRequest);
         }
 
-        private CredentialScope GetCredentialScope(HttpRequestMessage httpRequest)
-            => new CredentialScope(httpRequest.Headers.Date.Value.UtcDateTime, region, service);
-
+        private CredentialScope GetCredentialScope(HttpRequestMessage httpRequest) => 
+            new CredentialScope(httpRequest.Headers.Date.Value.UtcDateTime, region, service);
 
         public void Dispose()
         {
