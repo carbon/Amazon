@@ -9,9 +9,16 @@ namespace Amazon.S3
 {
     public class S3ObjectInfo : IBlob
     {
-        public S3ObjectInfo(string name, long size)
+        public S3ObjectInfo(string key, long size)
         {
-            Key = name;
+            #region Preconditions
+
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            #endregion
+
+            Key = key;
             Size = size;
         }
 

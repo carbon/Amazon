@@ -44,7 +44,7 @@ namespace Amazon.S3
             httpClient.Timeout = timeout;
         }
 
-        public Task<HttpResponseMessage> CreateBucket(string bucketName)
+        public Task<HttpResponseMessage> CreateBucketAsync(string bucketName)
             => SendAsync(new AddBucketRequest(Region, bucketName));
 
         public async Task<ListBucketResult> ListBucketAsync(string bucketName, ListBucketOptions options)
@@ -83,7 +83,7 @@ namespace Amazon.S3
             }
         }
 
-        public async Task<CompleteMultipartUploadResult> CompleteMultipartUpload(CompleteMultipartUploadRequest request)
+        public async Task<CompleteMultipartUploadResult> CompleteMultipartUploadAsync(CompleteMultipartUploadRequest request)
         {
             using (var response = await SendAsync(request).ConfigureAwait(false))
             {
@@ -169,7 +169,7 @@ namespace Amazon.S3
 
             long expires = S3Helper.GetSecondsSince1970() + (long)request.ExpiresIn.TotalSeconds;
 
-            string stringToSign = S3Helper.ConstructStringToSign(
+            var stringToSign = S3Helper.ConstructStringToSign(
                 httpVerb      : HttpMethod.Get,
                 contentType   : "",
                 bucketName    : request.BucketName,

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Amazon.S3
 {
-    public class S3Helper
+    internal class S3Helper
     {
         public const string AmazonMetadataHeaderPrefix = "x-amz-meta-";
         public const string AmazonHeaderPrefix = "x-amz-";

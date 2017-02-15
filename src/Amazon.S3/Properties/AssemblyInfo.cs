@@ -1,4 +1,4 @@
 ﻿using System.Reflection;
 
 [assembly: AssemblyProduct("Amazon.S3")]
-[assembly: AssemblyVersion("0.5.3")]
+[assembly: AssemblyVersion("0.6.1")]

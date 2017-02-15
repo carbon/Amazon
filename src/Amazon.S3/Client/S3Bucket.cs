@@ -35,6 +35,9 @@ namespace Amazon.S3
             if (bucketName == null)
                 throw new ArgumentNullException(nameof(bucketName));
 
+            if (client == null)
+                throw new ArgumentNullException(nameof(client));
+
             #endregion
 
             this.bucketName = bucketName;
@@ -65,7 +68,7 @@ namespace Amazon.S3
             return result.Items;
         }
 
-        public async Task<IBlob> GetRange(string key, long start, long end)
+        public async Task<IBlob> GetRangeAsync(string key, long start, long end)
         {
             var request = new GetObjectRequest(s3.Region, bucketName, key: key);
 
@@ -221,18 +224,6 @@ namespace Amazon.S3
 
         const int chunkSize = 1024 * 1025 * 5; // 5MB
 
-        private byte[] ComputeMD5(Stream stream)
-        {
-            using (var md5 = MD5.Create())
-            {
-                var data = md5.ComputeHash(stream);
-
-                stream.Position = 0;
-
-                return data;
-            }
-        }
-
         public async Task PutBigAsync(string key, Blob blob)
         {
             var stream = blob.Open();
@@ -280,7 +271,7 @@ namespace Amazon.S3
 
                 var completeRequest = new CompleteMultipartUploadRequest(s3.Region, bucketName, key, session.UploadId, parts.ToArray());
 
-                var result = await s3.CompleteMultipartUpload(completeRequest).ConfigureAwait(false);
+                var result = await s3.CompleteMultipartUploadAsync(completeRequest).ConfigureAwait(false);
             }
         }
 
@@ -305,5 +296,22 @@ namespace Amazon.S3
                 throw new Exception("Deleted count not equal to keys.Count");
             }
         }
+
+
+        #region Helpers
+
+        private byte[] ComputeMD5(Stream stream)
+        {
+            using (var md5 = MD5.Create())
+            {
+                var data = md5.ComputeHash(stream);
+
+                stream.Position = 0;
+
+                return data;
+            }
+        }
+
+        #endregion
     }
 }

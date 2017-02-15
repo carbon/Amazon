@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Carbon.Data;
-
 namespace Amazon.S3
 {
     public class UploadPartResult : IUploadPart
@@ -11,7 +9,7 @@ namespace Amazon.S3
             #region Preconditions
 
             if (partNumber == 0)
-                throw new ArgumentException("Must not be 0", paramName: nameof(partNumber));
+                throw new ArgumentException("Must not be 0", nameof(partNumber));
 
             if (uploadId == null)
                 throw new ArgumentNullException(nameof(uploadId));
