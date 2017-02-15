@@ -11,7 +11,19 @@ namespace Amazon.Ec2
 
         public List<Filter> Filters { get; } = new List<Filter>();
 
+        protected void AddIds(AwsRequest request, string idName, List<string> ids)
+        {
+            var i = 1;
 
+            foreach (var id in ids)
+            {
+                // e.g. VpcId.1
+
+                request.Add(idName + "." + i, id);
+
+                i++;
+            }
+        }
 
         protected AwsRequest GetParameters(string actionName)
         {

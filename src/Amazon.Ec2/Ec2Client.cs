@@ -9,8 +9,7 @@ namespace Amazon.Ec2
 
     public class Ec2Client : AwsClient
     {
-        public static string Version = "2016-09-15";
-        public static readonly XNamespace NS = "http://ec2.amazonaws.com/doc/2016-09-15/";
+        public static readonly string Version = "2016-09-15";
 
         public Ec2Client(AwsRegion region, IAwsCredentials credentials)
             : base(AwsService.Ec2, region, credentials)
@@ -30,6 +29,13 @@ namespace Amazon.Ec2
             var result = await DescribeVolumesAsync(new DescribeVolumesRequest { VolumeIds = { volumeId } });
 
             return result.Volumes.Count > 0 ? result.Volumes[0] : null;
+        }
+
+        public async Task<Vpc> DescribeVpcAsync(string vpcId)
+        {
+            var result = await DescribeVpcsAsync(new DescribeVpcsRequest { VpcIds = { vpcId } });
+
+            return result.Vpcs.Count > 0 ? result.Vpcs[0] : null;
         }
 
         #endregion
@@ -54,6 +60,17 @@ namespace Amazon.Ec2
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
             return DescribeInstancesResponse.Parse(responseText);
+        }
+
+        public async Task<DescribeVpcsResponse> DescribeVpcsAsync(DescribeVpcsRequest request)
+        {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
+                Content = GetPostContent(request.ToParams())
+            };
+
+            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+
+            return DescribeVpcsResponse.Parse(responseText);
         }
 
         #region Helpers

@@ -10,16 +10,7 @@ namespace Amazon.Ec2
         {
             var parameters = GetParameters("DescribeInstances");
 
-            var i = 1;
-
-            foreach (var instanceId in InstanceIds)
-            {
-                var prefix = "InstanceId." + i;
-
-                parameters.Add("InstanceId." + i, instanceId);
-
-                i++;
-            }
+            AddIds(parameters, "InstanceId", InstanceIds);
 
             return parameters;
         }

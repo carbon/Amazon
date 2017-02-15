@@ -3,10 +3,10 @@ using System.Xml.Linq;
 
 namespace Amazon.Ec2
 {
-    using static Ec2Client;
-
     public class DescribeInstancesResponse
     {
+        private static readonly XNamespace NS = "http://ec2.amazonaws.com/doc/2016-09-15/";
+
         public List<Instance> Instances { get; } = new List<Instance>();
 
         public static DescribeInstancesResponse Parse(string text)

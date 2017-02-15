@@ -10,16 +10,7 @@ namespace Amazon.Ec2
         {
             var parameters = GetParameters("DescribeVolumes");
 
-            var i = 1;
-
-            foreach (var id in VolumeIds)
-            {
-                var prefix = "VolumeId." + i;
-
-                parameters.Add("VolumeId." + i, id);
-
-                i++;
-            }
+            AddIds(parameters, "VolumeId", VolumeIds);
 
             return parameters;
         }
