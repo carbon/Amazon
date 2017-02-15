@@ -10,30 +10,34 @@ namespace Amazon.Security
     {
         public string GenerateStringToSign(HttpRequestMessage request)
         {
+            return string.Join(/*seperator*/ "\n",
+                request.Method,                             // Line 1   : HTTP method (POST) + \n
+                request.RequestUri.AbsolutePath,            // Line 2   : Request URI (/)    + \n
+                CanonicizeQueryString(request.RequestUri),  // Line 3   : Querystring        + \n
+                CanonicalizeHeaders(request),               // Line 4-n : Headers            + \n
+                "",                                         // newline                       + \n
+                request.Content.ReadAsStringAsync().Result  // Request body
+            );
+
             /*
-			Line 1: The HTTP method (POST), followed by a newline.
-			Line 2: The request URI (/), followed by a newline.
-			Line 3: An empty string. Typically, a query string goes here, but Amazon DynamoDB doesn't use a query string. Follow with a newline
-			Line 4-n: The string representing that canonicalized request headers you computed in step 1, followed by a newline.
-			The request body. Do not follow the request body with a newline.
-			*/
             var sb = new StringBuilder();
 
-            sb.AppendFormat("{0}\n", request.Method);
-            sb.AppendFormat("{0}\n", request.RequestUri.AbsolutePath);
-            sb.AppendFormat("{0}\n", CanonicizeQueryString(request.RequestUri));
-            sb.AppendFormat("{0}\n", CanonicalizeHeaders(request));
+            sb.Append(request.Method)                               .Append("\n");
+            sb.Append(request.RequestUri.AbsolutePath)              .Append("\n");
+            sb.Append(CanonicizeQueryString(request.RequestUri))    .Append("\n");
+            sb.Append(CanonicalizeHeaders(request))                 .Append("\n");
             sb.Append("\n");
             sb.Append(request.Content.ReadAsStringAsync().Result);
 
             return sb.ToString();
+            */
         }
 
         public string CanonicizeQueryString(Uri uri)
         {
             // TODO
 
-            return "";
+            return string.Empty;
         }
 
 
@@ -85,13 +89,12 @@ namespace Amazon.Security
             return sb.ToString();
         }
 
-        public byte[] ComputeHash(string text)
+        protected byte[] ComputeHash(string text)
         {
             using (var algorithm = SHA256.Create())
             {
                 return algorithm.ComputeHash(Encoding.UTF8.GetBytes(text));
             }
         }
-
     }
 }

@@ -16,10 +16,10 @@ namespace Amazon.Security
             var canonicalRequest = HexString.FromBytes(ComputeHash(CanonicalizeRequest(request)));
 
             var sb = new StringBuilder()
-                .Append("AWS4-HMAC-SHA256").Append("\n") // Algorithm
-                .Append(dateHeader).Append("\n") // RequestDate (ISO8601 Basic format, YYYYMMDD'T'HHMMSS'Z')
-                .Append(scope.ToString()).Append("\n") // CredentialScope
-                .Append(canonicalRequest);               // HexEncode(Hash(CanonicalRequest))
+                .Append("AWS4-HMAC-SHA256")     .Append("\n") // Algorithm
+                .Append(dateHeader)             .Append("\n") // RequestDate (ISO8601 Basic format, YYYYMMDD'T'HHMMSS'Z')
+                .Append(scope.ToString())       .Append("\n") // CredentialScope
+                .Append(canonicalRequest);                    // HexEncode(Hash(CanonicalRequest))
 
             return sb.ToString();
         }
@@ -28,22 +28,22 @@ namespace Amazon.Security
         {
             var canonicalQueryString = CanonicizeQueryString(request.RequestUri);
 
-            var sb = new StringBuilder()
-                .Append(request.Method).Append("\n")    // HTTPRequestMethod
-                .Append(request.RequestUri.AbsolutePath).Append("\n")   // CanonicalURI
-                .Append(canonicalQueryString).Append("\n")  // CanonicalQueryString
-                .Append(CanonicalizeHeaders(request)).Append("\n\n") // CanonicalHeaders
-                .Append(GetSignedHeaders(request)).Append("\n") // SignedHeaders
-                .Append(HashPayload(request));                          // HexEncode(Hash(Payload))
-
-            return sb.ToString();
+            return new StringBuilder()
+                .Append(request.Method)                     .Append("\n") // HTTPRequestMethod
+                .Append(request.RequestUri.AbsolutePath)    .Append("\n") // CanonicalURI
+                .Append(canonicalQueryString)               .Append("\n") // CanonicalQueryString
+                .Append(CanonicalizeHeaders(request))       .Append("\n") // CanonicalHeaders
+                .Append("\n")
+                .Append(GetSignedHeaders(request))          .Append("\n") // SignedHeaders
+                .Append(HashPayload(request))                             // HexEncode(Hash(Payload))
+                .ToString();
         }
 
         public string HashPayload(HttpRequestMessage request)
         {
             // HexEncode(Hash(Payload))
             // If the payload is empty, use an empty string
-            return HexString.FromBytes(ComputeHash(request.Content?.ReadAsStringAsync().Result ?? ""));
+            return HexString.FromBytes(ComputeHash(request.Content?.ReadAsStringAsync().Result ?? string.Empty));
         }
 
         private byte[] HmacSHA256(byte[] key, String data)

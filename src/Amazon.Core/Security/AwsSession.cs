@@ -1,8 +1,8 @@
-﻿namespace Amazon
-{
-    using System;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
+namespace Amazon
+{
     public class AwsSession : IAwsCredentials
     {
         public string SessionToken { get; set; }

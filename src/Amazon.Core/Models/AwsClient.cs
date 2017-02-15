@@ -80,7 +80,7 @@ namespace Amazon
 
             var date = DateTimeOffset.UtcNow;
 
-            httpRequest.Headers.UserAgent.ParseAdd("Carbon/1.4");
+            httpRequest.Headers.UserAgent.ParseAdd("Carbon/1.5");
             httpRequest.Headers.Host = httpRequest.RequestUri.Host;
             httpRequest.Headers.Date = date;
 
