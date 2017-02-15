@@ -26,11 +26,12 @@ namespace Amazon.Sns
             this.arn = $"arn:aws:sns:{region}:{accountId}:{topicName}";
         }
 
-        public async Task<string> PublishAsync(string message)
+        public Task<string> PublishAsync(string message)
         {
             #region Preconditions
 
-            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
 
             #endregion
 
@@ -41,7 +42,7 @@ namespace Amazon.Sns
                 Message = message
             };
 
-            return await client.PublishAsync(request).ConfigureAwait(false);
+            return client.PublishAsync(request);
         }
 
         public Task PublishAsync(IMessage<string> message)

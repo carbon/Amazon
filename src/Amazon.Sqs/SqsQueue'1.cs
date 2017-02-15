@@ -51,7 +51,7 @@ namespace Amazon.Sqs
 
             while (!cancelationToken.IsCancellationRequested)
             {
-                var result = await client.ReceiveMessages(url, new RecieveMessagesRequest(take, lockTime, TimeSpan.FromSeconds(20))).ConfigureAwait(false);
+                var result = await client.ReceiveMessagesAsync(url, new RecieveMessagesRequest(take, lockTime, TimeSpan.FromSeconds(20))).ConfigureAwait(false);
 
                 if (result.Length == 0) continue;
 
@@ -65,7 +65,7 @@ namespace Amazon.Sqs
         {
             var request = new RecieveMessagesRequest(take, lockTime);
 
-            return (await client.ReceiveMessages(url, request).ConfigureAwait(false))
+            return (await client.ReceiveMessagesAsync(url, request).ConfigureAwait(false))
                 .Select(m => (IQueueMessage<T>)new JsonEncodedMessage<T>(m))
                 .ToList();
         }
@@ -76,7 +76,7 @@ namespace Amazon.Sqs
 
             var text = serializer.Serialize(message).ToString(pretty: false);
 
-            return client.SendMessage(url, new SendMessageRequest(text) { Delay = delay });
+            return client.SendMessageAsync(url, new SendMessageRequest(text) { Delay = delay });
         }
 
         public async Task PutAsync(params IMessage<T>[] messages)
@@ -93,7 +93,7 @@ namespace Amazon.Sqs
                     serializer.Serialize(m.Body).ToString(pretty: false)
                 ).ToArray();
 
-                await client.SendMessageBatch(url, messageBatch).ConfigureAwait(false);
+                await client.SendMessageBatchAsync(url, messageBatch).ConfigureAwait(false);
             }
         }
 
@@ -108,7 +108,7 @@ namespace Amazon.Sqs
             {
                 try
                 {
-                    await client.DeleteMessageBatch(url, handles).ConfigureAwait(false);
+                    await client.DeleteMessageBatchAsync(url, handles).ConfigureAwait(false);
 
                     return;
                 }
