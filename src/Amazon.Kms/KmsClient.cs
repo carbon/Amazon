@@ -14,23 +14,23 @@ namespace Amazon.Kms
             : base(AwsService.Kms, region, credentials)
         { }
 
-        public Task<CreateGrantResponse> CreateGrantAsync(CreateGrantRequest request)
-            => SendAsync<CreateGrantResponse>("CreateGrant", request);
+        public Task<CreateGrantResponse> CreateGrantAsync(CreateGrantRequest request) => 
+            SendAsync<CreateGrantResponse>("CreateGrant", request);
 
-        public Task<RetireGrantResponse> RetireGrantAsync(RetireGrantRequest request)
-            => SendAsync<RetireGrantResponse>("RetireGrant", request);
+        public Task<RetireGrantResponse> RetireGrantAsync(RetireGrantRequest request) => 
+            SendAsync<RetireGrantResponse>("RetireGrant", request);
 
-        public Task<ListGrantsResponse> ListGrantsAsync(ListGrantsRequest request)
-            => SendAsync<ListGrantsResponse>("ListGrants", request);
+        public Task<ListGrantsResponse> ListGrantsAsync(ListGrantsRequest request) => 
+            SendAsync<ListGrantsResponse>("ListGrants", request);
 
-        public Task<EncryptResponse> EncryptAsync(EncryptRequest request)
-            => SendAsync<EncryptResponse>("Encrypt", request);
+        public Task<EncryptResponse> EncryptAsync(EncryptRequest request) => 
+            SendAsync<EncryptResponse>("Encrypt", request);
 
-        public Task<DecryptResponse> DecryptAsync(DecryptRequest request)
-            => SendAsync<DecryptResponse>("Decrypt", request);
+        public Task<DecryptResponse> DecryptAsync(DecryptRequest request) =>
+            SendAsync<DecryptResponse>("Decrypt", request);
 
-        public Task<GenerateDataKeyResponse> GenerateDataKeyAsync(GenerateDataKeyRequest request)
-            => SendAsync<GenerateDataKeyResponse>("GenerateDataKey", request);
+        public Task<GenerateDataKeyResponse> GenerateDataKeyAsync(GenerateDataKeyRequest request) => 
+            SendAsync<GenerateDataKeyResponse>("GenerateDataKey", request);
 
         #region Helpers
 

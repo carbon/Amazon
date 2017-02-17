@@ -111,17 +111,36 @@ namespace Amazon.Kms
 
     public class DecryptRequest : KmsRequest
     {
+        public DecryptRequest() { }
+
+        public DecryptRequest(string keyId, byte[] ciphertext, JsonObject context)
+        {
+            #region Preconditions
+
+            if (keyId == null)
+                throw new ArgumentNullException(nameof(keyId));
+
+            if (ciphertext == null)
+                throw new ArgumentNullException(nameof(ciphertext));
+
+            #endregion
+
+            KeyId = keyId;
+            CiphertextBlob = ciphertext;
+            EncryptionContext = context;
+        }
+
+        public string KeyId { get; set; }
+
+        // [MaxSize(6144)]
+        public byte[] CiphertextBlob { get; set; }
+
         // String Map
         [DataMember(EmitDefaultValue = false)]
         public JsonObject EncryptionContext { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public string[] GrantTokens { get; set; }
-
-        public string KeyId { get; set; }
-
-        // [MaxSize(6144)]
-        public byte[] CiphertextBlob { get; set; }
     }
 
     public class DecryptResponse : KmsResponse
@@ -133,6 +152,26 @@ namespace Amazon.Kms
 
     public class EncryptRequest : KmsRequest
     {
+        public EncryptRequest() { }
+
+        public EncryptRequest(string keyId, byte[] data, JsonObject context)
+        {
+            #region Preconditions
+
+            if (keyId == null)
+                throw new ArgumentNullException(nameof(keyId));
+
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+
+            #endregion
+
+            KeyId = keyId;
+            Plaintext = data;
+            EncryptionContext = context;
+        }
+
+
         /// <summary>
         /// An encryption context is a key/value pair that you can pass to 
         /// AWS KMS when you call the Encrypt function.
@@ -190,38 +229,32 @@ namespace Amazon.Kms
 
         public byte[] Plaintext { get; set; }
     }
-
-    [Flags]
+    
     public enum KeySpec
     {
-        AES_256,
-        AES_128
+        AES_256 = 1,
+        AES_128 = 2
     }
 
-    [Flags]
     public enum KmsOperation
     {
         Decrypt = 1,
         Encrypt = 2,
-        GenerateDataKey,
-        GenerateDataKeyWithoutPlaintext,
-        ReEncryptFrom,
-        ReEncryptTo,
-        CreateGrant,
-        RetireGrant
+        GenerateDataKey = 3,
+        GenerateDataKeyWithoutPlaintext = 4,
+        ReEncryptFrom = 5,
+        ReEncryptTo = 6,
+        CreateGrant = 7,
+        RetireGrant = 8
 
     }
-
-    // You can encrypt up to 4 KB of arbitrary data such as an RSA key,
-    // a database password, or other sensitive customer information.
-
 }
 
 /*
 {
    "EncryptionContext": 
     {
-        "string" :  "string"
+        "string" : "string"
     },
     "GrantTokens": [
         "string"

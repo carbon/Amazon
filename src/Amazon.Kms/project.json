@@ -2,11 +2,11 @@
   "title": "Amazon KMS",
   "description": "Simple wrapper around the Amazon's Key Management Service Service.",
 
-  "version": "0.6.0",
+  "version": "0.7.0",
   "authors": [ "iamcarbon" ],
 
   "dependencies": {
-    "Amazon.Core": "0.6.0"
+    "Amazon.Core": "0.7.0"
   },
 
   "frameworks": {
