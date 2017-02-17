@@ -60,8 +60,8 @@ namespace Amazon.Sqs
             return Array.Empty<IQueueMessage<string>>();
         }
 
-        public async Task<IReadOnlyList<IQueueMessage<string>>> GetAsync(int take, TimeSpan? lockTime)
-            => (await client.ReceiveMessagesAsync(url, new RecieveMessagesRequest(take, lockTime)).ConfigureAwait(false));
+        public async Task<IReadOnlyList<IQueueMessage<string>>> GetAsync(int take, TimeSpan? lockTime) => 
+            (await client.ReceiveMessagesAsync(url, new RecieveMessagesRequest(take, lockTime)).ConfigureAwait(false));
 
         public async Task PutAsync(params IMessage<string>[] messages)
         {

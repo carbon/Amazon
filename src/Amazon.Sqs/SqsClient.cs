@@ -85,8 +85,7 @@ namespace Amazon.Sqs
 
         public async Task<SendMessageResult> SendMessageAsync(Uri queueUrl, SendMessageRequest request)
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl)
-            {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(request.ToParams())
             };
 
@@ -103,8 +102,7 @@ namespace Amazon.Sqs
 
             #endregion
 
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl)
-            {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(request.ToParams())
             };
 
@@ -120,8 +118,7 @@ namespace Amazon.Sqs
                 { "ReceiptHandle", recieptHandle }
             };
 
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl)
-            {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(parameters)
             };
 
@@ -136,7 +133,7 @@ namespace Amazon.Sqs
                 throw new ArgumentNullException(nameof(recieptHandles));
 
             if (recieptHandles.Length > 10)
-                throw new ArgumentException("Must be 10 or fewer.", "messages.Length");
+                throw new ArgumentException("Must contain 10 or fewer items.", nameof(recieptHandles));
 
             // Max payload = 64KB (65,536 bytes)
 
@@ -156,8 +153,7 @@ namespace Amazon.Sqs
                 parameters.Add(prefix + "ReceiptHandle", handle);   // DeleteMessageBatchRequestEntry.n.ReceiptHandle			Required
             }
 
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl)
-            {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(parameters)
             };
 

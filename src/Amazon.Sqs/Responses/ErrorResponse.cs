@@ -14,7 +14,6 @@ namespace Amazon.Sqs.Models
                 Code = errorEl.Element("Code").Value,
                 Message = errorEl.Element("Message").Value
             };
-
         }
     }
 }
@@ -22,12 +21,8 @@ namespace Amazon.Sqs.Models
 /*
 <ErrorResponse>
    <Error>
-      <Type>
-         Sender
-      </Type>
-      <Code>
-         InvalidParameterValue
-      </Code>
+      <Type>Sender</Type>
+      <Code>InvalidParameterValue</Code>
       <Message>
          Value (quename_nonalpha) for parameter QueueName is invalid.
          Must be an alphanumeric String of 1 to 80 in length

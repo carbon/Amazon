@@ -14,19 +14,23 @@ namespace Amazon.Sqs
 
             foreach (var entryEl in batchResultEl.Elements(SqsClient.NS + "DeleteMessageBatchResultEntry"))
             {
-                list.Add(new DeleteMessageBatchResultEntry
-                {
-                    Id = entryEl.Element(SqsClient.NS + "Id").Value,
-                });
+                list.Add(new DeleteMessageBatchResultEntry(
+                    id: entryEl.Element(SqsClient.NS + "Id").Value
+                ));
             }
 
             return list;
         }
     }
 
-    public class DeleteMessageBatchResultEntry
+    public struct DeleteMessageBatchResultEntry
     {
-        public string Id { get; set; }
+        public DeleteMessageBatchResultEntry(string id)
+        {
+            Id = id;
+        }
+
+        public string Id { get; }
     }
 }
 

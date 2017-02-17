@@ -1,41 +1,43 @@
-﻿namespace Amazon.Sqs
+﻿using System;
+
+using Carbon.Messaging;
+
+namespace Amazon.Sqs
 {
-	using System;
+    public class SqsMessage : IQueueMessage<string>
+    {
+        public SqsMessage() { }
 
-	using Carbon.Messaging;
+        public SqsMessage(string body)
+        {
+            #region Preconditions
 
-	public class SqsMessage : IQueueMessage<string>
-	{
-		public SqsMessage() { }
+            if (body == null) throw new ArgumentNullException(nameof(body));
 
-		public SqsMessage(string body)
-		{
-			#region Preconditions
+            #endregion
 
-			if(body == null) throw new ArgumentNullException("body");
+            Body = body;
+        }
 
-			#endregion
+        public string Id { get; set; }
 
-			Body = body;
-		}
+        public MessageReceipt Receipt { get; set; }
 
-		public string Id { get; set; }
+        public string Body { get; set; }
 
-		public MessageReceipt Receipt { get; set; }
+        public DateTime Created { get; set; }
 
-		public string Body { get; set; }
+        public DateTime Expires { get; set; }
 
-		public DateTime Created { get; set; }
+        public int ApproximateReceiveCount { get; set; }
 
-		public DateTime Expires { get; set; }
+        // FIFO queues only (128 bits)
+        public string SequenceNumber { get; set; }
 
-		public int ApproximateReceiveCount { get; set; }
+        // TODO: Attributes
+    }
 
-		// TODO: Attributes
-	}
-
-
-	/*
+    /*
 	Body—The message's contents (not URL-encoded)
 	MD5OfBody—An MD5 digest of the non-URL-encoded message body string.
 	MessageId—The message's SQS-assigned ID.

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Amazon.Sqs
 {
@@ -15,16 +14,19 @@ namespace Amazon.Sqs
         {
             #region Preconditions
 
-            if (take > 10) throw new ArgumentException("Must be less than 10", "limit");
+            if (take > 10)
+            {
+                throw new ArgumentException("Must be less than 10", nameof(take));
+            }
 
             if (lockTime != null && lockTime.Value.TotalHours > 12)
             {
-                throw new ArgumentException("Must be less than 12 hours ", "lockTime");
+                throw new ArgumentException("Must be less than 12 hours ", nameof(lockTime));
             }
 
             if (waitTime != null && waitTime.Value.TotalSeconds > 20)
             {
-                throw new ArgumentException("Must be less than 20 seconds ", "waitTime");
+                throw new ArgumentException("Must be less than 20 seconds ", nameof(waitTime));
             }
 
             #endregion

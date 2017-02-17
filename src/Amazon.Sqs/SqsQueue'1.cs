@@ -140,8 +140,8 @@ namespace Amazon.Sqs
             Body = JsonObject.Parse(model.Body).As<T>();
         }
 
-        public static JsonEncodedMessage<T> Create(SqsMessage message)
-            => new JsonEncodedMessage<T>(message);
+        public static JsonEncodedMessage<T> Create(SqsMessage message) => 
+            new JsonEncodedMessage<T>(message);
 
         public string Id => model.Id;
 

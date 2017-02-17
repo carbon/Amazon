@@ -4,8 +4,6 @@ namespace Amazon.Sqs
 {
     public class SendMessageRequest
     {
-        private readonly string body;
-
         public SendMessageRequest(string body)
         {
             #region Preconditions
@@ -14,8 +12,16 @@ namespace Amazon.Sqs
 
             #endregion
 
-            this.body = body;
+            MessageBody = body;
         }
+
+        public string MessageBody { get; }
+
+        // 128 characters
+        public string MessageDeduplicationId { get; set; }
+
+        // Required for FIFO queues
+        public string MessageGroupId { get; set; }
 
         /// <summary>
         /// The number of seconds (0 to 900 - 15 minutes) to delay a specific message. 
@@ -30,7 +36,7 @@ namespace Amazon.Sqs
         {
             var parameters = new SqsRequest {
                 { "Action", "SendMessage" },
-                { "MessageBody", body }
+                { "MessageBody", MessageBody }
             };
 
             // Defaults to the queue visibility timeout
@@ -39,8 +45,17 @@ namespace Amazon.Sqs
                 parameters.Add("DelaySeconds", (int)Delay.Value.TotalSeconds);
             }
 
+            if (MessageDeduplicationId != null)
+            {
+                parameters.Add("MessageDeduplicationId", MessageDeduplicationId);
+            }
+
+            if (MessageGroupId != null)
+            {
+                parameters.Add("MessageGroupId", MessageGroupId);
+            }
+
             return parameters;
         }
-
     }
 }

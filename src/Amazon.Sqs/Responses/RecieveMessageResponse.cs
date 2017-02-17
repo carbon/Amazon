@@ -13,14 +13,17 @@ namespace Amazon.Sqs.Models
 
             var receiveMessageResultEl = rootEl.Element(SqsClient.NS + "ReceiveMessageResult");
 
+            
             foreach (var messageEl in receiveMessageResultEl.Elements(SqsClient.NS + "Message"))
             {
-                yield return new SqsMessage
-                {
-                    Id = messageEl.Element(SqsClient.NS + "MessageId").Value,
-                    Receipt = new MessageReceipt(messageEl.Element(SqsClient.NS + "ReceiptHandle").Value),
-                    Body = messageEl.Element(SqsClient.NS + "Body").Value
+                var message = new SqsMessage {
+                    Id              = messageEl.Element(SqsClient.NS + "MessageId").Value,
+                    Receipt         = new MessageReceipt(messageEl.Element(SqsClient.NS + "ReceiptHandle").Value),
+                    Body            = messageEl.Element(SqsClient.NS + "Body").Value,
+                    SequenceNumber  = messageEl.Element(SqsClient.NS + "SequenceNumber")?.Value
                 };
+                
+                yield return message;
             }
         }
     }
