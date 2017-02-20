@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 
 namespace Amazon
 {
+    using Helpers;
+
+    // AccessKey
+
     public class AwsCredentials : IAwsCredentials
     {
         public AwsCredentials(string accessKeyId, string secretAccessKey)
@@ -21,11 +25,28 @@ namespace Amazon
             SecretAccessKey = secretAccessKey;
         }
 
+        // 16 - 32 characters
         public string AccessKeyId { get; }
 
         public string SecretAccessKey { get; }
 
         public string SecurityToken => null;
+
+        // {id}:{secret}
+
+        public static AwsCredentials Parse(string text)
+        {
+            #region Preconditions
+
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            #endregion
+
+            var parts = text.Split(Seperators.Colon);
+
+            return new AwsCredentials(parts[0], parts[1]);
+        }
 
         #region Renewable
 

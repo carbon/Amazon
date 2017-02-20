@@ -9,6 +9,7 @@ using System.Text.Encodings.Web;
 namespace Amazon.Security
 {
     using Helpers;
+    using System.Net;
 
     public class SignerV4
     {
@@ -112,8 +113,11 @@ namespace Amazon.Security
         {
             #region Preconditions
 
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-            if (scope == null) throw new ArgumentNullException(nameof(scope));
+            if (credentials == null)
+                throw new ArgumentNullException(nameof(credentials));
+
+            if (scope == null)
+                throw new ArgumentNullException(nameof(scope));
 
             #endregion
 
@@ -191,12 +195,12 @@ namespace Amazon.Security
             }
 
             foreach (var part in query.Split(Seperators.Ampersand)) // &
-            {
+            {             
                 var split = part.Split(Seperators.Equal); // =
 
                 yield return new KeyValuePair<string, string>(
-                    key   : Uri.EscapeUriString(split[0]),
-                    value : split.Length == 2 ? Uri.EscapeUriString(split[1]) : string.Empty
+                    key   : WebUtility.UrlDecode(split[0]),
+                    value : split.Length == 2 ? WebUtility.UrlDecode(split[1]) : string.Empty
                 );
             }
         }
@@ -249,7 +253,7 @@ namespace Amazon.Security
             return sb.ToString();
         }
 
-        public SignatureInfo GetInfo(AwsCredentials credentials, CredentialScope scope, HttpRequestMessage request)
+        public SignatureInfo GetInfo(IAwsCredentials credentials, CredentialScope scope, HttpRequestMessage request)
         {
             var signingKey = GetSigningKey(credentials, scope);
 

@@ -52,7 +52,6 @@ namespace Amazon
 
                 return result;
             }
-            
         }
     }
 }

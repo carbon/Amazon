@@ -10,7 +10,6 @@
 
   "frameworks": {
     "netstandard1.6": {
-      "imports": "dnxcore50",
       "dependencies": {
         "System.Linq": "4.3.0",
         "System.Net.Http": "4.3.0",
@@ -31,7 +30,7 @@
   },
 
   "packOptions": {
-    "tags": [ "aws" ],
+    "tags": [ "carbon", "aws" ],
     "requireLicenseAcceptance": false,
     "licenseUrl": "https://github.com/carbon/Amazon/blob/master/LICENSE",
     "repository": {

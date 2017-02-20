@@ -4,6 +4,7 @@
     {
         public static readonly char[] Ampersand = { '&' };
         public static readonly char[] Equal     = { '=' };
+        public static readonly char[] Colon     = { ':' };
 
     }
 }
