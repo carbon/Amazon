@@ -1,8 +1,8 @@
-﻿using Carbon.Json;
-
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+
+using Carbon.Json;
 
 namespace Amazon.Lambda
 {
@@ -10,7 +10,7 @@ namespace Amazon.Lambda
     {
         public const string Version = "2015-03-31";
 
-        public LambdaClient(AwsRegion region, AwsCredentials credentials)
+        public LambdaClient(AwsRegion region, IAwsCredentials credentials)
             : base(AwsService.Lambda, region, credentials)
         { }
 

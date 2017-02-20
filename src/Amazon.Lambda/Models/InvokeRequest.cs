@@ -27,14 +27,14 @@ namespace Amazon.Lambda
 
     public enum InvocationType
     {
-        Event,
-        RequestResponse,
-        DryRun
+        Event = 1,
+        RequestResponse = 2,
+        DryRun =3
     }
 
     public enum LogType
     {
-        None,
-        Tail
+        None = 0,
+        Tail = 1
     }
 }
