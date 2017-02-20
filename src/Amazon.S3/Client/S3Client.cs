@@ -14,10 +14,10 @@ namespace Amazon.S3
     {
         public static readonly XNamespace NS = "http://s3.amazonaws.com/doc/2006-03-01/";
 
-        public S3Client(AwsCredentials credentials)
+        public S3Client(IAwsCredentials credentials)
             : this(AwsRegion.Standard, credentials) { }
 
-        public S3Client(AwsRegion region, AwsCredentials credentials)
+        public S3Client(AwsRegion region, IAwsCredentials credentials)
             : base(AwsService.S3, region, credentials) { }
 
         public void SetTimeout(TimeSpan timeout)

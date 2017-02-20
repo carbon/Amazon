@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Net.Http;
-using System.IO;
-using System.Security.Cryptography;
 
 using Carbon.Storage;
 
@@ -12,7 +10,7 @@ namespace Amazon.S3
 {
     using Scheduling;
  
-    public class S3Bucket : IBucket
+    public class S3Bucket : IBucket, IReadOnlyBucket
     {
         private readonly S3Client s3;
         private readonly string bucketName;
@@ -22,10 +20,10 @@ namespace Amazon.S3
              maxDelay     : TimeSpan.FromSeconds(3),
              maxRetries   : 5);
 
-        public S3Bucket(string bucketName, AwsCredentials credentials)
+        public S3Bucket(string bucketName, IAwsCredentials credentials)
             : this(AwsRegion.Standard, bucketName, credentials) { }
               
-        public S3Bucket(AwsRegion region, string bucketName, AwsCredentials credentials)
+        public S3Bucket(AwsRegion region, string bucketName, IAwsCredentials credentials)
             : this(bucketName, client: new S3Client(region, credentials)) { }
 
         public S3Bucket(string bucketName, S3Client client)
@@ -52,8 +50,7 @@ namespace Amazon.S3
             return this;
         }
 
-        public Task<IReadOnlyList<IBlob>> ListAsync(string prefix)
-            => ListAsync(prefix, null, 1000);
+        public Task<IReadOnlyList<IBlob>> ListAsync(string prefix) => ListAsync(prefix, null, 1000);
         
         public async Task<IReadOnlyList<IBlob>> ListAsync(string prefix, string continuationToken, int take = 1000)
         {
@@ -102,8 +99,8 @@ namespace Amazon.S3
             return result.Headers;
         }
 
-        public Task<RestoreObjectResult> InitiateRestoreAsync(string key, int days)
-            => s3.RestoreObjectAsync(new RestoreObjectRequest(s3.Region, bucketName, key, days));
+        public Task<RestoreObjectResult> InitiateRestoreAsync(string key, int days) => 
+            s3.RestoreObjectAsync(new RestoreObjectRequest(s3.Region, bucketName, key, days));
 
         public async Task<CopyObjectResult> PutAsync(string key, S3ObjectLocation sourceLocation, IDictionary<string, string> metadata = null)
         {
@@ -114,7 +111,7 @@ namespace Amazon.S3
             {
                 try
                 {
-                    return await _PutAsync(key, sourceLocation, metadata).ConfigureAwait(false);
+                    return await PutInternalAsync(key, sourceLocation, metadata).ConfigureAwait(false);
                 }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {
@@ -129,7 +126,7 @@ namespace Amazon.S3
             throw new S3Exception($"Unrecoverable exception copying '{sourceLocation}' to '{key}'", lastException);
         }
 
-        private Task<CopyObjectResult> _PutAsync(string key, S3ObjectLocation sourceLocation, IDictionary<string, string> metadata = null)
+        private Task<CopyObjectResult> PutInternalAsync(string key, S3ObjectLocation sourceLocation, IDictionary<string, string> metadata = null)
         {
             var request = new CopyObjectRequest(
                 region : s3.Region,
@@ -145,8 +142,7 @@ namespace Amazon.S3
                     {
                         case "Content-Encoding" : request.Content.Headers.ContentEncoding.Add(item.Value); break;
                         case "Content-Type"     : request.Content.Headers.ContentType = new MediaTypeHeaderValue(item.Value); break;
-
-                        default: request.Headers.Add(item.Key, item.Value); break;
+                        default                 : request.Headers.Add(item.Key, item.Value); break;
                     }
                 }
             }
@@ -207,16 +203,9 @@ namespace Amazon.S3
                     case "Last-Modified": continue;
 
                     case "x-amz-request-id": continue;
-                    
 
                     default                 : request.Headers.Add(item.Key, item.Value); break;
                 }
-            }
-            
-            if (stream.CanSeek)
-            {
-                // Add a checksum (base64 encoded) to verify the integrity of the transfer
-                request.Content.Headers.ContentMD5 = ComputeMD5(stream);
             }
 
             await s3.PutObjectAsync(request).ConfigureAwait(false);
@@ -232,7 +221,7 @@ namespace Amazon.S3
 
             var initiateRequest = new InitiateMultipartUploadRequest(s3.Region, bucketName, key);
 
-            initiateRequest.Content = new StringContent("");
+            initiateRequest.Content = new StringContent(string.Empty);
 
             foreach (var item in blob.Metadata)
             {
@@ -255,12 +244,6 @@ namespace Amazon.S3
                     {
                         var partRequest = new UploadPartRequest(s3.Region, bucketName, key, parts.Count + 1, session.UploadId);
 
-                        if (slice.Stream.CanSeek)
-                        {
-                            // Add a checksum (base64 encoded) to verify the integrity of the transfer
-                            partRequest.Content.Headers.ContentMD5 = ComputeMD5(slice.Stream);
-                        }
-
                         partRequest.SetStream(slice.Stream);
 
                         var part = await s3.UploadPartAsync(partRequest).ConfigureAwait(false);
@@ -275,8 +258,8 @@ namespace Amazon.S3
             }
         }
 
-        public Task DeleteAsync(string key, string version = null)
-            => s3.DeleteObjectAsync(new DeleteObjectRequest(bucketName, key, version));
+        public Task DeleteAsync(string key, string version = null) => 
+            s3.DeleteObjectAsync(new DeleteObjectRequest(s3.Region, bucketName, key, version));
 
         public async Task DeleteAsync(string[] keys)
         {
@@ -296,22 +279,5 @@ namespace Amazon.S3
                 throw new Exception("Deleted count not equal to keys.Count");
             }
         }
-
-
-        #region Helpers
-
-        private byte[] ComputeMD5(Stream stream)
-        {
-            using (var md5 = MD5.Create())
-            {
-                var data = md5.ComputeHash(stream);
-
-                stream.Position = 0;
-
-                return data;
-            }
-        }
-
-        #endregion
     }
 }

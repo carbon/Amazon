@@ -3,7 +3,7 @@
   "description": "A simple wrapper around Amazon's Simple Storage Service.",
   "authors": [ "iamcarbon" ],
 
-  "version": "0.7.0",
+  "version": "0.7.1",
 
   "dependencies": {
     "Amazon.Core": "0.7.0",
@@ -12,7 +12,6 @@
 
   "frameworks": {
     "netstandard1.6": {
-      "imports": "dnxcore50",
       "dependencies": {
         "System.Runtime": "4.3.0",
         "System.Xml.XDocument": "4.3.0",
@@ -20,7 +19,6 @@
         "System.Security.Cryptography.Algorithms": "4.3.0",
         "System.Net.Http": "4.3.0",
         "System.Collections": "4.3.0"
-
       }
     },
     "net461": {

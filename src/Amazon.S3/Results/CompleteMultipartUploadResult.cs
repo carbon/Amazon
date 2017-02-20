@@ -34,7 +34,6 @@ namespace Amazon.S3
             {
                 return (CompleteMultipartUploadResult)serializer.Deserialize(reader);
             }
-
         }
     }
 }
