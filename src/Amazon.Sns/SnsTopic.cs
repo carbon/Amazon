@@ -10,7 +10,7 @@ namespace Amazon.Sns
         private readonly SnsClient client;
         private readonly string arn;
 
-        public SnsTopic(AwsRegion region, string accountId, string topicName, AwsCredentials credentials)
+        public SnsTopic(AwsRegion region, string accountId, string topicName, IAwsCredentials credentials)
         {
             #region Preconditions
 

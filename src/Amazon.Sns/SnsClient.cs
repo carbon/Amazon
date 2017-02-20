@@ -8,7 +8,7 @@ namespace Amazon.Sns
     {
         public const string Version = "2010-03-31";
 
-        public SnsClient(AwsRegion region, AwsCredentials credentials)
+        public SnsClient(AwsRegion region, IAwsCredentials credentials)
             : base(AwsService.Sns, region, credentials)
         { }
 
