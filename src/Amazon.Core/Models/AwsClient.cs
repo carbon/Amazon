@@ -86,7 +86,7 @@ namespace Amazon
 
             if (credentials.SecurityToken != null)
             {
-                httpRequest.Headers.Add("X-Amz-Security-Token", credentials.SecurityToken);
+                httpRequest.Headers.Add("x-amz-security-token", credentials.SecurityToken);
             }
 
             httpRequest.Headers.Add("x-amz-date", date.UtcDateTime.ToString("yyyyMMddTHHmmssZ"));
