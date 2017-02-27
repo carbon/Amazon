@@ -1,11 +1,11 @@
 ﻿namespace Amazon.S3
 {
-    public interface IUploadPart
+    public interface IUploadBlock
     {
-        int PartNumber { get; }
-
         string UploadId { get; }
 
         string ETag { get; }
+
+        int Number { get; }
     }
 }

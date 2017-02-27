@@ -15,19 +15,19 @@ namespace Amazon.S3
         private readonly Dictionary<string, string> headers = new Dictionary<string, string>();
         private readonly HttpResponseMessage response;
 
-        public S3Object(string key, HttpResponseMessage response)
+        public S3Object(string name, HttpResponseMessage response)
         {
             #region Preconditions
 
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
 
             if (response == null)
                 throw new ArgumentNullException(nameof(response));
 
             #endregion
 
-            Key = key;
+            Key = name;
 
             foreach (var header in response.Headers)
             {
@@ -91,7 +91,7 @@ namespace Amazon.S3
 
         DateTime IBlob.Modified => (LastModified ?? DateTimeOffset.MinValue).UtcDateTime;
 
-        IDictionary<string, string> IBlob.Metadata => headers;
+        IReadOnlyDictionary<string, string> IBlob.Metadata => headers;
 
         #endregion
 

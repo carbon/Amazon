@@ -2,9 +2,9 @@
 
 namespace Amazon.S3
 {
-    public class UploadPartResult : IUploadPart
+    public class UploadPartResult : IUploadBlock
     {
-        public UploadPartResult(int partNumber, string uploadId, string eTag)
+        public UploadPartResult(string uploadId, int partNumber, string eTag)
         {
             #region Preconditions
 
@@ -19,9 +19,9 @@ namespace Amazon.S3
 
             #endregion
 
+            UploadId   = uploadId;
             PartNumber = partNumber;
-            UploadId = uploadId;
-            ETag = eTag;
+            ETag       = eTag;
         }
 
         public int PartNumber { get; }
@@ -29,5 +29,13 @@ namespace Amazon.S3
         public string UploadId { get; }
 
         public string ETag { get; }
+
+        #region IUploadBlock
+
+        int IUploadBlock.Number => PartNumber;
+
+        string IUploadBlock.ETag => ETag;
+
+        #endregion
     }
 }

@@ -5,26 +5,29 @@ namespace Amazon.S3
     // PUT /ObjectName?partNumber=PartNumber&uploadId=UploadId
     public class UploadPartRequest : PutObjectRequest
     {
-        public UploadPartRequest(AwsRegion region, string bucketName, string key, int partNumber, string uploadId)
+        public UploadPartRequest(AwsRegion region, IUpload upload, int partNumber)
+            : this(region, upload.BucketName, upload.ObjectName, upload.Id, partNumber) { }
+
+            public UploadPartRequest(AwsRegion region, string bucketName, string key, string uploadId, int partNumber)
             : base(region, bucketName, key + $"?partNumber={partNumber}&uploadId={uploadId}")
         {
             #region Preconditions
 
-            if (partNumber < 1 || partNumber > 10000)
-                throw new ArgumentOutOfRangeException("partNumber", partNumber, "Must be between 1 and 10,000");
-
             if (uploadId == null)
                 throw new ArgumentNullException(nameof(uploadId));
 
+            if (partNumber < 1 || partNumber > 10000)
+                throw new ArgumentOutOfRangeException(nameof(partNumber), partNumber, "Must be between 1 and 10,000");
+
             #endregion
 
-            PartNumber = partNumber;
             UploadId = uploadId;
+            PartNumber = partNumber;
         }
 
-        public int PartNumber { get; }
-
         public string UploadId { get; }
+
+        public int PartNumber { get; }
     }
 }
 

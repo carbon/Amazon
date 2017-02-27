@@ -10,7 +10,7 @@ namespace Amazon.S3
     {
         private static readonly Dictionary<string, string> emptyStringDictionary = new Dictionary<string, string>();
 
-        public static string GetSignedUrl(GetUrlRequest request, AwsCredentials credentials)
+        public static string GetSignedUrl(GetUrlRequest request, IAwsCredentials credentials)
         {
             // You can specify any future expiration time in epoch or UNIX time (number of seconds since January 1, 1970).
 

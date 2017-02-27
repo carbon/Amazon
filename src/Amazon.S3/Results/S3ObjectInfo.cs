@@ -78,7 +78,7 @@ namespace Amazon.S3
 
         string IBlob.Name => Key;
 
-        IDictionary<string, string> IBlob.Metadata => Headers;
+        IReadOnlyDictionary<string, string> IBlob.Metadata => Headers;
 
         Stream IBlob.Open()
         {

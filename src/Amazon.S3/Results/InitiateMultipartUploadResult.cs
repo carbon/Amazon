@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace Amazon.S3
 {
     [XmlRoot(Namespace = "http://s3.amazonaws.com/doc/2006-03-01/")]
-    public class InitiateMultipartUploadResult
+    public class InitiateMultipartUploadResult : IUpload
     {
         [XmlElement]
         public string Bucket { get; set; }
@@ -17,6 +17,16 @@ namespace Amazon.S3
         public string UploadId { get; set; }
 
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(InitiateMultipartUploadResult));
+
+        #region IUpload
+
+        string IUpload.BucketName => Bucket;
+
+        string IUpload.ObjectName => Key;
+
+        string IUpload.Id => UploadId;
+
+        #endregion
 
         public static InitiateMultipartUploadResult ParseXml(string xmlText)
         {
@@ -32,6 +42,17 @@ namespace Amazon.S3
                 return (InitiateMultipartUploadResult)serializer.Deserialize(reader);
             }
         }
+    }
+
+    // TODO: Replace with Carbon.Storage.Uploads.IUpload (1.5)
+
+    public interface IUpload
+    {
+        string BucketName { get; }
+
+        string ObjectName { get; }
+
+        string Id { get; }
     }
 }
 

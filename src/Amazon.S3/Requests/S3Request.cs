@@ -8,7 +8,7 @@ namespace Amazon.S3
 {
     public abstract class S3Request : HttpRequestMessage
     {
-        public S3Request(HttpMethod method, AwsRegion region, string bucketName, string objectKey, string version = null)
+        public S3Request(HttpMethod method, AwsRegion region, string bucketName, string objectName, string version = null)
         {
             #region Preconditions
 
@@ -21,7 +21,7 @@ namespace Amazon.S3
             #endregion
 
             BucketName = bucketName;
-            Key = objectKey;
+            ObjectName = objectName;
 
             // https://{bucket}.s3.amazonaws.com/{key}
 
@@ -32,9 +32,11 @@ namespace Amazon.S3
                 .Append(S3Host.Get(region))
                 .Append("/");
 
-            if (objectKey != null)
+            // s3.dualstack.{region.Name}.amazonaws.com
+
+            if (objectName != null)
             {
-                urlBuilder.Append(objectKey);
+                urlBuilder.Append(objectName);
             }
 
             if (version != null)
@@ -43,9 +45,7 @@ namespace Amazon.S3
                 urlBuilder.Append(version);
             }
 
-            var url = urlBuilder.ToString();
-
-            RequestUri = new Uri(url);
+            RequestUri = new Uri(urlBuilder.ToString());
             Method = method;
             CompletionOption = HttpCompletionOption.ResponseHeadersRead;
         }
@@ -57,12 +57,11 @@ namespace Amazon.S3
 
         public string BucketName { get; }
 
-        public string Key { get; }
+        public string ObjectName { get; }
 
         public HttpCompletionOption CompletionOption { get; set; }
 
         #region Helpers
-
 
         protected byte[] ComputeSHA256(Stream stream)
         {
@@ -81,15 +80,8 @@ namespace Amazon.S3
 
     internal static class S3Host
     {
-        public static string Get(AwsRegion region)
-        {
-            if (region.Name == "google")
-            {
-                return "storage.googleapis.com";
-            }
-          
-            // Use dualstack to support IP6 in the future
-            return $"s3.dualstack.{region.Name}.amazonaws.com";
-        }
+        // Use dualstack to support IP6 in the future
+        public static string Get(AwsRegion region) =>
+            $"s3.dualstack.{region.Name}.amazonaws.com";
     }
 }

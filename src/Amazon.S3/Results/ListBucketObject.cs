@@ -31,7 +31,7 @@ namespace Amazon.S3
 
         DateTime IBlob.Modified => LastModified;
 
-        IDictionary<string, string> IBlob.Metadata => null;
+        IReadOnlyDictionary<string, string> IBlob.Metadata => null;
 
         Stream IBlob.Open()
         {

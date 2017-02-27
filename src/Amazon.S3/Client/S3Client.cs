@@ -50,9 +50,9 @@ namespace Amazon.S3
             using (var response = await SendAsync2(request).ConfigureAwait(false))
             {
                 return new UploadPartResult(
-                    partNumber  : request.PartNumber,
-                    uploadId    : request.UploadId,
-                    eTag        : response.Headers.ETag.Tag
+                    uploadId   : request.UploadId,
+                    partNumber : request.PartNumber,
+                    eTag       : response.Headers.ETag.Tag
                 );
             }
         }
@@ -111,7 +111,7 @@ namespace Amazon.S3
         {
             var response = await SendAsync2(request).ConfigureAwait(false);
 
-            return new S3Object(request.Key, response);
+            return new S3Object(request.ObjectName, response);
         }
 
         public async Task<S3ObjectInfo> GetObjectHeadAsync(ObjectHeadRequest request)
@@ -120,7 +120,7 @@ namespace Amazon.S3
             {
                 return new S3ObjectInfo(
                     bucketName : request.BucketName,
-                    name       : request.Key,
+                    name       : request.ObjectName,
                     response   : response
                 );
             }
@@ -141,7 +141,6 @@ namespace Amazon.S3
             }
 
             return response;
-
         }
 
         #region Helpers

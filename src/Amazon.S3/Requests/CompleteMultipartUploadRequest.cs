@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using System.Text;
 using System.Net.Http;
 using System.Xml.Linq;
@@ -7,13 +7,12 @@ namespace Amazon.S3
 {
     public class CompleteMultipartUploadRequest : S3Request
     {
-        private readonly IList<IUploadPart> parts;
+        public CompleteMultipartUploadRequest(AwsRegion region, IUpload upload, IUploadBlock[] parts)
+            : this(region, upload.BucketName, upload.ObjectName, upload.Id, parts) { }
 
-        public CompleteMultipartUploadRequest(AwsRegion region, string bucketName, string key, string uploadId, IList<IUploadPart> parts)
+        public CompleteMultipartUploadRequest(AwsRegion region, string bucketName, string key, string uploadId, IUploadBlock[] parts)
             : base(HttpMethod.Post, region, bucketName, key + "?uploadId=" + uploadId)
         {
-            this.parts = parts;
-
             CompletionOption = HttpCompletionOption.ResponseContentRead;
 
             Content = new StringContent(
@@ -26,12 +25,19 @@ namespace Amazon.S3
 
     public class CompleteMultipartUpload
     {
-        public CompleteMultipartUpload(IList<IUploadPart> parts)
+        public CompleteMultipartUpload(IUploadBlock[] parts)
         {
+            #region Preconditions
+
+            if (parts == null)
+                throw new ArgumentNullException(nameof(parts));
+
+            #endregion
+
             Parts = parts;
         }
 
-        public IList<IUploadPart> Parts { get; }
+        public IUploadBlock[] Parts { get; }
 
         public string ToXmlString()
         {
@@ -40,7 +46,7 @@ namespace Amazon.S3
             foreach (var part in Parts)
             {
                 root.Add(new XElement("Part",
-                    new XElement("PartNumber", part.PartNumber),
+                    new XElement("PartNumber", part.Number),
                     new XElement("ETag", part.ETag)
                 ));
             }

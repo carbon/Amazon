@@ -6,13 +6,9 @@ namespace Amazon.S3
 {
     public class RestoreObjectRequest : S3Request
     {
-        private readonly int days;
-
-        public RestoreObjectRequest(AwsRegion region, string bucketName, string key, int days)
+        public RestoreObjectRequest(AwsRegion region, string bucketName, string key)
             : base(HttpMethod.Post, region, bucketName, key + "?restore")
         {
-            this.days = days;
-
             var xmlText = GetXmlString();
 
             Content = new StringContent(xmlText, Encoding.UTF8, "text/xml");
@@ -21,11 +17,30 @@ namespace Amazon.S3
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }
 
+        public GlacierJobTier Tier { get; set; } = GlacierJobTier.Standard;
+
+        public int Days { get; set; } = 7; // Default to 7
+
         public string GetXmlString() =>
 $@"<RestoreRequest>
-   <Days>{days}</Days>
+  <Days>{Days}</Days>
+  <GlacierJobParameters>
+    <Tier>{Tier}</Tier>
+  </GlacierJobParameters>
 </RestoreRequest>";
-        
+    }
+
+
+    public class GlacierJobParameters
+    {
+        public GlacierJobTier Tier { get; }
+    }
+
+    public enum GlacierJobTier
+    {
+        Standard  = 0,
+        Expedited = 1,
+        Bulk      = 2
     }
 }
 
