@@ -6,12 +6,11 @@
   "version": "0.6.1",
 
   "dependencies": {
-    "Amazon.Core": "0.6.0"
+    "Amazon.Core": "0.7.0"
   },
 
   "frameworks": {
     "netstandard1.6": {
-      "imports": "dnxcore50",
       "dependencies": {
         "System.Runtime": "4.3.0",
         "System.Xml.XmlSerializer": "4.3.0",
