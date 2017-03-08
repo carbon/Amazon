@@ -10,7 +10,7 @@ namespace Amazon.Sns
         private readonly SnsClient client;
         private readonly string arn;
 
-        public SnsTopic(AwsRegion region, string accountId, string topicName, IAwsCredentials credentials)
+        public SnsTopic(AwsRegion region, string accountId, string topicName, IAwsCredential credential)
         {
             #region Preconditions
 
@@ -22,7 +22,7 @@ namespace Amazon.Sns
 
             #endregion
 
-            this.client = new SnsClient(region, credentials);
+            this.client = new SnsClient(region, credential);
             this.arn = $"arn:aws:sns:{region}:{accountId}:{topicName}";
         }
 
@@ -45,7 +45,7 @@ namespace Amazon.Sns
             return client.PublishAsync(request);
         }
 
-        public Task PublishAsync(IMessage<string> message)
-            => PublishAsync(message.Body);
+        public Task PublishAsync(IMessage<string> message) =>
+            PublishAsync(message.Body);
     }
 }

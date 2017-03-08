@@ -8,8 +8,8 @@ namespace Amazon.Sns
     {
         public const string Version = "2010-03-31";
 
-        public SnsClient(AwsRegion region, IAwsCredentials credentials)
-            : base(AwsService.Sns, region, credentials)
+        public SnsClient(AwsRegion region, IAwsCredential credential)
+            : base(AwsService.Sns, region, credential)
         { }
 
         public async Task<string> PublishAsync(PublishRequest request)
