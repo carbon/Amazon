@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kinesis
+﻿using System;
+
+namespace Amazon.Kinesis
 {
     public class DescribeStreamRequest : KinesisRequest
     {
@@ -6,7 +8,7 @@
 
         public DescribeStreamRequest(string streamName)
         {
-            StreamName = streamName;
+            StreamName = streamName ?? throw new ArgumentNullException(nameof(streamName));
         }
 
         public string ExclusiveStartShardId { get; set; }

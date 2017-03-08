@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using Carbon.Data.Streams;
@@ -11,8 +12,7 @@ namespace Amazon.Kinesis
 
         public List<Record> Records { get; set; }
 
-
-        public int Count => Records.Count;
+        public int Count => Records?.Count ?? 0;
 
         #region IDataRecordList
 
@@ -26,11 +26,9 @@ namespace Amazon.Kinesis
             }
         }
 
-        IEnumerator<IRecord> IEnumerable<IRecord>.GetEnumerator()
-            => Records.GetEnumerator();
+        IEnumerator<IRecord> IEnumerable<IRecord>.GetEnumerator() => Records.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-            => Records.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => Records.GetEnumerator();
 
         #endregion
     }
@@ -39,7 +37,7 @@ namespace Amazon.Kinesis
     {
         public KinesisIterator(string value)
         {
-            Value = value;
+            Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         public string Value { get; }

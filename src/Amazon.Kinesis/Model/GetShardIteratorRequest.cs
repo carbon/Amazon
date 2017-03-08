@@ -7,15 +7,8 @@
         public GetShardIteratorRequest(string streamName, string shardId,
             ShardIteratorType type, string startingSequenceNumber = null)
         {
-            #region Preconditions
-
-            if (streamName == null) throw new ArgumentNullException(streamName);
-            if (shardId == null) throw new ArgumentNullException(shardId);
-
-            #endregion
-
-            StreamName = streamName;
-            ShardId = shardId;
+            StreamName = streamName ?? throw new ArgumentNullException(streamName);
+            ShardId = shardId ?? throw new ArgumentNullException(shardId);
             ShardIteratorType = type;
             StartingSequenceNumber = startingSequenceNumber;
         }

@@ -8,13 +8,12 @@ namespace Amazon.Kinesis
         {
             #region Preconditions
 
-            if (shardIterator == null) throw new ArgumentNullException(nameof(shardIterator));
-
-            if (limit > 10000) throw new ArgumentException("Must be less than 1000", "limit");
+            if (limit > 10000)
+                throw new ArgumentOutOfRangeException(nameof(limit), limit, "Must be 10,000 or fewer");
 
             #endregion
 
-            ShardIterator = shardIterator;
+            ShardIterator = shardIterator ?? throw new ArgumentNullException(nameof(shardIterator));
             Limit = limit;
         }
 

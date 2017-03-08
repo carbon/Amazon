@@ -1,7 +1,7 @@
-﻿namespace Amazon.Kinesis
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace Amazon.Kinesis
+{
     public class StreamDescription
     {
         public bool HasMoreShards { get; set; }

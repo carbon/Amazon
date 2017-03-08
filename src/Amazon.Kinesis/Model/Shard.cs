@@ -1,4 +1,5 @@
-﻿using Carbon.Data.Streams;
+﻿using System;
+using Carbon.Data.Streams;
 
 namespace Amazon.Kinesis
 {
@@ -8,7 +9,7 @@ namespace Amazon.Kinesis
 
         public Shard(string id)
         {
-            ShardId = id;
+            ShardId = id ?? throw new ArgumentNullException(nameof(id));
         }
 
         public string AdjacentParentShardId { get; set; }

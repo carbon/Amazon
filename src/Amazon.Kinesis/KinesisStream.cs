@@ -20,18 +20,8 @@ namespace Amazon.Kinesis
 
         public KinesisStream(string name, KinesisClient client)
         {
-            #region Preconditions
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-
-            #endregion
-
-            Name = name;
-            this.client = client;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            this.client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         public string Name { get; }
