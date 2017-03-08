@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 
 namespace Amazon.S3
 {
-    public class S3Helper
+    public static class S3Helper
     {
         private static readonly Dictionary<string, string> emptyStringDictionary = new Dictionary<string, string>();
 
-        public static string GetSignedUrl(GetUrlRequest request, IAwsCredentials credentials)
+        public static string GetSignedUrl(GetUrlRequest request, IAwsCredential credential)
         {
             // You can specify any future expiration time in epoch or UNIX time (number of seconds since January 1, 1970).
 
@@ -28,7 +29,7 @@ namespace Amazon.S3
                 expiresOrDate : expires.ToString()
             );
 
-            var signature = ComputeSignature(credentials.SecretAccessKey, stringToSign);
+            var signature = ComputeSignature(credential.SecretAccessKey, stringToSign);
 
             return new StringBuilder()
                 .Append("https://")
@@ -36,12 +37,17 @@ namespace Amazon.S3
                 .Append(".s3.amazonaws.com/")
                 .Append(request.Key)
                 .Append("?AWSAccessKeyId=")
-                .Append(credentials.AccessKeyId.UrlEncodeX2())
+                .Append(credential.AccessKeyId.UrlEncode())
                 .Append("&Expires=")
                 .Append(expires)
                 .Append("&Signature=")
-                .Append(signature.UrlEncodeX2())
+                .Append(signature.UrlEncode())
                 .ToString();
+        }
+
+        private static string UrlEncode(this string text)
+        {
+            return UrlEncoder.Default.Encode(text);
         }
 
         private static string ConstructStringToSign(HttpMethod httpVerb, string contentType, string bucketName, string key,

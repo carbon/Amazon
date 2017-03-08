@@ -11,20 +11,13 @@ namespace Amazon.S3
     {
         public S3ObjectInfo(string key, long size)
         {
-            #region Preconditions
-
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
-            #endregion
-
-            Key = key;
+            Key = key ?? throw new ArgumentNullException(nameof(key));
             Size = size;
         }
 
-        public S3ObjectInfo(string name, long size, DateTime modified)
+        public S3ObjectInfo(string key, long size, DateTime modified)
         {
-            Key = name;
+            Key = key ?? throw new ArgumentNullException(nameof(key));
             Size = size;
             Modified = modified;
         }

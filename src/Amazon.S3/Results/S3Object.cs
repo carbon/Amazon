@@ -19,15 +19,12 @@ namespace Amazon.S3
         {
             #region Preconditions
 
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
             if (response == null)
                 throw new ArgumentNullException(nameof(response));
 
             #endregion
 
-            Key = name;
+            Key = name ?? throw new ArgumentNullException(nameof(name));
 
             foreach (var header in response.Headers)
             {
@@ -63,8 +60,8 @@ namespace Amazon.S3
 
         public CacheControlHeaderValue CacheControl
         {
-            get { return CacheControlHeaderValue.Parse(headers["Cache-Control"]); }
-            set { headers["Cache-Control"] = value.ToString(); }
+            get => CacheControlHeaderValue.Parse(headers["Cache-Control"]);
+            set => headers["Cache-Control"] = value.ToString(); 
         }
 
         #endregion

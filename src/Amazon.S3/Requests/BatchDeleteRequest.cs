@@ -27,13 +27,7 @@ namespace Amazon.S3
 
         public DeleteBatch(params string[] keys)
         {
-            #region Preconditions
-
-            if (keys == null) throw new ArgumentNullException("keys");
-
-            #endregion
-
-            this.keys = keys;
+            this.keys = keys ?? throw new ArgumentNullException("keys");
         }
 
         public string ToXmlString()

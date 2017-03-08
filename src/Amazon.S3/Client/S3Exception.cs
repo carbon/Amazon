@@ -14,10 +14,8 @@ namespace Amazon.S3
         public S3Exception(string message, Exception ex)
             : base(message, ex)
         {
-            if (ex is S3Exception)
+            if (ex is S3Exception s3Exception)
             {
-                var s3Exception = (S3Exception)ex;
-
                 HttpStatusCode = s3Exception.HttpStatusCode;
                 ErrorCode = s3Exception.ErrorCode;
                 RequestId = s3Exception.RequestId;

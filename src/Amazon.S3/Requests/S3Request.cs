@@ -15,12 +15,9 @@ namespace Amazon.S3
             if (region == null)
                 throw new ArgumentNullException(nameof(region));
 
-            if (bucketName == null)
-                throw new ArgumentNullException(nameof(bucketName));
-
             #endregion
 
-            BucketName = bucketName;
+            BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
             ObjectName = objectName;
 
             // https://{bucket}.s3.amazonaws.com/{key}

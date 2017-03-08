@@ -21,27 +21,16 @@ namespace Amazon.S3
              maxDelay     : TimeSpan.FromSeconds(3),
              maxRetries   : 5);
 
-        public S3Bucket(string bucketName, IAwsCredentials credentials)
-            : this(AwsRegion.Standard, bucketName, credentials) { }
+        public S3Bucket(string bucketName, IAwsCredential credential)
+            : this(AwsRegion.USEast1, bucketName, credential) { }
               
-        public S3Bucket(AwsRegion region, string bucketName, IAwsCredentials credentials)
-            : this(bucketName, client: new S3Client(region, credentials)) { }
+        public S3Bucket(AwsRegion region, string bucketName, IAwsCredential credential)
+            : this(bucketName, client: new S3Client(region, credential)) { }
 
         public S3Bucket(string bucketName, S3Client client)
         {
-            #region Preconditions
-
-            if (bucketName == null)
-                throw new ArgumentNullException(nameof(bucketName));
-
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-
-            #endregion
-
-            this.bucketName = bucketName;
-
-            this.client = client;
+            this.bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
+            this.client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         public S3Bucket WithTimeout(TimeSpan timeout)
@@ -69,7 +58,7 @@ namespace Amazon.S3
 
         public async Task<IBlob> GetRangeAsync(string name, long start, long end)
         {
-            var request = new GetObjectRequest(client.Region, bucketName, key: name);
+            var request = new GetObjectRequest(client.Region, bucketName, objectName: name);
 
             request.SetRange(start, end);
 
@@ -78,16 +67,16 @@ namespace Amazon.S3
 
         public async Task<IBlob> GetAsync(string name)
         {
-            var request = new GetObjectRequest(client.Region, bucketName, key: name);
+            var request = new GetObjectRequest(client.Region, bucketName, objectName: name);
 
             return await client.GetObjectAsync(request).ConfigureAwait(false);
         }
 
         public async Task<IBlob> GetBufferedAsync(string name)
         {
-            var request = new GetObjectRequest(client.Region, bucketName, key: name);
-
-            request.CompletionOption = HttpCompletionOption.ResponseContentRead;
+            var request = new GetObjectRequest(client.Region, bucketName, objectName: name) {
+                CompletionOption = HttpCompletionOption.ResponseContentRead
+            };
 
             return await client.GetObjectAsync(request).ConfigureAwait(false);
         }

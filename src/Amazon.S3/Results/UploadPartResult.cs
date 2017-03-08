@@ -8,20 +8,14 @@ namespace Amazon.S3
         {
             #region Preconditions
 
-            if (partNumber == 0)
-                throw new ArgumentException("Must not be 0", nameof(partNumber));
-
-            if (uploadId == null)
-                throw new ArgumentNullException(nameof(uploadId));
-
-            if (eTag == null)
-                throw new ArgumentNullException(nameof(ETag));
+            if (partNumber <= 0)
+                throw new ArgumentException("Must be greater than 0", nameof(partNumber));
 
             #endregion
 
-            UploadId   = uploadId;
+            UploadId = uploadId ?? throw new ArgumentNullException(nameof(uploadId));
             PartNumber = partNumber;
-            ETag       = eTag;
+            ETag       = eTag ?? throw new ArgumentNullException(nameof(ETag));
         }
 
         public int PartNumber { get; }

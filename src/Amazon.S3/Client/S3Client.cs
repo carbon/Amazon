@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -14,11 +12,11 @@ namespace Amazon.S3
     {
         public static readonly XNamespace NS = "http://s3.amazonaws.com/doc/2006-03-01/";
 
-        public S3Client(IAwsCredentials credentials)
-            : this(AwsRegion.Standard, credentials) { }
+        public S3Client(IAwsCredential credential)
+            : this(AwsRegion.USEast1, credential) { }
 
-        public S3Client(AwsRegion region, IAwsCredentials credentials)
-            : base(AwsService.S3, region, credentials) { }
+        public S3Client(AwsRegion region, IAwsCredential credential)
+            : base(AwsService.S3, region, credential) { }
 
         public void SetTimeout(TimeSpan timeout)
         {
@@ -136,7 +134,7 @@ namespace Amazon.S3
             {
                 using (response)
                 {
-                    throw await GetException(response).ConfigureAwait(false);
+                    throw await GetExceptionAsync(response).ConfigureAwait(false);
                 }
             }
 
@@ -145,7 +143,7 @@ namespace Amazon.S3
 
         #region Helpers
 
-        protected override async Task<Exception> GetException(HttpResponseMessage response)
+        protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 

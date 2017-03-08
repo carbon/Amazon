@@ -6,18 +6,8 @@ namespace Amazon.S3
     {
         public S3ObjectLocation(string bucketName, string key)
         {
-            #region Preconditions
-
-            if (bucketName == null)
-                throw new ArgumentNullException(nameof(bucketName));
-
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
-            #endregion
-
-            BucketName = bucketName;
-            Key = key;
+            BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
+            Key = key ?? throw new ArgumentNullException(nameof(key));
         }
 
         public string BucketName { get; }

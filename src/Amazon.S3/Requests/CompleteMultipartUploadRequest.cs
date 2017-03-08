@@ -27,14 +27,7 @@ namespace Amazon.S3
     {
         public CompleteMultipartUpload(IUploadBlock[] parts)
         {
-            #region Preconditions
-
-            if (parts == null)
-                throw new ArgumentNullException(nameof(parts));
-
-            #endregion
-
-            Parts = parts;
+            Parts = parts ?? throw new ArgumentNullException(nameof(parts));
         }
 
         public IUploadBlock[] Parts { get; }
