@@ -1,24 +1,14 @@
 ﻿using System;
 
-namespace Amazon
+namespace Amazon.Security
 {
     public class CredentialScope
     {
         public CredentialScope(DateTime date, AwsRegion region, AwsService service)
         {
-            #region Preconditions
-
-            if (region == null)
-                throw new ArgumentNullException(nameof(region));
-
-            if (service == null)
-                throw new ArgumentNullException(nameof(service));
-
-            #endregion
-
             Date = date;
-            Region = region;
-            Service = service;
+            Region = region ?? throw new ArgumentNullException(nameof(region));
+            Service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         public DateTime Date { get; }

@@ -2,7 +2,7 @@
 
 namespace Amazon
 {
-    public interface IAwsCredentials
+    public interface IAwsCredential
     {
         string AccessKeyId { get; }
 
@@ -12,6 +12,6 @@ namespace Amazon
 
         bool ShouldRenew { get; }
 
-        Task<IAwsCredentials> RenewAsync();
+        Task<IAwsCredential> RenewAsync();
     }
 }

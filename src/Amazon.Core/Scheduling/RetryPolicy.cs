@@ -9,7 +9,9 @@ namespace Amazon.Scheduling
         public abstract TimeSpan GetDelay(int retryCount);
 
         public static ExponentialBackoffRetryPolicy ExponentialBackoff(TimeSpan initialDelay, TimeSpan maxDelay, int maxRetries = 3)
-            => new ExponentialBackoffRetryPolicy(initialDelay, maxDelay);
+        {
+            return new ExponentialBackoffRetryPolicy(initialDelay, maxDelay);
+        }
     }
 
     public class ExponentialBackoffRetryPolicy : RetryPolicy
@@ -21,12 +23,11 @@ namespace Amazon.Scheduling
         public ExponentialBackoffRetryPolicy(TimeSpan initialDelay, TimeSpan maxDelay, int maxRetries = 3)
         {
             this.initialDelay = initialDelay;
-            this.maxDelay = maxDelay;
+            this.maxDelay   = maxDelay;
             this.maxRetries = maxRetries;
         }
 
-        public override bool ShouldRetry(int retryCount)
-            => maxRetries == -1 || maxRetries > retryCount;
+        public override bool ShouldRetry(int retryCount) => maxRetries == -1 || maxRetries > retryCount;
 
         public override TimeSpan GetDelay(int retryCount)
         {

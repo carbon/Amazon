@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Amazon
 {
-    public class AwsSession : IAwsCredentials
+    public class AwsSession : IAwsCredential
     {
         public string SessionToken { get; set; }
 
@@ -17,7 +17,7 @@ namespace Amazon
 
         public bool ShouldRenew => false;
 
-        public Task<IAwsCredentials> RenewAsync()
+        public Task<IAwsCredential> RenewAsync()
         {
             throw new NotImplementedException();
         }

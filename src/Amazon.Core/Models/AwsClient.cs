@@ -18,20 +18,14 @@ namespace Amazon
 
         private readonly AwsService service;
         protected readonly AwsRegion region;
-        private IAwsCredentials credentials;
+        private IAwsCredential credential;
         private readonly SemaphoreSlim mutex = new SemaphoreSlim(1);
 
-        public AwsClient(AwsService service, AwsRegion region, IAwsCredentials credentials)
+        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential)
         {
-            #region Preconditions
-
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-
-            #endregion
-
-            this.service = service;
-            this.region = region;
-            this.credentials = credentials;
+            this.service = service ?? throw new ArgumentNullException(nameof(service));
+            this.region = region ?? throw new ArgumentNullException(nameof(region));
+            this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
 
             Endpoint = $"https://{service.Name}.{region.Name}.amazonaws.com/";
         }
@@ -40,7 +34,7 @@ namespace Amazon
 
         public AwsRegion Region => region;
 
-        protected virtual async Task<Exception> GetException(HttpResponseMessage response)
+        protected virtual async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -55,7 +49,7 @@ namespace Amazon
             {
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw await GetException(response).ConfigureAwait(false);
+                    throw await GetExceptionAsync(response).ConfigureAwait(false);
                 }
 
                 return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -64,13 +58,13 @@ namespace Amazon
 
         protected async Task SignAsync(HttpRequestMessage httpRequest)
         {
-            if (credentials.ShouldRenew)
+            if (credential.ShouldRenew)
             {
                 await mutex.WaitAsync().ConfigureAwait(false);
 
                 try
                 {
-                    credentials = await credentials.RenewAsync().ConfigureAwait(false);
+                    credential = await credential.RenewAsync().ConfigureAwait(false);
                 }
                 finally
                 {
@@ -84,20 +78,22 @@ namespace Amazon
             httpRequest.Headers.Host = httpRequest.RequestUri.Host;
             httpRequest.Headers.Date = date;
 
-            if (credentials.SecurityToken != null)
+            if (credential.SecurityToken != null)
             {
-                httpRequest.Headers.Add("x-amz-security-token", credentials.SecurityToken);
+                httpRequest.Headers.Add("x-amz-security-token", credential.SecurityToken);
             }
 
             httpRequest.Headers.Add("x-amz-date", date.UtcDateTime.ToString("yyyyMMddTHHmmssZ"));
 
             var scope = GetCredentialScope(httpRequest);
 
-            SignerV4.Default.Sign(credentials, scope, httpRequest);
+            SignerV4.Default.Sign(credential, scope, httpRequest);
         }
 
-        private CredentialScope GetCredentialScope(HttpRequestMessage httpRequest) => 
-            new CredentialScope(httpRequest.Headers.Date.Value.UtcDateTime, region, service);
+        private CredentialScope GetCredentialScope(HttpRequestMessage httpRequest)
+        {
+            return new CredentialScope(httpRequest.Headers.Date.Value.UtcDateTime, region, service);
+        }
 
         public void Dispose()
         {

@@ -27,9 +27,7 @@ namespace Amazon.Security
 
             #endregion
 
-            IEnumerable<string> dateHeaderValues;
-
-            if (!request.Headers.TryGetValues("x-amz-date", out dateHeaderValues))
+            if (!request.Headers.TryGetValues("x-amz-date", out IEnumerable<string> dateHeaderValues))
             {
                 throw new Exception("Missing x-amz-date header");
             }
@@ -57,38 +55,22 @@ namespace Amazon.Security
                 string.Empty,                              // \n
                 GetSignedHeaders(request),                 // SignedHeaders          + \n
                 GetPayloadHash(request)                    // HexEncode(Hash(Payload))
-            );                  
-                
-            /*
-            return new StringBuilder()
-                .Append(request.Method)                             .Append("\n") // HTTPRequestMethod      + \n
-                .Append(request.RequestUri.AbsolutePath)            .Append("\n") // CanonicalURI           + \n
-                .Append(CanonicizeQueryString(request.RequestUri))  .Append("\n") // CanonicalQueryString   + \n
-                .Append(CanonicalizeHeaders(request))               .Append("\n") // CanonicalHeaders       + \n
-                .Append("\n")                                                     // \n
-                .Append(GetSignedHeaders(request))                  .Append("\n") // SignedHeaders          + \n
-                .Append(GetPayloadHash(request))                                  // HexEncode(Hash(Payload))
-                .ToString();
-            */
+            );
         }
 
         // HexEncode(Hash(Payload))
         // If the payload is empty, use an empty string
         public string GetPayloadHash(HttpRequestMessage request)
         {
-            IEnumerable<string> contentSha256Header;
-
             // http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-streaming.html
             // x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
 
             // STREAMING-AWS4-HMAC-SHA256-PAYLOAD
             // UNSIGNED-PAYLOAD
 
-            if (request.Headers.TryGetValues("x-amz-content-sha256", out contentSha256Header))
+            if (request.Headers.TryGetValues("x-amz-content-sha256", out IEnumerable<string> contentSha256Header))
             {
-                var hash = contentSha256Header.First();
-
-                return hash;              
+                return contentSha256Header.First();
             }
 
             return ComputeSHA256(request.Content);
@@ -109,19 +91,19 @@ namespace Amazon.Security
             }
         }
 
-        public byte[] GetSigningKey(IAwsCredentials credentials, CredentialScope scope)
+        public byte[] GetSigningKey(IAwsCredential credential, CredentialScope scope)
         {
             #region Preconditions
 
-            if (credentials == null)
-                throw new ArgumentNullException(nameof(credentials));
+            if (credential == null)
+                throw new ArgumentNullException(nameof(credential));
 
             if (scope == null)
                 throw new ArgumentNullException(nameof(scope));
 
             #endregion
 
-            var kSecret = Encoding.ASCII.GetBytes("AWS4" + credentials.SecretAccessKey);
+            var kSecret = Encoding.ASCII.GetBytes("AWS4" + credential.SecretAccessKey);
 
             var kDate = HMACSHA256(kSecret, scope.Date.ToString("yyyyMMdd"));
             var kRegion = HMACSHA256(kDate, scope.Region.Name);
@@ -131,11 +113,11 @@ namespace Amazon.Security
             return signingKey;
         }
 
-        public void Sign(IAwsCredentials credentials, CredentialScope scope, HttpRequestMessage request)
+        public void Sign(IAwsCredential credential, CredentialScope scope, HttpRequestMessage request)
         {
             #region Preconditions
 
-            if (credentials == null)  throw new ArgumentNullException(nameof(credentials));
+            if (credential == null)  throw new ArgumentNullException(nameof(credential));
             if (scope == null)        throw new ArgumentNullException(nameof(scope));
             if (request == null)      throw new ArgumentNullException(nameof(request));
 
@@ -147,7 +129,7 @@ namespace Amazon.Security
                 request.Headers.Add("x-amz-content-sha256", ComputeSHA256(request.Content));
             }
 
-            var signingKey = GetSigningKey(credentials, scope);
+            var signingKey = GetSigningKey(credential, scope);
 
             var stringToSign = GetStringToSign(scope, request);
 
@@ -156,7 +138,7 @@ namespace Amazon.Security
             var signedHeaders = GetSignedHeaders(request);
 
             // AWS4-HMAC-SHA256 Credential={0},SignedHeaders={0},Signature={0}
-            var auth = $"AWS4-HMAC-SHA256 Credential={credentials.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
+            var auth = $"AWS4-HMAC-SHA256 Credential={credential.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
 
             // AWS4-HMAC-SHA256 Credential=AKIAIOSFODNN7EXAMPLE/20120228/us-east-1/iam/aws4_request,SignedHeaders=content-type;host;x-amz-date,Signature=HexEncode(calculated-signature-from-task-3)
 
@@ -253,40 +235,12 @@ namespace Amazon.Security
             return sb.ToString();
         }
 
-        public SignatureInfo GetInfo(IAwsCredentials credentials, CredentialScope scope, HttpRequestMessage request)
-        {
-            var signingKey = GetSigningKey(credentials, scope);
-
-            var stringToSign = GetStringToSign(scope, request);
-
-            var signature = Signature.ComputeHmacSha256(signingKey, Encoding.UTF8.GetBytes(stringToSign)).ToHexString();
-
-            var signedHeaders = GetSignedHeaders(request);
-
-            var auth = $"AWS4-HMAC-SHA256 Credential={credentials.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
-
-            return new SignatureInfo {
-                CanonicalizedString = GetCanonicalRequest(request),
-                StringToSign = stringToSign,
-                Auth = auth
-            };
-        }
-
         public static byte[] ComputeSHA256(string text)
         {
             using (var algorithm = SHA256.Create())
             {
                 return algorithm.ComputeHash(Encoding.UTF8.GetBytes(text));
             }
-        }
-
-        public class SignatureInfo
-        {
-            public string CanonicalizedString { get; set; }
-
-            public string StringToSign { get; set; }
-
-            public string Auth { get; set; }
         }
     }
 }

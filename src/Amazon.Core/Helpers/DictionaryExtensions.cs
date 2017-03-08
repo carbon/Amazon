@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Encodings.Web;
 
-namespace Amazon.Extensions
+namespace Amazon.Helpers
 {
     public static class DictionaryExtensions
     {

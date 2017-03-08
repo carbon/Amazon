@@ -7,22 +7,12 @@ namespace Amazon
 
     // AccessKey
 
-    public class AwsCredentials : IAwsCredentials
+    public class AwsCredential : IAwsCredential
     {
-        public AwsCredentials(string accessKeyId, string secretAccessKey)
+        public AwsCredential(string accessKeyId, string secretAccessKey)
         {
-            #region Preconditions
-
-            if (accessKeyId == null)
-                throw new ArgumentNullException("accessKeyId");
-
-            if (secretAccessKey == null)
-                throw new ArgumentNullException("secretAccessKey");
-
-            #endregion
-
-            AccessKeyId = accessKeyId;
-            SecretAccessKey = secretAccessKey;
+            AccessKeyId = accessKeyId ?? throw new ArgumentNullException("accessKeyId");
+            SecretAccessKey = secretAccessKey ?? throw new ArgumentNullException("secretAccessKey");
         }
 
         // 16 - 32 characters
@@ -34,7 +24,7 @@ namespace Amazon
 
         // {id}:{secret}
 
-        public static AwsCredentials Parse(string text)
+        public static AwsCredential Parse(string text)
         {
             #region Preconditions
 
@@ -45,14 +35,14 @@ namespace Amazon
 
             var parts = text.Split(Seperators.Colon);
 
-            return new AwsCredentials(parts[0], parts[1]);
+            return new AwsCredential(parts[0], parts[1]);
         }
 
         #region Renewable
 
         public bool ShouldRenew => false;
 
-        public Task<IAwsCredentials> RenewAsync()
+        public Task<IAwsCredential> RenewAsync()
         {
             throw new NotImplementedException("Not renewable");
         }

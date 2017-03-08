@@ -6,7 +6,7 @@ using Carbon.Json;
 
 namespace Amazon
 {
-    public class InstanceRoleCredentials : IAwsCredentials
+    public class InstanceRoleCredential : IAwsCredential
     {
         public string Code { get; set; }
 
@@ -32,11 +32,18 @@ namespace Amazon
 
         public string SecurityToken => Token;
 
-        public async Task<IAwsCredentials> RenewAsync() => 
+        public async Task<IAwsCredential> RenewAsync() => 
             await GetAsync(RoleName).ConfigureAwait(false);
 
-        public static async Task<InstanceRoleCredentials> GetAsync(string roleName)
+        public static async Task<InstanceRoleCredential> GetAsync(string roleName)
         {
+            #region Preconditions
+
+            if (roleName == null)
+                throw new ArgumentNullException(nameof(roleName));
+
+            #endregion
+
             var url = "http://169.254.169.254/latest/meta-data/iam/security-credentials/" + roleName;
 
             var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -46,7 +53,7 @@ namespace Amazon
             {
                 var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                var result = JsonObject.Parse(responseText).As<InstanceRoleCredentials>();
+                var result = JsonObject.Parse(responseText).As<InstanceRoleCredential>();
 
                 result.RoleName = roleName;
 

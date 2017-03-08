@@ -31,46 +31,45 @@ namespace Amazon
 
         #endregion
 
+        // In launch order...
+        public static readonly AwsRegion USEast1      = new AwsRegion("us-east-1");      // | US            | N. Virginia   | 2006-08-25
+        public static readonly AwsRegion EUWest1      = new AwsRegion("eu-west-1");      // | EU            | Ireland       | 2008-12-10
+        public static readonly AwsRegion USWest1      = new AwsRegion("us-west-1");      // | US            | N. California | 2009-12-03
+        public static readonly AwsRegion APSouthEast1 = new AwsRegion("ap-southeast-1"); // | Asia Pacific  | Singapore     | 2010-04-29
+        public static readonly AwsRegion APNorthEast1 = new AwsRegion("ap-northeast-1"); // | Asia Pacific  | Tokyo         | 2011-03-02
+        public static readonly AwsRegion USGovWest1   = new AwsRegion("us-gov-west-1");  // | US            | AWS GovCloud  | 2011-08-16
+        public static readonly AwsRegion USWest2      = new AwsRegion("us-west-2");      // | US            | Oregon        | 2011-11-09
+        public static readonly AwsRegion SAEast1      = new AwsRegion("sa-east-1");      // | South America | São Paulo     | 2011-12-14
+        public static readonly AwsRegion APSouthEast2 = new AwsRegion("ap-southeast-2"); // | Asia Pacific  | Sydney        | 2012-11-12
+        public static readonly AwsRegion CNNorth1     = new AwsRegion("cn-north-1");     // | China         | Beijing       | 2013-12-18
+        public static readonly AwsRegion EUCentral1   = new AwsRegion("eu-central-1");   // | EU            | Frankfurt     | 2014-10-23
+        public static readonly AwsRegion APNortheast2 = new AwsRegion("ap-northeast-2"); // | Asia Pacific  | Seoul	        | 2016-01-06
+        public static readonly AwsRegion APSouth1     = new AwsRegion("ap-south-1");     // | Asia Pacific  | Mumbai        | 2016-06-27
+        public static readonly AwsRegion USEast2      = new AwsRegion("us-east-2");      // | US            | Ohio          | 2016-10-17
+        public static readonly AwsRegion CACentral1   = new AwsRegion("ca-central-1");   // | Canada        | Central       | 2016-12-08
+        public static readonly AwsRegion EUWest2      = new AwsRegion("eu-west-2");      // | EU            | London        | 2016-12-13
+        
         // Soon: Paris (France), Ningxia (China)
-
-        public static readonly AwsRegion USEast1      = new AwsRegion("us-east-1");      // | US East       | N. Virginia
-        public static readonly AwsRegion USEast2      = new AwsRegion("us-east-2");      // | US East       | Ohio
-        public static readonly AwsRegion USWest1      = new AwsRegion("us-west-1");      // | US West       | N. California
-        public static readonly AwsRegion USWest2      = new AwsRegion("us-west-2");      // | US West       | Oregon
-        public static readonly AwsRegion CACentral1   = new AwsRegion("ca-central-1");   // | Canada        | Central
-        public static readonly AwsRegion APSouth1     = new AwsRegion("ap-south-1");     // | Asia Pacific  | Mumbai
-        public static readonly AwsRegion APSouthEast1 = new AwsRegion("ap-southeast-1"); // | Asia Pacific  | Singapore
-        public static readonly AwsRegion APSouthEast2 = new AwsRegion("ap-southeast-2"); // | Asia Pacific  | Sydney
-        public static readonly AwsRegion APNorthEast1 = new AwsRegion("ap-northeast-1"); // | Asia Pacific  | Tokyo
-        public static readonly AwsRegion APNortheast2 = new AwsRegion("ap-northeast-2"); // | Asia Pacific  | Seoul	
-        public static readonly AwsRegion EUCentral1   = new AwsRegion("eu-central-1");   // | EU            | Frankfurt
-        public static readonly AwsRegion EUWest1      = new AwsRegion("eu-west-1");      // | EU            | Ireland
-        public static readonly AwsRegion EUWest2      = new AwsRegion("eu-west-2");      // | EU            | London
-        public static readonly AwsRegion SAEast1      = new AwsRegion("sa-east-1");      // | South America | São Paulo
-        public static readonly AwsRegion CNNorth1     = new AwsRegion("cn-north-1");     // | China         | Beijing
-        public static readonly AwsRegion USGovWest1   = new AwsRegion("us-gov-west-1");  // | US            | AWS GovCloud
 
         public static AwsRegion[] All = new AwsRegion[] {
             USEast1,
-            USEast2,
-            USWest1,
+            EUWest1,  
+            USWest1,     
+            APSouthEast1, 
+            APNorthEast1, 
+            USGovWest1,   
             USWest2,
-            CACentral1,
-            APSouth1,
-            APSouthEast1,
-            APSouthEast2,
-            APNorthEast1,
-            APNortheast2,
-            EUCentral1,
-            EUWest1,
-            EUWest2,
-            SAEast1,
-            CNNorth1,
-            USGovWest1
+            SAEast1,      
+            APSouthEast2, 
+            CNNorth1,     
+            EUCentral1,   
+            APNortheast2, 
+            APSouth1,     
+            USEast2,      
+            CACentral1,   
+            EUWest2      
         };
-
-        public static readonly AwsRegion Standard = USEast1;
-
+        
         public static AwsRegion Get(string name)
         {
             #region Preconditions

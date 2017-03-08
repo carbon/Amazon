@@ -36,9 +36,7 @@ namespace Amazon.Scheduling
 
         private static bool IsTransient(this Exception ex)
         {
-            var failure = ex as IException;
-
-            return (failure != null && failure.IsTransient);
+            return (ex as IException)?.IsTransient == true;;
         }
     }
 }

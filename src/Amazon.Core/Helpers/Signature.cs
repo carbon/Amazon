@@ -10,7 +10,7 @@ namespace Amazon
     {
         public Signature(byte[] data)
         {
-            Data = data;
+            Data = data ?? throw new ArgumentNullException(nameof(data));
         }
 
         public byte[] Data { get; }
@@ -22,8 +22,8 @@ namespace Amazon
         public static Signature ComputeHmacSha256(string key, string data)
         {
             return ComputeHmacSha256(
-                key: Encoding.UTF8.GetBytes(key), 
-                data: Encoding.UTF8.GetBytes(data)
+                key  : Encoding.UTF8.GetBytes(key), 
+                data : Encoding.UTF8.GetBytes(data)
            );
         }
 
@@ -32,10 +32,10 @@ namespace Amazon
             #region Preconditions
 
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             if (data == null)
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
 
             #endregion
 
