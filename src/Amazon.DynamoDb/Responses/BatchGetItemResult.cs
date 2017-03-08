@@ -9,9 +9,9 @@ namespace Amazon.DynamoDb
     {
         // public ConsumedCapacity[] ConsumedCapacity { get; set; }
 
-        public IList<TableItems> Responses { get; } = new List<TableItems>();
+        public List<TableItems> Responses { get; } = new List<TableItems>();
 
-        public IList<TableKeys> UnprocessedKeys { get; } = new List<TableKeys>();
+        public List<TableKeys> UnprocessedKeys { get; } = new List<TableKeys>();
 
         public static BatchGetItemResult FromJson(JsonObject json)
         {

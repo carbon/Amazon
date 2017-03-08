@@ -9,14 +9,8 @@ namespace Amazon.DynamoDb
     {
         public GetItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key)
         {
-            #region Preconditions
-
-            if (tableName == null) throw new ArgumentNullException(nameof(tableName));
-
-            #endregion
-
-            TableName = tableName;
-            Key = key;
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+            Key = key ?? throw new ArgumentNullException(nameof(key));
         }
 
         // [Required]

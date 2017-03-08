@@ -60,7 +60,7 @@ namespace Amazon.DynamoDb
 
         public DynamoQuery Descending()
         {
-            this.ScanIndexForward = false;
+            ScanIndexForward = false;
 
             return this;
         }

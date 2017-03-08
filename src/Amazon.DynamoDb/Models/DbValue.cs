@@ -61,9 +61,14 @@ namespace Amazon.DynamoDb
 
 		public DbValue(object value)
 		{
-			if (value == null) throw new ArgumentNullException(nameof(value));
+            #region Preconditions
 
-			var t = value.GetType();
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            #endregion
+
+            var t = value.GetType();
 
 			if (t.GetTypeInfo().IsEnum)
 			{
@@ -71,7 +76,6 @@ namespace Amazon.DynamoDb
 				this.value = EnumConverter.Default.FromObject(value, null).Value;
  
 				return;
-
 			}
 
 			if (t.IsArray)
@@ -154,9 +158,7 @@ namespace Amazon.DynamoDb
                         }
 						else
 						{
-                            IDbValueConverter converter;
-
-                            if (!DbValueConverterFactory.TryGet(t, out converter))
+                            if (!DbValueConverterFactory.TryGet(t, out IDbValueConverter converter))
                             {
                                 throw new Exception("Unexpected value type. Was: " + t.Name);
                             }
@@ -164,9 +166,7 @@ namespace Amazon.DynamoDb
                             var result = converter.FromObject(value, null);
 
                             this.value = result.Value;
-                            this.kind = result.Kind;
-
-                            
+                            this.kind = result.Kind;                            
                         }
 
                         break;
@@ -278,33 +278,37 @@ namespace Amazon.DynamoDb
 		{
 			if (kind == DbValueType.N) return ToInt() == 1;
 
-			if (value is bool) return (bool)value;
+            if (value is bool)
+            {
+                return (bool)value;
+            }
 
-			throw new Exception($"Cannot convert '{value.GetType().Name}' to a Boolean");
+            throw new Exception($"Cannot convert '{value.GetType().Name}' to a Boolean");
 		}
 
-		public float ToSingle() => Convert.ToSingle(value);
+		public float ToSingle() 
+            => Convert.ToSingle(value);
 
-		public short ToInt16() => Convert.ToInt16(value);
+		public short ToInt16() 
+            => Convert.ToInt16(value);
 
-		public int ToInt() => Convert.ToInt32(value);
+		public int ToInt() 
+            => Convert.ToInt32(value);
 
-		public long ToInt64() => Convert.ToInt64(value);
+		public long ToInt64()
+            => Convert.ToInt64(value);
 
-		public double ToDouble() => Convert.ToDouble(value);
+		public double ToDouble() 
+            => Convert.ToDouble(value);
 
-		public decimal ToDecimal() => Convert.ToDecimal(value);
+		public decimal ToDecimal() 
+            => Convert.ToDecimal(value);
 
 		public byte[] ToBinary()
 		{
-			if (value is byte[])
-			{
-				return (byte[])value;
-			}
-			else
-			{
-				return Convert.FromBase64String(value.ToString());
-			}
+            return value is byte[]
+                ? (byte[])value
+                : Convert.FromBase64String(value.ToString());
 		}
 
 		public override string ToString() => value.ToString();
@@ -380,10 +384,10 @@ namespace Amazon.DynamoDb
 		{
 			switch (value.Type)
 			{
-				case JsonType.Binary    : return new DbValue(((XBinary)value).Value,	    DbValueType.B);		// byte[]
-				case JsonType.Boolean	: return new DbValue(((JsonBoolean)value).Value,	DbValueType.BOOL);	// bool
-				case JsonType.Number	: return new DbValue(value.ToString(),			    DbValueType.N);
-				case JsonType.String	: return new DbValue((string)value,			        DbValueType.S);
+				case JsonType.Binary  : return new DbValue(((XBinary)value).Value,	    DbValueType.B);		// byte[]
+				case JsonType.Boolean : return new DbValue(((JsonBoolean)value).Value,	DbValueType.BOOL);	// bool
+				case JsonType.Number  : return new DbValue(value.ToString(),			DbValueType.N);
+				case JsonType.String  : return new DbValue((string)value,			    DbValueType.S);
 		
 				default: throw new Exception("Unexpected value type:" + value.Type);
 			}
@@ -456,7 +460,8 @@ namespace Amazon.DynamoDb
 			throw new NotImplementedException();
 		}
 
-        bool IConvertible.ToBoolean(IFormatProvider provider) => ToBoolean();
+        bool IConvertible.ToBoolean(IFormatProvider provider)
+            => ToBoolean();
 
 		byte IConvertible.ToByte(IFormatProvider provider)
 		{
@@ -494,32 +499,26 @@ namespace Amazon.DynamoDb
 
 		object IConvertible.ToType(Type conversionType, IFormatProvider provider)
 		{
-			switch (System.Type.GetTypeCode(conversionType))
+			switch (Type.GetTypeCode(conversionType))
 			{
-				case TypeCode.String	: return ToString();
-				case TypeCode.Int16		: return ToInt16();
-				case TypeCode.Int32		: return ToInt();
-				case TypeCode.Int64		: return ToInt64();
-				case TypeCode.Single	: return ToSingle();
-				case TypeCode.Double	: return ToDouble();
-				default					: throw new Exception("No convertor for " + conversionType.GetType().Name);
+				case TypeCode.String : return ToString();
+				case TypeCode.Int16	 : return ToInt16();
+				case TypeCode.Int32	 : return ToInt();
+				case TypeCode.Int64	 : return ToInt64();
+				case TypeCode.Single : return ToSingle();
+				case TypeCode.Double : return ToDouble();
+				default				 : throw new Exception("No convertor for " + conversionType.GetType().Name);
 			}
 		}
 
-		ushort IConvertible.ToUInt16(IFormatProvider provider)
-		{
-			throw new NotImplementedException();
-		}
+        ushort IConvertible.ToUInt16(IFormatProvider provider)
+            => (ushort)ToInt();
 
 		uint IConvertible.ToUInt32(IFormatProvider provider)
-		{
-			throw new NotImplementedException();
-		}
+            => (uint)ToInt64();
 
-		ulong IConvertible.ToUInt64(IFormatProvider provider)
-		{
-			throw new NotImplementedException();
-		}
+        ulong IConvertible.ToUInt64(IFormatProvider provider)
+            => ulong.Parse(ToString());
 
 		#endregion
 	}

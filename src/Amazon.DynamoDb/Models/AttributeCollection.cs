@@ -47,26 +47,22 @@ namespace Amazon.DynamoDb
 
         public int Count => items.Count;
 
-        public bool TryGet(string name, out DbValue value)
-            => items.TryGetValue(name, out value);
+        public bool TryGet(string name, out DbValue value) => 
+            items.TryGetValue(name, out value);
 
-        public bool ContainsKey(string name)
-            => items.ContainsKey(name);
+        public bool ContainsKey(string name) =>
+            items.ContainsKey(name);
 
         public DbValue Get(string name)
         {
-            DbValue value;
-
-            items.TryGetValue(name, out value);
+            items.TryGetValue(name, out DbValue value);
 
             return value;
         }
 
         public HashSet<string> GetStringSet(string key)
         {
-            DbValue value;
-
-            if (TryGet(key, out value))
+            if (TryGet(key, out DbValue value))
             {
                 return value.ToStringSet();
             }
@@ -76,9 +72,8 @@ namespace Amazon.DynamoDb
 
         public byte[] GetBinary(string key)
         {
-            DbValue value;
 
-            if (TryGet(key, out value))
+            if (TryGet(key, out DbValue value))
             {
                 return value.ToBinary();
             }
@@ -88,9 +83,7 @@ namespace Amazon.DynamoDb
 
         public int GetInt(string key)
         {
-            DbValue value;
-
-            if (TryGet(key, out value))
+            if (TryGet(key, out DbValue value))
             {
                 return value.ToInt();
             }
@@ -100,9 +93,7 @@ namespace Amazon.DynamoDb
 
         public string GetString(string key)
         {
-            DbValue value;
-
-            if (TryGet(key, out value))
+            if (TryGet(key, out DbValue value))
             {
                 return value.ToString();
             }
@@ -143,8 +134,8 @@ namespace Amazon.DynamoDb
 
         public DbValue this[string key]
         {
-            get { return Get(key); }
-            set { Set(key, value); }
+            get => Get(key);
+            set => Set(key, value);
         }
 
         #region IEnumerable<KeyValuePair<string,DbValue>> Members
@@ -180,9 +171,7 @@ namespace Amazon.DynamoDb
 
                 var typeInfo = TypeDetails.Get(member.Type);
 
-                IDbValueConverter converter;
-
-                if (DbValueConverterFactory.TryGet(member.Type, out converter))
+                if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter converter))
                 {
                     var dbValue = converter.FromObject(value, member);
 
@@ -209,9 +198,7 @@ namespace Amazon.DynamoDb
 
                     var list = new List<DbValue>(a.Count);
 
-                    IDbValueConverter c;
-
-                    if (DbValueConverterFactory.TryGet(typeInfo.ElementType, out c))
+                    if (DbValueConverterFactory.TryGet(typeInfo.ElementType, out IDbValueConverter c))
                     {
                         foreach (var item in a)
                         {
@@ -225,7 +212,7 @@ namespace Amazon.DynamoDb
                             list.Add(new DbValue(FromObject(item)));
                         }
                     }
-                   
+
                     attributes.Add(member.Name, new DbValue(list));
                 }
                 else
@@ -271,9 +258,7 @@ namespace Amazon.DynamoDb
 
                 if (member == null) continue;
 
-                IDbValueConverter converter;
-
-                if (DbValueConverterFactory.TryGet(member.Type, out converter))
+                if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter converter))
                 {
                     var value = converter.ToObject(attribute.Value, member);
 
@@ -291,7 +276,7 @@ namespace Amazon.DynamoDb
                 {
                     var list = DeserializeArray(member.Type.GetElementType(), (DbValue[])attribute.Value.Value);
 
-                    member.SetValue(instance, list);  
+                    member.SetValue(instance, list);
                 }
             }
 
@@ -329,9 +314,7 @@ namespace Amazon.DynamoDb
 
                 if (member == null) continue;
 
-                IDbValueConverter converter;
-
-                if (DbValueConverterFactory.TryGet(member.Type, out converter))
+                if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter converter))
                 {
                     var value = converter.ToObject(attribute.Value, member);
 
@@ -350,7 +333,7 @@ namespace Amazon.DynamoDb
                     var list = DeserializeArray(member.Type.GetElementType(), (DbValue[])attribute.Value.Value);
 
                     member.SetValue(instance, list);
-                }             
+                }
             }
 
             return instance;

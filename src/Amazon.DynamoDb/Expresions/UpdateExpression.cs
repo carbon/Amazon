@@ -106,11 +106,11 @@ namespace Amazon.DynamoDb
             }
         }
 
-        private void WriteValue(object value, StringBuilder sb)
-            => sb.WriteValue(value, attributeValues);
+        private void WriteValue(object value, StringBuilder sb) => 
+            sb.WriteValue(value, attributeValues);
 
-        private void WriteName(string name, StringBuilder sb)
-            => sb.WriteName(name, attributeNames);
+        private void WriteName(string name, StringBuilder sb) => 
+            sb.WriteName(name, attributeNames);
 
         public override string ToString()
         {

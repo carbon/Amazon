@@ -11,19 +11,9 @@ namespace Amazon.DynamoDb
     {
         public UpdateItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key, IList<Change> changes)
         {
-            #region Preconditions
-
-            if (tableName == null)
-                throw new ArgumentNullException(nameof(TableName));
-
-            if (changes == null)
-                throw new ArgumentNullException(nameof(changes));
-           
-            #endregion
-
-            TableName = tableName;
-            Key = key;
-            Changes = changes;
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+            Key       = key       ?? throw new ArgumentNullException(nameof(key));
+            Changes   = changes   ?? throw new ArgumentNullException(nameof(changes));
         }
 
         public string TableName { get; }
@@ -57,7 +47,6 @@ namespace Amazon.DynamoDb
             };
 
             var updateExpression = new UpdateExpression(Changes, ExpressionAttributeNames, ExpressionAttributeValues);
-
 
             if (ConditionExpression != null) json.Add("ConditionExpression", ConditionExpression);
 

@@ -12,8 +12,6 @@ namespace Amazon.DynamoDb
 
             foreach (var item in key)
             {
-                // Get converter?
-
                 json.Add(item.Key, new DbValue(item.Value).ToJson());
             }
 
@@ -21,7 +19,6 @@ namespace Amazon.DynamoDb
         }
     }
 }
-
 
 /*
 {

@@ -9,7 +9,7 @@ namespace Amazon.DynamoDb
 
     public class DynamoDbException : Exception, IException
     {
-        private readonly IList<Exception> exceptions;
+        private readonly List<Exception> exceptions;
 
         public DynamoDbException(string message)
             : base(message) { }
@@ -17,7 +17,7 @@ namespace Amazon.DynamoDb
         public DynamoDbException(string message, Exception innerException)
             : base(message, innerException) { }
 
-        public DynamoDbException(string message, IList<Exception> exceptions)
+        public DynamoDbException(string message, List<Exception> exceptions)
             : base(message)
         {
             this.exceptions = exceptions;
@@ -32,7 +32,7 @@ namespace Amazon.DynamoDb
             return FromJson(JsonObject.Parse(jsonText));
         }
 
-        public IList<Exception> Exceptions => exceptions;
+        public List<Exception> Exceptions => exceptions;
 
         public static DynamoDbException FromJson(JsonObject json)
         {

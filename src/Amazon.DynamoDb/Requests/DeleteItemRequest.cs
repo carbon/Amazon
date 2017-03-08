@@ -10,14 +10,7 @@ namespace Amazon.DynamoDb
     {
         public DeleteItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key)
         {
-            #region Preconditions
-
-            if (tableName == null)
-                throw new ArgumentNullException(nameof(tableName));
-
-            #endregion
-
-            TableName = tableName;
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             Key = key;
         }
 

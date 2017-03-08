@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Carbon.Json;
-using Carbon.Data;
 
 namespace Amazon.DynamoDb
 {
@@ -13,13 +12,7 @@ namespace Amazon.DynamoDb
 
         public BatchGetItemRequest(params TableKeys[] sets)
         {
-            #region Preconditions
-
-            if (sets == null) throw new ArgumentNullException(nameof(sets));
-
-            #endregion
-
-            this.sets = sets;
+            this.sets = sets ?? throw new ArgumentNullException(nameof(sets));
         }
 
         // [Required]
@@ -44,7 +37,7 @@ namespace Amazon.DynamoDb
     {
         public TableKeys(string tableName, params IEnumerable<KeyValuePair<string, object>>[] keys)
         {
-            TableName = tableName;
+            TableName = tableName ?? throw new ArgumentNullException(nameof(TableName));
             Keys = keys;
         }
 

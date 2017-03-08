@@ -29,12 +29,12 @@ namespace Amazon.DynamoDb
             maxDelay     : TimeSpan.FromSeconds(3),
             maxRetries   : 5);
 
-        public DynamoTable(string tableName, IAwsCredentials credentials)
-            : this(tableName, new DynamoDbClient(credentials))
+        public DynamoTable(string tableName, IAwsCredential credential)
+            : this(tableName, new DynamoDbClient(AwsRegion.USEast1, credential))
         { }
 
-        public DynamoTable(IAwsCredentials credentials)
-            : this(metadata.Name, new DynamoDbClient(credentials))
+        public DynamoTable(IAwsCredential credential)
+            : this(metadata.Name, new DynamoDbClient(AwsRegion.USEast1, credential))
         { }
 
         public DynamoTable(DynamoDbClient client)
@@ -43,24 +43,16 @@ namespace Amazon.DynamoDb
 
         public DynamoTable(string tableName, DynamoDbClient client)
         {
-            #region Preconditions
-
-            if (tableName == null) throw new ArgumentNullException(nameof(tableName));
-            if (client == null) throw new ArgumentNullException(nameof(client));
-
-            #endregion
-
-            this.tableName = tableName;
-            this.client = client;
+            this.tableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+            this.client = client ?? throw new ArgumentNullException(nameof(client));
 
             // TODO: Validate the key properties
         }
 
-        public IKeyInfo PrimaryKey 
-            => metadata.PrimaryKey;
+        public IKeyInfo PrimaryKey => metadata.PrimaryKey;
 
-        public Key<T> GetKey(params object[] keyValues) 
-            => Key<T>.FromValues(keyValues);
+        public Key<T> GetKey(params object[] keyValues) => 
+            Key<T>.FromValues(keyValues);
 
         public async Task<bool> ExistsAsync(RecordKey key)
         {
@@ -73,17 +65,17 @@ namespace Amazon.DynamoDb
             return result != null;
         }
 
-        public Task<T> FindAsync(Key<T> key)
-            => FindAsync(key, consistent: false);
+        public Task<T> FindAsync(Key<T> key) => 
+            FindAsync(key, consistent: false);
 
-        public Task<T> FindAsync(object hash)
-            => FindAsync(GetKey(hash), consistent: false);
+        public Task<T> FindAsync(object hash) => 
+            FindAsync(GetKey(hash), consistent: false);
 
-        public Task<T> FindAsync(object hash, object range)
-            => FindAsync(GetKey(hash, range), consistent: false);
+        public Task<T> FindAsync(object hash, object range) => 
+            FindAsync(GetKey(hash, range), consistent: false);
 
-        public Task<T> FindAsync(Key<T> key, bool consistent)
-            => FindAsync(new GetItemRequest(tableName, key) {
+        public Task<T> FindAsync(Key<T> key, bool consistent) => 
+            FindAsync(new GetItemRequest(tableName, key) {
                 ConsistentRead = true,
                 ReturnConsumedCapacity = false
             });
@@ -97,7 +89,7 @@ namespace Amazon.DynamoDb
             {
                 try
                 {
-                    var result = await client.GetItem(request).ConfigureAwait(false);
+                    var result = await client.GetItemAsync(request).ConfigureAwait(false);
 
                     // TODO: NotFound Handling
 
@@ -122,7 +114,7 @@ namespace Amazon.DynamoDb
             throw new Exception(errorMessage, lastException);
         }
 
-        public async Task<IList<T>> FindAllAsync(params IEnumerable<KeyValuePair<string, object>>[] keys)
+        public async Task<IReadOnlyList<T>> FindAllAsync(params IEnumerable<KeyValuePair<string, object>>[] keys)
         {
             #region Preconditions
 
@@ -134,15 +126,15 @@ namespace Amazon.DynamoDb
 
             var request = new BatchGetItemRequest(new TableKeys(tableName, keys));
 
-            var result = await client.BatchGetItem(request).ConfigureAwait(false);
+            var result = await client.BatchGetItemAsync(request).ConfigureAwait(false);
 
             return result.Responses[0].Select(i => i.As<T>(metadata)).ToArray();
         }
 
-        public Task<IList<T>> QueryAsync(params Expression[] expressions)
+        public Task<IReadOnlyList<T>> QueryAsync(params Expression[] expressions)
             => QueryAsync(new Query(expressions));
 
-        public Task<IList<T>> QueryAsync(Query q)
+        public Task<IReadOnlyList<T>> QueryAsync(Query q)
         {
             var e = new DynamoQueryExpression(PrimaryKey.Names, q.Expressions);
 
@@ -163,7 +155,7 @@ namespace Amazon.DynamoDb
             return QueryAsync(query);
         }
 
-        public async Task<IList<T>> QueryAsync(DynamoQuery query)
+        public async Task<IReadOnlyList<T>> QueryAsync(DynamoQuery query)
         {
             query.TableName = tableName;
 
@@ -172,7 +164,7 @@ namespace Amazon.DynamoDb
             return new QueryResult<T>(result);
         }
 
-        public async Task<IList<T>> QueryAllAsync(DynamoQuery query)
+        public async Task<IReadOnlyList<T>> QueryAllAsync(DynamoQuery query)
         {
             query.TableName = tableName;
 
@@ -202,15 +194,15 @@ namespace Amazon.DynamoDb
             return result;
         }
 
-        public Task<int> CountAsync(params Expression[] conditions)
-            => CountAsync(new DynamoQuery(conditions));
+        public Task<int> CountAsync(params Expression[] conditions) => 
+            CountAsync(new DynamoQuery(conditions));
 
         public async Task<int> CountAsync(DynamoQuery query)
         {
             query.TableName = tableName;
             query.Select = SelectEnum.COUNT;
 
-            var result = await client.QueryCount(query).ConfigureAwait(false);
+            var result = await client.QueryCountAsync(query).ConfigureAwait(false);
 
             return result.Count;
         }
@@ -227,14 +219,13 @@ namespace Amazon.DynamoDb
                 filterExpression = DynamoExpression.Conjunction(conditions);
             }
 
-            var result = new QueryResult();
+            QueryResult result = null;
 
             do
             {
-                var request = new ScanRequest(tableName)
-                {
+                var request = new ScanRequest(tableName) {
                     Limit = 1000,
-                    ExclusiveStartKey = result.LastEvaluatedKey
+                    ExclusiveStartKey = result?.LastEvaluatedKey
                 };
 
                 if (filterExpression != null)
@@ -242,7 +233,7 @@ namespace Amazon.DynamoDb
                     request.SetFilterExpression(filterExpression);
                 }
 
-                result = client.Scan(request).Result;
+                result = client.ScanAsync(request).Result;
 
                 // If LastEvaluatedKey is null, then the "last page" of results has been processed and there is no more data to be retrieved.
                 // If LastEvaluatedKey is anything other than null, this does not necessarily mean that there is more data in the result set. 
@@ -256,7 +247,7 @@ namespace Amazon.DynamoDb
             while (result.LastEvaluatedKey != null);
         }
 
-        public async Task<IList<T>> ScanAsync(IEnumerable<KeyValuePair<string, object>> startKey = null,
+        public async Task<IReadOnlyList<T>> ScanAsync(IEnumerable<KeyValuePair<string, object>> startKey = null,
             Expression[] conditions = null,
             int take = 1000)
         {
@@ -275,7 +266,7 @@ namespace Amazon.DynamoDb
                 request.ExclusiveStartKey = AttributeCollection.FromJson(startKey.ToJson());
             }
 
-            var result = await client.Scan(request).ConfigureAwait(false);
+            var result = await client.ScanAsync(request).ConfigureAwait(false);
 
             return new QueryResult<T>(result);
         }
@@ -290,7 +281,7 @@ namespace Amazon.DynamoDb
         {
             var request = new PutItemRequest(tableName, AttributeCollection.FromObject(entity, metadata));
 
-            return client.PutItemWithRetryPolicy(request, retryPolicy);
+            return client.PutItemUsingRetryPolicyAsync(request, retryPolicy);
         }
 
         // Conditional put
@@ -303,7 +294,7 @@ namespace Amazon.DynamoDb
                 request.SetConditions(conditions);
             }
 
-            return client.PutItemWithRetryPolicy(request, retryPolicy);
+            return client.PutItemUsingRetryPolicyAsync(request, retryPolicy);
         }
 
         public async Task<BatchResult> PutAsync(IEnumerable<T> entities)
@@ -340,7 +331,7 @@ namespace Amazon.DynamoDb
 
             var request = new UpdateItemRequest(tableName, key, changes);
 
-            return await client.UpdateItemWithRetryPolicy(request, retryPolicy).ConfigureAwait(false);
+            return await client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy).ConfigureAwait(false);
         }
 
         // Conditional patch
@@ -368,7 +359,7 @@ namespace Amazon.DynamoDb
                 request.SetConditions(conditions);
             }
 
-            return client.UpdateItemWithRetryPolicy(request, retryPolicy);
+            return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
         }
 
         public Task<UpdateItemResult> PatchAsync(Key<T> key, IList<Change> changes, ReturnValues returnValues)
@@ -377,7 +368,7 @@ namespace Amazon.DynamoDb
                 ReturnValues = returnValues
             };
 
-            return client.UpdateItemWithRetryPolicy(request, retryPolicy);
+            return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
         }
 
         public Task<DeleteItemResult> DeleteAsync(T record)
@@ -406,8 +397,8 @@ namespace Amazon.DynamoDb
             return InternalDelete(request);
         }
 
-        public Task<DeleteItemResult> DeleteAsync(Key<T> key, params Expression[] conditions)
-            => DeleteAsync(key, conditions, ReturnValues.NONE);
+        public Task<DeleteItemResult> DeleteAsync(Key<T> key, params Expression[] conditions) => 
+            DeleteAsync(key, conditions, ReturnValues.NONE);
 
         public Task<DeleteItemResult> DeleteAsync(Key<T> key, Expression[] conditions, ReturnValues returnValues)
         {
@@ -425,7 +416,7 @@ namespace Amazon.DynamoDb
             {
                 request.SetConditions(conditions);
             }
-
+        
             return InternalDelete(request);
         }
 
@@ -440,7 +431,7 @@ namespace Amazon.DynamoDb
             {
                 try
                 {
-                    return await client.DeleteItem(request).ConfigureAwait(false);
+                    return await client.DeleteItemAsync(request).ConfigureAwait(false);
                 }
                 catch (DynamoDbException ex) when (ex.IsTransient)
                 {
@@ -498,7 +489,7 @@ namespace Amazon.DynamoDb
             {
                 try
                 {
-                    var result = await client.BatchWriteItem(batch).ConfigureAwait(false);
+                    var result = await client.BatchWriteItemAsync(batch).ConfigureAwait(false);
 
                     info.ItemCount += batch.Requests.Count;
                     info.RequestCount++;

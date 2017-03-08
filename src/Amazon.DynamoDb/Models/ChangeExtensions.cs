@@ -36,9 +36,9 @@ namespace Amazon.DynamoDb
         {
             switch (op)
             {
-                case DataOperation.Add: return "ADD";
-                case DataOperation.Replace: return "PUT";
-                case DataOperation.Remove: return "DELETE";
+                case DataOperation.Add      : return "ADD";
+                case DataOperation.Replace  : return "PUT";
+                case DataOperation.Remove   : return "DELETE";
 
                 default: throw new Exception("Unexpected data operation: " + op.ToString());
             }

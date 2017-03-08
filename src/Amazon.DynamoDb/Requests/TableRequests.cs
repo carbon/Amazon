@@ -17,7 +17,7 @@ namespace Amazon.DynamoDb
     {
         public PutRequest(AttributeCollection item)
         {
-            Item = item;
+            Item = item ?? throw new ArgumentNullException(nameof(item));
         }
 
         public AttributeCollection Item { get; }
@@ -53,14 +53,13 @@ namespace Amazon.DynamoDb
         {
             #region Preconditions
 
-            if (tableName == null) throw new ArgumentNullException(nameof(tableName));
             if (requests == null) throw new ArgumentNullException(nameof(requests));
 
             if (requests.Count > 25) throw new ArgumentException("Must be 25 or fewer", "requests.Count");
 
             #endregion
 
-            TableName = tableName;
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             Requests = requests;
         }
 

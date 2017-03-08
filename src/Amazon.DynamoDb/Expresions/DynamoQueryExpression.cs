@@ -8,6 +8,8 @@ namespace Amazon.DynamoDb
     public class DynamoQueryExpression
     {
         public readonly string[] keyNames;
+        
+        // TODO: Expand BinaryExpression
 
         public DynamoQueryExpression(string[] keyNames, Expression[] expressions)
         {
@@ -17,30 +19,27 @@ namespace Amazon.DynamoDb
 
             foreach (var expression in expressions)
             {
-                if (expression is BinaryExpression)
+                if (expression is BinaryExpression be)
                 {
-                    var e = (BinaryExpression)expression;
 
-                    if (IsKey(e.Left.ToString()))
+                    if (IsKey(be.Left.ToString()))
                     {
-                        KeyExpression.Add(e);
+                        KeyExpression.Add(be);
                     }
                     else
                     {
-                        AddFilterExpression(e);
+                        AddFilterExpression(be);
                     }
                 }
-                else if (expression is BetweenExpression)
+                else if (expression is BetweenExpression between)
                 {
-                    var e = (BetweenExpression)expression;
-
-                    if (IsKey(e.Property.ToString()))
+                    if (IsKey(between.Property.ToString()))
                     {
-                        KeyExpression.Add(e);
+                        KeyExpression.Add(between);
                     }
                     else
                     {
-                        AddFilterExpression(e);
+                        AddFilterExpression(between);
                     }
                 }
                 else

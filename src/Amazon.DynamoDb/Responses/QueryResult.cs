@@ -2,45 +2,72 @@
 
 namespace Amazon.DynamoDb
 {
+    using System;
     using System.Collections.Generic;
 
     // Shared with ScanResult
 
     public class QueryResult : IConsumedResources
     {
-        public ConsumedCapacity ConsumedCapacity { get; set; }
+        public QueryResult(
+            ConsumedCapacity consumedCapacity,
+            AttributeCollection[] items,
+            AttributeCollection lastEvaluatedKey,
+            int count)
+        {
+            ConsumedCapacity = consumedCapacity;
+            LastEvaluatedKey = lastEvaluatedKey;
+            Items = items;
+            Count = count;
+        }
 
-        public AttributeCollection LastEvaluatedKey { get; set; }
+        public ConsumedCapacity ConsumedCapacity { get; }
 
-        public int Count { get; set; }
+        public int Count { get; }
 
-        public IList<AttributeCollection> Items { get; } = new List<AttributeCollection>();
+        public AttributeCollection[] Items { get; }
+
+        public AttributeCollection LastEvaluatedKey { get; }
 
         public static QueryResult FromJson(JsonObject json)
         {
-            var result = new QueryResult {
-                Count = (int)json["Count"]
-            };
+            ConsumedCapacity consumedCapacity = null;
+            AttributeCollection lastEvaluatedKey = null;
 
             if (json.ContainsKey("ConsumedCapacity"))
             {
-                result.ConsumedCapacity = ConsumedCapacity.FromJson((JsonObject)json["ConsumedCapacity"]);
+                consumedCapacity = ConsumedCapacity.FromJson((JsonObject)json["ConsumedCapacity"]);
             }
 
             if (json.ContainsKey("LastEvaluatedKey"))
             {
-                result.LastEvaluatedKey = AttributeCollection.FromJson((JsonObject)json["LastEvaluatedKey"]);
+                lastEvaluatedKey = AttributeCollection.FromJson((JsonObject)json["LastEvaluatedKey"]);
             }
+
+            AttributeCollection[] items;
 
             if (json.ContainsKey("Items"))
             {
-                foreach (var item in (JsonArray)json["Items"])
+                var itemsJson = (JsonArray)json["Items"];
+
+                items = new AttributeCollection[itemsJson.Count];
+
+                for (var i = 0; i < items.Length; i++)
                 {
-                    result.Items.Add(AttributeCollection.FromJson((JsonObject)item));
+                    items[i] = AttributeCollection.FromJson((JsonObject)itemsJson[i]);
                 }
             }
+            else
+            {
+                items = Array.Empty<AttributeCollection>();
+            }
 
-            return result;
+            return new QueryResult(
+                consumedCapacity: consumedCapacity,
+                items: items,
+                lastEvaluatedKey: lastEvaluatedKey,
+                count: (int)json["Count"]
+            );
         }
 
         /* 

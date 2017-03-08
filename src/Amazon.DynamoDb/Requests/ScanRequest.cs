@@ -1,4 +1,5 @@
-﻿using Carbon.Data.Expressions;
+﻿using System;
+using Carbon.Data.Expressions;
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
@@ -8,12 +9,12 @@ namespace Amazon.DynamoDb
     {
         public ScanRequest(string tableName)
         {
-            TableName = tableName;
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
         }
 
         public ScanRequest(string tableName, Expression[] conditions)
         {
-            TableName = tableName;
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
 
             if (conditions != null)
             {

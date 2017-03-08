@@ -6,7 +6,6 @@ using System.Net;
 using Carbon.Data;
 using Carbon.Json;
 using Carbon.Data.Annotations;
-using Carbon.Collections;
 
 namespace Amazon.DynamoDb
 {
@@ -54,21 +53,15 @@ namespace Amazon.DynamoDb
             // Custom
             Add<JsonObject>(new JsonObjectConverter());
             Add<JsonArray>(new JsonArrayConverter());
-
-            Add<Int32List>(new Int32ListDbConverter());
-            Add<StringList>(new StringListDbConverter());
-            Add<StringMap>(new StringMapDbConverter());
         }
 
         public static IDbValueConverter Get(Type type)
         {
             var details = TypeDetails.Get(type);
 
-            IDbValueConverter converter;
-
             if (details.IsEnum) return new EnumConverter();
 
-            if (!TryGet(details.NonNullType, out converter))
+            if (!TryGet(details.NonNullType, out IDbValueConverter converter))
             {
                 throw new ConversionException($"No converter found for '{type.Name}'.");
             }
@@ -110,12 +103,12 @@ namespace Amazon.DynamoDb
 
     internal class EnumConverter : IDbValueConverter
     {
-        public static EnumConverter Default = new EnumConverter();
+        public static readonly EnumConverter Default = new EnumConverter();
 
         // ulong?
 
-        public DbValue FromObject(object value, IMember member)
-            => new DbValue(Convert.ToInt32(value));
+        public DbValue FromObject(object value, IMember member) => 
+            new DbValue(Convert.ToInt32(value));
 
         public object ToObject(DbValue item, IMember member)
         {
@@ -132,12 +125,13 @@ namespace Amazon.DynamoDb
 
     internal class StringArrayConverter : DbTypeConverter<string[]>
     {
-        public override string[] Parse(DbValue dbValue)
-            => dbValue.ToArray<string>();
-            // item.ToStringSet().ToArray();
+        // item.ToStringSet().ToArray();
 
-        public override DbValue ToDbValue(string[] value)
-            => new DbValue(value);
+        public override string[] Parse(DbValue dbValue)=> 
+            dbValue.ToArray<string>();
+
+        public override DbValue ToDbValue(string[] value) => 
+            new DbValue(value);
     }
 
     internal class GuidConverter : DbTypeConverter<Guid>
@@ -247,10 +241,8 @@ namespace Amazon.DynamoDb
 
     internal class Int32Converter : IDbValueConverter
     {
-        public DbValue FromObject(object value, IMember member)
-        {
-            return new DbValue((Int32)value);
-        }
+        public DbValue FromObject(object value, IMember member) =>
+            new DbValue((int)value);
 
         public object ToObject(DbValue item, IMember member)
         {
@@ -384,100 +376,5 @@ namespace Amazon.DynamoDb
         }
     }
 
-    internal class Int32ListDbConverter : IDbValueConverter
-    {
-        public DbValue FromObject(object value, IMember member)
-        {
-            var list = value as Int32List;
-
-            if (list == null || list.Count == 0) return DbValue.Empty;
-
-            return new DbValue(list.ToBytes());
-        }
-
-        public object ToObject(DbValue item, IMember member)
-        {
-            // Gracefully migrate from number sets to a custom binary serializer that respects order
-            switch (item.Kind)
-            {
-                case DbValueType.NS : return new Int32List(item.ToArray<int>());
-                case DbValueType.B  : return Int32List.FromBytes(item.ToBinary());
-                default             : return new Int32List();
-            }
-        }
-    }
     
-
-    internal class StringListDbConverter : IDbValueConverter
-    {
-        public DbValue FromObject(object value, IMember member)
-        {
-            var list = value as StringList;
-
-            if (list == null || list.Count == 0) return DbValue.Empty;
-
-            return new DbValue(list.Select(item => new DbValue(item)));
-        }
-
-        public object ToObject(DbValue item, IMember member)
-        {
-            // Gracefully migrates from StringSets and custom binary provider to a List
-
-            switch (item.Kind)
-            {
-                case DbValueType.SS : return new StringList(item.ToStringSet());
-                case DbValueType.B  : return StringList.FromBytes(item.ToBinary());
-                case DbValueType.L  : return new StringList(item.ToArray<string>());
-                default             : return new StringList();
-            }
-        }
-    }
-
-    internal class ObjectConverter : IDbValueConverter
-    {
-        public DbValue FromObject(object value, IMember member)
-        {
-            var list = value as StringList;
-
-            if (list == null || list.Count == 0) return DbValue.Empty;
-
-            return new DbValue(list.Select(item => new DbValue(item)));
-        }
-
-        public object ToObject(DbValue item, IMember member)
-        {
-            // Gracefully migrates from StringSets and custom binary provider to a List
-
-            switch (item.Kind)
-            {
-                case DbValueType.SS : return new StringList(item.ToStringSet());
-                case DbValueType.B  : return StringList.FromBytes(item.ToBinary());
-                case DbValueType.L  : return new StringList(item.ToArray<string>());
-                default             : return new StringList();
-            }
-        }
-    }
-
-    internal class StringMapDbConverter : IDbValueConverter
-    {
-        public DbValue FromObject(object value, IMember member)
-        {
-            var list = value as StringMap;
-
-            if (list == null || list.Count == 0) return DbValue.Empty;
-
-            return new DbValue(list.ToBytes());
-        }
-
-        public object ToObject(DbValue item, IMember member)
-        {
-            // TODO: Use a nested map
-
-            switch (item.Kind)
-            {
-                case DbValueType.B: return StringMap.FromBytes(item.ToBinary());
-                default: return new StringMap();
-            }
-        }
-    }
 }

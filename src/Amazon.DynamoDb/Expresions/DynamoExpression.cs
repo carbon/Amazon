@@ -58,21 +58,14 @@ namespace Amazon.DynamoDb
 
         private void WritePrimary(Expression expression)
         {
-            if (expression is BinaryExpression)
+            switch (expression)
             {
-                WriteBinaryExpression((BinaryExpression)expression);
-            }
-            else if (expression is BetweenExpression)
-            {
-                WriteBetweenExpression((BetweenExpression)expression);
-            }
-            else if (expression is FunctionExpression)
-            {
-                WriteFunctionExpression((FunctionExpression)expression);
-            }
-            else
-            {
-                throw new Exception("Unexpected primary expression: " + expression.Kind);
+                case BinaryExpression binary   : WriteBinaryExpression(binary);    break;
+                case BetweenExpression between : WriteBetweenExpression(between);  break;
+                case FunctionExpression func   : WriteFunctionExpression(func);    break;
+
+                default:
+                    throw new Exception("Unexpected primary expression: " + expression.Kind);
             }
         }
 
@@ -100,23 +93,20 @@ namespace Amazon.DynamoDb
 
         private void Write(Expression e)
         {
-            switch (e.Kind)
+            if (e.Kind == ExpressionKind.Symbol)
             {
-                case ExpressionKind.Symbol   : WriteName(e.ToString()); break;
-                case ExpressionKind.Function : WriteFunctionExpression((FunctionExpression)e); break;
-                case ExpressionKind.Between  : WriteBetweenExpression((BetweenExpression)e); break;
+                WriteName(e.ToString());
 
-                default:
-                    if (e is BinaryExpression)
-                        WriteBinaryExpression((BinaryExpression)e);
-                    else if (e is Constant)
-                    {
-                        WriteValue((Constant)e);
-                    }
-                    else
-                        throw new Exception("Unexpected expression:" + e.Kind);
+                return;
+            }
 
-                    break;
+            switch (e)
+            {   
+                case BinaryExpression binary   : WriteBinaryExpression(binary); break;
+                case Constant constant         : WriteValue(constant); break;
+                case FunctionExpression func   : WriteFunctionExpression(func); break;
+                case BetweenExpression between : WriteBetweenExpression(between); break;
+                default                        : throw new Exception("Unexpected expression:" + e.Kind);
             }
         }
 
@@ -131,8 +121,10 @@ namespace Amazon.DynamoDb
         {
             switch (funcExp.Name)
             {
-                case "exists"     : sb.Append("attribute_exists"); break;
+                case "isNotNull"  : sb.Append("attribute_exists");     break;
+                case "exists"     : sb.Append("attribute_exists");     break;
                 case "notExists"  : sb.Append("attribute_not_exists"); break;
+                case "isNull"     : sb.Append("attribute_not_exists"); break;
                 case "startsWith" : sb.Append("begins_with"); break;
                 default           : sb.Append(funcExp.Name); break;
             }
@@ -184,6 +176,8 @@ namespace Amazon.DynamoDb
         {
             var result = new DynamoExpression();
 
+            // TODO: Flatten conjunctions...
+
             result.Add(expression);
 
             return result;
@@ -196,7 +190,9 @@ namespace Amazon.DynamoDb
             switch (kind)
             {
                 case ExpressionKind.And      : return "and";
+                case ExpressionKind.AndAlso  : return "and";
                 case ExpressionKind.Or       : return "or";
+                case ExpressionKind.OrElse   : return "or";
                 case ExpressionKind.Not      : return "not";
                 case ExpressionKind.Equal    : return "=";
                 case ExpressionKind.NotEqual : return "<>";

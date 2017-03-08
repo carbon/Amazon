@@ -8,7 +8,7 @@ namespace Amazon.DynamoDb
     {
         public ConsumedCapacity[] ConsumedCapacity { get; set; }
 
-        public IList<TableRequests> UnprocessedItems { get; set; }
+        public List<TableRequests> UnprocessedItems { get; set; }
 
         public static BatchWriteItemResult FromJson(JsonObject json)
         {

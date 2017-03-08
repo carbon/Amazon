@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,20 +14,10 @@ namespace Amazon.DynamoDb
     {
         private const string TargetPrefix = "DynamoDB_20120810";
 
-        public DynamoDbClient(IAwsCredentials credentials)
-            : base(AwsService.DynamoDb, AwsRegion.USEast1, credentials)
+        public DynamoDbClient(AwsRegion region, IAwsCredential credential)
+            : base(AwsService.DynamoDb, region, credential)
         {
-            #region Preconditions
-
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-
-            #endregion
-
             httpClient.Timeout = TimeSpan.FromSeconds(10);
-
-#if net461
-            ServicePointManager.Expect100Continue = false;
-#endif
         }
 
         #region Helpers
@@ -47,7 +36,7 @@ namespace Amazon.DynamoDb
 
         #endregion
 
-        public async Task<BatchGetItemResult> BatchGetItem(BatchGetItemRequest request)
+        public async Task<BatchGetItemResult> BatchGetItemAsync(BatchGetItemRequest request)
         {
             var httpRequest = Setup("BatchGetItem", request.ToJson());
 
@@ -57,12 +46,14 @@ namespace Amazon.DynamoDb
             return BatchGetItemResult.FromJson(responseJson);
         }
 
+        /*
         public void CreateTable()
         {
             throw new NotImplementedException();
         }
+        */
 
-        public async Task<DeleteItemResult> DeleteItem(DeleteItemRequest request)
+        public async Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
         {
             var httpRequest = Setup("DeleteItem", request.ToJson());
 
@@ -72,6 +63,7 @@ namespace Amazon.DynamoDb
             return DeleteItemResult.FromJson(responseJson);
         }
 
+        /*
         public void DeleteTable()
         {
             throw new NotImplementedException();
@@ -81,8 +73,9 @@ namespace Amazon.DynamoDb
         {
             throw new NotImplementedException();
         }
+        */
 
-        public async Task<GetItemResult> GetItem(GetItemRequest request)
+        public async Task<GetItemResult> GetItemAsync(GetItemRequest request)
         {
             var httpRequest = Setup("GetItem", request.ToJson());
 
@@ -97,7 +90,7 @@ namespace Amazon.DynamoDb
             throw new NotImplementedException();
         }
 
-        public async Task<BatchWriteItemResult> BatchWriteItem(params TableRequests[] batches)
+        public async Task<BatchWriteItemResult> BatchWriteItemAsync(params TableRequests[] batches)
         {
             #region Preconditions
 
@@ -125,7 +118,7 @@ namespace Amazon.DynamoDb
             return BatchWriteItemResult.FromJson(responseJson);
         }
 
-        public async Task<PutItemResult> PutItem(PutItemRequest request)
+        public async Task<PutItemResult> PutItemAsync(PutItemRequest request)
         {
             var httpRequest = Setup("PutItem", request.ToJson());
 
@@ -136,7 +129,7 @@ namespace Amazon.DynamoDb
         }
 
 
-        public async Task<PutItemResult> PutItemWithRetryPolicy(PutItemRequest request, RetryPolicy retryPolicy)
+        public async Task<PutItemResult> PutItemUsingRetryPolicyAsync(PutItemRequest request, RetryPolicy retryPolicy)
         {
             var retryCount = 0;
             Exception lastError = null;
@@ -145,7 +138,7 @@ namespace Amazon.DynamoDb
             {
                 try
                 {
-                    return await PutItem(request).ConfigureAwait(false);
+                    return await PutItemAsync(request).ConfigureAwait(false);
                 }
                 catch (DynamoDbException ex) when (ex.IsTransient)
                 {
@@ -204,7 +197,7 @@ namespace Amazon.DynamoDb
 
         }
 
-        public async Task<CountResult> QueryCount(DynamoQuery query)
+        public async Task<CountResult> QueryCountAsync(DynamoQuery query)
         {
             #region Preconditions
 
@@ -222,7 +215,7 @@ namespace Amazon.DynamoDb
             return CountResult.FromJson(responseJson);
         }
 
-        public async Task<QueryResult> Scan(ScanRequest request)
+        public async Task<QueryResult> ScanAsync(ScanRequest request)
         {
             var httpRequest = Setup("Scan", request.ToJson());
 
@@ -232,7 +225,7 @@ namespace Amazon.DynamoDb
             return QueryResult.FromJson(responseJson);
         }
 
-        public async Task<UpdateItemResult> UpdateItem(UpdateItemRequest request)
+        public async Task<UpdateItemResult> UpdateItemAsync(UpdateItemRequest request)
         {
             var httpRequest = Setup("UpdateItem", request.ToJson());
 
@@ -242,7 +235,7 @@ namespace Amazon.DynamoDb
             return UpdateItemResult.FromJson(responseJson);
         }
 
-        public async Task<UpdateItemResult> UpdateItemWithRetryPolicy(UpdateItemRequest request, RetryPolicy retryPolicy)
+        public async Task<UpdateItemResult> UpdateItemUsingRetryPolicyAsync(UpdateItemRequest request, RetryPolicy retryPolicy)
         {
             var retryCount = 0;
             Exception lastError = null;
@@ -251,7 +244,7 @@ namespace Amazon.DynamoDb
             {
                 try
                 {
-                    return await UpdateItem(request).ConfigureAwait(false);
+                    return await UpdateItemAsync(request).ConfigureAwait(false);
                 }
                 catch (DynamoDbException ex) when (ex.IsTransient)
                 {
@@ -293,7 +286,7 @@ namespace Amazon.DynamoDb
             return request;
         }
 
-        protected override async Task<Exception> GetException(HttpResponseMessage response)
+        protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 

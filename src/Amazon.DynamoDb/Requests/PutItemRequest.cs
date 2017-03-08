@@ -9,15 +9,8 @@ namespace Amazon.DynamoDb
     {
         public PutItemRequest(string tableName, AttributeCollection item)
         {
-            #region Preconditions
-
-            if (tableName == null) throw new ArgumentNullException("tableName");
-            if (item == null) throw new ArgumentNullException("item");
-
-            #endregion
-
-            TableName = tableName;
-            Item = item;
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+            Item = item ?? throw new ArgumentNullException(nameof(item));
         }
 
         public string TableName { get; }
