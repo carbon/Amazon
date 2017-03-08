@@ -17,12 +17,19 @@ namespace Amazon.Sqs
 
         public static readonly XNamespace NS = "http://queue.amazonaws.com/doc/2012-11-05/";
 
-        public SqsClient(AwsRegion region, IAwsCredentials credentials)
-            : base(AwsService.Sqs, region, credentials)
+        public SqsClient(AwsRegion region, IAwsCredential credential)
+            : base(AwsService.Sqs, region, credential)
         { }
 
         public async Task<CreateQueueResult> CreateQueueAsync(string queueName, int defaultVisibilityTimeout = 30)
         {
+            #region Preconditions
+
+            if (queueName == null)
+                throw new ArgumentNullException(nameof(queueName));
+
+            #endregion
+
             var parameters = new SqsRequest {
                 { "Action", "CreateQueue" },
                 { "QueueName", queueName },
@@ -173,7 +180,7 @@ namespace Amazon.Sqs
             return new FormUrlEncodedContent(request.Parameters);
         }
 
-        protected override async Task<Exception> GetException(HttpResponseMessage response)
+        protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
             var responseText = await response.Content.ReadAsStringAsync();
 

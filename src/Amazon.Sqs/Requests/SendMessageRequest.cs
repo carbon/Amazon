@@ -6,13 +6,7 @@ namespace Amazon.Sqs
     {
         public SendMessageRequest(string body)
         {
-            #region Preconditions
-
-            if (body == null) throw new ArgumentNullException(nameof(body));
-
-            #endregion
-
-            MessageBody = body;
+            MessageBody = body ?? throw new ArgumentNullException(nameof(body));
         }
 
         public string MessageBody { get; }

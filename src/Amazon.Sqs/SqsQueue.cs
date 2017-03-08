@@ -21,7 +21,7 @@ namespace Amazon.Sqs
             maxDelay: TimeSpan.FromSeconds(5),
             maxRetries: 3);
 
-        public SqsQueue(AwsRegion region, string accountId, string queueName, IAwsCredentials credentials)
+        public SqsQueue(AwsRegion region, string accountId, string queueName, IAwsCredential credential)
         {
             #region Preconditions
 
@@ -31,14 +31,14 @@ namespace Amazon.Sqs
             if (queueName == null)
                 throw new ArgumentNullException(nameof(queueName));
 
-            if (credentials == null)
-                throw new ArgumentNullException(nameof(credentials));
+            if (credential == null)
+                throw new ArgumentNullException(nameof(credential));
 
             #endregion
 
             this.url = new Uri($"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}");
 
-            this.client = new SqsClient(region, credentials);
+            this.client = new SqsClient(region, credential);
         }
 
         // Rename PollOnce ?

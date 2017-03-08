@@ -10,13 +10,7 @@ namespace Amazon.Sqs
 
         public SqsMessage(string body)
         {
-            #region Preconditions
-
-            if (body == null) throw new ArgumentNullException(nameof(body));
-
-            #endregion
-
-            Body = body;
+            Body = body ?? throw new ArgumentNullException(nameof(body));
         }
 
         public string Id { get; set; }
