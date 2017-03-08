@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Amazon.Ec2
 {
@@ -11,11 +10,18 @@ namespace Amazon.Ec2
     {
         public static readonly string Version = "2016-09-15";
 
-        public Ec2Client(AwsRegion region, IAwsCredentials credentials)
-            : base(AwsService.Ec2, region, credentials)
+        public Ec2Client(AwsRegion region, IAwsCredential credential)
+            : base(AwsService.Ec2, region, credential)
         { }
 
         #region Shortcuts
+
+        public async Task<Image> DescribeImageAsync(string imageId)
+        {
+            var result = await DescribeImagesAsync(new DescribeImagesRequest { ImageIds = { imageId } });
+
+            return result.Images.Count > 0 ? result.Images[0] : null;
+        }
 
         public async Task<Instance> DescribeInstanceAsync(string instanceId)
         {
@@ -62,6 +68,19 @@ namespace Amazon.Ec2
             return DescribeInstancesResponse.Parse(responseText);
         }
 
+        public async Task<DescribeImagesResponse> DescribeImagesAsync(DescribeImagesRequest request)
+        {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
+            {
+                Content = GetPostContent(request.ToParams())
+            };
+
+            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+
+            return DescribeImagesResponse.Parse(responseText);
+        }
+
+
         public async Task<DescribeVpcsResponse> DescribeVpcsAsync(DescribeVpcsRequest request)
         {
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
@@ -82,7 +101,7 @@ namespace Amazon.Ec2
             return new FormUrlEncodedContent(request.Parameters);
         }
 
-        protected override async Task<Exception> GetException(HttpResponseMessage response)
+        protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
             var responseText = await response.Content.ReadAsStringAsync();
 

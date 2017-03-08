@@ -5,8 +5,6 @@ namespace Amazon.Ec2
 {
     public class DescribeInstancesResponse
     {
-        private static readonly XNamespace NS = "http://ec2.amazonaws.com/doc/2016-09-15/";
-
         public List<Instance> Instances { get; } = new List<Instance>();
 
         public static DescribeInstancesResponse Parse(string text)
@@ -15,11 +13,13 @@ namespace Amazon.Ec2
 
             var rootEl = XElement.Parse(text);
 
-            var reservationSet = rootEl.Element(NS + "reservationSet");
+            var ns = rootEl.Name.Namespace;
+
+            var reservationSet = rootEl.Element(ns + "reservationSet");
 
             foreach (var itemEl in reservationSet.Elements())
             {
-                var instanceSetEl = itemEl.Element(NS + "instancesSet");
+                var instanceSetEl = itemEl.Element(ns + "instancesSet");
 
                 foreach (var instanceItemEl in instanceSetEl.Elements())
                 {

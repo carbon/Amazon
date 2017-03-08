@@ -1,0 +1,67 @@
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
+
+namespace Amazon.Ec2
+{
+    public class DescribeImagesResponse
+    {
+        public List<Image> Images { get; } = new List<Image>();
+
+        public static DescribeImagesResponse Parse(string text)
+        {
+            var result = new DescribeImagesResponse();
+
+            var rootEl = XElement.Parse(text);
+
+            var ns = rootEl.Name.Namespace;
+
+            var imagesSet = rootEl.Element(ns + "imagesSet");
+            
+            foreach (var itemEl in imagesSet.Elements())
+            {
+                result.Images.Add(Image.Deserialize(itemEl));   
+            }
+
+            return result;
+        }
+
+    }
+}
+
+/*
+<DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2016-11-15/">
+  <requestId>59dbff89-35bd-4eac-99ed-be587EXAMPLE</requestId> 
+  <imagesSet>
+    <item>
+      <imageId>ami-1a2b3c4d</imageId>
+      <imageLocation>amazon/getting-started</imageLocation>
+      <imageState>available</imageState>
+      <imageOwnerId>123456789012</imageOwnerId>
+      <isPublic>true</isPublic>
+      <architecture>i386</architecture>
+      <imageType>machine</imageType>
+      <kernelId>aki-1a2b3c4d</kernelId>
+      <ramdiskId>ari-1a2b3c4d</ramdiskId>
+      <imageOwnerAlias>amazon</imageOwnerAlias>
+      <name>getting-started</name>
+      <description>Image Description</description>
+      <rootDeviceType>ebs</rootDeviceType>
+      <rootDeviceName>/dev/sda</rootDeviceName>
+      <blockDeviceMapping>
+        <item>
+          <deviceName>/dev/sda1</deviceName>
+          <ebs>
+            <snapshotId>snap-1234567890abcdef0</snapshotId>
+            <volumeSize>15</volumeSize>
+            <deleteOnTermination>false</deleteOnTermination>
+            <volumeType>standard</volumeType>
+          </ebs>
+        </item>
+      </blockDeviceMapping>
+      <virtualizationType>paravirtual</virtualizationType>
+      <tagSet/>
+      <hypervisor>xen</hypervisor>
+    </item>
+  </imagesSet>
+</DescribeImagesResponse>
+*/
