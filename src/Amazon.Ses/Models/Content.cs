@@ -1,17 +1,17 @@
-﻿namespace Amazon.Ses
+﻿using System;
+
+namespace Amazon.Ses
 {
     public class SesContent
     {
         public SesContent(string data, CharsetType charset = CharsetType.SevenBitASCII)
         {
-            Data = data;
+            Data = data ?? throw new ArgumentNullException(nameof(data));
 
-            switch (charset)
+            if (charset == CharsetType.UTF8)
             {
-                case CharsetType.UTF8: Charset = "UTF-8"; break;
+                Charset = "UTF-8";
             }
-
-            // UTF-8
         }
 
         public string Charset { get; }
@@ -21,8 +21,8 @@
 
     public enum CharsetType
     {
-        SevenBitASCII,
-        UTF8,
+        SevenBitASCII = 1,
+        UTF8 = 2
     }
 }
 

@@ -29,9 +29,9 @@ namespace Amazon.Ses
 
         public Dictionary<string, string> ToParams()
         {
-            var dic = new Dictionary<string, string>();
-
-            dic.Add("Source", Source);
+            var dic = new Dictionary<string, string> {
+                { "Source", Source }
+            };
 
             SetContent("Message.Subject", Subject, dic);
             SetContent("Message.Body.Html", Html, dic);
@@ -90,8 +90,8 @@ namespace Amazon.Ses
 
                         switch (view.ContentType.MediaType)
                         {
-                            case "text/plain": doc.Text = new SesContent(text, CharsetType.UTF8); break;
-                            case "text/html": doc.Html = new SesContent(text, CharsetType.UTF8); break;
+                            case "text/plain" : doc.Text = new SesContent(text, CharsetType.UTF8); break;
+                            case "text/html"  : doc.Html = new SesContent(text, CharsetType.UTF8); break;
                         }
                     }
                 }
@@ -102,10 +102,10 @@ namespace Amazon.Ses
 
         public enum RecipientType
         {
-            ReplyTo,
-            To,
-            Cc,
-            Bcc
+            ReplyTo = 1,
+            To      = 2,
+            Cc      = 3,
+            Bcc     = 4
         }
 
         public void SetContent(string prefix, SesContent content, Dictionary<string, string> dic)

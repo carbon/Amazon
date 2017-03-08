@@ -17,8 +17,8 @@ namespace Amazon.Ses
             5
         );
 
-        public SesClient(IAwsCredentials credentials)
-             : base(AwsService.Ses, AwsRegion.USEast1, credentials)
+        public SesClient(AwsRegion region, IAwsCredential credential)
+             : base(AwsService.Ses, region, credential)
         { }
 
         public Task<SendEmailResult> SendEmailAsync(MailMessage message)
@@ -74,7 +74,7 @@ namespace Amazon.Ses
             throw lastError;
         }
 
-        protected override async Task<Exception> GetException(HttpResponseMessage response)
+        protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -87,12 +87,11 @@ namespace Amazon.Ses
         {
             request.Parameters.Add("Version", Version);
 
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-            {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Content = new FormUrlEncodedContent(request.Parameters)
             };
 
-            return SendAsync(httpRequest);
+            return base.SendAsync(httpRequest);
         }
 
         #endregion

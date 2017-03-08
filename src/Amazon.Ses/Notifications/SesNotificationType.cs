@@ -2,7 +2,7 @@
 {
     public enum SesNotificationType
     {
-        Bounce,
-        Complaint
+        Bounce    = 1,
+        Complaint = 2
     }
 }

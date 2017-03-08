@@ -9,13 +9,13 @@
 
     public enum SesBounceSubtype
     {
-        Undetermined,
-        General,
-        NoEmail,
-        Suppressed,
-        MailboxFull,
-        MessageToolarge,
-        ContentRejected,
-        AttachmentRejected
+        Undetermined       = 1,
+        General            = 2,
+        NoEmail            = 3,
+        Suppressed         = 4,
+        MailboxFull        = 5,
+        MessageToolarge    = 6,
+        ContentRejected    = 7,
+        AttachmentRejected = 8
     }
 }
