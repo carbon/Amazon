@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Amazon.CloudWatch
 {
@@ -7,18 +6,8 @@ namespace Amazon.CloudWatch
     {
         public GetMetricStatisticsRequest(string nameSpace, string metricName)
         {
-            #region Preconditions
-
-            if (nameSpace == null)
-                throw new ArgumentNullException(nameof(nameSpace));
-
-            if (metricName == null)
-                throw new ArgumentNullException(nameof(metricName));
-
-            #endregion
-
-            Namespace = nameSpace;
-            MetricName = metricName;
+            Namespace = nameSpace ?? throw new ArgumentNullException(nameof(nameSpace));
+            MetricName = metricName ?? throw new ArgumentNullException(nameof(metricName));
         }
         
         // Required
@@ -27,9 +16,9 @@ namespace Amazon.CloudWatch
         // Required
         public string Namespace { get; }
 
-        public IList<Dimension> Dimensions { get; set; }
+        public Dimension[] Dimensions { get; set; }
 
-        public IList<Statistic> Statistics { get; set; }
+        public Statistic[] Statistics { get; set; }
 
         public DateTime StartTime { get; set; }
 
@@ -64,7 +53,7 @@ namespace Amazon.CloudWatch
 
             if (Dimensions != null)
             {
-                for (int i = 0; i < Dimensions.Count; i++)
+                for (int i = 0; i < Dimensions.Length; i++)
                 {
                     var dimension = Dimensions[i];
 
@@ -77,7 +66,7 @@ namespace Amazon.CloudWatch
 
             if (Statistics != null)
             {
-                for (int i = 0; i < Statistics.Count; i++)
+                for (int i = 0; i < Statistics.Length; i++)
                 {
                     var stat = Statistics[i];
 

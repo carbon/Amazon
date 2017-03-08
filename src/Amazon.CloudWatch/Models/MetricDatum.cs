@@ -12,7 +12,7 @@ namespace Amazon.CloudWatch
 
         public DateTime Timestamp { get; set; }
 
-        public IList<Dimension> Dimensions { get; set; }
+        public Dimension[] Dimensions { get; set; }
 
         public string Unit { get; set; }
 

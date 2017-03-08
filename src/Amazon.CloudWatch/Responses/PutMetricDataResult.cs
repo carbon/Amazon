@@ -1,5 +1,4 @@
-﻿
-namespace Amazon.CloudWatch
+﻿namespace Amazon.CloudWatch
 {
     public class PutMetricDataResult
     {

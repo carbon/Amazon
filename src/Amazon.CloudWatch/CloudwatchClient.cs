@@ -13,8 +13,7 @@ namespace Amazon.CloudWatch
         public static string Version = "2010-08-01";
         public static readonly XNamespace NS = "http://monitoring.amazonaws.com/doc/2010-08-01/";
 
-
-        public CloudWatchClient(AwsRegion region, IAwsCredentials credentials)
+        public CloudWatchClient(AwsRegion region, IAwsCredential credentials)
             : base(AwsService.Monitoring, region, credentials)
         { }
 
@@ -88,7 +87,7 @@ namespace Amazon.CloudWatch
             return new FormUrlEncodedContent(request.Parameters);
         }
 
-        protected override async Task<Exception> GetException(HttpResponseMessage response)
+        protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
             var responseText = await response.Content.ReadAsStringAsync();
 

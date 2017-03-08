@@ -29,7 +29,7 @@ namespace Amazon.CloudWatch
 
                 if (datum.Dimensions != null)
                 {
-                    for (int i2 = 0; i < datum.Dimensions.Count; i++)
+                    for (int i2 = 0; i < datum.Dimensions.Length; i++)
                     {
                         var dimension = datum.Dimensions[i2];
 
