@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Amazon.Kms</AssemblyName>
+    <AssemblyTitle>Amazon KMS</AssemblyTitle>
+    <VersionPrefix>0.8.0</VersionPrefix>
+    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+
+    <!-- Package Details-->
+    <Authors>iamcarbon</Authors>
+    <Copyright>© Jason Nelson</Copyright>
+    <Description>Simple api to Amazon's Key Management Service Service.</Description>
+    <PackageTags>aws;kms</PackageTags>
+    <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Amazon.Core\Amazon.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <PackageReference Include="System.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="System" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+</Project>

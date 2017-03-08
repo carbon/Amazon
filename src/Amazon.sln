@@ -1,51 +1,51 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.DynamoDb", "Amazon.DynamoDb\Amazon.DynamoDb.xproj", "{DBDCA918-5E27-409A-BCD4-A8BC67BF5DEB}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Kinesis", "Amazon.Kinesis\Amazon.Kinesis.xproj", "{6ED0F320-70E0-4214-8C5C-CC7DB8A30C13}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Kms", "Amazon.Kms\Amazon.Kms.xproj", "{BA9D9484-3FB0-4858-A6AF-9084F0DD57E9}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.S3", "Amazon.S3\Amazon.S3.xproj", "{509822FC-8656-4FD9-9BE8-79E87DD03499}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Sqs", "Amazon.Sqs\Amazon.Sqs.xproj", "{EF0D3DB3-F9F5-4139-B2FC-05A697A0FAE6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D94F35A3-A44D-4AC4-BBED-C578D86572CE}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.S3.Tests", "Amazon.S3.Tests\Amazon.S3.Tests.xproj", "{32D7C871-E41E-4B0D-9F7B-013C44D7F196}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.DynamoDb", "Amazon.DynamoDb\Amazon.DynamoDb.csproj", "{DBDCA918-5E27-409A-BCD4-A8BC67BF5DEB}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.DynamoDb.Tests", "Amazon.DynamoDb.Tests\Amazon.DynamoDb.Tests.xproj", "{0D4DE00B-2B0D-4D42-BE30-0741C85B0469}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Kinesis", "Amazon.Kinesis\Amazon.Kinesis.csproj", "{6ED0F320-70E0-4214-8C5C-CC7DB8A30C13}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Lambda.Tests", "Amazon.Lambda.Tests\Amazon.Lambda.Tests.xproj", "{4CE8863C-0554-48AD-812E-28D5C117F774}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Kms", "Amazon.Kms\Amazon.Kms.csproj", "{BA9D9484-3FB0-4858-A6AF-9084F0DD57E9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Lambda", "Amazon.Lambda\Amazon.Lambda.xproj", "{6804E399-AB63-4B06-B2D2-2CCEFC85C852}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.S3", "Amazon.S3\Amazon.S3.csproj", "{509822FC-8656-4FD9-9BE8-79E87DD03499}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Sns", "Amazon.Sns\Amazon.Sns.xproj", "{19808EFE-1FC8-4A7C-AF6E-D56C244EF2BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Sqs", "Amazon.Sqs\Amazon.Sqs.csproj", "{EF0D3DB3-F9F5-4139-B2FC-05A697A0FAE6}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Kms.Tests", "Amazon.Kms.Tests\Amazon.Kms.Tests.xproj", "{61DA93BC-30C7-42C7-AC17-745E6110F57C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.S3.Tests", "Amazon.S3.Tests\Amazon.S3.Tests.csproj", "{32D7C871-E41E-4B0D-9F7B-013C44D7F196}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Ses", "Amazon.Ses\Amazon.Ses.xproj", "{72B9D1E3-E8A2-46DA-A2B6-E5F4D86B4E8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.DynamoDb.Tests", "Amazon.DynamoDb.Tests\Amazon.DynamoDb.Tests.csproj", "{0D4DE00B-2B0D-4D42-BE30-0741C85B0469}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Sqs.Tests", "Carbon.Sqs.Tests\Amazon.Sqs.Tests.xproj", "{A1F06B65-1A52-4D9E-9475-F74199699B0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Lambda.Tests", "Amazon.Lambda.Tests\Amazon.Lambda.Tests.csproj", "{4CE8863C-0554-48AD-812E-28D5C117F774}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Core.Tests", "Amazon.Tests\Amazon.Core.Tests.xproj", "{9390E070-4155-40D5-9694-C76EF3263AC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Lambda", "Amazon.Lambda\Amazon.Lambda.csproj", "{6804E399-AB63-4B06-B2D2-2CCEFC85C852}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Core", "Amazon.Core\Amazon.Core.xproj", "{F4BEFD10-C46E-4896-8AF6-2455C01E49D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Sns", "Amazon.Sns\Amazon.Sns.csproj", "{19808EFE-1FC8-4A7C-AF6E-D56C244EF2BE}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Ses.Tests", "Amazon.Ses.Tests\Amazon.Ses.Tests.xproj", "{702D1DF5-F605-4117-8F2E-D1C979660172}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Kms.Tests", "Amazon.Kms.Tests\Amazon.Kms.Tests.csproj", "{61DA93BC-30C7-42C7-AC17-745E6110F57C}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Kinisis.Tests", "Amazon.Kinisis.Tests\Amazon.Kinisis.Tests.xproj", "{19535B26-2740-4986-A194-CB52A428FFCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ses", "Amazon.Ses\Amazon.Ses.csproj", "{72B9D1E3-E8A2-46DA-A2B6-E5F4D86B4E8D}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Cloudwatch.Tests", "Amazon.Cloudwatch.Tests\Amazon.Cloudwatch.Tests.xproj", "{FBCD6BE3-74B4-46B8-A382-80532FB55427}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carbon.Sqs.Tests", "Carbon.Sqs.Tests\Carbon.Sqs.Tests.csproj", "{A1F06B65-1A52-4D9E-9475-F74199699B0A}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.CloudWatch", "Amazon.CloudWatch\Amazon.CloudWatch.xproj", "{35A881ED-E219-4607-A268-CBC6026B6BA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Tests", "Amazon.Tests\Amazon.Tests.csproj", "{9390E070-4155-40D5-9694-C76EF3263AC8}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Ec2", "Amazon.Ec2\Amazon.Ec2.xproj", "{0A564600-B6D3-4246-B849-DE03F3B909D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Core", "Amazon.Core\Amazon.Core.csproj", "{F4BEFD10-C46E-4896-8AF6-2455C01E49D6}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Amazon.Ec2.Tests", "Amazon.Ec2.Tests\Amazon.Ec2.Tests.xproj", "{0EDF4882-15DA-47EF-8D6E-452F302EB9F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ses.Tests", "Amazon.Ses.Tests\Amazon.Ses.Tests.csproj", "{702D1DF5-F605-4117-8F2E-D1C979660172}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Kinisis.Tests", "Amazon.Kinisis.Tests\Amazon.Kinisis.Tests.csproj", "{19535B26-2740-4986-A194-CB52A428FFCF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Cloudwatch.Tests", "Amazon.Cloudwatch.Tests\Amazon.Cloudwatch.Tests.csproj", "{FBCD6BE3-74B4-46B8-A382-80532FB55427}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch", "Amazon.CloudWatch\Amazon.CloudWatch.csproj", "{35A881ED-E219-4607-A268-CBC6026B6BA8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ec2", "Amazon.Ec2\Amazon.Ec2.csproj", "{0A564600-B6D3-4246-B849-DE03F3B909D9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ec2.Tests", "Amazon.Ec2.Tests\Amazon.Ec2.Tests.csproj", "{0EDF4882-15DA-47EF-8D6E-452F302EB9F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
