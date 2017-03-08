@@ -43,7 +43,7 @@ namespace Amazon
         public static readonly AwsRegion APSouthEast2 = new AwsRegion("ap-southeast-2"); // | Asia Pacific  | Sydney        | 2012-11-12
         public static readonly AwsRegion CNNorth1     = new AwsRegion("cn-north-1");     // | China         | Beijing       | 2013-12-18
         public static readonly AwsRegion EUCentral1   = new AwsRegion("eu-central-1");   // | EU            | Frankfurt     | 2014-10-23
-        public static readonly AwsRegion APNortheast2 = new AwsRegion("ap-northeast-2"); // | Asia Pacific  | Seoul	        | 2016-01-06
+        public static readonly AwsRegion APNortheast2 = new AwsRegion("ap-northeast-2"); // | Asia Pacific  | Seoul         | 2016-01-06
         public static readonly AwsRegion APSouth1     = new AwsRegion("ap-south-1");     // | Asia Pacific  | Mumbai        | 2016-06-27
         public static readonly AwsRegion USEast2      = new AwsRegion("us-east-2");      // | US            | Ohio          | 2016-10-17
         public static readonly AwsRegion CACentral1   = new AwsRegion("ca-central-1");   // | Canada        | Central       | 2016-12-08
