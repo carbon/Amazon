@@ -8,9 +8,9 @@
 		public void CompleteXmlGenerate()
 		{
 			var g = new CompleteMultipartUpload(new[] { 
-				new UploadPartResult(1, "uploadId", "eTag1"), 
-				new UploadPartResult(2, "uploadId", "eTag2"), 
-				new UploadPartResult(3, "uploadId", "eTag3")}
+				new UploadPartResult("uploadId", 1, "eTag1"), 
+				new UploadPartResult("uploadId", 2, "eTag2"), 
+				new UploadPartResult("uploadId", 3, "eTag3")}
 			);
 
 			Assert.Equal(@"<CompleteMultipartUpload>
