@@ -10,8 +10,8 @@ namespace Amazon.Kms
     {
         public const string Version = "2014-11-01";
 
-        public KmsClient(AwsRegion region, IAwsCredentials credentials)
-            : base(AwsService.Kms, region, credentials)
+        public KmsClient(AwsRegion region, IAwsCredential credential)
+            : base(AwsService.Kms, region, credential)
         { }
 
         public Task<CreateGrantResponse> CreateGrantAsync(CreateGrantRequest request) => 

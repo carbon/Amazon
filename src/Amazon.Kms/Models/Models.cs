@@ -115,18 +115,8 @@ namespace Amazon.Kms
 
         public DecryptRequest(string keyId, byte[] ciphertext, JsonObject context)
         {
-            #region Preconditions
-
-            if (keyId == null)
-                throw new ArgumentNullException(nameof(keyId));
-
-            if (ciphertext == null)
-                throw new ArgumentNullException(nameof(ciphertext));
-
-            #endregion
-
-            KeyId = keyId;
-            CiphertextBlob = ciphertext;
+            KeyId = keyId ?? throw new ArgumentNullException(nameof(keyId));
+            CiphertextBlob = ciphertext ?? throw new ArgumentNullException(nameof(ciphertext));
             EncryptionContext = context;
         }
 
@@ -156,21 +146,10 @@ namespace Amazon.Kms
 
         public EncryptRequest(string keyId, byte[] data, JsonObject context)
         {
-            #region Preconditions
-
-            if (keyId == null)
-                throw new ArgumentNullException(nameof(keyId));
-
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-
-            #endregion
-
-            KeyId = keyId;
-            Plaintext = data;
+            KeyId = keyId ?? throw new ArgumentNullException(nameof(keyId));
+            Plaintext = data ?? throw new ArgumentNullException(nameof(data));
             EncryptionContext = context;
         }
-
 
         /// <summary>
         /// An encryption context is a key/value pair that you can pass to 

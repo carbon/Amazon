@@ -6,33 +6,18 @@ using Carbon.Json;
 
 namespace Amazon.Kms
 {
-    // Implement IAsyncProtector ?
-
     public class KmsProtector
     {
         private readonly KmsClient client;
         private readonly string keyId;
 
-        public KmsProtector(IAwsCredentials credentials, string keyId)
-            : this(AwsRegion.Standard, credentials, keyId) { }
+        public KmsProtector(AwsRegion region, string keyId, IAwsCredential credential)
+            : this(new KmsClient(region, credential), keyId) { }
 
-        public KmsProtector(AwsRegion region, IAwsCredentials credentials, string keyId)
+        public KmsProtector(KmsClient client, string keyId)
         {
-            #region Preconditions
-
-            if (region == null)
-                throw new ArgumentNullException(nameof(region));
-
-            if (credentials == null)
-                throw new ArgumentNullException(nameof(credentials));
-
-            if (keyId == null)
-                throw new ArgumentNullException(nameof(keyId));
-
-            #endregion
-
-            this.client = new KmsClient(region, credentials);
-            this.keyId = keyId;
+            this.client = client ?? throw new ArgumentNullException(nameof(client));
+            this.keyId = keyId ?? throw new ArgumentNullException(nameof(keyId));
         }
 
         public async Task<byte[]> EncryptAsync(byte[] data, IDictionary<string, string> context = null)
