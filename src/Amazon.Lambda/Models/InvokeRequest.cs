@@ -1,4 +1,5 @@
-﻿using Carbon.Json;
+﻿using System;
+using Carbon.Json;
 
 namespace Amazon.Lambda
 {
@@ -6,13 +7,13 @@ namespace Amazon.Lambda
     {
         public InvokeRequest(string functionName)
         {
-            FunctionName = functionName;
+            FunctionName = functionName ?? throw new ArgumentNullException(nameof(functionName));
         }
 
         public InvokeRequest(string functionName, JsonNode payload)
         {
-            FunctionName = functionName;
-            Payload = payload.ToString(pretty: false);
+            FunctionName = functionName ?? throw new ArgumentNullException(nameof(functionName));
+            Payload = payload?.ToString(pretty: false) ?? throw new ArgumentNullException(nameof(payload));
         }
 
         public string FunctionName { get; }

@@ -10,14 +10,14 @@ namespace Amazon.Lambda
     {
         public const string Version = "2015-03-31";
 
-        public LambdaClient(AwsRegion region, IAwsCredentials credentials)
-            : base(AwsService.Lambda, region, credentials)
+        public LambdaClient(AwsRegion region, IAwsCredential credential)
+            : base(AwsService.Lambda, region, credential)
         { }
 
         // lambda:InvokeFunction
 
-        public Task<InvokeResult> InvokeAsync(string functionName, object param)
-            => InvokeFunctionAsync(new InvokeRequest(functionName, JsonNode.FromObject(param)));
+        public Task<InvokeResult> InvokeAsync(string functionName, object param) =>
+            InvokeFunctionAsync(new InvokeRequest(functionName, JsonNode.FromObject(param)));
 
         public async Task<InvokeResult> InvokeFunctionAsync(InvokeRequest message)
         {
@@ -45,3 +45,5 @@ namespace Amazon.Lambda
         }
     }
 }
+
+// http://docs.aws.amazon.com/lambda/latest/dg/API_Reference.html
