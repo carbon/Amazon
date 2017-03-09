@@ -6,9 +6,9 @@ namespace Amazon.CloudWatch.Tests
 {
     public class CloudWatchTests
     {
-        private readonly AwsCredential credential = new AwsCredential("AKIAJE3JFQRRF5VXXBMQ", "9zsX+lXxXUMJrMeupK6DqqLHCQ5MYeVxUg2vNA/v"); // cmmonitoring
+        private readonly AwsCredential credential = new AwsCredential("x", "x");
 
-        [Fact]
+       //  [Fact]
         public async Task PostMetric()
         {
 
@@ -19,7 +19,7 @@ namespace Amazon.CloudWatch.Tests
             // throw new Exception(result);
         }
 
-        [Fact]
+       // [Fact]
         public async Task Test1()
         {
 
@@ -30,7 +30,7 @@ namespace Amazon.CloudWatch.Tests
             // throw new Exception(result);
         }
 
-        [Fact]
+        //[Fact]
         public async Task Test2()
         {
             var client = new CloudWatchClient(AwsRegion.USEast1, credential);
