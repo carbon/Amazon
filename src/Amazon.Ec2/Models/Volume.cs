@@ -34,26 +34,4 @@ namespace Amazon.Ec2
         [XmlArrayItem("item")]
         public List<VolumeAttachment> Attachments { get; set; }
     }
-
-    public class VolumeAttachment
-    {
-        [XmlElement("attachTime", DataType = "dateTime")]
-        
-        public DateTime AttachTime { get; set; }
-
-        [XmlElement("volumeId")]
-        public string VolumeId { get; set; }
-
-        [XmlElement("instanceId")]
-        public string InstanceId { get; set; }
-
-        [XmlElement("device")]
-        public string Device { get; set; }
-
-        [XmlElement("status")]
-        public string Status { get; set; }
-
-        [XmlElement("deleteOnTermination")]
-        public bool DeleteOnTermination { get; set; }
-    }
 }

@@ -16,11 +16,18 @@ namespace Amazon.Ec2
 
         #region Shortcuts
 
-        public async Task<Image> DescribeImageAsync(string imageId)
+        public async Task<Image> DescribeImageAsync(string id)
         {
-            var result = await DescribeImagesAsync(new DescribeImagesRequest { ImageIds = { imageId } });
+            var result = await DescribeImagesAsync(new DescribeImagesRequest { ImageIds = { id } });
 
             return result.Images.Count > 0 ? result.Images[0] : null;
+        }
+
+        public async Task<NetworkInterface> DescribeNetworkInterfaceAsync(string id)
+        {
+            var result = await DescribeNetworkInterfacesAsync(new DescribeNetworkInterfacesRequest { NetworkInterfaceIds = { id } });
+
+            return result.NetworkInterfaces.Count > 0 ? result.NetworkInterfaces[0] : null;
         }
 
         public async Task<Instance> DescribeInstanceAsync(string instanceId)
@@ -46,7 +53,7 @@ namespace Amazon.Ec2
 
         #endregion
 
-        public async Task<DescribeVolumesResponse> DescribeVolumesAsync(DescribeVolumesRequest request)
+        public async Task<DescribeNetworkInterfacesResponse> DescribeNetworkInterfacesAsync(DescribeNetworkInterfacesRequest request)
         {
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Content = GetPostContent(request.ToParams())
@@ -54,7 +61,19 @@ namespace Amazon.Ec2
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            return DescribeVolumesResponse.Parse(responseText);
+            return DescribeNetworkInterfacesResponse.Parse(responseText);
+        }
+
+        public async Task<DescribeSubnetsResponse> DescribeSubnetsAsync(DescribeSubnetsRequest request)
+        {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
+            {
+                Content = GetPostContent(request.ToParams())
+            };
+
+            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+
+            return DescribeSubnetsResponse.Parse(responseText);
         }
 
         public async Task<DescribeInstancesResponse> DescribeInstancesAsync(DescribeInstancesRequest request)
@@ -90,6 +109,18 @@ namespace Amazon.Ec2
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
             return DescribeVpcsResponse.Parse(responseText);
+        }
+
+        public async Task<DescribeVolumesResponse> DescribeVolumesAsync(DescribeVolumesRequest request)
+        {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
+            {
+                Content = GetPostContent(request.ToParams())
+            };
+
+            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+
+            return DescribeVolumesResponse.Parse(responseText);
         }
 
         #region Helpers

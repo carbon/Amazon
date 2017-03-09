@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Ec2</AssemblyName>
     <AssemblyTitle>Amazon EC2</AssemblyTitle>
-    <VersionPrefix>0.8.0</VersionPrefix>
+    <VersionPrefix>0.8.1</VersionPrefix>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
 
     <!-- Package Details-->
