@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ec2", "Amazon.Ec2\Am
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ec2.Tests", "Amazon.Ec2.Tests\Amazon.Ec2.Tests.csproj", "{0EDF4882-15DA-47EF-8D6E-452F302EB9F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Iam", "Amazon.Iam\Amazon.Iam.csproj", "{CEA7E017-F021-4D6D-BE20-974CA6F5B532}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{0EDF4882-15DA-47EF-8D6E-452F302EB9F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EDF4882-15DA-47EF-8D6E-452F302EB9F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EDF4882-15DA-47EF-8D6E-452F302EB9F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEA7E017-F021-4D6D-BE20-974CA6F5B532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEA7E017-F021-4D6D-BE20-974CA6F5B532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEA7E017-F021-4D6D-BE20-974CA6F5B532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEA7E017-F021-4D6D-BE20-974CA6F5B532}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
