@@ -4,12 +4,13 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Net;
 
 using Carbon.Storage;
 
 namespace Amazon.S3
 {
-    public class S3Object : IBlob, IDisposable
+    public class S3Object : IBlobResult, IDisposable
     {
         private Stream stream;
         private readonly Dictionary<string, string> headers = new Dictionary<string, string>();
@@ -35,13 +36,26 @@ namespace Amazon.S3
             {
                 headers.Add(header.Key, string.Join(";", header.Value));
             }
-            
+
+
+            StatusCode = response.StatusCode;
+
+            if (response.StatusCode == HttpStatusCode.NotModified)
+            {
+                response.Dispose();
+
+                return;
+            }
+
             this.response = response;
         }
+
 
         #region Header Aliases
 
         public string Key { get; }
+
+        public HttpStatusCode StatusCode { get; }
 
         public string ContentType
         {
@@ -55,8 +69,10 @@ namespace Amazon.S3
             set { headers["Content-Length"] = value.ToString(); }
         }
 
-        public DateTimeOffset? LastModified => 
-            DateTime.ParseExact(headers["Last-Modified"], "r", null).ToUniversalTime();
+        public DateTimeOffset? LastModified
+        {
+           get => DateTime.ParseExact(headers["Last-Modified"], "r", null).ToUniversalTime();
+        }
 
         public CacheControlHeaderValue CacheControl
         {
@@ -66,9 +82,7 @@ namespace Amazon.S3
 
         #endregion
 
-        public Stream Open() => OpenAsync().Result;
-
-        public async Task<Stream> OpenAsync()
+        public async ValueTask<Stream> OpenAsync()
         {
             if (stream == null)
             {
@@ -95,8 +109,7 @@ namespace Amazon.S3
         public void Dispose()
         {
             stream?.Dispose();
-
-            response.Dispose();
+            response?.Dispose();
         }
     }
 }

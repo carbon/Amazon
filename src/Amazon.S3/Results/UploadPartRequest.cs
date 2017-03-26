@@ -13,15 +13,12 @@ namespace Amazon.S3
         {
             #region Preconditions
 
-            if (uploadId == null)
-                throw new ArgumentNullException(nameof(uploadId));
-
             if (partNumber < 1 || partNumber > 10000)
                 throw new ArgumentOutOfRangeException(nameof(partNumber), partNumber, "Must be between 1 and 10,000");
 
             #endregion
 
-            UploadId = uploadId;
+            UploadId = uploadId ?? throw new ArgumentNullException(nameof(uploadId));
             PartNumber = partNumber;
         }
 

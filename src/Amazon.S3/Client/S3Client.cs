@@ -12,9 +12,6 @@ namespace Amazon.S3
     {
         public static readonly XNamespace NS = "http://s3.amazonaws.com/doc/2006-03-01/";
 
-        public S3Client(IAwsCredential credential)
-            : this(AwsRegion.USEast1, credential) { }
-
         public S3Client(AwsRegion region, IAwsCredential credential)
             : base(AwsService.S3, region, credential) { }
 
@@ -27,7 +24,7 @@ namespace Amazon.S3
 
         public async Task<ListBucketResult> ListBucketAsync(string bucketName, ListBucketOptions options)
         {
-            var request = new ListBucketRequest(region, bucketName, options);
+            var request = new ListBucketRequest(Region, bucketName, options);
 
             var responseText = await SendAsync(request).ConfigureAwait(false);          
 
@@ -129,7 +126,12 @@ namespace Amazon.S3
             await SignAsync(request).ConfigureAwait(false);
 
             var response = await httpClient.SendAsync(request).ConfigureAwait(false);
-            
+
+            if (response.StatusCode == HttpStatusCode.NotModified)
+            {
+                return response;
+            }
+
             if (!response.IsSuccessStatusCode)
             {
                 using (response)

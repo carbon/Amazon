@@ -19,10 +19,8 @@ namespace Amazon.S3
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
              initialDelay : TimeSpan.FromMilliseconds(100),
              maxDelay     : TimeSpan.FromSeconds(3),
-             maxRetries   : 5);
-
-        public S3Bucket(string bucketName, IAwsCredential credential)
-            : this(AwsRegion.USEast1, bucketName, credential) { }
+             maxRetries   : 5
+        );
               
         public S3Bucket(AwsRegion region, string bucketName, IAwsCredential credential)
             : this(bucketName, client: new S3Client(region, credential)) { }
@@ -33,6 +31,17 @@ namespace Amazon.S3
             this.client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
+        // TODO: Fetch the region too...
+
+        public S3Bucket(AwsRegion region, string bucketName)
+        {
+            this.bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
+
+            var credential = new InstanceRoleCredential(); // this will be fetched on first use
+
+            this.client = new S3Client(region, credential);
+        }
+
         public S3Bucket WithTimeout(TimeSpan timeout)
         {
             client.SetTimeout(timeout);
@@ -40,9 +49,11 @@ namespace Amazon.S3
             return this;
         }
 
-        public Task<IReadOnlyList<IBlob>> ListAsync(string prefix) => 
-            ListAsync(prefix, null, 1000);
-        
+        public Task<IReadOnlyList<IBlob>> ListAsync(string prefix)
+        {
+            return ListAsync(prefix, null, 1000);
+        }
+
         public async Task<IReadOnlyList<IBlob>> ListAsync(string prefix, string continuationToken, int take = 1000)
         {
             var request = new ListBucketOptions {
@@ -56,15 +67,6 @@ namespace Amazon.S3
             return result.Items;
         }
 
-        public async Task<IBlob> GetRangeAsync(string name, long start, long end)
-        {
-            var request = new GetObjectRequest(client.Region, bucketName, objectName: name);
-
-            request.SetRange(start, end);
-
-            return await client.GetObjectAsync(request).ConfigureAwait(false);
-        }
-
         public async Task<IBlob> GetAsync(string name)
         {
             var request = new GetObjectRequest(client.Region, bucketName, objectName: name);
@@ -72,11 +74,31 @@ namespace Amazon.S3
             return await client.GetObjectAsync(request).ConfigureAwait(false);
         }
 
-        public async Task<IBlob> GetBufferedAsync(string name)
+        // If-Modified-Since                    OR 304
+        // If-None-Match        -- ETag         OR 304
+        public async Task<IBlobResult> GetAsync(string name, GetBlobOptions options)
         {
-            var request = new GetObjectRequest(client.Region, bucketName, objectName: name) {
-                CompletionOption = HttpCompletionOption.ResponseContentRead
-            };
+            var request = new GetObjectRequest(client.Region, bucketName, objectName: name);
+
+            if (options.IfModifiedSince != null)
+            {
+                request.IfModifiedSince = options.IfModifiedSince;
+            }
+
+            if (options.IfNoneMatch != null)
+            {
+                request.IfNoneMatch = options.IfNoneMatch;
+            }
+
+            if (options.Range != null)
+            {
+                request.SetRange(options.Range.Value.Start, options.Range.Value.End);
+            }
+
+            if (options.BufferResponse)
+            {
+                request.CompletionOption = HttpCompletionOption.ResponseContentRead;
+            }
 
             return await client.GetObjectAsync(request).ConfigureAwait(false);
         }
@@ -87,7 +109,7 @@ namespace Amazon.S3
 
             var result = await client.GetObjectHeadAsync(headRequest).ConfigureAwait(false);
 
-            return result.Headers;
+            return result.Metadata;
         }
 
         public Task<RestoreObjectResult> InitiateRestoreAsync(string name, int days)
@@ -142,22 +164,22 @@ namespace Amazon.S3
             return client.CopyObjectAsync(request);
         }
 
-        public async Task PutAsync(string name, Blob blob)
+        public async Task PutAsync(IBlob blob)
         {
             #region Preconditions
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
 
             if (blob == null)
                 throw new ArgumentNullException(nameof(blob));
 
+            if (blob.Name == null)
+                throw new ArgumentNullException("blob.Name");
+
             #endregion
 
-           
+
             // TODO: Chunked upload
 
-            var stream = blob.Open();
+            var stream = await blob.OpenAsync().ConfigureAwait(false);
 
             #region Stream conditions
 
@@ -169,7 +191,7 @@ namespace Amazon.S3
 
             #endregion
 
-            var request = new PutObjectRequest(client.Region, bucketName, name);
+            var request = new PutObjectRequest(client.Region, bucketName, blob.Name);
             
             request.SetStream(stream);
 

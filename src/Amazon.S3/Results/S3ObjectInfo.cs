@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 using Carbon.Storage;
 
@@ -12,13 +13,13 @@ namespace Amazon.S3
         public S3ObjectInfo(string key, long size)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
-            Size = size;
+            ContentLength = size;
         }
 
         public S3ObjectInfo(string key, long size, DateTime modified)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
-            Size = size;
+            ContentLength = size;
             Modified = modified;
         }
 
@@ -33,62 +34,63 @@ namespace Amazon.S3
             BucketName = bucketName;
             Key = name;
 
-            Size        = response.Content.Headers.ContentLength.Value;             // Content-Length
-            ContentType = response.Content.Headers.ContentType.MediaType;           // Content-Type
-            Modified    = response.Content.Headers.LastModified.Value.UtcDateTime;  // Last-Modified
+            ContentLength = response.Content.Headers.ContentLength.Value;             // Content-Length
+            Modified = response.Content.Headers.LastModified.Value.UtcDateTime;  // Last-Modified
 
             if (response.Headers.ETag != null)
             {
                 ETag = new ETag(response.Headers.ETag.Tag);
             }
 
+            var headers = new Dictionary<string, string>();
+
             foreach (var header in response.Headers)
             {
-                Headers.Add(header.Key, string.Join(";", header.Value));
+                headers.Add(header.Key, string.Join(";", header.Value));
             }
 
             foreach (var header in response.Content.Headers)
             {
-                Headers.Add(header.Key, string.Join(";", header.Value));
+                headers.Add(header.Key, string.Join(";", header.Value));
             }
+
+            Metadata = headers;
         }
 
         public string BucketName { get; }
 
         public string Key { get; }
 
-        public string ContentType { get; }
-
         public ETag ETag { get; }
 
-        public long Size { get; } // aka Content-Length
+        public long ContentLength { get; }
 
         public DateTime Modified { get; }
 
-        public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>();   
+        public IReadOnlyDictionary<string, string> Metadata { get; }
 
         #region IBlob
 
         string IBlob.Name => Key;
 
-        IReadOnlyDictionary<string, string> IBlob.Metadata => Headers;
+        long IBlob.Size => ContentLength;
 
-        Stream IBlob.Open()
+        ValueTask<Stream> IBlob.OpenAsync()
         {
             throw new NotImplementedException();
         }
 
-        void IDisposable.Dispose()
-        {
-        }
+        void IDisposable.Dispose() { }
 
         #endregion
 
         #region Helpers
 
-        public string VersionId => Headers["x-amz-version-id"];
+        public string ContentType => Metadata["Content-Type"];
 
-        public string StorageClass => Headers["x-amz-storage-class"];
+        public string VersionId => Metadata.TryGetValue("x-amz-version-id", out var version) ? version : null;
+
+        public string StorageClass => Metadata["x-amz-storage-class"];
 
         #endregion
     }

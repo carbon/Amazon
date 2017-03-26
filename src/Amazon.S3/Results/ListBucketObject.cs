@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using System.IO;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 using Carbon.Storage;
 
@@ -33,7 +34,7 @@ namespace Amazon.S3
 
         IReadOnlyDictionary<string, string> IBlob.Metadata => null;
 
-        Stream IBlob.Open()
+        ValueTask<Stream> IBlob.OpenAsync()
         {
             throw new NotImplementedException();
         }

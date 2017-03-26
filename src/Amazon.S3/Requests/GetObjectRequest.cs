@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -9,6 +10,28 @@ namespace Amazon.S3
             : base(HttpMethod.Get, region, bucketName, objectName)
         {
             CompletionOption = HttpCompletionOption.ResponseHeadersRead;
+        }
+
+        
+        public DateTimeOffset? IfModifiedSince
+        {
+            get => Headers.IfModifiedSince;
+            set => Headers.IfModifiedSince = value;
+        }
+
+        public string IfNoneMatch
+        {
+            set
+            {
+                if (value == null)
+                {
+                    Headers.IfNoneMatch.Clear();
+                }
+                else
+                {
+                    Headers.IfNoneMatch.Add(new EntityTagHeaderValue(value));
+                }
+            }
         }
 
         public void SetRange(long? from, long? to)
