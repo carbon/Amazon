@@ -1,11 +1,11 @@
-dotnet pack ./src/Amazon.Core       -o ./../../build/Amazon.Core
-dotnet pack ./src/Amazon.S3         -o ./../../build/Amazon.S3
-dotnet pack ./src/Amazon.DynamoDb   -o ./../../build/Amazon.DynamoDb
-dotnet pack ./src/Amazon.Ses        -o ./../../build/Amazon.Ses
-dotnet pack ./src/Amazon.Lambda     -o ./../../build/Amazon.Lambda
-dotnet pack ./src/Amazon.Kinesis    -o ./../../build/Amazon.Kinesis
-dotnet pack ./src/Amazon.Sns        -o ./../../build/Amazon.Sns
-dotnet pack ./src/Amazon.Kms        -o ./../../build/Amazon.Kms
-dotnet pack ./src/Amazon.CloudWatch -o ./../../build/Amazon.CloudWatch
-dotnet pack ./src/Amazon.Ec2        -o ./../../build/Amazon.Ec2
-dotnet pack ./src/Amazon.Sqs        -o ./../../build/Amazon.Sqs
+dotnet pack ./src/Amazon.Core       -c Release -o ./../../build/Amazon.Core
+dotnet pack ./src/Amazon.S3         -c Release -o ./../../build/Amazon.S3
+dotnet pack ./src/Amazon.DynamoDb   -c Release -o ./../../build/Amazon.DynamoDb
+dotnet pack ./src/Amazon.Ses        -c Release -o ./../../build/Amazon.Ses
+dotnet pack ./src/Amazon.Lambda     -c Release -o ./../../build/Amazon.Lambda
+dotnet pack ./src/Amazon.Kinesis    -c Release -o ./../../build/Amazon.Kinesis
+dotnet pack ./src/Amazon.Sns        -c Release -o ./../../build/Amazon.Sns
+dotnet pack ./src/Amazon.Kms        -c Release -o ./../../build/Amazon.Kms
+dotnet pack ./src/Amazon.CloudWatch -c Release -o ./../../build/Amazon.CloudWatch
+dotnet pack ./src/Amazon.Ec2        -c Release -o ./../../build/Amazon.Ec2
+dotnet pack ./src/Amazon.Sqs        -c Release -o ./../../build/Amazon.Sqs
