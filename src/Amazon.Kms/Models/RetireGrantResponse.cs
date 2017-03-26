@@ -1,8 +1,9 @@
 ﻿namespace Amazon.Kms
 {
-    public abstract class KmsRequest { }
-
-    public abstract class KmsResponse { }
+    public class RetireGrantResponse : KmsResponse
+    {
+        // 200
+    }
 }
 
 /*

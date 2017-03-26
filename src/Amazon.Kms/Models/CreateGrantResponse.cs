@@ -1,8 +1,11 @@
 ﻿namespace Amazon.Kms
 {
-    public abstract class KmsRequest { }
+    public class CreateGrantResponse : KmsResponse
+    {
+        public string GrantId { get; set; }
 
-    public abstract class KmsResponse { }
+        public string GrantToken { get; set; }
+    }
 }
 
 /*

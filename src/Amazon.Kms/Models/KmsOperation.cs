@@ -1,8 +1,17 @@
 ﻿namespace Amazon.Kms
 {
-    public abstract class KmsRequest { }
+    public enum KmsOperation
+    {
+        Decrypt = 1,
+        Encrypt = 2,
+        GenerateDataKey = 3,
+        GenerateDataKeyWithoutPlaintext = 4,
+        ReEncryptFrom = 5,
+        ReEncryptTo = 6,
+        CreateGrant = 7,
+        RetireGrant = 8
 
-    public abstract class KmsResponse { }
+    }
 }
 
 /*

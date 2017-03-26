@@ -1,8 +1,16 @@
-﻿namespace Amazon.Kms
-{
-    public abstract class KmsRequest { }
+﻿using System.Runtime.Serialization;
 
-    public abstract class KmsResponse { }
+namespace Amazon.Kms
+{
+    public class RetireGrantRequest : KmsRequest
+    {
+        public string GrantId { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public string GrantToken { get; set; }
+
+        public string KeyId { get; set; }
+    }
 }
 
 /*

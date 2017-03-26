@@ -1,8 +1,10 @@
 ﻿namespace Amazon.Kms
 {
-    public abstract class KmsRequest { }
-
-    public abstract class KmsResponse { }
+    public enum KeySpec
+    {
+        AES_256 = 1,
+        AES_128 = 2
+    }
 }
 
 /*

@@ -17,7 +17,7 @@ namespace Amazon.Kms
         public KmsProtector(KmsClient client, string keyId)
         {
             this.client = client ?? throw new ArgumentNullException(nameof(client));
-            this.keyId = keyId ?? throw new ArgumentNullException(nameof(keyId));
+            this.keyId  = keyId  ?? throw new ArgumentNullException(nameof(keyId));
         }
 
         public async Task<byte[]> EncryptAsync(byte[] data, IDictionary<string, string> context = null)

@@ -1,8 +1,19 @@
-﻿namespace Amazon.Kms
-{
-    public abstract class KmsRequest { }
+﻿using System.Runtime.Serialization;
 
-    public abstract class KmsResponse { }
+using Carbon.Json;
+
+namespace Amazon.Kms
+{
+    public class GrantConstraints
+    {
+        // Match all
+        [DataMember(EmitDefaultValue = false)]
+        public JsonObject EncryptionContextEquals { get; set; }
+
+        // Match any
+        [DataMember(EmitDefaultValue = false)]
+        public JsonObject EncryptionContextSubset { get; set; }
+    }
 }
 
 /*

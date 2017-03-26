@@ -1,8 +1,15 @@
-﻿namespace Amazon.Kms
-{
-    public abstract class KmsRequest { }
+﻿using System.Collections.Generic;
 
-    public abstract class KmsResponse { }
+namespace Amazon.Kms
+{
+    public class ListGrantsResponse : KmsResponse
+    {
+        public string NextMarker { get; set; }
+
+        public bool Truncated { get; set; }
+
+        public List<Grant> Grants { get; set; }
+    }
 }
 
 /*

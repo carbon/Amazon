@@ -1,8 +1,11 @@
 ﻿namespace Amazon.Kms
 {
-    public abstract class KmsRequest { }
+    public class EncryptResponse : KmsResponse
+    {
+        public byte[] CiphertextBlob { get; set; }
 
-    public abstract class KmsResponse { }
+        public string KeyId { get; set; }
+    }
 }
 
 /*
