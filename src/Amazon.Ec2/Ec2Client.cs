@@ -23,6 +23,13 @@ namespace Amazon.Ec2
             return result.Images.Count > 0 ? result.Images[0] : null;
         }
 
+        public async Task<Subnet> DescribeSubnetAsync(string id)
+        {
+            var result = await DescribeSubnetsAsync(new DescribeSubnetsRequest { SubnetIds = { id } });
+
+            return result.Subnets.Count > 0 ? result.Subnets[0] : null;
+        }
+
         public async Task<NetworkInterface> DescribeNetworkInterfaceAsync(string id)
         {
             var result = await DescribeNetworkInterfacesAsync(new DescribeNetworkInterfacesRequest { NetworkInterfaceIds = { id } });

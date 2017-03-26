@@ -2,15 +2,14 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ec2</AssemblyName>
-    <AssemblyTitle>Amazon EC2</AssemblyTitle>
-    <VersionPrefix>0.8.1</VersionPrefix>
+    <VersionPrefix>0.8.2</VersionPrefix>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple wrapper around the EC2 service.</Description>
-    <PackageTags>aws</PackageTags>
+    <Description>A simple API for Amazon EC2.</Description>
+    <PackageTags>aws;async</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
