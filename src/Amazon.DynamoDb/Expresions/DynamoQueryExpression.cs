@@ -33,7 +33,7 @@ namespace Amazon.DynamoDb
                 }
                 else if (expression is BetweenExpression between)
                 {
-                    if (IsKey(between.Property.ToString()))
+                    if (IsKey(between.Expression.Name))
                     {
                         KeyExpression.Add(between);
                     }

@@ -71,7 +71,7 @@ namespace Amazon.DynamoDb
 
         private void WriteBetweenExpression(BetweenExpression e)
         {
-            WriteName(e.Property.ToString());
+            WriteName(e.Expression.Name);
 
             sb.Append(" between ");
 

@@ -2,17 +2,15 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.DynamoDb</AssemblyName>
-    <AssemblyTitle>Amazon DynamoDB</AssemblyTitle>
-    <VersionPrefix>0.8.0</VersionPrefix>
+    <VersionPrefix>0.8.2</VersionPrefix>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple wrapper around the DynamoDB service.</Description>
-    <PackageTags>aws;dynamodb;carbon;async</PackageTags>
+    <Description>A simple wrapper around the Amazon DynamoDB service.</Description>
+    <PackageTags>dynamodb;async;aws</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
-    <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 
@@ -21,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Data" Version="0.12.0" />
+    <PackageReference Include="Carbon.Data" Version="0.13.1" />
     <PackageReference Include="System.Text.Encodings.Web" Version="4.3.0" />
   </ItemGroup>
 
