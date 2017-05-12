@@ -6,7 +6,7 @@ namespace Amazon.Ec2
     {        
         public List<string> VpcIds { get; } = new List<string>();
 
-        public AwsRequest ToParams()
+        public Dictionary<string, string> ToParams()
         {
             var parameters = GetParameters("DescribeVpcs");
 

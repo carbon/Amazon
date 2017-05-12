@@ -1,7 +1,9 @@
-﻿namespace Amazon.Ec2
+﻿using System.Collections.Generic;
+
+namespace Amazon.Ec2
 {
     public interface IEc2Request
     {
-        AwsRequest ToParams();
+        Dictionary<string, string> ToParams();
     }
 }

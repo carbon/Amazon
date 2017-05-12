@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -118,16 +119,16 @@ namespace Amazon.Ec2
             return Ec2ResponseHelper<TResponse>.ParseXml(responseXml);
         }
 
-        private FormUrlEncodedContent GetPostContent(AwsRequest request)
+        private FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)
         {
-            request.Add("Version", Version);
+            parameters.Add("Version", Version);
 
-            return new FormUrlEncodedContent(request.Parameters);
+            return new FormUrlEncodedContent(parameters);
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            var responseText = await response.Content.ReadAsStringAsync();
+            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             throw new Exception(response.StatusCode + "/" + responseText);
         }

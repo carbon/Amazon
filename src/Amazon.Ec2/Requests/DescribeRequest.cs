@@ -11,16 +11,16 @@ namespace Amazon.Ec2
 
         public List<Filter> Filters { get; } = new List<Filter>();
 
-        protected void AddIds(AwsRequest request, string prefix, List<string> ids)
+        protected void AddIds(Dictionary<string, string> parameters, string prefix, List<string> ids)
         {
             for(var i = 0; i < ids.Count; i++)
             {
                 // e.g. VpcId.1
-                request.Add(prefix + "." + (i + 1), ids[i]);
+                parameters.Add(prefix + "." + (i + 1), ids[i]);
             }
         }
 
-        protected AwsRequest GetParameters(string actionName)
+        protected Dictionary<string, string> GetParameters(string actionName)
         {
             #region Preconditions
 
@@ -29,7 +29,7 @@ namespace Amazon.Ec2
 
             #endregion
 
-            var parameters = new AwsRequest {
+            var parameters = new Dictionary<string, string> {
                 { "Action", actionName }
             };
 
@@ -47,7 +47,7 @@ namespace Amazon.Ec2
 
             if (MaxResults != null)
             {
-                parameters.Add("MaxResults", MaxResults.Value);
+                parameters.Add("MaxResults", MaxResults.Value.ToString());
             }
 
             if (NextToken != null)
