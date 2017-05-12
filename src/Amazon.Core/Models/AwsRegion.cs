@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Amazon
 {
@@ -48,7 +49,7 @@ namespace Amazon
         public static readonly AwsRegion USEast2      = new AwsRegion("us-east-2");      // | US            | Ohio          | 2016-10-17
         public static readonly AwsRegion CACentral1   = new AwsRegion("ca-central-1");   // | Canada        | Central       | 2016-12-08
         public static readonly AwsRegion EUWest2      = new AwsRegion("eu-west-2");      // | EU            | London        | 2016-12-13
-        
+
         // Soon: Paris (France), Ningxia (China)
 
         public static AwsRegion[] All = new AwsRegion[] {
@@ -100,6 +101,31 @@ namespace Amazon
             }
 
             throw new ArgumentException("Unexpected region:" + name);
+        }
+
+        private static AwsRegion current;
+
+        // TODO: Return ValueTask<AwsRegion>
+
+        public static async Task<AwsRegion> GetAsync()
+        {
+            if (current != null)
+            {
+                return current;
+            }
+
+            var availabilityZone = await InstanceMetadata.GetAvailabilityZoneAsync().ConfigureAwait(false);
+
+            current = FromAvailabilityZone(availabilityZone);
+
+            return current;
+        }
+
+        public static AwsRegion FromAvailabilityZone(string availabilityZone)
+        {
+            var regionName = availabilityZone.Substring(0, availabilityZone.Length - 1);
+
+            return Get(regionName);
         }
     }
 }
