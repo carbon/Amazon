@@ -16,15 +16,15 @@ namespace Amazon
             }
         );
 
+        private readonly AwsRegion region;
         private readonly AwsService service;
-        protected readonly AwsRegion region;
-        private IAwsCredential credential;
+        private readonly IAwsCredential credential;
         private readonly SemaphoreSlim mutex = new SemaphoreSlim(1);
-
+        
         public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential)
         {
-            this.service = service ?? throw new ArgumentNullException(nameof(service));
-            this.region = region ?? throw new ArgumentNullException(nameof(region));
+            this.service    = service    ?? throw new ArgumentNullException(nameof(service));
+            this.region     = region     ?? throw new ArgumentNullException(nameof(region));
             this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
 
             Endpoint = $"https://{service.Name}.{region.Name}.amazonaws.com/";
@@ -55,6 +55,7 @@ namespace Amazon
                 return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
         }
+        
 
         protected async Task SignAsync(HttpRequestMessage httpRequest)
         {
@@ -64,7 +65,10 @@ namespace Amazon
 
                 try
                 {
-                    credential = await credential.RenewAsync().ConfigureAwait(false);
+                    if (credential.ShouldRenew)
+                    {
+                        await credential.RenewAsync().ConfigureAwait(false);
+                    }
                 }
                 finally
                 {
@@ -74,7 +78,7 @@ namespace Amazon
 
             var date = DateTimeOffset.UtcNow;
 
-            httpRequest.Headers.UserAgent.ParseAdd("Carbon/1.5");
+            httpRequest.Headers.UserAgent.ParseAdd("Carbon/1.6.0");
             httpRequest.Headers.Host = httpRequest.RequestUri.Host;
             httpRequest.Headers.Date = date;
 

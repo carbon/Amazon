@@ -12,6 +12,6 @@ namespace Amazon
 
         bool ShouldRenew { get; }
 
-        Task<IAwsCredential> RenewAsync();
+        Task<bool> RenewAsync();
     }
 }

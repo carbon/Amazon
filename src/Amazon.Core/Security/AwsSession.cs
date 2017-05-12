@@ -17,7 +17,7 @@ namespace Amazon
 
         public bool ShouldRenew => false;
 
-        public Task<IAwsCredential> RenewAsync()
+        public Task<bool> RenewAsync()
         {
             throw new NotImplementedException();
         }

@@ -11,8 +11,8 @@ namespace Amazon
     {
         public AwsCredential(string accessKeyId, string secretAccessKey)
         {
-            AccessKeyId = accessKeyId ?? throw new ArgumentNullException("accessKeyId");
-            SecretAccessKey = secretAccessKey ?? throw new ArgumentNullException("secretAccessKey");
+            AccessKeyId     = accessKeyId ?? throw new ArgumentNullException(nameof(accessKeyId));
+            SecretAccessKey = secretAccessKey ?? throw new ArgumentNullException(nameof(secretAccessKey));
         }
 
         // 16 - 32 characters
@@ -35,6 +35,11 @@ namespace Amazon
 
             var parts = text.Split(Seperators.Colon);
 
+            if (parts.Length != 2)
+            {
+                throw new Exception("credential text is not in right format");
+            }
+
             return new AwsCredential(parts[0], parts[1]);
         }
 
@@ -42,7 +47,7 @@ namespace Amazon
 
         public bool ShouldRenew => false;
 
-        public Task<IAwsCredential> RenewAsync()
+        public Task<bool> RenewAsync()
         {
             throw new NotImplementedException("Not renewable");
         }
