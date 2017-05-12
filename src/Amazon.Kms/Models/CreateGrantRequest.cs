@@ -23,8 +23,14 @@ namespace Amazon.Kms
 
         public string KeyId { get; set; }
 
-        public string[] Operations { get; set; }
+        /// <summary>
+        /// A friendly name for identifying the grant. Use this value to prevent unintended creation of duplicate grants when retrying this request.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false)]
+        public string Name { get; set; }
 
+        public string[] Operations { get; set; }
+        
         public void SetOperations(params KmsOperation[] ops)
         {
             Operations = ops.Select(o => o.ToString()).ToArray();
@@ -33,6 +39,9 @@ namespace Amazon.Kms
         [DataMember(EmitDefaultValue = false)]
         public string RetiringPrincipal { get; set; }
     }
+
+
+    
 }
 
 /*

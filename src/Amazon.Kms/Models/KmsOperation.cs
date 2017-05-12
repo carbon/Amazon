@@ -1,5 +1,8 @@
-﻿namespace Amazon.Kms
+﻿using System;
+
+namespace Amazon.Kms
 {
+    [Flags]
     public enum KmsOperation
     {
         Decrypt = 1,

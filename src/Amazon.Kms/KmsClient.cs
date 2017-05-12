@@ -14,23 +14,40 @@ namespace Amazon.Kms
             : base(AwsService.Kms, region, credential)
         { }
 
-        public Task<CreateGrantResponse> CreateGrantAsync(CreateGrantRequest request) => 
-            SendAsync<CreateGrantResponse>("CreateGrant", request);
+        public Task<CreateAliasResponse> CreateAliasAsync(CreateAliasRequest request)
+        {
+            return SendAsync<CreateAliasResponse>("CreateAlias", request);
+        }
 
-        public Task<RetireGrantResponse> RetireGrantAsync(RetireGrantRequest request) => 
-            SendAsync<RetireGrantResponse>("RetireGrant", request);
+        public Task<CreateGrantResponse> CreateGrantAsync(CreateGrantRequest request)
+        {
+            return SendAsync<CreateGrantResponse>("CreateGrant", request);
+        }
 
-        public Task<ListGrantsResponse> ListGrantsAsync(ListGrantsRequest request) => 
-            SendAsync<ListGrantsResponse>("ListGrants", request);
+        public Task<RetireGrantResponse> RetireGrantAsync(RetireGrantRequest request)
+        {
+            return SendAsync<RetireGrantResponse>("RetireGrant", request);
+        }
 
-        public Task<EncryptResponse> EncryptAsync(EncryptRequest request) => 
-            SendAsync<EncryptResponse>("Encrypt", request);
+        public Task<ListGrantsResponse> ListGrantsAsync(ListGrantsRequest request)
+        {
+            return SendAsync<ListGrantsResponse>("ListGrants", request);
+        }
 
-        public Task<DecryptResponse> DecryptAsync(DecryptRequest request) =>
-            SendAsync<DecryptResponse>("Decrypt", request);
+        public Task<EncryptResponse> EncryptAsync(EncryptRequest request)
+        {
+            return SendAsync<EncryptResponse>("Encrypt", request);
+        }
 
-        public Task<GenerateDataKeyResponse> GenerateDataKeyAsync(GenerateDataKeyRequest request) => 
-            SendAsync<GenerateDataKeyResponse>("GenerateDataKey", request);
+        public Task<DecryptResponse> DecryptAsync(DecryptRequest request)
+        {
+            return SendAsync<DecryptResponse>("Decrypt", request);
+        }
+
+        public Task<GenerateDataKeyResponse> GenerateDataKeyAsync(GenerateDataKeyRequest request)
+        {
+            return SendAsync<GenerateDataKeyResponse>("GenerateDataKey", request);
+        }
 
         #region Helpers
 
@@ -49,11 +66,14 @@ namespace Amazon.Kms
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
+            if (responseText == "") return null;
+
             return JsonObject.Parse(responseText).As<T>();
         }
 
         #endregion
     }
+
 }
 
 // http://docs.aws.amazon.com/kms/latest/APIReference/Welcome.html
