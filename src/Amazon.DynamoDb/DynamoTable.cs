@@ -9,12 +9,12 @@ using Carbon.Data.Expressions;
 
 namespace Amazon.DynamoDb
 {
-    using Helpers;
     using Scheduling;
 
     using static Expression;
 
-    public class DynamoTable<T>
+    // Key may be byte[]
+    public class DynamoTable<T, TKey>
         where T : class
     {
         private readonly string tableName;
@@ -22,7 +22,7 @@ namespace Amazon.DynamoDb
 
         private static readonly DatasetInfo metadata = DatasetInfo.Get<T>();
 
-        // TODO: Historgram of consumed capsity
+        // TODO: Historgram of consumed capacity
 
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
             initialDelay : TimeSpan.FromMilliseconds(100),
@@ -44,18 +44,17 @@ namespace Amazon.DynamoDb
         public DynamoTable(string tableName, DynamoDbClient client)
         {
             this.tableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-            this.client = client ?? throw new ArgumentNullException(nameof(client));
+            this.client    = client    ?? throw new ArgumentNullException(nameof(client));
 
             // TODO: Validate the key properties
         }
 
         public IKeyInfo PrimaryKey => metadata.PrimaryKey;
 
-        public Key<T> GetKey(params object[] keyValues) => 
-            Key<T>.FromValues(keyValues);
-
-        public async Task<bool> ExistsAsync(RecordKey key)
+        public async Task<bool> ExistsAsync(TKey keyValue)
         {
+            var key = Key<T>.FromTuple(keyValue);
+
             var result = await FindAsync(new GetItemRequest(tableName, key) {
                 ConsistentRead = false,
                 ReturnConsumedCapacity = false,
@@ -65,14 +64,15 @@ namespace Amazon.DynamoDb
             return result != null;
         }
 
-        public Task<T> FindAsync(Key<T> key) => 
-            FindAsync(key, consistent: false);
+        public Task<T> FindAsync(Key<T> key)
+        {
+            return FindAsync(key, consistent: false);
+        }
 
-        public Task<T> FindAsync(object hash) => 
-            FindAsync(GetKey(hash), consistent: false);
-
-        public Task<T> FindAsync(object hash, object range) => 
-            FindAsync(GetKey(hash, range), consistent: false);
+        public Task<T> FindAsync(TKey keyValue)
+        {
+            return FindAsync(Key<T>.FromTuple(keyValue), consistent: false);
+        }
 
         public Task<T> FindAsync(Key<T> key, bool consistent) => 
             FindAsync(new GetItemRequest(tableName, key) {
@@ -194,8 +194,10 @@ namespace Amazon.DynamoDb
             return result;
         }
 
-        public Task<int> CountAsync(params Expression[] conditions) => 
-            CountAsync(new DynamoQuery(conditions));
+        public Task<int> CountAsync(params Expression[] conditions)
+        {
+            return CountAsync(new DynamoQuery(conditions));
+        }
 
         public async Task<int> CountAsync(DynamoQuery query)
         {
@@ -247,7 +249,8 @@ namespace Amazon.DynamoDb
             while (result.LastEvaluatedKey != null);
         }
 
-        public async Task<IReadOnlyList<T>> ScanAsync(IEnumerable<KeyValuePair<string, object>> startKey = null,
+        public async Task<IReadOnlyList<T>> ScanAsync(
+            IEnumerable<KeyValuePair<string, object>> startKey = null,
             Expression[] conditions = null,
             int take = 1000)
         {
@@ -377,6 +380,13 @@ namespace Amazon.DynamoDb
                 tableName : tableName,
                 key       : Key<T>.FromObject(record)
             );
+
+            return InternalDelete(request);
+        }
+
+        public Task<DeleteItemResult> DeleteAsync(TKey key)
+        {
+            var request = new DeleteItemRequest(tableName, key: Key<T>.FromTuple(key));
 
             return InternalDelete(request);
         }
@@ -521,18 +531,5 @@ namespace Amazon.DynamoDb
         }
 
         #endregion
-    }
-
-    public struct BatchResult
-    {
-        public TimeSpan ResponseTime { get; set; }
-
-        public int BatchCount { get; set; }
-
-        public int ItemCount { get; set; }
-
-        public int ErrorCount { get; set; }
-
-        public int RequestCount { get; set; }
     }
 }

@@ -22,16 +22,16 @@ namespace Amazon.DynamoDb
 
         #region Helpers
 
-        public DynamoTable<T> GetTable<T>(string name)
+        public DynamoTable<T, TKey> GetTable<T, TKey>(string name)
             where T : class
         {
-            return new DynamoTable<T>(name, this);
+            return new DynamoTable<T, TKey>(name, this);
         }
 
-        public DynamoTable<T> GetTable<T>()
+        public DynamoTable<T, TKey> GetTable<T, TKey>()
             where T : class
         {
-            return new DynamoTable<T>(this);
+            return new DynamoTable<T, TKey>(this);
         }
 
         #endregion
