@@ -11,6 +11,9 @@ namespace Amazon.Ec2
         public string GroupName { get; set; }
 
         [XmlElement("tenancy")]
-        public string tenancy { get; set; }
+        public string Tenancy { get; set; }
+
+        // hostId
+        // groupName
     }
 }

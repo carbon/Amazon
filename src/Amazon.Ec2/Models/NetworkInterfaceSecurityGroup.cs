@@ -2,7 +2,7 @@
 
 namespace Amazon.Ec2
 {
-    public class Group
+    public class NetworkInterfaceSecurityGroup
     {
         [XmlElement("groupId")]
         public string GroupId { get; set; }

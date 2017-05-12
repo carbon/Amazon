@@ -6,7 +6,7 @@ namespace Amazon.Ec2
     {
         public Filter(string name, string value)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name   ?? throw new ArgumentNullException(nameof(name));
             Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 

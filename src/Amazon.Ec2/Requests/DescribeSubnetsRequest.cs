@@ -2,7 +2,7 @@
 
 namespace Amazon.Ec2
 {
-    public class DescribeSubnetsRequest : DescribeRequest
+    public class DescribeSubnetsRequest : DescribeRequest, IEc2Request
     {        
         public List<string> SubnetIds { get; } = new List<string>();
 

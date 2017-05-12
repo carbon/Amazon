@@ -1,30 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class DescribeSubnetsResponse
+    public class DescribeSubnetsResponse : IEc2Response
     {
+        [XmlArray("subnetSet")]
+        [XmlArrayItem("item")]
         public List<Subnet> Subnets { get; } = new List<Subnet>();
-
-        public static DescribeSubnetsResponse Parse(string text)
-        {
-            var result = new DescribeSubnetsResponse();
-
-            var rootEl = XElement.Parse(text);
-
-            var ns = rootEl.Name.Namespace;
-
-            var imagesSet = rootEl.Element(ns + "subnetSet");
-            
-            foreach (var itemEl in imagesSet.Elements())
-            {
-                result.Subnets.Add(Subnet.Deserialize(itemEl));   
-            }
-
-            return result;
-        }
-
     }
 }
 

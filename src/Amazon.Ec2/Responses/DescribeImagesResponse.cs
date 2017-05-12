@@ -1,30 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class DescribeImagesResponse
+    public class DescribeImagesResponse : IEc2Response
     {
+        [XmlArray("imagesSet")]
+        [XmlArrayItem("item")]
         public List<Image> Images { get; } = new List<Image>();
-
-        public static DescribeImagesResponse Parse(string text)
-        {
-            var result = new DescribeImagesResponse();
-
-            var rootEl = XElement.Parse(text);
-
-            var ns = rootEl.Name.Namespace;
-
-            var imagesSet = rootEl.Element(ns + "imagesSet");
-            
-            foreach (var itemEl in imagesSet.Elements())
-            {
-                result.Images.Add(Image.Deserialize(itemEl));   
-            }
-
-            return result;
-        }
-
     }
 }
 

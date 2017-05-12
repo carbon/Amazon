@@ -2,7 +2,7 @@
 
 namespace Amazon.Ec2
 {
-    public class DescribeImagesRequest : DescribeRequest
+    public class DescribeImagesRequest : DescribeRequest, IEc2Request
     {        
         public List<string> ImageIds { get; } = new List<string>();
 

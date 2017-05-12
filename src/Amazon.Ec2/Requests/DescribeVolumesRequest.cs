@@ -2,7 +2,7 @@
 
 namespace Amazon.Ec2
 {
-    public class DescribeVolumesRequest : DescribeRequest
+    public class DescribeVolumesRequest : DescribeRequest, IEc2Request
     {        
         public List<string> VolumeIds { get; } = new List<string>();
 

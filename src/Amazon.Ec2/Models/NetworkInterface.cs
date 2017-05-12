@@ -35,7 +35,7 @@ namespace Amazon.Ec2
 
         [XmlArray("groupSet")]
         [XmlArrayItem("item")]
-        public List<Group> Groups { get; set; }
+        public List<NetworkInterfaceSecurityGroup> Groups { get; set; }
 
         [XmlElement("attachment")]
         public NetworkInterfaceAttachment Attachment { get; set; }
@@ -44,7 +44,7 @@ namespace Amazon.Ec2
           typeof(NetworkInterface),
           new XmlRootAttribute {
               ElementName = "item",
-              Namespace = "http://ec2.amazonaws.com/doc/2016-09-15/"
+              Namespace = Ec2Client.Namespace
           }
         );
 

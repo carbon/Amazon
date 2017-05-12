@@ -8,7 +8,8 @@ namespace Amazon.Ec2
 
     public class Ec2Client : AwsClient
     {
-        public static readonly string Version = "2016-09-15";
+        public static readonly string Version = "2016-11-15";
+        public const string Namespace = "http://ec2.amazonaws.com/doc/2016-11-15/";
 
         public Ec2Client(AwsRegion region, IAwsCredential credential)
             : base(AwsService.Ec2, region, credential)
@@ -60,77 +61,62 @@ namespace Amazon.Ec2
 
         #endregion
 
-        public async Task<DescribeNetworkInterfacesResponse> DescribeNetworkInterfacesAsync(DescribeNetworkInterfacesRequest request)
+        public Task<DescribeNetworkInterfacesResponse> DescribeNetworkInterfacesAsync(DescribeNetworkInterfacesRequest request)
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
-                Content = GetPostContent(request.ToParams())
-            };
-
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-
-            return DescribeNetworkInterfacesResponse.Parse(responseText);
+            return SendAsync<DescribeNetworkInterfacesResponse>(request);
         }
 
-        public async Task<DescribeSubnetsResponse> DescribeSubnetsAsync(DescribeSubnetsRequest request)
+        public Task<DescribeSubnetsResponse> DescribeSubnetsAsync(DescribeSubnetsRequest request)
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-            {
-                Content = GetPostContent(request.ToParams())
-            };
-
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-
-            return DescribeSubnetsResponse.Parse(responseText);
+            return SendAsync<DescribeSubnetsResponse>(request);
         }
 
         public async Task<DescribeInstancesResponse> DescribeInstancesAsync(DescribeInstancesRequest request)
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
-                Content = GetPostContent(request.ToParams())
-            };
-
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            var responseText = await SendAsync(request).ConfigureAwait(false);
 
             return DescribeInstancesResponse.Parse(responseText);
         }
 
-        public async Task<DescribeImagesResponse> DescribeImagesAsync(DescribeImagesRequest request)
+        public Task<DescribeImagesResponse> DescribeImagesAsync(DescribeImagesRequest request)
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-            {
-                Content = GetPostContent(request.ToParams())
-            };
-
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-
-            return DescribeImagesResponse.Parse(responseText);
+            return SendAsync<DescribeImagesResponse>(request);
         }
 
-
-        public async Task<DescribeVpcsResponse> DescribeVpcsAsync(DescribeVpcsRequest request)
+        public Task<DescribeVpcsResponse> DescribeVpcsAsync(DescribeVpcsRequest request)
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
-                Content = GetPostContent(request.ToParams())
-            };
-
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-
-            return DescribeVpcsResponse.Parse(responseText);
+            return SendAsync<DescribeVpcsResponse>(request);
         }
 
-        public async Task<DescribeVolumesResponse> DescribeVolumesAsync(DescribeVolumesRequest request)
+        public Task<DescribeVolumesResponse> DescribeVolumesAsync(DescribeVolumesRequest request)
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-            {
-                Content = GetPostContent(request.ToParams())
-            };
-
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-
-            return DescribeVolumesResponse.Parse(responseText);
+            return SendAsync<DescribeVolumesResponse>(request);
         }
 
         #region Helpers
+
+        private async Task<string> SendAsync(IEc2Request request)
+        {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
+            {
+                Content = GetPostContent(request.ToParams())
+            };
+
+            return await SendAsync(httpRequest).ConfigureAwait(false);
+        }
+
+        private async Task<TResponse> SendAsync<TResponse>(IEc2Request request)
+            where TResponse: IEc2Response
+        {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
+            {
+                Content = GetPostContent(request.ToParams())
+            };
+
+            var responseXml = await SendAsync(httpRequest).ConfigureAwait(false);
+
+            return Ec2ResponseHelper<TResponse>.ParseXml(responseXml);
+        }
 
         private FormUrlEncodedContent GetPostContent(AwsRequest request)
         {
@@ -149,3 +135,239 @@ namespace Amazon.Ec2
         #endregion
     }
 }
+
+// TODO: Break apart by
+// Addresses
+// Hosts
+// Instances
+// ...
+
+/*
+AcceptReservedInstancesExchangeQuote
+AcceptVpcPeeringConnection
+AllocateAddress
+AllocateHosts
+AssignIpv6Addresses
+AssignPrivateIpAddresses
+AssociateAddress
+AssociateDhcpOptions
+AssociateIamInstanceProfile
+AssociateRouteTable
+AssociateSubnetCidrBlock
+AssociateVpcCidrBlock
+AttachClassicLinkVpc
+AttachInternetGateway
+AttachNetworkInterface
+AttachVolume
+AttachVpnGateway
+AuthorizeSecurityGroupEgress
+AuthorizeSecurityGroupIngress
+BundleInstance
+CancelBundleTask
+CancelConversionTask
+CancelExportTask
+CancelImportTask
+CancelReservedInstancesListing
+CancelSpotFleetRequests
+CancelSpotInstanceRequests
+ConfirmProductInstance
+CopyImage
+CopySnapshot
+CreateCustomerGateway
+CreateDhcpOptions
+CreateEgressOnlyInternetGateway
+CreateFlowLogs
+CreateImage
+CreateInstanceExportTask
+CreateInternetGateway
+CreateKeyPair
+CreateNatGateway
+CreateNetworkAcl
+CreateNetworkAclEntry
+CreateNetworkInterface
+CreatePlacementGroup
+CreateReservedInstancesListing
+CreateRoute
+CreateRouteTable
+CreateSecurityGroup
+CreateSnapshot
+CreateSpotDatafeedSubscription
+CreateSubnet
+CreateTags
+CreateVolume
+CreateVpc
+CreateVpcEndpoint
+CreateVpcPeeringConnection
+CreateVpnConnection
+CreateVpnConnectionRoute
+CreateVpnGateway
+DeleteCustomerGateway
+DeleteDhcpOptions
+DeleteEgressOnlyInternetGateway
+DeleteFlowLogs
+DeleteInternetGateway
+DeleteKeyPair
+DeleteNatGateway
+DeleteNetworkAcl
+DeleteNetworkAclEntry
+DeleteNetworkInterface
+DeletePlacementGroup
+DeleteRoute
+DeleteRouteTable
+DeleteSecurityGroup
+DeleteSnapshot
+DeleteSpotDatafeedSubscription
+DeleteSubnet
+DeleteTags
+DeleteVolume
+DeleteVpc
+DeleteVpcEndpoints
+DeleteVpcPeeringConnection
+DeleteVpnConnection
+DeleteVpnConnectionRoute
+DeleteVpnGateway
+DeregisterImage
+DescribeAccountAttributes
+DescribeAddresses
+DescribeAvailabilityZones
+DescribeBundleTasks
+DescribeClassicLinkInstances
+DescribeConversionTasks
+DescribeCustomerGateways
+DescribeDhcpOptions
+DescribeEgressOnlyInternetGateways
+DescribeExportTasks
+DescribeFlowLogs
+DescribeHostReservationOfferings
+DescribeHostReservations
+DescribeHosts
+DescribeIamInstanceProfileAssociations
+DescribeIdentityIdFormat
+DescribeIdFormat
+DescribeImageAttribute
+DescribeImages
+DescribeImportImageTasks
+DescribeImportSnapshotTasks
+DescribeInstanceAttribute
+DescribeInstances
+DescribeInstanceStatus
+DescribeInternetGateways
+DescribeKeyPairs
+DescribeMovingAddresses
+DescribeNatGateways
+DescribeNetworkAcls
+DescribeNetworkInterfaceAttribute
+DescribeNetworkInterfaces
+DescribePlacementGroups
+DescribePrefixLists
+DescribeRegions
+DescribeReservedInstances
+DescribeReservedInstancesListings
+DescribeReservedInstancesModifications
+DescribeReservedInstancesOfferings
+DescribeRouteTables
+DescribeScheduledInstanceAvailability
+DescribeScheduledInstances
+DescribeSecurityGroupReferences
+DescribeSecurityGroups
+DescribeSnapshotAttribute
+DescribeSnapshots
+DescribeSpotDatafeedSubscription
+DescribeSpotFleetInstances
+DescribeSpotFleetRequestHistory
+DescribeSpotFleetRequests
+DescribeSpotInstanceRequests
+DescribeSpotPriceHistory
+DescribeStaleSecurityGroups
+DescribeSubnets
+DescribeTags
+DescribeVolumeAttribute
+DescribeVolumes
+DescribeVolumesModifications
+DescribeVolumeStatus
+DescribeVpcAttribute
+DescribeVpcClassicLink
+DescribeVpcClassicLinkDnsSupport
+DescribeVpcEndpoints
+DescribeVpcEndpointServices
+DescribeVpcPeeringConnections
+DescribeVpcs
+DescribeVpnConnections
+DescribeVpnGateways
+DetachClassicLinkVpc
+DetachInternetGateway
+DetachNetworkInterface
+DetachVolume
+DetachVpnGateway
+DisableVgwRoutePropagation
+DisableVpcClassicLink
+DisableVpcClassicLinkDnsSupport
+DisassociateAddress
+DisassociateIamInstanceProfile
+DisassociateRouteTable
+DisassociateSubnetCidrBlock
+DisassociateVpcCidrBlock
+EnableVgwRoutePropagation
+EnableVolumeIO
+EnableVpcClassicLink
+EnableVpcClassicLinkDnsSupport
+GetConsoleOutput
+GetConsoleScreenshot
+GetHostReservationPurchasePreview
+GetPasswordData
+GetReservedInstancesExchangeQuote
+ImportImage
+ImportInstance
+ImportKeyPair
+ImportSnapshot
+ImportVolume
+ModifyHosts
+ModifyIdentityIdFormat
+ModifyIdFormat
+ModifyImageAttribute
+ModifyInstanceAttribute
+ModifyInstancePlacement
+ModifyNetworkInterfaceAttribute
+ModifyReservedInstances
+ModifySnapshotAttribute
+ModifySpotFleetRequest
+ModifySubnetAttribute
+ModifyVolume
+ModifyVolumeAttribute
+ModifyVpcAttribute
+ModifyVpcEndpoint
+ModifyVpcPeeringConnectionOptions
+MonitorInstances
+MoveAddressToVpc
+PurchaseHostReservation
+PurchaseReservedInstancesOffering
+PurchaseScheduledInstances
+RebootInstances
+RegisterImage
+RejectVpcPeeringConnection
+ReleaseAddress
+ReleaseHosts
+ReplaceIamInstanceProfileAssociation
+ReplaceNetworkAclAssociation
+ReplaceNetworkAclEntry
+ReplaceRoute
+ReplaceRouteTableAssociation
+ReportInstanceStatus
+RequestSpotFleet
+RequestSpotInstances
+ResetImageAttribute
+ResetInstanceAttribute
+ResetNetworkInterfaceAttribute
+ResetSnapshotAttribute
+RestoreAddressToClassic
+RevokeSecurityGroupEgress
+RevokeSecurityGroupIngress
+RunInstances
+RunScheduledInstances
+StartInstances
+StopInstances
+TerminateInstances
+UnassignIpv6Addresses
+UnassignPrivateIpAddresses
+UnmonitorInstances
+*/

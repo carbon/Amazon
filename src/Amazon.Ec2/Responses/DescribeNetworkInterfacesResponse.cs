@@ -1,30 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class DescribeNetworkInterfacesResponse
+    public class DescribeNetworkInterfacesResponse : IEc2Response
     {
-        public List<NetworkInterface> NetworkInterfaces { get; } = new List<NetworkInterface>();
-
-        public static DescribeNetworkInterfacesResponse Parse(string text)
-        {
-            var result = new DescribeNetworkInterfacesResponse();
-
-            var rootEl = XElement.Parse(text);
-
-            var ns = rootEl.Name.Namespace;
-
-            var imagesSet = rootEl.Element(ns + "networkInterfaceSet");
-            
-            foreach (var itemEl in imagesSet.Elements())
-            {
-                result.NetworkInterfaces.Add(NetworkInterface.Deserialize(itemEl));   
-            }
-
-            return result;
-        }
-
+        [XmlArray("networkInterfaceSet")]
+        [XmlArrayItem("item")]
+        public List<NetworkInterface> NetworkInterfaces { get; set; }
     }
 }
 

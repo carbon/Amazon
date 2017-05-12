@@ -37,7 +37,7 @@ namespace Amazon.Ec2
            new XmlRootAttribute
            {
                ElementName = "item",
-               Namespace = "http://ec2.amazonaws.com/doc/2016-09-15/"
+               Namespace = Ec2Client.Namespace
            }
        );
 

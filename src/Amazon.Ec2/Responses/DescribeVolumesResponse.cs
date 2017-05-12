@@ -1,27 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    using System.IO;
-
-    [XmlRoot("DescribeVolumesResponse", Namespace = "http://ec2.amazonaws.com/doc/2016-09-15/")]
-    public class DescribeVolumesResponse
+    public class DescribeVolumesResponse : IEc2Response
     {
         [XmlArray("volumeSet")]
         [XmlArrayItem("item")]
         public List<Volume> Volumes { get; } = new List<Volume>();
-
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(DescribeVolumesResponse));
-
-        public static DescribeVolumesResponse Parse(string text)
-        {
-            using (var reader = new StringReader(text))
-            {
-                return (DescribeVolumesResponse)serializer.Deserialize(reader);
-            }          
-        }
     }
 }
 

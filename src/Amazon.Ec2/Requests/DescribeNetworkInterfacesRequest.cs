@@ -2,7 +2,7 @@
 
 namespace Amazon.Ec2
 {
-    public class DescribeNetworkInterfacesRequest : DescribeRequest
+    public class DescribeNetworkInterfacesRequest : DescribeRequest, IEc2Request
     {        
         public List<string> NetworkInterfaceIds { get; } = new List<string>();
 
