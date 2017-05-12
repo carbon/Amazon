@@ -209,9 +209,9 @@ namespace Amazon.DynamoDb
 
 			#endregion
 
-			if (value is IEnumerable<string>)
+			if (value is IEnumerable<string> enumerable)
 			{
-				return new HashSet<string>((IEnumerable<string>)value);		
+				return new HashSet<string>(enumerable);		
 			}
 
 			var set = new HashSet<string>();
@@ -236,9 +236,9 @@ namespace Amazon.DynamoDb
 			#endregion
 
 			// Avoid additional allocations where possible
-			if (value is IEnumerable<T>)
+			if (value is IEnumerable<T> enumerable)
 			{
-				return new HashSet<T>((IEnumerable<T>)value);
+				return new HashSet<T>(enumerable);
 			}
 
 			var set = new HashSet<T>();
@@ -306,8 +306,8 @@ namespace Amazon.DynamoDb
 
 		public byte[] ToBinary()
 		{
-            return value is byte[]
-                ? (byte[])value
+            return value is byte[] data
+                ? data
                 : Convert.FromBase64String(value.ToString());
 		}
 
@@ -329,9 +329,9 @@ namespace Amazon.DynamoDb
             {
                 node = ((AttributeCollection)value).ToJson();
             }
-			else if (kind == DbValueType.B && value is byte[])
+			else if (kind == DbValueType.B && value is byte[] data)
 			{
-				node = new JsonString(Convert.ToBase64String((byte[])value));
+				node = new JsonString(Convert.ToBase64String(data));
 			}
 			else if (kind == DbValueType.L)
 			{

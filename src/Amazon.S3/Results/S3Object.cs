@@ -59,14 +59,14 @@ namespace Amazon.S3
 
         public string ContentType
         {
-            get { return headers["Content-Type"]; }
-            set { headers["Content-Type"] = value; }
+            get => headers["Content-Type"];
+            set => headers["Content-Type"] = value;
         }
 
         public long ContentLength
         {
-            get { return long.Parse(headers["Content-Length"]); }
-            set { headers["Content-Length"] = value.ToString(); }
+            get => long.Parse(headers["Content-Length"]);
+            set => headers["Content-Length"] = value.ToString();
         }
 
         public DateTimeOffset? LastModified

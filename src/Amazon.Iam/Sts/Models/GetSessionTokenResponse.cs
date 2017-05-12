@@ -15,7 +15,6 @@ namespace Amazon.Sts.Models
 
             var rootEl = XElement.Parse(text);                              // GetSessionTokenResponse
 
-
             var ns = rootEl.Name.Namespace;
 
             var resultEl = rootEl.Element(ns + "GetSessionTokenResult");    // GetSessionTokenResult

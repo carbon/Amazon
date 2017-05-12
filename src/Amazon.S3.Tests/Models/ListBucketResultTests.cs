@@ -48,13 +48,12 @@
 
             Assert.Equal(116879, result.Items[0].Size);
             Assert.Equal(116882, result.Items[1].Size);
-            Assert.Equal(true, result.IsTruncated);
+            Assert.True(result.IsTruncated);
 
             Assert.Equal("STANDARD", result.Items[1].StorageClass);
 
             Assert.Equal("100000/800x600.jpeg", result.Items[0].Key);
             Assert.Equal("100001/800x600.jpeg", result.Items[1].Key);
-
         }
 
         [Fact]

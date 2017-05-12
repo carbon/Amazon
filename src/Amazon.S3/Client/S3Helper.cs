@@ -147,25 +147,3 @@ namespace Amazon.S3
         }
     }
 }
-
-
-/*
-On signing.
-
-The first few header elements of StringToSign (Content-Type, Date, and Content-MD5) are positional in nature. 
-StringToSign does not include the names of these headers, only their values from the request.
-In contrast, the 'x-amz-' elements are named; Both the header names and the header values appear in StringToSign. 
-
-A valid time-stamp (using either the HTTP Date header or an x-amz-date alternative) is mandatory for authenticated requests. 
-Furthermore, the client time-stamp included with an authenticated request must be within 15 minutes of the Amazon S3 system 
-time when the request is received. If not, the request will fail with the RequestTimeTooSkewed error status code. 
-The intention of these restrictions is to limit the possibility that intercepted requests could be replayed by an adversary. 
-For stronger protection against eavesdropping, use the HTTPS transport for authenticated requests. 
-
-Some HTTP client libraries do not expose the ability to set the Date header for a request. 
-If you have trouble including the value of the 'Date' header in the canonicalized headers, 
-you can set the time-stamp for the request using an 'x-amz-date' header instead. 
-The value of the x-amz-date header must be in one of the RFC 2616 formats (http://www.ietf.org/rfc/rfc2616.txt). 
-When an x-amz-date header is present in a request, the system will ignore any Date header when computing the request signature. 
-Therefore, if you include the x-amz-date  header, use the empty string for the Date when constructing the StringToSign. 
-*/

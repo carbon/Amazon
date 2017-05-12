@@ -39,7 +39,7 @@
 
 			Assert.Equal("BadDigest", error.Code);
 			Assert.Equal("The Content-MD5 you specified did not match what we received.", error.Message);
-			Assert.Equal(null, error.Resource);
+			Assert.Null(error.Resource);
 			Assert.Equal("FE689C8C5E73D8B6", error.RequestId);
 		}
 

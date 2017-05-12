@@ -31,6 +31,8 @@ namespace Amazon.CloudWatch
         public async Task EnableAlarmActionsAsync() { }
         */
 
+   
+
         public async Task<GetMetricStatatisticsResponse> GetMetricStatisticsAsync(GetMetricStatisticsRequest request)
         {
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {

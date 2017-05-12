@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26430.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D94F35A3-A44D-4AC4-BBED-C578D86572CE}"
 EndProject
@@ -48,6 +48,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ec2.Tests", "Amazon.Ec2.Tests\Amazon.Ec2.Tests.csproj", "{0EDF4882-15DA-47EF-8D6E-452F302EB9F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Iam", "Amazon.Iam\Amazon.Iam.csproj", "{CEA7E017-F021-4D6D-BE20-974CA6F5B532}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Elb", "Amazon.Elb\Amazon.Elb.csproj", "{1DB2A667-B1AE-47CA-BFC2-F926A7F4F685}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Ssm", "Amazon.Ssm\Amazon.Ssm.csproj", "{E4063E10-97F8-4666-AD20-D50094573569}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Elb.Tests", "Amazon.Elb.Tests\Amazon.Elb.Tests.csproj", "{C6504EBA-5000-41A1-83BD-4DE85995D3F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +149,18 @@ Global
 		{CEA7E017-F021-4D6D-BE20-974CA6F5B532}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEA7E017-F021-4D6D-BE20-974CA6F5B532}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEA7E017-F021-4D6D-BE20-974CA6F5B532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DB2A667-B1AE-47CA-BFC2-F926A7F4F685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DB2A667-B1AE-47CA-BFC2-F926A7F4F685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DB2A667-B1AE-47CA-BFC2-F926A7F4F685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DB2A667-B1AE-47CA-BFC2-F926A7F4F685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4063E10-97F8-4666-AD20-D50094573569}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4063E10-97F8-4666-AD20-D50094573569}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4063E10-97F8-4666-AD20-D50094573569}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4063E10-97F8-4666-AD20-D50094573569}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6504EBA-5000-41A1-83BD-4DE85995D3F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6504EBA-5000-41A1-83BD-4DE85995D3F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6504EBA-5000-41A1-83BD-4DE85995D3F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6504EBA-5000-41A1-83BD-4DE85995D3F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -158,5 +176,6 @@ Global
 		{19535B26-2740-4986-A194-CB52A428FFCF} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 		{FBCD6BE3-74B4-46B8-A382-80532FB55427} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 		{0EDF4882-15DA-47EF-8D6E-452F302EB9F5} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
+		{C6504EBA-5000-41A1-83BD-4DE85995D3F8} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 	EndGlobalSection
 EndGlobal
