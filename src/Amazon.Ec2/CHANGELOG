@@ -1,1 +1,3 @@
 ﻿- Added RunInstances
+- Added TerminateInstances
+- Add various convenience constructors

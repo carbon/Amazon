@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
@@ -7,7 +6,7 @@ namespace Amazon.Ec2
     {
         [XmlArray("securityGroupInfo")]
         [XmlArrayItem("item")]
-        public List<SecurityGroup> SecurityGroups { get; } = new List<SecurityGroup>();
+        public SecurityGroup[] SecurityGroups { get; set; }
     }
 }
 

@@ -38,8 +38,12 @@ namespace Amazon.Ec2
         [DataMember]
         public string InstanceInitiatedShutdownBehavior { get; set; }
 
+        // default = m1.small
         [DataMember]
         public string InstanceType { get; set; }
+
+        [DataMember]
+        public int? Ipv6AddressCount { get; set; }
 
         [DataMember]
         public string KernelId { get; set; }
@@ -57,113 +61,34 @@ namespace Amazon.Ec2
 
         [DataMember]
         public RunInstancesMonitoringEnabled Monitoring { get; set; }
-        
+
         [DataMember]
         public string PrivateIpAddress { get; set; }
 
-        [DataMember(Name ="SecurityGroupId")]
+        [DataMember(Name = "SecurityGroupId")]
         public string[] SecurityGroupIds { get; set; }
 
         [DataMember]
         public string SubnetId { get; set; }
-        
+
         [DataMember(Name = "TagSpecification")]
         public List<TagSpecification> TagSpecifications { get; set; }
-
-        [DataMember]
-        public string UserData { get; set; }
-        
+ 
         public Dictionary<string, string> ToParams()
         {
-            var parameters = new Dictionary<string, string> {
-                { "Action", "RunInstances" }
-            };
-            
-            foreach (var member in JsonObject.FromObject(this))
-            {
-                if (member.Value is XNull) continue;
-
-                if (member.Value is JsonArray arr)
-                {
-                    AddParameters(parameters, member.Key, arr);
-                }
-                else if (member.Value is JsonObject obj)
-                {
-                    AddParameters(parameters, member.Key, obj);
-                }
-                else
-                {
-                    parameters.Add(member.Key, member.Value.ToString());
-                }
-            }
-
-            return parameters;
+            return Ec2RequestHelper.ToParams("RunInstances", this);
         }
-
-        private void AddParameters(Dictionary<string, string> parameters, string prefix, JsonArray array)
-        {
-            for (var i = 0; i < array.Count; i++)
-            {
-                var key = prefix + "." + (i + 1);
-
-                var element = array[i];
-
-                if (element is JsonObject obj)
-                {
-                    AddParameters(parameters, key, obj);
-                }
-                else
-                {
-                    parameters.Add(key, element.ToString());
-                }
-            }
-        }
-
-        private void AddParameters(Dictionary<string, string> parameters, string prefix, JsonObject instance)
-        {
-            if (parameters.Count > 100) throw new System.Exception("excedeeded max of 100 parameters");
-
-            foreach (var m in instance)
-            {
-                if (m.Value is XNull) continue;
-
-                var key = prefix + "." + m.Key;
-
-                if (m.Value is JsonObject obj)
-                {
-                    AddParameters(parameters, key, obj);
-                }
-                else if (m.Value is JsonArray arr)
-                {
-                    AddParameters(parameters, key, arr);
-                }
-                else
-                {
-                    parameters.Add(key, m.Value.ToString());
-                }
-            }
-        }
-    }
-
-
-    public class TagSpecification
-    {
-        // instance and volume.
-        public string ResourceType { get; set; }
-
-        [DataMember(Name = "Tag")]
-        public Tag[] Tags { get; set; }
-    }
-
-    public class Tag
-    {
-        public string Key { get; set; }
-
-        public string Value { get; set; }
     }
 
     public class RunInstancesMonitoringEnabled
     {
-        public string Enabled { get; set; }
+        public RunInstancesMonitoringEnabled() { }
+
+        public RunInstancesMonitoringEnabled(bool enabled)
+        {
+            Enabled = enabled;
+        }
+
+        public bool Enabled { get; set; }
     }
 }

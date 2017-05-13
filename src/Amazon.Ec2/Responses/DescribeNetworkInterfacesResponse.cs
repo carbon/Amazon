@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
@@ -7,7 +6,7 @@ namespace Amazon.Ec2
     {
         [XmlArray("networkInterfaceSet")]
         [XmlArrayItem("item")]
-        public List<NetworkInterface> NetworkInterfaces { get; set; }
+        public NetworkInterface[] NetworkInterfaces { get; set; }
     }
 }
 

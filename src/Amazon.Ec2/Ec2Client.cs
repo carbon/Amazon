@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 
 namespace Amazon.Ec2
 {
-    // http://docs.aws.amazon.com/AWSEC2/latest/APIReference/Welcome.html
-
     public class Ec2Client : AwsClient
     {
         public static readonly string Version = "2016-11-15";
@@ -22,7 +20,7 @@ namespace Amazon.Ec2
         {
             var result = await DescribeImagesAsync(new DescribeImagesRequest { ImageIds = { id } });
 
-            return result.Images.Count > 0 ? result.Images[0] : null;
+            return result.Images.Length > 0 ? result.Images[0] : null;
         }
 
         public async Task<Subnet> DescribeSubnetAsync(string id)
@@ -36,7 +34,7 @@ namespace Amazon.Ec2
         {
             var result = await DescribeNetworkInterfacesAsync(new DescribeNetworkInterfacesRequest { NetworkInterfaceIds = { id } });
 
-            return result.NetworkInterfaces.Count > 0 ? result.NetworkInterfaces[0] : null;
+            return result.NetworkInterfaces.Length > 0 ? result.NetworkInterfaces[0] : null;
         }
 
         public async Task<Instance> DescribeInstanceAsync(string instanceId)
@@ -50,27 +48,19 @@ namespace Amazon.Ec2
         {
             var result = await DescribeVolumesAsync(new DescribeVolumesRequest { VolumeIds = { volumeId } });
 
-            return result.Volumes.Count > 0 ? result.Volumes[0] : null;
+            return result.Volumes.Length > 0 ? result.Volumes[0] : null;
         }
 
         public async Task<Vpc> DescribeVpcAsync(string vpcId)
         {
             var result = await DescribeVpcsAsync(new DescribeVpcsRequest { VpcIds = { vpcId } });
 
-            return result.Vpcs.Count > 0 ? result.Vpcs[0] : null;
+            return result.Vpcs.Length > 0 ? result.Vpcs[0] : null;
         }
 
         #endregion
 
-        public Task<DescribeNetworkInterfacesResponse> DescribeNetworkInterfacesAsync(DescribeNetworkInterfacesRequest request)
-        {
-            return SendAsync<DescribeNetworkInterfacesResponse>(request);
-        }
-
-        public Task<DescribeSubnetsResponse> DescribeSubnetsAsync(DescribeSubnetsRequest request)
-        {
-            return SendAsync<DescribeSubnetsResponse>(request);
-        }
+        #region Instances
 
         public async Task<DescribeInstancesResponse> DescribeInstancesAsync(DescribeInstancesRequest request)
         {
@@ -79,22 +69,65 @@ namespace Amazon.Ec2
             return DescribeInstancesResponse.Parse(responseText);
         }
 
+        public Task<RunInstancesResponse> RunInstancesAsync(RunInstancesRequest request)
+        {
+            return SendAsync<RunInstancesResponse>(request);
+        }
+
+        public Task<TerminateInstancesResponse> TerminateInstancesAsync(TerminateInstancesRequest request)
+        {
+            return SendAsync<TerminateInstancesResponse>(request);
+
+        }
+
+        #endregion
+
+        #region Images
+
         public Task<DescribeImagesResponse> DescribeImagesAsync(DescribeImagesRequest request)
         {
             return SendAsync<DescribeImagesResponse>(request);
         }
+
+        #endregion
+
+        #region Network Interfaces
+
+        public Task<DescribeNetworkInterfacesResponse> DescribeNetworkInterfacesAsync(DescribeNetworkInterfacesRequest request)
+        {
+            return SendAsync<DescribeNetworkInterfacesResponse>(request);
+        }
+
+        #endregion
+
+        #region Subnets
+
+        public Task<DescribeSubnetsResponse> DescribeSubnetsAsync(DescribeSubnetsRequest request)
+        {
+            return SendAsync<DescribeSubnetsResponse>(request);
+        }
+
+        #endregion
+
+        #region Vps
 
         public Task<DescribeVpcsResponse> DescribeVpcsAsync(DescribeVpcsRequest request)
         {
             return SendAsync<DescribeVpcsResponse>(request);
         }
 
+        #endregion
+
+        #region Volumes
+
         public Task<DescribeVolumesResponse> DescribeVolumesAsync(DescribeVolumesRequest request)
         {
             return SendAsync<DescribeVolumesResponse>(request);
         }
 
-        #region Helpers
+        #endregion
+
+        #region API Helpers
 
         private async Task<string> SendAsync(IEc2Request request)
         {
@@ -137,11 +170,7 @@ namespace Amazon.Ec2
     }
 }
 
-// TODO: Break apart by
-// Addresses
-// Hosts
-// Instances
-// ...
+// http://docs.aws.amazon.com/AWSEC2/latest/APIReference/Welcome.html
 
 /*
 AcceptReservedInstancesExchangeQuote

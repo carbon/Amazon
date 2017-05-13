@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
@@ -7,7 +6,7 @@ namespace Amazon.Ec2
     {
         [XmlArray("volumeSet")]
         [XmlArrayItem("item")]
-        public List<Volume> Volumes { get; } = new List<Volume>();
+        public Volume[] Volumes { get; set; }
     }
 }
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
@@ -7,6 +6,6 @@ namespace Amazon.Ec2
     {
         [XmlArray("vpcSet")]
         [XmlArrayItem("item")]
-        public List<Vpc> Vpcs { get; } = new List<Vpc>();
+        public Vpc[] Vpcs { get; set; }
     }
 }
