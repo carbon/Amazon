@@ -10,17 +10,18 @@ namespace Amazon.Ssm
 
         public int CompletedCount { get; set; }
 
-        public int RrrorCount { get; set; }
+        public int ErrorCount { get; set; }
 
         public string DocumentName { get; set; }
 
-        public int ExpiresAfter { get; set; }
+        // scientific notitation... why?
+        // 1.494825472676E9 
+        public double ExpiresAfter { get; set; }
 
         public string[] InstanceIds { get; set; }
 
         // Can be a number or %
         public string MaxConcurrency { get; set; }
-
 
         public string MaxErrors { get; set; }
 
@@ -32,7 +33,7 @@ namespace Amazon.Ssm
 
         public JsonObject Parameters { get; set; }
 
-        public int RequestedDateTime { get; set; }
+        public double RequestedDateTime { get; set; }
 
         public string ServiceRole { get; set; }
 
@@ -44,20 +45,40 @@ namespace Amazon.Ssm
 
         public Target[] Targets { get; set; }
     }
-
-    public class Target
-    {
-        public string Key { get; set; }
-
-        public string[] Values { get; set; }
-    }
-
-    public class NotificationConfig
-    {
-        public string NotificationArn { get; set; }
-
-        public string NotificationEvents { get; set; }
-
-        public string NotificationType { get; set; }
-    }
 }
+
+/*
+{ 
+    "CommandId": "string",
+    "Comment": "string",
+    "CompletedCount": number,
+    "DocumentName": "string",
+    "ErrorCount": number,
+    "ExpiresAfter": number,
+    "InstanceIds": [ "string" ],
+    "MaxConcurrency": "string",
+    "MaxErrors": "string",
+    "NotificationConfig": { 
+        "NotificationArn": "string",
+        "NotificationEvents": [ "string" ],
+        "NotificationType": "string"
+    },
+    "OutputS3BucketName": "string",
+    "OutputS3KeyPrefix": "string",
+    "OutputS3Region": "string",
+    "Parameters": { 
+        "string" : [ "string" ]
+    },
+    "RequestedDateTime": number,
+    "ServiceRole": "string",
+    "Status": "string",
+    "StatusDetails": "string",
+    "TargetCount": number,
+    "Targets": [ 
+        { 
+        "Key": "string",
+        "Values": [ "string" ]
+        }
+    ]
+}
+*/

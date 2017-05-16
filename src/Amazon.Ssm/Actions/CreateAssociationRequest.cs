@@ -1,0 +1,19 @@
+﻿using Carbon.Json;
+
+namespace Amazon.Ssm
+{
+    public class CreateAssociationRequest : ISsmRequest
+    {
+        public string DocumentVersion { get; set; }
+
+        public string InstanceId { get; set; }
+
+        public OutputLocation OutputLocation { get; set; }
+
+        public JsonObject Parameters { get; set; }
+
+        public string ScheduleExpression { get; set; }
+
+        public Target[] Targets { get; set; }
+    }
+}

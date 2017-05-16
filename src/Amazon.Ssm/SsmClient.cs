@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Carbon.Json;
 
@@ -15,22 +16,28 @@ namespace Amazon.Ssm
             : base(AwsService.Ssm, region, credential)
         { }
 
-
-        public Task<AddTagsToResourceResponse> AddTagsToResourceAsync(AddTagsToResourceRequest request)
-        {
-            return SendAsync<AddTagsToResourceResponse>(request);
-        }
-
-        public Task<CancelCommandResponse> CancelCommandAsync(CancelCommandRequest request)
-        {
-            return SendAsync<CancelCommandResponse>(request);
-        }
+        #region Activations
 
         public Task<CreateActivationResponse> CreateActivationAsync(CreateActivationRequest request)
         {
             return SendAsync<CreateActivationResponse>(request);
         }
 
+        public Task<DescribeActivationsResponse> DescribeActivationsAsync(DescribeActivationsRequest request)
+        {
+            return SendAsync<DescribeActivationsResponse>(request);
+        }
+
+        public Task<DeleteActivationResponse> DeleteActivationAsync(DeleteActivationRequest request)
+        {
+            return SendAsync<DeleteActivationResponse>(request);
+        }
+
+        #endregion
+
+        #region Assoications
+
+        /*
         public Task<CreateAssociationResponse> CreateAssociationAsync(CreateAssociationRequest request)
         {
             return SendAsync<CreateAssociationResponse>(request);
@@ -41,74 +48,9 @@ namespace Amazon.Ssm
             return SendAsync<CreateAssociationBatchResponse>(request);
         }
 
-        public Task<CreateDocumentResponse> CreateDocumentAsync(CreateDocumentRequest request)
-        {
-            return SendAsync<CreateDocumentResponse>(request);
-        }
-
-        public Task<CreateMaintenanceWindowResponse> CreateMaintenanceWindowAsync(CreateMaintenanceWindowRequest request)
-        {
-            return SendAsync<CreateMaintenanceWindowResponse>(request);
-        }
-
-        public Task<CreatePatchBaselineResponse> CreatePatchBaseline(CreatePatchBaselineRequest request)
-        {
-            return SendAsync<CreatePatchBaselineResponse>(request);
-        }
-
-        public Task<DeleteActivationResponse> DeleteActivationAsync(DeleteActivationRequest request)
-        {
-            return SendAsync<DeleteActivationResponse>(request);
-        }
-
         public Task<DeleteAssociationResponse> DeleteAssociationAsync(DeleteAssociationRequest request)
         {
             return SendAsync<DeleteAssociationResponse>(request);
-        }
-
-        public Task<DeleteDocumentResponse> DeleteDocumentAsync(DeleteDocumentRequest request)
-        {
-            return SendAsync<DeleteDocumentResponse>(request);
-        }
-
-        public Task<DeleteMaintenanceWindowResponse> DeleteMaintenanceWindowAsync(DeleteMaintenanceWindowRequest request)
-        {
-            return SendAsync<DeleteMaintenanceWindowResponse>(request);
-        }
-
-        public Task<DeleteParameterResponse> DeleteParameterAsync(DeleteParameterRequest request)
-        {
-            return SendAsync<DeleteParameterResponse>(request);
-        }
-
-        public Task<DeletePatchBaselineResponse> DeletePatchBaselineAsync(DeletePatchBaselineRequest request)
-        {
-            return SendAsync<DeletePatchBaselineResponse>(request);
-        }
-
-        public Task<DeregisterManagedInstanceResponse> DeregisterManagedInstanceAsync(DeregisterManagedInstanceRequest request)
-        {
-            return SendAsync<DeregisterManagedInstanceResponse>(request);
-        }
-
-        public Task<DeregisterPatchBaselineForPatchGroupResponse> DeregisterPatchBaselineForPatchGroupAsync(DeregisterPatchBaselineForPatchGroupRequest request)
-        {
-            return SendAsync<DeregisterPatchBaselineForPatchGroupResponse>(request);
-        }
-
-        public Task<DeregisterTargetFromMaintenanceWindowResponse> DeregisterTargetFromMaintenanceWindowAsync(DeregisterTargetFromMaintenanceWindowRequest request)
-        {
-            return SendAsync<DeregisterTargetFromMaintenanceWindowResponse>(request);
-        }
-
-        public Task<DeregisterTaskFromMaintenanceWindowResponse> DeregisterTaskFromMaintenanceWindowAsync(DeregisterTaskFromMaintenanceWindowRequest request)
-        {
-            return SendAsync<DeregisterTaskFromMaintenanceWindowResponse>(request);
-        }
-
-        public Task<DescribeActivationsResponse> DescribeActivationsAsync(DescribeActivationsRequest request)
-        {
-            return SendAsync<DescribeActivationsResponse>(request);
         }
 
         public Task<DescribeAssociationResponse> DescribeAssociationAsync(DescribeAssociationRequest request)
@@ -116,14 +58,106 @@ namespace Amazon.Ssm
             return SendAsync<DescribeAssociationResponse>(request);
         }
 
+        public Task<DescribeEffectiveInstanceAssociationsResponse> DescribeEffectiveInstanceAssociationsAsync(DescribeEffectiveInstanceAssociationsRequest request)
+        {
+            return SendAsync<DescribeEffectiveInstanceAssociationsResponse>(request);
+        }
+
+        public Task<DescribeInstanceAssociationsStatusResponse> DescribeInstanceAssociationsStatusAsync(DescribeInstanceAssociationsStatusRequest request)
+        {
+            return SendAsync<DescribeInstanceAssociationsStatusResponse>(request);
+        }
+
+        public Task<UpdateAssociationResponse> UpdateAssociationAsync(UpdateAssociationRequest request)
+        {
+            return SendAsync<UpdateAssociationResponse>(request);
+        }
+
+        public Task<UpdateAssociationStatusResponse> UpdateAssociationStatusAsync(UpdateAssociationStatusRequest request)
+        {
+            return SendAsync<UpdateAssociationStatusResponse>(request);
+        }
+
+        public Task<ListAssociationsResponse> ListAssociationsAsync(ListAssociationsRequest request)
+        {
+            return SendAsync<ListAssociationsResponse>(request);
+        }
+        */
+
+        #endregion
+
+        #region Automations
+
+        /*
+        public Task<GetAutomationExecutionResponse> GetAutomationExecutionAsync(GetAutomationExecutionRequest request)
+        {
+            return SendAsync<GetAutomationExecutionResponse>(request);
+        }
+
         public Task<DescribeAutomationExecutionsResponse> DescribeAutomationExecutionsAsync(DescribeAutomationExecutionsRequest request)
         {
             return SendAsync<DescribeAutomationExecutionsResponse>(request);
         }
 
-        public Task<DescribeAvailablePatchesResponse> DescribeAvailablePatchesAsync(DescribeAvailablePatchesRequest request)
+        public Task<StartAutomationExecutionResponse> StartAutomationExecutionAsync(StartAutomationExecutionRequest request)
         {
-            return SendAsync<DescribeAvailablePatchesResponse>(request);
+            return SendAsync<StartAutomationExecutionResponse>(request);
+        }
+
+        public Task<StopAutomationExecutionResponse> StopAutomationExecutionAsync(StopAutomationExecutionRequest request)
+        {
+            return SendAsync<StopAutomationExecutionResponse>(request);
+        }
+        */
+
+        #endregion
+
+        #region Commands
+
+        // Commands (CancelAsync, GetAsync, SendAsync, ListAsync, ListInvocationsAsync)
+
+        public Task<CancelCommandResponse> CancelCommandAsync(CancelCommandRequest request)
+        {
+            return SendAsync<CancelCommandResponse>(request);
+        }
+
+        public Task<GetCommandInvocationResponse> GetCommandInvocationAsync(GetCommandInvocationRequest request)
+        {
+            return SendAsync<GetCommandInvocationResponse>(request);
+        }
+
+        public Task<SendCommandResponse> SendCommandAsync(SendCommandRequest request)
+        {
+            return SendAsync<SendCommandResponse>(request);
+        }
+
+        public Task<ListCommandInvocationsResponse> ListCommandInvocationsAsync(ListCommandInvocationsRequest request)
+        {
+            return SendAsync<ListCommandInvocationsResponse>(request);
+        }
+
+        public Task<ListCommandsResponse> ListCommands(ListCommandsRequest request)
+        {
+            return SendAsync<ListCommandsResponse>(request);
+        }
+
+        #endregion
+
+        #region Documents
+
+        public Task<CreateDocumentResponse> CreateDocumentAsync(CreateDocumentRequest request)
+        {
+            return SendAsync<CreateDocumentResponse>(request);
+        }
+
+        public Task<DeleteDocumentResponse> DeleteDocumentAsync(DeleteDocumentRequest request)
+        {
+            return SendAsync<DeleteDocumentResponse>(request);
+        }
+
+        public Task<GetDocumentResponse> GetDocumentAsync(GetDocumentRequest request)
+        {
+            return SendAsync<GetDocumentResponse>(request);
         }
 
         public Task<DescribeDocumentResponse> DescribeDocumentAsync(DescribeDocumentRequest request)
@@ -136,40 +170,72 @@ namespace Amazon.Ssm
             return SendAsync<DescribeDocumentPermissionResponse>(request);
         }
 
-        public Task<DescribeEffectiveInstanceAssociationsResponse> DescribeEffectiveInstanceAssociationsAsync(DescribeEffectiveInstanceAssociationsRequest request)
+        public Task<UpdateDocumentResponse> UpdateDocumentAsync(UpdateDocumentRequest request)
         {
-            return SendAsync<DescribeEffectiveInstanceAssociationsResponse>(request);
+            return SendAsync<UpdateDocumentResponse>(request);
         }
 
-        public Task<DescribeEffectivePatchesForPatchBaselineResponse> DescribeEffectivePatchesForPatchBaselineAsync(DescribeEffectivePatchesForPatchBaselineRequest request)
+        public Task<UpdateDocumentDefaultVersionResponse> UpdateDocumentDefaultVersionAsync(UpdateDocumentDefaultVersionRequest request)
         {
-            return SendAsync<DescribeEffectivePatchesForPatchBaselineResponse>(request);
+            return SendAsync<UpdateDocumentDefaultVersionResponse>(request);
         }
 
-        public Task<DescribeInstanceAssociationsStatusResponse> DescribeInstanceAssociationsStatusAsync(DescribeInstanceAssociationsStatusRequest request)
+        public Task<ListDocumentsResponse> ListDocumentsAsync(ListDocumentsRequest request)
         {
-            return SendAsync<DescribeInstanceAssociationsStatusResponse>(request);
+            return SendAsync<ListDocumentsResponse>(request);
         }
 
-        public Task<DescribeInstanceInformationResponse> DescribeInstanceInformationAsync(DescribeInstanceInformationRequest request)
+        public Task<ListDocumentVersionsResponse> ListDocumentVersionsAsync(ListDocumentVersionsRequest request)
         {
-            return SendAsync<DescribeInstanceInformationResponse>(request);
+            return SendAsync<ListDocumentVersionsResponse>(request);
         }
 
-        public Task<DescribeInstancePatchesResponse> DescribeInstancePatchesAsync(DescribeInstancePatchesRequest request)
+        public Task<ModifyDocumentPermissionResponse> ModifyDocumentPermissionAsync(ModifyDocumentPermissionRequest request)
         {
-            return SendAsync<DescribeInstancePatchesResponse>(request);
+            return SendAsync<ModifyDocumentPermissionResponse>(request);
         }
 
-        public Task<DescribeInstancePatchStatesResponse> DescribeInstancePatchStatesAsync(DescribeInstancePatchStatesRequest request)
+        #endregion
+
+        #region Inventory
+
+        /*
+        public Task<GetInventoryResponse> GetInventoryAsync(GetInventoryRequest request)
         {
-            return SendAsync<DescribeInstancePatchStatesResponse>(request);
+            return SendAsync<GetInventoryResponse>(request);
         }
 
-        public Task<DescribeInstancePatchStatesForPatchGroupResponse> DescribeInstancePatchStatesForPatchGroupAsync(DescribeInstancePatchStatesForPatchGroupRequest request)
+        public Task<GetInventorySchemaResponse> GetInventorySchemaAsync(GetInventorySchemaRequest request)
         {
-            return SendAsync<DescribeInstancePatchStatesForPatchGroupResponse>(request);
+            return SendAsync<GetInventorySchemaResponse>(request);
         }
+
+        public Task<ListInventoryEntriesResponse> ListInventoryEntriesAsync(ListInventoryEntriesRequest request)
+        {
+            return SendAsync<ListInventoryEntriesResponse>(request);
+        }
+
+        public Task<PutInventoryResponse> PutInventoryAsync(PutInventoryRequest request)
+        {
+            return SendAsync<PutInventoryResponse>(request);
+        }
+        */
+
+        #endregion
+
+        #region Maintenance Windows
+
+        /*
+        public Task<CreateMaintenanceWindowResponse> CreateMaintenanceWindowAsync(CreateMaintenanceWindowRequest request)
+        {
+            return SendAsync<CreateMaintenanceWindowResponse>(request);
+        }
+
+        public Task<DeleteMaintenanceWindowResponse> DeleteMaintenanceWindowAsync(DeleteMaintenanceWindowRequest request)
+        {
+            return SendAsync<DeleteMaintenanceWindowResponse>(request);
+        }
+
         public Task<DescribeMaintenanceWindowExecutionsResponse> DescribeMaintenanceWindowExecutionsAsync(DescribeMaintenanceWindowExecutionsRequest request)
         {
             return SendAsync<DescribeMaintenanceWindowExecutionsResponse>(request);
@@ -180,79 +246,34 @@ namespace Amazon.Ssm
             return SendAsync<DescribeMaintenanceWindowExecutionTaskInvocationsResponse>(request);
         }
 
-        public Task<DescribeMaintenanceWindowExecutionTasksResponse> DescribeMaintenanceWindowExecutionTasks(DescribeMaintenanceWindowExecutionTasksRequest request)
+        public Task<DescribeMaintenanceWindowExecutionTasksResponse> DescribeMaintenanceWindowExecutionTasksAsync(DescribeMaintenanceWindowExecutionTasksRequest request)
         {
             return SendAsync<DescribeMaintenanceWindowExecutionTasksResponse>(request);
         }
 
-        public Task<DescribeMaintenanceWindowsResponse> DescribeMaintenanceWindows(DescribeMaintenanceWindowsRequest request)
+        public Task<DescribeMaintenanceWindowsResponse> DescribeMaintenanceWindowsAsync(DescribeMaintenanceWindowsRequest request)
         {
             return SendAsync<DescribeMaintenanceWindowsResponse>(request);
         }
 
-        public Task<DescribeMaintenanceWindowTargetsResponse> DescribeMaintenanceWindowTargets(DescribeMaintenanceWindowTargetsRequest request)
+        public Task<DescribeMaintenanceWindowTargetsResponse> DescribeMaintenanceWindowTargetsAsync(DescribeMaintenanceWindowTargetsRequest request)
         {
             return SendAsync<DescribeMaintenanceWindowTargetsResponse>(request);
         }
 
-        public Task<DescribeMaintenanceWindowTasksResponse> DescribeMaintenanceWindowTasks(DescribeMaintenanceWindowTasksRequest request)
+        public Task<DescribeMaintenanceWindowTasksResponse> DescribeMaintenanceWindowTasksAsync(DescribeMaintenanceWindowTasksRequest request)
         {
             return SendAsync<DescribeMaintenanceWindowTasksResponse>(request);
         }
 
-        public Task<DescribeParametersResponse> DescribeParameters(DescribeParametersRequest request)
+        public Task<DeregisterTargetFromMaintenanceWindowResponse> DeregisterTargetFromMaintenanceWindowAsync(DeregisterTargetFromMaintenanceWindowRequest request)
         {
-            return SendAsync<DescribeParametersResponse>(request);
+            return SendAsync<DeregisterTargetFromMaintenanceWindowResponse>(request);
         }
 
-        public Task<DescribePatchBaselinesResponse> DescribePatchBaselines(DescribePatchBaselinesRequest request)
+        public Task<DeregisterTaskFromMaintenanceWindowResponse> DeregisterTaskFromMaintenanceWindowAsync(DeregisterTaskFromMaintenanceWindowRequest request)
         {
-            return SendAsync<DescribePatchBaselinesResponse>(request);
-        }
-
-        public Task<DescribePatchGroupsResponse> DescribePatchGroupsAsync(DescribePatchGroupsRequest request)
-        {
-            return SendAsync<DescribePatchGroupsResponse>(request);
-        }
-
-        public Task<DescribePatchGroupStateResponse> DescribePatchGroupStateAsync(DescribePatchGroupStateRequest request)
-        {
-            return SendAsync<DescribePatchGroupStateResponse>(request);
-        }
-
-        public Task<GetAutomationExecutionResponse> GetAutomationExecutionAsync(GetAutomationExecutionRequest request)
-        {
-            return SendAsync<GetAutomationExecutionResponse>(request);
-        }
-
-        public Task<GetCommandInvocationResponse> GetCommandInvocationAsync(GetCommandInvocationRequest request)
-        {
-            return SendAsync<GetCommandInvocationResponse>(request);
-        }
-
-        public Task<GetDefaultPatchBaselineResponse> GetDefaultPatchBaselineAsync(GetDefaultPatchBaselineRequest request)
-        {
-            return SendAsync<GetDefaultPatchBaselineResponse>(request);
-        }
-
-        public Task<GetDeployablePatchSnapshotForInstanceResponse> GetDeployablePatchSnapshotForInstanceAsync(GetDeployablePatchSnapshotForInstanceRequest request)
-        {
-            return SendAsync<GetDeployablePatchSnapshotForInstanceResponse>(request);
-        }
-
-        public Task<GetDocumentResponse> GetDocumentAsync(GetDocumentRequest request)
-        {
-            return SendAsync<GetDocumentResponse>(request);
-        }
-
-        public Task<GetInventoryResponse> GetInventoryAsync(GetInventoryRequest request)
-        {
-            return SendAsync<GetInventoryResponse>(request);
-        }
-
-        public Task<GetInventorySchemaResponse> GetInventorySchemaAsync(GetInventorySchemaRequest request)
-        {
-            return SendAsync<GetInventorySchemaResponse>(request);
+            return SendAsync<DeregisterTaskFromMaintenanceWindowResponse>(request);
         }
 
         public Task<GetMaintenanceWindowResponse> GetMaintenanceWindowAsync(GetMaintenanceWindowRequest request)
@@ -270,6 +291,36 @@ namespace Amazon.Ssm
             return SendAsync<GetMaintenanceWindowExecutionTaskResponse>(request);
         }
 
+        public Task<RegisterTargetWithMaintenanceWindowResponse> RegisterTargetWithMaintenanceWindowAsync(RegisterTargetWithMaintenanceWindowRequest request)
+        {
+            return SendAsync<RegisterTargetWithMaintenanceWindowResponse>(request);
+        }
+
+        public Task<RegisterTaskWithMaintenanceWindowResponse> RegisterTaskWithMaintenanceWindowAsync(RegisterTaskWithMaintenanceWindowRequest request)
+        {
+            return SendAsync<RegisterTaskWithMaintenanceWindowResponse>(request);
+        }
+
+        public Task<UpdateMaintenanceWindowResponse> UpdateMaintenanceWindowAsync(UpdateMaintenanceWindowRequest request)
+        {
+            return SendAsync<UpdateMaintenanceWindowResponse>(request);
+        }
+        */
+
+        #endregion
+
+        #region Parameters
+
+        public Task<DeleteParameterResponse> DeleteParameterAsync(DeleteParameterRequest request)
+        {
+            return SendAsync<DeleteParameterResponse>(request);
+        }
+
+        public Task<DescribeParametersResponse> DescribeParametersAsync(DescribeParametersRequest request)
+        {
+            return SendAsync<DescribeParametersResponse>(request);
+        }
+
         public Task<GetParameterHistoryResponse> GetParameterHistoryAsync(GetParameterHistoryRequest request)
         {
             return SendAsync<GetParameterHistoryResponse>(request);
@@ -278,6 +329,81 @@ namespace Amazon.Ssm
         public Task<GetParametersResponse> GetParametersAsync(GetParametersRequest request)
         {
             return SendAsync<GetParametersResponse>(request);
+        }
+
+        public Task<PutParameterResponse> PutParameterAsync(PutParameterRequest request)
+        {
+            return SendAsync<PutParameterResponse>(request);
+        }
+
+        #endregion
+
+        #region Patching
+
+        /*
+        public Task<CreatePatchBaselineResponse> CreatePatchBaseline(CreatePatchBaselineRequest request)
+        {
+            return SendAsync<CreatePatchBaselineResponse>(request);
+        }
+
+        public Task<DeletePatchBaselineResponse> DeletePatchBaselineAsync(DeletePatchBaselineRequest request)
+        {
+            return SendAsync<DeletePatchBaselineResponse>(request);
+        }
+
+        public Task<DeregisterPatchBaselineForPatchGroupResponse> DeregisterPatchBaselineForPatchGroupAsync(DeregisterPatchBaselineForPatchGroupRequest request)
+        {
+            return SendAsync<DeregisterPatchBaselineForPatchGroupResponse>(request);
+        }
+
+        public Task<DescribeAvailablePatchesResponse> DescribeAvailablePatchesAsync(DescribeAvailablePatchesRequest request)
+        {
+            return SendAsync<DescribeAvailablePatchesResponse>(request);
+        }
+
+        public Task<DescribeEffectivePatchesForPatchBaselineResponse> DescribeEffectivePatchesForPatchBaselineAsync(DescribeEffectivePatchesForPatchBaselineRequest request)
+        {
+            return SendAsync<DescribeEffectivePatchesForPatchBaselineResponse>(request);
+        }
+
+        public Task<DescribeInstancePatchesResponse> DescribeInstancePatchesAsync(DescribeInstancePatchesRequest request)
+        {
+            return SendAsync<DescribeInstancePatchesResponse>(request);
+        }
+
+        public Task<DescribeInstancePatchStatesResponse> DescribeInstancePatchStatesAsync(DescribeInstancePatchStatesRequest request)
+        {
+            return SendAsync<DescribeInstancePatchStatesResponse>(request);
+        }
+
+        public Task<DescribeInstancePatchStatesForPatchGroupResponse> DescribeInstancePatchStatesForPatchGroupAsync(DescribeInstancePatchStatesForPatchGroupRequest request)
+        {
+            return SendAsync<DescribeInstancePatchStatesForPatchGroupResponse>(request);
+        }
+
+        public Task<DescribePatchBaselinesResponse> DescribePatchBaselines(DescribePatchBaselinesRequest request)
+        {
+            return SendAsync<DescribePatchBaselinesResponse>(request);
+        }
+
+        public Task<DescribePatchGroupsResponse> DescribePatchGroupsAsync(DescribePatchGroupsRequest request)
+        {
+            return SendAsync<DescribePatchGroupsResponse>(request);
+        }
+
+        public Task<DescribePatchGroupStateResponse> DescribePatchGroupStateAsync(DescribePatchGroupStateRequest request)
+        {
+            return SendAsync<DescribePatchGroupStateResponse>(request);
+        }
+
+        public Task<GetDefaultPatchBaselineResponse> GetDefaultPatchBaselineAsync(GetDefaultPatchBaselineRequest request)
+        {
+            return SendAsync<GetDefaultPatchBaselineResponse>(request);
+        }
+
+        public Task<GetDeployablePatchSnapshotForInstanceResponse> GetDeployablePatchSnapshotForInstanceAsync(GetDeployablePatchSnapshotForInstanceRequest request)
+        {
+            return SendAsync<GetDeployablePatchSnapshotForInstanceResponse>(request);
         }
 
         public Task<GetPatchBaselineResponse> GetPatchBaselineAsync(GetPatchBaselineRequest request)
@@ -290,55 +416,6 @@ namespace Amazon.Ssm
             return SendAsync<GetPatchBaselineForPatchGroupResponse>(request);
         }
 
-        public Task<ListAssociationsResponse> ListAssociationsAsync(ListAssociationsRequest request)
-        {
-            return SendAsync<ListAssociationsResponse>(request);
-        }
-
-        public Task<ListCommandInvocationsResponse> ListCommandInvocationsAsync(ListCommandInvocationsRequest request)
-        {
-            return SendAsync<ListCommandInvocationsResponse>(request);
-        }
-
-        public Task<ListCommandsResponse> ListCommands(ListCommandsRequest request)
-        {
-            return SendAsync<ListCommandsResponse>(request);
-        }
-
-        public Task<ListDocumentsResponse> ListDocumentsAsync(ListDocumentsRequest request)
-        {
-            return SendAsync<ListDocumentsResponse>(request);
-        }
-
-        public Task<ListDocumentVersionsResponse> ListDocumentVersionsAsync(ListDocumentVersionsRequest request)
-        {
-            return SendAsync<ListDocumentVersionsResponse>(request);
-        }
-        public Task<ListInventoryEntriesResponse> ListInventoryEntriesAsync(ListInventoryEntriesRequest request)
-        {
-            return SendAsync<ListInventoryEntriesResponse>(request);
-        }
-
-        public Task<ListTagsForResourceResponse> ListTagsForResourceAsync(ListTagsForResourceRequest request)
-        {
-            return SendAsync<ListTagsForResourceResponse>(request);
-        }
-
-        public Task<ModifyDocumentPermissionResponse> ModifyDocumentPermissionAsync(ModifyDocumentPermissionRequest request)
-        {
-            return SendAsync<ModifyDocumentPermissionResponse>(request);
-        }
-
-        public Task<PutInventoryResponse> PutInventoryAsync(PutInventoryRequest request)
-        {
-            return SendAsync<PutInventoryResponse>(request);
-        }
-
-        public Task<PutParameterResponse> PutParameterAsync(PutParameterRequest request)
-        {
-            return SendAsync<PutParameterResponse>(request);
-        }
-
         public Task<RegisterDefaultPatchBaselineResponse> RegisterDefaultPatchBaselineAsync(RegisterDefaultPatchBaselineRequest request)
         {
             return SendAsync<RegisterDefaultPatchBaselineResponse>(request);
@@ -349,58 +426,24 @@ namespace Amazon.Ssm
             return SendAsync<RegisterPatchBaselineForPatchGroupResponse>(request);
         }
 
-        public Task<RegisterTargetWithMaintenanceWindowResponse> RegisterTargetWithMaintenanceWindowAsync(RegisterTargetWithMaintenanceWindowRequest request)
+        public Task<UpdatePatchBaselineResponse> UpdatePatchBaselineAsync(UpdatePatchBaselineRequest request)
         {
-            return SendAsync<RegisterTargetWithMaintenanceWindowResponse>(request);
+            return SendAsync<UpdatePatchBaselineResponse>(request);
+        }
+        */
+
+        #endregion
+
+        #region Managed Instannces
+
+        public Task<DeregisterManagedInstanceResponse> DeregisterManagedInstanceAsync(DeregisterManagedInstanceRequest request)
+        {
+            return SendAsync<DeregisterManagedInstanceResponse>(request);
         }
 
-        public Task<RegisterTaskWithMaintenanceWindowResponse> RegisterTaskWithMaintenanceWindowAsync(RegisterTaskWithMaintenanceWindowRequest request)
+        public Task<DescribeInstanceInformationResponse> DescribeInstanceInformationAsync(DescribeInstanceInformationRequest request)
         {
-            return SendAsync<RegisterTaskWithMaintenanceWindowResponse>(request);
-        }
-
-        public Task<RemoveTagsFromResourceResponse> RemoveTagsFromResourceAsync(RemoveTagsFromResourceRequest request)
-        {
-            return SendAsync<RemoveTagsFromResourceResponse>(request);
-        }
-        public Task<SendCommandResponse> SendCommand(SendCommandRequest request)
-        {
-            return SendAsync<SendCommandResponse>(request);
-        }
-
-        public Task<StartAutomationExecutionResponse> StartAutomationExecutionAsync(StartAutomationExecutionRequest request)
-        {
-            return SendAsync<StartAutomationExecutionResponse>(request);
-        }
-
-        public Task<StopAutomationExecutionResponse> StopAutomationExecutionAsync(StopAutomationExecutionRequest request)
-        {
-            return SendAsync<StopAutomationExecutionResponse>(request);
-        }
-
-        public Task<UpdateAssociationResponse> UpdateAssociationAsync(UpdateAssociationRequest request)
-        {
-            return SendAsync<UpdateAssociationResponse>(request);
-        }
-
-        public Task<UpdateAssociationStatusResponse> UpdateAssociationStatusAsync(UpdateAssociationStatusRequest request)
-        {
-            return SendAsync<UpdateAssociationStatusResponse>(request);
-        }
-
-        public Task<UpdateDocumentResponse> UpdateDocumentAsync(UpdateDocumentRequest request)
-        {
-            return SendAsync<UpdateDocumentResponse>(request);
-        }
-
-        public Task<UpdateDocumentDefaultVersionResponse> UpdateDocumentDefaultVersionAsync(UpdateDocumentDefaultVersionRequest request)
-        {
-            return SendAsync<UpdateDocumentDefaultVersionResponse>(request);
-        }
-
-        public Task<UpdateMaintenanceWindowResponse> UpdateMaintenanceWindowAsync(UpdateMaintenanceWindowRequest request)
-        {
-            return SendAsync<UpdateMaintenanceWindowResponse>(request);
+            return SendAsync<DescribeInstanceInformationResponse>(request);
         }
 
         public Task<UpdateManagedInstanceRoleResponse> UpdateManagedInstanceRoleAsync(UpdateManagedInstanceRoleRequest request)
@@ -408,122 +451,74 @@ namespace Amazon.Ssm
             return SendAsync<UpdateManagedInstanceRoleResponse>(request);
         }
 
-        public Task<UpdatePatchBaselineResponse> UpdatePatchBaselineAsync(UpdatePatchBaselineRequest request)
-        {
-            return SendAsync<UpdatePatchBaselineResponse>(request);
+        #endregion
 
+        #region Tags
+
+        public Task<AddTagsToResourceResponse> AddTagsToResourceAsync(AddTagsToResourceRequest request)
+        {
+            return SendAsync<AddTagsToResourceResponse>(request);
         }
+
+        public Task<RemoveTagsFromResourceResponse> RemoveTagsFromResourceAsync(RemoveTagsFromResourceRequest request)
+        {
+            return SendAsync<RemoveTagsFromResourceResponse>(request);
+        }
+
+        public Task<ListTagsForResourceResponse> ListTagsForResourceAsync(ListTagsForResourceRequest request)
+        {
+            return SendAsync<ListTagsForResourceResponse>(request);
+        }
+
+        #endregion
 
         #region Helpers
 
-        private async Task<T> SendAsync<T>(object request)
+        private async Task<T> SendAsync<T>(ISsmRequest request)
             where T : new()
         {
-            var message = new HttpRequestMessage();
+            var responseText = await SendAsync(GetRequestMessage(Endpoint, request)).ConfigureAwait(false);
 
-            var responseText = await SendAsync(message);
+            if (responseText.Length == 0) return new T();
 
-            return JsonObject.Parse(responseText).As<T>();
+            // TEMP try / catch ... remove once all the JSON deserialization methods are verified
+
+            try
+            {
+                return JsonObject.Parse(responseText).As<T>();
+            }
+            catch
+            {
+                throw new Exception("error deserializing: " + responseText);
+            }
         }
 
+        // TODO: Fix Carbon.Json serializationOptions constructor
+        private static readonly SerializationOptions serializationOptions = new SerializationOptions {
+            IgnoreNullValues = true
+        };
 
-        private FormUrlEncodedContent GetPostContent(AwsRequest request)
+        public static HttpRequestMessage GetRequestMessage(string endpoint, ISsmRequest request)
         {
-            request.Add("Version", Version);
+            var actionName = request.GetType().Name.Replace("Request", "");
 
-            return new FormUrlEncodedContent(request.Parameters);
+            var json = new JsonSerializer().Serialize(request, serializationOptions);
+
+            return new HttpRequestMessage(HttpMethod.Post, endpoint) {
+                Headers = {
+                    { "x-amz-target", "AmazonSSM." + actionName },
+                },
+                Content = new StringContent(json.ToString(pretty: false), Encoding.UTF8, "application/x-amz-json-1.1")
+            };
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
             var responseText = await response.Content.ReadAsStringAsync();
-
+   
             throw new Exception(response.StatusCode + "/" + responseText);
         }
 
         #endregion
     }
 }
-
-/*
-AddTagsToResource
-CancelCommand
-CreateActivation
-CreateAssociation
-CreateAssociationBatch
-CreateDocument
-CreateMaintenanceWindow
-CreatePatchBaseline
-DeleteActivation
-DeleteAssociation
-DeleteDocument
-DeleteMaintenanceWindow
-DeleteParameter
-DeletePatchBaseline
-DeregisterManagedInstance
-DeregisterPatchBaselineForPatchGroup
-DeregisterTargetFromMaintenanceWindow
-DeregisterTaskFromMaintenanceWindow
-DescribeActivations
-DescribeAssociation
-DescribeAutomationExecutions
-DescribeAvailablePatches
-DescribeDocument
-DescribeDocumentPermission
-DescribeEffectiveInstanceAssociations
-DescribeEffectivePatchesForPatchBaseline
-DescribeInstanceAssociationsStatus
-DescribeInstanceInformation
-DescribeInstancePatches
-DescribeInstancePatchStates
-DescribeInstancePatchStatesForPatchGroup
-DescribeMaintenanceWindowExecutions
-DescribeMaintenanceWindowExecutionTaskInvocations
-DescribeMaintenanceWindowExecutionTasks
-DescribeMaintenanceWindows
-DescribeMaintenanceWindowTargets
-DescribeMaintenanceWindowTasks
-DescribeParameters
-DescribePatchBaselines
-DescribePatchGroups
-DescribePatchGroupState
-GetAutomationExecution
-GetCommandInvocation
-GetDefaultPatchBaseline
-GetDeployablePatchSnapshotForInstance
-GetDocument
-GetInventory
-GetInventorySchema
-GetMaintenanceWindow
-GetMaintenanceWindowExecution
-GetMaintenanceWindowExecutionTask
-GetParameterHistory
-GetParameters
-GetPatchBaseline
-GetPatchBaselineForPatchGroup
-ListAssociations
-ListCommandInvocations
-ListCommands
-ListDocuments
-ListDocumentVersions
-ListInventoryEntries
-ListTagsForResource
-ModifyDocumentPermission
-PutInventory
-PutParameter
-RegisterDefaultPatchBaseline
-RegisterPatchBaselineForPatchGroup
-RegisterTargetWithMaintenanceWindow
-RegisterTaskWithMaintenanceWindow
-RemoveTagsFromResource
-SendCommand
-StartAutomationExecution
-StopAutomationExecution
-UpdateAssociation
-UpdateAssociationStatus
-UpdateDocument
-UpdateDocumentDefaultVersion
-UpdateMaintenanceWindow
-UpdateManagedInstanceRole
-UpdatePatchBaseline
-*/
