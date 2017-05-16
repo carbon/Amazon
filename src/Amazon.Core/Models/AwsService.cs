@@ -15,6 +15,7 @@ namespace Amazon
 
         public static readonly AwsService Cloudfront       = new AwsService("cloudfront");
         public static readonly AwsService CloudwatchEvents = new AwsService("events");
+        public static readonly AwsService CodeBuild        = new AwsService("codebuild");
         public static readonly AwsService DynamoDb         = new AwsService("dynamodb");
         public static readonly AwsService Ec2              = new AwsService("ec2");
         public static readonly AwsService Elb              = new AwsService("elasticloadbalancing");
@@ -26,6 +27,7 @@ namespace Amazon
         public static readonly AwsService Lambda           = new AwsService("lambda");
         public static readonly AwsService Monitoring       = new AwsService("monitoring"); // Cloudwatch monitoring
         public static readonly AwsService Ses              = new AwsService("email");
+        public static readonly AwsService Ssm              = new AwsService("ssm"); // Amazon EC2 Systems Manager (SSM)
         public static readonly AwsService S3               = new AwsService("s3");
         public static readonly AwsService Sns              = new AwsService("sns");
         public static readonly AwsService Sts              = new AwsService("sts");

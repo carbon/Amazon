@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Core</AssemblyName>
-    <VersionPrefix>0.8.3</VersionPrefix>
+    <VersionPrefix>0.8.4</VersionPrefix>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
 
     <!-- Package Details-->
@@ -13,10 +13,6 @@
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Metadata\InstanceIdentity.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Carbon.Json" Version="1.3.1" />
