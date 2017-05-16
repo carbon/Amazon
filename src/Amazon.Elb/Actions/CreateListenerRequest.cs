@@ -9,7 +9,7 @@ namespace Amazon.Elb
 
         public string LoadBalancerArn { get; set; }
 
-        public List<Certificate> Certificates { get; set; }
+        public Certificate[] Certificates { get; set; }
 
         public List<Action> Actions { get; } = new List<Action>();
 

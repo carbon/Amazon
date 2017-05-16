@@ -1,10 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
     public class CreateLoadBalancerRequest : IElbRequest
     {
+        public CreateLoadBalancerRequest() { }
+
+        public CreateLoadBalancerRequest(string name)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+        }
+
         public string Action => "CreateLoadBalancer";
 
         public string IpAddressType { get; set; }
@@ -21,6 +28,6 @@ namespace Amazon.Elb
         [Required]
         public string[] Subnets { get; set; }
 
-        public List<Tag> Tags { get; set; }
+        public Tag[] Tags { get; set; }
     }
 }

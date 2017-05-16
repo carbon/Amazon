@@ -12,44 +12,30 @@ namespace Amazon.Elb
         public ElbClient(AwsRegion region, IAwsCredential credential)
             : base(AwsService.Elb, region, credential) { }
 
+        #region Tags
+
         public Task<AddTagsResponse> AddTagsAsync(AddTagsRequest request)
         {
             return SendAsync<AddTagsResponse>(request);
         }
-        
-        public Task<CreateListenerResponse> CreateListenerAsync(CreateListenerRequest request)
+
+        public Task<DescribeTagsResponse> DescribeTagsAsync(DescribeTagsRequest request)
         {
-            return SendAsync<CreateListenerResponse>(request);
+            return SendAsync<DescribeTagsResponse>(request);
         }
 
-        public Task<CreateLoadBalancerResponse> CreateLoadBalancerAsync(CreateLoadBalancerRequest request)
+        public Task<RemoveTagsResponse> RemoveTagsAsync(RemoveTagsRequest request)
         {
-            return SendAsync<CreateLoadBalancerResponse>(request);
+            return SendAsync<RemoveTagsResponse>(request);
         }
 
-        public Task<CreateRuleResponse> CreateRuleAsync(CreateRuleRequest request)
-        {
-            return SendAsync<CreateRuleResponse>(request);
-        }
+        #endregion
+
+        #region Target Groups
 
         public Task<CreateTargetGroupResponse> CreateTargetGroupAsync(CreateTargetGroupRequest request)
         {
             return SendAsync<CreateTargetGroupResponse>(request);
-        }
-
-        public Task<DeleteListenerResponse> DeleteListenerAsync(DeleteListenerRequest request)
-        {
-            return SendAsync<DeleteListenerResponse>(request);
-        }
-
-        public Task<DeleteLoadBalancerResponse> DeleteLoadBalancerAsync(DeleteLoadBalancerRequest request)
-        {
-            return SendAsync<DeleteLoadBalancerResponse>(request);
-        }
-
-        public Task<DeleteRuleResponse> DeleteRuleAsync(DeleteRuleRequest request)
-        {
-            return SendAsync<DeleteRuleResponse>(request);
         }
 
         public Task<DeleteTargetGroupResponse> DeleteTargetGroupAsync(DeleteTargetGroupRequest request)
@@ -60,36 +46,6 @@ namespace Amazon.Elb
         public Task<DeregisterTargetsResponse> DeregisterTargetsAsync(DeregisterTargetsRequest request)
         {
             return SendAsync<DeregisterTargetsResponse>(request);
-        }
-
-        public Task<DescribeListenersResponse> DescribeListenersAsync(DescribeListenersRequest request)
-        {
-            return SendAsync<DescribeListenersResponse>(request);
-        }
-
-        public Task<DescribeLoadBalancerAttributesResponse> DescribeLoadBalancerAttributesAsync(DescribeLoadBalancerAttributesRequest request)
-        {
-            return SendAsync<DescribeLoadBalancerAttributesResponse>(request);
-        }
-
-        public Task<DescribeLoadBalancersResponse> DescribeLoadBalancersAsync(DescribeLoadBalancersRequest request)
-        {
-            return SendAsync<DescribeLoadBalancersResponse>(request);
-        }
-
-        public Task<DescribeRulesResponse> DescribeRulesAsync(DescribeRulesRequest request)
-        {
-            return SendAsync<DescribeRulesResponse>(request);
-        }
-
-        public Task<DescribeSSLPoliciesResponse> DescribeSSLPoliciesAsync(DescribeSSLPoliciesRequest request)
-        {
-            return SendAsync<DescribeSSLPoliciesResponse>(request);
-        }
-
-        public Task<DescribeTagsResponse> DescribeTagsAsync(DescribeTagsRequest request)
-        {
-            return SendAsync<DescribeTagsResponse>(request);
         }
 
         public Task<DescribeTargetGroupAttributesResponse> DescribeTargetGroupAttributesAsync(DescribeTargetGroupAttributesRequest request)
@@ -107,26 +63,6 @@ namespace Amazon.Elb
             return SendAsync<DescribeTargetHealthResponse>(request);
         }
 
-        public Task<ModifyListenerResponse> ModifyListenerAsync(ModifyListenerRequest request)
-        {
-            return SendAsync<ModifyListenerResponse>(request);
-        }
-
-        public Task<ModifyLoadBalancerAttributesResponse> ModifyLoadBalancerAttributesAsync(ModifyLoadBalancerAttributesRequest request)
-        {
-            return SendAsync<ModifyLoadBalancerAttributesResponse>(request);
-        }
-
-        public Task<ModifyRuleResponse> ModifyRuleAsync(ModifyRuleRequest request)
-        {
-            return SendAsync<ModifyRuleResponse>(request);
-        }
-
-        public Task<ModifyTargetGroupResponse> ModifyTargetGroupAsync(ModifyTargetGroupRequest request)
-        {
-            return SendAsync<ModifyTargetGroupResponse>(request);
-        }
-
         public Task<ModifyTargetGroupAttributesResponse> ModifyTargetGroupAttributesAsync(ModifyTargetGroupAttributesRequest request)
         {
             return SendAsync<ModifyTargetGroupAttributesResponse>(request);
@@ -137,19 +73,98 @@ namespace Amazon.Elb
             return SendAsync<RegisterTargetsResponse>(request);
         }
 
-        public Task<RemoveTagsResponse> RemoveTagsAsync(RemoveTagsRequest request)
+        public Task<ModifyTargetGroupResponse> ModifyTargetGroupAsync(ModifyTargetGroupRequest request)
         {
-            return SendAsync<RemoveTagsResponse>(request);
+            return SendAsync<ModifyTargetGroupResponse>(request);
         }
 
-        public Task<SetIpAddressTypeResponse> SetIpAddressTypeAsync(SetIpAddressTypeRequest request)
+        #endregion
+
+        #region Listeners
+
+        public Task<CreateListenerResponse> CreateListenerAsync(CreateListenerRequest request)
         {
-            return SendAsync<SetIpAddressTypeResponse>(request);
+            return SendAsync<CreateListenerResponse>(request);
+        }
+
+        public Task<DeleteListenerResponse> DeleteListenerAsync(DeleteListenerRequest request)
+        {
+            return SendAsync<DeleteListenerResponse>(request);
+        }
+
+        public Task<DescribeListenersResponse> DescribeListenersAsync(DescribeListenersRequest request)
+        {
+            return SendAsync<DescribeListenersResponse>(request);
+        }
+
+        public Task<ModifyListenerResponse> ModifyListenerAsync(ModifyListenerRequest request)
+        {
+            return SendAsync<ModifyListenerResponse>(request);
+        }
+
+        #endregion
+
+        #region Rules
+
+        public Task<CreateRuleResponse> CreateRuleAsync(CreateRuleRequest request)
+        {
+            return SendAsync<CreateRuleResponse>(request);
+        }
+
+        public Task<DeleteRuleResponse> DeleteRuleAsync(DeleteRuleRequest request)
+        {
+            return SendAsync<DeleteRuleResponse>(request);
+        }
+
+        public Task<DescribeRulesResponse> DescribeRulesAsync(DescribeRulesRequest request)
+        {
+            return SendAsync<DescribeRulesResponse>(request);
+        }
+
+        public Task<ModifyRuleResponse> ModifyRuleAsync(ModifyRuleRequest request)
+        {
+            return SendAsync<ModifyRuleResponse>(request);
         }
 
         public Task<SetRulePrioritiesResponse> SetRulePrioritiesAsync(SetRulePrioritiesRequest request)
         {
             return SendAsync<SetRulePrioritiesResponse>(request);
+        }
+
+        #endregion
+
+        #region Load Balancers
+
+        public Task<CreateLoadBalancerResponse> CreateLoadBalancerAsync(CreateLoadBalancerRequest request)
+        {
+            return SendAsync<CreateLoadBalancerResponse>(request);
+        }
+
+        public Task<DeleteLoadBalancerResponse> DeleteLoadBalancerAsync(DeleteLoadBalancerRequest request)
+        {
+            return SendAsync<DeleteLoadBalancerResponse>(request);
+        }
+
+        public Task<DescribeLoadBalancerAttributesResponse> DescribeLoadBalancerAttributesAsync(DescribeLoadBalancerAttributesRequest request)
+        {
+            return SendAsync<DescribeLoadBalancerAttributesResponse>(request);
+        }
+
+        public Task<DescribeLoadBalancersResponse> DescribeLoadBalancersAsync(DescribeLoadBalancersRequest request)
+        {
+            return SendAsync<DescribeLoadBalancersResponse>(request);
+        }
+
+        public Task<ModifyLoadBalancerAttributesResponse> ModifyLoadBalancerAttributesAsync(ModifyLoadBalancerAttributesRequest request)
+        {
+            return SendAsync<ModifyLoadBalancerAttributesResponse>(request);
+        }
+
+        // Specific Load Balancer Actions ---
+
+        public Task<SetIpAddressTypeResponse> SetIpAddressTypeAsync(SetIpAddressTypeRequest request)
+        {
+            return SendAsync<SetIpAddressTypeResponse>(request);
         }
 
         public Task<SetSecurityGroupsResponse> SetSecurityGroupsAsync(SetSecurityGroupsRequest request)
@@ -161,6 +176,20 @@ namespace Amazon.Elb
         {
             return SendAsync<SetSubnetsResponse>(request);
         }
+
+        #endregion
+
+        #region SSL Policies
+
+        public Task<DescribeSSLPoliciesResponse> DescribeSSLPoliciesAsync(DescribeSSLPoliciesRequest request)
+        {
+            return SendAsync<DescribeSSLPoliciesResponse>(request);
+        }
+
+        #endregion
+
+
+
 
         #region Helpers
 

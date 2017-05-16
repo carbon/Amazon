@@ -1,13 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
     public class TargetDescription
     {
+        public TargetDescription() { }
+
+        public TargetDescription(string id, int? port = null)
+        {
+            Id   = id ?? throw new ArgumentNullException(nameof(id));
+            Port = port;
+        }
+
         [Required]
         public string Id { get; set; }
 
         [Range(1, 65535)]
-        public ushort? Port { get; set; }
+        public int? Port { get; set; }
     }
 }

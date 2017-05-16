@@ -48,20 +48,20 @@ namespace Amazon.Elb
 
 /*
 <member> 
-        <TargetGroupArn>arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067</TargetGroupArn> 
-        <HealthCheckTimeoutSeconds>5</HealthCheckTimeoutSeconds> 
-        <HealthCheckPort>traffic-port</HealthCheckPort> 
-        <Matcher>
-          <HttpCode>200</HttpCode> 
-        </Matcher> 
-        <TargetGroupName>my-targets</TargetGroupName> 
-        <HealthCheckProtocol>HTTP</HealthCheckProtocol> 
-        <HealthCheckPath>/</HealthCheckPath> 
-        <Protocol>HTTP</Protocol> 
-        <Port>80</Port> 
-        <VpcId>vpc-3ac0fb5f</VpcId> 
-        <HealthyThresholdCount>5</HealthyThresholdCount> 
-        <HealthCheckIntervalSeconds>30</HealthCheckIntervalSeconds> 
-        <UnhealthyThresholdCount>2</UnhealthyThresholdCount> 
-      </member> 
+    <TargetGroupArn>arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067</TargetGroupArn> 
+    <HealthCheckTimeoutSeconds>5</HealthCheckTimeoutSeconds> 
+    <HealthCheckPort>traffic-port</HealthCheckPort> 
+    <Matcher>
+        <HttpCode>200</HttpCode> 
+    </Matcher> 
+    <TargetGroupName>my-targets</TargetGroupName> 
+    <HealthCheckProtocol>HTTP</HealthCheckProtocol> 
+    <HealthCheckPath>/</HealthCheckPath> 
+    <Protocol>HTTP</Protocol> 
+    <Port>80</Port> 
+    <VpcId>vpc-3ac0fb5f</VpcId> 
+    <HealthyThresholdCount>5</HealthyThresholdCount> 
+    <HealthCheckIntervalSeconds>30</HealthCheckIntervalSeconds> 
+    <UnhealthyThresholdCount>2</UnhealthyThresholdCount> 
+</member> 
 */

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
@@ -7,9 +6,9 @@ namespace Amazon.Elb
     {
         public string Action => "CreateRule";
 
-        public List<Action> Actions { get; set; }
+        public Action[] Actions { get; set; }
 
-        public List<RuleCondition> Conditions { get; set; }
+        public RuleCondition[] Conditions { get; set; }
 
         [Required]
         public string ListenerArn { get; set; }
