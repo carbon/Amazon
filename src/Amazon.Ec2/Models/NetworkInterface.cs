@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
@@ -35,23 +33,10 @@ namespace Amazon.Ec2
 
         [XmlArray("groupSet")]
         [XmlArrayItem("item")]
-        public List<NetworkInterfaceSecurityGroup> Groups { get; set; }
+        public NetworkInterfaceSecurityGroup[] Groups { get; set; }
 
         [XmlElement("attachment")]
         public NetworkInterfaceAttachment Attachment { get; set; }
-
-        private static readonly XmlSerializer serializer = new XmlSerializer(
-          typeof(NetworkInterface),
-          new XmlRootAttribute {
-              ElementName = "item",
-              Namespace = Ec2Client.Namespace
-          }
-        );
-
-        public static NetworkInterface Deserialize(XElement element)
-        {
-            return (NetworkInterface)serializer.Deserialize(element.CreateReader());
-        }
     }
 }
 

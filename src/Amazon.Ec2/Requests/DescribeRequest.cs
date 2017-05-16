@@ -13,7 +13,7 @@ namespace Amazon.Ec2
 
         protected void AddIds(Dictionary<string, string> parameters, string prefix, List<string> ids)
         {
-            for(var i = 0; i < ids.Count; i++)
+            for (var i = 0; i < ids.Count; i++)
             {
                 // e.g. VpcId.1
                 parameters.Add(prefix + "." + (i + 1), ids[i]);

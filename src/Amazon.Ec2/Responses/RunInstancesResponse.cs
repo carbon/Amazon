@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
@@ -7,7 +6,7 @@ namespace Amazon.Ec2
     {
         [XmlArray("instancesSet")]
         [XmlArrayItem("item")]
-        public List<Instance> Instances { get; } = new List<Instance>();
+        public Instance[] Instances { get; set; }
 
         [XmlElement("ownerId")]
         public string OwnerId { get; set; }

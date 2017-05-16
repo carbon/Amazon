@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
@@ -10,6 +9,10 @@ namespace Amazon.Ec2
 
         [XmlElement("cidrBlock")]
         public string CidrBlock { get; set; }
+
+        [XmlArray("ipv6CidrBlockAssociationSet")]
+        [XmlArrayItem("item")]
+        public Ipv6CidrBlockAssociation[] Ipv6CidrBlockAssociations { get; set; }
 
         // default | dedicated | host
         [XmlElement("instanceTenancy")]
@@ -22,29 +25,6 @@ namespace Amazon.Ec2
         public string DhcpOptionsId { get; set; }
 
         // pending | available
-        [XmlElement("state")]
-        public string State { get; set; }
-
-        [XmlArray("ipv6CidrBlockAssociationSet")]
-        [XmlArrayItem("item")]
-        public List<VpcIpv6CidrBlockAssociation> Ipv6CidrBlockAssociations { get; set; }
-
-    }
-
-    public class VpcIpv6CidrBlockAssociation
-    {
-        [XmlElement("associationId")]
-        public string AssociationId { get; set; }
-
-        [XmlElement("ipv6CidrBlock")]
-        public string Ipv6CidrBlock { get; set; }
-
-        [XmlElement("ipv6CidrBlockState")]
-        public Ipv6CidrBlockState Ipv6CidrBlockState { get; set; }
-    }
-
-    public class Ipv6CidrBlockState
-    {
         [XmlElement("state")]
         public string State { get; set; }
     }

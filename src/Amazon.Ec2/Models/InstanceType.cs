@@ -18,8 +18,7 @@ namespace Amazon.Ec2.Models
 
     public class InstanceTypeMap
     {
-        public static InstanceType[] All
-            => map.Select(m => m.Value).ToArray();
+        public static InstanceType[] All => map.Select(m => m.Value).ToArray();
 
         private static readonly Dictionary<string, InstanceType> map = new Dictionary<string, InstanceType> {
             { "c1.medium"          , new InstanceType("c1.medium") },

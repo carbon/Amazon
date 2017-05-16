@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Carbon.Json;
 
@@ -8,6 +9,16 @@ namespace Amazon.Ec2
     {
         public static Dictionary<string, string> ToParams(string actionName, object instance)
         {
+            #region Preconditions
+
+            if (actionName == null)
+                throw new ArgumentNullException(nameof(actionName));
+
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+
+            #endregion
+
             var parameters = new Dictionary<string, string> {
                 { "Action", actionName }
             };

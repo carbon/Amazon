@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -33,11 +32,11 @@ namespace Amazon.Ec2
        
         [XmlArray("networkInterfaceSet")]
         [XmlArrayItem("item")]
-        public List<NetworkInterface> NetworkInterfaces { get; set; }
+        public NetworkInterface[] NetworkInterfaces { get; set; }
 
         [XmlArray("blockDeviceMapping")]
         [XmlArrayItem("item")]
-        public List<BlockDeviceMapping> BlockDeviceMappings { get; set; }
+        public BlockDeviceMapping[] BlockDeviceMappings { get; set; }
 
         // The public IP address assigned to the instance, if applicable.
 

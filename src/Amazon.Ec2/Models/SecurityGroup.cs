@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
@@ -23,50 +21,11 @@ namespace Amazon.Ec2
 
         [XmlArray("ipPermissions")]
         [XmlArrayItem("item")]
-        public List<IpPermission> IpPermissions { get; set; }
+        public IpPermission[] IpPermissions { get; set; }
 
         [XmlArray("ipPermissionsEgress")]
         [XmlArrayItem("item")]
-        public List<IpPermission> IpPermissionsEgress { get; set; }
-
-        private static readonly XmlSerializer serializer = new XmlSerializer(
-         typeof(SecurityGroup),
-         new XmlRootAttribute {
-             ElementName = "item",
-             Namespace = Ec2Client.Namespace
-         }
-       );
-
-        public static SecurityGroup Deserialize(XElement element)
-        {
-            return (SecurityGroup)serializer.Deserialize(element.CreateReader());
-        }
-    }
-
-    public class IpPermission
-    {
-
-        // -1
-        [XmlElement("ipProtocal")]
-        public string IpProtocal { get; set; }
-        
-        [XmlElement("fromPort")]
-        public int FromPort { get; set; }
-
-        [XmlElement("toPort")]
-        public string ToPort { get; set; }
-
-        [XmlArray("ipRanges")]
-        [XmlArrayItem("item")]
-        public List<IpRange> IpRanges { get; set; }
-
-        [XmlArray("ipv6Ranges")]
-        [XmlArrayItem("item")]
-        public List<Ipv6Range> Ipv6Ranges { get; set; }
-
-        [XmlArray("groups")]
-        [XmlArrayItem("item")]
-        public List<IpPermissionGroup> Groups { get; set; }
+        public IpPermission[] IpPermissionsEgress { get; set; }
     }
 
     public class IpPermissionGroup

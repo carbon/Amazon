@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
@@ -6,9 +7,10 @@ namespace Amazon.Ec2
     {
         public BlockDeviceMapping() { }
 
-        public BlockDeviceMapping(EbsBlockDevice ebs)
+        public BlockDeviceMapping(string deviceName, EbsBlockDevice ebs)
         {
-            Ebs = ebs;
+            DeviceName = deviceName ?? throw new ArgumentNullException(nameof(deviceName));
+            Ebs        = ebs ?? throw new ArgumentNullException(nameof(ebs));
         }
 
         [XmlElement("deviceName")]
@@ -20,6 +22,15 @@ namespace Amazon.Ec2
         [XmlElement("virtualName")]
         public string VirtualName { get; set; }
     }
+
+    public static class BlockDeviceNames
+    {
+        public const string Root = "/dev/sda1";
+
+        public const string sda1 = "/dev/sda1";
+        public const string xvda = "/dev/xvda";
+    }
+
 }
 
 

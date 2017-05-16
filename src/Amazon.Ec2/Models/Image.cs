@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
@@ -52,18 +51,5 @@ namespace Amazon.Ec2
 
         [XmlElement("virtualizationType")]
         public string VirtualizationType { get; set; }
-
-        private static readonly XmlSerializer serializer = new XmlSerializer(
-            typeof(Image),
-            new XmlRootAttribute {
-                ElementName = "item",
-                Namespace = Ec2Client.Namespace
-            }
-        );
-
-        public static Image Deserialize(XElement element)
-        {
-            return (Image)serializer.Deserialize(element.CreateReader());
-        }
     }
 }

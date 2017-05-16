@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
@@ -17,6 +16,10 @@ namespace Amazon.Ec2
         [XmlElement("cidrBlock")]
         public string CidrBlock { get; set; }
 
+        [XmlArray("ipv6CidrBlockAssociationSet")]
+        [XmlArrayItem("item")]
+        public Ipv6CidrBlockAssociation[] Ipv6CidrBlockAssociations { get; set; }
+
         [XmlElement("availableIpAddressCount")]
         public int AvailableIpAddressCount { get; set; }
         
@@ -31,20 +34,6 @@ namespace Amazon.Ec2
 
         [XmlElement("assignIpv6AddressOnCreation")]
         public bool AssignIpv6AddressOnCreation { get; set; }
-
-        private static readonly XmlSerializer serializer = new XmlSerializer(
-           typeof(Subnet),
-           new XmlRootAttribute
-           {
-               ElementName = "item",
-               Namespace = Ec2Client.Namespace
-           }
-       );
-
-        public static Subnet Deserialize(XElement element)
-        {
-            return (Subnet)serializer.Deserialize(element.CreateReader());
-        }
     }
 }
 
@@ -55,12 +44,12 @@ namespace Amazon.Ec2
     <vpcId>vpc-1a2b3c4d</vpcId>
     <cidrBlock>10.0.1.0/24</cidrBlock>
     <ipv6CidrBlockAssociationSet>
-    <item>
-        <ipv6CidrBlock>2001:db8:1234:1a00::/64</ipv6CidrBlock>
-        <associationId>subnet-cidr-assoc-abababab</associationId>
-        <ipv6CidrBlockState>
-            <state>ASSOCIATED</state>
-        </ipv6CidrBlockState>
+        <item>
+            <ipv6CidrBlock>2001:db8:1234:1a00::/64</ipv6CidrBlock>
+            <associationId>subnet-cidr-assoc-abababab</associationId>
+            <ipv6CidrBlockState>
+                <state>ASSOCIATED</state>
+            </ipv6CidrBlockState>
         </item>
     </ipv6CidrBlockAssociationSet>
     <availableIpAddressCount>251</availableIpAddressCount>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Amazon.Ec2
@@ -32,6 +31,6 @@ namespace Amazon.Ec2
 
         [XmlArray("attachmentSet")]
         [XmlArrayItem("item")]
-        public List<VolumeAttachment> Attachments { get; set; }
+        public VolumeAttachment[] Attachments { get; set; }
     }
 }
