@@ -9,3 +9,6 @@ dotnet pack ./src/Amazon.Kms        -c Release -o ./../../build/Amazon.Kms
 dotnet pack ./src/Amazon.CloudWatch -c Release -o ./../../build/Amazon.CloudWatch
 dotnet pack ./src/Amazon.Ec2        -c Release -o ./../../build/Amazon.Ec2
 dotnet pack ./src/Amazon.Sqs        -c Release -o ./../../build/Amazon.Sqs
+dotnet pack ./src/Amazon.Elb        -c Release -o ./../../build/Amazon.Elb
+dotnet pack ./src/Amazon.Ssm        -c Release -o ./../../build/Amazon.Ssm
+dotnet pack ./src/Amazon.CodeBuild  -c Release -o ./../../build/Amazon.CodeBuild
