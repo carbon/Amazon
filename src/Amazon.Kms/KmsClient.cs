@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +20,8 @@ namespace Amazon.Kms
             return SendAsync<CreateAliasResponse>("CreateAlias", request);
         }
 
+        #region Grants
+
         public Task<CreateGrantResponse> CreateGrantAsync(CreateGrantRequest request)
         {
             return SendAsync<CreateGrantResponse>("CreateGrant", request);
@@ -34,6 +37,8 @@ namespace Amazon.Kms
             return SendAsync<ListGrantsResponse>("ListGrants", request);
         }
 
+        #endregion
+
         public Task<EncryptResponse> EncryptAsync(EncryptRequest request)
         {
             return SendAsync<EncryptResponse>("Encrypt", request);
@@ -44,10 +49,20 @@ namespace Amazon.Kms
             return SendAsync<DecryptResponse>("Decrypt", request);
         }
 
+
+        #region Data Keys
+
         public Task<GenerateDataKeyResponse> GenerateDataKeyAsync(GenerateDataKeyRequest request)
         {
             return SendAsync<GenerateDataKeyResponse>("GenerateDataKey", request);
         }
+
+        public Task<GenerateDataKeyResponse> GenerateDataKeyWithoutPlaintextAsync(GenerateDataKeyRequest request)
+        {
+            return SendAsync<GenerateDataKeyResponse>("GenerateDataKeyWithoutPlaintext", request);
+        }
+
+        #endregion
 
         #region Helpers
 
@@ -71,8 +86,32 @@ namespace Amazon.Kms
             return JsonObject.Parse(responseText).As<T>();
         }
 
+        protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
+        {
+            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            if (responseText.StartsWith("{"))
+            {
+                var error = JsonObject.Parse(responseText).As<KmsError>();
+
+                if (error.Type == "AccessDeniedException")
+                {
+                    return new AccessDeniedException(error.Message);
+                }
+                else
+                {
+                    return new KmsException(error);
+                }
+            }
+            else
+            {
+                throw new Exception(responseText);
+            }
+        }
+
         #endregion
     }
+
 
 }
 
