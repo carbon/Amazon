@@ -30,12 +30,4 @@ namespace Amazon.Sqs
 
         // TODO: Attributes
     }
-
-    /*
-	Body—The message's contents (not URL-encoded)
-	MD5OfBody—An MD5 digest of the non-URL-encoded message body string.
-	MessageId—The message's SQS-assigned ID.
-	ReceiptHandle—A string associated with a specific instance of receiving the message.
-	Attribute—SenderId, SentTimestamp, ApproximateReceiveCount, and/or ApproximateFirstReceiveTimestamp. SentTimestamp and ApproximateFirstReceiveTimestamp are each returned as an integer representing the epoch time in milliseconds.
-	*/
 }

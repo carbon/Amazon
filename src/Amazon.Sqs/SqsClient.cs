@@ -45,10 +45,12 @@ namespace Amazon.Sqs
             return CreateQueueResult.Parse(responseText);
         }
 
+        /*
         public Task DeleteQueue(string queueName)
         {
             throw new NotImplementedException();
         }
+        */
 
         public async Task<List<SendMessageBatchResultEntry>> SendMessageBatchAsync(Uri queueUrl, string[] messages)
         {

@@ -9,7 +9,6 @@ using Carbon.Messaging;
 
 namespace Amazon.Sqs
 {
-    using Helpers;
     using Scheduling;
 
     public class SqsQueue<T> : IMessageQueue<T>
