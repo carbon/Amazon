@@ -1,4 +1,5 @@
-﻿using Carbon.Json;
+﻿using System;
+using Carbon.Json;
 
 namespace Amazon.Ssm
 {
@@ -14,9 +15,8 @@ namespace Amazon.Ssm
 
         public string DocumentName { get; set; }
 
-        // scientific notitation... why?
-        // 1.494825472676E9 
-        public double ExpiresAfter { get; set; }
+        // scientific notation: 1.494825472676E9 
+        public DateTime ExpiresAfter { get; set; }
 
         public string[] InstanceIds { get; set; }
 
@@ -33,7 +33,7 @@ namespace Amazon.Ssm
 
         public JsonObject Parameters { get; set; }
 
-        public double RequestedDateTime { get; set; }
+        public DateTime RequestedDateTime { get; set; }
 
         public string ServiceRole { get; set; }
 

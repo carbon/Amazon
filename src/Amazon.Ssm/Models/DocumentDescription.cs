@@ -1,10 +1,12 @@
-﻿using Carbon.Json;
+﻿using System;
+
+using Carbon.Json;
 
 namespace Amazon.Ssm
 {
     public class DocumentDescription
     {
-        public int CreateDate { get; set; }
+        public DateTime CreateDate { get; set; }
 
         public string DefaultVersion { get; set; }
 

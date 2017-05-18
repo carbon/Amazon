@@ -1,4 +1,6 @@
-﻿namespace Amazon.Ssm
+﻿using System;
+
+namespace Amazon.Ssm
 {
     public class Patch
     {
@@ -22,7 +24,7 @@
 
         public string ProductFamily { get; set; }
 
-        public string ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         public string Title { get; set; }
 

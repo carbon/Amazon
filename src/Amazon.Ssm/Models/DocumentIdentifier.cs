@@ -2,7 +2,6 @@
 {
     public class DocumentIdentifier
     {
-      
         public string DocumentType { get; set; }
     
         public string DocumentVersion { get; set; }
@@ -15,6 +14,5 @@
         public string[] PlatformTypes { get; set; }
 
         public string SchemaVersion { get; set; }
-
     }
 }

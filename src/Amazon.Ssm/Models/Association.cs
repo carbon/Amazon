@@ -1,4 +1,6 @@
-﻿namespace Amazon.Ssm
+﻿using System;
+
+namespace Amazon.Ssm
 {
     public class Association
     {
@@ -8,7 +10,7 @@
 
         public string InstanceId { get; set; }
 
-        public string LastExecutionDate { get; set; }
+        public DateTime? LastExecutionDate { get; set; }
 
         public string Name { get; set; }
 

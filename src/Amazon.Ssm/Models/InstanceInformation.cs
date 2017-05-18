@@ -1,11 +1,13 @@
-﻿namespace Amazon.Ssm
+﻿using System;
+
+namespace Amazon.Ssm
 {
     public class InstanceInformation
     {
         public string ActivationId { get; set; }
 
         public string AgentVersion { get; set; }
-        
+
         public string AssociationStatus { get; set; }
 
         public string ComputerName { get; set; }
@@ -16,7 +18,11 @@
 
         public bool IsLatestVersion { get; set; }
 
-        public string LastAssociationExecutionDate { get; set; }
+        public DateTime? LastAssociationExecutionDate { get; set; }
+
+        public DateTime? LastPingDateTime { get; set; }
+
+        public DateTime? LastSuccessfulAssociationExecutionDate { get; set; }
 
         public string Name { get; set; }
 
@@ -28,7 +34,7 @@
 
         public string PlatformVersion { get; set; }
 
-        public string RegistrationDate { get; set; }
+        public DateTime? RegistrationDate { get; set; }
 
         // ManagedInstance | Document | EC2Instance
         public string ResourceType { get; set; }
