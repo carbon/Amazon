@@ -314,12 +314,16 @@ namespace Amazon.DynamoDb
         public DbValue FromObject(object value, IMember member)
         {
             var date = (DateTime)value;
-            
-            return new DbValue(new XDate(date).ToUnixTime());
+
+            var unixTime = new DateTimeOffset(date).ToUnixTimeSeconds();
+
+            return new DbValue(unixTime);
         }
 
         public object ToObject(DbValue item, IMember member)
-            => DateTimeOffset.FromUnixTimeSeconds(item.ToInt64()).UtcDateTime;
+        {
+            return DateTimeOffset.FromUnixTimeSeconds(item.ToInt64()).UtcDateTime;
+        }
     }
 
     internal class TimeSpanConverter : IDbValueConverter

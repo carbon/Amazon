@@ -1,0 +1,9 @@
+﻿0.8.5
+- Update Carbon.Json to 1.4.0
+
+0.8.4
+- Add Instance Identity
+- Add CodeBuild Service
+
+0.8.3
+- Refresh credentials on IamRole (as needed)

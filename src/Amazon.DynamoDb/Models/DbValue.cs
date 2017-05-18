@@ -129,9 +129,10 @@ namespace Amazon.DynamoDb
 					case TypeCode.UInt32:
 					case TypeCode.UInt64: this.kind = DbValueType.N; break;
 
-					case TypeCode.DateTime: 
-						// Convert dates to unicode
-						this.value = new XDate((DateTime)value).ToUnixTime();
+					case TypeCode.DateTime:
+                        // Convert dates to unixtime
+
+                        this.value = new DateTimeOffset((DateTime)value).ToUnixTimeSeconds();
 						this.kind = DbValueType.N;
 
 						return;
