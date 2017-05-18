@@ -1,10 +1,12 @@
-﻿namespace Amazon.CodeBuild
+﻿using System;
+
+namespace Amazon.CodeBuild
 {
     public class Build
     {
         public string Arn { get; set; }
 
-        public BuildArtifacts[] Artifacts { get; set; }
+        public BuildArtifacts Artifacts { get; set; }
 
         public bool BuildComplete { get; set; }
 
@@ -27,7 +29,7 @@
         // Any version identifier for the version of the source code to be built.
         public string SourceVersion { get; set; }
 
-        public string StartTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         public int TimeoutInMinutes { get; set; }
     }

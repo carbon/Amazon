@@ -1,12 +1,14 @@
-﻿namespace Amazon.CodeBuild
+﻿using System;
+
+namespace Amazon.CodeBuild
 {
     public class Project
     {
+        public string Name { get; set; }
+
         public string Arn { get; set; }
 
         public ProjectArtifacts[] Artifacts { get; set; }
-
-        public string Created { get; set; }
 
         public string Description { get; set; }
 
@@ -14,9 +16,9 @@
 
         public ProjectEnvironment Environment { get; set; }
 
-        public string LastModified { get; set; }
+        public DateTime Created { get; set; }
 
-        public string Name { get; set; }
+        public DateTime LastModified { get; set; }
 
         public string ServiceRole { get; set; }
         

@@ -1,5 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System;
 
 namespace Amazon.CodeBuild
 {
@@ -9,12 +8,12 @@ namespace Amazon.CodeBuild
 
         public long DurationInSeconds { get; set; }
 
-        public string EndTime { get; set; }
+        public DateTime StartTime { get; set; }
+
+        public DateTime? EndTime { get; set; }
 
         public string PhaseStatus { get; set; }
 
         public string PhaseType { get; set; }
-
-        public string StartTime { get; set; }
     }
 }

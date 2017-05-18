@@ -5,6 +5,8 @@ namespace Amazon.CodeBuild
 {
     public class StartBuildRequest : ICodeBuildRequest
     {
+        public StartBuildRequest() { }
+
         public StartBuildRequest(string projectName)
         {
             ProjectName = projectName ?? throw new ArgumentNullException(nameof(projectName));

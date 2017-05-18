@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.CodeBuild
 {
@@ -8,7 +9,7 @@ namespace Amazon.CodeBuild
 
         public DeleteProjectRequest(string name)
         {
-            Name = name;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
         [Required]
