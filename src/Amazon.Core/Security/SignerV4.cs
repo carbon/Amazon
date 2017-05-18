@@ -78,7 +78,10 @@ namespace Amazon.Security
 
         public static string ComputeSHA256(HttpContent content)
         {
-            if (content == null) return "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+            if (content == null)
+            {
+                return "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+            }
 
             return HexString.FromBytes(ComputeSHA256(content?.ReadAsStringAsync().Result ?? string.Empty));
         }

@@ -55,6 +55,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Ssm", "Amazon.Ssm\Am
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Elb.Tests", "Amazon.Elb.Tests\Amazon.Elb.Tests.csproj", "{C6504EBA-5000-41A1-83BD-4DE85995D3F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Ssm.Tests", "Amazon.Ssm.Tests\Amazon.Ssm.Tests.csproj", "{427C69EE-21B8-4F63-8EC6-F360E3BA7DCE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.CodeBuild", "Amazon.CodeBuild\Amazon.CodeBuild.csproj", "{65C7099D-F2B5-4261-9370-F00FD3D1CDEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +165,14 @@ Global
 		{C6504EBA-5000-41A1-83BD-4DE85995D3F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6504EBA-5000-41A1-83BD-4DE85995D3F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6504EBA-5000-41A1-83BD-4DE85995D3F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{427C69EE-21B8-4F63-8EC6-F360E3BA7DCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{427C69EE-21B8-4F63-8EC6-F360E3BA7DCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{427C69EE-21B8-4F63-8EC6-F360E3BA7DCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{427C69EE-21B8-4F63-8EC6-F360E3BA7DCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65C7099D-F2B5-4261-9370-F00FD3D1CDEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65C7099D-F2B5-4261-9370-F00FD3D1CDEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65C7099D-F2B5-4261-9370-F00FD3D1CDEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65C7099D-F2B5-4261-9370-F00FD3D1CDEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,5 +189,6 @@ Global
 		{FBCD6BE3-74B4-46B8-A382-80532FB55427} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 		{0EDF4882-15DA-47EF-8D6E-452F302EB9F5} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 		{C6504EBA-5000-41A1-83BD-4DE85995D3F8} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
+		{427C69EE-21B8-4F63-8EC6-F360E3BA7DCE} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 	EndGlobalSection
 EndGlobal
