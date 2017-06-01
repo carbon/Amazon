@@ -7,7 +7,7 @@ namespace Amazon.Elb
     {
         public RegisterTargetsRequest() { }
 
-        public RegisterTargetsRequest(string targetGroupArn, TargetDescription[] targets)
+        public RegisterTargetsRequest(string targetGroupArn, params TargetDescription[] targets)
         {
             TargetGroupArn = targetGroupArn ?? throw new ArgumentNullException(nameof(targetGroupArn));
             Targets        = targets        ?? throw new ArgumentNullException(nameof(targets));

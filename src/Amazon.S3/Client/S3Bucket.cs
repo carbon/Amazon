@@ -28,7 +28,7 @@ namespace Amazon.S3
         public S3Bucket(string bucketName, S3Client client)
         {
             this.bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
-            this.client = client ?? throw new ArgumentNullException(nameof(client));
+            this.client     = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         // TODO: Fetch the region too...

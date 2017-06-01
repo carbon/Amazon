@@ -78,7 +78,6 @@ namespace Amazon.S3
     internal static class S3Host
     {
         // Use dualstack to support IP6 in the future
-        public static string Get(AwsRegion region) =>
-            $"s3.dualstack.{region.Name}.amazonaws.com";
+        public static string Get(AwsRegion region) => $"s3.dualstack.{region.Name}.amazonaws.com";
     }
 }

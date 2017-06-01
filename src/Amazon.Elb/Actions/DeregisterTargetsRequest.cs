@@ -9,7 +9,7 @@ namespace Amazon.Elb
 
         public DeregisterTargetsRequest(
             string targetGroupArn, 
-            TargetDescription[] targets)
+            params TargetDescription[] targets)
         {
             TargetGroupArn = targetGroupArn ?? throw new ArgumentNullException(nameof(targetGroupArn));
             Targets        = targets        ?? throw new ArgumentNullException(nameof(targets));

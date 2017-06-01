@@ -6,6 +6,13 @@ namespace Amazon.Elb
     {
         public string Action => "DescribeTargetGroupAttributes";
 
+        public DescribeTargetGroupAttributesRequest() { }
+
+        public DescribeTargetGroupAttributesRequest(string targetGroupArn)
+        {
+            TargetGroupArn = targetGroupArn;
+        }
+
         [Required]
         public string TargetGroupArn { get; set; }
     }
