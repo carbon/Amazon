@@ -36,7 +36,6 @@ namespace Amazon
 
         public string SecurityToken => Token;
 
-
         private readonly SemaphoreSlim gate = new SemaphoreSlim(1);
 
         public async Task<bool> RenewAsync()

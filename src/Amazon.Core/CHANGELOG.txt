@@ -1,4 +1,10 @@
-﻿0.8.5
+﻿0.8.7
+- Add presign
+
+0.8.6
+- Update to Carbon.Json 1.4.1
+
+0.8.5
 - Update Carbon.Json to 1.4.0
 
 0.8.4

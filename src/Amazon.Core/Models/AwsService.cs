@@ -27,6 +27,7 @@ namespace Amazon
         public static readonly AwsService Lambda           = new AwsService("lambda");
         public static readonly AwsService Monitoring       = new AwsService("monitoring"); // Cloudwatch monitoring
         public static readonly AwsService Ses              = new AwsService("email");
+        public static readonly AwsService RdsDb            = new AwsService("rds-db");
         public static readonly AwsService Ssm              = new AwsService("ssm"); // Amazon EC2 Systems Manager (SSM)
         public static readonly AwsService S3               = new AwsService("s3");
         public static readonly AwsService Sns              = new AwsService("sns");
