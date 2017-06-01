@@ -30,11 +30,7 @@ namespace Amazon.Kms
         public string Name { get; set; }
 
         public string[] Operations { get; set; }
-        
-        public void SetOperations(params KmsOperation[] ops)
-        {
-            Operations = ops.Select(o => o.ToString()).ToArray();
-        }
+      
 
         [DataMember(EmitDefaultValue = false)]
         public string RetiringPrincipal { get; set; }

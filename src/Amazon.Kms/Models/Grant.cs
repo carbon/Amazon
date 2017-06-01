@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kms
+﻿using System;
+
+namespace Amazon.Kms
 {
     public class Grant
     {
@@ -15,6 +17,8 @@
         public string[] Operations { get; set; }
 
         public string RetiringPrincipal { get; set; }
+
+        public DateTime CreationDate { get; set; }
     }
 }
 

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 using Carbon.Json;
 
@@ -6,6 +7,15 @@ namespace Amazon.Kms
 {
     public class GenerateDataKeyRequest : KmsRequest
     {
+        public GenerateDataKeyRequest() { }
+
+        public GenerateDataKeyRequest(string keyId, KeySpec keySpec, JsonObject encryptionContext)
+        {
+            KeyId             = keyId ?? throw new ArgumentNullException(nameof(keyId));
+            KeySpec           = keySpec;
+            EncryptionContext = encryptionContext;
+        }
+
         [DataMember(EmitDefaultValue = false)]
         public JsonObject EncryptionContext { get; set; }
 

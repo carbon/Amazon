@@ -15,10 +15,14 @@ namespace Amazon.Kms
             : base(AwsService.Kms, region, credential)
         { }
 
+        #region Aliases
+
         public Task<CreateAliasResponse> CreateAliasAsync(CreateAliasRequest request)
         {
             return SendAsync<CreateAliasResponse>("CreateAlias", request);
         }
+
+        #endregion
 
         #region Grants
 
@@ -111,8 +115,6 @@ namespace Amazon.Kms
 
         #endregion
     }
-
-
 }
 
 // http://docs.aws.amazon.com/kms/latest/APIReference/Welcome.html

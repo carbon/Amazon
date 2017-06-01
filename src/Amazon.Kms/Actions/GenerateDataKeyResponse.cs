@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Kms
 {
-    public class GenerateDataKeyResponse : KmsResponse
+    public class GenerateDataKeyResponse : KmsResponse 
     {
         public string KeyId { get; set; }
 
