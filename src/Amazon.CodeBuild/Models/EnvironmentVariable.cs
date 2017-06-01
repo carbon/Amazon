@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.CodeBuild
@@ -9,8 +9,8 @@ namespace Amazon.CodeBuild
 
         public EnvironmentVariable(string name, string value)
         {
-            Name = name;
-            Value = value;
+            Name  = name  ?? throw new ArgumentNullException(nameof(name));
+            Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         [Required]

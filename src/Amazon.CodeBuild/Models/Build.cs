@@ -22,7 +22,7 @@ namespace Amazon.CodeBuild
 
         public LogsLocation Logs { get; set; }
 
-        public BuildPhase Phases { get; set; }
+        public BuildPhase[] Phases { get; set; }
 
         public string ProjectName { get; set; }
 
@@ -34,3 +34,5 @@ namespace Amazon.CodeBuild
         public int TimeoutInMinutes { get; set; }
     }
 }
+
+

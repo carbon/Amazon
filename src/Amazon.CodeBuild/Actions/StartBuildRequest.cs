@@ -15,8 +15,8 @@ namespace Amazon.CodeBuild
         public ProjectArtifacts ArtifactsOverride { get; set; }
 
         public string BuildspecOverride { get; set; }
-
-        public EnvironmentVariable[] EnviromentVariablesOverride { get; set; }
+        
+        public EnvironmentVariable[] EnvironmentVariablesOverride { get; set; }
 
         [Required]
         public string ProjectName { get; set; }
