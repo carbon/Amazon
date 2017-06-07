@@ -1,40 +1,62 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Carbon.Json;
 
 namespace Amazon
 {
     public class InstanceRoleCredential : IAwsCredential
     {
-        public string Code { get; set; }
+        public InstanceRoleCredential() { }
 
-        public string Token { get; set; }
+        public InstanceRoleCredential(string roleName)
+        {
+            RoleName = roleName ?? throw new ArgumentNullException(nameof(roleName));
+        }
 
-        public string SecretAccessKey { get; set; }
+        internal InstanceRoleCredential(string roleName, IamSecurityCredentials credential)
+            : this(roleName)
+        {
+            #region Preconditions
 
-        public string Type { get; set; }
+            if (credential == null)
+                throw new ArgumentNullException(nameof(credential));
 
-        public DateTime LastUpdated { get; set; }
+            #endregion
 
-        public DateTime Expiration { get; set; }
+            AccessKeyId     = credential.AccessKeyId;
+            SecretAccessKey = credential.SecretAccessKey;
+            SecurityToken   = credential.Token;
+            Expires         = credential.Expiration;
+        }
 
-        public string AccessKeyId { get; set; }
+        public string RoleName { get; internal set; }
 
-        public string RoleName { get; set; }
+        public string AccessKeyId { get; internal set; }
 
-        public bool IsExpired => DateTime.UtcNow < Expiration;
+        public string SecretAccessKey { get; internal set; }
 
-        public TimeSpan ExpiresIn => Expiration - DateTime.UtcNow;
+        public string SecurityToken { get; internal set; }
+
+        public DateTime Expires { get; internal set; }
+
+        public int RenewCount => renewCount;
+
+        #region Helpers
+
+        public TimeSpan ExpiresIn => Expires - DateTime.UtcNow;
+
+        public bool IsExpired => DateTime.UtcNow < Expires;
 
         public bool ShouldRenew
         {
             get => RoleName == null || ExpiresIn <= TimeSpan.FromMinutes(5);
         }
 
-        public string SecurityToken => Token;
+        // aws: recomends refreshing 5 minutes before expiration
+
+        #endregion
+
+        private int renewCount = 0;
 
         private readonly SemaphoreSlim gate = new SemaphoreSlim(1);
 
@@ -42,12 +64,8 @@ namespace Amazon
         {
             if (RoleName == null)
             {
-                RoleName = await InstanceMetadata.GetIamRoleName().ConfigureAwait(false);
-
-                if (RoleName == null)
-                {
-                    throw new Exception("The instance is not configured with an IAM role");
-                }
+                RoleName = await InstanceMetadata.GetIamRoleName().ConfigureAwait(false)
+                    ?? throw new Exception("The instance is not configured with an IAM role");
             }
 
             // Lock so we only renew the credentials once
@@ -57,14 +75,17 @@ namespace Amazon
             {
                 if (ShouldRenew)
                 {
-                    var credential = await GetAsync(RoleName).ConfigureAwait(false);
+                    var iamCredential = await IamSecurityCredentials.GetAsync(RoleName).ConfigureAwait(false);
 
-                    AccessKeyId     = credential.AccessKeyId;
-                    SecretAccessKey = credential.SecretAccessKey;
-                    Expiration      = credential.Expiration;
+                    AccessKeyId     = iamCredential.AccessKeyId;
+                    SecretAccessKey = iamCredential.SecretAccessKey;
+                    Expires         = iamCredential.Expiration;
+                    SecurityToken   = iamCredential.Token;
+
+                    Interlocked.Increment(ref renewCount);
                 }
 
-                return Code == "Success";
+                return true;
             }
             finally
             {
@@ -72,52 +93,20 @@ namespace Amazon
             }
         }
 
-        const string baseUri = "http://169.254.169.254/latest/meta-data/";
-
-        private static readonly HttpClient http = new HttpClient {
-            Timeout = TimeSpan.FromSeconds(10)
-        };
-
         public static async Task<InstanceRoleCredential> GetAsync()
         {
             var roleName = await InstanceMetadata.GetIamRoleName().ConfigureAwait(false);
 
-            return await GetAsync(roleName);
+            var iamCredential = await IamSecurityCredentials.GetAsync(roleName).ConfigureAwait(false);
+
+            return new InstanceRoleCredential(roleName, iamCredential);
         }
 
         public static async Task<InstanceRoleCredential> GetAsync(string roleName)
         {
-            #region Preconditions
+            var iamCredential = await IamSecurityCredentials.GetAsync(roleName).ConfigureAwait(false);
 
-            if (roleName == null)
-                throw new ArgumentNullException(nameof(roleName));
-
-            #endregion
-
-            var url = baseUri + "iam/security-credentials/" + roleName;
-
-            var responseText = await http.GetStringAsync(url).ConfigureAwait(false);
-
-            var result = JsonObject.Parse(responseText).As<InstanceRoleCredential>();
-
-            result.RoleName = roleName;
-
-            return result;
+            return new InstanceRoleCredential(roleName, iamCredential);
         }
     }
 }
-
-// aws notes:
-// - We recommend refreshing temporary credentials 5 minutes before their expiration.
-
-/*
-{
-  "Code" : "Success",
-  "LastUpdated" : "2012-04-26T16:39:16Z",
-  "Type" : "AWS-HMAC",
-  "AccessKeyId" : "AKIAIOSFODNN7EXAMPLE",
-  "SecretAccessKey" : "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
-  "Token" : "token",
-  "Expiration" : "2012-04-27T22:39:16Z"
-}
-*/
