@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Rds</AssemblyName>
-    <VersionPrefix>0.5.3</VersionPrefix>
+    <VersionPrefix>0.5.5</VersionPrefix>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
 
     <!-- Package Details-->

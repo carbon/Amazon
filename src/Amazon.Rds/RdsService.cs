@@ -22,40 +22,29 @@ namespace Amazon.Rds
 
             var scope = new CredentialScope(date, AwsRegion.USEast1, AwsService.RdsDb);
 
+            // TODO: Avoid this allocation by extending presign...
+
             var httpRequest = new HttpRequestMessage(
                 HttpMethod.Get, 
                 $"https://{request.HostName}:{request.Port}?Action=connect&DBUser={request.UserName}"
             );
+            
+            // Ensure the underlying credential are current
+            if (credential.ShouldRenew)
+            {
+                credential.RenewAsync().Wait();
+            }
 
             SignerV4.Default.Presign(credential, scope, date, TimeSpan.FromMinutes(15), httpRequest);
 
             var url = httpRequest.RequestUri;
 
             return new AuthenticationToken(
-                value   : url.Host + ":" + url.Port + "/" + url.Query,
+                value   : url.Host + ":" + url.Port.ToString() + "/" + url.Query,
                 issued  : date,
                 expires : date.AddMinutes(15)
             );
         }
-    }
-
-    public struct AuthenticationToken
-    {
-        public AuthenticationToken(
-            string value, 
-            DateTime issued, 
-            DateTime expires)
-        {
-            Value   = value;
-            Issued  = issued;
-            Expires = expires;
-        }
-
-        public string Value { get; }
-        
-        public DateTime Issued { get; }
-
-        public DateTime Expires { get; }
     }
 }
 
