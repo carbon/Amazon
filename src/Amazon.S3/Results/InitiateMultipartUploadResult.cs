@@ -1,6 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
+
+using Carbon.Storage;
 
 namespace Amazon.S3
 {
@@ -16,43 +16,18 @@ namespace Amazon.S3
         [XmlElement]
         public string UploadId { get; set; }
 
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(InitiateMultipartUploadResult));
-
         #region IUpload
 
         string IUpload.BucketName => Bucket;
 
         string IUpload.ObjectName => Key;
 
-        string IUpload.Id => UploadId;
-
         #endregion
 
         public static InitiateMultipartUploadResult ParseXml(string xmlText)
         {
-            #region Preconditions
-
-            if (xmlText == null)
-                throw new ArgumentNullException("xmlText");
-
-            #endregion
-
-            using (var reader = new StringReader(xmlText))
-            {
-                return (InitiateMultipartUploadResult)serializer.Deserialize(reader);
-            }
+            return ResponseHelper<InitiateMultipartUploadResult>.ParseXml(xmlText);
         }
-    }
-
-    // TODO: Replace with Carbon.Storage.Uploads.IUpload (1.5)
-
-    public interface IUpload
-    {
-        string BucketName { get; }
-
-        string ObjectName { get; }
-
-        string Id { get; }
     }
 }
 

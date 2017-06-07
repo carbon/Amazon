@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.S3
 {
@@ -19,21 +17,9 @@ namespace Amazon.S3
         [XmlElement]
         public string ETag { get; set; }
 
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(CompleteMultipartUploadResult));
-
         public static CompleteMultipartUploadResult ParseXml(string xmlText)
         {
-            #region Preconditions
-
-            if (xmlText == null)
-                throw new ArgumentNullException("xmlText");
-
-            #endregion
-
-            using (var reader = new StringReader(xmlText))
-            {
-                return (CompleteMultipartUploadResult)serializer.Deserialize(reader);
-            }
+            return ResponseHelper<CompleteMultipartUploadResult>.ParseXml(xmlText);
         }
     }
 }

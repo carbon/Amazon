@@ -1,9 +1,10 @@
-﻿namespace Amazon.S3.Models.Tests
-{
-    using System;
-    using System.Globalization;
-    using Xunit;
+﻿using System;
+using System.Globalization;
 
+using Xunit;
+
+namespace Amazon.S3.Models.Tests
+{
     public class ListBucketResultTests
     {
         [Fact]
@@ -85,7 +86,7 @@
             Assert.Equal("", result.Marker);
             Assert.Equal(100, result.MaxKeys);
 
-            Assert.Equal(100, result.Items.Count);
+            Assert.Equal(100, result.Items.Length);
             Assert.Equal("100000/800x600.jpeg", result.Items[0].Key);
 
             // Assert.Equal("STANDARD", result.Items[0].StorageClass);

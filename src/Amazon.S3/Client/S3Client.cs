@@ -98,7 +98,7 @@ namespace Amazon.S3
         {
             using (var response = await SendAsync2(request).ConfigureAwait(false))
             {
-                return new RestoreObjectResult(response);
+                return new RestoreObjectResult(response.StatusCode);
             }
         }
 

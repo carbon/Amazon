@@ -1,14 +1,15 @@
 using System;
-using System.Text;
 using System.Net.Http;
+using System.Text;
 using System.Xml.Linq;
+using Carbon.Storage;
 
 namespace Amazon.S3
 {
     public class CompleteMultipartUploadRequest : S3Request
     {
         public CompleteMultipartUploadRequest(AwsRegion region, IUpload upload, IUploadBlock[] parts)
-            : this(region, upload.BucketName, upload.ObjectName, upload.Id, parts) { }
+            : this(region, upload.BucketName, upload.ObjectName, upload.UploadId, parts) { }
 
         public CompleteMultipartUploadRequest(AwsRegion region, string bucketName, string key, string uploadId, IUploadBlock[] parts)
             : base(HttpMethod.Post, region, bucketName, key + "?uploadId=" + uploadId)
@@ -40,7 +41,7 @@ namespace Amazon.S3
             {
                 root.Add(new XElement("Part",
                     new XElement("PartNumber", part.Number),
-                    new XElement("ETag", part.ETag)
+                    new XElement("ETag",       part.BlockId)
                 ));
             }
 

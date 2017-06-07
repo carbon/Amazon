@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Net.Http;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Amazon.S3
 {
@@ -27,7 +28,7 @@ namespace Amazon.S3
 
         public DeleteBatch(params string[] keys)
         {
-            this.keys = keys ?? throw new ArgumentNullException("keys");
+            this.keys = keys ?? throw new ArgumentNullException(nameof(keys));
         }
 
         public string ToXmlString()
@@ -45,14 +46,17 @@ namespace Amazon.S3
         }
     }
 
-    public struct BatchItem
+    public class BatchItem
     {
+        public BatchItem() { }
+
         public BatchItem(string key)
         {
             Key = key;
         }
 
-        public string Key { get; }
+        [XmlElement]
+        public string Key { get; set; }
     }
 }
 

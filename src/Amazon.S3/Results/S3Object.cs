@@ -37,7 +37,6 @@ namespace Amazon.S3
                 headers.Add(header.Key, string.Join(";", header.Value));
             }
 
-
             StatusCode = response.StatusCode;
 
             if (response.StatusCode == HttpStatusCode.NotModified)
@@ -49,7 +48,6 @@ namespace Amazon.S3
 
             this.response = response;
         }
-
 
         #region Header Aliases
 

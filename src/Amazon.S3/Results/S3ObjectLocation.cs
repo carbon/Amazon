@@ -7,7 +7,7 @@ namespace Amazon.S3
         public S3ObjectLocation(string bucketName, string key)
         {
             BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
-            Key = key ?? throw new ArgumentNullException(nameof(key));
+            Key        = key        ?? throw new ArgumentNullException(nameof(key));
         }
 
         public string BucketName { get; }

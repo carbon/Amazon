@@ -8,7 +8,12 @@ namespace Amazon.S3
 {
     public abstract class S3Request : HttpRequestMessage
     {
-        public S3Request(HttpMethod method, AwsRegion region, string bucketName, string objectName, string version = null)
+        public S3Request(
+            HttpMethod method,
+            AwsRegion region, 
+            string bucketName, 
+            string objectName, 
+            string version = null)
         {
             #region Preconditions
 
@@ -49,7 +54,7 @@ namespace Amazon.S3
 
         public void SetStorageClass(StorageClass storageClass)
         {
-            Headers.Add("x-amz-storage-class", storageClass.ToString());
+            Headers.Add("x-amz-storage-class", storageClass.Name);
         }
 
         public string BucketName { get; }

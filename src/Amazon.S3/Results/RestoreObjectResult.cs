@@ -1,18 +1,15 @@
 ﻿using System.Net;
-using System.Net.Http;
 
 namespace Amazon.S3
 {
     public class RestoreObjectResult
     {
-        private readonly HttpResponseMessage response;
-
-        public RestoreObjectResult(HttpResponseMessage response)
+        public RestoreObjectResult(HttpStatusCode statusCode)
         {
-            this.response = response;
+            StatusCode = statusCode;
         }
 
-        public HttpStatusCode StatusCode => response.StatusCode;
+        public HttpStatusCode StatusCode { get; }
     }
 }
 

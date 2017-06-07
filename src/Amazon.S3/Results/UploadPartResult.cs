@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Carbon.Storage;
+
 namespace Amazon.S3
 {
     public class UploadPartResult : IUploadBlock
@@ -28,7 +30,9 @@ namespace Amazon.S3
 
         int IUploadBlock.Number => PartNumber;
 
-        string IUploadBlock.ETag => ETag;
+        string IUploadBlock.BlockId => ETag;
+
+        ByteRange? IUploadBlock.Range => null;
 
         #endregion
     }

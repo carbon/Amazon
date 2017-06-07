@@ -31,8 +31,6 @@ namespace Amazon.S3
             this.client     = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        // TODO: Fetch the region too...
-
         public S3Bucket(AwsRegion region, string bucketName)
         {
             this.bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
@@ -227,7 +225,7 @@ namespace Amazon.S3
                 throw new Exception(result.Errors[0].Message);
             }
 
-            if (result.Deleted.Count != names.Length)
+            if (result.Deleted.Length != names.Length)
             {
                 throw new Exception("Deleted count not equal to keys.Count");
             }

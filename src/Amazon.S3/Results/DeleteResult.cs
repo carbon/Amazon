@@ -1,64 +1,37 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.S3
 {
     public class DeleteResult
-    {
-        private static readonly XNamespace ns = S3Client.NS;
+    {        
+        [XmlElement("Deleted")]
+        public BatchItem[] Deleted { get; set; }
 
-        public List<BatchItem> Deleted { get; } = new List<BatchItem>();
-
-        public List<BatchItemError> Errors { get; } = new List<BatchItemError>();
+        [XmlElement("Error")]
+        public BatchItemError[] Errors { get; set; }
 
         #region Helpers
 
-        public bool HasErrors => Errors.Count > 0;
+        public bool HasErrors => Errors != null && Errors.Length > 0;
 
         #endregion
 
         public static DeleteResult Parse(string xmlText)
         {
-            var result = new DeleteResult();
-
-            var deleteResultEl = XElement.Parse(xmlText);
-
-            foreach (var el in deleteResultEl.Elements(ns + "Deleted"))
-            {
-                var deleted = new BatchItem(el.Element(ns + "Key").Value);
-
-                result.Deleted.Add(deleted);
-            }
-
-            foreach (var el in deleteResultEl.Elements(ns + "Error"))
-            {
-                var error = new BatchItemError(
-                    key     : el.Element(ns + "Key").Value,
-                    code    : el.Element(ns + "Code").Value,
-                    message : el.Element(ns + "Message").Value
-                );
-
-                result.Errors.Add(error);
-            }
-
-            return result;
+            return ResponseHelper<DeleteResult>.ParseXml(xmlText);
         }
     }
 
     public class BatchItemError
     {
-        public BatchItemError(string key, string code, string message)
-        {
-            Key = key;
-            Code = code;
-            Message = message;
-        }
+        [XmlElement]
+        public string Key { get; set; }
 
-        public string Key { get; }
+        [XmlElement]
+        public string Code { get; set; }
 
-        public string Code { get; }
-
-        public string Message { get; }
+        [XmlElement]
+        public string Message { get; set; }
     }
 }
 

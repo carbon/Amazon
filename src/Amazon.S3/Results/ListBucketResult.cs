@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.S3
 {
-    // <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
     [XmlRoot("ListBucketResult", Namespace = "http://s3.amazonaws.com/doc/2006-03-01/")]
     public class ListBucketResult
     {
@@ -27,15 +24,11 @@ namespace Amazon.S3
         public bool IsTruncated { get; set; }
 
         [XmlElement("Contents")]
-        public List<ListBucketObject> Items { get; set; }
-
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(ListBucketResult));
+        public ListBucketObject[] Items { get; set; }
 
         public static ListBucketResult ParseXml(string xmlText)
         {
-            var rootEl = XElement.Parse(xmlText);
-
-            return (ListBucketResult)serializer.Deserialize(rootEl.CreateReader());
+            return ResponseHelper<ListBucketResult>.ParseXml(xmlText);
         }
     }
 }
