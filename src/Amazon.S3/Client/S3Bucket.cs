@@ -40,6 +40,8 @@ namespace Amazon.S3
             this.client = new S3Client(region, credential);
         }
 
+        public string Name => bucketName;
+
         public S3Bucket WithTimeout(TimeSpan timeout)
         {
             client.SetTimeout(timeout);
@@ -67,7 +69,11 @@ namespace Amazon.S3
 
         public async Task<IBlob> GetAsync(string name)
         {
-            var request = new GetObjectRequest(client.Region, bucketName, objectName: name);
+            var request = new GetObjectRequest(
+                region     : client.Region,
+                bucketName : bucketName, 
+                objectName : name
+            );
 
             return await client.GetObjectAsync(request).ConfigureAwait(false);
         }
@@ -76,7 +82,21 @@ namespace Amazon.S3
         // If-None-Match        -- ETag         OR 304
         public async Task<IBlobResult> GetAsync(string name, GetBlobOptions options)
         {
-            var request = new GetObjectRequest(client.Region, bucketName, objectName: name);
+            #region Preconditions
+
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
+
+            #endregion
+
+            var request = new GetObjectRequest(
+                region     : client.Region,
+                bucketName : bucketName, 
+                objectName : name
+            );
 
             if (options.IfModifiedSince != null)
             {
@@ -103,15 +123,29 @@ namespace Amazon.S3
 
         public async Task<IReadOnlyDictionary<string, string>> GetMetadataAsync(string name)
         {
-            var headRequest = new ObjectHeadRequest(client.Region, bucketName, key: name);
+            #region Preconditions
 
-            var result = await client.GetObjectHeadAsync(headRequest).ConfigureAwait(false);
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            #endregion
+
+            var request = new ObjectHeadRequest(client.Region, bucketName, key: name);
+
+            var result = await client.GetObjectHeadAsync(request).ConfigureAwait(false);
 
             return result.Metadata;
         }
 
         public Task<RestoreObjectResult> InitiateRestoreAsync(string name, int days)
         {
+            #region Preconditions
+
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            #endregion
+
             var request = new RestoreObjectRequest(client.Region, bucketName, name) {
                 Days = days
             };
@@ -124,6 +158,13 @@ namespace Amazon.S3
             S3ObjectLocation sourceLocation, 
             IReadOnlyDictionary<string, string> metadata = null)
         {
+            #region Preconditions
+
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            #endregion
+
             var retryCount = 0;
             Exception lastException = null;
 
@@ -174,7 +215,6 @@ namespace Amazon.S3
 
             #endregion
 
-
             // TODO: Chunked upload
 
             var stream = await blob.OpenAsync().ConfigureAwait(false);
@@ -198,22 +238,43 @@ namespace Amazon.S3
             await client.PutObjectAsync(request).ConfigureAwait(false);
         }
 
-        public Task DeleteAsync(string name, string version = null)
-        {
-            var request = new DeleteObjectRequest(client.Region, bucketName, name, version);
-
-            return client.DeleteObjectAsync(request);
-        }
-
         public async Task DeleteAsync(string name)
         {
+            #region Preconditions
+
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            #endregion
+
             var request = new DeleteObjectRequest(client.Region, bucketName, name);
 
             await client.DeleteObjectAsync(request).ConfigureAwait(false);
         }
 
+        public Task DeleteAsync(string name, string version)
+        {
+            #region Preconditions
+
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            #endregion
+
+            var request = new DeleteObjectRequest(client.Region, bucketName, name, version);
+
+            return client.DeleteObjectAsync(request);
+        }
+
         public async Task DeleteAsync(string[] names)
         {
+            #region Preconditions
+
+            if (names == null)
+                throw new ArgumentNullException(nameof(names));
+
+            #endregion
+
             var batch = new DeleteBatch(names);
 
             var request = new BatchDeleteRequest(client.Region, bucketName, batch);
@@ -242,6 +303,13 @@ namespace Amazon.S3
 
         public async Task<IUpload> StartUploadAsync(string name, IReadOnlyDictionary<string, string> metadata)
         {
+            #region Preconditions
+
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            #endregion
+
             var request = new InitiateMultipartUploadRequest(client.Region, bucketName, name) {
                 Content = new StringContent(string.Empty)
             };
@@ -253,11 +321,18 @@ namespace Amazon.S3
 
         public async Task<IUploadBlock> UploadBlock(IUpload upload, int number, Stream stream)
         {
-            var partRequest = new UploadPartRequest(client.Region, upload, number);
+            #region Preconditions
 
-            partRequest.SetStream(stream);
+            if (upload == null)
+                throw new ArgumentNullException(nameof(upload));
 
-            return await client.UploadPartAsync(partRequest).ConfigureAwait(false);
+            #endregion
+
+            var request = new UploadPartRequest(client.Region, upload, number);
+
+            request.SetStream(stream);
+
+            return await client.UploadPartAsync(request).ConfigureAwait(false);
         }
 
         public async Task CompleteUploadAsync(IUpload upload, IUploadBlock[] blocks)
@@ -279,8 +354,10 @@ namespace Amazon.S3
             {
                 switch (item.Key)
                 {
-                    case "Content-Encoding": request.Content.Headers.ContentEncoding.Add(item.Value); break;
-                    case "Content-Type": request.Content.Headers.ContentType = new MediaTypeHeaderValue(item.Value); break;
+                    case "Content-Encoding" :
+                        request.Content.Headers.ContentEncoding.Add(item.Value); break;
+                    case "Content-Type":
+                        request.Content.Headers.ContentType = new MediaTypeHeaderValue(item.Value); break;
 
                     // Skip list...
                     case "Accept-Ranges":
