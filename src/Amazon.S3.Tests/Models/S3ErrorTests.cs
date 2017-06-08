@@ -1,4 +1,4 @@
-﻿namespace Amazon.S3.Tests
+﻿namespace Amazon.S3.Models.Tests
 {
 	using Xunit;
 

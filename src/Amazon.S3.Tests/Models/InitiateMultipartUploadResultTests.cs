@@ -1,8 +1,8 @@
-﻿namespace Amazon.S3.Models.Tests
+﻿using Xunit;
+
+namespace Amazon.S3.Models.Tests
 {
-	using Xunit;
-	
-	public class InitiateMultipartUploadResultTests
+    public class InitiateMultipartUploadResultTests
 	{
 		[Fact]
 		public void CompleteXmlGenerate()

@@ -29,18 +29,6 @@ $@"<RestoreRequest>
   </GlacierJobParameters>
 </RestoreRequest>";
     }
-
-    public class GlacierJobParameters
-    {
-        public GlacierJobTier Tier { get; }
-    }
-
-    public enum GlacierJobTier
-    {
-        Standard  = 0,
-        Expedited = 1,
-        Bulk      = 2
-    }
 }
 
 /*

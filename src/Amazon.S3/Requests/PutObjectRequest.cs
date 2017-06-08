@@ -41,15 +41,6 @@ namespace Amazon.S3
                 : "UNSIGNED-PAYLOAD");
         }
 
-        //  TODO: Support chunked streaming...
-
-        // x-amz-content-sha256: STREAMING-AWS4-HMAC-SHA256-PAYLOAD
-        // Content-Encoding: aws-chunked,gzip
-        // x-amz-decoded-content-length: ?
-        // Content-Length: include metadata
-
-        // public bool UseChunkedStreamWrapper { get; set; } = false;
-
         public void SetStream(Stream stream, long length, string mediaType = "application/octet-stream")
         {
             #region Preconditions
