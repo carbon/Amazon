@@ -30,7 +30,6 @@ $@"<RestoreRequest>
 </RestoreRequest>";
     }
 
-
     public class GlacierJobParameters
     {
         public GlacierJobTier Tier { get; }
@@ -43,7 +42,6 @@ $@"<RestoreRequest>
         Bulk      = 2
     }
 }
-
 
 /*
 POST /ObjectName?restore&versionId=VersionID HTTP/1.1

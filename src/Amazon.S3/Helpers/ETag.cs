@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Amazon.Helpers;
 
 namespace Amazon.S3
 {
@@ -20,37 +20,11 @@ namespace Amazon.S3
 
             // 1f8ada2ce841b291cfcd6b9b4b645044-2
 
-            return HexStringToBytes(Value.Trim('"'));
+            return HexString.ToBytes(Value.Trim('"'));
         }
 
         public string Value { get; }
 
         public static implicit operator string(ETag tag) => tag.Value;
-
-        #region Private Helpers
-
-        private static byte[] HexStringToBytes(string hexString)
-        {
-            #region Preconditions
-
-            if (hexString == null)
-                throw new ArgumentNullException(nameof(hexString));
-
-            if (hexString.Length % 2 != 0)
-                throw new ArgumentException("Must be divisible by 2");
-
-            #endregion
-
-            byte[] bytes = new byte[hexString.Length / 2];
-
-            for (int i = 0; i < hexString.Length; i += 2)
-            {
-                bytes[i / 2] = Convert.ToByte(hexString.Substring(i, 2), 16);
-            }
-
-            return bytes;
-        }
-
-        #endregion
     }
 }

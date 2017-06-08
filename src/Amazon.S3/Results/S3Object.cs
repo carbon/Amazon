@@ -82,12 +82,7 @@ namespace Amazon.S3
 
         public async ValueTask<Stream> OpenAsync()
         {
-            if (stream == null)
-            {
-                stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            }
-
-            return stream;
+            return stream ?? (stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false));
         }
 
         public Dictionary<string, string> Headers => headers;

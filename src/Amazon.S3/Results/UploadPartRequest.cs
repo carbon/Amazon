@@ -10,7 +10,7 @@ namespace Amazon.S3
         public UploadPartRequest(AwsRegion region, IUpload upload, int partNumber)
             : this(region, upload.BucketName, upload.ObjectName, upload.UploadId, partNumber) { }
 
-            public UploadPartRequest(AwsRegion region, string bucketName, string key, string uploadId, int partNumber)
+        public UploadPartRequest(AwsRegion region, string bucketName, string key, string uploadId, int partNumber)
             : base(region, bucketName, key + $"?partNumber={partNumber}&uploadId={uploadId}")
         {
             #region Preconditions
@@ -20,7 +20,7 @@ namespace Amazon.S3
 
             #endregion
 
-            UploadId = uploadId ?? throw new ArgumentNullException(nameof(uploadId));
+            UploadId   = uploadId ?? throw new ArgumentNullException(nameof(uploadId));
             PartNumber = partNumber;
         }
 

@@ -11,7 +11,6 @@ namespace Amazon.S3
         {
             CompletionOption = HttpCompletionOption.ResponseHeadersRead;
         }
-
         
         public DateTimeOffset? IfModifiedSince
         {
