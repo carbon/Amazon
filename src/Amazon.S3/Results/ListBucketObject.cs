@@ -8,7 +8,7 @@ using Carbon.Storage;
 
 namespace Amazon.S3
 {
-    [XmlRoot("Contents", Namespace = "http://s3.amazonaws.com/doc/2006-03-01/")]
+    [XmlRoot("Contents", Namespace = S3Client.Namespace)]
     public class ListBucketObject : IBlob
     {
         [XmlElement("Key")]
@@ -44,8 +44,6 @@ namespace Amazon.S3
         }
 
         #endregion
-
-
     }
 }
 

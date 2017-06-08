@@ -2,7 +2,7 @@
 
 namespace Amazon.S3
 {
-    [XmlRoot("ListBucketResult", Namespace = "http://s3.amazonaws.com/doc/2006-03-01/")]
+    [XmlRoot("ListBucketResult", Namespace = S3Client.Namespace)]
     public class ListBucketResult
     {
         [XmlElement("Name")]

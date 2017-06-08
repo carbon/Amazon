@@ -4,7 +4,7 @@ using Carbon.Storage;
 
 namespace Amazon.S3
 {
-    [XmlRoot(Namespace = "http://s3.amazonaws.com/doc/2006-03-01/")]
+    [XmlRoot(Namespace = S3Client.Namespace)]
     public class InitiateMultipartUploadResult : IUpload
     {
         [XmlElement]

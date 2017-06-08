@@ -6,7 +6,7 @@ namespace Amazon.S3
 {
     internal static class ResponseHelper<T>
     {
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(T), S3Client.NS.ToString());
+        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(T), S3Client.Namespace);
 
         public static T ParseXml(string xml)
         {

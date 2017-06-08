@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 using Carbon.Storage;
 
@@ -10,7 +9,7 @@ namespace Amazon.S3
 {
     public class S3Client : AwsClient
     {
-        public static readonly XNamespace NS = "http://s3.amazonaws.com/doc/2006-03-01/";
+        public const string Namespace = "http://s3.amazonaws.com/doc/2006-03-01/";
 
         public S3Client(AwsRegion region, IAwsCredential credential)
             : base(AwsService.S3, region, credential) { }
