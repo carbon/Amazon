@@ -30,14 +30,10 @@ namespace Amazon.Kms
         public string Name { get; set; }
 
         public string[] Operations { get; set; }
-      
 
         [DataMember(EmitDefaultValue = false)]
         public string RetiringPrincipal { get; set; }
     }
-
-
-    
 }
 
 /*

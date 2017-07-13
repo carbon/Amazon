@@ -34,12 +34,6 @@ namespace Amazon
 
         public AwsRegion Region => region;
 
-        protected virtual async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
-        {
-            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-            return new Exception(responseText);
-        }
 
         protected async Task<string> SendAsync(HttpRequestMessage request)
         {
@@ -55,7 +49,6 @@ namespace Amazon
                 return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
         }
-        
 
         protected async Task SignAsync(HttpRequestMessage httpRequest)
         {
@@ -92,6 +85,13 @@ namespace Amazon
             var scope = GetCredentialScope(httpRequest);
 
             SignerV4.Default.Sign(credential, scope, httpRequest);
+        }
+
+        protected virtual async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
+        {
+            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            return new Exception(responseText);
         }
 
         private CredentialScope GetCredentialScope(HttpRequestMessage httpRequest)

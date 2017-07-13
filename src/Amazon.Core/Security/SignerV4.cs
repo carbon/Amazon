@@ -48,7 +48,7 @@ namespace Amazon.Security
             );
         }
 
-        public string GetStringToSign(
+        public static string GetStringToSign(
             CredentialScope scope, 
             string timestamp,
             string canonicalRequest)
@@ -113,7 +113,7 @@ namespace Amazon.Security
 
         // HexEncode(Hash(Payload))
         // If the payload is empty, use an empty string
-        public string GetPayloadHash(HttpRequestMessage request)
+        private static string GetPayloadHash(HttpRequestMessage request)
         {
             // http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-streaming.html
             // x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
@@ -129,7 +129,7 @@ namespace Amazon.Security
             return ComputeSHA256(request.Content);
         }
 
-        public byte[] GetSigningKey(IAwsCredential credential, CredentialScope scope)
+        public static byte[] GetSigningKey(IAwsCredential credential, CredentialScope scope)
         {
             #region Preconditions
 
@@ -224,7 +224,6 @@ namespace Amazon.Security
                 data : Encoding.UTF8.GetBytes(stringToSign)
             ).ToHexString();
 
-
             /*
             queryString = Action=action
             queryString += &X-Amz-Algorithm=algorithm
@@ -233,6 +232,7 @@ namespace Amazon.Security
             queryString += &X-Amz-Expires=timeout interval
             queryString += &X-Amz-SignedHeaders=signed_headers
             */
+
             var queryString = string.Join("&", 
                 queryParameters.Select(pair => WebUtility.UrlEncode(pair.Key) + "=" + WebUtility.UrlEncode(pair.Value))
             ) + "&X-Amz-Signature=" + signature;
@@ -352,7 +352,7 @@ namespace Amazon.Security
             return signedHeaders;
         }
 
-        public string CanonicalizeHeaders(HttpRequestMessage request)
+        public static string CanonicalizeHeaders(HttpRequestMessage request)
         {
             var sb = new StringBuilder();
 

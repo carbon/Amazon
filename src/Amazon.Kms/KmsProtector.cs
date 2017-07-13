@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Carbon.Json;
-using Carbon.Data.Protection;
 
 namespace Amazon.Kms
 {
-    public class KmsProtector : IDataProtector
+    public class KmsProtector
     {
         private readonly KmsClient client;
         private readonly string keyId;
@@ -21,9 +20,9 @@ namespace Amazon.Kms
             this.keyId  = keyId  ?? throw new ArgumentNullException(nameof(keyId));
         }
 
-        public async ValueTask<byte[]> EncryptAsync(
+        public async Task<byte[]> EncryptAsync(
             byte[] plaintext, 
-            IEnumerable<KeyValuePair<string, string>> context = null)
+            IEnumerable<KeyValuePair<string, string>> aad = null)
         { 
             #region Preconditions
 
@@ -39,18 +38,18 @@ namespace Amazon.Kms
 
             #endregion
             
-            var request = new EncryptRequest(keyId, plaintext, GetEncryptionContext(context));
+            var request = new EncryptRequest(keyId, plaintext, GetEncryptionContext(aad));
 
             var result = await client.EncryptAsync(request).ConfigureAwait(false);
 
             return result.CiphertextBlob;
         }
         
-        public async ValueTask<byte[]> DecryptAsync(
+        public async Task<byte[]> DecryptAsync(
             byte[] ciphertext, 
-            IEnumerable<KeyValuePair<string, string>> context = null)
+            IEnumerable<KeyValuePair<string, string>> aad = null)
         {
-            var request = new DecryptRequest(keyId, ciphertext, GetEncryptionContext(context));
+            var request = new DecryptRequest(keyId, ciphertext, GetEncryptionContext(aad));
 
             var result = await client.DecryptAsync(request).ConfigureAwait(false);
 
@@ -69,10 +68,17 @@ namespace Amazon.Kms
             return result;
         }
         
-        public async Task RetireGrantAsync(string id)
+        public async Task RetireGrantAsync(string grantId)
         {
+            #region Preconditions
+
+            if (grantId == null)
+                throw new ArgumentNullException(nameof(grantId));
+
+            #endregion
+
             await client.RetireGrantAsync(new RetireGrantRequest {
-                GrantId = id,
+                GrantId = grantId,
                 KeyId = keyId
             }).ConfigureAwait(false);
         }
@@ -97,4 +103,3 @@ namespace Amazon.Kms
         #endregion
     }
 }
-

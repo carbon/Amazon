@@ -23,6 +23,9 @@ namespace Amazon
 
         public static Task<string> GetIamRoleName()
         {
+            // TODO: Limit to first line...
+            // throw if empty...
+
             return http.GetStringAsync(baseUri + "iam/security-credentials/");
         }
 

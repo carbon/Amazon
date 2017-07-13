@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kms</AssemblyName>
-    <VersionPrefix>0.8.10</VersionPrefix>
+    <VersionPrefix>0.8.13</VersionPrefix>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
 
     <!-- Package Details-->
@@ -13,11 +13,7 @@
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Carbon.Data.Protection.Abstractions" Version="1.2.1" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\Amazon.Core\Amazon.Core.csproj" />
   </ItemGroup>

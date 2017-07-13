@@ -7,10 +7,6 @@ namespace Amazon.Elb
 {
     public static class RequestHelper
     {
-        
-
-        
-
         public static Dictionary<string, string> ToParams(object instance)
         {
             var parameters = new Dictionary<string, string>();

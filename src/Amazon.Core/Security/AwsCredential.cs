@@ -37,7 +37,7 @@ namespace Amazon
 
             if (parts.Length != 2)
             {
-                throw new Exception("credential text is not in right format");
+                throw new Exception("AccessKeyId & SecretAccessKey should be seperated be ':'");
             }
 
             return new AwsCredential(parts[0], parts[1]);

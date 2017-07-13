@@ -10,6 +10,7 @@ namespace Amazon.CodeBuild
 
         public bool BuildComplete { get; set; }
 
+        // SUCCEEDED | FAILED | FAULT | TIMED_OUT | IN_PROGRESS | STOPPED
         public string BuildStatus { get; set; }
 
         public string CurrentPhase { get; set; }
@@ -18,6 +19,9 @@ namespace Amazon.CodeBuild
 
         public string Id { get; set; }
 
+        /// <summary>
+        /// The entity that started the build.
+        /// </summary>
         public string Initiator { get; set; }
 
         public LogsLocation Logs { get; set; }
@@ -31,7 +35,9 @@ namespace Amazon.CodeBuild
 
         public DateTime StartTime { get; set; }
 
-        public int TimeoutInMinutes { get; set; }
+        public DateTime? EndTime { get; set; }
+
+        public int? TimeoutInMinutes { get; set; }
     }
 }
 

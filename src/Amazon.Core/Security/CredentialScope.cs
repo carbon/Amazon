@@ -6,8 +6,8 @@ namespace Amazon.Security
     {
         public CredentialScope(DateTime date, AwsRegion region, AwsService service)
         {
-            Date = date;
-            Region = region ?? throw new ArgumentNullException(nameof(region));
+            Date    = date;
+            Region  = region  ?? throw new ArgumentNullException(nameof(region));
             Service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
