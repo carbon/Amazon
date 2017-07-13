@@ -9,11 +9,26 @@ namespace Amazon.DynamoDb
 {
     public class UpdateItemRequest
     {
-        public UpdateItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key, IList<Change> changes)
+        public UpdateItemRequest(
+            string tableName, 
+            IEnumerable<KeyValuePair<string, object>> key,
+            IList<Change> changes,
+            Expression[] conditions = null,
+            ReturnValues? returnValues = null)
         {
-            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-            Key       = key       ?? throw new ArgumentNullException(nameof(key));
-            Changes   = changes   ?? throw new ArgumentNullException(nameof(changes));
+            TableName    = tableName ?? throw new ArgumentNullException(nameof(tableName));
+            Key          = key       ?? throw new ArgumentNullException(nameof(key));
+            Changes      = changes   ?? throw new ArgumentNullException(nameof(changes));
+            ReturnValues = returnValues;
+
+            if (conditions != null && conditions.Length > 0)
+            {
+                var expression = new DynamoExpression(ExpressionAttributeNames, ExpressionAttributeValues);
+
+                expression.AddRange(conditions);
+
+                ConditionExpression = expression.Text;
+            }
         }
 
         public string TableName { get; }
@@ -22,22 +37,13 @@ namespace Amazon.DynamoDb
 
         public IList<Change> Changes { get; }
 
-        public string ConditionExpression { get; set; }
+        public string ConditionExpression { get; }
 
         public JsonObject ExpressionAttributeNames { get; } = new JsonObject();
 
         public AttributeCollection ExpressionAttributeValues { get; } = new AttributeCollection();
 
-        public ReturnValues? ReturnValues { get; set; }
-
-        internal void SetConditions(Expression[] conditions)
-        {
-            var expression = new DynamoExpression(ExpressionAttributeNames, ExpressionAttributeValues);
-
-            expression.AddRange(conditions);
-
-            ConditionExpression = expression.Text;
-        }
+        public ReturnValues? ReturnValues { get; }
 
         public JsonObject ToJson()
         {
@@ -48,7 +54,10 @@ namespace Amazon.DynamoDb
 
             var updateExpression = new UpdateExpression(Changes, ExpressionAttributeNames, ExpressionAttributeValues);
 
-            if (ConditionExpression != null) json.Add("ConditionExpression", ConditionExpression);
+            if (ConditionExpression != null)
+            {
+                json.Add("ConditionExpression", ConditionExpression);
+            }
 
             if (ExpressionAttributeNames != null && ExpressionAttributeNames.Keys.Count > 0)
             {
@@ -62,7 +71,10 @@ namespace Amazon.DynamoDb
 
             json.Add("UpdateExpression", updateExpression.ToString());
 
-            if (ReturnValues != null) json.Add("ReturnValues", ReturnValues.ToString());
+            if (ReturnValues != null)
+            {
+                json.Add("ReturnValues", ReturnValues.ToString());
+            }
 
             return json;
         }
@@ -78,19 +90,19 @@ namespace Amazon.DynamoDb
         /// <summary>
         /// ALL_OLD is specified, and UpdateItem overwrote an attribute name-value pair, the content of the old item is returned. 
         /// </summary>
-        ALL_OLD,
+        ALL_OLD = 1,
 
-        UPDATED_OLD,
+        UPDATED_OLD = 2,
 
         /// <summary>
         /// All the attributes of the new version of the item are returned. 
         /// </summary>
-        ALL_NEW,
+        ALL_NEW = 3,
 
         /// <summary>
         /// The new versions of only the updated attributes are returned.
         /// </summary>
-        UPDATED_NEW
+        UPDATED_NEW = 4
     }
 }
 

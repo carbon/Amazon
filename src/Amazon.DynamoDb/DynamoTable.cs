@@ -338,7 +338,8 @@ namespace Amazon.DynamoDb
         }
 
         // Conditional patch
-        public Task<UpdateItemResult> PatchAsync(Key<T> key,
+        public Task<UpdateItemResult> PatchAsync(
+            Key<T> key,
             IList<Change> changes,
             Expression[] conditions,
             ReturnValues? returnValues = null)
@@ -353,23 +354,14 @@ namespace Amazon.DynamoDb
 
             #endregion
 
-            var request = new UpdateItemRequest(tableName, key, changes) {
-                ReturnValues = returnValues
-            };
-
-            if (conditions.Length > 0)
-            {
-                request.SetConditions(conditions);
-            }
+            var request = new UpdateItemRequest(tableName, key, changes, conditions, returnValues);
 
             return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
         }
 
         public Task<UpdateItemResult> PatchAsync(Key<T> key, IList<Change> changes, ReturnValues returnValues)
         {
-            var request = new UpdateItemRequest(tableName, key, changes)  {
-                ReturnValues = returnValues
-            };
+            var request = new UpdateItemRequest(tableName, key, changes, returnValues: returnValues);
 
             return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
         }

@@ -152,11 +152,11 @@ namespace Amazon.DynamoDb
 
         private void WriteValue(Constant constant)
         {
-            var variableName = ":v" + AttributeValues.Count;
+            var variableName = ":v" + AttributeValues.Count.ToString();
 
             var convertor = DbValueConverterFactory.Get(constant.Value.GetType());
 
-            AttributeValues[variableName] = convertor.FromObject(constant.Value, null);
+            AttributeValues[variableName] = convertor.FromObject(constant.Value);
 
             sb.Append(variableName);
         }

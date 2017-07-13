@@ -8,7 +8,7 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-	public struct DbValue : IConvertible
+    public struct DbValue : IConvertible
 	{
 		public static readonly DbValue Empty = new DbValue("", DbValueType.Unknown);
 		public static readonly DbValue Null	 = new DbValue("", DbValueType.NULL);

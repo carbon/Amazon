@@ -22,7 +22,7 @@ namespace Amazon.DynamoDb
             JsonObject attributeNames,
             AttributeCollection attributeValues)
         {
-            this.attributeNames = attributeNames;
+            this.attributeNames  = attributeNames;
             this.attributeValues = attributeValues;
 
             foreach (var change in changes)
@@ -45,15 +45,20 @@ namespace Amazon.DynamoDb
                     {
                         // Remove attribute
 
-                        if (remove == null) remove = new StringBuilder("REMOVE ");
+                        if (remove == null)
+                        {
+                            remove = new StringBuilder("REMOVE ");
+                        }
 
                         WriteChange(change, remove);
-
                     }
                     else
                     {
                         // Delete element
-                        if (delete == null) delete = new StringBuilder("DELETE ");
+                        if (delete == null)
+                        {
+                            delete = new StringBuilder("DELETE ");
+                        }
 
                         WriteChange(change, delete);
                     }
@@ -61,14 +66,20 @@ namespace Amazon.DynamoDb
                 }
                 else if (change.Operation == DataOperation.Add)
                 {
-                    if (add == null) add = new StringBuilder("ADD ");
+                    if (add == null)
+                    {
+                        add = new StringBuilder("ADD ");
+                    }
 
                     WriteChange(change, add);
 
                 }
                 else if (change.Operation == DataOperation.Replace)
                 {
-                    if (set == null) set = new StringBuilder("SET ");
+                    if (set == null)
+                    {
+                        set = new StringBuilder("SET ");
+                    }
 
                     WriteChange(change, set);
                 }
@@ -79,10 +90,14 @@ namespace Amazon.DynamoDb
             }
         }
 
-
         public void WriteChange(Change change, StringBuilder sb)
         {
-            if (sb == null) sb = new StringBuilder();
+            #region Preconditions
+
+            if (sb == null)
+                throw new ArgumentNullException(nameof(sb));
+
+            #endregion
 
             if (sb[sb.Length - 1] != ' ')
             {
@@ -106,11 +121,15 @@ namespace Amazon.DynamoDb
             }
         }
 
-        private void WriteValue(object value, StringBuilder sb) => 
+        private void WriteValue(object value, StringBuilder sb)
+        {
             sb.WriteValue(value, attributeValues);
+        }
 
-        private void WriteName(string name, StringBuilder sb) => 
+        private void WriteName(string name, StringBuilder sb)
+        {
             sb.WriteName(name, attributeNames);
+        }
 
         public override string ToString()
         {
@@ -123,13 +142,21 @@ namespace Amazon.DynamoDb
 
             var sb = new StringBuilder();
 
-            if (set != null)    sb.AppendLine(set.ToString());
-            if (remove != null) sb.AppendLine(remove.ToString());
-            if (add != null)    sb.AppendLine(add.ToString());
-            if (delete != null) sb.AppendLine(delete.ToString());
+            AppendSet(sb, set);
+            AppendSet(sb, remove);
+            AppendSet(sb, add);
+            AppendSet(sb, delete);
 
-            return sb.Remove(sb.Length - 2, 2).ToString();
+            return sb.ToString();
+        }
+
+        private static void AppendSet(StringBuilder sb, StringBuilder segment)
+        {
+            if (segment == null) return;
+
+            if (sb.Length > 0) sb.AppendLine();
+
+            sb.Append(segment.ToString());
         }
     }
-
 }

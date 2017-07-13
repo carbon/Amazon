@@ -72,7 +72,6 @@ namespace Amazon.DynamoDb
 
         public byte[] GetBinary(string key)
         {
-
             if (TryGet(key, out DbValue value))
             {
                 return value.ToBinary();
