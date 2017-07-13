@@ -6,9 +6,7 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    // Used in filters, queries, scans, and conditional updates
-
-    public class DynamoExpression
+    public sealed class DynamoExpression
     {
         private readonly StringBuilder sb = new StringBuilder();
 
@@ -63,9 +61,7 @@ namespace Amazon.DynamoDb
                 case BinaryExpression binary   : WriteBinaryExpression(binary);    break;
                 case BetweenExpression between : WriteBetweenExpression(between);  break;
                 case FunctionExpression func   : WriteFunctionExpression(func);    break;
-
-                default:
-                    throw new Exception("Unexpected primary expression: " + expression.Kind);
+                default: throw new Exception("Unexpected primary expression: " + expression.Kind);
             }
         }
 
@@ -75,9 +71,9 @@ namespace Amazon.DynamoDb
 
             sb.Append(" between ");
 
-            WriteValue(e.Start);
+            Write(e.Start);
             sb.Append(" and ");
-            WriteValue(e.End);
+            Write(e.End);
         }
 
         public void WriteBinaryExpression(BinaryExpression e)
@@ -227,3 +223,5 @@ namespace Amazon.DynamoDb
     Logical operators: AND | OR | NOT
     */
 }
+
+// Used in filters, queries, scans, and conditional updates

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.DynamoDb</AssemblyName>
-    <VersionPrefix>0.8.14</VersionPrefix>
+    <VersionPrefix>0.8.15</VersionPrefix>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
 
     <!-- Package Details-->
