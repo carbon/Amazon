@@ -17,7 +17,7 @@ namespace Amazon.DynamoDb
         {
             Add<bool>(new BooleanConverter());
             Add<DateTime>(new DateTimeConverter());
-            // Add<DateTimeOffset>(new DateTimeOffsetConverter());
+            Add<DateTimeOffset>(new DateTimeOffsetConverter());
             Add<decimal>(new DecimalConverter());
             Add<double>(new DoubleConverter());
             Add<float>(new SingleConverter());
@@ -96,7 +96,7 @@ namespace Amazon.DynamoDb
 
     public interface IDbValueConverter
     {
-        DbValue FromObject(object value, IMember meta);
+        DbValue FromObject(object value, IMember meta = null);
 
         object ToObject(DbValue item, IMember meta);
     }
@@ -313,16 +313,51 @@ namespace Amazon.DynamoDb
     {
         public DbValue FromObject(object value, IMember member)
         {
-            var date = (DateTime)value;
+            var date = new DateTimeOffset((DateTime)value);
 
-            var unixTime = new DateTimeOffset(date).ToUnixTimeSeconds();
-
-            return new DbValue(unixTime);
+            if (member?.Precision == 4)
+            {
+                return new DbValue(date.ToUnixTimeMilliseconds());
+            }
+            
+            return new DbValue(date.ToUnixTimeSeconds());
         }
 
         public object ToObject(DbValue item, IMember member)
         {
+            if (member?.Precision == 4)
+            {
+                return DateTimeOffset.FromUnixTimeMilliseconds(item.ToInt64()).UtcDateTime;
+            }
+
             return DateTimeOffset.FromUnixTimeSeconds(item.ToInt64()).UtcDateTime;
+        }
+    }
+    
+    internal class DateTimeOffsetConverter : IDbValueConverter
+    {
+        public DbValue FromObject(object value, IMember member)
+        {
+            var date = (DateTimeOffset)value;
+
+            var precision = (TimePrecision)(member?.Precision ?? 0);
+
+            switch (precision)
+            {
+                case TimePrecision.Millisecond : return new DbValue(date.ToUnixTimeMilliseconds());
+                default                        : return new DbValue(date.ToUnixTimeSeconds());
+            }
+        }
+
+        public object ToObject(DbValue item, IMember member)
+        {
+            var precision = (TimePrecision)(member?.Precision ?? 0);
+
+            switch (precision)
+            {
+                case TimePrecision.Millisecond : return DateTimeOffset.FromUnixTimeMilliseconds(item.ToInt64());
+                default                        : return DateTimeOffset.FromUnixTimeSeconds(item.ToInt64());
+            }
         }
     }
 
@@ -331,7 +366,7 @@ namespace Amazon.DynamoDb
         public DbValue FromObject(object value, IMember member)
         {
             var time = (TimeSpan)value;
-            var precision = (TimePrecision)(member.Precision ?? 3);
+            var precision = (TimePrecision)(member?.Precision ?? 3);
 
             switch (precision)
             {
