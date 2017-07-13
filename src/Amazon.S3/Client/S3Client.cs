@@ -32,6 +32,13 @@ namespace Amazon.S3
 
         #region Multipart Uploads
 
+
+        public async Task AbortMultipartUploadAsync(AbortMultipartUploadRequest request)
+        {
+            await SendAsync(request).ConfigureAwait(false);
+        }
+
+
         public async Task<InitiateMultipartUploadResult> InitiateMultipartUploadAsync(InitiateMultipartUploadRequest request)
         {
             var responseText = await SendAsync(request).ConfigureAwait(false);

@@ -10,25 +10,25 @@ using Carbon.Storage;
 namespace Amazon.S3
 {
     using Scheduling;
- 
+
     public class S3Bucket : IBucket, IReadOnlyBucket
     {
         private readonly S3Client client;
         private readonly string bucketName;
 
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
-             initialDelay : TimeSpan.FromMilliseconds(100),
-             maxDelay     : TimeSpan.FromSeconds(3),
-             maxRetries   : 5
+             initialDelay: TimeSpan.FromMilliseconds(100),
+             maxDelay: TimeSpan.FromSeconds(3),
+             maxRetries: 5
         );
-              
+
         public S3Bucket(AwsRegion region, string bucketName, IAwsCredential credential)
             : this(bucketName, client: new S3Client(region, credential)) { }
 
         public S3Bucket(string bucketName, S3Client client)
         {
             this.bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
-            this.client     = client ?? throw new ArgumentNullException(nameof(client));
+            this.client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         public S3Bucket(AwsRegion region, string bucketName)
@@ -57,9 +57,9 @@ namespace Amazon.S3
         public async Task<IReadOnlyList<IBlob>> ListAsync(string prefix, string continuationToken, int take = 1000)
         {
             var request = new ListBucketOptions {
-                Prefix            = prefix,
+                Prefix = prefix,
                 ContinuationToken = continuationToken,
-                MaxKeys           = take
+                MaxKeys = take
             };
 
             var result = await client.ListBucketAsync(bucketName, request).ConfigureAwait(false);
@@ -70,9 +70,9 @@ namespace Amazon.S3
         public async Task<IBlob> GetAsync(string name)
         {
             var request = new GetObjectRequest(
-                region     : client.Region,
-                bucketName : bucketName, 
-                objectName : name
+                region: client.Region,
+                bucketName: bucketName,
+                objectName: name
             );
 
             return await client.GetObjectAsync(request).ConfigureAwait(false);
@@ -87,20 +87,22 @@ namespace Amazon.S3
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
-            if (options == null)
-                throw new ArgumentNullException(nameof(options));
-
             #endregion
 
             var request = new GetObjectRequest(
                 region     : client.Region,
-                bucketName : bucketName, 
+                bucketName : bucketName,
                 objectName : name
             );
 
             if (options.IfModifiedSince != null)
             {
                 request.IfModifiedSince = options.IfModifiedSince;
+            }
+
+            if (options.EncryptionKey != null)
+            {
+                request.SetCustomerEncryptionKey(new ServerSideEncryptionKey(options.EncryptionKey));
             }
 
             if (options.IfNoneMatch != null)
@@ -154,8 +156,8 @@ namespace Amazon.S3
         }
 
         public async Task<CopyObjectResult> PutAsync(
-            string name, 
-            S3ObjectLocation sourceLocation, 
+            string name,
+            S3ObjectLocation sourceLocation,
             IReadOnlyDictionary<string, string> metadata = null)
         {
             #region Preconditions
@@ -188,14 +190,14 @@ namespace Amazon.S3
         }
 
         private Task<CopyObjectResult> PutInternalAsync(
-            string name, 
-            S3ObjectLocation sourceLocation, 
+            string name,
+            S3ObjectLocation sourceLocation,
             IReadOnlyDictionary<string, string> metadata = null)
         {
             var request = new CopyObjectRequest(
-                region : client.Region,
-                source : sourceLocation,
-                target : new S3ObjectLocation(bucketName, name)
+                region: client.Region,
+                source: sourceLocation,
+                target: new S3ObjectLocation(bucketName, name)
             );
 
             SetHeaders(request, metadata);
@@ -203,7 +205,12 @@ namespace Amazon.S3
             return client.CopyObjectAsync(request);
         }
 
-        public async Task PutAsync(IBlob blob)
+        public Task PutAsync(IBlob blob)
+        {
+            return PutAsync(blob, new PutBlobOptions());
+        }
+
+        public async Task PutAsync(IBlob blob, PutBlobOptions options)
         {
             #region Preconditions
 
@@ -221,7 +228,8 @@ namespace Amazon.S3
 
             #region Stream conditions
 
-            if (stream.Length == 0) throw new ArgumentException("May not be empty", nameof(blob));
+            if (stream.Length == 0)
+                throw new ArgumentException("May not be empty", nameof(blob));
 
             // Ensure we're at the start of the stream
             if (stream.CanSeek && stream.Position != 0)
@@ -230,8 +238,14 @@ namespace Amazon.S3
             #endregion
 
             var request = new PutObjectRequest(client.Region, bucketName, blob.Name);
-            
+
             request.SetStream(stream);
+
+            // Server side encrpytion
+            if (options.EncryptionKey != null)
+            {
+                request.SetCustomerEncryptionKey(new ServerSideEncryptionKey(options.EncryptionKey));
+            }
 
             SetHeaders(request, blob.Metadata);
 
@@ -337,9 +351,21 @@ namespace Amazon.S3
 
         public async Task CompleteUploadAsync(IUpload upload, IUploadBlock[] blocks)
         {
-            var completeRequest = new CompleteMultipartUploadRequest(client.Region, upload, blocks);
+            var request = new CompleteMultipartUploadRequest(client.Region, upload, blocks);
 
-            var result = await client.CompleteMultipartUploadAsync(completeRequest).ConfigureAwait(false);
+            await client.CompleteMultipartUploadAsync(request).ConfigureAwait(false);
+        }
+
+        public async Task CancelUploadAsync(IUpload upload)
+        {
+            var request = new AbortMultipartUploadRequest(
+                region     : client.Region, 
+                bucketName : upload.BucketName, 
+                key        : upload.ObjectName,
+                uploadId   : upload.UploadId
+            );
+
+            await client.AbortMultipartUploadAsync(request).ConfigureAwait(false);
         }
 
         #endregion
