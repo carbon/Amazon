@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -39,6 +39,13 @@ namespace Amazon.S3
                 stream.CanSeek 
                 ? HexString.FromBytes(ComputeSHA256(stream))
                 : "UNSIGNED-PAYLOAD");
+        }
+
+        internal void SetCustomerEncryptionKey(ServerSideEncryptionKey key)
+        {
+            Headers.Add("x-amz-server-side-encryption-customer-algorithm", key.Algorithm);
+            Headers.Add("x-amz-server-side-encryption-customer-key",       Convert.ToBase64String(key.Key));
+            Headers.Add("x-amz-server-side-encryption-customer-key-MD5",   Convert.ToBase64String(key.KeyMD5));
         }
 
         public void SetStream(Stream stream, long length, string mediaType = "application/octet-stream")

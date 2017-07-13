@@ -12,6 +12,13 @@ namespace Amazon.S3
         public BatchDeleteRequest(AwsRegion region, string bucketName, DeleteBatch batch)
             : base(HttpMethod.Post, region, bucketName, "?delete")
         {
+            #region Preconditions
+
+            if (batch == null)
+                throw new ArgumentNullException(nameof(batch));
+
+            #endregion
+
             var xmlText = batch.ToXmlString();
 
             Content = new StringContent(xmlText, Encoding.UTF8, "text/xml");

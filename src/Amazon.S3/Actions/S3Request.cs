@@ -63,6 +63,7 @@ namespace Amazon.S3
 
         public HttpCompletionOption CompletionOption { get; set; }
 
+
         #region Helpers
 
         protected byte[] ComputeSHA256(Stream stream)

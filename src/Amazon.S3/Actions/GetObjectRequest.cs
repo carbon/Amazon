@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -11,12 +11,13 @@ namespace Amazon.S3
         {
             CompletionOption = HttpCompletionOption.ResponseHeadersRead;
         }
-        
+
         public DateTimeOffset? IfModifiedSince
         {
             get => Headers.IfModifiedSince;
             set => Headers.IfModifiedSince = value;
         }
+
 
         public string IfNoneMatch
         {
@@ -33,6 +34,13 @@ namespace Amazon.S3
             }
         }
 
+        internal void SetCustomerEncryptionKey(ServerSideEncryptionKey key)
+        {
+            Headers.Add("x-amz-server-side-encryption-customer-algorithm", key.Algorithm);
+            Headers.Add("x-amz-server-side-encryption-customer-key",       Convert.ToBase64String(key.Key));
+            Headers.Add("x-amz-server-side-encryption-customer-key-MD5",   Convert.ToBase64String(key.KeyMD5));
+        }                                                        
+                                                                  
         public void SetRange(long? from, long? to)
         {
             Headers.Range = new RangeHeaderValue(from, to);
