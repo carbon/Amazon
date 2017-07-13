@@ -47,21 +47,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ec2", "Amazon.Ec2\Am
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ec2.Tests", "Amazon.Ec2.Tests\Amazon.Ec2.Tests.csproj", "{0EDF4882-15DA-47EF-8D6E-452F302EB9F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Iam", "Amazon.Iam\Amazon.Iam.csproj", "{CEA7E017-F021-4D6D-BE20-974CA6F5B532}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Iam", "Amazon.Iam\Amazon.Iam.csproj", "{CEA7E017-F021-4D6D-BE20-974CA6F5B532}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Elb", "Amazon.Elb\Amazon.Elb.csproj", "{1DB2A667-B1AE-47CA-BFC2-F926A7F4F685}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Elb", "Amazon.Elb\Amazon.Elb.csproj", "{1DB2A667-B1AE-47CA-BFC2-F926A7F4F685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Ssm", "Amazon.Ssm\Amazon.Ssm.csproj", "{E4063E10-97F8-4666-AD20-D50094573569}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ssm", "Amazon.Ssm\Amazon.Ssm.csproj", "{E4063E10-97F8-4666-AD20-D50094573569}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Elb.Tests", "Amazon.Elb.Tests\Amazon.Elb.Tests.csproj", "{C6504EBA-5000-41A1-83BD-4DE85995D3F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Elb.Tests", "Amazon.Elb.Tests\Amazon.Elb.Tests.csproj", "{C6504EBA-5000-41A1-83BD-4DE85995D3F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Ssm.Tests", "Amazon.Ssm.Tests\Amazon.Ssm.Tests.csproj", "{427C69EE-21B8-4F63-8EC6-F360E3BA7DCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ssm.Tests", "Amazon.Ssm.Tests\Amazon.Ssm.Tests.csproj", "{427C69EE-21B8-4F63-8EC6-F360E3BA7DCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.CodeBuild", "Amazon.CodeBuild\Amazon.CodeBuild.csproj", "{65C7099D-F2B5-4261-9370-F00FD3D1CDEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CodeBuild", "Amazon.CodeBuild\Amazon.CodeBuild.csproj", "{65C7099D-F2B5-4261-9370-F00FD3D1CDEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Rds", "Amazon.Rds\Amazon.Rds.csproj", "{507C647F-59A0-49B2-AFA7-983CD4DE041B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Rds", "Amazon.Rds\Amazon.Rds.csproj", "{507C647F-59A0-49B2-AFA7-983CD4DE041B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Rds.Tests", "Amazon.Rds.Tests\Amazon.Rds.Tests.csproj", "{BFFC92D2-FC50-4673-B236-3C5A96075904}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Rds.Tests", "Amazon.Rds.Tests\Amazon.Rds.Tests.csproj", "{BFFC92D2-FC50-4673-B236-3C5A96075904}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Sts", "Amazon.Sts\Amazon.Sts.csproj", "{856C94FE-CE01-4D59-9106-3C5DE942967D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Sts.Tests", "Amazon.Sts.Tests\Amazon.Sts.Tests.csproj", "{683A45C9-28BC-4B62-A431-6E308A2F5895}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -185,6 +189,14 @@ Global
 		{BFFC92D2-FC50-4673-B236-3C5A96075904}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFFC92D2-FC50-4673-B236-3C5A96075904}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFFC92D2-FC50-4673-B236-3C5A96075904}.Release|Any CPU.Build.0 = Release|Any CPU
+		{856C94FE-CE01-4D59-9106-3C5DE942967D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{856C94FE-CE01-4D59-9106-3C5DE942967D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{856C94FE-CE01-4D59-9106-3C5DE942967D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{856C94FE-CE01-4D59-9106-3C5DE942967D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{683A45C9-28BC-4B62-A431-6E308A2F5895}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{683A45C9-28BC-4B62-A431-6E308A2F5895}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{683A45C9-28BC-4B62-A431-6E308A2F5895}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{683A45C9-28BC-4B62-A431-6E308A2F5895}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -203,5 +215,6 @@ Global
 		{C6504EBA-5000-41A1-83BD-4DE85995D3F8} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 		{427C69EE-21B8-4F63-8EC6-F360E3BA7DCE} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 		{BFFC92D2-FC50-4673-B236-3C5A96075904} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
+		{683A45C9-28BC-4B62-A431-6E308A2F5895} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 	EndGlobalSection
 EndGlobal

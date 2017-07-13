@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.S3</AssemblyName>
-    <VersionPrefix>0.8.9</VersionPrefix>
+    <VersionPrefix>0.8.12</VersionPrefix>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
 
     <!-- Package Details-->
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Storage" Version="1.7.0" />
+    <PackageReference Include="Carbon.Storage" Version="1.8.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
