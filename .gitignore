@@ -8,3 +8,4 @@ restore.dg
 *.lock.json
 bin/
 obj/
+/release
