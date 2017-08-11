@@ -2,14 +2,13 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ses</AssemblyName>
-    <AssemblyTitle>Amazon SES</AssemblyTitle>
-    <VersionPrefix>0.8.0</VersionPrefix>
+    <VersionPrefix>0.8.1</VersionPrefix>
     <TargetFramework>net461</TargetFramework>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple wrapper around Amazon's Simple Email Service.</Description>    
+    <Description>A simple wrapper around Amazon's Simple Email Service (SES).</Description>    
     <PackageTags>aws;ses</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>

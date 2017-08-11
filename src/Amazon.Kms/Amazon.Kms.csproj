@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kms</AssemblyName>
-    <VersionPrefix>0.8.13</VersionPrefix>
+    <VersionPrefix>0.8.14</VersionPrefix>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
 
     <!-- Package Details-->
@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <Reference Include="System" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 </Project>

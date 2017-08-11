@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Core</AssemblyName>
-    <VersionPrefix>0.8.10</VersionPrefix>
+    <VersionPrefix>0.8.11</VersionPrefix>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
 
     <!-- Package Details-->
@@ -15,8 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Json" Version="1.4.1" />
-    <PackageReference Include="System.Text.Encodings.Web" Version="4.3.1" />
+    <PackageReference Include="Carbon.Json" Version="1.4.2" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
