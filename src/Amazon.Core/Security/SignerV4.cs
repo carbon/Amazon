@@ -78,7 +78,7 @@ namespace Amazon.Security
 
         // Timestamp format: ISO8601 Basic format, YYYYMMDD'T'HHMMSS'Z'
 
-        public string GetCanonicalRequest(HttpRequestMessage request)
+        public static string GetCanonicalRequest(HttpRequestMessage request)
         {
             return string.Join("\n",
                 request.Method,                            // HTTPRequestMethod      + \n
@@ -91,7 +91,7 @@ namespace Amazon.Security
             );
         }
 
-        public string GetCanonicalRequest(
+        public static string GetCanonicalRequest(
             HttpMethod method,
             string canonicalURI,
             string canonicalQueryString,
@@ -282,7 +282,7 @@ namespace Amazon.Security
 
         // e.g. ?a=1&
 
-        public string CanonicizeQueryString(Uri uri)
+        public static string CanonicizeQueryString(Uri uri)
         {
             if (string.IsNullOrEmpty(uri.Query) || uri.Query == "?")
             {
@@ -331,7 +331,7 @@ namespace Amazon.Security
             return dictionary;
         }
 
-        public string GetSignedHeaders(HttpRequestMessage request)
+        public static string GetSignedHeaders(HttpRequestMessage request)
         {
             // Sonvert all header names to lowercase
             // Sort them by character code
