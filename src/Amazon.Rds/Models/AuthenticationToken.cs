@@ -9,7 +9,7 @@ namespace Amazon.Rds
             DateTime issued, 
             DateTime expires)
         {
-            Value   = value;
+            Value   = value ?? throw new ArgumentNullException(nameof(value));
             Issued  = issued;
             Expires = expires;
         }

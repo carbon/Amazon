@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace Amazon.Elb
@@ -9,6 +10,13 @@ namespace Amazon.Elb
 
         public static T ParseXml(string xml)
         {
+            #region Preconditions
+
+            if (xml == null)
+                throw new ArgumentNullException(nameof(xml));
+
+            #endregion
+
             using (var reader = new StringReader(xml))
             {
                 return (T)serializer.Deserialize(reader);

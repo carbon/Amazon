@@ -103,9 +103,7 @@ namespace Amazon.CodeBuild
         }
 
         // TODO: Fix Carbon.Json serializationOptions constructor
-        private static readonly SerializationOptions serializationOptions = new SerializationOptions
-        {
-            IgnoreNullValues        = true,
+        private static readonly SerializationOptions serializationOptions = new SerializationOptions(ingoreNullValues: true) { 
             PropertyNameTransformer = CamelCase
         };
 
@@ -116,6 +114,13 @@ namespace Amazon.CodeBuild
 
         public static HttpRequestMessage GetRequestMessage(string endpoint, ICodeBuildRequest request)
         {
+            #region Preconditions
+
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            #endregion
+
             var actionName = request.GetType().Name.Replace("Request", "");
 
             var json = new JsonSerializer().Serialize(request, serializationOptions);
