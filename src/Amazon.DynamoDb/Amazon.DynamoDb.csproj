@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.DynamoDb</AssemblyName>
-    <VersionPrefix>0.8.17</VersionPrefix>
-    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+    <VersionPrefix>0.10.1</VersionPrefix>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
@@ -19,20 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Data" Version="0.22.2" />
-    <PackageReference Include="System.Text.Encodings.Web" Version="4.4.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <PackageReference Remove="NETStandard.Library" />
-    <PackageReference Include="System.Runtime" Version="4.3.0" />
-    <PackageReference Include="System.Collections" Version="4.3.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.2" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <Reference Include="System.IO" />
-    <Reference Include="System.Net.Http" />
+    <PackageReference Include="Carbon.Data" Version="0.24.0" />
   </ItemGroup>
 
 </Project>
