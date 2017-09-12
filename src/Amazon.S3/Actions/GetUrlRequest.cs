@@ -17,8 +17,8 @@ namespace Amazon.S3
             #endregion
 
             BucketName = bucketName;
-            Key = key;
-            ExpiresIn = TimeSpan.FromMinutes(60);
+            Key        = key;
+            ExpiresIn  = TimeSpan.FromMinutes(60);
         }
 
         public string BucketName { get; }

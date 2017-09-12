@@ -6,8 +6,8 @@ namespace Amazon.S3
 {
     public class GetObjectRequest : S3Request
     {
-        public GetObjectRequest(AwsRegion region, string bucketName, string objectName)
-            : base(HttpMethod.Get, region, bucketName, objectName)
+        public GetObjectRequest(string host, string bucketName, string objectName)
+            : base(HttpMethod.Get, host, bucketName, objectName)
         {
             CompletionOption = HttpCompletionOption.ResponseHeadersRead;
         }

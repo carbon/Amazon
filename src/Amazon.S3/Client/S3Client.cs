@@ -12,18 +12,26 @@ namespace Amazon.S3
         public const string Namespace = "http://s3.amazonaws.com/doc/2006-03-01/";
 
         public S3Client(AwsRegion region, IAwsCredential credential)
-            : base(AwsService.S3, region, credential) { }
+            : this(region, host: $"s3.dualstack.{region.Name}.amazonaws.com", credential: credential) { }
+
+        public S3Client(AwsRegion region, string host, IAwsCredential credential)
+            : base(AwsService.S3, region, credential)
+        {
+            Host = host ?? throw new ArgumentNullException(nameof(host));
+        }
 
         public void SetTimeout(TimeSpan timeout)
         {
             httpClient.Timeout = timeout;
         }
 
-        // CreateBucketRequest?
+        public string Host { get; }
+        
+        // TODO: CreateBucketAsync
 
         public async Task<ListBucketResult> ListBucketAsync(string bucketName, ListBucketOptions options)
         {
-            var request = new ListBucketRequest(Region, bucketName, options);
+            var request = new ListBucketRequest(Host, bucketName, options);
 
             var responseText = await SendAsync(request).ConfigureAwait(false);          
 
@@ -32,12 +40,10 @@ namespace Amazon.S3
 
         #region Multipart Uploads
 
-
         public async Task AbortMultipartUploadAsync(AbortMultipartUploadRequest request)
         {
             await SendAsync(request).ConfigureAwait(false);
         }
-
 
         public async Task<InitiateMultipartUploadResult> InitiateMultipartUploadAsync(InitiateMultipartUploadRequest request)
         {

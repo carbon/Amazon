@@ -9,8 +9,8 @@ namespace Amazon.S3
 
     public class PutObjectRequest : S3Request
     {
-        public PutObjectRequest(AwsRegion region, string bucketName, string key)
-            : base(HttpMethod.Put, region, bucketName, key)
+        public PutObjectRequest(string host, string bucketName, string key)
+            : base(HttpMethod.Put, host, bucketName, key)
         {
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }

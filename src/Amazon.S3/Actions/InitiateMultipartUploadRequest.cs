@@ -4,8 +4,8 @@ namespace Amazon.S3
 {
     public class InitiateMultipartUploadRequest : S3Request
     {
-        public InitiateMultipartUploadRequest(AwsRegion region, string bucketName, string key)
-            : base(HttpMethod.Post, region, bucketName, key + "?uploads")
+        public InitiateMultipartUploadRequest(string host, string bucketName, string key)
+            : base(HttpMethod.Post, host, bucketName, key + "?uploads")
         {
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }

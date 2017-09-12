@@ -7,11 +7,11 @@ namespace Amazon.S3
     // PUT /ObjectName?partNumber=PartNumber&uploadId=UploadId
     public class UploadPartRequest : PutObjectRequest
     {
-        public UploadPartRequest(AwsRegion region, IUpload upload, int partNumber)
-            : this(region, upload.BucketName, upload.ObjectName, upload.UploadId, partNumber) { }
+        public UploadPartRequest(string host, IUpload upload, int partNumber)
+            : this(host, upload.BucketName, upload.ObjectName, upload.UploadId, partNumber) { }
 
-        public UploadPartRequest(AwsRegion region, string bucketName, string key, string uploadId, int partNumber)
-            : base(region, bucketName, key + $"?partNumber={partNumber}&uploadId={uploadId}")
+        public UploadPartRequest(string host, string bucketName, string key, string uploadId, int partNumber)
+            : base(host, bucketName, key + $"?partNumber={partNumber}&uploadId={uploadId}")
         {
             #region Preconditions
 

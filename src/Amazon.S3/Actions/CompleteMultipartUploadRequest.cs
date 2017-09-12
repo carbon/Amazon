@@ -8,12 +8,19 @@ namespace Amazon.S3
 {
     public class CompleteMultipartUploadRequest : S3Request
     {
-        public CompleteMultipartUploadRequest(AwsRegion region, IUpload upload, IUploadBlock[] parts)
-            : this(region, upload.BucketName, upload.ObjectName, upload.UploadId, parts) { }
+        public CompleteMultipartUploadRequest(string host, IUpload upload, IUploadBlock[] parts)
+            : this(host, upload.BucketName, upload.ObjectName, upload.UploadId, parts) { }
 
-        public CompleteMultipartUploadRequest(AwsRegion region, string bucketName, string key, string uploadId, IUploadBlock[] parts)
-            : base(HttpMethod.Post, region, bucketName, key + "?uploadId=" + uploadId)
+        public CompleteMultipartUploadRequest(string host, string bucketName, string key, string uploadId, IUploadBlock[] parts)
+            : base(HttpMethod.Post, host, bucketName, key + "?uploadId=" + uploadId)
         {
+            #region Preconditions
+
+            if (parts == null)
+                throw new ArgumentNullException(nameof(parts));
+
+            #endregion
+
             CompletionOption = HttpCompletionOption.ResponseContentRead;
 
             Content = new StringContent(

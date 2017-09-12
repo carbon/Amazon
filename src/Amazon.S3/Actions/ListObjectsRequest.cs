@@ -8,8 +8,8 @@ namespace Amazon.S3
 
     public class ListBucketRequest : S3Request
     {
-        public ListBucketRequest(AwsRegion region, string bucketName, ListBucketOptions options)
-            : base(HttpMethod.Get, region, bucketName, null)
+        public ListBucketRequest(string host, string bucketName, ListBucketOptions options)
+            : base(HttpMethod.Get, host, bucketName, null)
         {
             options.QueryList.Add("list-type", "2");
 

@@ -9,8 +9,8 @@ namespace Amazon.S3
 {
     public class BatchDeleteRequest : S3Request
     {
-        public BatchDeleteRequest(AwsRegion region, string bucketName, DeleteBatch batch)
-            : base(HttpMethod.Post, region, bucketName, "?delete")
+        public BatchDeleteRequest(string host, string bucketName, DeleteBatch batch)
+            : base(HttpMethod.Post, host, bucketName, "?delete")
         {
             #region Preconditions
 

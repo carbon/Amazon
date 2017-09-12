@@ -10,15 +10,15 @@ namespace Amazon.S3
     {
         public S3Request(
             HttpMethod method,
-            AwsRegion region, 
+            string host, 
             string bucketName, 
             string objectName, 
             string version = null)
         {
             #region Preconditions
 
-            if (region == null)
-                throw new ArgumentNullException(nameof(region));
+            if (host == null)
+                throw new ArgumentNullException(nameof(host));
 
             #endregion
 
@@ -29,9 +29,9 @@ namespace Amazon.S3
 
             var urlBuilder = new StringBuilder()
                 .Append("https://")
+                .Append(host)
+                .Append("/")
                 .Append(bucketName)
-                .Append(".")
-                .Append(S3Host.Get(region))
                 .Append("/");
 
             // s3.dualstack.{region.Name}.amazonaws.com
@@ -63,7 +63,6 @@ namespace Amazon.S3
 
         public HttpCompletionOption CompletionOption { get; set; }
 
-
         #region Helpers
 
         protected byte[] ComputeSHA256(Stream stream)
@@ -79,11 +78,5 @@ namespace Amazon.S3
         }
 
         #endregion
-    }
-
-    internal static class S3Host
-    {
-        // Use dualstack to support IP6 in the future
-        public static string Get(AwsRegion region) => $"s3.dualstack.{region.Name}.amazonaws.com";
     }
 }

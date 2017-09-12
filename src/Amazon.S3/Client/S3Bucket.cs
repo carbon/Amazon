@@ -23,12 +23,12 @@ namespace Amazon.S3
         );
 
         public S3Bucket(AwsRegion region, string bucketName, IAwsCredential credential)
-            : this(bucketName, client: new S3Client(region, credential)) { }
+            : this(bucketName, new S3Client(region, credential)) { }
 
         public S3Bucket(string bucketName, S3Client client)
         {
             this.bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
-            this.client = client ?? throw new ArgumentNullException(nameof(client));
+            this.client     = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         public S3Bucket(AwsRegion region, string bucketName)
@@ -70,9 +70,9 @@ namespace Amazon.S3
         public async Task<IBlob> GetAsync(string name)
         {
             var request = new GetObjectRequest(
-                region: client.Region,
-                bucketName: bucketName,
-                objectName: name
+                host       : client.Host,
+                bucketName : bucketName,
+                objectName : name
             );
 
             return await client.GetObjectAsync(request).ConfigureAwait(false);
@@ -90,7 +90,7 @@ namespace Amazon.S3
             #endregion
 
             var request = new GetObjectRequest(
-                region     : client.Region,
+                host       : client.Host,
                 bucketName : bucketName,
                 objectName : name
             );
@@ -132,7 +132,7 @@ namespace Amazon.S3
 
             #endregion
 
-            var request = new ObjectHeadRequest(client.Region, bucketName, key: name);
+            var request = new ObjectHeadRequest(client.Host, bucketName, key: name);
 
             var result = await client.GetObjectHeadAsync(request).ConfigureAwait(false);
 
@@ -148,7 +148,7 @@ namespace Amazon.S3
 
             #endregion
 
-            var request = new RestoreObjectRequest(client.Region, bucketName, name) {
+            var request = new RestoreObjectRequest(client.Host, bucketName, name) {
                 Days = days
             };
 
@@ -195,9 +195,9 @@ namespace Amazon.S3
             IReadOnlyDictionary<string, string> metadata = null)
         {
             var request = new CopyObjectRequest(
-                region: client.Region,
-                source: sourceLocation,
-                target: new S3ObjectLocation(bucketName, name)
+                host   : client.Host,
+                source : sourceLocation,
+                target : new S3ObjectLocation(bucketName, name)
             );
 
             SetHeaders(request, metadata);
@@ -237,7 +237,7 @@ namespace Amazon.S3
 
             #endregion
 
-            var request = new PutObjectRequest(client.Region, bucketName, blob.Name);
+            var request = new PutObjectRequest(client.Host, bucketName, blob.Name);
 
             request.SetStream(stream);
 
@@ -261,7 +261,7 @@ namespace Amazon.S3
 
             #endregion
 
-            var request = new DeleteObjectRequest(client.Region, bucketName, name);
+            var request = new DeleteObjectRequest(client.Host, bucketName, name);
 
             await client.DeleteObjectAsync(request).ConfigureAwait(false);
         }
@@ -275,7 +275,7 @@ namespace Amazon.S3
 
             #endregion
 
-            var request = new DeleteObjectRequest(client.Region, bucketName, name, version);
+            var request = new DeleteObjectRequest(client.Host, bucketName, name, version);
 
             return client.DeleteObjectAsync(request);
         }
@@ -291,7 +291,7 @@ namespace Amazon.S3
 
             var batch = new DeleteBatch(names);
 
-            var request = new BatchDeleteRequest(client.Region, bucketName, batch);
+            var request = new BatchDeleteRequest(client.Host, bucketName, batch);
 
             var result = await client.DeleteObjectsAsync(request).ConfigureAwait(false);
 
@@ -324,7 +324,7 @@ namespace Amazon.S3
 
             #endregion
 
-            var request = new InitiateMultipartUploadRequest(client.Region, bucketName, name) {
+            var request = new InitiateMultipartUploadRequest(client.Host, bucketName, name) {
                 Content = new StringContent(string.Empty)
             };
 
@@ -342,7 +342,7 @@ namespace Amazon.S3
 
             #endregion
 
-            var request = new UploadPartRequest(client.Region, upload, number);
+            var request = new UploadPartRequest(client.Host, upload, number);
 
             request.SetStream(stream);
 
@@ -351,15 +351,22 @@ namespace Amazon.S3
 
         public async Task CompleteUploadAsync(IUpload upload, IUploadBlock[] blocks)
         {
-            var request = new CompleteMultipartUploadRequest(client.Region, upload, blocks);
+            var request = new CompleteMultipartUploadRequest(client.Host, upload, blocks);
 
             await client.CompleteMultipartUploadAsync(request).ConfigureAwait(false);
         }
 
         public async Task CancelUploadAsync(IUpload upload)
         {
+            #region Preconditions
+
+            if (upload == null)
+                throw new ArgumentNullException(nameof(upload));
+
+            #endregion
+
             var request = new AbortMultipartUploadRequest(
-                region     : client.Region, 
+                host       : client.Host, 
                 bucketName : upload.BucketName, 
                 key        : upload.ObjectName,
                 uploadId   : upload.UploadId

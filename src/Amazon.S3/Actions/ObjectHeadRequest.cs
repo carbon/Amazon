@@ -5,8 +5,8 @@ namespace Amazon.S3
 {
     public class ObjectHeadRequest : S3Request
     {
-        public ObjectHeadRequest(AwsRegion region, string bucketName, string key)
-            : base(HttpMethod.Head, region, bucketName, key) { }
+        public ObjectHeadRequest(string host, string bucketName, string key)
+            : base(HttpMethod.Head, host, bucketName, key) { }
 
         internal void SetCustomerEncryptionKey(ServerSideEncryptionKey key)
         {
