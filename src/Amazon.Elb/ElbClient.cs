@@ -188,9 +188,6 @@ namespace Amazon.Elb
 
         #endregion
 
-
-
-
         #region Helpers
 
         private async Task<T> SendAsync<T>(IElbRequest request)
@@ -218,3 +215,5 @@ namespace Amazon.Elb
         #endregion
     }
 }
+
+// http://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/Welcome.html

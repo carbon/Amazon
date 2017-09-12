@@ -49,7 +49,7 @@ namespace Amazon
 
         public Task<bool> RenewAsync()
         {
-            throw new NotImplementedException("Not renewable");
+            throw new NotImplementedException("AwsCredential is not renewable");
         }
 
         #endregion

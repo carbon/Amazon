@@ -5,9 +5,9 @@ namespace Amazon
 {
     public class AwsRegion : IEquatable<AwsRegion>
     {
-        private AwsRegion(string name)
+        public AwsRegion(string name)
         {
-            Name = name;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
         public string Name { get; }

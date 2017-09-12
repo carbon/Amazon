@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 using Carbon.Json;
 
@@ -68,9 +67,9 @@ namespace Amazon.DynamoDb
 
             #endregion
 
-            var t = value.GetType();
+            var type = value.GetType();
 
-			if (t.GetTypeInfo().IsEnum)
+			if (type.IsEnum)
 			{
 				this.kind = DbValueType.N;
 				this.value = EnumConverter.Default.FromObject(value, null).Value;
@@ -78,9 +77,9 @@ namespace Amazon.DynamoDb
 				return;
 			}
 
-			if (t.IsArray)
+			if (type.IsArray)
 			{
-				var elementType = t.GetElementType();
+				var elementType = type.GetElementType();
 
 				var list = value as IList;
 
@@ -100,16 +99,16 @@ namespace Amazon.DynamoDb
 					case TypeCode.UInt32:
 					case TypeCode.UInt64:		this.kind = DbValueType.NS;		break;
 
-					default: throw new Exception("Unexpected array element type:" + t.Name);
+					default: throw new Exception("Unexpected array element type:" + type.Name);
 				}
 			}
 			else
 			{
-				switch (Type.GetTypeCode(t))
+				switch (Type.GetTypeCode(type))
 				{
 					// String
 					case TypeCode.String:
-                        if (value.ToString() == string.Empty)
+                        if ((string)value == string.Empty)
                         {
                             throw new ArgumentException(paramName: nameof(value), message: "Must not be empty");
                         }
@@ -145,23 +144,23 @@ namespace Amazon.DynamoDb
 						return;
 
 					default: {
-						if (t == typeof(DbValue)) {
+						if (type == typeof(DbValue)) {
 							var dbValue = (DbValue)value;
 
 							this.kind = dbValue.Kind;
 							this.value = dbValue.Value;
 
 						}
-                        else if (t == typeof(AttributeCollection))
+                        else if (type == typeof(AttributeCollection))
                         {
                            this.value = value;
                            this.kind = DbValueType.M;        
                         }
 						else
 						{
-                            if (!DbValueConverterFactory.TryGet(t, out IDbValueConverter converter))
+                            if (!DbValueConverterFactory.TryGet(type, out IDbValueConverter converter))
                             {
-                                throw new Exception("Unexpected value type. Was: " + t.Name);
+                                throw new Exception("Unexpected value type. Was: " + type.Name);
                             }
 
                             var result = converter.FromObject(value, null);

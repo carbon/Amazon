@@ -16,8 +16,7 @@ namespace Amazon.Elb
 
         public string IpAddressType { get; set; }
 
-        [Required]
-        [MaxLength(32)]
+        [Required, MaxLength(32)]
         public string Name { get; set; }
 
         public string Scheme { get; set; }

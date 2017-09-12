@@ -34,7 +34,6 @@ namespace Amazon
 
         public AwsRegion Region => region;
 
-
         protected async Task<string> SendAsync(HttpRequestMessage request)
         {
             await SignAsync(request).ConfigureAwait(false);

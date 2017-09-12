@@ -61,10 +61,13 @@ namespace Amazon.Ses
             };
 
             // "Carbonmade" <hello@carbonmade.com>
+
+#pragma warning disable CS0618 // Type or member is obsolete
             if (message.ReplyTo != null)
             {
                 doc.ReplyTo = new[] { SesHelper.EncodeEmail(message.ReplyTo) };
             }
+#pragma warning restore CS0618
             else if (message.ReplyToList.Count > 0)
             {
                 doc.ReplyTo = message.ReplyToList.Select(r => SesHelper.EncodeEmail(r)).ToArray();

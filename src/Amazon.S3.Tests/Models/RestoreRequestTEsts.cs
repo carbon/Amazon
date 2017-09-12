@@ -7,7 +7,7 @@ namespace Amazon.S3.Models.Tests
         [Fact]
         public void RestoreRequest()
         {
-            var r = new RestoreObjectRequest(AwsRegion.USEast1, "a", "hi") { Days = 30 };
+            var r = new RestoreObjectRequest("s3.amazonaws.com", "a", "hi") { Days = 30 };
 
             Assert.Equal(@"<RestoreRequest>
   <Days>30</Days>
