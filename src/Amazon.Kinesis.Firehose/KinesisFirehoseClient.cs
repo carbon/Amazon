@@ -12,7 +12,7 @@ namespace Amazon.Kinesis.Firehose
         const string Version = "20150804";
         const string TargetPrefix = "Firehose_" + Version;
 
-        public KinesisFirehoseClient(AwsRegion region, AwsCredential credential)
+        public KinesisFirehoseClient(AwsRegion region, IAwsCredential credential)
             : base("firehose", region, credential) { }
         
         public DeliveryStream GetStream(string name)

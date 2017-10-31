@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Kinesis.Firehose
 {
-    public class PutRecordResult
+    public struct PutRecordResult
     {
         public string RecordId { get; set; }
     }

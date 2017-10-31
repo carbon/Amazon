@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Amazon.Kinesis.Firehose
 {
     public class PutRecordBatchRequest
     {
-        public PutRecordBatchRequest() { }
-
         public PutRecordBatchRequest(string deliveryStreamName, params Record[] records)
         {
             DeliveryStreamName = deliveryStreamName ?? throw new ArgumentNullException(nameof(deliveryStreamName));
-            Records = records;
+            Records            = records            ?? throw new ArgumentNullException(nameof(records));
         }
 
-        [DataMember(Name = "deliveryStreamName")]
-        public string DeliveryStreamName { get; set; }
+        public string DeliveryStreamName { get; }
 
-        [DataMember(Name = "records")]
-        public Record[] Records { get; set; }
+        public Record[] Records { get; }
     }
 }

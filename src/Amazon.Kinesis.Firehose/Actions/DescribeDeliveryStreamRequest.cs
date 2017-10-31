@@ -8,7 +8,7 @@ namespace Amazon.Kinesis.Firehose
 
         public string ExclusiveStartDestinationId { get; set; }
 
-        [DataMember(Name = "limit", EmitDefaultValue = false)]
+        [DataMember(Name = "Limit", EmitDefaultValue = false)]
         public int? Limit { get; set; }
     }
 }

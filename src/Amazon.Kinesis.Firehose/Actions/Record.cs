@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Amazon.Kinesis.Firehose
 {
@@ -25,7 +24,6 @@ namespace Amazon.Kinesis.Firehose
             Data = Convert.ToBase64String(data);
         }
 
-        [DataMember(Name = "record")]
         public string Data { get; }
     }
 }
