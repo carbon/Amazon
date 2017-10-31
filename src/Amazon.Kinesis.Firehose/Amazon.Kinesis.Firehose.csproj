@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Amazon.Kinesis.Firehose</AssemblyName>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+
+    <!-- Package Details-->
+    <Authors>iamcarbon</Authors>
+    <Copyright>© Jason Nelson</Copyright>
+    <Description>A modern netstandard library for the Kinesis Firehose service.</Description>
+    <PackageTags>aws;kinesis</PackageTags>
+    <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Amazon.Core\Amazon.Core.csproj" />
+  </ItemGroup>
+
+</Project>
