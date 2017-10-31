@@ -8,7 +8,7 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple async wrapper around the Kinesis service.</Description>
+    <Description>A modern netstandard library for the Kinesis stream service.</Description>
     <PackageTags>aws;kinesis</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>

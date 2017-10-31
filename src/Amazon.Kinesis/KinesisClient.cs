@@ -9,21 +9,26 @@ namespace Amazon.Kinesis
 {
     public class KinesisClient : AwsClient
     {
-        private const string TargetPrefix = "Kinesis_20131202";
-        private const string Version = "20131202";
+        const string TargetPrefix = "Kinesis_" + Version;
+        const string Version = "20131202";
 
         public KinesisClient(IAwsCredential credential)
             : base(AwsService.Kinesis, AwsRegion.USEast1, credential)
         { }
 
-        public KinesisStream GetStream(string name) => 
-            new KinesisStream(name, this);
+        public KinesisStream GetStream(string name)
+        {
+            return new KinesisStream(name, this);
+        }
 
-        public Task<KinesisResponse> MergeShardsAsync(MergeShardsRequest request) => 
-            SendAsync<KinesisResponse>("MergeShards", request);
-
-        public Task<PutRecordResult> PutRecordAsync(Record record) => 
-            SendAsync<PutRecordResult>("PutRecord", record);
+        public Task<KinesisResponse> MergeShardsAsync(MergeShardsRequest request)
+        {
+            return SendAsync<KinesisResponse>("MergeShards", request);
+        }
+        public Task<PutRecordResult> PutRecordAsync(Record record)
+        {
+            return SendAsync<PutRecordResult>("PutRecord", record);
+        }
 
         public Task<PutRecordsResult> PutRecordsAsync(string streamName, Record[] records)
         {
@@ -34,14 +39,20 @@ namespace Amazon.Kinesis
             return SendAsync<PutRecordsResult>("PutRecords", request);
         }
 
-        public Task<DescribeStreamResult> DescribeStreamAsync(DescribeStreamRequest request) =>
-            SendAsync<DescribeStreamResult>("DescribeStream", request);
+        public Task<DescribeStreamResult> DescribeStreamAsync(DescribeStreamRequest request)
+        {
+            return SendAsync<DescribeStreamResult>("DescribeStream", request);
+        }
 
-        public Task<GetShardIteratorResponse> GetShardIteratorAsync(GetShardIteratorRequest request) => 
-            SendAsync<GetShardIteratorResponse>("GetShardIterator", request);
+        public Task<GetShardIteratorResponse> GetShardIteratorAsync(GetShardIteratorRequest request)
+        {
+            return SendAsync<GetShardIteratorResponse>("GetShardIterator", request);
+        }
 
-        public Task<GetRecordsResponse> GetRecordsAsync(GetRecordsRequest request) => 
-            SendAsync<GetRecordsResponse>("GetRecords", request);
+        public Task<GetRecordsResponse> GetRecordsAsync(GetRecordsRequest request)
+        {
+            return SendAsync<GetRecordsResponse>("GetRecords", request);
+        }
 
         #region Helpers
 
