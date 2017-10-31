@@ -2,7 +2,7 @@
 
 namespace Amazon
 {
-    public class AwsService : IEquatable<AwsService>
+    public class AwsService : IEquatable<AwsService> // readonly struct?
     {
         private AwsService(string name)
         {
@@ -23,6 +23,7 @@ namespace Amazon
         public static readonly AwsService Glacier          = new AwsService("glacier");
         public static readonly AwsService Iam              = new AwsService("iam");
         public static readonly AwsService Kinesis          = new AwsService("kinesis");
+        public static readonly AwsService KinesisFirehose  = new AwsService("firehose");
         public static readonly AwsService Kms              = new AwsService("kms");
         public static readonly AwsService Lambda           = new AwsService("lambda");
         public static readonly AwsService Monitoring       = new AwsService("monitoring"); // Cloudwatch monitoring
@@ -36,7 +37,7 @@ namespace Amazon
 
         #region Equality
 
-        public bool Equals(AwsService other) =>
+        public bool Equals(AwsService other) => 
             other != null && Name == other.Name;
 
         public override bool Equals(object obj) =>
@@ -53,8 +54,7 @@ namespace Amazon
 
         #endregion
 
-        public static implicit operator AwsService(string name)
-           => new AwsService(name);
+        public static implicit operator AwsService(string name) => new AwsService(name);
     }
 }
 
