@@ -290,9 +290,7 @@ namespace Amazon.DynamoDb
         {
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            var responseJson = JsonObject.Parse(responseText);
-
-            var ex = DynamoDbException.FromJson(responseJson);
+            var ex = DynamoDbException.FromJson(JsonObject.Parse(responseText));
 
             ex.StatusCode = (int)response.StatusCode;
 

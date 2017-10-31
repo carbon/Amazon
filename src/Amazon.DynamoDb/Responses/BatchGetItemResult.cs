@@ -19,9 +19,9 @@ namespace Amazon.DynamoDb
 
             var items = new List<AttributeCollection>();
 
-            if (json.ContainsKey("ConsumedCapacity")) // Array
+            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode)) // Array
             {
-                foreach (var item in (JsonArray)json["ConsumedCapacity"])
+                foreach (var item in (JsonArray)consumedCapacityNode)
                 {
                     var unit = ConsumedCapacity.FromJson((JsonObject)item);
 
@@ -29,9 +29,9 @@ namespace Amazon.DynamoDb
                 }
             }
 
-            if (json.ContainsKey("Responses"))
+            if (json.TryGetValue("Responses", out var responsesNode))
             {
-                foreach (var tableEl in (JsonObject)json["Responses"])
+                foreach (var tableEl in (JsonObject)responsesNode)
                 {
                     var table = new TableItems(tableEl.Key);
 
@@ -45,9 +45,9 @@ namespace Amazon.DynamoDb
             }
 
             /*
-			if (json.ContainsKey("UnprocessedKeys"))
+			if (json.TryGetValue("UnprocessedKeys", out var unprocessedKeysNode))
 			{
-				foreach (var tableEl in (JsonObject)json["UnprocessedKeys"])
+				foreach (var tableEl in (JsonObject)unprocessedKeysNode)
 				{
 					var tableName = tableEl.Key;
 

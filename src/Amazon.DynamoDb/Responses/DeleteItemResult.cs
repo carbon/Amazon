@@ -12,14 +12,14 @@ namespace Amazon.DynamoDb
         {
             var result = new DeleteItemResult();
 
-            if (json.ContainsKey("ConsumedCapacity"))
+            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
             {
-                result.ConsumedCapacity = ConsumedCapacity.FromJson((JsonObject)json["ConsumedCapacity"]);
+                result.ConsumedCapacity = ConsumedCapacity.FromJson((JsonObject)consumedCapacityNode);
             }
 
-            if (json.ContainsKey("Attributes"))
+            if (json.TryGetValue("Attributes", out var attributesNode))
             {
-                result.Attributes = AttributeCollection.FromJson((JsonObject)json["Attributes"]);
+                result.Attributes = AttributeCollection.FromJson((JsonObject)attributesNode);
             }
 
             return result;

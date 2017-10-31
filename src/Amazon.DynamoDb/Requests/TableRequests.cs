@@ -13,7 +13,7 @@ namespace Amazon.DynamoDb
         public abstract JsonObject ToJson();
     }
 
-    public class PutRequest : ItemRequest
+    public sealed class PutRequest : ItemRequest
     {
         public PutRequest(AttributeCollection item)
         {
@@ -30,11 +30,11 @@ namespace Amazon.DynamoDb
         }
     }
 
-    public class DeleteRequest : ItemRequest
+    public sealed class DeleteRequest : ItemRequest
     {
         public DeleteRequest(AttributeCollection key)
         {
-            Key = key;
+            Key = key ?? throw new ArgumentNullException(nameof(key));
         }
 
         public AttributeCollection Key { get; }
@@ -93,15 +93,15 @@ namespace Amazon.DynamoDb
 				}
 				*/
 
-                if (request.ContainsKey("PutRequest"))
+                if (request.TryGetValue("PutRequest", out var putRequestNode))
                 {
-                    var itemAttributes = AttributeCollection.FromJson((JsonObject)request["PutRequest"]["Item"]);
+                    var itemAttributes = AttributeCollection.FromJson((JsonObject)putRequestNode["Item"]);
 
                     requests.Add(new PutRequest(itemAttributes));
                 }
-                else if (request.ContainsKey("DeleteRequest"))
+                else if (request.TryGetValue("DeleteRequest", out var deleteRequestNode))
                 {
-                    var keyAttributes = AttributeCollection.FromJson((JsonObject)request["DeleteRequest"]["Key"]);
+                    var keyAttributes = AttributeCollection.FromJson((JsonObject)deleteRequestNode["Key"]);
 
                     requests.Add(new DeleteRequest(keyAttributes));
                 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Amazon.DynamoDb
 {
-	public class QueryResult<T> : IReadOnlyList<T>, IConsumedResources
+	public sealed class QueryResult<T> : IReadOnlyList<T>, IConsumedResources
 	{
 		private readonly T[] items;
 

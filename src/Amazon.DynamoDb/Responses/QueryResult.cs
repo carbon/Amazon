@@ -1,13 +1,10 @@
-﻿using Carbon.Json;
+﻿using System;
+
+using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    using System;
-    using System.Collections.Generic;
-
-    // Shared with ScanResult
-
-    public class QueryResult : IConsumedResources
+    public sealed class QueryResult : IConsumedResources
     {
         public QueryResult(
             ConsumedCapacity consumedCapacity,
@@ -23,32 +20,32 @@ namespace Amazon.DynamoDb
 
         public ConsumedCapacity ConsumedCapacity { get; }
 
-        public int Count { get; }
-
         public AttributeCollection[] Items { get; }
 
         public AttributeCollection LastEvaluatedKey { get; }
+
+        public int Count { get; }
 
         public static QueryResult FromJson(JsonObject json)
         {
             ConsumedCapacity consumedCapacity = null;
             AttributeCollection lastEvaluatedKey = null;
 
-            if (json.ContainsKey("ConsumedCapacity"))
+            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
             {
-                consumedCapacity = ConsumedCapacity.FromJson((JsonObject)json["ConsumedCapacity"]);
+                consumedCapacity = ConsumedCapacity.FromJson((JsonObject)consumedCapacityNode);
             }
 
-            if (json.ContainsKey("LastEvaluatedKey"))
+            if (json.TryGetValue("LastEvaluatedKey", out var lastEvaluatedKeyNode))
             {
-                lastEvaluatedKey = AttributeCollection.FromJson((JsonObject)json["LastEvaluatedKey"]);
+                lastEvaluatedKey = AttributeCollection.FromJson((JsonObject)lastEvaluatedKeyNode);
             }
 
             AttributeCollection[] items;
 
-            if (json.ContainsKey("Items"))
+            if (json.TryGetValue("Items", out var itemsNode))
             {
-                var itemsJson = (JsonArray)json["Items"];
+                var itemsJson = (JsonArray)itemsNode;
 
                 items = new AttributeCollection[itemsJson.Count];
 
@@ -69,50 +66,50 @@ namespace Amazon.DynamoDb
                 count: (int)json["Count"]
             );
         }
-
-        /* 
-		{ 
-			"Count": 343,
-			"ConsumedCapacity": {
-				"TableName": "Thread",
-				"CapacityUnits": 1
-			},
-			"Items": [
-				{ 
-					"hitCount": {"N":"225"},
-					"date": {"S":"2011-05-31T00:00:00Z"},
-					"siteId": {"N":"221051"}
-				},
-				{
-					"hitCount": {"N":"120"},
-					"date": {"S":"2011-06-01T00:00:00Z"},
-					"siteId": {"N":"221051"}
-				},
-				{
-					"hitCount": {"N":"6680"},
-					"date": {"S":"2011-06-02T00:00:00Z"},
-					"siteId": {"N":"221051"}
-				}
-			],
-			"LastEvaluatedKey": {
-				"string" :
-					{
-						"B": "blob",
-						"BS": [
-							"blob"
-						],
-						"N": "string",
-						"NS": [
-							"string"
-						],
-						"S": "string",
-						"SS": [
-							"string"
-						]
-					}
-			}
-		}
-		*/
-
     }
 }
+
+
+/* 
+{ 
+	"Count": 343,
+	"ConsumedCapacity": {
+		"TableName": "Thread",
+		"CapacityUnits": 1
+	},
+	"Items": [
+		{ 
+			"hitCount": {"N":"225"},
+			"date": {"S":"2011-05-31T00:00:00Z"},
+			"siteId": {"N":"221051"}
+		},
+		{
+			"hitCount": {"N":"120"},
+			"date": {"S":"2011-06-01T00:00:00Z"},
+			"siteId": {"N":"221051"}
+		},
+		{
+			"hitCount": {"N":"6680"},
+			"date": {"S":"2011-06-02T00:00:00Z"},
+			"siteId": {"N":"221051"}
+		}
+	],
+	"LastEvaluatedKey": {
+		"string" :
+			{
+				"B": "blob",
+				"BS": [
+					"blob"
+				],
+				"N": "string",
+				"NS": [
+					"string"
+				],
+				"S": "string",
+				"SS": [
+					"string"
+				]
+			}
+	}
+}
+*/

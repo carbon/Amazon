@@ -14,9 +14,9 @@ namespace Amazon.DynamoDb
         {
             var unprocessed = new List<TableRequests>();
 
-            if (json.ContainsKey("ConsumedCapacity")) // Array
+            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode)) // Array
             {
-                foreach (var item in (JsonArray)json["ConsumedCapacity"])
+                foreach (var item in (JsonArray)consumedCapacityNode)
                 {
                     var unit = DynamoDb.ConsumedCapacity.FromJson((JsonObject)item);
 
@@ -24,9 +24,9 @@ namespace Amazon.DynamoDb
                 }
             }
 
-            if (json.ContainsKey("UnprocessedItems"))
+            if (json.TryGetValue("UnprocessedItems", out var unprocessedItemsNode))
             {
-                foreach (var batch in (JsonObject)json["UnprocessedItems"])
+                foreach (var batch in (JsonObject)unprocessedItemsNode)
                 {
                     unprocessed.Add(TableRequests.FromJson(batch.Key, (JsonArray)batch.Value));
                 }
