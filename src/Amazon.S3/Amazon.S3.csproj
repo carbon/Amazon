@@ -8,8 +8,8 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple wrapper around Amazon's Simple Storage Service.</Description>
-    <PackageTags>aws;s3</PackageTags>
+    <Description>A modern .NET Standard library for Amazon's Simple Storage Service.</Description>
+    <PackageTags>aws;s3;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>

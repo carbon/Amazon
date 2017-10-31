@@ -8,8 +8,8 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple wrapper around Amazon's Simple Email Service (SES).</Description>    
-    <PackageTags>aws;ses</PackageTags>
+    <Description>A modern .NET Standard library for Amazon's Simple Email Service.</Description>    
+    <PackageTags>aws;ses;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>

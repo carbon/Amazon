@@ -8,8 +8,8 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>Simple api to Amazon's Key Management Service Service.</Description>
-    <PackageTags>aws;kms</PackageTags>
+    <Description>A modern .NET Standard library for Amazon's Key Management Service.</Description>
+    <PackageTags>aws;kms;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>

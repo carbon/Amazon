@@ -8,8 +8,8 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple API for CodeBuild.</Description>
-    <PackageTags>aws;async</PackageTags>
+    <Description>A modern .NET Standard library for AWS CodeBuild.</Description>
+    <PackageTags>aws;codebuild;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>

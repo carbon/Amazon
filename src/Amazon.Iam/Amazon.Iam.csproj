@@ -8,8 +8,8 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple wrapper around the IAM service.</Description>
-    <PackageTags>aws;iam</PackageTags>
+    <Description>A modern .NET Standard library for the IAM service.</Description>
+    <PackageTags>aws;iam;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>

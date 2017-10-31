@@ -8,8 +8,8 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>Simple wrapper around Amazon's Simple Notification Service service.</Description>
-    <PackageTags>aws;sns</PackageTags>
+    <Description>A modern .NET Standard library for Amazon's Simple Notification Service.</Description>
+    <PackageTags>aws;sns;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>

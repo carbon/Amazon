@@ -8,8 +8,8 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple API for managing Elastic Load Balancers.</Description>
-    <PackageTags>aws;async</PackageTags>
+    <Description>A modern .NET Standard library for managing Elastic Load Balancers.</Description>
+    <PackageTags>aws;elb;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>

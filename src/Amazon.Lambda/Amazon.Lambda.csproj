@@ -8,8 +8,8 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple wrapper around the Lambda service.</Description>
-    <PackageTags>aws;lambda</PackageTags>
+    <Description>A modern .NET Standard library for Amazon's Lambda service.</Description>
+    <PackageTags>aws;lambda;netstandard</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

@@ -8,8 +8,8 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple API for EC2 Systems Manager.</Description>
-    <PackageTags>aws;async</PackageTags>
+    <Description>A modern .NET Standard library for Amazon's EC2 Systems Manager.</Description>
+    <PackageTags>aws;ssm;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>

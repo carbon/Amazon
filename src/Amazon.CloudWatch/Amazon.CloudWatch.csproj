@@ -8,8 +8,8 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple wrapper around the CloudWatch service.</Description>
-    <PackageTags>cloudwatch;aws</PackageTags>
+    <Description>A modern .NET Standard library for Amazon CloudWatch.</Description>
+    <PackageTags>cloudwatch;aws;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>

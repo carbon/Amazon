@@ -8,8 +8,8 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern .NET Standard library for interacting with Amazon DynamoDB.</Description>
-    <PackageTags>dynamodb;async;aws</PackageTags>
+    <Description>A modern .NET Standard library for Amazon DynamoDB.</Description>
+    <PackageTags>aws;dynamodb;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
