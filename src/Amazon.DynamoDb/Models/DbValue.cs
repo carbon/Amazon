@@ -7,7 +7,7 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public struct DbValue : IConvertible
+    public readonly struct DbValue : IConvertible
 	{
 		public static readonly DbValue Empty = new DbValue("", DbValueType.Unknown);
 		public static readonly DbValue Null	 = new DbValue("", DbValueType.NULL);
@@ -196,7 +196,6 @@ namespace Amazon.DynamoDb
 			}
 		}
 
-
 		#region To Helpers
 
 		public HashSet<string> ToStringSet()
@@ -276,7 +275,10 @@ namespace Amazon.DynamoDb
 
 		public bool ToBoolean()
 		{
-			if (kind == DbValueType.N) return ToInt() == 1;
+            if (kind == DbValueType.N)
+            {
+                return ToInt() == 1;
+            }
 
             if (value is bool)
             {
@@ -286,23 +288,17 @@ namespace Amazon.DynamoDb
             throw new Exception($"Cannot convert '{value.GetType().Name}' to a Boolean");
 		}
 
-		public float ToSingle() 
-            => Convert.ToSingle(value);
+		public float ToSingle() => Convert.ToSingle(value);
 
-		public short ToInt16() 
-            => Convert.ToInt16(value);
+		public short ToInt16() => Convert.ToInt16(value);
 
-		public int ToInt() 
-            => Convert.ToInt32(value);
+		public int ToInt() => Convert.ToInt32(value);
 
-		public long ToInt64()
-            => Convert.ToInt64(value);
+		public long ToInt64() => Convert.ToInt64(value);
 
-		public double ToDouble() 
-            => Convert.ToDouble(value);
+		public double ToDouble() => Convert.ToDouble(value);
 
-		public decimal ToDecimal() 
-            => Convert.ToDecimal(value);
+		public decimal ToDecimal() => Convert.ToDecimal(value);
 
 		public byte[] ToBinary()
 		{
@@ -460,15 +456,11 @@ namespace Amazon.DynamoDb
 			throw new NotImplementedException();
 		}
 
-        bool IConvertible.ToBoolean(IFormatProvider provider)
-            => ToBoolean();
+        bool IConvertible.ToBoolean(IFormatProvider provider) => ToBoolean();
 
-		byte IConvertible.ToByte(IFormatProvider provider)
-		{
-			throw new NotImplementedException();
-		}
+		byte IConvertible.ToByte(IFormatProvider provider) => (byte)ToInt();
 
-		char IConvertible.ToChar(IFormatProvider provider)
+        char IConvertible.ToChar(IFormatProvider provider)
 		{
 			throw new NotImplementedException();
 		}
@@ -511,14 +503,11 @@ namespace Amazon.DynamoDb
 			}
 		}
 
-        ushort IConvertible.ToUInt16(IFormatProvider provider)
-            => (ushort)ToInt();
+        ushort IConvertible.ToUInt16(IFormatProvider provider) => (ushort)ToInt();
 
-		uint IConvertible.ToUInt32(IFormatProvider provider)
-            => (uint)ToInt64();
+		uint IConvertible.ToUInt32(IFormatProvider provider) => (uint)ToInt64();
 
-        ulong IConvertible.ToUInt64(IFormatProvider provider)
-            => ulong.Parse(ToString());
+        ulong IConvertible.ToUInt64(IFormatProvider provider) => ulong.Parse(ToString());
 
 		#endregion
 	}

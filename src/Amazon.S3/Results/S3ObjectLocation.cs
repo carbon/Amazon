@@ -2,7 +2,7 @@
 
 namespace Amazon.S3
 {
-    public struct S3ObjectLocation
+    public readonly struct S3ObjectLocation
     {
         public S3ObjectLocation(string bucketName, string key)
         {

@@ -3,9 +3,9 @@ using System.Security.Cryptography;
 
 namespace Amazon.S3
 {
-    internal struct ServerSideEncryptionKey
+    internal readonly struct ServerSideEncryptionKey
     {
-        public ServerSideEncryptionKey(byte[] key)
+        public ServerSideEncryptionKey(byte[] key, string algorithm = "AES256")
         {
             #region Preconditions
 
@@ -17,10 +17,11 @@ namespace Amazon.S3
 
             #endregion
 
-            Key = key;
+            Algorithm = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
+            Key       = key;
         }
 
-        public string Algorithm => "AES256";
+        public string Algorithm { get; }
 
         public byte[] Key { get; }
 

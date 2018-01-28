@@ -2,12 +2,14 @@
 
 namespace Amazon.S3
 {
-    public struct ETag
+    public readonly struct ETag
     {
         public ETag(string value)
         {
             Value = value;
         }
+
+        public readonly string Value;
 
         public byte[] AsMD5()
         {
@@ -20,10 +22,8 @@ namespace Amazon.S3
 
             // 1f8ada2ce841b291cfcd6b9b4b645044-2
 
-            return HexString.ToBytes(Value.Trim('"'));
+            return HexString.ToBytes(Value.Trim(Seperators.DoubleQuote));
         }
-
-        public string Value { get; }
 
         public static implicit operator string(ETag tag) => tag.Value;
     }

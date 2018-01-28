@@ -6,7 +6,7 @@ namespace Amazon
 {
     using Helpers;
 
-    internal struct Signature
+    internal readonly struct Signature
     {
         public Signature(byte[] data)
         {
