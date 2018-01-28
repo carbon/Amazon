@@ -16,10 +16,10 @@ namespace Amazon.CodeBuild
 
         public string BuildspecOverride { get; set; }
         
-        public EnvironmentVariable[] EnvironmentVariablesOverride { get; set; }
-
         [Required]
         public string ProjectName { get; set; }
+
+        public EnvironmentVariable[] EnvironmentVariablesOverride { get; set; }
 
         public string SourceVersion { get; set; }
 
