@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
 namespace Amazon.Ec2
@@ -41,7 +40,7 @@ namespace Amazon.Ec2
         [XmlElement("encrypted")]
         public bool? Encrypted { get; set; }
 
-        [Range(100, 20000)]
+        // [Range(100, 20000)]
         [XmlElement("iops")]
         public int? Iops { get; set; }
 
@@ -49,7 +48,7 @@ namespace Amazon.Ec2
         public string SnapshotId { get; set; }
 
         // The size of the volume, in GiB.
-        [Range(1, 16384)]
+        // [Range(1, 16384)]
         [XmlElement("volumeSize")]
         public int? VolumeSize { get; set; }
 

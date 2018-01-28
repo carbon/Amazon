@@ -1,3 +1,10 @@
-﻿- Added RunInstances
+﻿# 2017-12-01
+
+- Added StartInstances
+- Added StopInstances
+- Added RebootInstances
+
+# 2017-10-01
+
+- Added RunInstances
 - Added TerminateInstances
-- Add various convenience constructors
