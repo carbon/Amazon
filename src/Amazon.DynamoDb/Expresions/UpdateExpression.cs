@@ -114,7 +114,7 @@ namespace Amazon.DynamoDb
                 }
                 else
                 {
-                    sb.Append(" ");
+                    sb.Append(' ');
                 }
 
                 WriteValue(change.Value, sb);
@@ -154,7 +154,7 @@ namespace Amazon.DynamoDb
         {
             if (segment == null) return;
 
-            if (sb.Length > 0) sb.AppendLine();
+            if (sb.Length > 0) sb.AppendLine(); // \n ?
 
             sb.Append(segment.ToString());
         }

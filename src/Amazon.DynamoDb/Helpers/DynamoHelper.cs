@@ -15,7 +15,7 @@ namespace Amazon.DynamoDb
                     map.Add("#" + name, name);
                 }
 
-                sb.Append("#" + name);
+                sb.Append('#').Append(name);
             }
             else
             {

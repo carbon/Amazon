@@ -111,7 +111,7 @@ namespace Amazon.DynamoDb
 
             foreach (var value in values)
             {
-                if (i != 0) sb.Append(",");
+                if (i != 0) sb.Append(',');
 
                 sb.WriteName(value, ExpressionAttributeNames);
 

@@ -80,9 +80,9 @@ namespace Amazon.DynamoDb
         {
             Write(e.Left);
 
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append(GetName(e.Kind));
-            sb.Append(" ");
+            sb.Append(' ');
 
             Write(e.Right);
         }
@@ -125,7 +125,7 @@ namespace Amazon.DynamoDb
                 default           : sb.Append(funcExp.Name); break;
             }
 
-            sb.Append("(");
+            sb.Append('(');
 
             var i = 0;
 
@@ -138,7 +138,7 @@ namespace Amazon.DynamoDb
                 i++;
             }
 
-            sb.Append(")");
+            sb.Append(')');
         }
 
         private void WriteName(string name)
