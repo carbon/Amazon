@@ -11,7 +11,7 @@ namespace Amazon
     {
         public AwsCredential(string accessKeyId, string secretAccessKey)
         {
-            AccessKeyId     = accessKeyId ?? throw new ArgumentNullException(nameof(accessKeyId));
+            AccessKeyId     = accessKeyId     ?? throw new ArgumentNullException(nameof(accessKeyId));
             SecretAccessKey = secretAccessKey ?? throw new ArgumentNullException(nameof(secretAccessKey));
         }
 
@@ -26,12 +26,10 @@ namespace Amazon
 
         public static AwsCredential Parse(string text)
         {
-            #region Preconditions
-
             if (text == null)
+            {
                 throw new ArgumentNullException(nameof(text));
-
-            #endregion
+            }
 
             var parts = text.Split(Seperators.Colon);
 

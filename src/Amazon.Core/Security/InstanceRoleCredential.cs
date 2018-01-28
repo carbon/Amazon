@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 namespace Amazon
 {
+    using Metadata;
+
     public class InstanceRoleCredential : IAwsCredential
     {
         public InstanceRoleCredential() { }
@@ -14,15 +16,13 @@ namespace Amazon
         }
 
         internal InstanceRoleCredential(string roleName, IamSecurityCredentials credential)
-            : this(roleName)
         {
-            #region Preconditions
-
             if (credential == null)
+            {
                 throw new ArgumentNullException(nameof(credential));
+            }
 
-            #endregion
-
+            RoleName        = roleName ?? throw new ArgumentNullException(nameof(roleName));
             AccessKeyId     = credential.AccessKeyId;
             SecretAccessKey = credential.SecretAccessKey;
             SecurityToken   = credential.Token;
@@ -52,7 +52,7 @@ namespace Amazon
             get => RoleName == null || ExpiresIn <= TimeSpan.FromMinutes(5);
         }
 
-        // aws: recomends refreshing 5 minutes before expiration
+        // aws guidance: refreshe 5 minutes before expiration
 
         #endregion
 
@@ -62,34 +62,39 @@ namespace Amazon
 
         public async Task<bool> RenewAsync()
         {
-            if (RoleName == null)
-            {
-                RoleName = await InstanceMetadata.GetIamRoleName().ConfigureAwait(false)
-                    ?? throw new Exception("The instance is not configured with an IAM role");
-            }
-
             // Lock so we only renew the credentials once
-            await gate.WaitAsync().ConfigureAwait(false);
-
-            try
+            if (await gate.WaitAsync(5000).ConfigureAwait(false))
             {
-                if (ShouldRenew)
+                try
                 {
-                    var iamCredential = await IamSecurityCredentials.GetAsync(RoleName).ConfigureAwait(false);
+                    if (RoleName == null)
+                    {
+                        RoleName = await InstanceMetadata.GetIamRoleName().ConfigureAwait(false)
+                            ?? throw new Exception("The instance is not configured with an IAM role");
+                    }
 
-                    AccessKeyId     = iamCredential.AccessKeyId;
-                    SecretAccessKey = iamCredential.SecretAccessKey;
-                    Expires         = iamCredential.Expiration;
-                    SecurityToken   = iamCredential.Token;
+                    if (ShouldRenew)
+                    {
+                        var iamCredential = await IamSecurityCredentials.GetAsync(RoleName).ConfigureAwait(false);
 
-                    Interlocked.Increment(ref renewCount);
+                        AccessKeyId     = iamCredential.AccessKeyId;
+                        SecretAccessKey = iamCredential.SecretAccessKey;
+                        Expires         = iamCredential.Expiration;
+                        SecurityToken   = iamCredential.Token;
+                        
+                        Interlocked.Increment(ref renewCount);
+                    }
+
+                    return true;
                 }
-
-                return true;
+                finally
+                {
+                    gate.Release();
+                }
             }
-            finally
+            else
             {
-                gate.Release();
+                throw new Exception("Could not aquire mutex to renew credential in 5 seconds");
             }
         }
 

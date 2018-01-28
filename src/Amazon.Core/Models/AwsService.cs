@@ -49,8 +49,7 @@ namespace Amazon
         public static bool operator !=(AwsService lhs, AwsService rhs) =>
             lhs?.Name != rhs?.Name;
 
-        public override int GetHashCode() =>
-            Name.GetHashCode();
+        public override int GetHashCode() => Name.GetHashCode();
 
         #endregion
 

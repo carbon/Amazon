@@ -20,16 +20,9 @@ namespace Amazon.Security
 
         public string GetStringToSign(CredentialScope scope, HttpRequestMessage request)
         {
-            #region Preconditions
-
-            if (scope == null)
-                throw new ArgumentNullException(nameof(scope));
-
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
-
-            #endregion
-
+            
             string timestamp;
 
             if (request.Headers.TryGetValues("x-amz-date", out IEnumerable<string> dateHeaderValues))
@@ -48,15 +41,9 @@ namespace Amazon.Security
             );
         }
 
-        public static string GetStringToSign(
-            CredentialScope scope, 
-            string timestamp,
-            string canonicalRequest)
+        public static string GetStringToSign(CredentialScope scope, string timestamp, string canonicalRequest)
         {
             #region Preconditions
-
-            if (scope == null)
-                throw new ArgumentNullException(nameof(scope));
 
             if (timestamp == null)
                 throw new ArgumentNullException(nameof(timestamp));
@@ -68,27 +55,27 @@ namespace Amazon.Security
 
             var hashedCanonicalRequest = HexString.FromBytes(ComputeSHA256(canonicalRequest));
 
-            return string.Join("\n",
+            return string.Join("\n", new string[] {
                 "AWS4-HMAC-SHA256",     // Algorithm + \n
                 timestamp,              // Timestamp + \n
                 scope.ToString(),       // Scope     + \n
                 hashedCanonicalRequest  // Hex(SHA256(CanonicalRequest))
-            );
+            });
         }
 
         // Timestamp format: ISO8601 Basic format, YYYYMMDD'T'HHMMSS'Z'
 
         public static string GetCanonicalRequest(HttpRequestMessage request)
         {
-            return string.Join("\n",
-                request.Method,                            // HTTPRequestMethod      + \n
+            return string.Join("\n", new string[] {
+                request.Method.ToString(),                 // HTTPRequestMethod      + \n
                 request.RequestUri.AbsolutePath,           // CanonicalURI           + \n
                 CanonicizeQueryString(request.RequestUri), // CanonicalQueryString   + \n
                 CanonicalizeHeaders(request),              // CanonicalHeaders       + \n
                 string.Empty,                              // \n
                 GetSignedHeaders(request),                 // SignedHeaders          + \n
                 GetPayloadHash(request)                    // HexEncode(Hash(Payload))
-            );
+            });
         }
 
         public static string GetCanonicalRequest(
@@ -97,10 +84,9 @@ namespace Amazon.Security
             string canonicalQueryString,
             string canonicalHeaders,
             string signedHeaders,
-            string payloadHash
-            )
+            string payloadHash)
         {
-            return string.Join("\n",
+            return string.Join("\n", new string[] {
                 method.ToString(),    // HTTPRequestMethod      + \n
                 canonicalURI,         // CanonicalURI           + \n
                 canonicalQueryString, // CanonicalQueryString   + \n
@@ -108,7 +94,7 @@ namespace Amazon.Security
                 string.Empty,         // \n
                 signedHeaders,        // SignedHeaders          + \n
                 payloadHash           // HexEncode(Hash(Payload))
-            );
+            });
         }
 
         // HexEncode(Hash(Payload))
@@ -129,15 +115,12 @@ namespace Amazon.Security
             return ComputeSHA256(request.Content);
         }
 
-        public static byte[] GetSigningKey(IAwsCredential credential, CredentialScope scope)
+        public static byte[] GetSigningKey(IAwsCredential credential, in CredentialScope scope)
         {
             #region Preconditions
 
             if (credential == null)
                 throw new ArgumentNullException(nameof(credential));
-
-            if (scope == null)
-                throw new ArgumentNullException(nameof(scope));
 
             #endregion
 
@@ -151,7 +134,6 @@ namespace Amazon.Security
             return signingKey;
         }
 
-
         // http://docs.aws.amazon.com/general/latest/gr/sigv4-add-signature-to-request.html
         
         public void Presign(
@@ -159,15 +141,13 @@ namespace Amazon.Security
             CredentialScope scope, 
             DateTime date,
             TimeSpan expires,
-            HttpRequestMessage request)
+            HttpRequestMessage request,
+            string payloadHash = emptySha256)
         {
             #region Preconditions
 
             if (credential == null)
                 throw new ArgumentNullException(nameof(credential));
-
-            if (scope == null)
-                throw new ArgumentNullException(nameof(scope));
 
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -210,7 +190,7 @@ namespace Amazon.Security
                 canonicalQueryString : CanonicizeQueryString(queryParameters),
                 canonicalHeaders     : canonicalHeaders,
                 signedHeaders        : "host",
-                payloadHash          : emptySha256               
+                payloadHash          : payloadHash
             );
             
             var stringToSign = GetStringToSign(
@@ -218,7 +198,7 @@ namespace Amazon.Security
                 timestamp,
                 canonicalRequest
             );
-            
+
             var signature = Signature.ComputeHmacSha256(
                 key  : signingKey, 
                 data : Encoding.UTF8.GetBytes(stringToSign)
@@ -233,15 +213,30 @@ namespace Amazon.Security
             queryString += &X-Amz-SignedHeaders=signed_headers
             */
 
-            var queryString = string.Join("&", 
-                queryParameters.Select(pair => WebUtility.UrlEncode(pair.Key) + "=" + WebUtility.UrlEncode(pair.Value))
-            ) + "&X-Amz-Signature=" + signature;
+            var url = request.RequestUri;
+            var newUrl = new StringBuilder();
 
-            var url = request.RequestUri.ToString();
+            newUrl.Append(url.Scheme).Append("://").Append(url.Host);
 
-            request.RequestUri = new Uri(
-                url.Substring(0, url.IndexOf("?")) + "?" + queryString
-            );
+            if (!url.IsDefaultPort)
+            {
+                newUrl.Append(':');
+                newUrl.Append(url.Port);
+            }
+
+            newUrl.Append(url.AbsolutePath);
+            newUrl.Append('?');
+
+            foreach(var pair in queryParameters)
+            {
+                newUrl.Append(UrlEncoder.Default.Encode(pair.Key));
+                newUrl.Append('=');
+                newUrl.Append(UrlEncoder.Default.Encode(pair.Value));
+                newUrl.Append('&');
+            }
+            newUrl.Append("X-Amz-Signature=").Append(signature);
+            
+            request.RequestUri = new Uri(newUrl.ToString());
         }
 
         public void Sign(IAwsCredential credential, CredentialScope scope, HttpRequestMessage request)
@@ -250,9 +245,6 @@ namespace Amazon.Security
 
             if (credential == null)
                 throw new ArgumentNullException(nameof(credential));
-
-            if (scope == null)
-                throw new ArgumentNullException(nameof(scope));
 
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -279,7 +271,6 @@ namespace Amazon.Security
             request.Headers.TryAddWithoutValidation("Authorization", auth);
         }
 
-
         // e.g. ?a=1&
 
         public static string CanonicizeQueryString(Uri uri)
@@ -294,18 +285,22 @@ namespace Amazon.Security
 
         public static string CanonicizeQueryString(IDictionary<string, string> sortedValues)
         {
+            if (sortedValues.Count == 0)
+            {
+                return string.Empty;
+            }
+
             var sb = new StringBuilder();
 
-            // Sort
             foreach (var pair in sortedValues)
             {
                 if (sb.Length > 0)
                 {
-                    sb.Append("&");
+                    sb.Append('&');
                 }
 
                 sb.Append(UrlEncoder.Default.Encode(pair.Key));
-                sb.Append("=");
+                sb.Append('=');
                 sb.Append(UrlEncoder.Default.Encode(pair.Value));
             }
 
@@ -314,6 +309,8 @@ namespace Amazon.Security
 
         private static IDictionary<string, string> ParseQueryString(string query)
         {
+            if (query == null || query.Length == 0) return new Dictionary<string, string>();
+
             var dictionary = new SortedDictionary<string, string>();
 
             if (query[0] == '?')
@@ -325,7 +322,9 @@ namespace Amazon.Security
             {             
                 var split = part.Split(Seperators.Equal); // =
 
-                dictionary[WebUtility.UrlDecode(split[0])] = split.Length == 2 ? WebUtility.UrlDecode(split[1]) : string.Empty;
+                dictionary[WebUtility.UrlDecode(split[0])] = split.Length == 2 
+                    ? WebUtility.UrlDecode(split[1]) 
+                    : string.Empty;
             }
 
             return dictionary;
@@ -360,7 +359,7 @@ namespace Amazon.Security
             {
                 sb.Append("date:");
                 sb.Append(request.Headers.GetValues("Date").First());
-                sb.Append("\n");
+                sb.Append('\n');
             }
 
             sb.Append("host:").Append(request.Headers.Host);
@@ -369,10 +368,10 @@ namespace Amazon.Security
                                             .Where(item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
                                             .OrderBy(item => item.Key.ToLower()))
             {
-                sb.Append("\n");
+                sb.Append('\n');
 
                 sb.Append(header.Key.ToLower());
-                sb.Append(":");
+                sb.Append(':');
                 sb.Append(string.Join(";", header.Value));
             }
 
@@ -413,4 +412,3 @@ namespace Amazon.Security
         #endregion
     }
 }
- 

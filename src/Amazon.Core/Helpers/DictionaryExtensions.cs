@@ -21,11 +21,11 @@ namespace Amazon.Helpers
             {
                 if (sb.Length > 0)
                 {
-                    sb.Append("&");
+                    sb.Append('&');
                 }
 
                 sb.Append(key);
-                sb.Append("=");
+                sb.Append('=');
                 sb.Append(UrlEncoder.Default.Encode(nvc[key]));
             }
 
@@ -34,7 +34,7 @@ namespace Amazon.Helpers
 
         public static string ToQueryString(this Dictionary<string, string> nvc)
         {
-            if (nvc.Count == 0) return "";
+            if (nvc.Count == 0) return string.Empty;
 
             return "?" + nvc.ToPostData();
         }

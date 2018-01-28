@@ -2,20 +2,21 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Core</AssemblyName>
-    <VersionPrefix>0.10.0</VersionPrefix>
+    <VersionPrefix>0.10.4</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <LangVersion>7.2</LangVersion>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>Shared library for Amazon API implementations.</Description>    
-    <PackageTags>carbon;aws</PackageTags>
+    <PackageTags>aws;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Json" Version="1.5.0" />
+    <PackageReference Include="Carbon.Json" Version="1.6.0" />
   </ItemGroup>
 
 </Project>

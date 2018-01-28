@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 
 namespace Amazon
 {
+    using Metadata;
+
     public class AwsRegion : IEquatable<AwsRegion>
     {
         public AwsRegion(string name)

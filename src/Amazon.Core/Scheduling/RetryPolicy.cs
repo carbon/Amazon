@@ -14,7 +14,7 @@ namespace Amazon.Scheduling
         }
     }
 
-    public class ExponentialBackoffRetryPolicy : RetryPolicy
+    public sealed class ExponentialBackoffRetryPolicy : RetryPolicy
     {
         private readonly TimeSpan initialDelay;
         private readonly TimeSpan maxDelay;

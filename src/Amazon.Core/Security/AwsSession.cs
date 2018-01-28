@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Amazon
 {
-    public class AwsSession : IAwsCredential
+    public sealed class AwsSession : IAwsCredential
     {
         public string SessionToken { get; set; }
 

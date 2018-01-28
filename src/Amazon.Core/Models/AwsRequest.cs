@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Amazon
 {
-    public class AwsRequest : IEnumerable
+    public class AwsRequest : IEnumerable<KeyValuePair<string, string>>
     {
         public Dictionary<string, string> Parameters { get; } = new Dictionary<string, string>();
 
@@ -17,10 +17,14 @@ namespace Amazon
             Parameters.Add(name, value.ToString());
         }
 
-        #region IEnumerator
+        #region IEnumerable
 
-        IEnumerator IEnumerable.GetEnumerator()
-            => Parameters.GetEnumerator();
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        {
+            return Parameters.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => Parameters.GetEnumerator();
 
         #endregion
     }

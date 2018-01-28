@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Amazon
@@ -11,16 +10,17 @@ namespace Amazon
     public abstract class AwsClient : IDisposable
     {
         protected readonly HttpClient httpClient = new HttpClient(
-            new HttpClientHandler {
-                AutomaticDecompression = DecompressionMethods.GZip
+            new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip }
+        ) {
+            DefaultRequestHeaders = {
+                {  "User-Agent", "Carbon/2.0" }
             }
-        );
-
+        };
+        
         private readonly AwsRegion region;
         private readonly AwsService service;
-        private readonly IAwsCredential credential;
-        private readonly SemaphoreSlim mutex = new SemaphoreSlim(1);
-        
+        protected readonly IAwsCredential credential;
+
         public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential)
         {
             this.service    = service    ?? throw new ArgumentNullException(nameof(service));
@@ -49,28 +49,19 @@ namespace Amazon
             }
         }
 
+
         protected async Task SignAsync(HttpRequestMessage httpRequest)
         {
             if (credential.ShouldRenew)
             {
-                await mutex.WaitAsync().ConfigureAwait(false);
-
-                try
+                if (credential.ShouldRenew)
                 {
-                    if (credential.ShouldRenew)
-                    {
-                        await credential.RenewAsync().ConfigureAwait(false);
-                    }
-                }
-                finally
-                {
-                    mutex.Release();
+                    await credential.RenewAsync().ConfigureAwait(false);
                 }
             }
 
             var date = DateTimeOffset.UtcNow;
 
-            httpRequest.Headers.UserAgent.ParseAdd("Carbon/1.6.0");
             httpRequest.Headers.Host = httpRequest.RequestUri.Host;
             httpRequest.Headers.Date = date;
 
