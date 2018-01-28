@@ -9,16 +9,18 @@ namespace Amazon.Ssm
     {
         public SendCommandRequest() { }
 
-        public SendCommandRequest(string documentName, string[] instanceIds)
+        public SendCommandRequest(string documentName, string[] instanceIds, JsonObject parameters = null)
         {
             DocumentName = documentName ?? throw new ArgumentNullException(nameof(documentName));
             InstanceIds  = instanceIds  ?? throw new ArgumentNullException(nameof(instanceIds));
+            Parameters   = parameters;
         }
 
-        public SendCommandRequest(string documentName, CommandTarget[] targets)
+        public SendCommandRequest(string documentName, CommandTarget[] targets, JsonObject parameters = null)
         {
             DocumentName = documentName ?? throw new ArgumentNullException(nameof(documentName));
             Targets      = targets      ?? throw new ArgumentNullException(nameof(targets));
+            Parameters   = parameters;
         }
 
         public string Comment { get; set; }

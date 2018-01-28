@@ -1,4 +1,4 @@
 ﻿namespace Amazon.Ssm
 {
-    public interface ISsmRequest { }
+    internal interface ISsmRequest { }
 }
