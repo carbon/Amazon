@@ -1,30 +1,31 @@
 using System;
 
 namespace Amazon.S3
-{
-    public class GetUrlRequest
+{    
+    public readonly struct GetPresignedUrlRequest
     {
-        public GetUrlRequest(string bucketName, string key)
+        public GetPresignedUrlRequest(
+            string host,
+            AwsRegion region, 
+            string bucketName, 
+            string objectKey, 
+            TimeSpan expiresIn)
         {
-            #region Preconditions
-
-            if (bucketName == null)
-                throw new ArgumentNullException(nameof(bucketName));
-
-            if (bucketName.Length == 0)
-                throw new ArgumentException("may not be empty", nameof(bucketName));
-
-            #endregion
-
-            BucketName = bucketName;
-            Key        = key;
-            ExpiresIn  = TimeSpan.FromMinutes(60);
+            Host       = host  ?? throw new ArgumentNullException(nameof(host));
+            Region     = region;
+            BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
+            Key        = objectKey;
+            ExpiresIn  = expiresIn;
         }
 
-        public string BucketName { get; }
+        public readonly string Host;
 
-        public string Key { get; }
+        public readonly string BucketName;
 
-        public TimeSpan ExpiresIn { get; set; }
+        public readonly AwsRegion Region;
+
+        public readonly string Key;
+
+        public readonly TimeSpan ExpiresIn;
     }
 }

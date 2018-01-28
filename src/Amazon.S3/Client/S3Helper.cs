@@ -1,149 +1,37 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Text;
-using System.Text.Encodings.Web;
+using Amazon.Security;
 
 namespace Amazon.S3
 {
     public static class S3Helper
-    {
-        private static readonly Dictionary<string, string> emptyStringDictionary = new Dictionary<string, string>();
-
-        public static string GetSignedUrl(GetUrlRequest request, IAwsCredential credential)
+    {        
+        public static string GetPresignedUrl(in GetPresignedUrlRequest request, IAwsCredential credential)
         {
-            // You can specify any future expiration time in epoch or UNIX time (number of seconds since January 1, 1970).
+            var now = DateTime.UtcNow;
 
-            var unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var scope = new CredentialScope(now, request.Region, AwsService.S3);
 
-            long expires = unixTime + (long)request.ExpiresIn.TotalSeconds;
+            int urlLength = 10 + request.Host.Length + request.BucketName.Length + request.Key.Length;
 
-            var stringToSign = ConstructStringToSign(
-                httpVerb      : HttpMethod.Get,
-                contentType   : string.Empty,
-                bucketName    : request.BucketName,
-                key           : request.Key,
-                headers       : emptyStringDictionary,
-                query         : string.Empty,
-                expiresOrDate : expires.ToString()
-            );
-
-            var signature = ComputeSignature(credential.SecretAccessKey, stringToSign);
-
-            return new StringBuilder()
+            var urlBuilder = new StringBuilder(urlLength)
                 .Append("https://")
+                .Append(request.Host)
+                .Append('/')
                 .Append(request.BucketName)
-                .Append(".s3.amazonaws.com/")
-                .Append(request.Key)
-                .Append("?AWSAccessKeyId=")
-                .Append(credential.AccessKeyId.UrlEncode())
-                .Append("&Expires=")
-                .Append(expires)
-                .Append("&Signature=")
-                .Append(signature.UrlEncode())
-                .ToString();
-        }
+                .Append('/')
+                .Append(request.Key);
 
-        private static string UrlEncode(this string text)
-        {
-            return UrlEncoder.Default.Encode(text);
-        }
+            // TODO: support version querystring
 
-        private static string ConstructStringToSign(HttpMethod httpVerb, string contentType, string bucketName, string key,
-            Dictionary<string, string> headers, string query, string expiresOrDate)
-        {
-            #region Preconditions
+            var r = new HttpRequestMessage(HttpMethod.Get, urlBuilder.ToString());
 
-            if (httpVerb == null)
-                throw new ArgumentNullException("httpVerb");
+            SignerV4.Default.Presign(credential, scope, now, request.ExpiresIn, r, "UNSIGNED-PAYLOAD");
 
-            if (headers == null)
-                throw new ArgumentNullException("headers");
+            var signedUrl = r.RequestUri.ToString();
 
-            #endregion
-
-            var sb = new StringBuilder();
-
-            sb.Append(httpVerb.ToString()).Append("\n");              // HTTP-VERB + \n + 
-            sb.Append("\n");                                          // Content-MD5 + \n + 
-            sb.Append(contentType).Append("\n");                      // Content-Type+ \n + 
-            sb.Append(expiresOrDate).Append("\n");                    // Expires/ Date + \n + 
-            sb.Append(string.Empty);                                  // CanonicalizedAmzHeaders
-            sb.Append(CanonicalizeResource(bucketName, key, query));  // CanonicalizedResource
-
-            return sb.ToString();
-        }
-
-        private static string CanonicalizeResource(string bucketName, string key, string query)
-        {
-            #region Preconditions
-
-            if (bucketName == null)
-                throw new ArgumentNullException("bucketName");
-
-            #endregion
-
-            // 1. Start with the empty string
-
-            // 2. If the request specifies a bucket using the HTTP Host header (virtual hosted-style), 
-            // append the bucket name preceded by a "/" (e.g., "/bucketname"). For path-style requests 
-            // and requests that don't address a bucket, do nothing.
-
-            // 3. Append the path part of the un-decoded HTTP Request-URI, up-to but not including the query string.
-
-            // 4. If the request addresses a sub-resource, like ?location, ?acl, or ?torrent, append the sub-resource including question mark. 
-
-            var sb = new StringBuilder();
-
-            sb.Append("/");
-            sb.Append(bucketName);
-            sb.Append("/");
-
-            if (key != null)
-            {
-                sb.Append(key);
-            }
-
-            if (query != null)
-            {
-                if (query.Contains("acl"))
-                {
-                    sb.Append("?acl");
-                }
-                else if (query.Contains("torrent"))
-                {
-                    sb.Append("?torrent");
-                }
-                else if (query.Contains("logging"))
-                {
-                    sb.Append("?logging");
-                }
-            }
-
-            return sb.ToString();
-        }
-
-        private static string ComputeSignature(string secret, string stringToSign)
-        {
-            #region Preconditions
-
-            if (secret == null)
-                throw new ArgumentNullException(nameof(secret));
-
-            if (stringToSign == null)
-                throw new ArgumentNullException(nameof(stringToSign));
-
-            #endregion
-
-            // Signature = Base64(HMAC-SHA1(UTF-8-Encoding-Of(StringToSign)));
-
-            using (var hmacSha1 = new HMACSHA1(Encoding.UTF8.GetBytes(secret)))
-            {
-                var hashBytes = hmacSha1.ComputeHash(Encoding.UTF8.GetBytes(stringToSign.ToCharArray()));
-
-                return Convert.ToBase64String(hashBytes);
-            }
+            return signedUrl;
         }
     }
 }

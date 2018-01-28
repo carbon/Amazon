@@ -7,13 +7,13 @@ using Carbon.Storage;
 
 namespace Amazon.S3
 {
-    public class S3Client : AwsClient
+    public sealed class S3Client : AwsClient
     {
         public const string Namespace = "http://s3.amazonaws.com/doc/2006-03-01/";
 
         public S3Client(AwsRegion region, IAwsCredential credential)
             : this(region, host: $"s3.dualstack.{region.Name}.amazonaws.com", credential: credential) { }
-
+        
         public S3Client(AwsRegion region, string host, IAwsCredential credential)
             : base(AwsService.S3, region, credential)
         {
@@ -155,6 +155,11 @@ namespace Amazon.S3
             return response;
         }
 
+        public string GetPresignedUrl(in GetPresignedUrlRequest request)
+        {
+            return S3Helper.GetPresignedUrl(in request, credential);
+        }
+
         #region Helpers
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
@@ -162,17 +167,16 @@ namespace Amazon.S3
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                // Consider limiting to KeyNotFound?
-                
-                throw StorageException.NotFound(response.RequestMessage.RequestUri.AbsolutePath.TrimStart('/'));
+            {                
+                throw StorageException.NotFound(response.RequestMessage.RequestUri.AbsolutePath.TrimStart(Seperators.ForwardSlash));
             }
 
             if (responseText.Contains("<Error>"))
             {
-                var error = S3Error.ParseXml(responseText);
-
-                throw new S3Exception(error, response.StatusCode, responseText);
+                throw new S3Exception(
+                    error      : S3Error.ParseXml(responseText),
+                    statusCode : response.StatusCode
+                );
             }
 
             throw new S3Exception("Unexpected S3 error. " + response.StatusCode + ":" + responseText, response.StatusCode);
