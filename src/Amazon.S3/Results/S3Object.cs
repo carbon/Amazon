@@ -13,7 +13,7 @@ namespace Amazon.S3
     public class S3Object : IBlobResult, IDisposable
     {
         private Stream stream;
-        private readonly Dictionary<string, string> headers = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> properties = new Dictionary<string, string>();
         private readonly HttpResponseMessage response;
 
         public S3Object(string name, HttpResponseMessage response)
@@ -29,12 +29,12 @@ namespace Amazon.S3
 
             foreach (var header in response.Headers)
             {
-                headers.Add(header.Key, string.Join(";", header.Value));
+                properties.Add(header.Key, string.Join(";", header.Value));
             }
 
             foreach (var header in response.Content.Headers)
             {
-                headers.Add(header.Key, string.Join(";", header.Value));
+                properties.Add(header.Key, string.Join(";", header.Value));
             }
 
             StatusCode = response.StatusCode;
@@ -57,25 +57,25 @@ namespace Amazon.S3
 
         public string ContentType
         {
-            get => headers["Content-Type"];
-            set => headers["Content-Type"] = value;
+            get => properties["Content-Type"];
+            set => properties["Content-Type"] = value;
         }
 
         public long ContentLength
         {
-            get => long.Parse(headers["Content-Length"]);
-            set => headers["Content-Length"] = value.ToString();
+            get => long.Parse(properties["Content-Length"]);
+            set => properties["Content-Length"] = value.ToString();
         }
 
         public DateTimeOffset? LastModified
         {
-           get => DateTime.ParseExact(headers["Last-Modified"], "r", null).ToUniversalTime();
+           get => DateTime.ParseExact(properties["Last-Modified"], "r", null).ToUniversalTime();
         }
 
         public CacheControlHeaderValue CacheControl
         {
-            get => CacheControlHeaderValue.Parse(headers["Cache-Control"]);
-            set => headers["Cache-Control"] = value.ToString(); 
+            get => CacheControlHeaderValue.Parse(properties["Cache-Control"]);
+            set => properties["Cache-Control"] = value.ToString(); 
         }
 
         #endregion
@@ -85,17 +85,13 @@ namespace Amazon.S3
             return stream ?? (stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false));
         }
 
-        public Dictionary<string, string> Headers => headers;
-
         #region IBlob
-
-        string IBlob.Name => Key;
 
         long IBlob.Size => ContentLength;
 
         DateTime IBlob.Modified => (LastModified ?? DateTimeOffset.MinValue).UtcDateTime;
 
-        IReadOnlyDictionary<string, string> IBlob.Metadata => headers;
+        public IReadOnlyDictionary<string, string> Properties => properties;
 
         #endregion
 

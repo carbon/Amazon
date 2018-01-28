@@ -11,7 +11,7 @@ namespace Amazon.S3
 {
     using Scheduling;
 
-    public class S3Bucket : IBucket, IReadOnlyBucket
+    public sealed class S3Bucket : IBucket, IReadOnlyBucket
     {
         private readonly S3Client client;
         private readonly string bucketName;
@@ -28,16 +28,7 @@ namespace Amazon.S3
         public S3Bucket(string bucketName, S3Client client)
         {
             this.bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
-            this.client     = client ?? throw new ArgumentNullException(nameof(client));
-        }
-
-        public S3Bucket(AwsRegion region, string bucketName)
-        {
-            this.bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
-
-            var credential = new InstanceRoleCredential(); // this will be fetched on first use
-
-            this.client = new S3Client(region, credential);
+            this.client     = client     ?? throw new ArgumentNullException(nameof(client));
         }
 
         public string Name => bucketName;
@@ -67,32 +58,42 @@ namespace Amazon.S3
             return result.Items;
         }
 
-        public async Task<IBlob> GetAsync(string name)
+        public async Task<IBlob> GetAsync(string key)
         {
             var request = new GetObjectRequest(
                 host       : client.Host,
                 bucketName : bucketName,
-                objectName : name
+                objectName : key
             );
 
             return await client.GetObjectAsync(request).ConfigureAwait(false);
         }
 
+        public string GetPresignedUrl(string key, TimeSpan expiresIn)
+        {
+            var request = new GetPresignedUrlRequest(client.Host, client.Region, bucketName, key, expiresIn);
+
+            return client.GetPresignedUrl(in request);
+        }
+
         // If-Modified-Since                    OR 304
         // If-None-Match        -- ETag         OR 304
-        public async Task<IBlobResult> GetAsync(string name, GetBlobOptions options)
+        public async Task<IBlobResult> GetAsync(string key, GetBlobOptions options)
         {
             #region Preconditions
 
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
 
             #endregion
 
             var request = new GetObjectRequest(
                 host       : client.Host,
                 bucketName : bucketName,
-                objectName : name
+                objectName : key
             );
 
             if (options.IfModifiedSince != null)
@@ -123,32 +124,32 @@ namespace Amazon.S3
             return await client.GetObjectAsync(request).ConfigureAwait(false);
         }
 
-        public async Task<IReadOnlyDictionary<string, string>> GetMetadataAsync(string name)
+        public async Task<IReadOnlyDictionary<string, string>> GetPropertiesAsync(string key)
         {
             #region Preconditions
 
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
 
             #endregion
 
-            var request = new ObjectHeadRequest(client.Host, bucketName, key: name);
+            var request = new ObjectHeadRequest(client.Host, bucketName, key: key);
 
             var result = await client.GetObjectHeadAsync(request).ConfigureAwait(false);
 
-            return result.Metadata;
+            return result.Properties;
         }
 
-        public Task<RestoreObjectResult> InitiateRestoreAsync(string name, int days)
+        public Task<RestoreObjectResult> InitiateRestoreAsync(string key, int days)
         {
             #region Preconditions
 
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
 
             #endregion
 
-            var request = new RestoreObjectRequest(client.Host, bucketName, name) {
+            var request = new RestoreObjectRequest(client.Host, bucketName, key) {
                 Days = days
             };
 
@@ -156,14 +157,14 @@ namespace Amazon.S3
         }
 
         public async Task<CopyObjectResult> PutAsync(
-            string name,
+            string key,
             S3ObjectLocation sourceLocation,
             IReadOnlyDictionary<string, string> metadata = null)
         {
             #region Preconditions
 
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
 
             #endregion
 
@@ -174,7 +175,7 @@ namespace Amazon.S3
             {
                 try
                 {
-                    return await PutInternalAsync(name, sourceLocation, metadata).ConfigureAwait(false);
+                    return await PutInternalAsync(key, sourceLocation, metadata).ConfigureAwait(false);
                 }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {
@@ -186,21 +187,21 @@ namespace Amazon.S3
                 await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
 
-            throw new S3Exception($"Unrecoverable exception copying '{sourceLocation}' to '{name}'", lastException);
+            throw new S3Exception($"Unrecoverable exception copying '{sourceLocation}' to '{key}'", lastException);
         }
 
         private Task<CopyObjectResult> PutInternalAsync(
-            string name,
+            string key,
             S3ObjectLocation sourceLocation,
-            IReadOnlyDictionary<string, string> metadata = null)
+            IReadOnlyDictionary<string, string> properties = null)
         {
             var request = new CopyObjectRequest(
                 host   : client.Host,
                 source : sourceLocation,
-                target : new S3ObjectLocation(bucketName, name)
+                target : new S3ObjectLocation(bucketName, key)
             );
 
-            SetHeaders(request, metadata);
+            SetHeaders(request, properties);
 
             return client.CopyObjectAsync(request);
         }
@@ -217,8 +218,8 @@ namespace Amazon.S3
             if (blob == null)
                 throw new ArgumentNullException(nameof(blob));
 
-            if (blob.Name == null)
-                throw new ArgumentNullException("blob.Name");
+            if (blob.Key == null)
+                throw new ArgumentNullException("blob.Key");
 
             #endregion
 
@@ -237,7 +238,7 @@ namespace Amazon.S3
 
             #endregion
 
-            var request = new PutObjectRequest(client.Host, bucketName, blob.Name);
+            var request = new PutObjectRequest(client.Host, bucketName, blob.Key);
 
             request.SetStream(stream);
 
@@ -247,7 +248,7 @@ namespace Amazon.S3
                 request.SetCustomerEncryptionKey(new ServerSideEncryptionKey(options.EncryptionKey));
             }
 
-            SetHeaders(request, blob.Metadata);
+            SetHeaders(request, blob.Properties);
 
             await client.PutObjectAsync(request).ConfigureAwait(false);
         }
@@ -266,30 +267,30 @@ namespace Amazon.S3
             await client.DeleteObjectAsync(request).ConfigureAwait(false);
         }
 
-        public Task DeleteAsync(string name, string version)
+        public Task DeleteAsync(string key, string version)
         {
             #region Preconditions
 
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
 
             #endregion
 
-            var request = new DeleteObjectRequest(client.Host, bucketName, name, version);
+            var request = new DeleteObjectRequest(client.Host, bucketName, key, version);
 
             return client.DeleteObjectAsync(request);
         }
 
-        public async Task DeleteAsync(string[] names)
+        public async Task DeleteAsync(string[] keys)
         {
             #region Preconditions
 
-            if (names == null)
-                throw new ArgumentNullException(nameof(names));
+            if (keys == null)
+                throw new ArgumentNullException(nameof(keys));
 
             #endregion
 
-            var batch = new DeleteBatch(names);
+            var batch = new DeleteBatch(keys);
 
             var request = new BatchDeleteRequest(client.Host, bucketName, batch);
 
@@ -300,7 +301,7 @@ namespace Amazon.S3
                 throw new Exception(result.Errors[0].Message);
             }
 
-            if (result.Deleted.Length != names.Length)
+            if (result.Deleted.Length != keys.Length)
             {
                 throw new Exception("Deleted count not equal to keys.Count");
             }
@@ -315,20 +316,20 @@ namespace Amazon.S3
         // - IUpload (bucketName, objectName, uploadId)
         // - IUploadBlock (uploadId, number, state)
 
-        public async Task<IUpload> StartUploadAsync(string name, IReadOnlyDictionary<string, string> metadata)
+        public async Task<IUpload> StartUploadAsync(string key, IReadOnlyDictionary<string, string> properties)
         {
             #region Preconditions
 
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
 
             #endregion
 
-            var request = new InitiateMultipartUploadRequest(client.Host, bucketName, name) {
+            var request = new InitiateMultipartUploadRequest(client.Host, bucketName, key) {
                 Content = new StringContent(string.Empty)
             };
 
-            SetHeaders(request, metadata);
+            SetHeaders(request, properties);
 
             return await client.InitiateMultipartUploadAsync(request).ConfigureAwait(false);
         }

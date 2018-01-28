@@ -54,7 +54,7 @@ namespace Amazon.S3
                 headers.Add(header.Key, string.Join(";", header.Value));
             }
 
-            Metadata = headers;
+            Properties = headers;
         }
 
         public string BucketName { get; }
@@ -67,11 +67,9 @@ namespace Amazon.S3
 
         public DateTime Modified { get; }
 
-        public IReadOnlyDictionary<string, string> Metadata { get; }
+        public IReadOnlyDictionary<string, string> Properties { get; }
 
         #region IBlob
-
-        string IBlob.Name => Key;
 
         long IBlob.Size => ContentLength;
 
@@ -86,11 +84,11 @@ namespace Amazon.S3
 
         #region Helpers
 
-        public string ContentType => Metadata["Content-Type"];
+        public string ContentType => Properties["Content-Type"];
 
-        public string VersionId => Metadata.TryGetValue("x-amz-version-id", out var version) ? version : null;
+        public string VersionId => Properties.TryGetValue("x-amz-version-id", out var version) ? version : null;
 
-        public string StorageClass => Metadata["x-amz-storage-class"];
+        public string StorageClass => Properties["x-amz-storage-class"];
 
         #endregion
     }

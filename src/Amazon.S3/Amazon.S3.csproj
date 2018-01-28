@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.S3</AssemblyName>
-    <VersionPrefix>0.10.1</VersionPrefix>
+    <VersionPrefix>0.10.6</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <LangVersion>7.2</LangVersion>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
@@ -19,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Storage" Version="1.11.0" />
+    <PackageReference Include="Carbon.Storage" Version="1.13.0" />
   </ItemGroup>
   
 </Project>
