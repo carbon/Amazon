@@ -6,7 +6,7 @@ using Carbon.Json;
 
 namespace Amazon.Lambda
 {
-    public class LambdaClient : AwsClient
+    public sealed class LambdaClient : AwsClient
     {
         public const string Version = "2015-03-31";
 

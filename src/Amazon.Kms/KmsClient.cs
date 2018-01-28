@@ -7,7 +7,7 @@ using Carbon.Json;
 
 namespace Amazon.Kms
 {
-    public class KmsClient : AwsClient
+    public sealed class KmsClient : AwsClient
     {
         public const string Version = "2014-11-01";
 
@@ -52,7 +52,6 @@ namespace Amazon.Kms
         {
             return SendAsync<DecryptResponse>("Decrypt", request);
         }
-
 
         #region Data Keys
 

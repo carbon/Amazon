@@ -6,7 +6,7 @@ using Carbon.Json;
 
 namespace Amazon.Sts
 {
-    public class StsClient : AwsClient
+    public sealed class StsClient : AwsClient
     {
         public const string Version = "2011-06-15";
         public const string Namespace = "https://sts.amazonaws.com/doc/2011-06-15/";
@@ -81,8 +81,7 @@ namespace Amazon.Sts
         private async Task<TResponse> SendAsync<TResponse>(IStsRequest request)
           where TResponse : IStsResponse
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-            {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Content = GetPostContent(StsRequestHelper.ToParams(request))
             };
 

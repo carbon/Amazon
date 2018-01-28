@@ -7,7 +7,7 @@ using Carbon.Json;
 
 namespace Amazon.CodeBuild
 {
-    public class CodeBuildClient : AwsClient
+    public sealed class CodeBuildClient : AwsClient
     {
         public const string Version = "2016-10-06";
 

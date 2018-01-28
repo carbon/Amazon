@@ -7,7 +7,7 @@ using Carbon.Json;
 
 namespace Amazon.Kinesis.Firehose
 {
-    public class KinesisFirehoseClient : AwsClient
+    public sealed class KinesisFirehoseClient : AwsClient
     {
         const string Version = "20150804";
         const string TargetPrefix = "Firehose_" + Version;

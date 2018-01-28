@@ -8,9 +8,10 @@ namespace Amazon.CloudWatch
 {
     // http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/Welcome.html
 
-    public class CloudWatchClient : AwsClient
+    public sealed class CloudWatchClient : AwsClient
     {
-        public static string Version = "2010-08-01";
+        public const string Version = "2010-08-01";
+
         public static readonly XNamespace NS = "http://monitoring.amazonaws.com/doc/2010-08-01/";
 
         public CloudWatchClient(AwsRegion region, IAwsCredential credentials)

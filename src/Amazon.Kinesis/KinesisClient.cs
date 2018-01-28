@@ -7,10 +7,10 @@ using Carbon.Json;
 
 namespace Amazon.Kinesis
 {
-    public class KinesisClient : AwsClient
+    public sealed class KinesisClient : AwsClient
     {
-        const string TargetPrefix = "Kinesis_" + Version;
-        const string Version = "20131202";
+        private const string TargetPrefix = "Kinesis_" + Version;
+        private const string Version = "20131202";
 
         public KinesisClient(IAwsCredential credential)
             : base(AwsService.Kinesis, AwsRegion.USEast1, credential)

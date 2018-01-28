@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Amazon.Elb
 {
-    public class ElbClient : AwsClient
+    public sealed class ElbClient : AwsClient
     {
         public const string Namespace = "http://elasticloadbalancing.amazonaws.com/doc/2015-12-01/";
         public const string Version = "2015-12-01";
@@ -202,7 +202,7 @@ namespace Amazon.Elb
 
             var responseText = await base.SendAsync(httpRequest).ConfigureAwait(false);
 
-            return ElbResponseHelper<T>.ParseXml(responseText);
+            return ElbResponseHelper<T>.DeserializeXml(responseText);
         }
 
         private FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)

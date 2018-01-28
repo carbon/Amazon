@@ -6,11 +6,9 @@ using Carbon.Json;
 
 namespace Amazon.Ssm
 {
-    // http://docs.aws.amazon.com/systems-manager/latest/APIReference/API_SendCommand.html
-
-    public class SsmClient : AwsClient
+    public sealed class SsmClient : AwsClient
     {
-        public static string Version = "2014-11-06";
+        public const string Version = "2014-11-06";
 
         public SsmClient(AwsRegion region, IAwsCredential credential)
             : base(AwsService.Ssm, region, credential)
@@ -477,28 +475,21 @@ namespace Amazon.Ssm
         private async Task<T> SendAsync<T>(ISsmRequest request)
             where T : new()
         {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
             var responseText = await SendAsync(GetRequestMessage(Endpoint, request)).ConfigureAwait(false);
 
             if (responseText.Length == 0) return new T();
 
-            // TEMP try / catch ... remove once all the JSON deserialization methods are verified
-
-            try
-            {
-                return JsonObject.Parse(responseText).As<T>();
-            }
-            catch
-            {
-                throw new Exception("error deserializing: " + responseText);
-            }
+            return JsonObject.Parse(responseText).As<T>();
         }
+        
+        private static readonly SerializationOptions serializationOptions = new SerializationOptions(ingoreNullValues: true);
 
-        // TODO: Fix Carbon.Json serializationOptions constructor
-        private static readonly SerializationOptions serializationOptions = new SerializationOptions {
-            IgnoreNullValues = true
-        };
-
-        public static HttpRequestMessage GetRequestMessage(string endpoint, ISsmRequest request)
+        private static HttpRequestMessage GetRequestMessage(string endpoint, ISsmRequest request)
         {
             var actionName = request.GetType().Name.Replace("Request", "");
 
@@ -522,3 +513,5 @@ namespace Amazon.Ssm
         #endregion
     }
 }
+
+// http://docs.aws.amazon.com/systems-manager/latest/APIReference/API_SendCommand.html

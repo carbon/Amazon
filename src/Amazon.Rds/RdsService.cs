@@ -5,7 +5,7 @@ using Amazon.Security;
 
 namespace Amazon.Rds
 {
-    public class RdsService
+    public sealed class RdsService
     {
         private readonly AwsRegion region;
         private readonly IAwsCredential credential;
@@ -18,6 +18,8 @@ namespace Amazon.Rds
 
         public AuthenticationToken GenerateAuthenticationToken(GetAuthenticationTokenRequest request)
         {
+            // TODO: Ensure the underlying AWS credential does not need renewed also
+
             var date = DateTime.UtcNow;
 
             var scope = new CredentialScope(date, AwsRegion.USEast1, AwsService.RdsDb);
@@ -28,12 +30,6 @@ namespace Amazon.Rds
                 HttpMethod.Get, 
                 $"https://{request.HostName}:{request.Port}?Action=connect&DBUser={request.UserName}"
             );
-            
-            // Ensure the underlying credential are current
-            if (credential.ShouldRenew)
-            {
-                credential.RenewAsync().Wait();
-            }
 
             SignerV4.Default.Presign(credential, scope, date, TimeSpan.FromMinutes(15), httpRequest);
 

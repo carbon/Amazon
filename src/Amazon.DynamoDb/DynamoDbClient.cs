@@ -10,7 +10,7 @@ namespace Amazon.DynamoDb
 {
     using Scheduling;
 
-    public class DynamoDbClient : AwsClient
+    public sealed class DynamoDbClient : AwsClient
     {
         private const string TargetPrefix = "DynamoDB_20120810";
 
