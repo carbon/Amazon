@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Amazon.Ec2
 {
-    public class Ec2Client : AwsClient
+    public sealed class Ec2Client : AwsClient
     {
-        public static readonly string Version = "2016-11-15";
+        public const string Version = "2016-11-15";
         public const string Namespace = "http://ec2.amazonaws.com/doc/2016-11-15/";
 
         public Ec2Client(AwsRegion region, IAwsCredential credential)
@@ -16,44 +16,44 @@ namespace Amazon.Ec2
 
         #region Shortcuts
 
-        public async Task<Image> DescribeImageAsync(string id)
+        public async Task<Image> DescribeImageAsync(string imageId)
         {
-            var result = await DescribeImagesAsync(new DescribeImagesRequest { ImageIds = { id } });
+            var result = await DescribeImagesAsync(new DescribeImagesRequest(imageIds: new[] { imageId }));
 
             return result.Images.Length > 0 ? result.Images[0] : null;
         }
 
-        public async Task<Subnet> DescribeSubnetAsync(string id)
+        public async Task<Subnet> DescribeSubnetAsync(string subnetId)
         {
-            var result = await DescribeSubnetsAsync(new DescribeSubnetsRequest { SubnetIds = { id } });
+            var result = await DescribeSubnetsAsync(new DescribeSubnetsRequest(new[] { subnetId }));
 
             return result.Subnets.Length > 0 ? result.Subnets[0] : null;
         }
 
-        public async Task<NetworkInterface> DescribeNetworkInterfaceAsync(string id)
+        public async Task<NetworkInterface> DescribeNetworkInterfaceAsync(string networkInterfaceId)
         {
-            var result = await DescribeNetworkInterfacesAsync(new DescribeNetworkInterfacesRequest { NetworkInterfaceIds = { id } });
+            var result = await DescribeNetworkInterfacesAsync(new DescribeNetworkInterfacesRequest(new[] { networkInterfaceId }));
 
             return result.NetworkInterfaces.Length > 0 ? result.NetworkInterfaces[0] : null;
         }
 
         public async Task<Instance> DescribeInstanceAsync(string instanceId)
         {
-            var result = await DescribeInstancesAsync(new DescribeInstancesRequest { InstanceIds = { instanceId } });
+            var result = await DescribeInstancesAsync(new DescribeInstancesRequest(new[] { instanceId }));
 
             return result.Instances.Count > 0 ? result.Instances[0] : null;
         }
 
         public async Task<Volume> DescribeVolumeAsync(string volumeId)
         {
-            var result = await DescribeVolumesAsync(new DescribeVolumesRequest { VolumeIds = { volumeId } });
+            var result = await DescribeVolumesAsync(new DescribeVolumesRequest(new[] { volumeId }));
 
             return result.Volumes.Length > 0 ? result.Volumes[0] : null;
         }
 
         public async Task<Vpc> DescribeVpcAsync(string vpcId)
         {
-            var result = await DescribeVpcsAsync(new DescribeVpcsRequest { VpcIds = { vpcId } });
+            var result = await DescribeVpcsAsync(new DescribeVpcsRequest(new[] { vpcId }));
 
             return result.Vpcs.Length > 0 ? result.Vpcs[0] : null;
         }
@@ -73,11 +73,25 @@ namespace Amazon.Ec2
         {
             return SendAsync<RunInstancesResponse>(request);
         }
+        
+        public Task<RebootInstancesResponse> RebootInstancesAsync(RebootInstancesRequest request)
+        {
+            return SendAsync<RebootInstancesResponse>(request);
+        }
+
+        public Task<StartInstancesResponse> StartInstancesAsync(StartInstancesRequest request)
+        {
+            return SendAsync<StartInstancesResponse>(request);
+        }
+
+        public Task<StopInstancesResponse> StopInstancesAsync(StopInstancesRequest request)
+        {
+            return SendAsync<StopInstancesResponse>(request);
+        }
 
         public Task<TerminateInstancesResponse> TerminateInstancesAsync(TerminateInstancesRequest request)
         {
             return SendAsync<TerminateInstancesResponse>(request);
-
         }
 
         #endregion
@@ -131,8 +145,7 @@ namespace Amazon.Ec2
 
         private async Task<string> SendAsync(IEc2Request request)
         {
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-            {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Content = GetPostContent(request.ToParams())
             };
 
