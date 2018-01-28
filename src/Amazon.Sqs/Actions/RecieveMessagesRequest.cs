@@ -10,7 +10,10 @@ namespace Amazon.Sqs
 
         /// <param name="lockTime">The time to hide the message from other workers.</param>
         /// <param name="waitTime">The maximium amount of time to wait for queue items.</param>
-        public RecieveMessagesRequest(int take = 1, TimeSpan? lockTime = null, TimeSpan? waitTime = null)
+        public RecieveMessagesRequest(
+            int take = 1,
+            TimeSpan? lockTime = null, 
+            TimeSpan? waitTime = null)
         {
             #region Preconditions
 
@@ -39,12 +42,11 @@ namespace Amazon.Sqs
         public SqsRequest ToParams()
         {
             var parameters = new SqsRequest {
-                { "Action",                 "ReceiveMessage" },
-                { "MaxNumberOfMessages",    take },
+                { "Action",              "ReceiveMessage" },
+                { "MaxNumberOfMessages", take },
             };
 
-            // Defaults to the queue visibility timeout
-            if (lockTime != null)
+            if (lockTime != null) // Defaults to the queue visibility timeout
             {
                 parameters.Add("VisibilityTimeout", (int)lockTime.Value.TotalSeconds);
             }
@@ -59,3 +61,5 @@ namespace Amazon.Sqs
         }
     }
 }
+
+// specification: http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ReceiveMessage.html

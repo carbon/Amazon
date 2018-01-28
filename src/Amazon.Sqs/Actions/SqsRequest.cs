@@ -1,7 +1,4 @@
 ﻿namespace Amazon.Sqs
 {
-    public class SqsRequest : AwsRequest
-    {
-
-    }
+    public class SqsRequest : AwsRequest { }
 }
