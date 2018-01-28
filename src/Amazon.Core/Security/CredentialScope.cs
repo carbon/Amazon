@@ -2,7 +2,7 @@
 
 namespace Amazon.Security
 {
-    public class CredentialScope
+    public readonly struct CredentialScope
     {
         public CredentialScope(DateTime date, AwsRegion region, AwsService service)
         {
@@ -11,14 +11,13 @@ namespace Amazon.Security
             Service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public DateTime Date { get; }
+        public readonly DateTime Date;
 
-        public AwsRegion Region { get; }
+        public readonly AwsRegion Region;
 
-        public AwsService Service { get; }
+        public readonly AwsService Service;
 
         // 20120228/us-east-1/iam/aws4_request
-        public override string ToString() => 
-            $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request";
+        public override string ToString() => $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request";
     }
 }
