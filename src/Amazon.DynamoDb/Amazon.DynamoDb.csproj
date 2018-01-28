@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.DynamoDb</AssemblyName>
-    <VersionPrefix>0.10.2</VersionPrefix>
+    <VersionPrefix>0.10.6</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <LangVersion>7.2</LangVersion>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
@@ -19,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Data" Version="0.26.0" />
+    <PackageReference Include="Carbon.Data" Version="0.28.0" />
   </ItemGroup>
 
 </Project>

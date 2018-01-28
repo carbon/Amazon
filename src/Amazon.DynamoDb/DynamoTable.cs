@@ -368,6 +368,13 @@ namespace Amazon.DynamoDb
 
         public Task<DeleteItemResult> DeleteAsync(T record)
         {
+            #region Preconditions
+
+            if (record == null)
+                throw new ArgumentNullException(nameof(record));
+
+            #endregion
+
             var request = new DeleteItemRequest(
                 tableName : tableName,
                 key       : Key<T>.FromObject(record)

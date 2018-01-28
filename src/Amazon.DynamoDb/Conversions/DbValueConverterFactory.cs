@@ -127,11 +127,9 @@ namespace Amazon.DynamoDb
     {
         // item.ToStringSet().ToArray();
 
-        public override string[] Parse(DbValue dbValue)=> 
-            dbValue.ToArray<string>();
+        public override string[] Parse(DbValue dbValue) => dbValue.ToArray<string>();
 
-        public override DbValue ToDbValue(string[] value) => 
-            new DbValue(value);
+        public override DbValue ToDbValue(string[] value) => new DbValue(value);
     }
 
     internal sealed class GuidConverter : DbTypeConverter<Guid>
@@ -143,11 +141,9 @@ namespace Amazon.DynamoDb
 
     internal sealed class ArrayConverter<T> : IDbValueConverter
     {
-        public DbValue FromObject(object value, IMember member)
-            => new DbValue((T[])value);
+        public DbValue FromObject(object value, IMember member) => new DbValue((T[])value);
 
-        public object ToObject(DbValue item, IMember member)
-            => item.ToArray<T>();
+        public object ToObject(DbValue item, IMember member) => item.ToArray<T>();
     }
 
     internal sealed class StringHashSetConverter : IDbValueConverter
@@ -155,8 +151,7 @@ namespace Amazon.DynamoDb
         public DbValue FromObject(object value, IMember member)
             => new DbValue(((HashSet<string>)value).ToArray());
 
-        public object ToObject(DbValue item, IMember member)
-            => item.ToStringSet();
+        public object ToObject(DbValue item, IMember member) => item.ToStringSet();
     }
 
     internal sealed class HashSetConverter<T> : IDbValueConverter
@@ -164,8 +159,7 @@ namespace Amazon.DynamoDb
         public DbValue FromObject(object value, IMember member)
             => new DbValue(((HashSet<T>)value).ToArray());
 
-        public object ToObject(DbValue item, IMember member)
-            => item.ToSet<T>();
+        public object ToObject(DbValue item, IMember member) => item.ToSet<T>();
     }
 
     internal sealed class BinaryConverter : IDbValueConverter
@@ -179,8 +173,7 @@ namespace Amazon.DynamoDb
             return new DbValue(data, DbValueType.B);
         }
 
-        public object ToObject(DbValue item, IMember member)
-            => item.ToBinary();
+        public object ToObject(DbValue item, IMember member) => item.ToBinary();
     }
 
     internal sealed class UriConverter : DbTypeConverter<Uri>
@@ -188,17 +181,14 @@ namespace Amazon.DynamoDb
         public override Uri Parse(DbValue item) => 
             new Uri(item.ToString());
 
-        public override DbValue ToDbValue(Uri value) =>
-            new DbValue(value.ToString());
+        public override DbValue ToDbValue(Uri value) => new DbValue(value.ToString());
     }
 
     internal sealed class VersionConverter : DbTypeConverter<Version>
     {
-        public override Version Parse(DbValue item) => 
-            Version.Parse(item.ToString());
+        public override Version Parse(DbValue item) => Version.Parse(item.ToString());
 
-        public override DbValue ToDbValue(Version value) => 
-            new DbValue(value.ToString());
+        public override DbValue ToDbValue(Version value) => new DbValue(value.ToString());
     }
     
     internal sealed class IPAddressConverter : DbTypeConverter<IPAddress>
@@ -240,10 +230,7 @@ namespace Amazon.DynamoDb
         public DbValue FromObject(object value, IMember member) =>
             new DbValue((int)value);
 
-        public object ToObject(DbValue item, IMember member)
-        {
-            return item.ToInt();
-        }
+        public object ToObject(DbValue item, IMember member) => item.ToInt();
     }
 
     internal sealed class SingleConverter : IDbValueConverter
@@ -253,10 +240,7 @@ namespace Amazon.DynamoDb
             return new DbValue((Single)value);
         }
 
-        public object ToObject(DbValue item, IMember member)
-        {
-            return item.ToSingle();
-        }
+        public object ToObject(DbValue item, IMember member) => item.ToSingle();
     }
 
     internal sealed class DecimalConverter : IDbValueConverter
@@ -404,6 +388,4 @@ namespace Amazon.DynamoDb
             return JsonArray.Parse(text);
         }
     }
-
-    
 }

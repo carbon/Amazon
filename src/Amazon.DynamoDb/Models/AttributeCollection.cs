@@ -50,8 +50,7 @@ namespace Amazon.DynamoDb
         public bool TryGet(string name, out DbValue value) => 
             items.TryGetValue(name, out value);
 
-        public bool ContainsKey(string name) =>
-            items.ContainsKey(name);
+        public bool ContainsKey(string name) => items.ContainsKey(name);
 
         public DbValue Get(string name)
         {
