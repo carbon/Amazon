@@ -33,7 +33,7 @@ namespace Amazon.Kinesis
         #endregion
     }
 
-    public struct KinesisIterator : IIterator
+    public class KinesisIterator : IIterator
     {
         public KinesisIterator(string value)
         {

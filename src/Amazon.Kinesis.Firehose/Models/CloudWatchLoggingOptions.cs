@@ -8,5 +8,4 @@
 
         public string LogStreamName { get; set; }
     }
-    
 }

@@ -4,6 +4,5 @@
     {
         DirectPut = 1,
         KinesisStreamAsSource = 2
-    }
-    
+    }   
 }

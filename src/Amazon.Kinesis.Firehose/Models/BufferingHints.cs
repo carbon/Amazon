@@ -6,5 +6,4 @@
 
         public int SizeInMBs { get; set; }
     }
-    
 }
