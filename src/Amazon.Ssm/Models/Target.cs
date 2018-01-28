@@ -1,9 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm
 {
     public class Target
     {
+        public Target() { }
+
+        public Target(string key, string[] values)
+        {
+            Key    = key    ?? throw new ArgumentNullException(nameof(key));
+            Values = values ?? throw new ArgumentNullException(nameof(values));
+        }
+
         [StringLength(128)]
         public string Key { get; set; }
 
