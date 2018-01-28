@@ -11,8 +11,10 @@ namespace Amazon.Ec2
 
         public List<Filter> Filters { get; } = new List<Filter>();
 
-        protected void AddIds(Dictionary<string, string> parameters, string prefix, List<string> ids)
+        protected void AddIds(Dictionary<string, string> parameters, string prefix, IReadOnlyList<string> ids)
         {
+            if (ids == null) return;
+
             for (var i = 0; i < ids.Count; i++)
             {
                 // e.g. VpcId.1

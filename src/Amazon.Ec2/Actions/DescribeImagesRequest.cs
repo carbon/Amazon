@@ -3,7 +3,14 @@
 namespace Amazon.Ec2
 {
     public class DescribeImagesRequest : DescribeRequest, IEc2Request
-    {        
+    {
+        public DescribeImagesRequest() { }
+
+        public DescribeImagesRequest(string[] imageIds)
+        {
+            ImageIds.AddRange(imageIds);
+        }
+
         public List<string> ImageIds { get; } = new List<string>();
 
         public List<string> OwnerIds { get; } = new List<string>();
@@ -13,9 +20,7 @@ namespace Amazon.Ec2
             var parameters = GetParameters("DescribeImages");
 
             AddIds(parameters, "ImageId", ImageIds);
-
-            AddIds(parameters, "OwnerId", ImageIds);
-
+            AddIds(parameters, "OwnerId", OwnerIds);
 
             return parameters;
         }

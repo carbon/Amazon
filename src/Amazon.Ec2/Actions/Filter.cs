@@ -2,7 +2,7 @@
 
 namespace Amazon.Ec2
 {
-    public struct Filter
+    public /*readonly*/ struct Filter
     {
         public Filter(string name, string value)
         {

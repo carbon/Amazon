@@ -4,7 +4,14 @@ namespace Amazon.Ec2
 {
     public class DescribeInstancesRequest : DescribeRequest, IEc2Request
     {
-        public List<string> InstanceIds { get; } = new List<string>();
+        public DescribeInstancesRequest() { }
+
+        public DescribeInstancesRequest(string[] instanceIds)
+        {
+            InstanceIds = instanceIds;
+        }
+
+        public string[] InstanceIds { get; }
 
         public Dictionary<string, string> ToParams()
         {

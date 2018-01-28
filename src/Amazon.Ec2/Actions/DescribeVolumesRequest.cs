@@ -3,8 +3,15 @@
 namespace Amazon.Ec2
 {
     public class DescribeVolumesRequest : DescribeRequest, IEc2Request
-    {        
-        public List<string> VolumeIds { get; } = new List<string>();
+    {
+        public DescribeVolumesRequest() { }
+
+        public DescribeVolumesRequest(string[] volumeIds)
+        {
+            VolumeIds = volumeIds;
+        }
+
+        public string[] VolumeIds { get; }
 
         public Dictionary<string, string> ToParams()
         {

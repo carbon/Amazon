@@ -1,11 +1,37 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Amazon.Ec2
 {
     public class RunInstancesRequest : IEc2Request
     {
+        public RunInstancesRequest() { }
+
+        public RunInstancesRequest(
+            int minCount,
+            int maxCount, 
+            string keyName = null,
+            string imageId = null,
+            string subnetId = null, 
+            string userData = null,
+            string clientToken = null)
+        {
+            if (minCount <= 0)
+                throw new ArgumentException("Must be > 0", nameof(minCount));
+
+            if (maxCount <= 0)
+                throw new ArgumentException("Must be > 0", nameof(maxCount));
+
+            MinCount    = minCount;
+            MaxCount    = maxCount;
+            KeyName     = keyName;
+            ImageId     = imageId;
+            SubnetId    = subnetId;
+            UserData    = userData;
+            ClientToken = clientToken;
+        }
+
         [DataMember(Name = "BlockDeviceMapping", Order = 1)]
         public BlockDeviceMapping[] BlockDeviceMappings { get; set; }
 
@@ -25,8 +51,8 @@ namespace Amazon.Ec2
         [DataMember(Order = 6)]
         public IamInstanceProfileSpecification IamInstanceProfile { get; set; }
 
+        // [Required]
         [DataMember(Order = 7)]
-        [Required]
         public string ImageId { get; set; }
         
         // stop | terminate
@@ -47,11 +73,11 @@ namespace Amazon.Ec2
         public string KeyName { get; set; }
 
         [DataMember(Order = 13)]
-        [Range(1, 100)]
+        // [Range(1, 100)]
         public int MaxCount { get; set; }
 
         [DataMember(Order = 14)]
-        [Range(1, 100)]
+        // [Range(1, 100)]
         public int MinCount { get; set; }
 
         [DataMember(Order = 15)]
@@ -79,17 +105,5 @@ namespace Amazon.Ec2
         {
             return Ec2RequestHelper.ToParams("RunInstances", this);
         }
-    }
-
-    public class RunInstancesMonitoringEnabled
-    {
-        public RunInstancesMonitoringEnabled() { }
-
-        public RunInstancesMonitoringEnabled(bool enabled)
-        {
-            Enabled = enabled;
-        }
-
-        public bool Enabled { get; set; }
     }
 }

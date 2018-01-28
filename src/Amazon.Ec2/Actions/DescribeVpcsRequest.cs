@@ -3,8 +3,15 @@
 namespace Amazon.Ec2
 {
     public class DescribeVpcsRequest : DescribeRequest, IEc2Request
-    {        
-        public List<string> VpcIds { get; } = new List<string>();
+    {
+        public DescribeVpcsRequest() { }
+
+        public DescribeVpcsRequest(string[] vpcIds)
+        {
+            VpcIds = vpcIds;
+        }
+
+        public string[] VpcIds { get; }
 
         public Dictionary<string, string> ToParams()
         {

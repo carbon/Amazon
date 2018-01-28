@@ -3,8 +3,15 @@
 namespace Amazon.Ec2
 {
     public class DescribeNetworkInterfacesRequest : DescribeRequest, IEc2Request
-    {        
-        public List<string> NetworkInterfaceIds { get; } = new List<string>();
+    {
+        public DescribeNetworkInterfacesRequest() { }
+
+        public DescribeNetworkInterfacesRequest(string[] networkInterfaceIds)
+        {
+            NetworkInterfaceIds = networkInterfaceIds;
+        }
+
+        public string[] NetworkInterfaceIds { get; }
 
         public Dictionary<string, string> ToParams()
         {

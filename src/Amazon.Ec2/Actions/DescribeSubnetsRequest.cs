@@ -3,8 +3,15 @@
 namespace Amazon.Ec2
 {
     public class DescribeSubnetsRequest : DescribeRequest, IEc2Request
-    {        
-        public List<string> SubnetIds { get; } = new List<string>();
+    {
+        public DescribeSubnetsRequest() { }
+
+        public DescribeSubnetsRequest(string[] subnetIds)
+        {
+            SubnetIds = subnetIds;
+        }
+
+        public string[] SubnetIds { get; }
 
         public Dictionary<string, string> ToParams()
         {
