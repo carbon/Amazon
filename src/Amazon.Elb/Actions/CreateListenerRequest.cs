@@ -21,7 +21,6 @@ namespace Amazon.Elb
 
         public string SslPolicy { get; set; }
 
-
         // Certificates
         // Default actions
     }

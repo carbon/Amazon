@@ -8,7 +8,7 @@ namespace Amazon.Elb
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(T), ElbClient.Namespace);
 
-        public static T ParseXml(string xml)
+        public static T DeserializeXml(string xml)
         {
             #region Preconditions
 
