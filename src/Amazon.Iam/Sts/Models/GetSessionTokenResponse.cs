@@ -9,7 +9,7 @@ namespace Amazon.Sts.Models
         {
             #region Preconditions
 
-            if (text == null) throw new ArgumentNullException("text");
+            if (text == null) throw new ArgumentNullException(nameof(text));
 
             #endregion
 

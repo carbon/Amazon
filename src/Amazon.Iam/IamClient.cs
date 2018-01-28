@@ -3,9 +3,9 @@ using System.Net.Http;
 
 namespace Amazon.Iam
 {
-    public class IamClient : AwsClient
+    public sealed class IamClient : AwsClient
     {
-        public static string Version = "2010-05-08";
+        public const string Version = "2010-05-08";
 
         public IamClient(AwsCredential credential)
             : base(AwsService.Iam, AwsRegion.USEast1, credential)
