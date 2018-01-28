@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ec2</AssemblyName>
-    <VersionPrefix>0.10.0</VersionPrefix>
+    <VersionPrefix>0.10.6</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple API for Amazon EC2.</Description>
-    <PackageTags>aws;async</PackageTags>
+    <Description>A modern .NET Standard library for Amazon's EC2 service.</Description>
+    <PackageTags>aws;ec2;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Amazon.Core\Amazon.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />
-  </ItemGroup>
-  
 </Project>

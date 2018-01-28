@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kms</AssemblyName>
-    <VersionPrefix>0.10.0</VersionPrefix>
+    <VersionPrefix>0.10.3</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
 
     <!-- Package Details-->
