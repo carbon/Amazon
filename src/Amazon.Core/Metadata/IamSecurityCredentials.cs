@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
-using Carbon.Json;
-
-namespace Amazon
+namespace Amazon.Metadata
 {
     internal class IamSecurityCredentials
     {
@@ -21,29 +18,10 @@ namespace Amazon
         public DateTime LastUpdated { get; set; }
 
         public DateTime Expiration { get; set; }
-
-        const string baseUri = "http://169.254.169.254/latest/meta-data/iam/security-credentials/";
-
-        private static readonly HttpClient http = new HttpClient {
-            Timeout = TimeSpan.FromSeconds(3)
-        };
-
-        public static async Task<IamSecurityCredentials> GetAsync(string roleName)
+        
+        public static Task<IamSecurityCredentials> GetAsync(string roleName)
         {
-            #region Preconditions
-
-            if (roleName == null)
-                throw new ArgumentNullException(nameof(roleName));
-
-            #endregion
-            
-            var responseText = await http.GetStringAsync(
-                requestUri: baseUri + roleName
-            ).ConfigureAwait(false);
-
-            var result = JsonObject.Parse(responseText).As<IamSecurityCredentials>();
-
-            return result;
+            return InstanceMetadata.GetIamSecurityCredentials(roleName);
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-
-using Carbon.Json;
+﻿using System.Threading.Tasks;
 
 namespace Amazon.Metadata
 {
@@ -23,16 +19,10 @@ namespace Amazon.Metadata
         public string AvailabilityZone { get; set; }
 
         public string PrivateIp { get; set; }
-
-        private static readonly HttpClient http = new HttpClient {
-            Timeout = TimeSpan.FromSeconds(5)
-        };
-
-        public static async Task<InstanceIdentity> GetAsync()
+        
+        public static Task<InstanceIdentity> GetAsync()
         {
-            var text = await http.GetStringAsync("http://169.254.169.254/latest/dynamic/instance-identity/document");
-
-            return JsonObject.Parse(text).As<InstanceIdentity>();
+            return InstanceMetadata.GetIdentityAsync();    
         }
     }
 }
