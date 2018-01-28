@@ -8,10 +8,9 @@ using Carbon.Messaging;
 
 namespace Amazon.Sqs
 {
-    using Helpers;
     using Scheduling;
 
-    public class SqsQueue : IMessageQueue<string>
+    public sealed class SqsQueue : IMessageQueue<string>
     {
         private readonly SqsClient client;
         private readonly Uri url;
@@ -43,11 +42,14 @@ namespace Amazon.Sqs
 
         // Rename PollOnce ?
 
-        public async Task<IReadOnlyList<IQueueMessage<string>>> PollAsync(int take, TimeSpan? lockTime, CancellationToken cancelationToken)
+        public async Task<IReadOnlyList<IQueueMessage<string>>> PollAsync(
+            int take, 
+            TimeSpan? lockTime,
+            CancellationToken cancellationToken = default)
         {
             // Blocks until we recieve a message
 
-            while (!cancelationToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 var result = await client.ReceiveMessagesAsync(url, new RecieveMessagesRequest(take, lockTime, TimeSpan.FromSeconds(20))).ConfigureAwait(false);
 
@@ -60,8 +62,10 @@ namespace Amazon.Sqs
             return Array.Empty<IQueueMessage<string>>();
         }
 
-        public async Task<IReadOnlyList<IQueueMessage<string>>> GetAsync(int take, TimeSpan? lockTime) => 
-            (await client.ReceiveMessagesAsync(url, new RecieveMessagesRequest(take, lockTime)).ConfigureAwait(false));
+        public async Task<IReadOnlyList<IQueueMessage<string>>> GetAsync(int take, TimeSpan? lockTime)
+        {
+            return await client.ReceiveMessagesAsync(url, new RecieveMessagesRequest(take, lockTime)).ConfigureAwait(false);
+        }
 
         public async Task PutAsync(params IMessage<string>[] messages)
         {

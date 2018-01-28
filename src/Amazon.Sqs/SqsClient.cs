@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Linq;
 
 using Carbon.Messaging;
 
@@ -11,11 +8,11 @@ namespace Amazon.Sqs
 {
     using Models;
 
-    public class SqsClient : AwsClient
+    public sealed class SqsClient : AwsClient
     {
-        public static string Version = "2012-11-05";
+        public const string Version = "2012-11-05";
 
-        public static readonly XNamespace NS = "http://queue.amazonaws.com/doc/2012-11-05/";
+        public const string NS = "http://queue.amazonaws.com/doc/2012-11-05/";
 
         public SqsClient(AwsRegion region, IAwsCredential credential)
             : base(AwsService.Sqs, region, credential)
@@ -23,12 +20,8 @@ namespace Amazon.Sqs
 
         public async Task<CreateQueueResult> CreateQueueAsync(string queueName, int defaultVisibilityTimeout = 30)
         {
-            #region Preconditions
-
             if (queueName == null)
                 throw new ArgumentNullException(nameof(queueName));
-
-            #endregion
 
             var parameters = new SqsRequest {
                 { "Action", "CreateQueue" },
@@ -42,7 +35,7 @@ namespace Amazon.Sqs
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            return CreateQueueResult.Parse(responseText);
+            return CreateQueueResponse.Parse(responseText).CreateQueueResult;
         }
 
         /*
@@ -52,10 +45,8 @@ namespace Amazon.Sqs
         }
         */
 
-        public async Task<List<SendMessageBatchResultEntry>> SendMessageBatchAsync(Uri queueUrl, string[] messages)
+        public async Task<SendMessageBatchResultEntry[]> SendMessageBatchAsync(Uri queueUrl, string[] messages)
         {
-            #region Preconditions
-
             if (messages == null)
                 throw new ArgumentNullException(nameof(messages));
 
@@ -63,8 +54,6 @@ namespace Amazon.Sqs
                 throw new ArgumentException("Must be 10 or fewer.", nameof(messages));
 
             // Max payload = 256KB (262,144 bytes)
-
-            #endregion
 
             var parameters = new SqsRequest {
                 { "Action", "SendMessageBatch" }
@@ -82,14 +71,13 @@ namespace Amazon.Sqs
 
             }
 
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl)
-            {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(parameters)
             };
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            return SendMessageBatchResult.Parse(responseText);
+            return SendMessageBatchResponse.Parse(responseText).SendMessageBatchResult.Items;
         }
 
         public async Task<SendMessageResult> SendMessageAsync(Uri queueUrl, SendMessageRequest request)
@@ -100,7 +88,7 @@ namespace Amazon.Sqs
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            return SendMessageResult.Parse(responseText);
+            return SendMessageResponse.Parse(responseText).SendMessageResult;
         }
 
         public async Task<SqsMessage[]> ReceiveMessagesAsync(Uri queueUrl, RecieveMessagesRequest request)
@@ -117,7 +105,9 @@ namespace Amazon.Sqs
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            return RecieveMessageResponse.Parse(responseText).ToArray();
+            var response = ReceiveMessageResponse.Parse(responseText);
+
+            return response.ReceiveMessageResult.Items ?? Array.Empty<SqsMessage>();
         }
 
         public async Task<string> DeleteMessageAsync(Uri queueUrl, string recieptHandle)
@@ -134,7 +124,7 @@ namespace Amazon.Sqs
             return await SendAsync(httpRequest).ConfigureAwait(false);
         }
 
-        public async Task<List<DeleteMessageBatchResultEntry>> DeleteMessageBatchAsync(Uri queueUrl, string[] recieptHandles)
+        public async Task<DeleteMessageBatchResultEntry[]> DeleteMessageBatchAsync(Uri queueUrl, string[] recieptHandles)
         {
             #region Preconditions
 
@@ -170,12 +160,12 @@ namespace Amazon.Sqs
 
             // Because the batch request can result in a combination of successful and unsuccessful actions, 
             // you should check for batch errors even when the call returns an HTTP status code of 200.
-            return DeleteMessageBatchResult.Parse(responseText);
+            return DeleteMessageBatchResponse.Parse(responseText).DeleteMessageBatchResult.Items;
         }
 
         #region Helpers
 
-        private FormUrlEncodedContent GetPostContent(SqsRequest request)
+        private static FormUrlEncodedContent GetPostContent(SqsRequest request)
         {
             request.Add("Version", Version);
 
@@ -194,7 +184,6 @@ namespace Amazon.Sqs
 }
 
 // http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/Welcome.html
-
 
 /*
 <?xml version="1.0"?>

@@ -18,9 +18,10 @@ namespace Amazon.Sqs
         private readonly Uri url;
 
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
-            initialDelay: TimeSpan.FromSeconds(0.5),
-            maxDelay: TimeSpan.FromSeconds(3),
-            maxRetries: 3);
+            initialDelay : TimeSpan.FromSeconds(0.5),
+            maxDelay     : TimeSpan.FromSeconds(3),
+            maxRetries   : 3
+        );
 
         public SqsQueue(AwsRegion region, string accountId, string queueName, IAwsCredential credential)
         {
@@ -44,29 +45,49 @@ namespace Amazon.Sqs
 
         // TODO: Overload with serializer (Default to JSON)
 
-        public async Task<IReadOnlyList<IQueueMessage<T>>> PollAsync(int take, TimeSpan? lockTime, CancellationToken cancelationToken)
+        public async Task<IReadOnlyList<IQueueMessage<T>>> PollAsync(
+            int take, 
+            TimeSpan? lockTime,
+            CancellationToken cancellationToken = default)
         {
             // Blocks until we recieve a message
 
-            while (!cancelationToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                var result = await client.ReceiveMessagesAsync(url, new RecieveMessagesRequest(take, lockTime, TimeSpan.FromSeconds(20))).ConfigureAwait(false);
+                var result = await client.ReceiveMessagesAsync(
+                    queueUrl : url,
+                    request  : new RecieveMessagesRequest(take, lockTime, waitTime: TimeSpan.FromSeconds(20)
+                )).ConfigureAwait(false);
 
                 if (result.Length == 0) continue;
 
-                return result.Select(m => (IQueueMessage<T>)new JsonEncodedMessage<T>(m)).ToList();
+                return Convert(result);
             }
 
-            return new IQueueMessage<T>[0];
+            return Array.Empty<IQueueMessage<T>>();
         }
 
         public async Task<IReadOnlyList<IQueueMessage<T>>> GetAsync(int take, TimeSpan? lockTime)
         {
             var request = new RecieveMessagesRequest(take, lockTime);
 
-            return (await client.ReceiveMessagesAsync(url, request).ConfigureAwait(false))
-                .Select(m => (IQueueMessage<T>)new JsonEncodedMessage<T>(m))
-                .ToList();
+            var result = await client.ReceiveMessagesAsync(url, request).ConfigureAwait(false);
+
+            return Convert(result);
+        }
+
+        private static IQueueMessage<T>[] Convert(SqsMessage[] messages)
+        {
+            if (messages.Length == 0) return Array.Empty<IQueueMessage<T>>();
+
+            var result = new IQueueMessage<T>[messages.Length];
+
+            for (var i = 0; i < messages.Length; i++)
+            {
+                result[i] = new JsonEncodedMessage<T>(messages[i]);
+            }
+
+            return result;
         }
 
         public Task PutAsync(T message, TimeSpan? delay = null)
@@ -128,7 +149,7 @@ namespace Amazon.Sqs
     }
 
     public class JsonEncodedMessage<T> : IQueueMessage<T>
-            where T : new()
+        where T : new()
     {
         private readonly SqsMessage model;
 
@@ -139,12 +160,14 @@ namespace Amazon.Sqs
             Body = JsonObject.Parse(model.Body).As<T>();
         }
 
-        public static JsonEncodedMessage<T> Create(SqsMessage message) => 
-            new JsonEncodedMessage<T>(message);
+        public static JsonEncodedMessage<T> Create(SqsMessage message)
+        {
+            return new JsonEncodedMessage<T>(message);
+        }
 
-        public string Id => model.Id;
+        public string Id => model.MessageId;
 
-        public MessageReceipt Receipt => model.Receipt;
+        public MessageReceipt Receipt => new MessageReceipt(model.ReceiptHandle);
 
         public T Body { get; }
     }

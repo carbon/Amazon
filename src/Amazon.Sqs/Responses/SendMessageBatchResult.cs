@@ -1,36 +1,33 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Sqs
 {
+    public class SendMessageBatchResponse
+    {
+        [XmlElement("SendMessageBatchResult")]
+        public SendMessageBatchResult SendMessageBatchResult { get; set; }
+
+        public static SendMessageBatchResponse Parse(string xmlText)
+        {
+            return SqsSerializer<SendMessageBatchResponse>.Deserialize(xmlText);
+        }
+    }
+
     public class SendMessageBatchResult
     {
-        public static List<SendMessageBatchResultEntry> Parse(string xmlText)
-        {
-            var list = new List<SendMessageBatchResultEntry>();
-
-            var rootEl = XElement.Parse(xmlText);   // <SendMessageBatchResponse>
-            var batchResultEl = rootEl.Element(SqsClient.NS + "SendMessageBatchResult");
-
-            foreach (var entryEl in batchResultEl.Elements(SqsClient.NS + "SendMessageBatchResultEntry"))
-            {
-                list.Add(new SendMessageBatchResultEntry {
-                    Id = entryEl.Element(SqsClient.NS + "Id").Value,
-                    MessageId = entryEl.Element(SqsClient.NS + "MessageId").Value,
-                    MD5OfMessageBody = entryEl.Element(SqsClient.NS + "MD5OfMessageBody").Value
-                });
-            }
-
-            return list;
-        }
+        [XmlElement("SendMessageBatchResultEntry")]
+        public SendMessageBatchResultEntry[] Items { get; set; }        
     }
 
     public class SendMessageBatchResultEntry
     {
+        [XmlElement("Id")]
         public string Id { get; set; }
 
+        [XmlElement("MessageId")]
         public string MessageId { get; set; }
 
+        [XmlElement("MD5OfMessageBody")]
         public string MD5OfMessageBody { get; set; }
     }
 }

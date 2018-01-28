@@ -1,22 +1,22 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Sqs.Models
 {
+    public class CreateQueueResponse
+    {
+        [XmlElement("CreateQueueResult")]
+        public CreateQueueResult CreateQueueResult { get; set; }
+
+        public static CreateQueueResponse Parse(string xmlText)
+        {
+            return SqsSerializer<CreateQueueResponse>.Deserialize(xmlText);
+        }
+    }
+
     public class CreateQueueResult
     {
-        public Uri QueueUrl { get; set; }
-
-        public static CreateQueueResult Parse(string xmlText)
-        {
-            var rootEl = XElement.Parse(xmlText); // CreateQueueResponse
-
-            var queueUrl = rootEl.Element(SqsClient.NS + "CreateQueueResult").Element(SqsClient.NS + "QueueUrl").Value;
-
-            return new CreateQueueResult {
-                QueueUrl = new Uri(queueUrl)
-            };
-        }
+        [XmlElement("QueueUrl")]
+        public string QueueUrl { get; set; }
     }
 }
 

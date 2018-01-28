@@ -1,36 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
-
-using Carbon.Messaging;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Sqs.Models
 {
-    public static class RecieveMessageResponse
+    public class ReceiveMessageResponse
     {
-        public static IEnumerable<SqsMessage> Parse(string xmlText)
+        [XmlElement("ReceiveMessageResult")]
+        public ReceiveMessageResult ReceiveMessageResult { get; set; }
+
+        public static ReceiveMessageResponse Parse(string xmlText)
         {
-            var rootEl = XElement.Parse(xmlText); // <ReceiveMessageResponse>
-
-            var receiveMessageResultEl = rootEl.Element(SqsClient.NS + "ReceiveMessageResult");
-
-            
-            foreach (var messageEl in receiveMessageResultEl.Elements(SqsClient.NS + "Message"))
-            {
-                var message = new SqsMessage {
-                    Id              = messageEl.Element(SqsClient.NS + "MessageId").Value,
-                    Receipt         = new MessageReceipt(messageEl.Element(SqsClient.NS + "ReceiptHandle").Value),
-                    Body            = messageEl.Element(SqsClient.NS + "Body").Value,
-                    SequenceNumber  = messageEl.Element(SqsClient.NS + "SequenceNumber")?.Value
-                };
-                
-                yield return message;
-            }
+            return SqsSerializer<ReceiveMessageResponse>.Deserialize(xmlText);
         }
+    }
+
+    public class ReceiveMessageResult
+    {
+        [XmlElement("Message")]
+        public SqsMessage[] Items { get; set; }
     }
 }
 
 /*
-<?xml version="1.0"?>
 <ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2009-02-01/">
 	<ReceiveMessageResult>
 		<Message>

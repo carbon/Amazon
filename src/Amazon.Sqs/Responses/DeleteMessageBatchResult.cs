@@ -1,36 +1,28 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Sqs
 {
+    public class DeleteMessageBatchResponse
+    {
+        [XmlElement("DeleteMessageBatchResult")]
+        public DeleteMessageBatchResult DeleteMessageBatchResult { get; set; }
+
+        public static DeleteMessageBatchResponse Parse(string xmlText)
+        {
+            return SqsSerializer<DeleteMessageBatchResponse>.Deserialize(xmlText);
+        }
+    }
+
     public class DeleteMessageBatchResult
     {
-        public static List<DeleteMessageBatchResultEntry> Parse(string xmlText)
-        {
-            var list = new List<DeleteMessageBatchResultEntry>();
-
-            var rootEl = XElement.Parse(xmlText);   // <DeleteMessageBatchResponse>
-            var batchResultEl = rootEl.Element(SqsClient.NS + "DeleteMessageBatchResult");
-
-            foreach (var entryEl in batchResultEl.Elements(SqsClient.NS + "DeleteMessageBatchResultEntry"))
-            {
-                list.Add(new DeleteMessageBatchResultEntry(
-                    id: entryEl.Element(SqsClient.NS + "Id").Value
-                ));
-            }
-
-            return list;
-        }
+        [XmlElement("DeleteMessageBatchResultEntry")]
+        public DeleteMessageBatchResultEntry[] Items { get; set; }
     }
 
     public struct DeleteMessageBatchResultEntry
     {
-        public DeleteMessageBatchResultEntry(string id)
-        {
-            Id = id;
-        }
-
-        public string Id { get; }
+        [XmlElement("Id")]
+        public string Id { get; set; }
     }
 }
 

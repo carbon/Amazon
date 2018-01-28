@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 using Carbon.Messaging;
 
@@ -13,10 +14,13 @@ namespace Amazon.Sqs
             Body = body ?? throw new ArgumentNullException(nameof(body));
         }
 
-        public string Id { get; set; }
+        [XmlElement("MessageId")]
+        public string MessageId { get; set; }
 
-        public MessageReceipt Receipt { get; set; }
+        [XmlElement("ReceiptHandle")]
+        public string ReceiptHandle { get; set; }
 
+        [XmlElement("Body")]
         public string Body { get; set; }
 
         public DateTime Created { get; set; }
@@ -26,8 +30,17 @@ namespace Amazon.Sqs
         public int ApproximateReceiveCount { get; set; }
 
         // FIFO queues only (128 bits)
+        [XmlElement("SequenceNumber")]
         public string SequenceNumber { get; set; }
 
         // TODO: Attributes
+
+        #region IQueueMessage<string>
+
+        string IQueueMessage<string>.Id => MessageId;
+
+        MessageReceipt IQueueMessage<string>.Receipt => new MessageReceipt(ReceiptHandle);
+
+        #endregion
     }
 }
