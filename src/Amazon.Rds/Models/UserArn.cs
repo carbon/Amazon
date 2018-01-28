@@ -1,8 +1,8 @@
 ﻿namespace Amazon.Rds
 {
-    public class UserArn
+    public struct UserArn
     {
-        private string name;
+        private readonly string name;
 
         public UserArn(
             AwsRegion region,

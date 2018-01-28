@@ -2,7 +2,7 @@
 
 namespace Amazon.Rds
 {
-    public struct AuthenticationToken
+    public class AuthenticationToken
     {
         public AuthenticationToken(
             string value, 
@@ -15,7 +15,7 @@ namespace Amazon.Rds
         }
 
         public string Value { get; }
-        
+
         public DateTime Issued { get; }
 
         public DateTime Expires { get; }
