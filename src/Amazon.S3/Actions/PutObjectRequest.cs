@@ -35,10 +35,10 @@ namespace Amazon.S3
             Content.Headers.ContentLength = stream.Length;
             Content.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
             
-            Headers.Add("x-amz-content-sha256",
-                stream.CanSeek 
+            Headers.Add("x-amz-content-sha256", stream.CanSeek 
                 ? HexString.FromBytes(ComputeSHA256(stream))
-                : "UNSIGNED-PAYLOAD");
+                : "UNSIGNED-PAYLOAD"
+            );
         }
 
         internal void SetCustomerEncryptionKey(ServerSideEncryptionKey key)
@@ -68,8 +68,8 @@ namespace Amazon.S3
 
             Headers.Add("x-amz-content-sha256",
                 stream.CanSeek
-                ? HexString.FromBytes(ComputeSHA256(stream))
-                : "UNSIGNED-PAYLOAD");
+                    ? HexString.FromBytes(ComputeSHA256(stream))
+                    : "UNSIGNED-PAYLOAD");
         }
     }
 }

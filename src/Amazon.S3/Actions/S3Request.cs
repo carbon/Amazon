@@ -15,12 +15,10 @@ namespace Amazon.S3
             string objectName, 
             string version = null)
         {
-            #region Preconditions
-
             if (host == null)
+            {
                 throw new ArgumentNullException(nameof(host));
-
-            #endregion
+            }
 
             BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
             ObjectName = objectName;
@@ -30,9 +28,9 @@ namespace Amazon.S3
             var urlBuilder = new StringBuilder()
                 .Append("https://")
                 .Append(host)
-                .Append("/")
+                .Append('/')
                 .Append(bucketName)
-                .Append("/");
+                .Append('/');
 
             // s3.dualstack.{region.Name}.amazonaws.com
 

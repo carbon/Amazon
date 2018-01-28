@@ -25,7 +25,7 @@ namespace Amazon.S3
         {
             #region Preconditions
 
-            if (xmlText == null) throw new ArgumentNullException("xmlText");
+            if (xmlText == null) throw new ArgumentNullException(nameof(xmlText));
 
             #endregion
 

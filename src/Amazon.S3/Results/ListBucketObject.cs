@@ -28,11 +28,9 @@ namespace Amazon.S3
 
         #region IBlob
 
-        string IBlob.Name => Key;
-
         DateTime IBlob.Modified => LastModified;
 
-        IReadOnlyDictionary<string, string> IBlob.Metadata => null;
+        IReadOnlyDictionary<string, string> IBlob.Properties => BlobProperties.Empty;
 
         ValueTask<Stream> IBlob.OpenAsync()
         {

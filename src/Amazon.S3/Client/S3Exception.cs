@@ -17,18 +17,17 @@ namespace Amazon.S3
             if (ex is S3Exception s3Exception)
             {
                 HttpStatusCode = s3Exception.HttpStatusCode;
-                ErrorCode = s3Exception.ErrorCode;
-                RequestId = s3Exception.RequestId;
-                ResponseText = s3Exception.ResponseText;
+                ErrorCode      = s3Exception.ErrorCode;
+                RequestId      = s3Exception.RequestId;
             }
         }
 
-        public S3Exception(S3Error error, HttpStatusCode httpStatusCode, string responseText)
-            : this(error.Message, httpStatusCode)
+        public S3Exception(S3Error error, HttpStatusCode statusCode)
+            : this(error.Message, statusCode)
         {
-            ErrorCode = error.Code;
-            RequestId = error.RequestId;
-            ResponseText = responseText;
+            ErrorCode      = error.Code;
+            HttpStatusCode = statusCode;
+            RequestId      = error.RequestId;
         }
 
         /// <summary>
@@ -41,8 +40,6 @@ namespace Amazon.S3
         public string ErrorCode { get; }
 
         public string RequestId { get; }
-
-        public string ResponseText { get; }
 
         public bool IsTransient => HttpStatusCode == HttpStatusCode.InternalServerError;
     }

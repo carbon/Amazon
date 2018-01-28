@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Xml.Linq;
+
 using Carbon.Storage;
 
 namespace Amazon.S3
@@ -14,13 +15,6 @@ namespace Amazon.S3
         public CompleteMultipartUploadRequest(string host, string bucketName, string key, string uploadId, IUploadBlock[] parts)
             : base(HttpMethod.Post, host, bucketName, key + "?uploadId=" + uploadId)
         {
-            #region Preconditions
-
-            if (parts == null)
-                throw new ArgumentNullException(nameof(parts));
-
-            #endregion
-
             CompletionOption = HttpCompletionOption.ResponseContentRead;
 
             Content = new StringContent(
