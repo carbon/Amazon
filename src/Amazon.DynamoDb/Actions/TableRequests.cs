@@ -22,12 +22,10 @@ namespace Amazon.DynamoDb
 
         public AttributeCollection Item { get; }
 
-        public override JsonObject ToJson()
-        {
-            return new JsonObject {
-                { "Item", Item.ToJson() }
-            };
-        }
+        public override JsonObject ToJson() => new JsonObject {
+            { "Item", Item.ToJson() }
+        };
+        
     }
 
     public sealed class DeleteRequest : ItemRequest
@@ -39,25 +37,20 @@ namespace Amazon.DynamoDb
 
         public AttributeCollection Key { get; }
 
-        public override JsonObject ToJson()
-        {
-            return new JsonObject {
-                { "Key", Key.ToJson() }
-            };
-        }
+        public override JsonObject ToJson() => new JsonObject {
+            { "Key", Key.ToJson() }
+        };
     }
 
     public class TableRequests
     {
         public TableRequests(string tableName, List<ItemRequest> requests)
         {
-            #region Preconditions
+            if (requests == null)
+                throw new ArgumentNullException(nameof(requests));
 
-            if (requests == null) throw new ArgumentNullException(nameof(requests));
-
-            if (requests.Count > 25) throw new ArgumentException("Must be 25 or fewer", "requests.Count");
-
-            #endregion
+            if (requests.Count > 25)
+                throw new ArgumentException("Must be 25 or fewer", "requests.Count");
 
             TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             Requests = requests;
@@ -114,7 +107,7 @@ namespace Amazon.DynamoDb
         {
             var requests = new XNodeArray();
 
-            foreach (var request in Requests)
+            foreach (ItemRequest request in Requests)
             {
                 if (request is PutRequest)
                 {

@@ -22,7 +22,7 @@ namespace Amazon.DynamoDb
         {
             var o = new JsonObject();
 
-            foreach (var set in sets)
+            foreach (TableKeys set in sets)
             {
                 o.Add(set.TableName, set.ToJson());
             }
@@ -55,12 +55,18 @@ namespace Amazon.DynamoDb
                 { "Keys", new XNodeArray(Keys.Select(k => k.ToJson()).ToArray()) }
             };
 
-            if (AttributesToGet != null) json.Add("AttributesToGet", JsonArray.Create(AttributesToGet));
-            if (ConsistentRead) json.Add("ConsistentRead", ConsistentRead);
+            if (AttributesToGet != null)
+            {
+                json.Add("AttributesToGet", JsonArray.Create(AttributesToGet));
+            }
+
+            if (ConsistentRead)
+            {
+                json.Add("ConsistentRead", ConsistentRead);
+            }
 
             return json;
         }
-
 
         /* 
 		{

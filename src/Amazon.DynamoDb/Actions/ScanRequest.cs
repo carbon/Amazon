@@ -4,7 +4,6 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-
     public class ScanRequest
     {
         public ScanRequest(string tableName)

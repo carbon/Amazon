@@ -92,11 +92,7 @@ namespace Amazon.DynamoDb
 
         public async Task<BatchWriteItemResult> BatchWriteItemAsync(params TableRequests[] batches)
         {
-            #region Preconditions
-
             if (batches == null) throw new ArgumentNullException(nameof(batches));
-
-            #endregion
 
             /*
 			RequestItems {
@@ -182,11 +178,7 @@ namespace Amazon.DynamoDb
 
         public async Task<QueryResult> QueryAsync(DynamoQuery query)
         {
-            #region Preconditions
-
             if (query == null) throw new ArgumentNullException(nameof(query));
-
-            #endregion
 
             var httpRequest = Setup("Query", query.ToJson());
 
@@ -199,11 +191,7 @@ namespace Amazon.DynamoDb
 
         public async Task<CountResult> QueryCountAsync(DynamoQuery query)
         {
-            #region Preconditions
-
             if (query == null) throw new ArgumentNullException(nameof(query));
-
-            #endregion
 
             query.Select = SelectEnum.COUNT;
 
@@ -268,8 +256,7 @@ namespace Amazon.DynamoDb
 
         private HttpRequestMessage Setup(string action, JsonObject jsonContent)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-            {
+            var request = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Headers = {
                     { "Accept-Encoding", "gzip" },
                     { "x-amz-target", TargetPrefix + "." + action }

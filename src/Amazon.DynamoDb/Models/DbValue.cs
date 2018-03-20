@@ -17,28 +17,28 @@ namespace Amazon.DynamoDb
 		private readonly DbValueType kind;
 		private readonly object value;
 
-		public DbValue(string value)	: this(value, DbValueType.S) { }
-	
-		public DbValue(bool value)	    : this(value, DbValueType.BOOL) { }
-		public DbValue(byte value)		: this(value, DbValueType.N) { }
-		public DbValue(decimal value)	: this(value, DbValueType.N) { }
-		public DbValue(double value)	: this(value, DbValueType.N) { }
-		public DbValue(short value)		: this(value, DbValueType.N) { }
-		public DbValue(int value)		: this(value, DbValueType.N) { }
-		public DbValue(long value)		: this(value, DbValueType.N) { }
-		public DbValue(float value)	    : this(value, DbValueType.N) { }
-		public DbValue(ushort value)	: this(value, DbValueType.N) { }
-		public DbValue(uint value)	    : this(value, DbValueType.N) { }
-		public DbValue(ulong value)	    : this(value, DbValueType.N) { }
-		public DbValue(byte[] value)	: this(value, DbValueType.B) { }
-
-		public DbValue(short[] values)	: this(values, DbValueType.NS) { }
-		public DbValue(int[] values)	: this(values, DbValueType.NS) { }
-		public DbValue(long[] values)	: this(values, DbValueType.NS) { }
-		public DbValue(float[] values)	: this(values, DbValueType.NS) { }
-		public DbValue(double[] values)	: this(values, DbValueType.NS) { }
-		public DbValue(string[] values)	: this(values, DbValueType.SS) { }
-		public DbValue(byte[][] values)	: this(values, DbValueType.BS) { }
+		public DbValue(string value)	 : this(value, DbValueType.S) { }
+	                                     
+		public DbValue(bool value)	     : this(value, DbValueType.BOOL) { }
+		public DbValue(byte value)		 : this(value, DbValueType.N) { }
+		public DbValue(decimal value)	 : this(value, DbValueType.N) { }
+		public DbValue(double value)	 : this(value, DbValueType.N) { }
+		public DbValue(short value)		 : this(value, DbValueType.N) { }
+		public DbValue(int value)		 : this(value, DbValueType.N) { }
+		public DbValue(long value)		 : this(value, DbValueType.N) { }
+		public DbValue(float value)	     : this(value, DbValueType.N) { }
+		public DbValue(ushort value)	 : this(value, DbValueType.N) { }
+		public DbValue(uint value)	     : this(value, DbValueType.N) { }
+		public DbValue(ulong value)	     : this(value, DbValueType.N) { }
+		public DbValue(byte[] value)	 : this(value, DbValueType.B) { }
+                                         
+		public DbValue(short[] values)	 : this(values, DbValueType.NS) { }
+		public DbValue(int[] values)	 : this(values, DbValueType.NS) { }
+		public DbValue(long[] values)	 : this(values, DbValueType.NS) { }
+		public DbValue(float[] values)	 : this(values, DbValueType.NS) { }
+		public DbValue(double[] values)	 : this(values, DbValueType.NS) { }
+		public DbValue(string[] values)	 : this(values, DbValueType.SS) { }
+		public DbValue(byte[][] values)	 : this(values, DbValueType.BS) { }
 
 		public DbValue(DbValue[] values)            : this(values, DbValueType.L) { }
         public DbValue(IEnumerable<DbValue> values) : this(values, DbValueType.L) { }
@@ -60,12 +60,8 @@ namespace Amazon.DynamoDb
 
 		public DbValue(object value)
 		{
-            #region Preconditions
-
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
-
-            #endregion
 
             var type = value.GetType();
 
@@ -200,13 +196,9 @@ namespace Amazon.DynamoDb
 
 		public HashSet<string> ToStringSet()
 		{
-			#region Preconditions
-
 			if (!(kind == DbValueType.NS || kind == DbValueType.SS || kind == DbValueType.BS)) {
 				throw new Exception("Cannot be converted to a set.");
 			}
-
-			#endregion
 
 			if (value is IEnumerable<string> enumerable)
 			{
@@ -225,14 +217,10 @@ namespace Amazon.DynamoDb
 
 		public HashSet<T> ToSet<T>()
 		{
-			#region Preconditions
-
 			if (!(kind == DbValueType.NS || kind == DbValueType.SS || kind == DbValueType.BS))
 			{
 				throw new Exception($"The value type '{kind}' cannot be converted to a Int32 Set.");
 			}
-
-			#endregion
 
 			// Avoid additional allocations where possible
 			if (value is IEnumerable<T> enumerable)
@@ -280,9 +268,9 @@ namespace Amazon.DynamoDb
                 return ToInt() == 1;
             }
 
-            if (value is bool)
+            if (value is bool b)
             {
-                return (bool)value;
+                return b;
             }
 
             throw new Exception($"Cannot convert '{value.GetType().Name}' to a Boolean");
@@ -313,7 +301,6 @@ namespace Amazon.DynamoDb
 
 		public JsonObject ToJson()
 		{
-         
 			// {"N":"225"}
 			// {"S":"Hello"}
 			// {"SS": ["Keneau", "Alexis", "John"]}

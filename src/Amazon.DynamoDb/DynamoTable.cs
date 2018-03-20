@@ -116,13 +116,11 @@ namespace Amazon.DynamoDb
 
         public async Task<IReadOnlyList<T>> FindAllAsync(params IEnumerable<KeyValuePair<string, object>>[] keys)
         {
-            #region Preconditions
+            if (keys == null)
+                throw new ArgumentNullException(nameof(keys));
 
-            if (keys == null) throw new ArgumentNullException(nameof(keys));
-
-            if (keys.Length == 0) throw new ArgumentException("Must not be 0", paramName: "keys.Length");
-
-            #endregion
+            if (keys.Length == 0)
+                throw new ArgumentException("May not be empty", nameof(keys));
 
             var request = new BatchGetItemRequest(new TableKeys(tableName, keys));
 
@@ -132,26 +130,16 @@ namespace Amazon.DynamoDb
         }
 
         public Task<IReadOnlyList<T>> QueryAsync(params Expression[] expressions)
-            => QueryAsync(new Query(expressions));
-
-        public Task<IReadOnlyList<T>> QueryAsync(Query q)
-        {
-            var e = new DynamoQueryExpression(PrimaryKey.Names, q.Expressions);
+        { 
+            var e = new DynamoQueryExpression(PrimaryKey.Names, expressions);
 
             var query = new DynamoQuery {
-                IndexName                 = q.Index?.Name,
-                Limit                     = q.Take ?? 0,
                 KeyConditionExpression    = e.KeyExpression.Text,
                 ExpressionAttributeNames  = (e.HasAttributeNames) ? e.AttributeNames : null,
                 ExpressionAttributeValues = e.AttributeValues,
                 FilterExpression          = e.FilterExpression?.Text
             };
-
-            if (q.Orders != null && q.Orders[0].IsDescending)
-            {
-                query.ScanIndexForward = false;
-            }
-
+            
             return QueryAsync(query);
         }
 
@@ -178,7 +166,7 @@ namespace Amazon.DynamoDb
             {
                 a = await client.QueryAsync(query, retryPolicy).ConfigureAwait(false);
 
-                foreach (var item in a.Items)
+                foreach (AttributeCollection item in a.Items)
                 {
                     result.Add(item.As<T>());
                 }
@@ -241,7 +229,7 @@ namespace Amazon.DynamoDb
                 // If LastEvaluatedKey is anything other than null, this does not necessarily mean that there is more data in the result set. 
                 // The only way to know when you have reached the end of the result set is when LastEvaluatedKey is null.
 
-                foreach (var item in result.Items)
+                foreach (AttributeCollection item in result.Items)
                 {
                     yield return item.As<T>(metadata);
                 }
@@ -302,18 +290,15 @@ namespace Amazon.DynamoDb
 
         public async Task<BatchResult> PutAsync(IEnumerable<T> entities)
         {
-            #region Preconditions
-
-            if (entities == null) throw new ArgumentNullException(nameof(entities));
-
-            #endregion
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
 
             var sw = Stopwatch.StartNew();
 
             var result = new BatchResult();
 
             // Batch in groups of 25
-            foreach (var batch in entities.Batch(25))
+            foreach (IEnumerable<T> batch in entities.Batch(25))
             {
                 await PutBatch(batch, result).ConfigureAwait(false);
             }
@@ -325,12 +310,8 @@ namespace Amazon.DynamoDb
 
         public async Task<UpdateItemResult> PatchAsync(Key<T> key, params Change[] changes)
         {
-            #region Preconditions
-
             if (changes == null)
                 throw new ArgumentNullException(nameof(changes));
-
-            #endregion
 
             var request = new UpdateItemRequest(tableName, key, changes);
 
@@ -340,26 +321,22 @@ namespace Amazon.DynamoDb
         // Conditional patch
         public Task<UpdateItemResult> PatchAsync(
             Key<T> key,
-            IList<Change> changes,
+            Change[] changes,
             Expression[] conditions,
             ReturnValues? returnValues = null)
         {
-            #region Preconditions
-
             if (changes == null)
                 throw new ArgumentNullException(nameof(changes));
 
             if (conditions == null)
                 throw new ArgumentNullException(nameof(conditions));
 
-            #endregion
-
             var request = new UpdateItemRequest(tableName, key, changes, conditions, returnValues);
 
             return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
         }
 
-        public Task<UpdateItemResult> PatchAsync(Key<T> key, IList<Change> changes, ReturnValues returnValues)
+        public Task<UpdateItemResult> PatchAsync(Key<T> key, Change[] changes, ReturnValues returnValues)
         {
             var request = new UpdateItemRequest(tableName, key, changes, returnValues: returnValues);
 

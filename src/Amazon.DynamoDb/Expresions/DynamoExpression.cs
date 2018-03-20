@@ -6,6 +6,8 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
+    using static ExpressionKind;
+
     public sealed class DynamoExpression
     {
         private readonly StringBuilder sb = new StringBuilder();
@@ -34,7 +36,7 @@ namespace Amazon.DynamoDb
 
         public void AddRange(Expression[] expressions)
         {
-            foreach (var expression in expressions)
+            foreach (Expression expression in expressions)
             {
                 Add(expression);
             }
@@ -89,23 +91,19 @@ namespace Amazon.DynamoDb
 
         private void Write(Expression e)
         {
-            if (e.Kind == ExpressionKind.Symbol)
-            {
-                WriteName(e.ToString());
-
-                return;
-            }
-
             switch (e)
             {   
-                case BinaryExpression binary   : WriteBinaryExpression(binary); break;
-                case Constant constant         : WriteValue(constant); break;
-                case FunctionExpression func   : WriteFunctionExpression(func); break;
-                case BetweenExpression between : WriteBetweenExpression(between); break;
-                default                        : throw new Exception("Unexpected expression:" + e.Kind);
+                case Symbol symbol             : WriteName(symbol.Name);            break;
+                case BinaryExpression binary   : WriteBinaryExpression(binary);     break;
+                case Constant constant         : WriteValue(constant);              break;
+                case FunctionExpression func   : WriteFunctionExpression(func);     break;
+                case BetweenExpression between : WriteBetweenExpression(between);   break;
+                default:
+                    throw new Exception("Unexpected expression:" + e.Kind);
             }
         }
 
+        // https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.OperatorsAndFunctions.html
         // attribute_exists(path)
         // attribute_not_exists(path)
         // attribute_type(path, type)
@@ -129,7 +127,7 @@ namespace Amazon.DynamoDb
 
             var i = 0;
 
-            foreach (var e in funcExp.Args)
+            foreach (Expression e in funcExp.Args)
             {
                 if (i != 0) sb.Append(", ");
 
@@ -172,8 +170,6 @@ namespace Amazon.DynamoDb
         {
             var result = new DynamoExpression();
 
-            // TODO: Flatten conjunctions...
-
             result.Add(expression);
 
             return result;
@@ -185,20 +181,20 @@ namespace Amazon.DynamoDb
         {
             switch (kind)
             {
-                case ExpressionKind.And      : return "and";
-                case ExpressionKind.AndAlso  : return "and";
-                case ExpressionKind.Or       : return "or";
-                case ExpressionKind.OrElse   : return "or";
-                case ExpressionKind.Not      : return "not";
-                case ExpressionKind.Equal    : return "=";
-                case ExpressionKind.NotEqual : return "<>";
-                case ExpressionKind.Gt       : return ">";
-                case ExpressionKind.Gte      : return ">=";
-                case ExpressionKind.Lt       : return "<";
-                case ExpressionKind.Lte      : return "<=";
-
-                default: throw new Exception("Unexpected expression kind:" + kind);
+                case And      : return "and";
+                case AndAlso  : return "and";
+                case Or       : return "or";
+                case OrElse   : return "or";
+                case Not      : return "not";
+                case Equal    : return "=";
+                case NotEqual : return "<>";
+                case Gt       : return ">";
+                case Gte      : return ">=";
+                case Lt       : return "<";
+                case Lte      : return "<=";
             }
+
+            throw new Exception("Unexpected expression:" + kind);
         }
 
         #endregion

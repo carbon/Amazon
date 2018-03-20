@@ -153,15 +153,12 @@ namespace Amazon.DynamoDb
 
         internal static AttributeCollection FromObject(object instance, DatasetInfo schema)
         {
-            #region Preconditions
-
-            if (instance == null) throw new ArgumentNullException(nameof(instance));
-
-            #endregion
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
 
             var attributes = new AttributeCollection();
 
-            foreach (var member in schema.Members)
+            foreach (MemberDescriptor member in schema.Members)
             {
                 var value = member.GetValue(instance);
 
@@ -181,11 +178,11 @@ namespace Amazon.DynamoDb
                 {
                     var a = (Array)value;
 
-                    var list = new List<DbValue>(a.Length);
+                    var list = new DbValue[a.Length];
 
-                    foreach (var item in a)
+                    for (int i = 0; i < list.Length; i++)
                     {
-                        list.Add(new DbValue(FromObject(item)));
+                        list[i] = new DbValue(FromObject(a.GetValue(i)));
                     }
 
                     attributes.Add(member.Name, new DbValue(list));
@@ -194,20 +191,20 @@ namespace Amazon.DynamoDb
                 {
                     var a = (IList)value;
 
-                    var list = new List<DbValue>(a.Count);
+                    var list = new DbValue[a.Count];
 
                     if (DbValueConverterFactory.TryGet(typeInfo.ElementType, out IDbValueConverter c))
                     {
-                        foreach (var item in a)
+                        for (int i = 0; i < list.Length; i++)
                         {
-                            list.Add(c.FromObject(item, member));
+                            list[i] = c.FromObject(a[i], member);
                         }
                     }
                     else
                     {
-                        foreach (var item in a)
+                        for (int i = 0; i < list.Length; i++)
                         {
-                            list.Add(new DbValue(FromObject(item)));
+                            list[i] = new DbValue(FromObject(a[i]));
                         }
                     }
 
@@ -287,16 +284,14 @@ namespace Amazon.DynamoDb
 
             var list = Array.CreateInstance(elementType, values.Length);
 
-            var i = 0;
-
-            foreach (var value in values)
+            for (int i = 0; i < values.Length; i++)
             {
+                ref DbValue value = ref values[i];
+
                 if (value.Kind == DbValueType.M)
                 {
                     list.SetValue(((AttributeCollection)value.Value).DeserializeMap(elementModel), i);
                 }
-
-                i++;
             }
 
             return list;
@@ -308,7 +303,7 @@ namespace Amazon.DynamoDb
 
             foreach (var attribute in items)
             {
-                var member = model[attribute.Key];
+                MemberDescriptor member = model[attribute.Key];
 
                 if (member == null) continue;
 

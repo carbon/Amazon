@@ -81,7 +81,7 @@ namespace Amazon.DynamoDb
                 _filter = new DynamoExpression(ExpressionAttributeNames, ExpressionAttributeValues);
             }
 
-            foreach (var condition in conditions)
+            foreach (Expression condition in conditions)
             {
                 _filter.Add(condition);
             }
@@ -109,7 +109,7 @@ namespace Amazon.DynamoDb
 
             var i = 0;
 
-            foreach (var value in values)
+            foreach (string value in values)
             {
                 if (i != 0) sb.Append(',');
 

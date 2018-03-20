@@ -22,38 +22,38 @@ namespace Amazon.DynamoDb.Models
         {
             var i = 0;
 
-            writer.Write("{");
-
+            writer.Write('{');
+            
             foreach (var property in obj)
             {
-                if (i != 0) writer.Write(",");
+                if (i != 0) writer.Write(',');
 
-                writer.Write("\"");
+                writer.Write('"');
                 JavaScriptEncoder.Default.Encode(writer, property.Key);
-                writer.Write("\"");
+                writer.Write('"');
                 
-                writer.Write(":");
+                writer.Write(':');
 
                 WriteXNode(property.Value);
 
                 i++;
             }
 
-            writer.Write("}");
+            writer.Write('}');
         }
 
-        public void WriteProperty(string name, DbValue value)
+        public void WriteProperty(string name, in DbValue value)
         {
-            writer.Write("\"");
+            writer.Write('"');
             JavaScriptEncoder.Default.Encode(writer, name);
-            writer.Write("\"");
+            writer.Write('"');
 
-            writer.Write(":");
+            writer.Write(':');
 
             WriteDbValue(value);
         }
 
-        public void WriteDbValue(DbValue value)
+        public void WriteDbValue(in DbValue value)
         {
             switch (value.Kind)
             {
@@ -63,7 +63,7 @@ namespace Amazon.DynamoDb.Models
                 case BS   : WriteSet("BS", value.ToSet<byte[]>()); break;
                 case SS   : WriteSet("SS", value.ToSet<string>()); break;
                 case NS   : WriteSet("NS", value.ToSet<string>()); break;
-                case L    : WriteList((IEnumerable<DbValue>)value.Value); break;
+                case L    : WriteList((DbValue[])value.Value); break;
                 case N    : WriteValue("N", value.ToString()); break;
                 case M    : WriteMap((AttributeCollection)value.Value); break;
                 default   : throw new Exception("Unexpected type:" + value.Kind);
@@ -74,10 +74,10 @@ namespace Amazon.DynamoDb.Models
         {
             switch (value.Type)
             {
-                case JsonType.Number   : WriteValue("N", value.ToString()); break;
-                case JsonType.String   : WriteString(value.ToString()); break;
-                case JsonType.Binary   : WriteValue("B", value.ToString()); break;
-                case JsonType.Boolean  : WriteBool((value as JsonBoolean).Value); break;
+                case JsonType.Number  : WriteValue("N", value.ToString()); break;
+                case JsonType.String  : WriteString(value.ToString()); break;
+                case JsonType.Binary  : WriteValue("B", value.ToString()); break;
+                case JsonType.Boolean : WriteBool((value as JsonBoolean).Value); break;
 
                 case JsonType.Array:
                     var array = (JsonArray)value;
@@ -104,7 +104,7 @@ namespace Amazon.DynamoDb.Models
 
                         WriteJsonObject((JsonObject)value);
 
-                        writer.Write("}");
+                        writer.Write('}');
 
                         break;
                     }
@@ -119,7 +119,7 @@ namespace Amazon.DynamoDb.Models
 
             foreach (var property in map)
             {
-                if (i != 0) writer.Write(",");
+                if (i != 0) writer.Write(',');
 
                 WriteProperty(property.Key, property.Value);
 
@@ -129,20 +129,18 @@ namespace Amazon.DynamoDb.Models
             writer.Write("}}");
         }
 
-        private void WriteList(IEnumerable<DbValue> values)
+        private void WriteList(DbValue[] values)
         {
             // { "L":[] }
             writer.Write(@"{""L"":[");
 
-            var i = 0;
-
-            foreach (var value in values)
+            for (var i = 0; i < values.Length; i++)
             {
-                if (i != 0) writer.Write(",");
+                if (i != 0) writer.Write(',');
+
+                ref DbValue value = ref values[i];
 
                 WriteDbValue(value);
-
-                i++;
             }
 
             writer.Write(@"]}");
@@ -153,11 +151,11 @@ namespace Amazon.DynamoDb.Models
             // { "SS":[] }
             writer.Write(@"{""L"":[");
 
-            var i = 0;
+            var i = 0; https://mcohen.carbonmade.com/
 
             foreach (var value in values)
             {
-                if (i != 0) writer.Write(",");
+                if (i != 0) writer.Write(',');
 
                 WriteXNode(value);
 
@@ -178,9 +176,9 @@ namespace Amazon.DynamoDb.Models
 
             foreach (var value in values)
             {
-                if (i != 0) writer.Write(",");
+                if (i != 0) writer.Write(',');
 
-                writer.Write("\"");
+                writer.Write('"');
 
                 if (type == "S")
                 {
@@ -191,7 +189,7 @@ namespace Amazon.DynamoDb.Models
                     writer.Write(value.ToString());
                 }
 
-                writer.Write("\"");
+                writer.Write('"');
 
                 i++;
             }
@@ -203,16 +201,16 @@ namespace Amazon.DynamoDb.Models
         {
             writer.Write(@"{""BOOL"":");
             writer.Write(value ? "true" : "false");
-            writer.Write(@"}");
+            writer.Write('}');
         }
 
         private void WriteString(string value)
         {
             writer.Write(@"{""S"":");
-            writer.Write("\"");
+            writer.Write('"');
             JavaScriptEncoder.Default.Encode(writer, value);
-            writer.Write("\"");
-            writer.Write(@"}");
+            writer.Write('"');
+            writer.Write('}');
         }
 
         private void WriteValue(string type, string value)

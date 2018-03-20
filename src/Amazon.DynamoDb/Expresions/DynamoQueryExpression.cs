@@ -17,7 +17,7 @@ namespace Amazon.DynamoDb
 
             KeyExpression = new DynamoExpression(AttributeNames, AttributeValues);
 
-            foreach (var expression in expressions)
+            foreach (Expression expression in expressions)
             {
                 if (expression is BinaryExpression be)
                 {
@@ -72,7 +72,7 @@ namespace Amazon.DynamoDb
 
         private bool IsKey(string name)
         {
-            foreach (var key in keyNames)
+            foreach (string key in keyNames)
             {
                 if (name == key) return true;
             }

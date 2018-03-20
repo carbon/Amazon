@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 using Carbon.Json;
 
@@ -13,10 +14,10 @@ namespace Amazon.DynamoDb
             Key = key ?? throw new ArgumentNullException(nameof(key));
         }
 
-        // [Required]
+        [DataMember(Name = "TableName", IsRequired = true)]
         public string TableName { get; }
 
-        // [Required]
+        [DataMember(Name = "Key", IsRequired = true)]
         public IEnumerable<KeyValuePair<string, object>> Key { get; }
 
         public bool ConsistentRead { get; set; }

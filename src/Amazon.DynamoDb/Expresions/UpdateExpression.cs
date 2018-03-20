@@ -18,15 +18,17 @@ namespace Amazon.DynamoDb
         private readonly StringBuilder delete = null;
 
         public UpdateExpression(
-            IEnumerable<Change> changes,
+            Change[] changes,
             JsonObject attributeNames,
             AttributeCollection attributeValues)
         {
             this.attributeNames  = attributeNames;
             this.attributeValues = attributeValues;
 
-            foreach (var change in changes)
+            for (int i = 0; i < changes.Length; i++)
             {
+                ref Change change = ref changes[i];
+
                 /*
                 An update expression consists of sections. 
                 Each section begins with a SET, REMOVE, ADD or DELETE keyword. 
@@ -92,12 +94,10 @@ namespace Amazon.DynamoDb
 
         public void WriteChange(Change change, StringBuilder sb)
         {
-            #region Preconditions
-
             if (sb == null)
+            {
                 throw new ArgumentNullException(nameof(sb));
-
-            #endregion
+            }
 
             if (sb[sb.Length - 1] != ' ')
             {
