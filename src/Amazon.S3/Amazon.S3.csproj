@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.S3</AssemblyName>
-    <VersionPrefix>0.10.6</VersionPrefix>
+    <VersionPrefix>0.10.7</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7.2</LangVersion>
 
@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Storage" Version="1.13.0" />
+    <PackageReference Include="Carbon.Storage" Version="1.14.0" />
   </ItemGroup>
   
 </Project>
