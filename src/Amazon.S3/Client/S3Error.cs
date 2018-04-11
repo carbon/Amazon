@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.S3
 {
@@ -19,30 +17,14 @@ namespace Amazon.S3
         [XmlElement]
         public string RequestId { get; set; }
 
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(S3Error));
-
         public static S3Error ParseXml(string xmlText)
         {
-            #region Preconditions
-
-            if (xmlText == null) throw new ArgumentNullException(nameof(xmlText));
-
-            #endregion
-
-            try
-            {
-                using (var reader = new StringReader(xmlText))
-                {
-                    return (S3Error)serializer.Deserialize(reader);
-                }
-            }
-            catch
-            {
-                throw new Exception(xmlText);
-            }
+            return ResponseHelper<S3Error>.ParseXml(xmlText);
         }
     }
 }
+
+// https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html
 
 /*
 <?xml version="1.0" encoding="UTF-8"?>
