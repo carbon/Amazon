@@ -1,14 +1,17 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace Amazon.S3
 {
-    public class RestoreObjectRequest : S3Request
+    public sealed class RestoreObjectRequest : S3Request
     {
         public RestoreObjectRequest(string host, string bucketName, string key)
             : base(HttpMethod.Post, host, bucketName, key + "?restore")
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
             var xmlText = GetXmlString();
 
             Content = new StringContent(xmlText, Encoding.UTF8, "text/xml");

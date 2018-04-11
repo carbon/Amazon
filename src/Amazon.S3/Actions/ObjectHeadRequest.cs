@@ -3,10 +3,13 @@ using System.Net.Http;
 
 namespace Amazon.S3
 {
-    public class ObjectHeadRequest : S3Request
+    public sealed class ObjectHeadRequest : S3Request
     {
         public ObjectHeadRequest(string host, string bucketName, string key)
-            : base(HttpMethod.Head, host, bucketName, key) { }
+            : base(HttpMethod.Head, host, bucketName, key)
+        {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+        }
 
         internal void SetCustomerEncryptionKey(ServerSideEncryptionKey key)
         {

@@ -4,11 +4,13 @@ using System.Net.Http.Headers;
 
 namespace Amazon.S3
 {
-    public class GetObjectRequest : S3Request
+    public sealed class GetObjectRequest : S3Request
     {
-        public GetObjectRequest(string host, string bucketName, string objectName)
-            : base(HttpMethod.Get, host, bucketName, objectName)
+        public GetObjectRequest(string host, string bucketName, string key)
+            : base(HttpMethod.Get, host, bucketName, key)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
             CompletionOption = HttpCompletionOption.ResponseHeadersRead;
         }
 

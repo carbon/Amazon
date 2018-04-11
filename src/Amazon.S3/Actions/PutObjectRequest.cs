@@ -12,13 +12,13 @@ namespace Amazon.S3
         public PutObjectRequest(string host, string bucketName, string key)
             : base(HttpMethod.Put, host, bucketName, key)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }
 
         public void SetStream(Stream stream, string mediaType = "application/octet-stream")
         {
-            #region Preconditions
-
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
 
@@ -27,8 +27,6 @@ namespace Amazon.S3
 
             if (mediaType == null)
                 throw new ArgumentNullException(nameof(mediaType));
-
-            #endregion
 
             Content = new StreamContent(stream);
 
@@ -41,7 +39,7 @@ namespace Amazon.S3
             );
         }
 
-        internal void SetCustomerEncryptionKey(ServerSideEncryptionKey key)
+        internal void SetCustomerEncryptionKey(in ServerSideEncryptionKey key)
         {
             Headers.Add("x-amz-server-side-encryption-customer-algorithm", key.Algorithm);
             Headers.Add("x-amz-server-side-encryption-customer-key",       Convert.ToBase64String(key.Key));
@@ -50,15 +48,11 @@ namespace Amazon.S3
 
         public void SetStream(Stream stream, long length, string mediaType = "application/octet-stream")
         {
-            #region Preconditions
-
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
 
             if (length <= 0)
                 throw new ArgumentException("Must be greater than 0.", nameof(length));
-
-            #endregion
             
             Content = new StreamContent(stream);
             Content.Headers.ContentLength = length;

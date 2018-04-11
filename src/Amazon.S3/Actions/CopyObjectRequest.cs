@@ -2,7 +2,7 @@ using System.Net.Http;
 
 namespace Amazon.S3
 {
-    public class CopyObjectRequest : S3Request
+    public sealed class CopyObjectRequest : S3Request
     {
         public CopyObjectRequest(string host, S3ObjectLocation source, S3ObjectLocation target)
             : base(HttpMethod.Put, host, target.BucketName, target.Key)

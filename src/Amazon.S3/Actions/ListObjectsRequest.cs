@@ -6,7 +6,7 @@ namespace Amazon.S3
 {
     using Helpers;
 
-    public class ListBucketRequest : S3Request
+    public sealed class ListBucketRequest : S3Request
     {
         public ListBucketRequest(string host, string bucketName, ListBucketOptions options)
             : base(HttpMethod.Get, host, bucketName, null)

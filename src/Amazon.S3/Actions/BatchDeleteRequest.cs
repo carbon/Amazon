@@ -1,24 +1,16 @@
 ﻿using System;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Net.Http;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace Amazon.S3
 {
-    public class BatchDeleteRequest : S3Request
+    public sealed class BatchDeleteRequest : S3Request
     {
         public BatchDeleteRequest(string host, string bucketName, DeleteBatch batch)
             : base(HttpMethod.Post, host, bucketName, "?delete")
         {
-            #region Preconditions
-
-            if (batch == null)
-                throw new ArgumentNullException(nameof(batch));
-
-            #endregion
-
             var xmlText = batch.ToXmlString();
 
             Content = new StringContent(xmlText, Encoding.UTF8, "text/xml");
@@ -29,7 +21,7 @@ namespace Amazon.S3
         }
     }
 
-    public class DeleteBatch
+    public readonly struct DeleteBatch
     {
         private readonly string[] keys;
 
@@ -51,19 +43,6 @@ namespace Amazon.S3
 
             return root.ToString();
         }
-    }
-
-    public class BatchItem
-    {
-        public BatchItem() { }
-
-        public BatchItem(string key)
-        {
-            Key = key;
-        }
-
-        [XmlElement]
-        public string Key { get; set; }
     }
 }
 

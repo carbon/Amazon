@@ -7,7 +7,7 @@ using Carbon.Storage;
 
 namespace Amazon.S3
 {
-    public class CompleteMultipartUploadRequest : S3Request
+    public sealed class CompleteMultipartUploadRequest : S3Request
     {
         public CompleteMultipartUploadRequest(string host, IUpload upload, IUploadBlock[] parts)
             : this(host, upload.BucketName, upload.ObjectName, upload.UploadId, parts) { }

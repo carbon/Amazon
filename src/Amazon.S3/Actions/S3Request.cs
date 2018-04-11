@@ -63,7 +63,7 @@ namespace Amazon.S3
 
         #region Helpers
 
-        protected byte[] ComputeSHA256(Stream stream)
+        protected static byte[] ComputeSHA256(Stream stream)
         {
             using (var sha = SHA256.Create())
             {
