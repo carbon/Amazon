@@ -1,7 +1,12 @@
 ﻿namespace Amazon.S3
 {
-    public class GlacierJobParameters
+    public readonly struct GlacierJobParameters
     {
+        public GlacierJobParameters(GlacierJobTier tier)
+        {
+            this.Tier = tier;
+        }
+
         public GlacierJobTier Tier { get; }
     }
 }

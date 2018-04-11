@@ -63,7 +63,7 @@ namespace Amazon.S3
             var request = new GetObjectRequest(
                 host       : client.Host,
                 bucketName : bucketName,
-                objectName : key
+                key : key
             );
 
             return await client.GetObjectAsync(request).ConfigureAwait(false);
@@ -80,20 +80,13 @@ namespace Amazon.S3
         // If-None-Match        -- ETag         OR 304
         public async Task<IBlobResult> GetAsync(string key, GetBlobOptions options)
         {
-            #region Preconditions
-
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
-
-            #endregion
-
+            
             var request = new GetObjectRequest(
                 host       : client.Host,
                 bucketName : bucketName,
-                objectName : key
+                key  : key
             );
 
             if (options.IfModifiedSince != null)
@@ -126,13 +119,6 @@ namespace Amazon.S3
 
         public async Task<IReadOnlyDictionary<string, string>> GetPropertiesAsync(string key)
         {
-            #region Preconditions
-
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
-            #endregion
-
             var request = new ObjectHeadRequest(client.Host, bucketName, key: key);
 
             var result = await client.GetObjectHeadAsync(request).ConfigureAwait(false);
@@ -142,13 +128,6 @@ namespace Amazon.S3
 
         public Task<RestoreObjectResult> InitiateRestoreAsync(string key, int days)
         {
-            #region Preconditions
-
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
-            #endregion
-
             var request = new RestoreObjectRequest(client.Host, bucketName, key) {
                 Days = days
             };
@@ -161,17 +140,10 @@ namespace Amazon.S3
             S3ObjectLocation sourceLocation,
             IReadOnlyDictionary<string, string> metadata = null)
         {
-            #region Preconditions
-
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
-            #endregion
-
             var retryCount = 0;
             Exception lastException = null;
 
-            while (retryPolicy.ShouldRetry(retryCount))
+            do
             {
                 try
                 {
@@ -186,19 +158,20 @@ namespace Amazon.S3
 
                 await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
+            while (retryPolicy.ShouldRetry(retryCount));
 
             throw new S3Exception($"Unrecoverable exception copying '{sourceLocation}' to '{key}'", lastException);
         }
 
         private Task<CopyObjectResult> PutInternalAsync(
-            string key,
-            S3ObjectLocation sourceLocation,
+            string destinationKey,
+            in S3ObjectLocation source,
             IReadOnlyDictionary<string, string> properties = null)
         {
             var request = new CopyObjectRequest(
                 host   : client.Host,
-                source : sourceLocation,
-                target : new S3ObjectLocation(bucketName, key)
+                source : source,
+                target : new S3ObjectLocation(bucketName, destinationKey)
             );
 
             SetHeaders(request, properties);
@@ -213,15 +186,11 @@ namespace Amazon.S3
 
         public async Task PutAsync(IBlob blob, PutBlobOptions options)
         {
-            #region Preconditions
-
             if (blob == null)
                 throw new ArgumentNullException(nameof(blob));
 
             if (blob.Key == null)
                 throw new ArgumentNullException("blob.Key");
-
-            #endregion
 
             // TODO: Chunked upload
 
@@ -255,41 +224,20 @@ namespace Amazon.S3
 
         public async Task DeleteAsync(string name)
         {
-            #region Preconditions
-
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-
-            #endregion
-
-            var request = new DeleteObjectRequest(client.Host, bucketName, name);
-
-            await client.DeleteObjectAsync(request).ConfigureAwait(false);
+            await client.DeleteObjectAsync(
+                new DeleteObjectRequest(client.Host, bucketName, name)
+            ).ConfigureAwait(false);
         }
 
-        public Task DeleteAsync(string key, string version)
+        public async Task DeleteAsync(string key, string version)
         {
-            #region Preconditions
-
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
-            #endregion
-
-            var request = new DeleteObjectRequest(client.Host, bucketName, key, version);
-
-            return client.DeleteObjectAsync(request);
+            await client.DeleteObjectAsync(
+                new DeleteObjectRequest(client.Host, bucketName, key, version)
+            ).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(string[] keys)
         {
-            #region Preconditions
-
-            if (keys == null)
-                throw new ArgumentNullException(nameof(keys));
-
-            #endregion
-
             var batch = new DeleteBatch(keys);
 
             var request = new BatchDeleteRequest(client.Host, bucketName, batch);
@@ -318,13 +266,6 @@ namespace Amazon.S3
 
         public async Task<IUpload> StartUploadAsync(string key, IReadOnlyDictionary<string, string> properties)
         {
-            #region Preconditions
-
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
-            #endregion
-
             var request = new InitiateMultipartUploadRequest(client.Host, bucketName, key) {
                 Content = new StringContent(string.Empty)
             };
@@ -336,12 +277,8 @@ namespace Amazon.S3
 
         public async Task<IUploadBlock> UploadBlock(IUpload upload, int number, Stream stream)
         {
-            #region Preconditions
-
             if (upload == null)
                 throw new ArgumentNullException(nameof(upload));
-
-            #endregion
 
             var request = new UploadPartRequest(client.Host, upload, number);
 
@@ -359,12 +296,8 @@ namespace Amazon.S3
 
         public async Task CancelUploadAsync(IUpload upload)
         {
-            #region Preconditions
-
             if (upload == null)
                 throw new ArgumentNullException(nameof(upload));
-
-            #endregion
 
             var request = new AbortMultipartUploadRequest(
                 host       : client.Host, 
@@ -404,7 +337,8 @@ namespace Amazon.S3
                     case "x-amz-request-id2":
                     case "x-amz-request-id": continue;
 
-                    default: request.Headers.Add(item.Key, item.Value); break;
+                    default:
+                        request.Headers.Add(item.Key, item.Value); break;
                 }
             }
         }

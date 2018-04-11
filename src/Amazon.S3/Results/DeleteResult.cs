@@ -2,6 +2,7 @@
 
 namespace Amazon.S3
 {
+    [XmlRoot("DeleteResult", Namespace = S3Client.Namespace)]
     public class DeleteResult
     {        
         [XmlElement("Deleted")]
@@ -20,6 +21,19 @@ namespace Amazon.S3
         {
             return ResponseHelper<DeleteResult>.ParseXml(xmlText);
         }
+    }
+
+    public class BatchItem
+    {
+        public BatchItem() { }
+
+        public BatchItem(string key)
+        {
+            Key = key;
+        }
+
+        [XmlElement]
+        public string Key { get; set; }
     }
 
     public class BatchItemError

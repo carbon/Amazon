@@ -1,6 +1,6 @@
 ﻿namespace Amazon.S3
 {
-    public class StorageClass
+    public readonly struct StorageClass
     {
         private StorageClass(string name)
         {

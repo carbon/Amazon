@@ -25,11 +25,8 @@ namespace Amazon.S3
 
         public S3ObjectInfo(string bucketName, string name, HttpResponseMessage response)
         {
-            #region Preconditions
-
-            if (response == null) throw new ArgumentNullException(nameof(response));
-
-            #endregion
+            if (response == null)
+                throw new ArgumentNullException(nameof(response));
 
             BucketName = bucketName;
             Key = name;
