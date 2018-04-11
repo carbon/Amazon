@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.S3</AssemblyName>
-    <VersionPrefix>0.10.7</VersionPrefix>
+    <VersionPrefix>0.10.8</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7.2</LangVersion>
 
