@@ -26,19 +26,19 @@ namespace Amazon
 
         public static AwsCredential Parse(string text)
         {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
+            if (text == null) throw new ArgumentNullException(nameof(text));
 
-            var parts = text.Split(Seperators.Colon);
-
-            if (parts.Length != 2)
+            var colonIndex = text.IndexOf(':');
+            
+            if (colonIndex == -1)
             {
                 throw new Exception("AccessKeyId & SecretAccessKey should be seperated be ':'");
             }
 
-            return new AwsCredential(parts[0], parts[1]);
+            return new AwsCredential(
+                accessKeyId     : text.Substring(0, colonIndex), 
+                secretAccessKey : text.Substring(colonIndex + 1)
+            );
         }
 
         #region Renewable

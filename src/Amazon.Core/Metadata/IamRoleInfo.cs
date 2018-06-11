@@ -1,5 +1,4 @@
 ﻿using System;
-using Amazon.Helpers;
 
 namespace Amazon
 {
@@ -13,6 +12,6 @@ namespace Amazon
 
         public string InstanceProfileId { get; set; }
 
-        public string ProfileName => InstanceProfileArn.Split(Seperators.ForwardSlash)[1];
+        public string ProfileName => InstanceProfileArn.Substring(InstanceProfileArn.IndexOf('/') + 1);
     }
 }
