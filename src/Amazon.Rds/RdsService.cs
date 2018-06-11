@@ -18,27 +18,29 @@ namespace Amazon.Rds
 
         public AuthenticationToken GenerateAuthenticationToken(GetAuthenticationTokenRequest request)
         {
-            // TODO: Ensure the underlying AWS credential does not need renewed also
+            // Ensure the underlying credential is renewed
+            if (credential.ShouldRenew)
+            {
+                credential.RenewAsync().GetAwaiter().GetResult();
+            }
 
             var date = DateTime.UtcNow;
 
             var scope = new CredentialScope(date, AwsRegion.USEast1, AwsService.RdsDb);
-
-            // TODO: Avoid this allocation by extending presign...
-
+            
             var httpRequest = new HttpRequestMessage(
                 HttpMethod.Get, 
                 $"https://{request.HostName}:{request.Port}?Action=connect&DBUser={request.UserName}"
             );
 
-            SignerV4.Default.Presign(credential, scope, date, TimeSpan.FromMinutes(15), httpRequest);
+            SignerV4.Default.Presign(credential, scope, date, request.Expires, httpRequest);
 
             var url = httpRequest.RequestUri;
 
             return new AuthenticationToken(
                 value   : url.Host + ":" + url.Port.ToString() + "/" + url.Query,
                 issued  : date,
-                expires : date.AddMinutes(15)
+                expires : date + request.Expires
             );
         }
     }
