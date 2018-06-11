@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ses</AssemblyName>
-    <VersionPrefix>0.10.2</VersionPrefix>
+    <VersionPrefix>0.11.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-
+    <LangVersion>7.3</LangVersion>
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
