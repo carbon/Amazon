@@ -8,12 +8,7 @@ namespace Amazon.Ec2
 
         public IamInstanceProfileSpecification(string nameOrArn)
         {
-            #region Preconditions
-
-            if (nameOrArn == null)
-                throw new ArgumentNullException(nameof(nameOrArn));
-
-            #endregion
+            if (nameOrArn == null) throw new ArgumentNullException(nameof(nameOrArn));
 
             if (nameOrArn.StartsWith("arn:"))
             {

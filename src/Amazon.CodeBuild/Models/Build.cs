@@ -13,6 +13,8 @@ namespace Amazon.CodeBuild
         // SUCCEEDED | FAILED | FAULT | TIMED_OUT | IN_PROGRESS | STOPPED
         public string BuildStatus { get; set; }
 
+        public ProjectCache Cache { get; set; }
+
         public string CurrentPhase { get; set; }
 
         public ProjectEnvironment Environment { get; set; }

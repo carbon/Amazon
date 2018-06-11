@@ -345,12 +345,7 @@ namespace Amazon.DynamoDb
 
         public Task<DeleteItemResult> DeleteAsync(T record)
         {
-            #region Preconditions
-
-            if (record == null)
-                throw new ArgumentNullException(nameof(record));
-
-            #endregion
+            if (record == null) throw new ArgumentNullException(nameof(record));
 
             var request = new DeleteItemRequest(
                 tableName : tableName,
@@ -388,11 +383,7 @@ namespace Amazon.DynamoDb
 
         public Task<DeleteItemResult> DeleteAsync(Key<T> key, Expression[] conditions, ReturnValues returnValues)
         {
-            #region Preconditions
-
             if (conditions == null) throw new ArgumentNullException(nameof(conditions));
-
-            #endregion
 
             var request = new DeleteItemRequest(tableName, key) {
                 ReturnValues = returnValues
