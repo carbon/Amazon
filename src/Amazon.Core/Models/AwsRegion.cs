@@ -75,12 +75,8 @@ namespace Amazon
         
         public static AwsRegion Get(string name)
         {
-            #region Preconditions
-
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
-
-            #endregion
 
             switch (name)
             {

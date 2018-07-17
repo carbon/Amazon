@@ -15,8 +15,6 @@ namespace Amazon.Sqs
             TimeSpan? lockTime = null, 
             TimeSpan? waitTime = null)
         {
-            #region Preconditions
-
             if (take > 10)
             {
                 throw new ArgumentException("Must be less than 10", nameof(take));
@@ -31,8 +29,6 @@ namespace Amazon.Sqs
             {
                 throw new ArgumentException("Must be less than 20 seconds ", nameof(waitTime));
             }
-
-            #endregion
 
             this.take = take;
             this.lockTime = lockTime;

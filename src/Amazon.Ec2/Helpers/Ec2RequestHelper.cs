@@ -9,15 +9,11 @@ namespace Amazon.Ec2
     {
         public static Dictionary<string, string> ToParams(string actionName, object instance)
         {
-            #region Preconditions
-
             if (actionName == null)
                 throw new ArgumentNullException(nameof(actionName));
 
             if (instance == null)
                 throw new ArgumentNullException(nameof(instance));
-
-            #endregion
 
             var parameters = new Dictionary<string, string> {
                 { "Action", actionName }
@@ -65,7 +61,8 @@ namespace Amazon.Ec2
 
         private static void AddObject(Dictionary<string, string> parameters, string prefix, JsonObject instance)
         {
-            if (parameters.Count > 100) throw new System.Exception("excedeeded max of 100 parameters");
+            if (parameters.Count > 100)
+                throw new ArgumentException("Must be less than 100 values", nameof(parameters));
 
             foreach (var m in instance)
             {

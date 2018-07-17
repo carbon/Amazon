@@ -43,17 +43,13 @@ namespace Amazon.Security
 
         public static string GetStringToSign(CredentialScope scope, string timestamp, string canonicalRequest)
         {
-            #region Preconditions
-
             if (timestamp == null)
                 throw new ArgumentNullException(nameof(timestamp));
 
             if (canonicalRequest == null)
                 throw new ArgumentNullException(nameof(canonicalRequest));
 
-            #endregion
-
-            var hashedCanonicalRequest = HexString.FromBytes(ComputeSHA256(canonicalRequest));
+            string hashedCanonicalRequest = HexString.FromBytes(ComputeSHA256(canonicalRequest));
 
             return string.Join("\n", new string[] {
                 "AWS4-HMAC-SHA256",     // Algorithm + \n
@@ -117,12 +113,7 @@ namespace Amazon.Security
 
         public static byte[] GetSigningKey(IAwsCredential credential, in CredentialScope scope)
         {
-            #region Preconditions
-
-            if (credential == null)
-                throw new ArgumentNullException(nameof(credential));
-
-            #endregion
+            if (credential == null) throw new ArgumentNullException(nameof(credential));
 
             var kSecret = Encoding.ASCII.GetBytes("AWS4" + credential.SecretAccessKey);
 
@@ -144,15 +135,11 @@ namespace Amazon.Security
             HttpRequestMessage request,
             string payloadHash = emptySha256)
         {
-            #region Preconditions
-
             if (credential == null)
                 throw new ArgumentNullException(nameof(credential));
 
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
-
-            #endregion
 
             var signingKey = GetSigningKey(credential, scope);
 
@@ -164,18 +151,19 @@ namespace Amazon.Security
             }
 
             var timestamp = date.ToString(format: isoDateTimeFormat);
+            var signedHeaders = "host";
 
             queryParameters["X-Amz-Algorithm"] = "AWS4-HMAC-SHA256";
-            queryParameters["X-Amz-Credential"] = $"{credential.AccessKeyId}/{scope}";
+            queryParameters["X-Amz-Credential"] = credential.AccessKeyId + "/" + scope;
 
             if (credential.SecurityToken != null)
             {
                 queryParameters["X-Amz-Security-Token"] = credential.SecurityToken;
             }
 
-            queryParameters["X-Amz-Date"] = timestamp;
-            queryParameters["X-Amz-Expires"] = expires.TotalSeconds.ToString(); // in seconds
-            queryParameters["X-Amz-SignedHeaders"] = "host";
+            queryParameters["X-Amz-Date"]          = timestamp;
+            queryParameters["X-Amz-Expires"]       = expires.TotalSeconds.ToString(); // in seconds
+            queryParameters["X-Amz-SignedHeaders"] = signedHeaders;
 
             var canonicalHeaders = "host:" + request.RequestUri.Host;
 
@@ -189,7 +177,7 @@ namespace Amazon.Security
                 canonicalURI         : request.RequestUri.AbsolutePath,
                 canonicalQueryString : CanonicizeQueryString(queryParameters),
                 canonicalHeaders     : canonicalHeaders,
-                signedHeaders        : "host",
+                signedHeaders        : signedHeaders,
                 payloadHash          : payloadHash
             );
             
@@ -234,6 +222,7 @@ namespace Amazon.Security
                 newUrl.Append(UrlEncoder.Default.Encode(pair.Value));
                 newUrl.Append('&');
             }
+
             newUrl.Append("X-Amz-Signature=").Append(signature);
             
             request.RequestUri = new Uri(newUrl.ToString());
@@ -241,15 +230,11 @@ namespace Amazon.Security
 
         public void Sign(IAwsCredential credential, CredentialScope scope, HttpRequestMessage request)
         {
-            #region Preconditions
-
             if (credential == null)
                 throw new ArgumentNullException(nameof(credential));
 
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
-
-            #endregion
 
             // If we're using S3, ensure the request content has been signed
             if (scope.Service == AwsService.S3 && !request.Headers.Contains("x-amz-content-sha256"))
@@ -318,9 +303,9 @@ namespace Amazon.Security
                 query = query.Substring(1);
             }
 
-            foreach (var part in query.Split(Seperators.Ampersand)) // &
-            {             
-                var split = part.Split(Seperators.Equal); // =
+            foreach (string part in query.Split(Seperators.Ampersand)) // &
+            {          
+                string[] split = part.Split(Seperators.Equal); // =
 
                 dictionary[WebUtility.UrlDecode(split[0])] = split.Length == 2 
                     ? WebUtility.UrlDecode(split[1]) 

@@ -7,18 +7,14 @@ namespace Amazon.S3
     {
         public ServerSideEncryptionKey(byte[] key, string algorithm = "AES256")
         {
-            #region Preconditions
-
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
             if (key.Length != 32)
                 throw new ArgumentException("Must be 256 bits", nameof(key));
 
-            #endregion
-
             Algorithm = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
-            Key       = key;
+            Key = key;
         }
 
         public string Algorithm { get; }

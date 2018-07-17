@@ -93,11 +93,7 @@ namespace Amazon.Sqs
 
         public async Task<SqsMessage[]> ReceiveMessagesAsync(Uri queueUrl, RecieveMessagesRequest request)
         {
-            #region Preconditions
-
             if (request == null) throw new ArgumentNullException(nameof(request));
-
-            #endregion
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(request.ToParams())
@@ -126,8 +122,6 @@ namespace Amazon.Sqs
 
         public async Task<DeleteMessageBatchResultEntry[]> DeleteMessageBatchAsync(Uri queueUrl, string[] recieptHandles)
         {
-            #region Preconditions
-
             if (recieptHandles == null)
                 throw new ArgumentNullException(nameof(recieptHandles));
 
@@ -135,8 +129,6 @@ namespace Amazon.Sqs
                 throw new ArgumentException("Must contain 10 or fewer items.", nameof(recieptHandles));
 
             // Max payload = 64KB (65,536 bytes)
-
-            #endregion
 
             var parameters = new SqsRequest {
                 { "Action", "DeleteMessageBatch" }

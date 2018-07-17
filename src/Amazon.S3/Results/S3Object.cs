@@ -18,12 +18,7 @@ namespace Amazon.S3
 
         public S3Object(string name, HttpResponseMessage response)
         {
-            #region Preconditions
-
-            if (response == null)
-                throw new ArgumentNullException(nameof(response));
-
-            #endregion
+            if (response == null) throw new ArgumentNullException(nameof(response));
 
             Key = name ?? throw new ArgumentNullException(nameof(name));
 
