@@ -4,7 +4,7 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public sealed class QueryResult : IConsumedResources
+    public sealed class QueryResult
     {
         public QueryResult(
             ConsumedCapacity consumedCapacity,
@@ -33,7 +33,7 @@ namespace Amazon.DynamoDb
 
             if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
             {
-                consumedCapacity = ConsumedCapacity.FromJson((JsonObject)consumedCapacityNode);
+                consumedCapacity = consumedCapacityNode.As<ConsumedCapacity>();
             }
 
             if (json.TryGetValue("LastEvaluatedKey", out var lastEvaluatedKeyNode))
@@ -49,7 +49,7 @@ namespace Amazon.DynamoDb
 
                 items = new AttributeCollection[itemsJson.Count];
 
-                for (var i = 0; i < items.Length; i++)
+                for (int i = 0; i < items.Length; i++)
                 {
                     items[i] = AttributeCollection.FromJson((JsonObject)itemsJson[i]);
                 }
@@ -68,7 +68,6 @@ namespace Amazon.DynamoDb
         }
     }
 }
-
 
 /* 
 { 

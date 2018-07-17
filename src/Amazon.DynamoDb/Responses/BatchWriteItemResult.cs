@@ -18,7 +18,7 @@ namespace Amazon.DynamoDb
             {
                 foreach (var item in (JsonArray)consumedCapacityNode)
                 {
-                    var unit = DynamoDb.ConsumedCapacity.FromJson((JsonObject)item);
+                    var unit = item.As<ConsumedCapacity>();
 
                     // TODO
                 }

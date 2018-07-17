@@ -11,11 +11,10 @@ namespace Amazon.DynamoDb
         public static GetItemResult FromJson(JsonObject json)
         {
             var result = new GetItemResult();
-
-
+            
             if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
             {
-                result.ConsumedCapacity = ConsumedCapacity.FromJson((JsonObject)consumedCapacityNode);
+                result.ConsumedCapacity = consumedCapacityNode.As<ConsumedCapacity>();
             }
 
             if (json.TryGetValue("Item", out var itemNode))

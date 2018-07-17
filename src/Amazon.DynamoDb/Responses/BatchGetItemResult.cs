@@ -9,7 +9,7 @@ namespace Amazon.DynamoDb
     {
         // public ConsumedCapacity[] ConsumedCapacity { get; set; }
 
-        public List<TableItems> Responses { get; } = new List<TableItems>();
+        public List<TableItemCollection> Responses { get; } = new List<TableItemCollection>();
 
         public List<TableKeys> UnprocessedKeys { get; } = new List<TableKeys>();
 
@@ -23,7 +23,7 @@ namespace Amazon.DynamoDb
             {
                 foreach (var item in (JsonArray)consumedCapacityNode)
                 {
-                    var unit = ConsumedCapacity.FromJson((JsonObject)item);
+                    var unit = item.As<ConsumedCapacity>();
 
                     // TODO
                 }
@@ -33,7 +33,7 @@ namespace Amazon.DynamoDb
             {
                 foreach (var tableEl in (JsonObject)responsesNode)
                 {
-                    var table = new TableItems(tableEl.Key);
+                    var table = new TableItemCollection(tableEl.Key);
 
                     foreach (var item in (JsonArray)tableEl.Value)
                     {
@@ -71,9 +71,9 @@ namespace Amazon.DynamoDb
         }
     }
 
-    public class TableItems : Collection<AttributeCollection>
+    public sealed class TableItemCollection : Collection<AttributeCollection>
     {
-        public TableItems(string name)
+        public TableItemCollection(string name)
         {
             Name = name;
         }
