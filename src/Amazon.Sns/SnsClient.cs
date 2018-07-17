@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Amazon.Sns
 {
-    public class SnsClient : AwsClient
+    public sealed class SnsClient : AwsClient
     {
         public const string Version = "2010-03-31";
 
@@ -23,7 +23,7 @@ namespace Amazon.Sns
 
         #region Helpers
 
-        private FormUrlEncodedContent GetFormContent(Dictionary<string, string> parameters)
+        private static FormUrlEncodedContent GetFormContent(Dictionary<string, string> parameters)
         {
             parameters.Add("Version", Version);
 

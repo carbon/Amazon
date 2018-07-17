@@ -47,11 +47,7 @@ namespace Amazon.Ses
 
         public static SesEmail FromMailMessage(MailMessage message)
         {
-            #region Preconditions
-
             if (message == null) throw new ArgumentNullException(nameof(message));
-
-            #endregion
 
             var doc = new SesEmail
             {
