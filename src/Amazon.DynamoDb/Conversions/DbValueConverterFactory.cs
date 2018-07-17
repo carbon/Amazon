@@ -367,19 +367,14 @@ namespace Amazon.DynamoDb
 
     internal sealed class JsonObjectConverter : IDbValueConverter
     {
-        public DbValue FromObject(object value, IMember member) => 
-            new DbValue(value.ToString());
+        public DbValue FromObject(object value, IMember member) => new DbValue(value.ToString());
 
-        public object ToObject(DbValue item, IMember member) =>
-            JsonObject.Parse(item.ToString());
+        public object ToObject(DbValue item, IMember member) => JsonObject.Parse(item.ToString());
     }
 
     internal sealed class JsonArrayConverter : IDbValueConverter
     {
-        public DbValue FromObject(object value, IMember member)
-        {
-            return new DbValue(value.ToString());
-        }
+        public DbValue FromObject(object value, IMember member) => new DbValue(value.ToString());
 
         public object ToObject(DbValue item, IMember member)
         {

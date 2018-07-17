@@ -1,6 +1,4 @@
-﻿using Carbon.Json;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
     public class CountResult
     {
@@ -12,11 +10,6 @@ namespace Amazon.DynamoDb
         }
 
         public int Count { get; set; }
-
-        public static CountResult FromJson(JsonObject json)
-        {
-            return new CountResult((int)json["Count"]);
-        }
     }
 }
 

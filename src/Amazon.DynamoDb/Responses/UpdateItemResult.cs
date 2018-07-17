@@ -21,7 +21,7 @@ namespace Amazon.DynamoDb
 
             if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
             {
-                consumedCapacity = ConsumedCapacity.FromJson((JsonObject)consumedCapacityNode);
+                consumedCapacity = consumedCapacityNode.As<ConsumedCapacity>();
             }
 
             if (json.TryGetValue("Attributes", out var attributesNode))

@@ -16,13 +16,13 @@ namespace Amazon.DynamoDb
         public void Add(string name, string value)
             => items.Add(name, new DbValue(value));
 
-        public void Add(string name, Int16 value)
+        public void Add(string name, short value)
             => items.Add(name, new DbValue(value));
 
-        public void Add(string name, Int32 value)
+        public void Add(string name, int value)
             => items.Add(name, new DbValue(value));
 
-        public void Add(string name, Int64 value)
+        public void Add(string name, long value)
             => items.Add(name, new DbValue(value));
 
         public void Add(string name, float value)

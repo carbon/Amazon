@@ -4,16 +4,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Amazon.Scheduling;
+
 using Carbon.Data;
 using Carbon.Data.Expressions;
 
 namespace Amazon.DynamoDb
 {
-    using Scheduling;
-
     using static Expression;
 
-    // Key may be byte[]
     public class DynamoTable<T, TKey>
         where T : class
     {
@@ -428,11 +427,7 @@ namespace Amazon.DynamoDb
 
         private async Task<BatchResult> PutBatch(IEnumerable<T> entities, BatchResult result)
         {
-            #region Preconditions
-
             if (entities == null) throw new ArgumentNullException(nameof(entities));
-
-            #endregion
 
             // Up to 25 items put or delete operations, with the request size not exceeding 1 MB.
 
@@ -451,13 +446,11 @@ namespace Amazon.DynamoDb
 
         private async Task<BatchWriteItemResult> BatchWriteItem(TableRequests batch, BatchResult info)
         {
-            #region Preconditions
+            if (batch == null)
+                throw new ArgumentNullException(nameof(batch));
 
-            if (batch == null) throw new ArgumentNullException(nameof(batch));
-
-            if (batch.Requests.Count > 25) throw new ArgumentException("Must be 25 or less.", "batch.Items");
-
-            #endregion
+            if (batch.Requests.Count > 25)
+                throw new ArgumentException("Must be 25 or less.", "batch.Items");
 
             var retryCount = 0;
             Exception lastError = null;

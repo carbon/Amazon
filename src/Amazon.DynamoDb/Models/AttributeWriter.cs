@@ -9,7 +9,7 @@ namespace Amazon.DynamoDb.Models
 {
     using static DbValueType;
 
-    public class AttributeWriter
+    public readonly struct AttributeWriter
     {
         private readonly TextWriter writer;
 
@@ -20,7 +20,7 @@ namespace Amazon.DynamoDb.Models
 
         public void WriteJsonObject(JsonObject obj)
         {
-            var i = 0;
+            int i = 0;
 
             writer.Write('{');
             
@@ -113,7 +113,7 @@ namespace Amazon.DynamoDb.Models
 
         public void WriteMap(AttributeCollection map)
         {
-            var i = 0;
+            int i = 0;
 
             writer.Write(@"{""M"":{");
 
@@ -134,7 +134,7 @@ namespace Amazon.DynamoDb.Models
             // { "L":[] }
             writer.Write(@"{""L"":[");
 
-            for (var i = 0; i < values.Length; i++)
+            for (int i = 0; i < values.Length; i++)
             {
                 if (i != 0) writer.Write(',');
 
@@ -151,7 +151,7 @@ namespace Amazon.DynamoDb.Models
             // { "SS":[] }
             writer.Write(@"{""L"":[");
 
-            var i = 0; https://mcohen.carbonmade.com/
+            int i = 0;
 
             foreach (var value in values)
             {
@@ -172,7 +172,7 @@ namespace Amazon.DynamoDb.Models
             writer.Write(type);
             writer.Write(@""":[");
 
-            var i = 0;
+            int i = 0;
 
             foreach (var value in values)
             {

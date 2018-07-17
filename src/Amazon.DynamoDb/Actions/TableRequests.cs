@@ -24,8 +24,7 @@ namespace Amazon.DynamoDb
 
         public override JsonObject ToJson() => new JsonObject {
             { "Item", Item.ToJson() }
-        };
-        
+        };   
     }
 
     public sealed class DeleteRequest : ItemRequest

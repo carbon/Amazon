@@ -247,11 +247,9 @@ namespace Amazon.DynamoDb
 				return (T[])value;
 			}
 
-			var collection = value as IList;
-
-			if (collection == null) throw new Exception("value is not an IList");
-
-			var array = new T[collection.Count];
+            IList collection = (IList)value;
+            
+			T[] array = new T[collection.Count];
 			
 			for (int i = 0; i < collection.Count; i++)
 			{

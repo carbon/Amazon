@@ -186,7 +186,6 @@ namespace Amazon.DynamoDb
             var responseJson = JsonObject.Parse(responseText);
 
             return QueryResult.FromJson(responseJson);
-
         }
 
         public async Task<CountResult> QueryCountAsync(DynamoQuery query)
@@ -200,7 +199,7 @@ namespace Amazon.DynamoDb
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
             var responseJson = JsonObject.Parse(responseText);
 
-            return CountResult.FromJson(responseJson);
+            return responseJson.As<CountResult>();
         }
 
         public async Task<QueryResult> ScanAsync(ScanRequest request)

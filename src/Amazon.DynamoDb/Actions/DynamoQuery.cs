@@ -107,7 +107,7 @@ namespace Amazon.DynamoDb
                 ExpressionAttributeNames = new JsonObject();
             }
 
-            var i = 0;
+            int i = 0;
 
             foreach (string value in values)
             {

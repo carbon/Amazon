@@ -8,21 +8,19 @@ namespace Amazon.DynamoDb
 {
     public class BatchGetItemRequest
     {
-        private readonly TableKeys[] sets;
-
         public BatchGetItemRequest(params TableKeys[] sets)
         {
-            this.sets = sets ?? throw new ArgumentNullException(nameof(sets));
+            Sets = sets ?? throw new ArgumentNullException(nameof(sets));
         }
 
         // [Required]
-        public TableKeys[] Sets => sets;
+        public TableKeys[] Sets { get; }
 
         public JsonObject ToJson()
         {
             var o = new JsonObject();
 
-            foreach (TableKeys set in sets)
+            foreach (TableKeys set in Sets)
             {
                 o.Add(set.TableName, set.ToJson());
             }
