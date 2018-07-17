@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Kinesis
 {
-    public class PutRecordsRequest : KinesisRequest
+    public sealed class PutRecordsRequest : KinesisRequest
     {
         public PutRecordsRequest(string streamName, Record[] records)
         {
