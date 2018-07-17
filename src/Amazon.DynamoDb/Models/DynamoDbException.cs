@@ -56,7 +56,12 @@ namespace Amazon.DynamoDb
 
             if (type != null)
             {
-                type = type.Split('#')[1];
+                int indexOfPound = type.IndexOf('#');
+
+                if (indexOfPound > -1)
+                {
+                    type = type.Substring(indexOfPound + 1);
+                }
             }
 
             if (type == "ConditionalCheckFailedException")
