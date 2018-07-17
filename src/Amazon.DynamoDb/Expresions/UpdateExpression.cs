@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
-
-using Carbon.Json;
 using Carbon.Data;
+using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -92,7 +90,7 @@ namespace Amazon.DynamoDb
             }
         }
 
-        public void WriteChange(Change change, StringBuilder sb)
+        public void WriteChange(in Change change, StringBuilder sb)
         {
             if (sb == null)
             {

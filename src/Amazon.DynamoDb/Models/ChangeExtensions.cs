@@ -8,7 +8,7 @@ namespace Amazon.DynamoDb
 {
     public static class ChangeExtensions
     {
-        public static KeyValuePair<string, JsonObject> ToProperty(this Change change)
+        public static KeyValuePair<string, JsonObject> ToProperty(this in Change change)
         {
             var o = new JsonObject();
 
@@ -40,7 +40,7 @@ namespace Amazon.DynamoDb
                 case DataOperation.Replace  : return "PUT";
                 case DataOperation.Remove   : return "DELETE";
 
-                default: throw new Exception("Unexpected data operation: " + op.ToString());
+                default: throw new Exception("Invalid DataOperation: " + op.ToString());
             }
         }
     }
