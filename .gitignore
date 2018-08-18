@@ -9,3 +9,4 @@ restore.dg
 bin/
 obj/
 /release
+.vs
