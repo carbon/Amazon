@@ -14,7 +14,7 @@ namespace Amazon.DynamoDb
     using static Expression;
 
     public class DynamoTable<T, TKey>
-        where T : class
+        where T: class
     {
         private readonly string tableName;
         private readonly DynamoDbClient client;

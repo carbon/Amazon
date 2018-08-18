@@ -7,7 +7,7 @@ using Carbon.Data;
 
 namespace Amazon.DynamoDb
 {
-    public class AttributeCollection : IEnumerable<KeyValuePair<string, DbValue>>
+    public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbValue>>
     {
         private readonly Dictionary<string, DbValue> items = new Dictionary<string, DbValue>();
 
