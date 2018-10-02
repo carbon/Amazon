@@ -8,10 +8,10 @@ namespace Amazon.S3
         public ObjectHeadRequest(string host, string bucketName, string key)
             : base(HttpMethod.Head, host, bucketName, key)
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (key is null) throw new ArgumentNullException(nameof(key));
         }
 
-        internal void SetCustomerEncryptionKey(ServerSideEncryptionKey key)
+        internal void SetCustomerEncryptionKey(in ServerSideEncryptionKey key)
         {
             Headers.Add("x-amz-server-side-encryption-customer-algorithm", key.Algorithm);
             Headers.Add("x-amz-server-side-encryption-customer-key",       Convert.ToBase64String(key.Key));
