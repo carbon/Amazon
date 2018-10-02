@@ -8,7 +8,7 @@ namespace Amazon.Kinesis.Firehose
 
         public Record(byte[] data)
         {
-            if (data == null)
+            if (data is null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
@@ -23,10 +23,10 @@ namespace Amazon.Kinesis.Firehose
                 throw new ArgumentException(nameof(data), "Must be less than 1MB");
             }
 
-            Data = Convert.ToBase64String(data);
+            Data = data;
         }
 
-        public readonly string Data;
+        public byte[] Data { get; }
     }
 }
 
