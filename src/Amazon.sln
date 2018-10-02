@@ -69,7 +69,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Sqs.Tests", "Amazon.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Kinesis.Firehose", "Amazon.Kinesis.Firehose\Amazon.Kinesis.Firehose.csproj", "{BEBB0E0C-50DE-47E8-804C-EBA415FB185B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.CodeBuild.Tests", "Amazon.CodeBuild.Tests\Amazon.CodeBuild.Tests.csproj", "{1B0E1A80-0907-4602-8303-0E28D330D094}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CodeBuild.Tests", "Amazon.CodeBuild.Tests\Amazon.CodeBuild.Tests.csproj", "{1B0E1A80-0907-4602-8303-0E28D330D094}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
