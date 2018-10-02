@@ -155,9 +155,9 @@ namespace Amazon.S3
             return response;
         }
 
-        public string GetPresignedUrl(in GetPresignedUrlRequest request)
+        public string GetPresignedUrl(GetPresignedUrlRequest request)
         {
-            return S3Helper.GetPresignedUrl(in request, credential);
+            return S3Helper.GetPresignedUrl(request, credential);
         }
 
         #region Helpers
@@ -167,8 +167,15 @@ namespace Amazon.S3
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
-            {                
-                throw StorageException.NotFound(response.RequestMessage.RequestUri.AbsolutePath.TrimStart(Seperators.ForwardSlash));
+            {
+                string key = response.RequestMessage.RequestUri.AbsolutePath;
+
+                if (key.Length > 0 && key[0] == '/')
+                {
+                    key = key.Substring(1);
+                }
+
+                throw StorageException.NotFound(key);
             }
 
             if (responseText.Contains("<Error>"))

@@ -6,11 +6,14 @@ using Amazon.Security;
 namespace Amazon.S3
 {
     public static class S3Helper
-    {        
-        public static string GetPresignedUrl(in GetPresignedUrlRequest request, IAwsCredential credential)
+    {
+        public static string GetPresignedUrl(GetPresignedUrlRequest request, IAwsCredential credential)
         {
-            var now = DateTime.UtcNow;
+            return GetPresignedUrl(request, credential, DateTime.UtcNow);
+        }
 
+        public static string GetPresignedUrl(GetPresignedUrlRequest request, IAwsCredential credential, DateTime now)
+        {
             var scope = new CredentialScope(now, request.Region, AwsService.S3);
 
             int urlLength = 10 + request.Host.Length + request.BucketName.Length + request.Key.Length;
@@ -25,11 +28,11 @@ namespace Amazon.S3
 
             // TODO: support version querystring
 
-            var r = new HttpRequestMessage(HttpMethod.Get, urlBuilder.ToString());
+            var r = new HttpRequestMessage(new HttpMethod(request.Method), urlBuilder.ToString());
 
             SignerV4.Default.Presign(credential, scope, now, request.ExpiresIn, r, "UNSIGNED-PAYLOAD");
 
-            var signedUrl = r.RequestUri.ToString();
+            string signedUrl = r.RequestUri.ToString();
 
             return signedUrl;
         }

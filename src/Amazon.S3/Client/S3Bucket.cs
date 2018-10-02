@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Net.Http;
+
+using Amazon.Scheduling;
 
 using Carbon.Storage;
 
 namespace Amazon.S3
 {
-    using Scheduling;
-
     public sealed class S3Bucket : IBucket, IReadOnlyBucket
     {
         private readonly S3Client client;
@@ -63,25 +63,24 @@ namespace Amazon.S3
             var request = new GetObjectRequest(
                 host       : client.Host,
                 bucketName : bucketName,
-                key : key
+                key        : key
             );
 
             return await client.GetObjectAsync(request).ConfigureAwait(false);
         }
 
-        public string GetPresignedUrl(string key, TimeSpan expiresIn)
+        public string GetPresignedUrl(string key, TimeSpan expiresIn, string method = "GET")
         {
-            var request = new GetPresignedUrlRequest(client.Host, client.Region, bucketName, key, expiresIn);
+            var request = new GetPresignedUrlRequest(method, client.Host, client.Region, bucketName, key, expiresIn);
 
-            return client.GetPresignedUrl(in request);
+            return client.GetPresignedUrl(request);
         }
 
         // If-Modified-Since                    OR 304
         // If-None-Match        -- ETag         OR 304
         public async Task<IBlobResult> GetAsync(string key, GetBlobOptions options)
         {
-            if (options == null)
-                throw new ArgumentNullException(nameof(options));
+            if (options is null) throw new ArgumentNullException(nameof(options));
             
             var request = new GetObjectRequest(
                 host       : client.Host,
@@ -186,10 +185,10 @@ namespace Amazon.S3
 
         public async Task PutAsync(IBlob blob, PutBlobOptions options)
         {
-            if (blob == null)
+            if (blob is null)
                 throw new ArgumentNullException(nameof(blob));
 
-            if (blob.Key == null)
+            if (blob.Key is null)
                 throw new ArgumentNullException("blob.Key");
 
             // TODO: Chunked upload
@@ -257,14 +256,7 @@ namespace Amazon.S3
 
         #region Uploads
 
-        // TODO: Introduce IUpload in Carbon.Storage
-
-        // TODO: 
-        // Carbon.Storage.Uploads
-        // - IUpload (bucketName, objectName, uploadId)
-        // - IUploadBlock (uploadId, number, state)
-
-        public async Task<IUpload> StartUploadAsync(string key, IReadOnlyDictionary<string, string> properties)
+        public async Task<IUpload> InitiateUploadAsync(string key, IReadOnlyDictionary<string, string> properties)
         {
             var request = new InitiateMultipartUploadRequest(client.Host, bucketName, key) {
                 Content = new StringContent(string.Empty)
@@ -275,19 +267,24 @@ namespace Amazon.S3
             return await client.InitiateMultipartUploadAsync(request).ConfigureAwait(false);
         }
 
-        public async Task<IUploadBlock> UploadBlock(IUpload upload, int number, Stream stream)
+        public async Task<IUploadBlock> UploadPartAsync(IUpload upload, int number, Stream stream)
         {
-            if (upload == null)
-                throw new ArgumentNullException(nameof(upload));
+            if (upload is null) throw new ArgumentNullException(nameof(upload));
 
-            var request = new UploadPartRequest(client.Host, upload, number);
+            var request = new UploadPartRequest(
+                host       : client.Host,
+                bucketName : upload.BucketName,
+                key        : upload.ObjectName,
+                uploadId   : upload.UploadId,
+                partNumber : number
+            );
 
             request.SetStream(stream);
 
             return await client.UploadPartAsync(request).ConfigureAwait(false);
         }
 
-        public async Task CompleteUploadAsync(IUpload upload, IUploadBlock[] blocks)
+        public async Task FinalizeUploadAsync(IUpload upload, IUploadBlock[] blocks)
         {
             var request = new CompleteMultipartUploadRequest(client.Host, upload, blocks);
 
@@ -296,7 +293,7 @@ namespace Amazon.S3
 
         public async Task CancelUploadAsync(IUpload upload)
         {
-            if (upload == null)
+            if (upload is null)
                 throw new ArgumentNullException(nameof(upload));
 
             var request = new AbortMultipartUploadRequest(
@@ -315,7 +312,7 @@ namespace Amazon.S3
 
         private void SetHeaders(HttpRequestMessage request, IReadOnlyDictionary<string, string> headers)
         {
-            if (headers == null) return;
+            if (headers is null) return;
 
             foreach (var item in headers)
             {
