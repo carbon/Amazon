@@ -9,7 +9,7 @@ namespace Amazon.S3
         public GetObjectRequest(string host, string bucketName, string key)
             : base(HttpMethod.Get, host, bucketName, key)
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (key is null) throw new ArgumentNullException(nameof(key));
 
             CompletionOption = HttpCompletionOption.ResponseHeadersRead;
         }
@@ -25,7 +25,7 @@ namespace Amazon.S3
         {
             set
             {
-                if (value == null)
+                if (value is null)
                 {
                     Headers.IfNoneMatch.Clear();
                 }

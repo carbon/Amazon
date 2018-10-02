@@ -75,7 +75,7 @@ namespace Amazon
         
         public static AwsRegion Get(string name)
         {
-            if (name == null)
+            if (name is null)
                 throw new ArgumentNullException(nameof(name));
 
             switch (name)

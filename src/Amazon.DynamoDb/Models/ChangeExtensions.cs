@@ -15,7 +15,10 @@ namespace Amazon.DynamoDb
             if (change.Operation == DataOperation.Replace)
             {
                 // Delete Null Values
-                if (change.Value == null) o.Add("Action", "DELETE");
+                if (change.Value is null)
+                {
+                    o.Add("Action", "DELETE");
+                }
 
                 // Action is Replace By Default
             }

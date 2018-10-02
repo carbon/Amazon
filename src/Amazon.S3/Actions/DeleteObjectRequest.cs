@@ -8,7 +8,7 @@ namespace Amazon.S3
         public DeleteObjectRequest(string host, string bucketName, string key, string version = null)
             : base(HttpMethod.Delete, host, bucketName, key, version)
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (key is null) throw new ArgumentNullException(nameof(key));
         }
     }
 }

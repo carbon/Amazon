@@ -9,11 +9,11 @@ namespace Amazon.S3
             Value = value;
         }
 
-        public readonly string Value;
+        public string Value { get; }
 
         public byte[] AsMD5()
         {
-            if (Value == null || Value.Contains("-")) return null;
+            if (Value is null || Value.IndexOf('-') > -1) return null;
 
             // Generally the ETAG is the MD5 of the object -- hexidecimal encoded and wrapped in quootes.
             // If the object was uploaded using multipart upload then this is the MD5 all of the upload-part-md5s.

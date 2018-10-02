@@ -20,7 +20,7 @@ namespace Amazon.Sqs
 
         public async Task<CreateQueueResult> CreateQueueAsync(string queueName, int defaultVisibilityTimeout = 30)
         {
-            if (queueName == null)
+            if (queueName is null)
                 throw new ArgumentNullException(nameof(queueName));
 
             var parameters = new SqsRequest {
@@ -47,7 +47,7 @@ namespace Amazon.Sqs
 
         public async Task<SendMessageBatchResultEntry[]> SendMessageBatchAsync(Uri queueUrl, string[] messages)
         {
-            if (messages == null)
+            if (messages is null)
                 throw new ArgumentNullException(nameof(messages));
 
             if (messages.Length > 10)
@@ -93,7 +93,7 @@ namespace Amazon.Sqs
 
         public async Task<SqsMessage[]> ReceiveMessagesAsync(Uri queueUrl, RecieveMessagesRequest request)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (request is null) throw new ArgumentNullException(nameof(request));
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(request.ToParams())
@@ -122,7 +122,7 @@ namespace Amazon.Sqs
 
         public async Task<DeleteMessageBatchResultEntry[]> DeleteMessageBatchAsync(Uri queueUrl, string[] recieptHandles)
         {
-            if (recieptHandles == null)
+            if (recieptHandles is null)
                 throw new ArgumentNullException(nameof(recieptHandles));
 
             if (recieptHandles.Length > 10)

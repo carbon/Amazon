@@ -27,15 +27,11 @@ namespace Amazon.Helpers
 
         public static byte[] ToBytes(string hexString)
         {
-            #region Preconditions
-
-            if (hexString == null)
+            if (hexString is null)
                 throw new ArgumentNullException(nameof(hexString));
 
             if (hexString.Length % 2 != 0)
                 throw new ArgumentException("Must be divisible by 2");
-
-            #endregion
 
             byte[] bytes = new byte[hexString.Length / 2];
 

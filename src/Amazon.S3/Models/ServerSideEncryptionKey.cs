@@ -7,7 +7,7 @@ namespace Amazon.S3
     {
         public ServerSideEncryptionKey(byte[] key, string algorithm = "AES256")
         {
-            if (key == null)
+            if (key is null)
                 throw new ArgumentNullException(nameof(key));
 
             if (key.Length != 32)

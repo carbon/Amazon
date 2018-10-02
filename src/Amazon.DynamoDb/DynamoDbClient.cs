@@ -92,7 +92,7 @@ namespace Amazon.DynamoDb
 
         public async Task<BatchWriteItemResult> BatchWriteItemAsync(params TableRequests[] batches)
         {
-            if (batches == null) throw new ArgumentNullException(nameof(batches));
+            if (batches is null) throw new ArgumentNullException(nameof(batches));
 
             /*
 			RequestItems {
@@ -178,7 +178,7 @@ namespace Amazon.DynamoDb
 
         public async Task<QueryResult> QueryAsync(DynamoQuery query)
         {
-            if (query == null) throw new ArgumentNullException(nameof(query));
+            if (query is null) throw new ArgumentNullException(nameof(query));
 
             var httpRequest = Setup("Query", query.ToJson());
 
@@ -190,7 +190,7 @@ namespace Amazon.DynamoDb
 
         public async Task<CountResult> QueryCountAsync(DynamoQuery query)
         {
-            if (query == null) throw new ArgumentNullException(nameof(query));
+            if (query is null) throw new ArgumentNullException(nameof(query));
 
             query.Select = SelectEnum.COUNT;
 

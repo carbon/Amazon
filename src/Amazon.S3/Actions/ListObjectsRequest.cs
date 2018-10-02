@@ -72,7 +72,7 @@ namespace Amazon.S3
 
         private void Set(string name, string value)
         {
-            if (value == null)
+            if (value is null)
             {
                 QueryList.Remove(name);
             }

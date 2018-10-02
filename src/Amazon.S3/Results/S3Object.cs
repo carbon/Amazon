@@ -18,7 +18,7 @@ namespace Amazon.S3
 
         public S3Object(string name, HttpResponseMessage response)
         {
-            if (response == null) throw new ArgumentNullException(nameof(response));
+            if (response is null) throw new ArgumentNullException(nameof(response));
 
             Key = name ?? throw new ArgumentNullException(nameof(name));
 

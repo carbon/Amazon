@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 
 namespace Amazon
 {
-    using Helpers;
-
     // AccessKey
 
     public class AwsCredential : IAwsCredential
@@ -26,13 +24,13 @@ namespace Amazon
 
         public static AwsCredential Parse(string text)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
+            if (text is null) throw new ArgumentNullException(nameof(text));
 
             var colonIndex = text.IndexOf(':');
             
             if (colonIndex == -1)
             {
-                throw new Exception("AccessKeyId & SecretAccessKey should be seperated be ':'");
+                throw new Exception("AccessKeyId & SecretAccessKey must be seperated by ':'");
             }
 
             return new AwsCredential(
@@ -45,10 +43,7 @@ namespace Amazon
 
         public bool ShouldRenew => false;
 
-        public Task<bool> RenewAsync()
-        {
-            throw new NotImplementedException("AwsCredential is not renewable");
-        }
+        public Task<bool> RenewAsync() => throw new NotImplementedException("AwsCredential is not renewable");
 
         #endregion
     }

@@ -21,6 +21,11 @@ namespace Amazon.Metadata
         
         public static Task<IamSecurityCredentials> GetAsync(string roleName)
         {
+            if (roleName is null)
+            {
+                throw new ArgumentNullException(nameof(roleName));
+            }
+
             return InstanceMetadata.GetIamSecurityCredentials(roleName);
         }
     }

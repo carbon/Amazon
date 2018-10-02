@@ -7,11 +7,7 @@ namespace Amazon.Sts.Models
     {
         public static AwsSession Parse(string text)
         {
-            #region Preconditions
-
-            if (text == null) throw new ArgumentNullException(nameof(text));
-
-            #endregion
+            if (text is null) throw new ArgumentNullException(nameof(text));
 
             var rootEl = XElement.Parse(text);                              // GetSessionTokenResponse
 

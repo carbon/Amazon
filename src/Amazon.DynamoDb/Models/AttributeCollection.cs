@@ -153,7 +153,7 @@ namespace Amazon.DynamoDb
 
         internal static AttributeCollection FromObject(object instance, DatasetInfo schema)
         {
-            if (instance == null)
+            if (instance is null)
                 throw new ArgumentNullException(nameof(instance));
 
             var attributes = new AttributeCollection();
@@ -162,7 +162,7 @@ namespace Amazon.DynamoDb
             {
                 var value = member.GetValue(instance);
 
-                if (value == null) continue;
+                if (value is null) continue;
 
                 var typeInfo = TypeDetails.Get(member.Type);
 
@@ -251,7 +251,7 @@ namespace Amazon.DynamoDb
             {
                 var member = model[attribute.Key];
 
-                if (member == null) continue;
+                if (member is null) continue;
 
                 if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter converter))
                 {
@@ -305,7 +305,7 @@ namespace Amazon.DynamoDb
             {
                 MemberDescriptor member = model[attribute.Key];
 
-                if (member == null) continue;
+                if (member is null) continue;
 
                 if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter converter))
                 {

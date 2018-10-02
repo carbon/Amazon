@@ -41,11 +41,11 @@ namespace Amazon.DynamoDb
                     // DELETE (elements in set)
                     // e.g. Color :c (deleted :c from color set)
 
-                    if (change.Value == null)
+                    if (change.Value is null)
                     {
                         // Remove attribute
 
-                        if (remove == null)
+                        if (remove is null)
                         {
                             remove = new StringBuilder("REMOVE ");
                         }
@@ -55,7 +55,7 @@ namespace Amazon.DynamoDb
                     else
                     {
                         // Delete element
-                        if (delete == null)
+                        if (delete is null)
                         {
                             delete = new StringBuilder("DELETE ");
                         }
@@ -66,7 +66,7 @@ namespace Amazon.DynamoDb
                 }
                 else if (change.Operation == DataOperation.Add)
                 {
-                    if (add == null)
+                    if (add is null)
                     {
                         add = new StringBuilder("ADD ");
                     }
@@ -76,7 +76,7 @@ namespace Amazon.DynamoDb
                 }
                 else if (change.Operation == DataOperation.Replace)
                 {
-                    if (set == null)
+                    if (set is null)
                     {
                         set = new StringBuilder("SET ");
                     }
@@ -92,7 +92,7 @@ namespace Amazon.DynamoDb
 
         public void WriteChange(in Change change, StringBuilder sb)
         {
-            if (sb == null)
+            if (sb is null)
             {
                 throw new ArgumentNullException(nameof(sb));
             }
@@ -150,7 +150,7 @@ namespace Amazon.DynamoDb
 
         private static void AppendSet(StringBuilder sb, StringBuilder segment)
         {
-            if (segment == null) return;
+            if (segment is null) return;
 
             if (sb.Length > 0) sb.AppendLine(); // \n ?
 

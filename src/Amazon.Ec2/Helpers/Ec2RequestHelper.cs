@@ -9,10 +9,10 @@ namespace Amazon.Ec2
     {
         public static Dictionary<string, string> ToParams(string actionName, object instance)
         {
-            if (actionName == null)
+            if (actionName is null)
                 throw new ArgumentNullException(nameof(actionName));
 
-            if (instance == null)
+            if (instance is null)
                 throw new ArgumentNullException(nameof(instance));
 
             var parameters = new Dictionary<string, string> {

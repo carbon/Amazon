@@ -8,7 +8,7 @@ namespace Amazon.S3
         public InitiateMultipartUploadRequest(string host, string bucketName, string key)
             : base(HttpMethod.Post, host, bucketName, key + "?uploads")
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (key is null) throw new ArgumentNullException(nameof(key));
 
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }

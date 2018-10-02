@@ -24,7 +24,7 @@ namespace Amazon.Metadata
         
         internal static async Task<IamSecurityCredentials> GetIamSecurityCredentials(string roleName)
         {
-            if (roleName == null)
+            if (roleName is null)
             {
                 throw new ArgumentNullException(nameof(roleName));
             }

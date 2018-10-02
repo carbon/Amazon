@@ -9,24 +9,20 @@ namespace Amazon.Elb
 
         public TargetGroupService(ElbClient client)
         {
-            this.client         = client         ?? throw new ArgumentNullException(nameof(client));
+            this.client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         public async Task AddInstancesAsync(string targetGroupArn, params string[] instanceIds)
         {
-            #region Preconditions
-
-            if (instanceIds == null)
+            if (instanceIds is null)
                 throw new ArgumentNullException(nameof(instanceIds));
 
             if (instanceIds.Length == 0)
                 throw new ArgumentException("May not be empty", nameof(instanceIds));
 
-            #endregion
-
             var targets = new TargetDescription[instanceIds.Length];
 
-            for(var i = 0; i < targets.Length; i++)
+            for (var i = 0; i < targets.Length; i++)
             {
                 targets[i] = new TargetDescription(instanceIds[i]);
             }
@@ -38,15 +34,11 @@ namespace Amazon.Elb
 
         public async Task RemoveInstancesAsync(string targetGroupArn, params string[] instanceIds)
         {
-            #region Preconditions
-
-            if (instanceIds == null)
+            if (instanceIds is null)
                 throw new ArgumentNullException(nameof(instanceIds));
 
             if (instanceIds.Length == 0)
                 throw new ArgumentException("May not be empty", nameof(instanceIds));
-
-            #endregion
 
             var targets = new TargetDescription[instanceIds.Length];
 

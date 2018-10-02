@@ -9,11 +9,7 @@ namespace Amazon.Helpers
     {
         public static string ToPostData(this Dictionary<string, string> nvc)
         {
-            #region Preconditions
-
-            if (nvc == null) throw new ArgumentNullException(nameof(nvc));
-
-            #endregion
+            if (nvc is null) throw new ArgumentNullException(nameof(nvc));
 
             var sb = new StringBuilder();
 

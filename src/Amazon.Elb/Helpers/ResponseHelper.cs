@@ -10,12 +10,7 @@ namespace Amazon.Elb
 
         public static T DeserializeXml(string xml)
         {
-            #region Preconditions
-
-            if (xml == null)
-                throw new ArgumentNullException(nameof(xml));
-
-            #endregion
+            if (xml is null) throw new ArgumentNullException(nameof(xml));
 
             using (var reader = new StringReader(xml))
             {

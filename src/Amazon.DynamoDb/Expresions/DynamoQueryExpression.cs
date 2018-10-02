@@ -54,7 +54,7 @@ namespace Amazon.DynamoDb
 
         private void AddFilterExpression(Expression expression)
         {
-            if (FilterExpression == null)
+            if (FilterExpression is null)
             {
                 FilterExpression = new DynamoExpression(AttributeNames, AttributeValues);
             }

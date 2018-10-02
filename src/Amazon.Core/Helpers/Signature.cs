@@ -29,15 +29,11 @@ namespace Amazon
 
         public static Signature ComputeHmacSha256(byte[] key, byte[] data)
         {
-            #region Preconditions
-
-            if (key == null)
+            if (key is null)
                 throw new ArgumentNullException(nameof(key));
 
-            if (data == null)
+            if (data is null)
                 throw new ArgumentNullException(nameof(data));
-
-            #endregion
 
             using (var algorithm = new HMACSHA256(key))
             {

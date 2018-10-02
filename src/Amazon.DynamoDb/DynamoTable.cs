@@ -92,7 +92,7 @@ namespace Amazon.DynamoDb
 
                     // TODO: NotFound Handling
 
-                    if (result.Item == null) return null;
+                    if (result.Item is null) return null;
 
                     return result.Item.As<T>(metadata);
                 }
@@ -115,7 +115,7 @@ namespace Amazon.DynamoDb
 
         public async Task<IReadOnlyList<T>> FindAllAsync(params IEnumerable<KeyValuePair<string, object>>[] keys)
         {
-            if (keys == null)
+            if (keys is null)
                 throw new ArgumentNullException(nameof(keys));
 
             if (keys.Length == 0)
@@ -289,7 +289,7 @@ namespace Amazon.DynamoDb
 
         public async Task<BatchResult> PutAsync(IEnumerable<T> entities)
         {
-            if (entities == null)
+            if (entities is null)
                 throw new ArgumentNullException(nameof(entities));
 
             var sw = Stopwatch.StartNew();
@@ -309,7 +309,7 @@ namespace Amazon.DynamoDb
 
         public async Task<UpdateItemResult> PatchAsync(Key<T> key, params Change[] changes)
         {
-            if (changes == null)
+            if (changes is null)
                 throw new ArgumentNullException(nameof(changes));
 
             var request = new UpdateItemRequest(tableName, key, changes);
@@ -324,10 +324,10 @@ namespace Amazon.DynamoDb
             Expression[] conditions,
             ReturnValues? returnValues = null)
         {
-            if (changes == null)
+            if (changes is null)
                 throw new ArgumentNullException(nameof(changes));
 
-            if (conditions == null)
+            if (conditions is null)
                 throw new ArgumentNullException(nameof(conditions));
 
             var request = new UpdateItemRequest(tableName, key, changes, conditions, returnValues);
@@ -344,7 +344,8 @@ namespace Amazon.DynamoDb
 
         public Task<DeleteItemResult> DeleteAsync(T record)
         {
-            if (record == null) throw new ArgumentNullException(nameof(record));
+            if (record is null)
+                throw new ArgumentNullException(nameof(record));
 
             var request = new DeleteItemRequest(
                 tableName : tableName,
@@ -382,7 +383,8 @@ namespace Amazon.DynamoDb
 
         public Task<DeleteItemResult> DeleteAsync(Key<T> key, Expression[] conditions, ReturnValues returnValues)
         {
-            if (conditions == null) throw new ArgumentNullException(nameof(conditions));
+            if (conditions is null)
+                throw new ArgumentNullException(nameof(conditions));
 
             var request = new DeleteItemRequest(tableName, key) {
                 ReturnValues = returnValues
@@ -427,7 +429,8 @@ namespace Amazon.DynamoDb
 
         private async Task<BatchResult> PutBatch(IEnumerable<T> entities, BatchResult result)
         {
-            if (entities == null) throw new ArgumentNullException(nameof(entities));
+            if (entities is null)
+                throw new ArgumentNullException(nameof(entities));
 
             // Up to 25 items put or delete operations, with the request size not exceeding 1 MB.
 
@@ -446,7 +449,7 @@ namespace Amazon.DynamoDb
 
         private async Task<BatchWriteItemResult> BatchWriteItem(TableRequests batch, BatchResult info)
         {
-            if (batch == null)
+            if (batch is null)
                 throw new ArgumentNullException(nameof(batch));
 
             if (batch.Requests.Count > 25)

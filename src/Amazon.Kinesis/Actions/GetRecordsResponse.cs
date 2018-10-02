@@ -20,7 +20,7 @@ namespace Amazon.Kinesis
         {
             get
             {
-                if (NextShardIterator == null) return null;
+                if (NextShardIterator is null) return null;
 
                 return new KinesisIterator(NextShardIterator);
             }

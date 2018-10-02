@@ -13,7 +13,7 @@ namespace Amazon.Ec2
 
         protected void AddIds(Dictionary<string, string> parameters, string prefix, IReadOnlyList<string> ids)
         {
-            if (ids == null) return;
+            if (ids is null) return;
 
             for (var i = 0; i < ids.Count; i++)
             {
@@ -24,12 +24,8 @@ namespace Amazon.Ec2
 
         protected Dictionary<string, string> GetParameters(string actionName)
         {
-            #region Preconditions
-
-            if (actionName == null)
+            if (actionName is null)
                 throw new ArgumentNullException(nameof(actionName));
-
-            #endregion
 
             var parameters = new Dictionary<string, string> {
                 { "Action", actionName }
