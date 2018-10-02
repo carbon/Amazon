@@ -1,31 +1,35 @@
 using System;
 
 namespace Amazon.S3
-{    
-    public readonly struct GetPresignedUrlRequest
+{
+    public class GetPresignedUrlRequest
     {
         public GetPresignedUrlRequest(
+            string method,
             string host,
-            AwsRegion region, 
-            string bucketName, 
-            string objectKey, 
+            AwsRegion region,
+            string bucketName,
+            string objectKey,
             TimeSpan expiresIn)
         {
-            Host       = host  ?? throw new ArgumentNullException(nameof(host));
-            Region     = region;
+            Method = method ?? throw new ArgumentException(nameof(method));
+            Host = host ?? throw new ArgumentNullException(nameof(host));
+            Region = region;
             BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
-            Key        = objectKey;
-            ExpiresIn  = expiresIn;
+            Key = objectKey;
+            ExpiresIn = expiresIn;
         }
 
-        public readonly string Host;
+        public string Method { get; }
 
-        public readonly string BucketName;
+        public string Host { get; }
 
-        public readonly AwsRegion Region;
+        public string BucketName { get; }
 
-        public readonly string Key;
+        public AwsRegion Region { get; }
 
-        public readonly TimeSpan ExpiresIn;
+        public string Key { get; }
+
+        public TimeSpan ExpiresIn { get; }
     }
 }
