@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Rds
 {
-    public struct UserArn
+    public readonly struct UserArn
     {
         private readonly string name;
 
