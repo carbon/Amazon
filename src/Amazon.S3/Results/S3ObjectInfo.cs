@@ -8,7 +8,7 @@ using Carbon.Storage;
 
 namespace Amazon.S3
 {
-    public class S3ObjectInfo : IBlob
+    public sealed class S3ObjectInfo : IBlob
     {
         public S3ObjectInfo(string key, long size)
         {
@@ -25,7 +25,7 @@ namespace Amazon.S3
 
         public S3ObjectInfo(string bucketName, string name, HttpResponseMessage response)
         {
-            if (response == null)
+            if (response is null)
                 throw new ArgumentNullException(nameof(response));
 
             BucketName = bucketName;
