@@ -12,10 +12,10 @@ namespace Amazon.Sns
 
         public SnsTopic(AwsRegion region, string accountId, string topicName, IAwsCredential credential)
         {
-            if (accountId == null)
+            if (accountId is null)
                 throw new ArgumentNullException(nameof(accountId));
 
-            if (topicName == null)
+            if (topicName is null)
                 throw new ArgumentNullException(nameof(topicName));
             
             this.client = new SnsClient(region, credential);
@@ -24,7 +24,7 @@ namespace Amazon.Sns
 
         public Task<string> PublishAsync(string message)
         {
-            if (message == null)
+            if (message is null)
                 throw new ArgumentNullException(nameof(message));
             
             // Max payload = 256KB (262,144 bytes)

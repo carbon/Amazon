@@ -7,13 +7,15 @@ namespace Amazon.Sts
 {
     public class CallerIdentityVerifier 
     {
-        protected readonly HttpClient httpClient = new HttpClient();
+        protected readonly HttpClient httpClient = new HttpClient {
+            DefaultRequestHeaders = {
+                { "User-Agent", "Carbon/2.0" }
+            }
+        };
 
         public async Task<GetCallerIdentityResult> VerifyCallerIdentityAsync(CallerIdentityVerificationParameters token)
         {
-            #region Preconditions
-
-            if (token == null)
+            if (token is null)
                 throw new ArgumentNullException(nameof(token));
 
             var uri = new Uri(token.Url);
@@ -26,8 +28,6 @@ namespace Amazon.Sts
             if (!(uri.Host.StartsWith("sts.") && uri.Host.EndsWith(".amazonaws.com")))
                 throw new Exception("Must be an STS endpoint: was:" + token.Url);
 
-            #endregion
-
             var request = new HttpRequestMessage(HttpMethod.Post, token.Url) {
                 Content = new StringContent(token.Body, Encoding.UTF8, "application/x-www-form-urlencoded")
             };
@@ -37,7 +37,6 @@ namespace Amazon.Sts
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value.ToString());
             }
 
-            request.Headers.UserAgent.ParseAdd("Carbon/1.6.0");
             request.Headers.Host = uri.Host;
 
             // throw new Exception(JsonObject.FromObject(request).ToString(true));

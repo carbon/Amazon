@@ -73,10 +73,10 @@ namespace Amazon.DynamoDb
 
         public DynamoQuery Filter(params Expression[] conditions)
         {
-            if (_filter == null)
+            if (_filter is null)
             {
-                if (ExpressionAttributeNames == null)  ExpressionAttributeNames = new JsonObject();
-                if (ExpressionAttributeValues == null) ExpressionAttributeValues = new AttributeCollection();
+                if (ExpressionAttributeNames is null)  ExpressionAttributeNames = new JsonObject();
+                if (ExpressionAttributeValues is null) ExpressionAttributeValues = new AttributeCollection();
 
                 _filter = new DynamoExpression(ExpressionAttributeNames, ExpressionAttributeValues);
             }
@@ -102,7 +102,7 @@ namespace Amazon.DynamoDb
         {
             var sb = new StringBuilder();
 
-            if (ExpressionAttributeNames == null)
+            if (ExpressionAttributeNames is null)
             {
                 ExpressionAttributeNames = new JsonObject();
             }

@@ -45,7 +45,7 @@ namespace Amazon.DynamoDb
     {
         public TableRequests(string tableName, List<ItemRequest> requests)
         {
-            if (requests == null)
+            if (requests is null)
                 throw new ArgumentNullException(nameof(requests));
 
             if (requests.Count > 25)

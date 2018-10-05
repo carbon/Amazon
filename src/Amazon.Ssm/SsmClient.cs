@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+
 using Carbon.Json;
 
 namespace Amazon.Ssm
@@ -475,16 +476,16 @@ namespace Amazon.Ssm
         private async Task<T> SendAsync<T>(ISsmRequest request)
             where T : new()
         {
-            if (request == null)
+            if (request is null)
             {
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var responseText = await SendAsync(GetRequestMessage(Endpoint, request)).ConfigureAwait(false);
+            string responseText = await SendAsync(GetRequestMessage(Endpoint, request)).ConfigureAwait(false);
 
-            if (responseText.Length == 0) return new T();
-
-            return JsonObject.Parse(responseText).As<T>();
+            return responseText.Length > 0
+                ? JsonObject.Parse(responseText).As<T>()
+                : new T();
         }
         
         private static readonly SerializationOptions serializationOptions = new SerializationOptions(ingoreNullValues: true);

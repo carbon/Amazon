@@ -11,12 +11,8 @@ namespace Amazon.Ses
 
         public static string EncodeEmail(string email)
         {
-            #region Preconditions
-
-            if (email == null)
+            if (email is null)
                 throw new ArgumentNullException(nameof(email));
-
-            #endregion
 
             // By default, the string must be 7-bit ASCII. 
             // If the text must contain any other characters, 
