@@ -2,16 +2,12 @@
 
 namespace Amazon.Kinesis
 {
-    public class GetRecordsRequest : KinesisRequest
+    public sealed class GetRecordsRequest : KinesisRequest
     {
         public GetRecordsRequest(string shardIterator, int? limit = null)
         {
-            #region Preconditions
-
-            if (limit > 10000)
+            if (limit > 10_000)
                 throw new ArgumentOutOfRangeException(nameof(limit), limit, "Must be 10,000 or fewer");
-
-            #endregion
 
             ShardIterator = shardIterator ?? throw new ArgumentNullException(nameof(shardIterator));
             Limit = limit;
