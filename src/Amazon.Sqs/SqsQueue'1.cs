@@ -11,7 +11,7 @@ namespace Amazon.Sqs
 {
     using Scheduling;
 
-    public class SqsQueue<T> : IMessageQueue<T>
+    public sealed class SqsQueue<T> : IMessageQueue<T>
         where T : new()
     {
         private readonly SqsClient client;
@@ -25,18 +25,11 @@ namespace Amazon.Sqs
 
         public SqsQueue(AwsRegion region, string accountId, string queueName, IAwsCredential credential)
         {
-            #region Preconditions
-
-            if (accountId == null)
+            if (accountId is null)
                 throw new ArgumentNullException(nameof(accountId));
 
-            if (queueName == null)
+            if (queueName is null)
                 throw new ArgumentNullException(nameof(queueName));
-
-            if (credential == null)
-                throw new ArgumentNullException(nameof(credential));
-
-            #endregion
 
             this.url = new Uri($"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}");
 
@@ -148,7 +141,7 @@ namespace Amazon.Sqs
         }
     }
 
-    public class JsonEncodedMessage<T> : IQueueMessage<T>
+    public sealed class JsonEncodedMessage<T> : IQueueMessage<T>
         where T : new()
     {
         private readonly SqsMessage model;
