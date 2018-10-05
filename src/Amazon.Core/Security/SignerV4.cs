@@ -14,15 +14,14 @@ namespace Amazon.Security
     public class SignerV4
     {
         const string isoDateTimeFormat = "yyyyMMddTHHmmssZ";  // ISO8601
-        const string isoDateFormat     = "yyyyMMdd";
+        const string isoDateFormat = "yyyyMMdd";
 
         public static readonly SignerV4 Default = new SignerV4();
 
         public string GetStringToSign(CredentialScope scope, HttpRequestMessage request)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
-            
+            if (request is null) throw new ArgumentNullException(nameof(request));
+
             string timestamp;
 
             if (request.Headers.TryGetValues("x-amz-date", out IEnumerable<string> dateHeaderValues))
@@ -30,23 +29,23 @@ namespace Amazon.Security
                 timestamp = dateHeaderValues.First();
             }
             else
-            { 
+            {
                 throw new Exception("Missing 'x-amz-date' header");
             }
 
             return GetStringToSign(
-                scope            : scope, 
-                timestamp        : timestamp,
-                canonicalRequest : GetCanonicalRequest(request)
+                scope: scope,
+                timestamp: timestamp,
+                canonicalRequest: GetCanonicalRequest(request)
             );
         }
 
         public static string GetStringToSign(CredentialScope scope, string timestamp, string canonicalRequest)
         {
-            if (timestamp == null)
+            if (timestamp is null)
                 throw new ArgumentNullException(nameof(timestamp));
 
-            if (canonicalRequest == null)
+            if (canonicalRequest is null)
                 throw new ArgumentNullException(nameof(canonicalRequest));
 
             string hashedCanonicalRequest = HexString.FromBytes(ComputeSHA256(canonicalRequest));
@@ -113,35 +112,35 @@ namespace Amazon.Security
 
         public static byte[] GetSigningKey(IAwsCredential credential, in CredentialScope scope)
         {
-            if (credential == null) throw new ArgumentNullException(nameof(credential));
+            if (credential is null) throw new ArgumentNullException(nameof(credential));
 
-            var kSecret = Encoding.ASCII.GetBytes("AWS4" + credential.SecretAccessKey);
+            byte[] kSecret = Encoding.ASCII.GetBytes("AWS4" + credential.SecretAccessKey);
 
-            var kDate      = HMACSHA256(kSecret,  scope.Date.ToString("yyyyMMdd"));
-            var kRegion    = HMACSHA256(kDate,    scope.Region.Name);
-            var kService   = HMACSHA256(kRegion,  scope.Service.Name);
+            var kDate = HMACSHA256(kSecret, scope.Date.ToString("yyyyMMdd"));
+            var kRegion = HMACSHA256(kDate, scope.Region.Name);
+            var kService = HMACSHA256(kRegion, scope.Service.Name);
             var signingKey = HMACSHA256(kService, "aws4_request");
 
             return signingKey;
         }
 
         // http://docs.aws.amazon.com/general/latest/gr/sigv4-add-signature-to-request.html
-        
+
         public void Presign(
-            IAwsCredential credential, 
-            CredentialScope scope, 
+            IAwsCredential credential,
+            CredentialScope scope,
             DateTime date,
             TimeSpan expires,
             HttpRequestMessage request,
             string payloadHash = emptySha256)
         {
-            if (credential == null)
+            if (credential is null)
                 throw new ArgumentNullException(nameof(credential));
 
-            if (request == null)
+            if (request is null)
                 throw new ArgumentNullException(nameof(request));
 
-            var signingKey = GetSigningKey(credential, scope);
+            byte[] signingKey = GetSigningKey(credential, scope);
 
             var queryParameters = new SortedDictionary<string, string>();
 
@@ -161,8 +160,8 @@ namespace Amazon.Security
                 queryParameters["X-Amz-Security-Token"] = credential.SecurityToken;
             }
 
-            queryParameters["X-Amz-Date"]          = timestamp;
-            queryParameters["X-Amz-Expires"]       = expires.TotalSeconds.ToString(); // in seconds
+            queryParameters["X-Amz-Date"] = timestamp;
+            queryParameters["X-Amz-Expires"] = expires.TotalSeconds.ToString(); // in seconds
             queryParameters["X-Amz-SignedHeaders"] = signedHeaders;
 
             var canonicalHeaders = "host:" + request.RequestUri.Host;
@@ -173,14 +172,14 @@ namespace Amazon.Security
             }
 
             var canonicalRequest = GetCanonicalRequest(
-                method               : request.Method,
-                canonicalURI         : request.RequestUri.AbsolutePath,
-                canonicalQueryString : CanonicizeQueryString(queryParameters),
-                canonicalHeaders     : canonicalHeaders,
-                signedHeaders        : signedHeaders,
-                payloadHash          : payloadHash
+                method: request.Method,
+                canonicalURI: request.RequestUri.AbsolutePath,
+                canonicalQueryString: CanonicizeQueryString(queryParameters),
+                canonicalHeaders: canonicalHeaders,
+                signedHeaders: signedHeaders,
+                payloadHash: payloadHash
             );
-            
+
             var stringToSign = GetStringToSign(
                 scope,
                 timestamp,
@@ -188,8 +187,8 @@ namespace Amazon.Security
             );
 
             var signature = Signature.ComputeHmacSha256(
-                key  : signingKey, 
-                data : Encoding.UTF8.GetBytes(stringToSign)
+                key: signingKey,
+                data: Encoding.UTF8.GetBytes(stringToSign)
             ).ToHexString();
 
             /*
@@ -215,7 +214,7 @@ namespace Amazon.Security
             newUrl.Append(url.AbsolutePath);
             newUrl.Append('?');
 
-            foreach(var pair in queryParameters)
+            foreach (var pair in queryParameters)
             {
                 newUrl.Append(UrlEncoder.Default.Encode(pair.Key));
                 newUrl.Append('=');
@@ -224,16 +223,16 @@ namespace Amazon.Security
             }
 
             newUrl.Append("X-Amz-Signature=").Append(signature);
-            
+
             request.RequestUri = new Uri(newUrl.ToString());
         }
 
         public void Sign(IAwsCredential credential, CredentialScope scope, HttpRequestMessage request)
         {
-            if (credential == null)
+            if (credential is null)
                 throw new ArgumentNullException(nameof(credential));
 
-            if (request == null)
+            if (request is null)
                 throw new ArgumentNullException(nameof(request));
 
             // If we're using S3, ensure the request content has been signed
@@ -244,11 +243,11 @@ namespace Amazon.Security
 
             var signingKey = GetSigningKey(credential, scope);
 
-            var stringToSign = GetStringToSign(scope, request);
+            string stringToSign = GetStringToSign(scope, request);
 
             var signature = Signature.ComputeHmacSha256(signingKey, Encoding.UTF8.GetBytes(stringToSign)).ToHexString();
 
-            var signedHeaders = GetSignedHeaders(request);
+            string signedHeaders = GetSignedHeaders(request);
 
             // AWS4-HMAC-SHA256 Credential={0},SignedHeaders={0},Signature={0}
             var auth = $"AWS4-HMAC-SHA256 Credential={credential.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
@@ -264,7 +263,7 @@ namespace Amazon.Security
             {
                 return string.Empty;
             }
-            
+
             return CanonicizeQueryString(ParseQueryString(uri.Query));
         }
 
@@ -294,7 +293,10 @@ namespace Amazon.Security
 
         private static IDictionary<string, string> ParseQueryString(string query)
         {
-            if (query == null || query.Length == 0) return new Dictionary<string, string>();
+            if (string.IsNullOrEmpty(query))
+            {
+                return new Dictionary<string, string>();
+            }
 
             var dictionary = new SortedDictionary<string, string>();
 
@@ -304,11 +306,14 @@ namespace Amazon.Security
             }
 
             foreach (string part in query.Split(Seperators.Ampersand)) // &
-            {          
-                string[] split = part.Split(Seperators.Equal); // =
+            {
+                int equalIndex = part.IndexOf('=');
 
-                dictionary[WebUtility.UrlDecode(split[0])] = split.Length == 2 
-                    ? WebUtility.UrlDecode(split[1]) 
+                string lhs = equalIndex > -1 ? part.Substring(0, equalIndex) : part;
+                string rhs = equalIndex > -1 ? part.Substring(equalIndex + 1) : null;
+
+                dictionary[WebUtility.UrlDecode(lhs)] = rhs != null
+                    ? WebUtility.UrlDecode(rhs)
                     : string.Empty;
             }
 
@@ -378,12 +383,9 @@ namespace Amazon.Security
 
         public static string ComputeSHA256(HttpContent content)
         {
-            if (content == null)
-            {
-                return emptySha256;
-            }
-
-            return HexString.FromBytes(ComputeSHA256(content?.ReadAsStringAsync().Result ?? string.Empty));
+            return content != null
+                ? HexString.FromBytes(ComputeSHA256(content?.ReadAsStringAsync().Result ?? string.Empty))
+                : emptySha256;
         }
 
         private static byte[] HMACSHA256(byte[] key, string data)
