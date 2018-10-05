@@ -7,14 +7,14 @@ namespace Amazon.Ses
 {
     using Scheduling;
 
-    public class SesClient : AwsClient
+    public sealed class SesClient : AwsClient
     {
-        public static string Version = "2010-12-01";
+        public const string Version = "2010-12-01";
 
-        private readonly RetryPolicy retryPolicy = new ExponentialBackoffRetryPolicy(
-            TimeSpan.FromSeconds(1),
-            TimeSpan.FromSeconds(10),
-            5
+        private static readonly RetryPolicy retryPolicy = new ExponentialBackoffRetryPolicy(
+            initialDelay : TimeSpan.FromSeconds(1),
+            maxDelay     : TimeSpan.FromSeconds(10),
+            maxRetries   : 5
         );
 
         public SesClient(AwsRegion region, IAwsCredential credential)
@@ -22,7 +22,9 @@ namespace Amazon.Ses
         { }
 
         public Task<SendEmailResult> SendEmailAsync(MailMessage message)
-            => SendEmailAsync(SesEmail.FromMailMessage(message));
+        {
+            return SendEmailAsync(SesEmail.FromMailMessage(message));
+        }
 
         public async Task<SendEmailResult> SendEmailAsync(SesEmail message)
         {
