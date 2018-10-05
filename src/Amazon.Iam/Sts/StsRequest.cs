@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Sts
 {
-    public class StsRequest : AwsRequest
+    public sealed class StsRequest : AwsRequest
     {
         public StsRequest(string action)
         {
