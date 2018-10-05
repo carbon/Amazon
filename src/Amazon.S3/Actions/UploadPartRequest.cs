@@ -1,15 +1,10 @@
 using System;
 
-using Carbon.Storage;
-
 namespace Amazon.S3
 {
     // PUT /ObjectName?partNumber=PartNumber&uploadId=UploadId
     public sealed class UploadPartRequest : PutObjectRequest
     {
-        public UploadPartRequest(string host, IUpload upload, int partNumber)
-            : this(host, upload.BucketName, upload.ObjectName, upload.UploadId, partNumber) { }
-
         public UploadPartRequest(string host, string bucketName, string key, string uploadId, int partNumber)
             : base(host, bucketName, key + $"?partNumber={partNumber}&uploadId={uploadId}")
         {
