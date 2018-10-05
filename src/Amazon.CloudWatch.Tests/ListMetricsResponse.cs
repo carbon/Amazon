@@ -136,18 +136,6 @@ namespace Amazon.CloudWatch.Tests
 
             Assert.Equal(11, result.Count);
 
-            /*
-             <member>
-        <Namespace>AWS/ELB</Namespace>
-        <MetricName>BackendConnectionErrors</MetricName>
-        <Dimensions>
-          <member>
-            <Name>Namespace</Name>
-            <Value>AWS</Value>
-          </member>
-        </Dimensions>
-      </member>
-      */
 
             Assert.Equal("AWS/ELB"                 , result[0].Namespace);
             Assert.Equal("BackendConnectionErrors" , result[0].MetricName);

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Amazon.CloudWatch.Tests
 {
     public class GetMetricStatsTests
     {
-
-     
         [Fact]
         public void A()
         {
@@ -81,36 +78,18 @@ namespace Amazon.CloudWatch.Tests
   <ResponseMetadata>
     <RequestId>ef302b1f-a147-11e6-acab-872d798a60c5</RequestId>
   </ResponseMetadata>
-</GetMetricStatisticsResponse>
-
-";
-
-
-           var result = GetMetricStatatisticsResponse.Parse(text);
+</GetMetricStatisticsResponse>";
+            
+            var result = GetMetricStatatisticsResponse.Parse(text);
 
             Assert.Equal(3.895104895104895d, result.Datapoints[0].Average.Value);
             Assert.Equal(12, result.Datapoints.Count);
             Assert.Equal("HealthyHostCount", result.Label);
 
-
-            /*
-             <member>
-        <Namespace>AWS/ELB</Namespace>
-        <MetricName>BackendConnectionErrors</MetricName>
-        <Dimensions>
-          <member>
-            <Name>Namespace</Name>
-            <Value>AWS</Value>
-          </member>
-        </Dimensions>
-      </member>
-      */
-
             var date = new DateTime(2016, 11, 02, 12, 01, 00, DateTimeKind.Utc);
 
             Assert.Equal(date, result.Datapoints[0].Timestamp);
             Assert.Equal(3.895104895104895, result.Datapoints[0].Average.Value);
-
         }
     }
 }
