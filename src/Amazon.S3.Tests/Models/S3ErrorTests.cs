@@ -1,8 +1,8 @@
-﻿namespace Amazon.S3.Models.Tests
-{
-	using Xunit;
+﻿using Xunit;
 
-	public class S3ErrorTests
+namespace Amazon.S3.Models.Tests
+{
+    public class S3ErrorTests
 	{
 		[Fact]
 		public void ParseS3ErrorXml()
@@ -42,6 +42,5 @@
 			Assert.Null(error.Resource);
 			Assert.Equal("FE689C8C5E73D8B6", error.RequestId);
 		}
-
 	}
 }
