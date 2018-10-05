@@ -24,9 +24,7 @@ namespace Amazon.Kms
             byte[] plaintext, 
             IEnumerable<KeyValuePair<string, string>> aad = null)
         { 
-            #region Preconditions
-
-            if (plaintext == null)
+            if (plaintext is null)
             {
                 throw new ArgumentNullException(nameof(plaintext));
             }
@@ -35,8 +33,6 @@ namespace Amazon.Kms
             {
                 throw new ArgumentException("Must be less than 4KB", nameof(plaintext));
             }
-
-            #endregion
             
             var request = new EncryptRequest(keyId, plaintext, GetEncryptionContext(aad));
 
@@ -70,12 +66,8 @@ namespace Amazon.Kms
         
         public async Task RetireGrantAsync(string grantId)
         {
-            #region Preconditions
-
-            if (grantId == null)
+            if (grantId is null)
                 throw new ArgumentNullException(nameof(grantId));
-
-            #endregion
 
             await client.RetireGrantAsync(new RetireGrantRequest {
                 GrantId = grantId,
@@ -88,7 +80,7 @@ namespace Amazon.Kms
         private static JsonObject GetEncryptionContext(
             IEnumerable<KeyValuePair<string, string>> authenticatedProperties)
         {
-            if (authenticatedProperties == null) return null;
+            if (authenticatedProperties is null) return null;
 
             var json = new JsonObject();
 

@@ -15,10 +15,7 @@ namespace Amazon.S3
             string objectName, 
             string version = null)
         {
-            if (host == null)
-            {
-                throw new ArgumentNullException(nameof(host));
-            }
+            if (host is null) throw new ArgumentNullException(nameof(host));
 
             BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
             ObjectName = objectName;

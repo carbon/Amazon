@@ -47,7 +47,7 @@ namespace Amazon.Ses
 
         public static SesEmail FromMailMessage(MailMessage message)
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (message is null) throw new ArgumentNullException(nameof(message));
 
             var doc = new SesEmail
             {
@@ -109,7 +109,7 @@ namespace Amazon.Ses
 
         public void SetContent(string prefix, SesContent content, Dictionary<string, string> dic)
         {
-            if (content == null) return;
+            if (content is null) return;
 
             dic.Add(prefix + ".Data", content.Data);
 
@@ -120,7 +120,7 @@ namespace Amazon.Ses
         {
             // http://www.ietf.org/rfc/rfc0822.txt
 
-            if (list == null || list.Length == 0) return;
+            if (list is null || list.Length == 0) return;
 
             var i = 1;
 

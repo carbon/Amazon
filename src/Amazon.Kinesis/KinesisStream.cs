@@ -79,15 +79,11 @@ namespace Amazon.Kinesis
 
         public IDisposable Subscribe(IShard shard, IObserver<IRecord> observer)
         {
-            #region Preconditions
-
-            if (shard == null)
+            if (shard is null)
                 throw new ArgumentNullException(nameof(shard));
 
-            if (observer == null)
+            if (observer is null)
                 throw new ArgumentNullException(nameof(observer));
-
-            #endregion
 
             return new KinesisStreamSubscription(this, shard, observer);
         }

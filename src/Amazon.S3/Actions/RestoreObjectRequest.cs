@@ -10,7 +10,7 @@ namespace Amazon.S3
         public RestoreObjectRequest(string host, string bucketName, string key)
             : base(HttpMethod.Post, host, bucketName, key + "?restore")
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (key is null) throw new ArgumentNullException(nameof(key));
 
             var xmlText = GetXmlString();
 

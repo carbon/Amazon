@@ -9,8 +9,8 @@ namespace Amazon.DynamoDb
 {
     public readonly struct DbValue : IConvertible
 	{
-		public static readonly DbValue Empty = new DbValue("", DbValueType.Unknown);
-		public static readonly DbValue Null	 = new DbValue("", DbValueType.NULL);
+		public static readonly DbValue Empty = new DbValue(string.Empty, DbValueType.Unknown);
+		public static readonly DbValue Null	 = new DbValue(string.Empty, DbValueType.NULL);
 		public static readonly DbValue True = new DbValue(true);
 		public static readonly DbValue False = new DbValue(false);
 
@@ -60,7 +60,7 @@ namespace Amazon.DynamoDb
 
 		public DbValue(object value)
 		{
-            if (value == null)
+            if (value is null)
                 throw new ArgumentNullException(nameof(value));
 
             var type = value.GetType();
