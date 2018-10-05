@@ -73,12 +73,13 @@ namespace Amazon.Kinesis.Firehose
             throw new Exception(responseText);
         }
 
+        private static readonly SerializationOptions serializationOptions = new SerializationOptions(ingoreNullValues: true);
+
         private HttpRequestMessage GetRequestMessage(string action, object request)
         {
-            var json = (JsonObject)new JsonSerializer().Serialize(request,
-                    new SerializationOptions(ingoreNullValues: true));
+            var json = (JsonObject)new JsonSerializer().Serialize(request, serializationOptions);
 
-            var postBody = json.ToString(pretty: false);
+            var postBody = json.ToString(pretty: false); // ToUtf8String 
 
             return new HttpRequestMessage(HttpMethod.Post, Endpoint)
             {
