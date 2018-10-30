@@ -2,11 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Amazon.Metadata;
+
 namespace Amazon
 {
-    using Metadata;
-
-    public class InstanceRoleCredential : IAwsCredential
+    public sealed class InstanceRoleCredential : IAwsCredential
     {
         public InstanceRoleCredential() { }
 
@@ -17,16 +17,9 @@ namespace Amazon
 
         internal InstanceRoleCredential(string roleName, IamSecurityCredentials credential)
         {
-            if (credential == null)
-            {
-                throw new ArgumentNullException(nameof(credential));
-            }
+            RoleName = roleName ?? throw new ArgumentNullException(nameof(roleName));
 
-            RoleName        = roleName ?? throw new ArgumentNullException(nameof(roleName));
-            AccessKeyId     = credential.AccessKeyId;
-            SecretAccessKey = credential.SecretAccessKey;
-            SecurityToken   = credential.Token;
-            Expires         = credential.Expiration;
+            Set(credential);
         }
 
         public string RoleName { get; internal set; }
@@ -49,58 +42,68 @@ namespace Amazon
 
         public bool ShouldRenew
         {
-            get => RoleName == null || ExpiresIn <= TimeSpan.FromMinutes(5);
+            get => RoleName is null || Expires == default || ExpiresIn <= TimeSpan.FromMinutes(5);
         }
 
-        // aws guidance: refreshe 5 minutes before expiration
+        private void Set(IamSecurityCredentials credential)
+        {
+            if (credential is null)
+            {
+                throw new ArgumentNullException(nameof(credential));
+            }
+
+            AccessKeyId     = credential.AccessKeyId;
+            SecretAccessKey = credential.SecretAccessKey;
+            SecurityToken   = credential.Token;
+            Expires         = credential.Expiration;
+        }
 
         #endregion
 
         private int renewCount = 0;
 
-        private readonly SemaphoreSlim gate = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim gate = new SemaphoreSlim(1, 1);
+
+        // aws note: refresh 5 minutes before expiration
 
         public async Task<bool> RenewAsync()
         {
+            if (!ShouldRenew) return false;
+
             // Lock so we only renew the credentials once
-            if (await gate.WaitAsync(5000).ConfigureAwait(false))
+            if (!(await gate.WaitAsync(2000).ConfigureAwait(false)))
             {
-                try
+                throw new TimeoutException("Timeout waiting for mutex to renew credentials (2s)");
+            }
+
+            try
+            {
+                if (ShouldRenew)
                 {
-                    if (RoleName == null)
+                    if (RoleName is null)
                     {
                         RoleName = await InstanceMetadata.GetIamRoleName().ConfigureAwait(false)
                             ?? throw new Exception("The instance is not configured with an IAM role");
                     }
 
-                    if (ShouldRenew)
-                    {
-                        var iamCredential = await IamSecurityCredentials.GetAsync(RoleName).ConfigureAwait(false);
+                    var iamCredential = await IamSecurityCredentials.GetAsync(RoleName).ConfigureAwait(false);
 
-                        AccessKeyId     = iamCredential.AccessKeyId;
-                        SecretAccessKey = iamCredential.SecretAccessKey;
-                        Expires         = iamCredential.Expiration;
-                        SecurityToken   = iamCredential.Token;
-                        
-                        Interlocked.Increment(ref renewCount);
-                    }
+                    Set(iamCredential);
 
-                    return true;
-                }
-                finally
-                {
-                    gate.Release();
+                    Interlocked.Increment(ref renewCount);
                 }
             }
-            else
+            finally
             {
-                throw new Exception("Could not aquire mutex to renew credential in 5 seconds");
+                gate.Release();
             }
+
+            return true;
         }
 
         public static async Task<InstanceRoleCredential> GetAsync()
         {
-            var roleName = await InstanceMetadata.GetIamRoleName().ConfigureAwait(false);
+            string roleName = await InstanceMetadata.GetIamRoleName().ConfigureAwait(false);
 
             var iamCredential = await IamSecurityCredentials.GetAsync(roleName).ConfigureAwait(false);
 
