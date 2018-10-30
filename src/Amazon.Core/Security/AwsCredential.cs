@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 
 namespace Amazon
 {
-    // AccessKey
-
-    public class AwsCredential : IAwsCredential
+    public sealed class AwsCredential : IAwsCredential
     {
         public AwsCredential(string accessKeyId, string secretAccessKey)
         {
