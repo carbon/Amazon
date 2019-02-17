@@ -104,7 +104,7 @@ namespace Amazon.DynamoDb
 
         public KeyValuePair<string, JsonNode> ToJson()
         {
-            var requests = new XNodeArray();
+            var requests = new JsonNodeList();
 
             foreach (ItemRequest request in Requests)
             {

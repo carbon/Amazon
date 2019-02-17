@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Carbon.Json;
 
@@ -49,8 +48,15 @@ namespace Amazon.DynamoDb
 
         public JsonObject ToJson()
         {
+            var jsonKeys = new JsonNodeList();
+
+            foreach (var key in Keys)
+            {
+                jsonKeys.Add(key.ToJson());
+            }
+
             var json = new JsonObject {
-                { "Keys", new XNodeArray(Keys.Select(k => k.ToJson()).ToArray()) }
+                { "Keys", jsonKeys }
             };
 
             if (AttributesToGet != null)

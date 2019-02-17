@@ -316,7 +316,7 @@ namespace Amazon.DynamoDb
 			}
 			else if (kind == DbValueType.L)
 			{
-				var list = new XNodeArray();
+				var list = new JsonNodeList();
 
                 foreach (var item in (IEnumerable<DbValue>)value)
                 {
