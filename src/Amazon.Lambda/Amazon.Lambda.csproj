@@ -10,6 +10,7 @@
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern .NET Standard library for Amazon's Lambda service.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;lambda;netstandard</PackageTags>
   </PropertyGroup>
 

@@ -2,14 +2,15 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Rds</AssemblyName>
-    <VersionPrefix>0.7.6</VersionPrefix>
+    <VersionPrefix>0.8.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>7.2</LangVersion>
+    <LangVersion>7.3</LangVersion>
     
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern .NET Standard library for Amazon RDS.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>carbon;aws;rds</PackageTags>
   </PropertyGroup>
 

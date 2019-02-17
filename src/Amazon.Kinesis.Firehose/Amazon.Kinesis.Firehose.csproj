@@ -10,8 +10,8 @@
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern .NET Standard library for Kinesis Firehose.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;kinesis;firehose;netstandard</PackageTags>
-    <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 

@@ -2,15 +2,16 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sns</AssemblyName>
-    <VersionPrefix>0.11.0</VersionPrefix>
+    <VersionPrefix>0.12.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern .NET Standard library for Amazon's Simple Notification Service.</Description>
+    
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;sns;netstandard</PackageTags>
-    <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 

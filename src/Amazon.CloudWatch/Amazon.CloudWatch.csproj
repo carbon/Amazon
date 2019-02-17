@@ -9,8 +9,8 @@
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern .NET Standard library for Amazon CloudWatch.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>cloudwatch;aws;netstandard</PackageTags>
-    <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 

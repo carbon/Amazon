@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sqs</AssemblyName>
-    <VersionPrefix>0.12.0</VersionPrefix>
+    <VersionPrefix>0.12.1</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7.1</LangVersion>
 
@@ -10,8 +10,9 @@
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern .NET Standard library for Amazon's Simple Queue Service.</Description>
+    
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;sqs;netstandard</PackageTags>
-    <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 
