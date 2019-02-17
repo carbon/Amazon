@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb
 {
-    public class UpdateItemResult : IConsumedResources
+    public sealed class UpdateItemResult : IConsumedResources
     {
         public UpdateItemResult(AttributeCollection attributes, ConsumedCapacity consumedCapacity)
         {
@@ -10,9 +10,9 @@ namespace Amazon.DynamoDb
             ConsumedCapacity = consumedCapacity;
         }
 
-        public ConsumedCapacity ConsumedCapacity { get; }
-
         public AttributeCollection Attributes { get; }
+
+        public ConsumedCapacity ConsumedCapacity { get; }
 
         public static UpdateItemResult FromJson(JsonObject json)
         {
