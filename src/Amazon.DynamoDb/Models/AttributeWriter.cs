@@ -9,7 +9,7 @@ namespace Amazon.DynamoDb.Models
 {
     using static DbValueType;
 
-    public readonly struct AttributeWriter
+    public readonly ref struct AttributeWriter
     {
         private readonly TextWriter writer;
 
