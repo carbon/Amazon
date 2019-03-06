@@ -48,33 +48,29 @@ namespace Amazon
                 return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
         }
-
-
-        protected async Task SignAsync(HttpRequestMessage httpRequest)
+        
+        protected async Task SignAsync(HttpRequestMessage request)
         {
             if (credential.ShouldRenew)
             {
-                if (credential.ShouldRenew)
-                {
-                    await credential.RenewAsync().ConfigureAwait(false);
-                }
+                await credential.RenewAsync().ConfigureAwait(false);   
             }
 
             var date = DateTimeOffset.UtcNow;
 
-            httpRequest.Headers.Host = httpRequest.RequestUri.Host;
-            httpRequest.Headers.Date = date;
+            request.Headers.Host = request.RequestUri.Host;
+            request.Headers.Date = date;
 
             if (credential.SecurityToken != null)
             {
-                httpRequest.Headers.Add("x-amz-security-token", credential.SecurityToken);
+                request.Headers.Add("x-amz-security-token", credential.SecurityToken);
             }
 
-            httpRequest.Headers.Add("x-amz-date", date.UtcDateTime.ToString("yyyyMMddTHHmmssZ"));
+            request.Headers.Add("x-amz-date", date.UtcDateTime.ToString("yyyyMMddTHHmmssZ"));
 
-            var scope = GetCredentialScope(httpRequest);
+            var scope = GetCredentialScope(request);
 
-            SignerV4.Default.Sign(credential, scope, httpRequest);
+            SignerV4.Default.Sign(credential, scope, request);
         }
 
         protected virtual async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
