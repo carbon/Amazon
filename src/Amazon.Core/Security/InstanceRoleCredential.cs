@@ -8,6 +8,10 @@ namespace Amazon
 {
     public sealed class InstanceRoleCredential : IAwsCredential
     {
+        private int renewCount = 0;
+
+        private readonly SemaphoreSlim gate = new SemaphoreSlim(1, 1);
+
         public InstanceRoleCredential() { }
 
         public InstanceRoleCredential(string roleName)
@@ -60,9 +64,6 @@ namespace Amazon
 
         #endregion
 
-        private int renewCount = 0;
-
-        private readonly SemaphoreSlim gate = new SemaphoreSlim(1, 1);
 
         // aws note: refresh 5 minutes before expiration
 
