@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Iam</AssemblyName>
-    <VersionPrefix>0.12.1</VersionPrefix>
+    <VersionPrefix>0.12.2</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.3</LangVersion>
     

@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ec2</AssemblyName>
-    <VersionPrefix>0.11.0</VersionPrefix>
+    <VersionPrefix>0.12.2</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern .NET Standard library for Amazon's EC2 service.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;ec2;netstandard</PackageTags>
-    <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 

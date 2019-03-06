@@ -2,13 +2,15 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sts</AssemblyName>
-    <VersionPrefix>0.4.5</VersionPrefix>
+    <VersionPrefix>0.5.10</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern .NET Standard library for Amazon's Security Token Service.</Description>
+    <Description>A .NET Standard library for Amazon's Security Token Service.</Description>
+
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;sts;netstandard</PackageTags>
     <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>

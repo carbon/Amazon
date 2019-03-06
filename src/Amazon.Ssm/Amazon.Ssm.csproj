@@ -2,15 +2,16 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ssm</AssemblyName>
-    <VersionPrefix>0.8.0</VersionPrefix>
+    <VersionPrefix>0.8.2</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern .NET Standard library for AWS Systems Manager.</Description>
+    <Description>A .NET Standard library for AWS Systems Manager.</Description>
+    
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;ssm;netstandard</PackageTags>
-    <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 

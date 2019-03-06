@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.DynamoDb</AssemblyName>
-    <VersionPrefix>0.12.0</VersionPrefix>
+    <VersionPrefix>0.12.4</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7.3</LangVersion>
 
@@ -10,8 +10,8 @@
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern asynchronous .NET Standard library for Amazon DynamoDB.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;dynamodb;netstandard</PackageTags>
-    <PackageLicenseUrl>https://github.com/carbon/Amazon/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 
@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Data" Version="0.33.0" />
+    <PackageReference Include="Carbon.Data" Version="0.34.1" />
   </ItemGroup>
 
 </Project>
