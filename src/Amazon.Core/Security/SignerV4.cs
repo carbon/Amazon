@@ -13,6 +13,7 @@ namespace Amazon.Security
 
     public class SignerV4
     {
+        const string algorithmName = "AWS4-HMAC-SHA256";
         const string isoDateTimeFormat = "yyyyMMddTHHmmssZ";  // ISO8601
         const string isoDateFormat = "yyyyMMdd";
 
@@ -51,7 +52,7 @@ namespace Amazon.Security
             string hashedCanonicalRequest = HexString.FromBytes(ComputeSHA256(canonicalRequest));
 
             return string.Join("\n", new string[] {
-                "AWS4-HMAC-SHA256",     // Algorithm + \n
+                algorithmName,          // Algorithm + \n
                 timestamp,              // Timestamp + \n
                 scope.ToString(),       // Scope     + \n
                 hashedCanonicalRequest  // Hex(SHA256(CanonicalRequest))
@@ -152,7 +153,7 @@ namespace Amazon.Security
             var timestamp = date.ToString(format: isoDateTimeFormat);
             var signedHeaders = "host";
 
-            queryParameters["X-Amz-Algorithm"] = "AWS4-HMAC-SHA256";
+            queryParameters["X-Amz-Algorithm"] = algorithmName;
             queryParameters["X-Amz-Credential"] = credential.AccessKeyId + "/" + scope;
 
             if (credential.SecurityToken != null)
@@ -200,7 +201,7 @@ namespace Amazon.Security
             queryString += &X-Amz-SignedHeaders=signed_headers
             */
 
-            var url = request.RequestUri;
+            Uri url = request.RequestUri;
             var newUrl = new StringBuilder();
 
             newUrl.Append(url.Scheme).Append("://").Append(url.Host);
@@ -241,7 +242,7 @@ namespace Amazon.Security
                 request.Headers.Add("x-amz-content-sha256", ComputeSHA256(request.Content));
             }
 
-            var signingKey = GetSigningKey(credential, scope);
+            byte[] signingKey = GetSigningKey(credential, scope);
 
             string stringToSign = GetStringToSign(scope, request);
 
@@ -259,7 +260,7 @@ namespace Amazon.Security
 
         public static string CanonicizeQueryString(Uri uri)
         {
-            if (string.IsNullOrEmpty(uri.Query) || uri.Query == "?")
+            if (string.IsNullOrEmpty(uri.Query) || uri.Query.Length == 1 && uri.Query[0] == '?')
             {
                 return string.Empty;
             }
@@ -322,28 +323,48 @@ namespace Amazon.Security
 
         public static string GetSignedHeaders(HttpRequestMessage request)
         {
-            // Sonvert all header names to lowercase
+            // Convert all header names to lowercase
             // Sort them by character code
             // Use a semicolon to separate the header names
 
             // The host header must be included as a signed header.
 
-            var signedHeaders = "host;" + string.Join(";", request.Headers
-                .Select(item => item.Key.ToLower())
-                .Where(key => key.StartsWith("x-amz-"))
-                .OrderBy(k => k));
+            var sb = new StringBuilder();
 
-            if (!signedHeaders.Contains("x-amz-date"))
+            if (request.Content?.Headers.Contains("Content-MD5") == true)
             {
-                signedHeaders = "date;" + signedHeaders;
+                sb.Append("content-md5;");
             }
 
-            return signedHeaders;
+            if (!request.Headers.Contains("x-amz-date") && request.Headers.Contains("Date"))
+            {
+                sb.Append("date;");
+            }
+
+            sb.Append("host");
+
+            foreach (var header in request.Headers
+                .Where(item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
+                .Select(item => item.Key.ToLower())
+                .OrderBy(k => k))
+            {
+                sb.Append(';');
+                sb.Append(header);
+            }
+            
+            return sb.ToString();
         }
 
         public static string CanonicalizeHeaders(HttpRequestMessage request)
         {
             var sb = new StringBuilder();
+
+            if (request.Content?.Headers.Contains("Content-MD5") == true)
+            {
+                sb.Append("content-md5:");
+                sb.Append(request.Content.Headers.GetValues("Content-MD5").FirstOrDefault());
+                sb.Append('\n');
+            }
 
             if (!request.Headers.Contains("x-amz-date") && request.Headers.Contains("Date"))
             {
@@ -355,8 +376,8 @@ namespace Amazon.Security
             sb.Append("host:").Append(request.Headers.Host);
 
             foreach (var header in request.Headers
-                                            .Where(item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
-                                            .OrderBy(item => item.Key.ToLower()))
+                .Where(item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(item => item.Key.ToLower()))
             {
                 sb.Append('\n');
 
@@ -367,7 +388,6 @@ namespace Amazon.Security
 
             return sb.ToString();
         }
-
 
         #region SHA Helpers
 
