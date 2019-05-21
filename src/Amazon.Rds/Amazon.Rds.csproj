@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Rds</AssemblyName>
-    <VersionPrefix>0.8.0</VersionPrefix>
+    <Version>0.8.0</Version>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>

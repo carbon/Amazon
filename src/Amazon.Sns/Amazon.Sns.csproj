@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sns</AssemblyName>
-    <VersionPrefix>0.12.1</VersionPrefix>
+    <VersionPrefix>0.13.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>

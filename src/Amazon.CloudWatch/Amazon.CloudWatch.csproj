@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.CloudWatch</AssemblyName>
-    <VersionPrefix>0.6.3</VersionPrefix>
+    <VersionPrefix>0.7.0</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
-
+    <LangVersion>8.0</LangVersion>
+    
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>

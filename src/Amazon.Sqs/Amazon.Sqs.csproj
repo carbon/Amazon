@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sqs</AssemblyName>
-    <VersionPrefix>0.12.2</VersionPrefix>
+    <VersionPrefix>0.13.1</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>8.0</LangVersion>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
