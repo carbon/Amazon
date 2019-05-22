@@ -1,6 +1,8 @@
-﻿namespace Amazon.Sts
+﻿#nullable disable
+
+namespace Amazon.Sts
 {
-    public class AssumeRoleWithWebIdentityRequest : IStsRequest
+    public sealed class AssumeRoleWithWebIdentityRequest : IStsRequest
     {
         public string Action => "AssumeRoleWithWebIdentity";
 

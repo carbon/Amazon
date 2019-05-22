@@ -1,9 +1,10 @@
-﻿namespace Amazon.Sts
+﻿#nullable disable
+
+namespace Amazon.Sts
 {
-    public class GetFederationTokenRequest : IStsRequest
+    public sealed class GetFederationTokenRequest : IStsRequest
     {
         public string Action => "GetFederationToken";
-
 
         public int DurationSeconds { get; set; }
 

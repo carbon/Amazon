@@ -1,4 +1,6 @@
-﻿namespace Amazon.Sts
+﻿#nullable disable
+
+namespace Amazon.Sts
 {
     public class DecodeAuthorizationMessageRequest : IStsRequest
     {

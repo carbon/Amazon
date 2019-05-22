@@ -1,6 +1,8 @@
-﻿namespace Amazon.Sts
+﻿#nullable disable
+
+namespace Amazon.Sts
 {
-    public class GetSessionTokenRequest : IStsRequest
+    public sealed class GetSessionTokenRequest : IStsRequest
     {
         public string Action => "GetSessionToken";
 

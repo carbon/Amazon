@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+
 using Carbon.Json;
 
 namespace Amazon.Sts
@@ -87,7 +88,7 @@ namespace Amazon.Sts
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            return StsResponseHelper<TResponse>.ParseXml(responseText);
+            return StsSerializer<TResponse>.ParseXml(responseText);
         }
 
         private FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)

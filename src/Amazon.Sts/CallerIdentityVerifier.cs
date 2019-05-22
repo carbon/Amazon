@@ -3,25 +3,26 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
+using Amazon.Sts.Exceptions;
+
 namespace Amazon.Sts
 {
     public class CallerIdentityVerifier 
     {
         protected readonly HttpClient httpClient = new HttpClient {
             DefaultRequestHeaders = {
-                { "User-Agent", "Carbon/2.0" }
+                { "User-Agent", "Carbon/2.1" }
             }
         };
 
         public async Task<GetCallerIdentityResult> VerifyCallerIdentityAsync(CallerIdentityVerificationParameters token)
         {
-            if (token is null)
-                throw new ArgumentNullException(nameof(token));
-
             var uri = new Uri(token.Url);
 
             if (uri.Scheme != "https")
+            {
                 throw new ArgumentException("endpoint must be HTTPS. was :" + uri.Scheme);
+            }
 
             // https://sts.us-east-1.amazonaws.com/
 
@@ -43,17 +44,16 @@ namespace Amazon.Sts
 
             // Our message should be signed
 
-            using (var response = await httpClient.SendAsync(request).ConfigureAwait(false))
+            using HttpResponseMessage response = await httpClient.SendAsync(request).ConfigureAwait(false);
+
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
             {
-                var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception("ERROR:" + response.StatusCode + "/" + responseText);
-                }
-
-                return StsResponseHelper<GetCallerIdentityResponse>.ParseXml(responseText).GetCallerIdentityResult;
+                throw new StsException(response.StatusCode + " / " + responseText);
             }
+
+            return StsSerializer<GetCallerIdentityResponse>.ParseXml(responseText).GetCallerIdentityResult;
         }
       
     }

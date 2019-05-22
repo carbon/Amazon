@@ -1,6 +1,4 @@
-﻿using System.Xml.Serialization;
-
-namespace Amazon.Sts
+﻿namespace Amazon.Sts
 {
     public class AssumeRoleWithSAMLResponse : IStsResponse
     {

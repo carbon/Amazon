@@ -1,11 +1,13 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Runtime.Serialization;
 
 using Carbon.Json;
 
 namespace Amazon.Sts
 {
-    public class CallerIdentityVerificationParameters
+    public sealed class CallerIdentityVerificationParameters
     {
         public CallerIdentityVerificationParameters() { }
 
