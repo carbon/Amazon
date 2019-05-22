@@ -2,11 +2,11 @@
 
 namespace Amazon
 {
-    public class AwsService : IEquatable<AwsService> // readonly struct?
+    public sealed class AwsService : IEquatable<AwsService> // readonly struct?
     {
         private AwsService(string name)
         {
-            Name = name;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
         public string Name { get; }
@@ -27,6 +27,7 @@ namespace Amazon
         public static readonly AwsService Kms              = new AwsService("kms");
         public static readonly AwsService Lambda           = new AwsService("lambda");
         public static readonly AwsService Monitoring       = new AwsService("monitoring"); // Cloudwatch monitoring
+        public static readonly AwsService Route53          = new AwsService("route53");
         public static readonly AwsService Ses              = new AwsService("email");
         public static readonly AwsService RdsDb            = new AwsService("rds-db");
         public static readonly AwsService Ssm              = new AwsService("ssm"); // Amazon EC2 Systems Manager (SSM)
@@ -37,17 +38,13 @@ namespace Amazon
 
         #region Equality
 
-        public bool Equals(AwsService other) => 
-            other != null && Name == other.Name;
+        public bool Equals(AwsService other) => other != null && (object.ReferenceEquals(this, other) || Name == other.Name);
 
-        public override bool Equals(object obj) =>
-            this.Equals(obj as AwsService);
+        public override bool Equals(object obj) => this.Equals(obj as AwsService);
 
-        public static bool operator ==(AwsService lhs, AwsService rhs) =>
-            lhs?.Name == rhs?.Name;
+        public static bool operator ==(AwsService lhs, AwsService rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(AwsService lhs, AwsService rhs) =>
-            lhs?.Name != rhs?.Name;
+        public static bool operator !=(AwsService lhs, AwsService rhs) => lhs?.Name != rhs?.Name;
 
         public override int GetHashCode() => Name.GetHashCode();
 
