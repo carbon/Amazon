@@ -2,10 +2,8 @@
 
 namespace Amazon.Ssm
 {
-    public class DescribeDocumentPermissionRequest : ISsmRequest
+    public sealed class DescribeDocumentPermissionRequest : ISsmRequest
     {
-        public DescribeDocumentPermissionRequest() { }
-
         public DescribeDocumentPermissionRequest(string name, string permissionType)
         {
             Name = name;
@@ -13,9 +11,9 @@ namespace Amazon.Ssm
         }
 
         [Required]
-        public string Name { get; set; }
+        public string Name { get; }
 
         [Required]
-        public string PermissionType { get; set; }
+        public string PermissionType { get; }
     }
 }

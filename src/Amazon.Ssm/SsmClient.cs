@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -476,11 +478,6 @@ namespace Amazon.Ssm
         private async Task<T> SendAsync<T>(ISsmRequest request)
             where T : new()
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
-
             string responseText = await SendAsync(GetRequestMessage(Endpoint, request)).ConfigureAwait(false);
 
             return responseText.Length > 0
