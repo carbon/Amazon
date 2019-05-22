@@ -16,9 +16,7 @@ namespace Amazon.S3
         {
             var scope = new CredentialScope(now, request.Region, AwsService.S3);
 
-            int urlLength = 10 + request.Host.Length + request.BucketName.Length + request.Key.Length;
-
-            var urlBuilder = new StringBuilder(urlLength)
+            var urlBuilder = StringBuilderCache.Aquire()
                 .Append("https://")
                 .Append(request.Host)
                 .Append('/')
@@ -28,7 +26,7 @@ namespace Amazon.S3
 
             // TODO: support version querystring
 
-            var r = new HttpRequestMessage(new HttpMethod(request.Method), urlBuilder.ToString());
+            var r = new HttpRequestMessage(new HttpMethod(request.Method), StringBuilderCache.ExtractAndRelease(urlBuilder));
 
             SignerV4.Default.Presign(credential, scope, now, request.ExpiresIn, r, "UNSIGNED-PAYLOAD");
 

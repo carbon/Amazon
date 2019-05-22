@@ -1,8 +1,8 @@
 using System;
-using System.Text;
-using System.Net.Http;
 using System.IO;
+using System.Net.Http;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Amazon.S3
 {
@@ -22,7 +22,7 @@ namespace Amazon.S3
 
             // https://{bucket}.s3.amazonaws.com/{key}
 
-            var urlBuilder = new StringBuilder()
+            var urlBuilder = StringBuilderCache.Aquire()
                 .Append("https://")
                 .Append(host)
                 .Append('/')
@@ -42,9 +42,8 @@ namespace Amazon.S3
                 urlBuilder.Append(version);
             }
 
-            RequestUri = new Uri(urlBuilder.ToString());
+            RequestUri = new Uri(StringBuilderCache.ExtractAndRelease(urlBuilder));
             Method = method;
-            CompletionOption = HttpCompletionOption.ResponseHeadersRead;
         }
 
         public void SetStorageClass(StorageClass storageClass)
@@ -56,20 +55,19 @@ namespace Amazon.S3
 
         public string ObjectName { get; }
 
-        public HttpCompletionOption CompletionOption { get; set; }
+        public HttpCompletionOption CompletionOption { get; set; } = HttpCompletionOption.ResponseHeadersRead;
 
         #region Helpers
 
         protected static byte[] ComputeSHA256(Stream stream)
         {
-            using (var sha = SHA256.Create())
-            {
-                var data = sha.ComputeHash(stream);
+            using SHA256 sha = SHA256.Create();
 
-                stream.Position = 0;
+            byte[] data = sha.ComputeHash(stream);
 
-                return data;
-            }
+            stream.Position = 0;
+
+            return data;
         }
 
         #endregion
