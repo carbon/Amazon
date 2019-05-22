@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.Encodings.Web;
 
@@ -9,9 +8,27 @@ namespace Amazon.Helpers
     {
         public static string ToPostData(this Dictionary<string, string> nvc)
         {
-            if (nvc is null) throw new ArgumentNullException(nameof(nvc));
+            return ToPostData(nvc, null);
+        }
 
-            var sb = new StringBuilder();
+        public static string ToQueryString(this Dictionary<string, string> nvc)
+        {
+            if (nvc.Count == 0) return string.Empty;
+
+            return nvc.ToPostData(prefix: "?");
+        }
+
+
+        private static string ToPostData(this Dictionary<string, string> nvc, string prefix)
+        {
+            if (nvc == null) return null;
+
+            var sb = StringBuilderCache.Aquire();
+
+            if (prefix != null)
+            {
+                sb.Append(prefix);
+            }
 
             foreach (string key in nvc.Keys)
             {
@@ -25,14 +42,7 @@ namespace Amazon.Helpers
                 sb.Append(UrlEncoder.Default.Encode(nvc[key]));
             }
 
-            return sb.ToString();
-        }
-
-        public static string ToQueryString(this Dictionary<string, string> nvc)
-        {
-            if (nvc.Count == 0) return string.Empty;
-
-            return "?" + nvc.ToPostData();
+            return StringBuilderCache.ExtractAndRelease(sb);
         }
     }
 }
