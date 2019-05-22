@@ -1,15 +1,15 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-
+using Amazon.Scheduling;
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    using Scheduling;
-
     public sealed class DynamoDbClient : AwsClient
     {
         private const string TargetPrefix = "DynamoDB_20120810";
@@ -92,8 +92,6 @@ namespace Amazon.DynamoDb
 
         public async Task<BatchWriteItemResult> BatchWriteItemAsync(params TableRequests[] batches)
         {
-            if (batches is null) throw new ArgumentNullException(nameof(batches));
-
             /*
 			RequestItems {
 				"TableName1" :  [ Request, Request, ... ],
@@ -127,8 +125,8 @@ namespace Amazon.DynamoDb
 
         public async Task<PutItemResult> PutItemUsingRetryPolicyAsync(PutItemRequest request, RetryPolicy retryPolicy)
         {
-            var retryCount = 0;
-            Exception lastError = null;
+            int retryCount = 0;
+            Exception lastError;
 
             do
             {
@@ -153,7 +151,7 @@ namespace Amazon.DynamoDb
         public async Task<QueryResult> QueryAsync(DynamoQuery query, RetryPolicy retryPolicy)
         {
             var retryCount = 0;
-            Exception lastError = null;
+            Exception lastError;
 
             do
             {
@@ -178,8 +176,6 @@ namespace Amazon.DynamoDb
 
         public async Task<QueryResult> QueryAsync(DynamoQuery query)
         {
-            if (query is null) throw new ArgumentNullException(nameof(query));
-
             var httpRequest = Setup("Query", query.ToJson());
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
@@ -190,8 +186,6 @@ namespace Amazon.DynamoDb
 
         public async Task<CountResult> QueryCountAsync(DynamoQuery query)
         {
-            if (query is null) throw new ArgumentNullException(nameof(query));
-
             query.Select = SelectEnum.COUNT;
 
             var httpRequest = Setup("Query", query.ToJson());
@@ -225,7 +219,7 @@ namespace Amazon.DynamoDb
         public async Task<UpdateItemResult> UpdateItemUsingRetryPolicyAsync(UpdateItemRequest request, RetryPolicy retryPolicy)
         {
             var retryCount = 0;
-            Exception lastError = null;
+            Exception? lastError = null;
 
             while (retryPolicy.ShouldRetry(retryCount))
             {

@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿#nullable enable
+
+using System.Text;
 
 using Carbon.Json;
 
@@ -25,7 +27,7 @@ namespace Amazon.DynamoDb
 
         public static void WriteValue(this StringBuilder sb, object value, AttributeCollection attributes)
         {
-            var varName = ":v" + attributes.Count;
+            string varName = ":v" + attributes.Count.ToString();
 
             var convertor = DbValueConverterFactory.Get(value.GetType());
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -63,26 +65,25 @@ namespace Amazon.DynamoDb
             return result != null;
         }
 
-        public Task<T> FindAsync(Key<T> key)
+        public Task<T?> FindAsync(Key<T> key)
         {
-            return FindAsync(key, consistent: false);
+            return FindAsync(key, isConsistent: false);
         }
 
-        public Task<T> FindAsync(TKey keyValue)
+        public Task<T?> FindAsync(TKey keyValue)
         {
-            return FindAsync(Key<T>.FromTuple(keyValue), consistent: false);
+            return FindAsync(Key<T>.FromTuple(keyValue), isConsistent: false);
         }
 
-        public Task<T> FindAsync(Key<T> key, bool consistent) => 
-            FindAsync(new GetItemRequest(tableName, key) {
-                ConsistentRead = true,
-                ReturnConsumedCapacity = false
-            });
+        public Task<T?> FindAsync(Key<T> key, bool isConsistent) => FindAsync(new GetItemRequest(tableName, key) {
+            ConsistentRead = isConsistent,
+            ReturnConsumedCapacity = false
+        });
 
-        internal async Task<T> FindAsync(GetItemRequest request)
+        internal async Task<T?> FindAsync(GetItemRequest request)
         {
             var retryCount = 0;
-            Exception lastException = null;
+            Exception? lastException = null;
 
             while (retryPolicy.ShouldRetry(retryCount))
             {
@@ -115,11 +116,10 @@ namespace Amazon.DynamoDb
 
         public async Task<IReadOnlyList<T>> FindAllAsync(params IEnumerable<KeyValuePair<string, object>>[] keys)
         {
-            if (keys is null)
-                throw new ArgumentNullException(nameof(keys));
-
-            if (keys.Length == 0)
-                throw new ArgumentException("May not be empty", nameof(keys));
+            if (keys == null || keys.Length == 0)
+            {
+                return Array.Empty<T>();
+            }
 
             var request = new BatchGetItemRequest(new TableKeys(tableName, keys));
 
@@ -201,14 +201,14 @@ namespace Amazon.DynamoDb
             // Each scan may return upto 1MB of data
             // TODO, consider parellel scans
 
-            DynamoExpression filterExpression = null;
+            DynamoExpression? filterExpression = null;
 
             if (conditions.Length > 0)
             {
                 filterExpression = DynamoExpression.Conjunction(conditions);
             }
 
-            QueryResult result = null;
+            QueryResult? result = null;
 
             do
             {
@@ -237,8 +237,8 @@ namespace Amazon.DynamoDb
         }
 
         public async Task<IReadOnlyList<T>> ScanAsync(
-            IEnumerable<KeyValuePair<string, object>> startKey = null,
-            Expression[] conditions = null,
+            IEnumerable<KeyValuePair<string, object>>? startKey = null,
+            Expression[]? conditions = null,
             int take = 1000)
         {
             var request = new ScanRequest(tableName)
@@ -289,9 +289,6 @@ namespace Amazon.DynamoDb
 
         public async Task<BatchResult> PutAsync(IEnumerable<T> entities)
         {
-            if (entities is null)
-                throw new ArgumentNullException(nameof(entities));
-
             var sw = Stopwatch.StartNew();
 
             var result = new BatchResult();
@@ -309,9 +306,6 @@ namespace Amazon.DynamoDb
 
         public async Task<UpdateItemResult> PatchAsync(Key<T> key, params Change[] changes)
         {
-            if (changes is null)
-                throw new ArgumentNullException(nameof(changes));
-
             var request = new UpdateItemRequest(tableName, key, changes);
 
             return await client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy).ConfigureAwait(false);
@@ -324,12 +318,6 @@ namespace Amazon.DynamoDb
             Expression[] conditions,
             ReturnValues? returnValues = null)
         {
-            if (changes is null)
-                throw new ArgumentNullException(nameof(changes));
-
-            if (conditions is null)
-                throw new ArgumentNullException(nameof(conditions));
-
             var request = new UpdateItemRequest(tableName, key, changes, conditions, returnValues);
 
             return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
@@ -383,9 +371,6 @@ namespace Amazon.DynamoDb
 
         public Task<DeleteItemResult> DeleteAsync(Key<T> key, Expression[] conditions, ReturnValues returnValues)
         {
-            if (conditions is null)
-                throw new ArgumentNullException(nameof(conditions));
-
             var request = new DeleteItemRequest(tableName, key) {
                 ReturnValues = returnValues
             };
@@ -401,7 +386,7 @@ namespace Amazon.DynamoDb
         private async Task<DeleteItemResult> InternalDelete(DeleteItemRequest request)
         {
             var retryCount = 0;
-            Exception lastError = null;
+            Exception lastError;
 
             // TODO: Move retry logic to client...
 
@@ -429,9 +414,6 @@ namespace Amazon.DynamoDb
 
         private async Task<BatchResult> PutBatch(IEnumerable<T> entities, BatchResult result)
         {
-            if (entities is null)
-                throw new ArgumentNullException(nameof(entities));
-
             // Up to 25 items put or delete operations, with the request size not exceeding 1 MB.
 
             var putRequests = entities
@@ -449,14 +431,11 @@ namespace Amazon.DynamoDb
 
         private async Task<BatchWriteItemResult> BatchWriteItem(TableRequests batch, BatchResult info)
         {
-            if (batch is null)
-                throw new ArgumentNullException(nameof(batch));
-
             if (batch.Requests.Count > 25)
                 throw new ArgumentException("Must be 25 or less.", "batch.Items");
 
             var retryCount = 0;
-            Exception lastError = null;
+            Exception? lastError = null;
 
             while (retryPolicy.ShouldRetry(retryCount))
             {

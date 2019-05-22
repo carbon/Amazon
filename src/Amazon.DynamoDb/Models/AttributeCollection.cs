@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,7 +11,17 @@ namespace Amazon.DynamoDb
 {
     public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbValue>>
     {
-        private readonly Dictionary<string, DbValue> items = new Dictionary<string, DbValue>();
+        private readonly Dictionary<string, DbValue> items;
+
+        public AttributeCollection(int capacity)
+        {
+            items = new Dictionary<string, DbValue>(capacity);
+        }
+
+        public AttributeCollection()
+        {
+            items = new Dictionary<string, DbValue>();
+        }
 
         #region Add Helpers
 
@@ -59,7 +71,7 @@ namespace Amazon.DynamoDb
             return value;
         }
 
-        public HashSet<string> GetStringSet(string key)
+        public HashSet<string>? GetStringSet(string key)
         {
             if (TryGet(key, out DbValue value))
             {
@@ -69,7 +81,7 @@ namespace Amazon.DynamoDb
             return null;
         }
 
-        public byte[] GetBinary(string key)
+        public byte[]? GetBinary(string key)
         {
             if (TryGet(key, out DbValue value))
             {
@@ -89,7 +101,7 @@ namespace Amazon.DynamoDb
             return 0;
         }
 
-        public string GetString(string key)
+        public string? GetString(string key)
         {
             if (TryGet(key, out DbValue value))
             {
@@ -120,7 +132,7 @@ namespace Amazon.DynamoDb
 
         public static AttributeCollection FromJson(JsonObject json)
         {
-            var item = new AttributeCollection();
+            var item = new AttributeCollection(json.Keys.Count);
 
             foreach (var property in json)
             {
@@ -148,14 +160,10 @@ namespace Amazon.DynamoDb
 
         #region Helpers
 
-        public static AttributeCollection FromObject(object instance)
-            => FromObject(instance, DatasetInfo.Get(instance.GetType()));
+        public static AttributeCollection FromObject(object instance) => FromObject(instance, DatasetInfo.Get(instance.GetType()));
 
         internal static AttributeCollection FromObject(object instance, DatasetInfo schema)
         {
-            if (instance is null)
-                throw new ArgumentNullException(nameof(instance));
-
             var attributes = new AttributeCollection();
 
             foreach (MemberDescriptor member in schema.Members)

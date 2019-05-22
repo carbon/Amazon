@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,9 +62,6 @@ namespace Amazon.DynamoDb
 
 		public DbValue(object value)
 		{
-            if (value is null)
-                throw new ArgumentNullException(nameof(value));
-
             var type = value.GetType();
 
 			if (type.IsEnum)
@@ -76,8 +75,6 @@ namespace Amazon.DynamoDb
 			if (type.IsArray)
 			{
 				var elementType = type.GetElementType();
-
-				var list = value as IList;
 
 				switch (Type.GetTypeCode(elementType))
 				{
@@ -361,18 +358,14 @@ namespace Amazon.DynamoDb
             };
 		}
 
-		public static DbValue FromValue(JsonNode value)
+		public static DbValue FromValue(JsonNode value) => value.Type switch
 		{
-			switch (value.Type)
-			{
-				case JsonType.Binary  : return new DbValue(((XBinary)value).Value,	    DbValueType.B);		// byte[]
-				case JsonType.Boolean : return new DbValue(((JsonBoolean)value).Value,	DbValueType.BOOL);	// bool
-				case JsonType.Number  : return new DbValue(value.ToString(),			DbValueType.N);
-				case JsonType.String  : return new DbValue((string)value,			    DbValueType.S);
-		
-				default: throw new Exception("Unexpected value type:" + value.Type);
-			}
-		}
+			JsonType.Binary  => new DbValue(((XBinary)value).Value,	    DbValueType.B),		// byte[]
+			JsonType.Boolean => new DbValue(((JsonBoolean)value).Value,	DbValueType.BOOL),	// bool
+			JsonType.Number  => new DbValue(value.ToString(),			DbValueType.N),
+			JsonType.String  => new DbValue((string)value,			    DbValueType.S),
+			_                => throw new Exception("Unexpected value type:" + value.Type)
+		};
 
 		public static DbValue FromJson(JsonObject json)
 		{
@@ -385,23 +378,19 @@ namespace Amazon.DynamoDb
 
 			var property = json.First();
 
-			switch (property.Key)
+			return property.Key switch
 			{
-				case "B"	: return new DbValue(property.Value.ToString(), DbValueType.B);
-				case "N"	: return new DbValue(property.Value.ToString(), DbValueType.N);
-				case "S"	: return new DbValue(property.Value.ToString(), DbValueType.S);
-				case "BOOL"	: return new DbValue((bool)property.Value,		DbValueType.BOOL);
-
-				case "BS"	: return new DbValue(((JsonArray)property.Value).ToArrayOf<string>(), DbValueType.BS);
-				case "NS"	: return new DbValue(((JsonArray)property.Value).ToArrayOf<string>(), DbValueType.NS);
-				case "SS"	: return new DbValue(((JsonArray)property.Value).ToArrayOf<string>(), DbValueType.SS);
-				
-				case "L"	: return new DbValue(GetListValues((JsonArray)property.Value).ToArray());
-
-                case "M"    : return new DbValue(AttributeCollection.FromJson((JsonObject)property.Value));
-
-				default     : throw new Exception("Unexpected value type:" + property.Key);
-			}
+				"B"	   => new DbValue(property.Value.ToString(), DbValueType.B),
+				"N"	   => new DbValue(property.Value.ToString(), DbValueType.N),
+				"S"	   => new DbValue(property.Value.ToString(), DbValueType.S),
+				"BOOL" => new DbValue((bool)property.Value,      DbValueType.BOOL),
+				"BS"   => new DbValue(((JsonArray)property.Value).ToArrayOf<string>(), DbValueType.BS),
+				"NS"   => new DbValue(((JsonArray)property.Value).ToArrayOf<string>(), DbValueType.NS),
+				"SS"   => new DbValue(((JsonArray)property.Value).ToArrayOf<string>(), DbValueType.SS),
+				"L"	   => new DbValue(GetListValues((JsonArray)property.Value).ToArray()),
+                "M"    => new DbValue(AttributeCollection.FromJson((JsonObject)property.Value)),
+				_      => throw new Exception("Unexpected value type:" + property.Key),
+			};
 		}
 
 		#region Casting
@@ -436,25 +425,16 @@ namespace Amazon.DynamoDb
 
 		#region IConvertible
 
-		TypeCode IConvertible.GetTypeCode()
-		{
-			throw new NotImplementedException();
-		}
-
+		TypeCode IConvertible.GetTypeCode() => throw new NotImplementedException();
+		
         bool IConvertible.ToBoolean(IFormatProvider provider) => ToBoolean();
 
 		byte IConvertible.ToByte(IFormatProvider provider) => (byte)ToInt();
 
-        char IConvertible.ToChar(IFormatProvider provider)
-		{
-			throw new NotImplementedException();
-		}
-
-		DateTime IConvertible.ToDateTime(IFormatProvider provider)
-		{
-			throw new NotImplementedException();
-		}
-
+        char IConvertible.ToChar(IFormatProvider provider) => throw new NotImplementedException();
+		
+		DateTime IConvertible.ToDateTime(IFormatProvider provider) => throw new NotImplementedException();
+		
         decimal IConvertible.ToDecimal(IFormatProvider provider) => ToDecimal();
 
         double IConvertible.ToDouble(IFormatProvider provider) => ToDouble();

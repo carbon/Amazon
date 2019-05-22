@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Carbon.Json;
@@ -7,17 +10,20 @@ namespace Amazon.DynamoDb
 {
     public class BatchGetItemResult // : IConsumedResources
     {
+        public BatchGetItemResult(TableItemCollection[] responses)
+        {
+            this.Responses = responses;
+        }
+
         // public ConsumedCapacity[] ConsumedCapacity { get; set; }
 
-        public List<TableItemCollection> Responses { get; } = new List<TableItemCollection>();
+        public TableItemCollection[] Responses { get; }
 
-        public List<TableKeys> UnprocessedKeys { get; } = new List<TableKeys>();
+        public IReadOnlyList<TableKeys> UnprocessedKeys => Array.Empty<TableKeys>();
 
         public static BatchGetItemResult FromJson(JsonObject json)
         {
-            var result = new BatchGetItemResult();
-
-            var items = new List<AttributeCollection>();
+            // var items = new List<AttributeCollection>();
 
             if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode)) // Array
             {
@@ -29,9 +35,17 @@ namespace Amazon.DynamoDb
                 }
             }
 
+            TableItemCollection[] responses;
+
             if (json.TryGetValue("Responses", out var responsesNode))
             {
-                foreach (var tableEl in (JsonObject)responsesNode)
+                var tableElements = (JsonObject)responsesNode;
+
+                var collections = new TableItemCollection[tableElements.Keys.Count];
+
+                int i = 0;
+
+                foreach (var tableEl in tableElements)
                 {
                     var table = new TableItemCollection(tableEl.Key);
 
@@ -40,13 +54,23 @@ namespace Amazon.DynamoDb
                         table.Add(AttributeCollection.FromJson((JsonObject)item));
                     }
 
-                    result.Responses.Add(table);
+                    collections[i] = table;
+
+                    i++;
                 }
+
+                responses = collections;
+            }
+            else
+            {
+                responses = Array.Empty<TableItemCollection>();
             }
 
             /*
 			if (json.TryGetValue("UnprocessedKeys", out var unprocessedKeysNode))
 			{
+                var unprocessedKeys = new List<TableKeys>();
+
 				foreach (var tableEl in (JsonObject)unprocessedKeysNode)
 				{
 					var tableName = tableEl.Key;
@@ -67,7 +91,7 @@ namespace Amazon.DynamoDb
 			}
 			*/
 
-            return result;
+            return new BatchGetItemResult(responses);
         }
     }
 
