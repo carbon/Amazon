@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+
+using System.Collections.Generic;
 
 namespace Amazon
 {
     internal static class CollectionExtensions
     {
-        public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> items, int batchSize)
+        public static IEnumerable<List<T>> Batch<T>(this IEnumerable<T> items, int batchSize)
         {
             var batch = new List<T>(batchSize);
 

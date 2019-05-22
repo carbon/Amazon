@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿#nullable enable
+
+using System.IO;
 using System.Xml.Serialization;
 
 namespace Amazon.Sqs
@@ -9,10 +11,9 @@ namespace Amazon.Sqs
 
         public static T Deserialize(string xml)
         {
-            using (var reader = new StringReader(xml))
-            {
-                return (T)serializer.Deserialize(reader);
-            }
+            using var reader = new StringReader(xml);
+
+            return (T)serializer.Deserialize(reader);
         }
     }
 }

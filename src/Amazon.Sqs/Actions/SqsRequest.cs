@@ -1,4 +1,4 @@
 ﻿namespace Amazon.Sqs
 {
-    public class SqsRequest : AwsRequest { }
+    internal sealed class SqsRequest : AwsRequest { }
 }

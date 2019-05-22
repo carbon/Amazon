@@ -5,7 +5,7 @@ using Carbon.Messaging;
 
 namespace Amazon.Sqs
 {
-    public class SqsMessage : IQueueMessage<string>
+    public sealed class SqsMessage : IQueueMessage<string>
     {
         public SqsMessage() { }
 
@@ -23,15 +23,19 @@ namespace Amazon.Sqs
         [XmlElement("Body")]
         public string Body { get; set; }
 
+        public string SequenceNumber { get; set; }
+
         public DateTime Created { get; set; }
 
         public DateTime Expires { get; set; }
 
-        public int ApproximateReceiveCount { get; set; }
-
-        // FIFO queues only (128 bits)
-        [XmlElement("SequenceNumber")]
-        public string SequenceNumber { get; set; }
+        // ApproximateReceiveCount
+        // ApproximateFirstReceiveTimestamp
+        // MessageDedublicationId
+        // MessageGroupId
+        // SenderId
+        // SentTimestamp
+        // SequenceNumber
 
         // TODO: Attributes
 

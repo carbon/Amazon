@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 
 namespace Amazon.Sqs
 {
@@ -9,13 +11,20 @@ namespace Amazon.Sqs
             MessageBody = body ?? throw new ArgumentNullException(nameof(body));
         }
 
+        public SendMessageRequest(string body, string messageDeduplicationId, string messageGroupId)
+        {
+            MessageBody = body ?? throw new ArgumentNullException(nameof(body));
+            MessageDeduplicationId = messageDeduplicationId;
+            MessageGroupId = messageGroupId;
+        }
+
         public string MessageBody { get; }
 
         // 128 characters
-        public string MessageDeduplicationId { get; set; }
+        public string? MessageDeduplicationId { get; }
 
         // Required for FIFO queues
-        public string MessageGroupId { get; set; }
+        public string? MessageGroupId { get; }
 
         /// <summary>
         /// The number of seconds (0 to 900 - 15 minutes) to delay a specific message. 
@@ -26,7 +35,7 @@ namespace Amazon.Sqs
 
         // TODO: Attributes
 
-        public SqsRequest ToParams()
+        internal SqsRequest ToParams()
         {
             var parameters = new SqsRequest {
                 { "Action", "SendMessage" },
@@ -52,4 +61,5 @@ namespace Amazon.Sqs
             return parameters;
         }
     }
+
 }

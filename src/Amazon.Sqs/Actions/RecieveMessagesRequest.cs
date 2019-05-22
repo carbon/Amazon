@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 
 namespace Amazon.Sqs
 {
@@ -12,9 +14,14 @@ namespace Amazon.Sqs
         /// <param name="waitTime">The maximium amount of time to wait for queue items.</param>
         public RecieveMessagesRequest(
             int take = 1,
-            TimeSpan? lockTime = null, 
+            TimeSpan? lockTime = null,
             TimeSpan? waitTime = null)
         {
+            if (take <= 0)
+            {
+                throw new ArgumentException("Must be greater than 0", nameof(take));
+            }
+
             if (take > 10)
             {
                 throw new ArgumentException("Must be less than 10", nameof(take));
@@ -35,10 +42,10 @@ namespace Amazon.Sqs
             this.waitTime = waitTime;
         }
 
-        public SqsRequest ToParams()
+        internal SqsRequest ToParams()
         {
             var parameters = new SqsRequest {
-                { "Action",              "ReceiveMessage" },
+                { "Action", "ReceiveMessage" },
                 { "MaxNumberOfMessages", take },
             };
 

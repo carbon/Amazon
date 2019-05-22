@@ -1,16 +1,17 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Amazon.Scheduling;
 
 using Carbon.Json;
 using Carbon.Messaging;
 
 namespace Amazon.Sqs
 {
-    using Scheduling;
-
     public sealed class SqsQueue<T> : IMessageQueue<T>
         where T : new()
     {
@@ -45,12 +46,11 @@ namespace Amazon.Sqs
         {
             // Blocks until we recieve a message
 
+            var request = new RecieveMessagesRequest(take, lockTime, waitTime: TimeSpan.FromSeconds(20));
+
             while (!cancellationToken.IsCancellationRequested)
             {
-                var result = await client.ReceiveMessagesAsync(
-                    queueUrl : url,
-                    request  : new RecieveMessagesRequest(take, lockTime, waitTime: TimeSpan.FromSeconds(20)
-                )).ConfigureAwait(false);
+                var result = await client.ReceiveMessagesAsync(url, request).ConfigureAwait(false);
 
                 if (result.Length == 0) continue;
 
@@ -71,11 +71,14 @@ namespace Amazon.Sqs
 
         private static IQueueMessage<T>[] Convert(SqsMessage[] messages)
         {
-            if (messages.Length == 0) return Array.Empty<IQueueMessage<T>>();
+            if (messages.Length == 0)
+            {
+                return Array.Empty<IQueueMessage<T>>();
+            }
 
             var result = new IQueueMessage<T>[messages.Length];
 
-            for (var i = 0; i < messages.Length; i++)
+            for (int i = 0; i < messages.Length; i++)
             {
                 result[i] = new JsonEncodedMessage<T>(messages[i]);
             }
@@ -94,6 +97,8 @@ namespace Amazon.Sqs
 
         public async Task PutAsync(params IMessage<T>[] messages)
         {
+            if (messages is null) throw new ArgumentNullException(nameof(messages));
+
             // Max payload = 256KB (262,144 bytes)
 
             // Convert the message payload to JSON
@@ -102,20 +107,37 @@ namespace Amazon.Sqs
 
             foreach (var batch in messages.Batch(10))
             {
-                var messageBatch = batch.Select(m =>
-                    serializer.Serialize(m.Body).ToString(pretty: false)
-                ).ToArray();
+                string[] messageBatch = new string[batch.Count];
+
+                for (int i = 0; i < batch.Count; i++)
+                {
+                    messageBatch[i] = serializer.Serialize(batch[i].Body).ToString(pretty: false);
+                }
 
                 await client.SendMessageBatchAsync(url, messageBatch).ConfigureAwait(false);
             }
         }
 
+        public async Task UpdateMessageVisibilityAsync(string receiptHandle, TimeSpan duration)
+        {
+            await client.ChangeMessageVisibilityAsync(url, new ChangeMessageVisibilityRequest(receiptHandle, duration)).ConfigureAwait(false);
+        }
+
         public async Task DeleteAsync(params IQueueMessage<T>[] messages)
         {
-            var handles = messages.Select(m => m.Receipt.Handle).ToArray();
+            if (messages is null) throw new ArgumentNullException(nameof(messages));
+
+            if (messages.Length == 0) return;
+
+            var handles = new string[messages.Length]; 
+
+            for (int i = 0; i < messages.Length; i++)
+            {
+                handles[i] = messages[i].Receipt.Handle;
+            }
 
             var retryCount = 0;
-            Exception lastError = null;
+            Exception lastError;
 
             do
             {
@@ -139,29 +161,5 @@ namespace Amazon.Sqs
 
             throw lastError;
         }
-    }
-
-    public sealed class JsonEncodedMessage<T> : IQueueMessage<T>
-        where T : new()
-    {
-        private readonly SqsMessage model;
-
-        public JsonEncodedMessage(SqsMessage model)
-        {
-            this.model = model;
-
-            Body = JsonObject.Parse(model.Body).As<T>();
-        }
-
-        public static JsonEncodedMessage<T> Create(SqsMessage message)
-        {
-            return new JsonEncodedMessage<T>(message);
-        }
-
-        public string Id => model.MessageId;
-
-        public MessageReceipt Receipt => new MessageReceipt(model.ReceiptHandle);
-
-        public T Body { get; }
     }
 }
