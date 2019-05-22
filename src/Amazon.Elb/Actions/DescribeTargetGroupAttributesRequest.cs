@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable enable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
@@ -6,14 +8,12 @@ namespace Amazon.Elb
     {
         public string Action => "DescribeTargetGroupAttributes";
 
-        public DescribeTargetGroupAttributesRequest() { }
-
         public DescribeTargetGroupAttributesRequest(string targetGroupArn)
         {
             TargetGroupArn = targetGroupArn;
         }
 
         [Required]
-        public string TargetGroupArn { get; set; }
+        public string TargetGroupArn { get; }
     }
 }

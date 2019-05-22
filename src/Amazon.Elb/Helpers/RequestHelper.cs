@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Xml.Serialization;
+﻿#nullable enable
+
+using System.Collections.Generic;
+
 using Carbon.Json;
 
 namespace Amazon.Elb
@@ -54,7 +55,7 @@ namespace Amazon.Elb
             {
                 if (m.Value is XNull) continue;
 
-                var key = prefix + "." + m.Key;
+                string key = prefix + "." + m.Key;
 
                 if (m.Value is JsonObject obj)
                 {

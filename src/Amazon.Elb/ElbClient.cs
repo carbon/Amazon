@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -202,7 +204,7 @@ namespace Amazon.Elb
 
             var responseText = await base.SendAsync(httpRequest).ConfigureAwait(false);
 
-            return ElbResponseHelper<T>.DeserializeXml(responseText);
+            return ElbSerializer<T>.DeserializeXml(responseText);
         }
 
         private FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)

@@ -1,15 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable enable
+
+using System;
 
 namespace Amazon.Elb
 {
-    public class SetIpAddressTypeRequest : IElbRequest
+    public sealed class SetIpAddressTypeRequest : IElbRequest
     {
         public string Action => "SetIpAddressType";
 
-        [Required]
-        public string IpAddressType { get; set; }
+        public SetIpAddressTypeRequest(string ipAddressType, string loadBalancerArn)
+        {
+            IpAddressType = ipAddressType ?? throw new ArgumentNullException(nameof(ipAddressType));
+            LoadBalancerArn = loadBalancerArn ?? throw new ArgumentNullException(nameof(ipAddressType));
+        }
+
+        public string IpAddressType { get; }
         
-        [Required]
-        public string LoadBalancerArn { get; set; }
+        public string LoadBalancerArn { get; }
     }
 }

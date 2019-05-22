@@ -1,12 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable enable
+
+using System;
 
 namespace Amazon.Elb
 {
-    public class DeleteRuleRequest : IElbRequest
+    public sealed class DeleteRuleRequest : IElbRequest
     {
         public string Action => "DeleteRule";
 
-        [Required]
-        public string RuleArn { get; set; }
+        public DeleteRuleRequest(string ruleArn)
+        {
+            RuleArn = ruleArn ?? throw new ArgumentNullException(nameof(ruleArn));
+        }
+
+        public string RuleArn { get; }
     }
 }

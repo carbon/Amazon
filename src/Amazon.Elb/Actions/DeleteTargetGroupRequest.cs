@@ -1,12 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable enable
+
+using System;
 
 namespace Amazon.Elb
 {
-    public class DeleteTargetGroupRequest : IElbRequest
+    public sealed class DeleteTargetGroupRequest : IElbRequest
     {
         public string Action => "DeleteTargetGroup";
 
-        [Required]
-        public string TargetGroupArn { get; set; }
+        public DeleteTargetGroupRequest(string targetGroupArn)
+        {
+            TargetGroupArn = targetGroupArn ?? throw new ArgumentNullException(nameof(targetGroupArn));
+        }
+
+        public string TargetGroupArn { get; }
     }
 }
