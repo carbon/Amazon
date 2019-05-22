@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -27,7 +29,7 @@ namespace Amazon.Sqs
                 { "Action", "CreateQueue" },
                 { "QueueName", queueName },
                 { "DefaultVisibilityTimeout", defaultVisibilityTimeout } /* in seconds */
-			};
+            };
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Content = GetPostContent(parameters)
@@ -82,6 +84,8 @@ namespace Amazon.Sqs
 
         public async Task<SendMessageResult> SendMessageAsync(Uri queueUrl, SendMessageRequest request)
         {
+            if (request is null) throw new ArgumentNullException(nameof(request));
+
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(request.ToParams())
             };
@@ -108,6 +112,8 @@ namespace Amazon.Sqs
 
         public async Task<string> DeleteMessageAsync(Uri queueUrl, string recieptHandle)
         {
+            if (recieptHandle is null) throw new ArgumentNullException(nameof(recieptHandle));
+
             var parameters = new SqsRequest {
                 { "Action", "DeleteMessage" },
                 { "ReceiptHandle", recieptHandle }
@@ -115,6 +121,17 @@ namespace Amazon.Sqs
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(parameters)
+            };
+
+            return await SendAsync(httpRequest).ConfigureAwait(false);
+        }
+
+        public async Task<string> ChangeMessageVisibilityAsync(Uri queueUrl, ChangeMessageVisibilityRequest request)
+        {
+            if (request is null) throw new ArgumentNullException(nameof(request));
+
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
+                Content = GetPostContent(request.ToParams())
             };
 
             return await SendAsync(httpRequest).ConfigureAwait(false);
