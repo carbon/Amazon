@@ -177,25 +177,21 @@ namespace Amazon.DynamoDb
 
         #region Helpers
 
-        private static string GetName(ExpressionKind kind)
+        private static string GetName(ExpressionKind kind) => kind switch
         {
-            switch (kind)
-            {
-                case And      : return "and";
-                case AndAlso  : return "and";
-                case Or       : return "or";
-                case OrElse   : return "or";
-                case Not      : return "not";
-                case Equal    : return "=";
-                case NotEqual : return "<>";
-                case Gt       : return ">";
-                case Gte      : return ">=";
-                case Lt       : return "<";
-                case Lte      : return "<=";
-            }
-
-            throw new Exception("Unexpected expression:" + kind);
-        }
+            And      => "and",
+            AndAlso  => "and",
+            Or       => "or",
+            OrElse   => "or",
+            Not      => "not",
+            Equal    => "=",
+            NotEqual => "<>",
+            Gt       => ">",
+            Gte      => ">=",
+            Lt       => "<",
+            Lte      => "<=",
+            _        => throw new Exception("Unexpected expression:" + kind)
+        };        
 
         #endregion
     }
