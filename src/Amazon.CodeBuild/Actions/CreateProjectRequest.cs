@@ -1,6 +1,6 @@
 ﻿namespace Amazon.CodeBuild
 {
-    public class CreateProjectRequest : ICodeBuildRequest
+    public sealed class CreateProjectRequest : ICodeBuildRequest
     {
         public ProjectArtifacts Artifacts { get; set; }
 
