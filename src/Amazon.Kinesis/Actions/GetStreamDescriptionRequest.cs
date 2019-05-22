@@ -2,7 +2,7 @@
 
 namespace Amazon.Kinesis
 {
-    public class DescribeStreamRequest : KinesisRequest
+    public sealed class DescribeStreamRequest : KinesisRequest
     {
         public DescribeStreamRequest() { }
 

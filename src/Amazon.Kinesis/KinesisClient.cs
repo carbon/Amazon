@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,9 +61,9 @@ namespace Amazon.Kinesis
         private async Task<T> SendAsync<T>(string action, KinesisRequest request)
             where T : new()
         {
-            var httpRequest = GetRequestMessage(action, request);
+            var message = GetRequestMessage(action, request);
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            var responseText = await SendAsync(message).ConfigureAwait(false);
 
             return JsonObject.Parse(responseText).As<T>();
         }

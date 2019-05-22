@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Kinesis
 {
-    public class MergeShardsRequest : KinesisRequest
+    public sealed class MergeShardsRequest : KinesisRequest
     {
         public string AdjacentShardToMerge { get; set; }
 
