@@ -5,28 +5,47 @@ using Carbon.Json;
 
 namespace Amazon.Kms
 {
-    public class DecryptRequest : KmsRequest
+    public sealed class DecryptRequest : KmsRequest
     {
-        public DecryptRequest() { }
-
-        public DecryptRequest(string keyId, byte[] ciphertext, JsonObject context)
+        public DecryptRequest(string keyId, byte[] ciphertext, JsonObject context, string[] grantTokens = null)
         {
-            KeyId             = keyId      ?? throw new ArgumentNullException(nameof(keyId));
-            CiphertextBlob    = ciphertext ?? throw new ArgumentNullException(nameof(ciphertext));
+            if (keyId is null)
+            {
+                throw new ArgumentException(nameof(keyId));
+            }
+
+            if (keyId.Length == 0)
+            {
+                throw new ArgumentException("May not be empty", nameof(keyId));
+            }
+
+            if (ciphertext == null)
+            {
+                throw new ArgumentNullException(nameof(ciphertext));
+            }
+
+            if (ciphertext.Length == 0)
+            {
+                throw new ArgumentException("May not be empty", nameof(ciphertext));
+            }
+
+            KeyId = keyId;
+            CiphertextBlob = ciphertext;
             EncryptionContext = context;
+            GrantTokens = grantTokens;
         }
 
-        public string KeyId { get; set; }
+        public string KeyId { get; }
 
         // [MaxSize(6144)]
-        public byte[] CiphertextBlob { get; set; }
+        public byte[] CiphertextBlob { get; }
 
         // String Map
         [DataMember(EmitDefaultValue = false)]
-        public JsonObject EncryptionContext { get; set; }
+        public JsonObject EncryptionContext { get; }
 
         [DataMember(EmitDefaultValue = false)]
-        public string[] GrantTokens { get; set; }
+        public string[] GrantTokens { get; }
     }
 }
 

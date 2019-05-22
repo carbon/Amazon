@@ -5,7 +5,7 @@ using Carbon.Json;
 
 namespace Amazon.Kms
 {
-    public class GenerateDataKeyRequest : KmsRequest
+    public sealed class GenerateDataKeyRequest : KmsRequest
     {
         public GenerateDataKeyRequest() { }
 

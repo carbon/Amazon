@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Kms
 {
-    public class CreateGrantResponse : KmsResponse
+    public sealed class CreateGrantResponse : KmsResponse
     {
         public string GrantId { get; set; }
 

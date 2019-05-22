@@ -2,7 +2,7 @@
 
 namespace Amazon.Kms
 {
-    public class RetireGrantRequest : KmsRequest
+    public sealed class RetireGrantRequest : KmsRequest
     {
         public RetireGrantRequest() { }
 

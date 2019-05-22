@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Amazon.Kms
 {
-    public class CreateGrantRequest : KmsRequest
+    public sealed class CreateGrantRequest : KmsRequest
     {
         [DataMember(EmitDefaultValue = false)]
         public GrantConstraints Constraints { get; set; }

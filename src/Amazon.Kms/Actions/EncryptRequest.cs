@@ -1,19 +1,44 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Runtime.Serialization;
 
 using Carbon.Json;
 
 namespace Amazon.Kms
 {
-    public class EncryptRequest : KmsRequest
+    public sealed class EncryptRequest : KmsRequest
     {
-        public EncryptRequest() { }
-
-        public EncryptRequest(string keyId, byte[] data, JsonObject context)
+        public EncryptRequest(
+            string keyId,
+            byte[] plaintext, 
+            JsonObject? context = null, 
+            string[]? grantTokens = null)
         {
-            KeyId             = keyId ?? throw new ArgumentNullException(nameof(keyId));
-            Plaintext         = data  ?? throw new ArgumentNullException(nameof(data));
+            if (keyId is null)
+            {
+                throw new ArgumentNullException(nameof(plaintext));
+            }
+
+            if (keyId.Length == 0)
+            {
+                throw new ArgumentNullException("May not be empty", nameof(keyId));
+            }
+
+            if (plaintext is null)
+            {
+                throw new ArgumentNullException(nameof(plaintext));
+            }
+
+            if (plaintext.Length > 1024 * 4)
+            {
+                throw new ArgumentException("Must be less than 4KB", nameof(plaintext));
+            }
+
+            KeyId = keyId;
+            Plaintext = plaintext;
             EncryptionContext = context;
+            GrantTokens = grantTokens;
         }
 
         /// <summary>
@@ -30,14 +55,14 @@ namespace Amazon.Kms
         /// The encryption context is logged by using CloudTrail.
         /// </summary>
         [DataMember(EmitDefaultValue = false)]
-        public JsonObject EncryptionContext { get; set; }
+        public JsonObject? EncryptionContext { get; }
 
         [DataMember(EmitDefaultValue = false)]
-        public string[] GrantTokens { get; set; }
+        public string[]? GrantTokens { get; }
 
-        public string KeyId { get; set; }
+        public string KeyId { get; }
 
-        public byte[] Plaintext { get; set; }
+        public byte[] Plaintext { get; }
     }
 }
 
