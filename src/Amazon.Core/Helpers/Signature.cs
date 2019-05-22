@@ -1,23 +1,25 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Security.Cryptography;
 using System.Text;
 
+using Amazon.Helpers;
+
 namespace Amazon
 {
-    using Helpers;
-
     internal readonly struct Signature
     {
         public Signature(byte[] data)
         {
-            Data = data ?? throw new ArgumentNullException(nameof(data));
+            Data = data;
         }
 
         public byte[] Data { get; }
 
-        public string ToBase64String() => Convert.ToBase64String(Data);
+        public readonly string ToBase64String() => Convert.ToBase64String(Data);
 
-        public string ToHexString() => HexString.FromBytes(Data);
+        public readonly string ToHexString() => HexString.FromBytes(Data);
 
         public static Signature ComputeHmacSha256(string key, string data)
         {
@@ -29,18 +31,11 @@ namespace Amazon
 
         public static Signature ComputeHmacSha256(byte[] key, byte[] data)
         {
-            if (key is null)
-                throw new ArgumentNullException(nameof(key));
+            using HMACSHA256 algorithm = new HMACSHA256(key);
 
-            if (data is null)
-                throw new ArgumentNullException(nameof(data));
+            byte[] hash = algorithm.ComputeHash(data);
 
-            using (var algorithm = new HMACSHA256(key))
-            {
-                byte[] hash = algorithm.ComputeHash(data);
-
-                return new Signature(hash);
-            }
+            return new Signature(hash);
         }
     }
 }
