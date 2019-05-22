@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Amazon.Metadata;
+
 namespace Amazon
 {
-    using Metadata;
-
-    public class AwsRegion : IEquatable<AwsRegion>
+    public sealed class AwsRegion : IEquatable<AwsRegion>
     {
         public AwsRegion(string name)
         {
@@ -19,13 +19,11 @@ namespace Amazon
         #region Equality
 
         public bool Equals(AwsRegion other) => 
-            other != null && Name == other.Name;
+            other != null && (object.ReferenceEquals(this, other) || Name == other.Name);
 
-        public override bool Equals(object obj) =>
-            Equals(obj as AwsRegion);
+        public override bool Equals(object obj) => Equals(obj as AwsRegion);
 
-        public static bool operator ==(AwsRegion lhs, AwsRegion rhs) =>
-            lhs?.Name == rhs?.Name;
+        public static bool operator ==(AwsRegion lhs, AwsRegion rhs) => lhs.Equals(rhs);
 
         public static bool operator !=(AwsRegion lhs, AwsRegion rhs) =>
             lhs?.Name != rhs?.Name;
@@ -73,33 +71,26 @@ namespace Amazon
             EUWest2      
         };
         
-        public static AwsRegion Get(string name)
+        public static AwsRegion Get(string name) => name switch
         {
-            if (name is null)
-                throw new ArgumentNullException(nameof(name));
-
-            switch (name)
-            {
-                case "ap-south-1"     : return APSouth1;
-                case "ap-southeast-1" : return APSouthEast1;
-                case "ap-southeast-2" : return APSouthEast2;
-                case "ap-northeast-1" : return APNorthEast1;
-                case "ap-northeast-2" : return APNortheast2;
-                case "us-east-1"      : return USEast1;
-                case "us-east-2"      : return USEast2;
-                case "us-west-1"      : return USWest1;
-                case "us-west-2"      : return USWest2;
-                case "ca-central-1"   : return CACentral1;
-                case "eu-central-1"   : return EUCentral1;
-                case "eu-west-1"      : return EUWest1;
-                case "eu-west-2"      : return EUWest2;
-                case "sa-east-1"      : return SAEast1;
-                case "cn-north-1"     : return CNNorth1;
-                case "us-gov-west-1"  : return USGovWest1;
-            }
-
-            throw new ArgumentException("Unexpected region:" + name);
-        }
+            "ap-south-1"     => APSouth1,
+            "ap-southeast-1" => APSouthEast1,
+            "ap-southeast-2" => APSouthEast2,
+            "ap-northeast-1" => APNorthEast1,
+            "ap-northeast-2" => APNortheast2,
+            "us-east-1"      => USEast1,
+            "us-east-2"      => USEast2,
+            "us-west-1"      => USWest1,
+            "us-west-2"      => USWest2,
+            "ca-central-1"   => CACentral1,
+            "eu-central-1"   => EUCentral1,
+            "eu-west-1"      => EUWest1,
+            "eu-west-2"      => EUWest2,
+            "sa-east-1"      => SAEast1,
+            "cn-north-1"     => CNNorth1,
+            "us-gov-west-1"  => USGovWest1,
+            _                => new AwsRegion(name)
+        };
 
         private static AwsRegion current;
 
@@ -121,7 +112,7 @@ namespace Amazon
 
         public static AwsRegion FromAvailabilityZone(string availabilityZone)
         {
-            var regionName = availabilityZone.Substring(0, availabilityZone.Length - 1);
+            string regionName = availabilityZone.Substring(0, availabilityZone.Length - 1);
 
             return Get(regionName);
         }
