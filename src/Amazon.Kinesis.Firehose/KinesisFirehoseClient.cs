@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +15,7 @@ namespace Amazon.Kinesis.Firehose
         const string TargetPrefix = "Firehose_" + Version;
 
         public KinesisFirehoseClient(AwsRegion region, IAwsCredential credential)
-            : base("firehose", region, credential) { }
+            : base(AwsService.KinesisFirehose, region, credential) { }
         
         public DeliveryStream GetStream(string name)
         {
@@ -50,7 +52,7 @@ namespace Amazon.Kinesis.Firehose
             return SendAsync<PutRecordBatchResult>("PutRecordBatch", request);
         }
 
-        public void UpdateDestination(UpdateDestinationRequest request) { }
+        // public void UpdateDestinationAsync(UpdateDestinationRequest request) { }
 
         #region Helpers
 
@@ -68,7 +70,7 @@ namespace Amazon.Kinesis.Firehose
         {
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            var result = JsonObject.Parse(responseText);
+            // var result = JsonObject.Parse(responseText);
 
             throw new Exception(responseText);
         }

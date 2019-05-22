@@ -1,8 +1,8 @@
 ﻿namespace Amazon.Kinesis.Firehose
 {
-    public enum DeliveryStreamType
+    public enum DeliveryStreamType : byte
     {
-        DirectPut = 1,
+        DirectPut             = 1,
         KinesisStreamAsSource = 2
     }   
 }

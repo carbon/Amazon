@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 
 namespace Amazon.Kinesis
 {
@@ -8,7 +10,7 @@ namespace Amazon.Kinesis
             string streamName, 
             string shardId,
             ShardIteratorType type,
-            string startingSequenceNumber = null)
+            string? startingSequenceNumber = null)
         {
             StreamName             = streamName ?? throw new ArgumentNullException(streamName);
             ShardId                = shardId ?? throw new ArgumentNullException(shardId);
@@ -20,7 +22,7 @@ namespace Amazon.Kinesis
 
         public ShardIteratorType ShardIteratorType { get; }
 
-        public string StartingSequenceNumber { get; }
+        public string? StartingSequenceNumber { get; }
 
         public string StreamName { get; }
     }

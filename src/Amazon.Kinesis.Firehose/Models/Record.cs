@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 
 namespace Amazon.Kinesis.Firehose
 {
@@ -8,11 +10,6 @@ namespace Amazon.Kinesis.Firehose
 
         public Record(byte[] data)
         {
-            if (data is null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
-
             if (data.Length == 0)
             {
                 throw new ArgumentException("Must not be empty", nameof(data));
