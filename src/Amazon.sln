@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D94F35A3-A44D-4AC4-BBED-C578D86572CE}"
 EndProject
@@ -70,6 +70,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Kinesis.Firehose", "Amazon.Kinesis.Firehose\Amazon.Kinesis.Firehose.csproj", "{BEBB0E0C-50DE-47E8-804C-EBA415FB185B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CodeBuild.Tests", "Amazon.CodeBuild.Tests\Amazon.CodeBuild.Tests.csproj", "{1B0E1A80-0907-4602-8303-0E28D330D094}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Route53", "Amazon.Route53\Amazon.Route53.csproj", "{FE093EF2-3893-4E36-AA05-81DF4FA4B881}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Route53.Tests", "Amazon.Route53.Tests\Amazon.Route53.Tests.csproj", "{7A29E5C1-A19C-48A4-9075-96658118207F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -209,6 +213,14 @@ Global
 		{1B0E1A80-0907-4602-8303-0E28D330D094}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B0E1A80-0907-4602-8303-0E28D330D094}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B0E1A80-0907-4602-8303-0E28D330D094}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE093EF2-3893-4E36-AA05-81DF4FA4B881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE093EF2-3893-4E36-AA05-81DF4FA4B881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE093EF2-3893-4E36-AA05-81DF4FA4B881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE093EF2-3893-4E36-AA05-81DF4FA4B881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A29E5C1-A19C-48A4-9075-96658118207F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A29E5C1-A19C-48A4-9075-96658118207F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A29E5C1-A19C-48A4-9075-96658118207F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A29E5C1-A19C-48A4-9075-96658118207F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -229,6 +241,7 @@ Global
 		{683A45C9-28BC-4B62-A431-6E308A2F5895} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 		{595B4814-2AF1-41C4-BF7A-546B1EF0CBFA} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 		{1B0E1A80-0907-4602-8303-0E28D330D094} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
+		{7A29E5C1-A19C-48A4-9075-96658118207F} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C538AC86-7240-43BC-9265-FC69CA3DB932}
