@@ -20,7 +20,6 @@ namespace Amazon.S3
             set => Headers.IfModifiedSince = value;
         }
 
-
         public string IfNoneMatch
         {
             set
@@ -36,7 +35,7 @@ namespace Amazon.S3
             }
         }
 
-        internal void SetCustomerEncryptionKey(ServerSideEncryptionKey key)
+        internal void SetCustomerEncryptionKey(in ServerSideEncryptionKey key)
         {
             Headers.Add("x-amz-server-side-encryption-customer-algorithm", key.Algorithm);
             Headers.Add("x-amz-server-side-encryption-customer-key",       Convert.ToBase64String(key.Key));
