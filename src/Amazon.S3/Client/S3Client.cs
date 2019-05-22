@@ -54,14 +54,13 @@ namespace Amazon.S3
 
         public async Task<UploadPartResult> UploadPartAsync(UploadPartRequest request)
         {
-            using (var response = await SendAsync2(request).ConfigureAwait(false))
-            {
-                return new UploadPartResult(
-                    uploadId   : request.UploadId,
-                    partNumber : request.PartNumber,
-                    eTag       : response.Headers.ETag.Tag
-                );
-            }
+            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
+
+            return new UploadPartResult(
+                uploadId   : request.UploadId,
+                partNumber : request.PartNumber,
+                eTag       : response.Headers.ETag.Tag
+            );
         }
 
         public async Task<CompleteMultipartUploadResult> CompleteMultipartUploadAsync(CompleteMultipartUploadRequest request)
@@ -75,7 +74,7 @@ namespace Amazon.S3
 
         public async Task<PutObjectResult> PutObjectAsync(PutObjectRequest request)
         {
-            using (var response = await SendAsync2(request).ConfigureAwait(false))
+            using (var response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false))
             {
                 return new PutObjectResult(response);
             }
@@ -90,12 +89,11 @@ namespace Amazon.S3
 
         public async Task DeleteObjectAsync(DeleteObjectRequest request)
         {
-            using (var response = await SendAsync2(request).ConfigureAwait(false))
+            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
+
+            if (response.StatusCode != HttpStatusCode.NoContent)
             {
-                if (response.StatusCode != HttpStatusCode.NoContent)
-                {
-                    throw new Exception("Expected 204");
-                }
+                throw new S3Exception("Expected 204", response.StatusCode);
             }
         }
 
@@ -108,22 +106,21 @@ namespace Amazon.S3
 
         public async Task<RestoreObjectResult> RestoreObjectAsync(RestoreObjectRequest request)
         {
-            using (var response = await SendAsync2(request).ConfigureAwait(false))
-            {
-                return new RestoreObjectResult(response.StatusCode);
-            }
+            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
+
+            return new RestoreObjectResult(response.StatusCode);
         }
 
         public async Task<S3Object> GetObjectAsync(GetObjectRequest request)
         {
-            var response = await SendAsync2(request).ConfigureAwait(false);
+            var response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
 
             return new S3Object(request.ObjectName, response);
         }
 
         public async Task<S3ObjectInfo> GetObjectHeadAsync(ObjectHeadRequest request)
         {
-            using (var response = await SendAsync2(request).ConfigureAwait(false))
+            using (var response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false))
             {
                 return new S3ObjectInfo(
                     bucketName : request.BucketName,
@@ -133,12 +130,12 @@ namespace Amazon.S3
             }
         }
 
-        private async Task<HttpResponseMessage> SendAsync2(HttpRequestMessage request)
+        private async Task<HttpResponseMessage> SendAsync2(HttpRequestMessage request, HttpCompletionOption completionOption)
         {
             await SignAsync(request).ConfigureAwait(false);
 
-            var response = await httpClient.SendAsync(request).ConfigureAwait(false);
-
+            var response = await httpClient.SendAsync(request, completionOption).ConfigureAwait(false);
+            
             if (response.StatusCode == HttpStatusCode.NotModified)
             {
                 return response;
@@ -164,7 +161,7 @@ namespace Amazon.S3
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -189,6 +186,6 @@ namespace Amazon.S3
             throw new S3Exception("Unexpected S3 error. " + response.StatusCode + ":" + responseText, response.StatusCode);
         }
 
-        #endregion       
+        #endregion
     }
 }
