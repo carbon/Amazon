@@ -4,7 +4,7 @@ namespace Amazon.Ses
 {
     using Helpers;
 
-    [XmlRoot(Namespace = "http://ses.amazonaws.com/doc/2010-12-01/")]
+    [XmlRoot(Namespace = SesClient.Namespace)]
     public class SendEmailResponse
     {
         [XmlElement]

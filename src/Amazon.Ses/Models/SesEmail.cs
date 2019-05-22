@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Mail;
-using System.Text;
 using System.Linq;
+using System.Net.Mail;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -152,8 +151,6 @@ namespace Amazon.Ses
 
         public XDocument ToXml()
         {
-            var sb = new StringBuilder();
-
             var namespaces = new XmlSerializerNamespaces();
 
             //  Add lib namespace with empty prefix 

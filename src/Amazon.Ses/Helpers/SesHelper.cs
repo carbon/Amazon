@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Net.Mail;
 using System.Text;
 
@@ -6,14 +8,10 @@ namespace Amazon.Ses
 {
     public static class SesHelper
     {
-        public static string EncodeEmail(MailAddress email)
-            => EncodeEmail(email?.ToString());
+        public static string EncodeEmail(MailAddress email) => EncodeEmail(email?.ToString());
 
         public static string EncodeEmail(string email)
         {
-            if (email is null)
-                throw new ArgumentNullException(nameof(email));
-
             // By default, the string must be 7-bit ASCII. 
             // If the text must contain any other characters, 
             // then you must use MIME encoded-word syntax (RFC 2047) instead of a literal string.

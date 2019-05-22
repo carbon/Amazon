@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ses
+﻿#nullable enable
+
+namespace Amazon.Ses
 {
-    public class SesRequest : AwsRequest
+    public sealed class SesRequest : AwsRequest
     {
         public SesRequest(string action)
         {

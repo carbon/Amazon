@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 
 namespace Amazon.Ses
 {
@@ -14,7 +16,7 @@ namespace Amazon.Ses
             }
         }
 
-        public string Charset { get; }
+        public string? Charset { get; }
 
         public string Data { get; }
     }

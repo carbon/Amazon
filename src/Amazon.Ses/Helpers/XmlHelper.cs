@@ -1,18 +1,19 @@
-﻿using System.IO;
+﻿#nullable enable
+
+using System.IO;
 using System.Xml.Serialization;
 
 namespace Amazon.Helpers
 {
-    public static class XmlText
+    internal static class XmlText
     {
         public static T ToObject<T>(string text)
         {
-            using (var reader = new StringReader(text))
-            {
-                var serializer = new XmlSerializer(typeof(T));
+            using var reader = new StringReader(text);
 
-                return (T)serializer.Deserialize(reader);
-            }
+            var serializer = new XmlSerializer(typeof(T));
+
+            return (T)serializer.Deserialize(reader);
         }
     }
 }

@@ -1,15 +1,19 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
+using Amazon.Scheduling;
+
 namespace Amazon.Ses
 {
-    using Scheduling;
-
     public sealed class SesClient : AwsClient
     {
         public const string Version = "2010-12-01";
+
+        public const string Namespace = "http://ses.amazonaws.com/doc/2010-12-01/";
 
         private static readonly RetryPolicy retryPolicy = new ExponentialBackoffRetryPolicy(
             initialDelay : TimeSpan.FromSeconds(1),
@@ -40,7 +44,7 @@ namespace Amazon.Ses
             return SendEmailResponse.Parse(text).SendEmailResult;
         }
 
-        public async Task<GetSendQuotaResult> GetSendQuotaAsync(SesEmail message)
+        public async Task<GetSendQuotaResult> GetSendQuotaAsync()
         {
             var request = new SesRequest("GetSendQuota");
 
@@ -54,7 +58,7 @@ namespace Amazon.Ses
         private async Task<string> SendWithRetryPolicy(SesRequest request, RetryPolicy retryPolicy)
         {
             var retryCount = 0;
-            Exception lastError = null;
+            Exception lastError;
 
             do
             {

@@ -10,34 +10,6 @@
 
         public SesMail Mail { get; set; }
     }
-
-    public class SesRecipient
-    {
-        public string EmailAddress { get; set; }
-    }
-
-    /*
-	* {
-	   "userAgent":"Comcast Feedback Loop (V0.01)",
-	   "complainedRecipients":[{
-			 "emailAddress":"recipient1@example.com"
-		  }
-	   ],
-	   "complaintFeedbackType":"abuse",
-	   "arrivalDate":"2009-12-03T04:24:21.000-05:00",
-	   "timestamp":"2012-05-25T14:59:38.623-07:00",
-	   "feedbackId":"000001378603177f-18c07c78-fa81-4a58-9dd1-fedc3cb8f49a-000000"
-	 */
-
-
-    public class SesMail
-    {
-        public string Source { get; set; }
-
-        public string[] Destination { get; set; }
-
-        public string MessageId { get; set; }
-    }
 }
 
 
