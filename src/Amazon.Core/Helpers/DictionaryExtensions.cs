@@ -8,21 +8,26 @@ namespace Amazon.Helpers
     {
         public static string ToPostData(this Dictionary<string, string> nvc)
         {
+            if (nvc is null || nvc.Count == 0)
+            {
+                return string.Empty;
+            }
+
             return ToPostData(nvc, null);
         }
 
         public static string ToQueryString(this Dictionary<string, string> nvc)
         {
-            if (nvc.Count == 0) return string.Empty;
+            if (nvc is null || nvc.Count == 0)
+            {
+                return string.Empty;
+            }
 
             return nvc.ToPostData(prefix: "?");
         }
 
-
-        private static string ToPostData(this Dictionary<string, string> nvc, string prefix)
+        private static string ToPostData(this Dictionary<string, string> nvc, string? prefix)
         {
-            if (nvc == null) return null;
-
             var sb = StringBuilderCache.Aquire();
 
             if (prefix != null)

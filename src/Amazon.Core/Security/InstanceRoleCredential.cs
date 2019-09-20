@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -81,10 +83,11 @@ namespace Amazon
             {
                 if (ShouldRenew)
                 {
+                    RoleName ??= await InstanceMetadata.GetIamRoleNameAsync().ConfigureAwait(false);
+
                     if (RoleName is null)
                     {
-                        RoleName = await InstanceMetadata.GetIamRoleName().ConfigureAwait(false)
-                            ?? throw new Exception("The instance is not configured with an IAM role");
+                        throw new Exception("The instance is not configured with an IAM role");
                     }
 
                     var iamCredential = await IamSecurityCredentials.GetAsync(RoleName).ConfigureAwait(false);
@@ -104,7 +107,7 @@ namespace Amazon
 
         public static async Task<InstanceRoleCredential> GetAsync()
         {
-            string roleName = await InstanceMetadata.GetIamRoleName().ConfigureAwait(false);
+            string roleName = await InstanceMetadata.GetIamRoleNameAsync().ConfigureAwait(false);
 
             var iamCredential = await IamSecurityCredentials.GetAsync(roleName).ConfigureAwait(false);
 

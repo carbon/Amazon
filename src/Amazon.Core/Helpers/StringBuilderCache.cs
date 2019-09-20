@@ -1,12 +1,11 @@
 ﻿// Based on .NET Source code
 
-
 namespace System.Text
 {
     internal static class StringBuilderCache
     {
         [ThreadStatic]
-        static StringBuilder cachedInstance;
+        static StringBuilder? cachedInstance;
 
         public static StringBuilder Aquire()
         {

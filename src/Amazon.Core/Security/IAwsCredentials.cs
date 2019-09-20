@@ -8,7 +8,7 @@ namespace Amazon
 
         string SecretAccessKey { get; }
 
-        string SecurityToken { get; }
+        string? SecurityToken { get; }
 
         bool ShouldRenew { get; }
 

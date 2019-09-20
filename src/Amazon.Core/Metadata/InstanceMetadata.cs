@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,19 +19,14 @@ namespace Amazon.Metadata
 
         public static async Task<InstanceIdentity> GetIdentityAsync()
         {
-            var text = await http.GetStringAsync("http://169.254.169.254/latest/dynamic/instance-identity/document");
+            string text = await http.GetStringAsync("http://169.254.169.254/latest/dynamic/instance-identity/document");
 
             return JsonObject.Parse(text).As<InstanceIdentity>();
         }
         
-        internal static async Task<IamSecurityCredentials> GetIamSecurityCredentials(string roleName)
+        public static async Task<IamSecurityCredentials> GetIamSecurityCredentials(string roleName)
         {
-            if (roleName is null)
-            {
-                throw new ArgumentNullException(nameof(roleName));
-            }
-
-            var responseText = await http.GetStringAsync(
+            string responseText = await http.GetStringAsync(
                 requestUri: baseUri + "/iam/security-credentials/" + roleName
             ).ConfigureAwait(false);
 
@@ -42,13 +39,14 @@ namespace Amazon.Metadata
             return http.GetStringAsync(baseUri + "/placement/availability-zone");
         }
 
-        public static Task<string> GetIamRoleName()
+        public static Task<string> GetIamRoleNameAsync()
         {
             // TODO: Limit to first line...
             
             return http.GetStringAsync(baseUri + "/iam/security-credentials/");
         }
 
+        /*
         private static async Task<IamRoleInfo> GetIamInfoAsync()
         {
             var url = baseUri + "/iam/info";
@@ -57,18 +55,14 @@ namespace Amazon.Metadata
 
             return JsonObject.Parse(responseText).As<IamRoleInfo>();
         }
-
-        private static Task<string> GetCurrentRoleNameAsync()
-        {
-            return http.GetStringAsync(baseUri + "/iam/security-credentials/");
-        }
+        */
 
         public static Task<string> GetInstanceIdAsync()
         {
             return http.GetStringAsync(baseUri + "/instance-id");
         }
 
-        public static async Task<IPAddress> GetPublicIpAsync()
+        public static async Task<IPAddress?> GetPublicIpAsync()
         {
             var result = await http.GetStringAsync(baseUri + "/public-ipv4");
 

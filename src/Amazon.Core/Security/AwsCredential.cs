@@ -16,19 +16,20 @@ namespace Amazon
 
         public string SecretAccessKey { get; }
 
-        public string SecurityToken => null;
+        public string? SecurityToken => null;
 
         // {id}:{secret}
 
         public static AwsCredential Parse(string text)
         {
-            if (text is null) throw new ArgumentNullException(nameof(text));
+            if (text is null)
+                throw new ArgumentNullException(nameof(text));
 
             var colonIndex = text.IndexOf(':');
             
             if (colonIndex == -1)
             {
-                throw new Exception("AccessKeyId & SecretAccessKey must be seperated by ':'");
+                throw new Exception("accessKeyId & secretAccessKey must be seperated by ':'");
             }
 
             return new AwsCredential(

@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Core</AssemblyName>
-    <VersionPrefix>0.13.1</VersionPrefix>
+    <Version>0.13.2</Version>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>8</LangVersion>
+    <Nullable>enable</Nullable>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
