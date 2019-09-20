@@ -5,7 +5,8 @@
     <Version>0.8.0</Version>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
-    
+    <Nullable>enable</Nullable>
+
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>

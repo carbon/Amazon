@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 using Amazon.Security;
 
@@ -16,32 +17,37 @@ namespace Amazon.Rds
             this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
         }
 
-        public AuthenticationToken GenerateAuthenticationToken(GetAuthenticationTokenRequest request)
+        public async Task<AuthenticationToken> GetAuthenticationTokenAsync(GetAuthenticationTokenRequest request)
         {
             // Ensure the underlying credential is renewed
             if (credential.ShouldRenew)
             {
-                credential.RenewAsync().GetAwaiter().GetResult();
+                await credential.RenewAsync().ConfigureAwait(false);
             }
 
             var date = DateTime.UtcNow;
 
-            var scope = new CredentialScope(date, AwsRegion.USEast1, AwsService.RdsDb);
-            
+            var scope = new CredentialScope(date, region, AwsService.RdsDb);
+
             var httpRequest = new HttpRequestMessage(
-                HttpMethod.Get, 
+                HttpMethod.Get,
                 $"https://{request.HostName}:{request.Port}?Action=connect&DBUser={request.UserName}"
             );
 
             SignerV4.Default.Presign(credential, scope, date, request.Expires, httpRequest);
 
-            var url = httpRequest.RequestUri;
+            Uri url = httpRequest.RequestUri;
 
             return new AuthenticationToken(
-                value   : url.Host + ":" + url.Port.ToString() + "/" + url.Query,
-                issued  : date,
-                expires : date + request.Expires
+                value: url.Host + ":" + url.Port.ToString() + "/" + url.Query,
+                issued: date,
+                expires: date + request.Expires
             );
+        }
+
+        public AuthenticationToken GetAuthenticationToken(GetAuthenticationTokenRequest request)
+        {
+            return GetAuthenticationTokenAsync(request).GetAwaiter().GetResult();
         }
     }
 }

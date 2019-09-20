@@ -2,7 +2,7 @@
 
 namespace Amazon.Rds
 {
-    public class GetAuthenticationTokenRequest
+    public sealed class GetAuthenticationTokenRequest
     {
         public GetAuthenticationTokenRequest(string hostname, int port, string userName)
             : this(hostname, port, userName, TimeSpan.FromMinutes(15)) { }
