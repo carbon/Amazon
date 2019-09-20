@@ -43,16 +43,18 @@ namespace Amazon.Elb.Tests
   </ResponseMetadata>
 </DescribeSSLPoliciesResponse>";
 
-            var r = ElbResponseHelper<DescribeSSLPoliciesResponse>.DeserializeXml(text);
+            var r = ElbSerializer<DescribeSSLPoliciesResponse>.DeserializeXml(text);
 
             var policies = r.DescribeSSLPoliciesResult.SslPolicies;
 
-            Assert.Equal(1, policies.Length);
+            Assert.Single(policies);
 
-            Assert.Equal(4, policies[0].Ciphers.Length);
-            Assert.Equal(3, policies[0].SslProtocols.Length);
-            Assert.Equal("TLSv1", policies[0].SslProtocols[0]);
-            Assert.Equal("TLSv1.1", policies[0].SslProtocols[1]);
+            var policy = policies[0];
+
+            Assert.Equal(4,         policy.Ciphers.Length);
+            Assert.Equal(3,         policy.SslProtocols.Length);
+            Assert.Equal("TLSv1",   policy.SslProtocols[0]);
+            Assert.Equal("TLSv1.1", policy.SslProtocols[1]);
 
             Assert.Equal("ELBSecurityPolicy-2016-08", policies[0].Name);
         }

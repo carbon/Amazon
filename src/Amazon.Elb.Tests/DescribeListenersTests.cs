@@ -30,11 +30,11 @@ namespace Amazon.Elb.Tests
   </ResponseMetadata>
 </DescribeListenersResponse>";
 
-            var r = ElbResponseHelper<DescribeListenersResponse>.DeserializeXml(text);
+            var r = ElbSerializer<DescribeListenersResponse>.DeserializeXml(text);
 
             var listeners = r.DescribeListenersResult.Listeners;
 
-            Assert.Equal(1, listeners.Length);
+            Assert.Single(listeners);
 
             var arnPrefix = "arn:aws:elasticloadbalancing:us-west-2:123456789012";
 
@@ -43,7 +43,7 @@ namespace Amazon.Elb.Tests
 
             Assert.Equal("HTTP", listeners[0].Protocol);
 
-            Assert.Equal(1, listeners[0].DefaultActions.Length);
+            Assert.Single(listeners[0].DefaultActions);
             Assert.Equal("forward", listeners[0].DefaultActions[0].Type);
             Assert.Equal(arnPrefix + ":targetgroup/my-targets/73e2d6bc24d8a067", listeners[0].DefaultActions[0].TargetGroupArn);
 
