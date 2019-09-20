@@ -3,7 +3,7 @@ using System.Net;
 
 namespace Amazon.S3
 {
-    public class S3Exception : Exception
+    public sealed class S3Exception : Exception
     {
         public S3Exception(string message, HttpStatusCode statusCode)
             : base(message)
@@ -37,10 +37,10 @@ namespace Amazon.S3
         /// </summary>
         public HttpStatusCode HttpStatusCode { get; }
 
-        public string ErrorCode { get; }
+        public string? ErrorCode { get; }
 
-        public string RequestId { get; }
+        public string? RequestId { get; }
 
-        public bool IsTransient => HttpStatusCode == HttpStatusCode.InternalServerError;
+        public bool IsTransient => HttpStatusCode == HttpStatusCode.InternalServerError || HttpStatusCode == HttpStatusCode.ServiceUnavailable; // 500 || 503
     }
 }
