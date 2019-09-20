@@ -10,7 +10,7 @@ namespace Amazon.Scheduling
 
         public static ExponentialBackoffRetryPolicy ExponentialBackoff(TimeSpan initialDelay, TimeSpan maxDelay, int maxRetries = 3)
         {
-            return new ExponentialBackoffRetryPolicy(initialDelay, maxDelay);
+            return new ExponentialBackoffRetryPolicy(initialDelay, maxDelay, maxRetries);
         }
     }
 }
