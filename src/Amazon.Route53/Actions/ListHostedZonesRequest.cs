@@ -1,4 +1,6 @@
-﻿namespace Amazon.Route53
+﻿#nullable disable
+
+namespace Amazon.Route53
 {
     public sealed class ListHostedZonesRequest
     {

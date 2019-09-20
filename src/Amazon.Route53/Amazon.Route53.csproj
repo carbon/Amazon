@@ -4,8 +4,8 @@
     <AssemblyName>Amazon.Route53</AssemblyName>
     <Version>0.1.0</Version>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
-    <NullableContextOptions>enable</NullableContextOptions>
+    <LangVersion>8</LangVersion>
+    <Nullable>enable</Nullable>
 
     <PackageId>Carbon.Amazon.Route53</PackageId>
   </PropertyGroup>
