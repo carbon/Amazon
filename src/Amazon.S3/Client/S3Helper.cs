@@ -26,11 +26,11 @@ namespace Amazon.S3
 
             // TODO: support version querystring
 
-            var r = new HttpRequestMessage(new HttpMethod(request.Method), StringBuilderCache.ExtractAndRelease(urlBuilder));
+            var message = new HttpRequestMessage(new HttpMethod(request.Method), StringBuilderCache.ExtractAndRelease(urlBuilder));
 
-            SignerV4.Default.Presign(credential, scope, now, request.ExpiresIn, r, "UNSIGNED-PAYLOAD");
+            SignerV4.Default.Presign(credential, scope, now, request.ExpiresIn, message, "UNSIGNED-PAYLOAD");
 
-            string signedUrl = r.RequestUri.ToString();
+            string signedUrl = message.RequestUri.ToString();
 
             return signedUrl;
         }
