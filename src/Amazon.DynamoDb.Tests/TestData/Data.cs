@@ -1,5 +1,5 @@
 ﻿using Carbon.Data.Annotations;
-
+using Carbon.Data.Sequences;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -128,12 +128,30 @@ namespace Amazon.DynamoDb.Models.Tests
         public RecordType Type { get; set; }
     }
 
+
+    public class ReadOnlyRecord
+    {
+        [Member("id"), Key]
+        public long Id { get; }
+
+        [Member("type")]
+        public RecordType Type { get; }
+    }
+
     public enum RecordType
     {
         Zero = 0,
         One = 1,
         Two = 2,
         Three = 3
+    }
+
+
+    [Dataset("Entity")]
+    public class Entity
+    {
+        [Member("id"), Key]
+        public Uid Id { get; set; }
     }
 
     [Dataset("Hi")]

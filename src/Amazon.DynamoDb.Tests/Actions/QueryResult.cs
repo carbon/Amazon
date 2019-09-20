@@ -1,9 +1,9 @@
-﻿namespace Amazon.DynamoDb.Tests
-{
-    using Carbon.Data;
-    using Carbon.Json;
-    using Xunit;
+﻿using Carbon.Json;
 
+using Xunit;
+
+namespace Amazon.DynamoDb.Tests
+{
     public class QueryResultTests
 	{
 		[Fact]

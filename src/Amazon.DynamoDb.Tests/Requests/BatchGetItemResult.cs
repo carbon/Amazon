@@ -83,11 +83,13 @@ namespace Amazon.DynamoDb.Models.Tests
 
             var result = BatchGetItemResult.FromJson(JsonObject.Parse(text));
 
-            Assert.Equal(2, result.Responses.Count);
+            Assert.Equal(2, result.Responses.Length);
 
             Assert.Equal(3, result.Responses[0].Count);
 
             Assert.Equal("Amazon DynamoDB", result.Responses[0][0].GetString("Name"));
+            Assert.Equal("How many users can read a single data item at a time? Are there any limits?", result.Responses[1][0].GetString("Message"));
+
         }
     }
 }

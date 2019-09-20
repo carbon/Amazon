@@ -76,7 +76,7 @@ namespace Amazon.DynamoDb.Models.Tests
 
 			var result = BatchWriteItemResult.FromJson(JsonObject.Parse(text));
 
-			Assert.Equal(1, result.UnprocessedItems.Count);
+			Assert.Single(result.UnprocessedItems);
 			Assert.Equal(3, result.UnprocessedItems[0].Requests.Count);
 
 			Assert.Equal("Slugs", result.UnprocessedItems[0].TableName);

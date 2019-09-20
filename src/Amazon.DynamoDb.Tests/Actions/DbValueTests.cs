@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-
+using Carbon.Data.Sequences;
 using Carbon.Json;
 
 using Xunit;
@@ -71,23 +71,22 @@ namespace Amazon.DynamoDb.Models.Tests
 		[Fact]
 		public void SetConversions()
 		{
-			Assert.Equal("1,2,3", string.Join(",", new DbValue(new[] { 1, 2, 3 }).ToSet<Int16>()));
-			Assert.Equal("1,2,3", string.Join(",", new DbValue(new[] { 1, 2, 3 }).ToSet<Int32>()));
-			Assert.Equal("1,2,3", string.Join(",", new DbValue(new[] { 1, 2, 3 }).ToSet<Int64>()));
-			Assert.Equal("1,2,3", string.Join(",", new DbValue(new[] { 1, 2, 3 }).ToSet<float>()));
-			Assert.Equal("1,2,3", string.Join(",", new DbValue(new[] { 1, 2, 3 }).ToSet<double>()));
-
-			Assert.Equal("a,b,c", string.Join(",", new DbValue(new[] { "a", "b", "c" }).ToStringSet()));
+			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int16>()));
+			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int32>()));
+			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int64>()));
+			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<float>()));
+			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<double>()));
+			Assert.Equal("a,b,c", string.Join(',', new DbValue(new[] { "a", "b", "c" }).ToStringSet()));
 		}
 
 		[Fact]
 		public void ArrayConversions()
 		{
-			Assert.Equal("1,2,3", string.Join(",", new DbValue(new[] { 1, 2, 3 }).ToArray<Int16>()));
-			Assert.Equal("1,2,3", string.Join(",", new DbValue(new[] { 1, 2, 3 }).ToArray<Int32>()));
-			Assert.Equal("1,2,3", string.Join(",", new DbValue(new[] { 1, 2, 3 }).ToArray<Int64>()));
-			Assert.Equal("1,2,3", string.Join(",", new DbValue(new[] { 1, 2, 3 }).ToArray<float>()));
-			Assert.Equal("1,2,3", string.Join(",", new DbValue(new[] { 1, 2, 3 }).ToArray<double>()));
+			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int16>()));
+			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int32>()));
+			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int64>()));
+			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<float>()));
+			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<double>()));
 		}
 
 		[Fact]
@@ -185,6 +184,29 @@ namespace Amazon.DynamoDb.Models.Tests
 
             Assert.Equal(1, a.A.A);
             Assert.Equal("boat", a.A.B);
+
+        }
+
+        [Fact]
+        public void UidTest()
+        {
+            var id = Uid.Deserialize(Convert.FromBase64String("ZKWQKAIkHUiA4MGBMfFiGg=="));
+
+            var value = AttributeCollection.FromObject(new Entity {
+                Id = id
+            });
+
+
+
+            Assert.Equal(@"{
+  ""id"": {
+    ""B"": ""ZKWQKAIkHUiA4MGBMfFiGg==""
+  }
+}", value.ToJson().ToString());
+
+            var a = AttributeCollection.FromJson(value.ToJson()).As<Entity>();
+
+            Assert.Equal(id, a.Id);
 
         }
 

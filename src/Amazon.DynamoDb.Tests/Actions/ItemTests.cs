@@ -21,6 +21,21 @@ namespace Amazon.DynamoDb.Models.Tests
         }
 
         [Fact]
+        public void CanSetReadOnlyProperties()
+        {
+            var item = new AttributeCollection {
+                { "id",   234 },
+                { "type", "Three" }
+            };
+
+            var record = item.As<ReadOnlyRecord>();
+
+            Assert.Equal(234, record.Id);
+
+            Assert.Equal(RecordType.Three, record.Type);
+        }
+
+        [Fact]
         public void DbItem_As_Media_Test()
         {
             var created = new DateTime(2012, 01, 01, 0, 0, 0, DateTimeKind.Utc);
@@ -40,9 +55,11 @@ namespace Amazon.DynamoDb.Models.Tests
             Assert.Equal(Convert.FromBase64String("FHX8PLDaGoI2hSlwjI1yFvqWTcQ="), media.Hash);
             Assert.Equal(created, media.Created);
 
-            Assert.Equal("resize:500x500.jpeg", AttributeCollection.FromObject(media)["Transformation"].Value.ToString());
-            Assert.Equal(DbValueType.N, AttributeCollection.FromObject(media)["Duration"].Kind);
-            Assert.Equal(DbValueType.N, AttributeCollection.FromObject(media)["Created"].Kind);
+            var attributes = AttributeCollection.FromObject(media);
+
+            Assert.Equal("resize:500x500.jpeg", attributes["Transformation"].Value.ToString());
+            Assert.Equal(DbValueType.N,         attributes["Duration"].Kind);
+            Assert.Equal(DbValueType.N,         attributes["Created"].Kind);
         }
 
         [Fact]
