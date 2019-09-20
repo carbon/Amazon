@@ -62,20 +62,20 @@ namespace Amazon.DynamoDb
     {
         public static string ToQuickString(this DbValueType type)
         {
-            switch (type)
+            return type switch
             {
-                case DbValueType.B      : return "B";
-                case DbValueType.BOOL   : return "BOOL";
-                case DbValueType.BS     : return "BS";
-                case DbValueType.L      : return "L";
-                case DbValueType.M      : return "M";
-                case DbValueType.N      : return "N";
-                case DbValueType.NS     : return "NS";
-                case DbValueType.NULL   : return "NULL";
-                case DbValueType.S      : return "S";
-                case DbValueType.SS     : return "SS";
-                default : throw new Exception("Unexpected type:" + type.ToString());
-            }
+                DbValueType.B    => "B",
+                DbValueType.BOOL => "BOOL",
+                DbValueType.BS   => "BS",
+                DbValueType.L    => "L",
+                DbValueType.M    => "M",
+                DbValueType.N    => "N",
+                DbValueType.NS   => "NS",
+                DbValueType.NULL => "NULL",
+                DbValueType.S    => "S",
+                DbValueType.SS   => "SS",
+                _                => throw new Exception("Unexpected type:" + type.ToString()),
+            };
         }
     }
 }

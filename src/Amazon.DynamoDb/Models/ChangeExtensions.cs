@@ -20,7 +20,7 @@ namespace Amazon.DynamoDb
                     o.Add("Action", "DELETE");
                 }
 
-                // Action is Replace By Default
+                // Default action is Replace
             }
             else
             {
@@ -35,16 +35,12 @@ namespace Amazon.DynamoDb
             return new KeyValuePair<string, JsonObject>(change.Name, o);
         }
 
-        internal static string DataOpToAction(DataOperation op)
+        internal static string DataOpToAction(DataOperation op) => op switch
         {
-            switch (op)
-            {
-                case DataOperation.Add      : return "ADD";
-                case DataOperation.Replace  : return "PUT";
-                case DataOperation.Remove   : return "DELETE";
-
-                default: throw new Exception("Invalid DataOperation: " + op.ToString());
-            }
-        }
+            DataOperation.Add     => "ADD",
+            DataOperation.Replace => "PUT",
+            DataOperation.Remove  => "DELETE",
+            _                     => throw new Exception("Invalid operation: " + op)
+        };       
     }
 }
