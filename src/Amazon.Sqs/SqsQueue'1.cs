@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +11,7 @@ using Carbon.Messaging;
 namespace Amazon.Sqs
 {
     public sealed class SqsQueue<T> : IMessageQueue<T>
-        where T : new()
+        where T : notnull, new()
     {
         private readonly SqsClient client;
         private readonly Uri url;

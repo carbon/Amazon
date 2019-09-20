@@ -1,4 +1,6 @@
-﻿namespace Amazon.Sqs.Models
+﻿#nullable disable
+
+namespace Amazon.Sqs.Models
 {
     public class BatchResultErrorEntry
     {

@@ -1,4 +1,6 @@
-﻿using System.Xml.Serialization;
+﻿#nullable disable
+
+using System.Xml.Serialization;
 
 namespace Amazon.Sqs.Models
 {

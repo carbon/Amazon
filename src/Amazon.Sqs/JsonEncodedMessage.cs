@@ -1,11 +1,10 @@
-﻿
-using Carbon.Json;
+﻿using Carbon.Json;
 using Carbon.Messaging;
 
 namespace Amazon.Sqs
 {
     public sealed class JsonEncodedMessage<T> : IQueueMessage<T>
-        where T : new()
+        where T : notnull, new()
     {
         private readonly SqsMessage model;
 
