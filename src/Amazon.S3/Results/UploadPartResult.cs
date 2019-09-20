@@ -4,7 +4,7 @@ using Carbon.Storage;
 
 namespace Amazon.S3
 {
-    public class UploadPartResult : IUploadBlock
+    public sealed class UploadPartResult : IUploadBlock
     {
         public UploadPartResult(string uploadId, int partNumber, string eTag)
         {
