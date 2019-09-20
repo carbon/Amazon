@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kinesis
+﻿#nullable disable
+
+namespace Amazon.Kinesis
 {
     public class PutRecordResult
     {
@@ -6,11 +8,11 @@
 
         public string ShardId { get; set; }
     }
-
-    /*
-	{
-      "SequenceNumber": "string",
-	  "ShardId": "string"
-	}
-	*/
 }
+
+/*
+{
+  "SequenceNumber": "string",
+  "ShardId": "string"
+}
+*/

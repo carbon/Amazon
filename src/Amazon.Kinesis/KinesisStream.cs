@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -65,8 +63,8 @@ namespace Amazon.Kinesis
                 startingSequenceNumber : position.Offset
             );
 
-            return retryPolicy.ExecuteAsync<IIterator>(async ()
-                => await client.GetShardIteratorAsync(request).ConfigureAwait(false)
+            return retryPolicy.ExecuteAsync<IIterator>(async () =>
+                await client.GetShardIteratorAsync(request).ConfigureAwait(false)
             );
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable disable
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -6,7 +7,7 @@ using Carbon.Data.Streams;
 
 namespace Amazon.Kinesis
 {
-    public class GetRecordsResponse : IRecordList
+    public sealed class GetRecordsResponse : IRecordList
     {
         public string NextShardIterator { get; set; }
 
@@ -31,16 +32,6 @@ namespace Amazon.Kinesis
         IEnumerator IEnumerable.GetEnumerator() => Records.GetEnumerator();
 
         #endregion
-    }
-
-    public class KinesisIterator : IIterator
-    {
-        public KinesisIterator(string value)
-        {
-            Value = value ?? throw new ArgumentNullException(nameof(value));
-        }
-
-        public string Value { get; }
     }
 }
 

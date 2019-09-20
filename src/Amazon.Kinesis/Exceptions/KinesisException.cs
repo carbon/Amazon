@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Net;
 
+using Amazon.Scheduling;
+
 namespace Amazon.Kinesis
 {
-    using Scheduling;
-
-    public class KinesisException : Exception, IException
+    public sealed class KinesisException : Exception, IException
 	{
 		private readonly ErrorResult error;
 

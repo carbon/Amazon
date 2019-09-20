@@ -1,4 +1,6 @@
-﻿using Carbon.Data.Streams;
+﻿#nullable disable
+
+using Carbon.Data.Streams;
 
 namespace Amazon.Kinesis
 {

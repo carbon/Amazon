@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kinesis
+﻿#nullable disable
+
+namespace Amazon.Kinesis
 {
     public sealed class MergeShardsRequest : KinesisRequest
     {

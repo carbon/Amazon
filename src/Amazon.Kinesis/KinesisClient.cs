@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,7 +57,7 @@ namespace Amazon.Kinesis
         #region Helpers
 
         private async Task<T> SendAsync<T>(string action, KinesisRequest request)
-            where T : new()
+            where T : notnull, new()
         {
             var message = GetRequestMessage(action, request);
 

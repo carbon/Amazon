@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kinesis
+﻿#nullable disable
+
+namespace Amazon.Kinesis
 {
 	using System.Collections.Generic;
 
