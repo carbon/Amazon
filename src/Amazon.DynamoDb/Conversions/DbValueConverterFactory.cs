@@ -6,6 +6,7 @@ using System.Net;
 using Carbon.Data;
 using Carbon.Json;
 using Carbon.Data.Annotations;
+using Carbon.Data.Sequences;
 
 namespace Amazon.DynamoDb
 {
@@ -49,6 +50,7 @@ namespace Amazon.DynamoDb
             Add(new VersionConverter());
             Add(new UriConverter());
             Add(new IPAddressConverter());
+            Add(new UidConverter());
 
             // Custom
             Add<JsonObject>(new JsonObjectConverter());
@@ -96,7 +98,7 @@ namespace Amazon.DynamoDb
 
     public interface IDbValueConverter
     {
-        DbValue FromObject(object value, IMember meta = null);
+        DbValue FromObject(object value, IMember meta = null!);
 
         object ToObject(DbValue item, IMember meta);
     }
@@ -166,11 +168,11 @@ namespace Amazon.DynamoDb
     {
         public DbValue FromObject(object value, IMember member)
         {
-            var data = (byte[])value;
-
-            if (data.Length == 0) return DbValue.Empty;
-
-            return new DbValue(data, DbValueType.B);
+            byte[] data = (byte[])value;
+            
+            return data.Length > 0
+                ? new DbValue(data, DbValueType.B)
+                : DbValue.Empty;
         }
 
         public object ToObject(DbValue item, IMember member) => item.ToBinary();
@@ -178,10 +180,16 @@ namespace Amazon.DynamoDb
 
     internal sealed class UriConverter : DbTypeConverter<Uri>
     {
-        public override Uri Parse(DbValue item) => 
-            new Uri(item.ToString());
+        public override Uri Parse(DbValue item) => new Uri(item.ToString());
 
         public override DbValue ToDbValue(Uri value) => new DbValue(value.ToString());
+    }
+
+    internal sealed class UidConverter : DbTypeConverter<Uid>
+    {
+        public override Uid Parse(DbValue item) => Uid.Deserialize(item.ToBinary());
+
+        public override DbValue ToDbValue(Uid value) => new DbValue(value.Serialize());
     }
 
     internal sealed class VersionConverter : DbTypeConverter<Version>
@@ -193,26 +201,22 @@ namespace Amazon.DynamoDb
     
     internal sealed class IPAddressConverter : DbTypeConverter<IPAddress>
     {
-        public override IPAddress Parse(DbValue item)
+        public override IPAddress Parse(DbValue item) => item.Kind switch
         {
-            switch (item.Kind)
-            {
-                case DbValueType.S : return IPAddress.Parse(item.ToString());
-                case DbValueType.B : return new IPAddress(item.ToBinary());
-                default            : throw new ConversionException($"Cannot DB type: {item.Kind} to IPAddress");
-            }
-        }
-
+            DbValueType.S => IPAddress.Parse(item.ToString()),
+            DbValueType.B => new IPAddress(item.ToBinary()),
+            _             => throw new ConversionException($"Cannot DB type: {item.Kind} to IPAddress")
+        };
+        
         // Serialize IP addresses as bytes
-        public override DbValue ToDbValue(IPAddress value) =>
-            new DbValue(value.GetAddressBytes());
+        public override DbValue ToDbValue(IPAddress value) => new DbValue(value.GetAddressBytes());
     }
 
     internal sealed class StringConverter : IDbValueConverter
     {
         public DbValue FromObject(object value, IMember member)
         {
-            var text = (string)value;
+            string text = (string)value;
 
             if (text.Length == 0) return DbValue.Empty;
 
@@ -273,11 +277,9 @@ namespace Amazon.DynamoDb
 
     internal sealed class Int64Converter : IDbValueConverter
     {
-        public DbValue FromObject(object value, IMember member)
-            => new DbValue((long)value);
+        public DbValue FromObject(object value, IMember member) => new DbValue((long)value);
 
-        public object ToObject(DbValue item, IMember member)
-            => item.ToInt64();
+        public object ToObject(DbValue item, IMember member) => item.ToInt64();
     }
 
     internal sealed class DateTimeConverter : IDbValueConverter
@@ -313,22 +315,22 @@ namespace Amazon.DynamoDb
 
             var precision = (TimePrecision)(member?.Precision ?? 0);
 
-            switch (precision)
+            return precision switch
             {
-                case TimePrecision.Millisecond : return new DbValue(date.ToUnixTimeMilliseconds());
-                default                        : return new DbValue(date.ToUnixTimeSeconds());
-            }
+                TimePrecision.Millisecond => new DbValue(date.ToUnixTimeMilliseconds()),
+                _                         => new DbValue(date.ToUnixTimeSeconds())
+            };
         }
 
         public object ToObject(DbValue item, IMember member)
         {
             var precision = (TimePrecision)(member?.Precision ?? 0);
 
-            switch (precision)
+            return precision switch
             {
-                case TimePrecision.Millisecond : return DateTimeOffset.FromUnixTimeMilliseconds(item.ToInt64());
-                default                        : return DateTimeOffset.FromUnixTimeSeconds(item.ToInt64());
-            }
+                TimePrecision.Millisecond => DateTimeOffset.FromUnixTimeMilliseconds(item.ToInt64()),
+                _                         => DateTimeOffset.FromUnixTimeSeconds(item.ToInt64())
+            };
         }
     }
 
@@ -339,22 +341,22 @@ namespace Amazon.DynamoDb
             var time = (TimeSpan)value;
             var precision = (TimePrecision)(member?.Precision ?? 3);
 
-            switch (precision)
+            return precision switch
             {
-                case TimePrecision.Second: return new DbValue((int)time.TotalSeconds);
-                default: return new DbValue((int)time.TotalMilliseconds);
-            }
+                TimePrecision.Second => new DbValue((int)time.TotalSeconds),
+                _                    => new DbValue((int)time.TotalMilliseconds)
+            };
         }
 
         public object ToObject(DbValue item, IMember member)
         {
             var precision = (TimePrecision)(member.Precision ?? 3);
 
-            switch (precision)
+            return precision switch
             {
-                case TimePrecision.Second: return TimeSpan.FromSeconds(item.ToInt());
-                default: return TimeSpan.FromMilliseconds(item.ToInt());
-            }
+                TimePrecision.Second => TimeSpan.FromSeconds(item.ToInt()),
+                _                    => TimeSpan.FromMilliseconds(item.ToInt())
+            };
         }
     }
 
