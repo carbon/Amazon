@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Runtime.Serialization;
 
 namespace Amazon.S3.Events

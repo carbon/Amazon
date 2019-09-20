@@ -2,7 +2,7 @@
 
 namespace Amazon.S3
 {
-    public class RestoreObjectResult
+    public sealed class RestoreObjectResult
     {
         public RestoreObjectResult(HttpStatusCode statusCode)
         {

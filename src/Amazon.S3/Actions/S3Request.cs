@@ -12,8 +12,8 @@ namespace Amazon.S3
             HttpMethod method,
             string host, 
             string bucketName, 
-            string objectName, 
-            string version = null)
+            string? objectName, 
+            string? version = null)
         {
             if (host is null) throw new ArgumentNullException(nameof(host));
 
@@ -53,7 +53,7 @@ namespace Amazon.S3
 
         public string BucketName { get; }
 
-        public string ObjectName { get; }
+        public string? ObjectName { get; }
 
         public HttpCompletionOption CompletionOption { get; set; } = HttpCompletionOption.ResponseHeadersRead;
 

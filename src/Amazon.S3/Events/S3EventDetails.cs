@@ -1,4 +1,6 @@
-﻿namespace Amazon.S3.Events
+﻿#nullable disable
+
+namespace Amazon.S3.Events
 {
     public class S3EventDetails
     {

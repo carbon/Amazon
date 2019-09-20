@@ -33,7 +33,7 @@ namespace Amazon.S3
 
             set
             {
-                string val = null;
+                string? val = null;
 
                 switch (value)
                 {
@@ -50,7 +50,7 @@ namespace Amazon.S3
         }
 
 
-        private void Set(string name, string value)
+        private void Set(string name, string? value)
         {
             if (value is null)
             {

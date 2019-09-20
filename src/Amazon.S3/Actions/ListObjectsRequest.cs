@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Net.Http;
 
+using Amazon.Helpers;
+
 namespace Amazon.S3
 {
-    using Helpers;
-
     public sealed class ListBucketRequest : S3Request
     {
         public ListBucketRequest(string host, string bucketName, ListBucketOptions options)
@@ -39,19 +39,19 @@ namespace Amazon.S3
             set => Set("delimiter", value);
         }
 
-        public string Prefix
+        public string? Prefix
         {
             get => Get("prefix");
             set => Set("prefix", value);
         }
 
-        public string ContinuationToken
+        public string? ContinuationToken
         {
             get => Get("continuation-token");
             set => Set("continuation-token", value);
         }
 
-        public string StartAfter
+        public string? StartAfter
         {
             get => Get("start-after");
             set => Set("start-after", value);
@@ -70,7 +70,7 @@ namespace Amazon.S3
             return value;
         }
 
-        private void Set(string name, string value)
+        private void Set(string name, string? value)
         {
             if (value is null)
             {

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -9,7 +11,7 @@ using Carbon.Storage;
 namespace Amazon.S3
 {
     [XmlRoot("Contents", Namespace = S3Client.Namespace)]
-    public class ListBucketObject : IBlob
+    public sealed class ListBucketObject : IBlob
     {
         [XmlElement("Key")]
         public string Key { get; set; }

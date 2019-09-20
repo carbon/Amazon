@@ -31,8 +31,8 @@ namespace Amazon.S3
             BucketName = bucketName;
             Key = name;
 
-            ContentLength = response.Content.Headers.ContentLength.Value;             // Content-Length
-            Modified = response.Content.Headers.LastModified.Value.UtcDateTime;  // Last-Modified
+            ContentLength = response.Content.Headers.ContentLength!.Value;             // Content-Length
+            Modified = response.Content.Headers.LastModified!.Value.UtcDateTime;  // Last-Modified
 
             if (response.Headers.ETag != null)
             {
@@ -54,7 +54,7 @@ namespace Amazon.S3
             Properties = headers;
         }
 
-        public string BucketName { get; }
+        public string? BucketName { get; }
 
         public string Key { get; }
 
@@ -81,11 +81,19 @@ namespace Amazon.S3
 
         #region Helpers
 
-        public string ContentType => Properties["Content-Type"];
+        public string? ContentType => Properties?["Content-Type"];
 
-        public string VersionId => Properties.TryGetValue("x-amz-version-id", out var version) ? version : null;
+        public string? VersionId
+        {
+            get
+            {
+                if (Properties is null) return null;
 
-        public string StorageClass => Properties["x-amz-storage-class"];
+                return Properties.TryGetValue("x-amz-version-id", out var version) ? version : null;
+            }
+        }
+
+        public string? StorageClass => Properties?["x-amz-storage-class"];
 
         #endregion
     }
