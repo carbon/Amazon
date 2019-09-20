@@ -7,11 +7,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 
+using Amazon.Helpers;
+
 namespace Amazon.Security
 {
-    using Helpers;
-
-    public class SignerV4
+    public sealed class SignerV4
     {
         private const string algorithmName = "AWS4-HMAC-SHA256";
         private const string isoDateTimeFormat = "yyyyMMddTHHmmssZ";  // ISO8601
@@ -32,9 +32,9 @@ namespace Amazon.Security
             }
 
             return GetStringToSign(
-                scope: scope,
-                timestamp: timestamp,
-                canonicalRequest: GetCanonicalRequest(request)
+                scope            : scope,
+                timestamp        : timestamp,
+                canonicalRequest : GetCanonicalRequest(request)
             );
         }
 
@@ -71,7 +71,6 @@ namespace Amazon.Security
             });
 
             return StringBuilderCache.ExtractAndRelease(sb);
-
         }
 
         public static string GetCanonicalRequest(
@@ -316,8 +315,8 @@ namespace Amazon.Security
             {
                 int equalIndex = part.IndexOf('=');
 
-                string lhs = equalIndex > -1 ? part.Substring(0, equalIndex) : part;
-                string rhs = equalIndex > -1 ? part.Substring(equalIndex + 1) : null;
+                string lhs  = equalIndex > -1 ? part.Substring(0, equalIndex) : part;
+                string? rhs = equalIndex > -1 ? part.Substring(equalIndex + 1) : null;
 
                 dictionary[WebUtility.UrlDecode(lhs)] = rhs != null
                     ? WebUtility.UrlDecode(rhs)
