@@ -7,13 +7,13 @@ using Amazon.Security;
 
 namespace Amazon
 {
-    public abstract class AwsClient : IDisposable
+    public abstract class AwsClient
     {
         protected readonly HttpClient httpClient = new HttpClient(
             new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip }
         ) {
             DefaultRequestHeaders = {
-                {  "User-Agent", "Carbon/2.1" }
+                { "User-Agent", "Carbon/2.2" }
             }
         };
         
@@ -78,12 +78,12 @@ namespace Amazon
 
         private CredentialScope GetCredentialScope(HttpRequestMessage httpRequest)
         {
-            return new CredentialScope(httpRequest.Headers.Date.Value.UtcDateTime, Region, service);
-        }
+            if (httpRequest.Headers.Date is null)
+            {
+                throw new Exception("Headers.Date must be set");
+            }
 
-        public void Dispose()
-        {
-            httpClient.Dispose();
+            return new CredentialScope(httpRequest.Headers.Date.Value.UtcDateTime, Region, service);
         }
     }
 }
