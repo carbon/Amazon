@@ -2,7 +2,7 @@
 
 namespace Amazon.Kinesis.Firehose
 {
-    public class PutRecordRequest
+    public sealed class PutRecordRequest
     {
         public PutRecordRequest(string deliveryStreamName, Record record)
         {

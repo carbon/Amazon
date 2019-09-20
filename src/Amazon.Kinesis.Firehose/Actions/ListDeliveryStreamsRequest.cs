@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kinesis.Firehose
+﻿#nullable disable
+
+namespace Amazon.Kinesis.Firehose
 {
     public class ListDeliveryStreamsRequest
     {

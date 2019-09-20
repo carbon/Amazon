@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kinesis.Firehose</AssemblyName>
-    <VersionPrefix>0.5.0</VersionPrefix>
+    <Version>0.5.0</Version>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>8</LangVersion>
+    <Nullable>enable</Nullable>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>

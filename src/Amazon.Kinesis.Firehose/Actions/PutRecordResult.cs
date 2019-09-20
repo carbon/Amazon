@@ -1,6 +1,8 @@
-﻿namespace Amazon.Kinesis.Firehose
+﻿#nullable disable
+
+namespace Amazon.Kinesis.Firehose
 {
-    public struct PutRecordResult
+    public class PutRecordResult
     {
         public string RecordId { get; set; }
     }
