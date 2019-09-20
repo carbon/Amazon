@@ -18,10 +18,9 @@ namespace Amazon
 
         #region Equality
 
-        public bool Equals(AwsRegion other) => 
-            other != null && (object.ReferenceEquals(this, other) || Name == other.Name);
+        public bool Equals(AwsRegion? other) => ReferenceEquals(this, other) || Name == other?.Name;
 
-        public override bool Equals(object obj) => Equals(obj as AwsRegion);
+        public override bool Equals(object? obj) => Equals(obj as AwsRegion);
 
         public static bool operator ==(AwsRegion lhs, AwsRegion rhs) => lhs.Equals(rhs);
 
@@ -49,6 +48,7 @@ namespace Amazon
         public static readonly AwsRegion USEast2      = new AwsRegion("us-east-2");      // | US            | Ohio          | 2016-10-17
         public static readonly AwsRegion CACentral1   = new AwsRegion("ca-central-1");   // | Canada        | Central       | 2016-12-08
         public static readonly AwsRegion EUWest2      = new AwsRegion("eu-west-2");      // | EU            | London        | 2016-12-13
+        public static readonly AwsRegion MESouth1     = new AwsRegion("me-south-1");     // | ME            | Bahrain       | ?
 
         // Soon: Paris (France), Ningxia (China)
 
@@ -68,7 +68,8 @@ namespace Amazon
             APSouth1,     
             USEast2,      
             CACentral1,   
-            EUWest2      
+            EUWest2,
+            MESouth1
         };
         
         public static AwsRegion Get(string name) => name switch
@@ -89,23 +90,21 @@ namespace Amazon
             "sa-east-1"      => SAEast1,
             "cn-north-1"     => CNNorth1,
             "us-gov-west-1"  => USGovWest1,
+            "me-south-1"     => MESouth1,
             _                => new AwsRegion(name)
         };
 
-        private static AwsRegion current;
+        private static AwsRegion? current;
 
         // TODO: Return ValueTask<AwsRegion>
-
         public static async Task<AwsRegion> GetAsync()
         {
-            if (current != null)
+            if (current is null)
             {
-                return current;
+                var availabilityZone = await InstanceMetadata.GetAvailabilityZoneAsync().ConfigureAwait(false);
+
+                current = FromAvailabilityZone(availabilityZone);
             }
-
-            var availabilityZone = await InstanceMetadata.GetAvailabilityZoneAsync().ConfigureAwait(false);
-
-            current = FromAvailabilityZone(availabilityZone);
 
             return current;
         }
