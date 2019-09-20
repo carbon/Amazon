@@ -17,9 +17,9 @@ namespace Amazon.S3
         private readonly string bucketName;
 
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
-             initialDelay: TimeSpan.FromMilliseconds(100),
-             maxDelay: TimeSpan.FromSeconds(3),
-             maxRetries: 5
+             initialDelay : TimeSpan.FromMilliseconds(100),
+             maxDelay     : TimeSpan.FromSeconds(3),
+             maxRetries   : 4
         );
 
         public S3Bucket(AwsRegion region, string bucketName, IAwsCredential credential)
@@ -40,12 +40,12 @@ namespace Amazon.S3
             return this;
         }
 
-        public Task<IReadOnlyList<IBlob>> ListAsync(string prefix)
+        public Task<IReadOnlyList<IBlob>> ListAsync(string? prefix)
         {
             return ListAsync(prefix, null, 1000);
         }
 
-        public async Task<IReadOnlyList<IBlob>> ListAsync(string prefix, string continuationToken, int take = 1000)
+        public async Task<IReadOnlyList<IBlob>> ListAsync(string? prefix, string? continuationToken, int take = 1000)
         {
             var request = new ListBucketOptions {
                 Prefix = prefix,
@@ -60,13 +60,37 @@ namespace Amazon.S3
 
         public async Task<IBlob> GetAsync(string key)
         {
-            var request = new GetObjectRequest(
-                host       : client.Host,
-                bucketName : bucketName,
-                key        : key
-            );
+            int retryCount = 0;
+            Exception lastException;
 
-            return await client.GetObjectAsync(request).ConfigureAwait(false);
+            do
+            {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
+                try
+                {
+                    var request = new GetObjectRequest(
+                        host       : client.Host,
+                        bucketName : bucketName,
+                        key        : key
+                    );
+
+                    return await client.GetObjectAsync(request).ConfigureAwait(false);
+                }
+                catch (S3Exception ex) when (ex.IsTransient)
+                {
+                    lastException = ex;
+                }
+
+                retryCount++;
+
+            }
+            while (retryPolicy.ShouldRetry(retryCount));
+
+            throw lastException;
         }
 
         public string GetPresignedUrl(string key, TimeSpan expiresIn, string method = "GET")
@@ -81,48 +105,43 @@ namespace Amazon.S3
         public async Task<IBlobResult> GetAsync(string key, GetBlobOptions options)
         {
             if (options is null) throw new ArgumentNullException(nameof(options));
-            
-            var request = new GetObjectRequest(
-                host       : client.Host,
-                bucketName : bucketName,
-                key  : key
-            );
 
-            if (options.IfModifiedSince != null)
+            int retryCount = 0;
+            Exception lastException;
+
+            do
             {
-                request.IfModifiedSince = options.IfModifiedSince;
-            }
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
 
-            if (options.EncryptionKey != null)
-            {
-                request.SetCustomerEncryptionKey(new ServerSideEncryptionKey(options.EncryptionKey));
-            }
+                try
+                {
+                    var request = ConstructGetRequest(key, options);
 
-            if (options.IfNoneMatch != null)
-            {
-                request.IfNoneMatch = options.IfNoneMatch;
-            }
+                    return await client.GetObjectAsync(request).ConfigureAwait(false);
+                }
+                catch (S3Exception ex) when (ex.IsTransient)
+                {
+                    lastException = ex;
+                }
 
-            if (options.Range != null)
-            {
-                request.SetRange(options.Range.Value.Start, options.Range.Value.End);
-            }
+                retryCount++;
 
-            if (options.BufferResponse)
-            {
-                request.CompletionOption = HttpCompletionOption.ResponseContentRead;
             }
+            while (retryPolicy.ShouldRetry(retryCount));
 
-            return await client.GetObjectAsync(request).ConfigureAwait(false);
+            throw lastException;
         }
 
         public async Task<IReadOnlyDictionary<string, string>> GetPropertiesAsync(string key)
         {
             var request = new ObjectHeadRequest(client.Host, bucketName, key: key);
 
-            var result = await client.GetObjectHeadAsync(request).ConfigureAwait(false);
+            using var result = await client.GetObjectHeadAsync(request).ConfigureAwait(false);
 
-            return result.Properties;
+            return result.Properties!;
         }
 
         public Task<RestoreObjectResult> InitiateRestoreAsync(string key, int days)
@@ -135,18 +154,41 @@ namespace Amazon.S3
         }
 
         public async Task<CopyObjectResult> PutAsync(
-            string key,
+            string destinationKey,
             S3ObjectLocation sourceLocation,
-            IReadOnlyDictionary<string, string> metadata = null)
-        {
-            var retryCount = 0;
-            Exception lastException = null;
+            IReadOnlyDictionary<string, string>? metadata = null)
+        { 
+            if (destinationKey is null)
+            {
+                throw new ArgumentNullException(nameof(destinationKey));
+            }
+         
+            int retryCount = 0;
+            Exception lastException;
 
             do
             {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
+                var request = new CopyObjectRequest(
+                    host   : client.Host,
+                    source : sourceLocation,
+                    target : new S3ObjectLocation(bucketName, destinationKey)
+                );
+
+                if (metadata != null)
+                {
+                    request.MetadataDirective = MetadataDirectiveValue.Replace;
+
+                    SetHeaders(request, metadata);
+                }
+
                 try
                 {
-                    return await PutInternalAsync(key, sourceLocation, metadata).ConfigureAwait(false);
+                    return await client.CopyObjectAsync(request).ConfigureAwait(false);
                 }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {
@@ -154,28 +196,10 @@ namespace Amazon.S3
                 }
 
                 retryCount++;
-
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
             while (retryPolicy.ShouldRetry(retryCount));
 
-            throw new S3Exception($"Unrecoverable exception copying '{sourceLocation}' to '{key}'", lastException);
-        }
-
-        private Task<CopyObjectResult> PutInternalAsync(
-            string destinationKey,
-            in S3ObjectLocation source,
-            IReadOnlyDictionary<string, string> properties = null)
-        {
-            var request = new CopyObjectRequest(
-                host   : client.Host,
-                source : source,
-                target : new S3ObjectLocation(bucketName, destinationKey)
-            );
-
-            SetHeaders(request, properties);
-
-            return client.CopyObjectAsync(request);
+            throw new S3Exception($"Error copying '{sourceLocation}' to '{destinationKey}'", lastException);
         }
 
         public Task PutAsync(IBlob blob)
@@ -193,7 +217,7 @@ namespace Amazon.S3
 
             // TODO: Chunked upload
 
-            var stream = await blob.OpenAsync().ConfigureAwait(false);
+            Stream stream = await blob.OpenAsync().ConfigureAwait(false);
 
             #region Stream conditions
 
@@ -206,19 +230,44 @@ namespace Amazon.S3
 
             #endregion
 
-            var request = new PutObjectRequest(client.Host, bucketName, blob.Key);
+            int retryCount = 0;
 
-            request.SetStream(stream);
+            Exception lastException;
 
-            // Server side encrpytion
-            if (options.EncryptionKey != null)
+            do
             {
-                request.SetCustomerEncryptionKey(new ServerSideEncryptionKey(options.EncryptionKey));
+                var request = new PutObjectRequest(client.Host, bucketName, blob.Key);
+
+                request.SetStream(stream);
+
+                // Server side encrpytion
+                if (options.EncryptionKey != null)
+                {
+                    request.SetCustomerEncryptionKey(new ServerSideEncryptionKey(options.EncryptionKey));
+                }
+
+                SetHeaders(request, blob.Properties);
+
+                try
+                {
+                    await client.PutObjectAsync(request).ConfigureAwait(false);
+
+                    return;
+                }
+                catch (S3Exception ex) when (ex.IsTransient)
+                {
+                    lastException = ex;
+                }
+                
+                stream.Position = 0; // reset the stream position
+                
+                retryCount++;
+
+                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
-
-            SetHeaders(request, blob.Properties);
-
-            await client.PutObjectAsync(request).ConfigureAwait(false);
+            while (retryPolicy.ShouldRetry(retryCount));
+            
+            throw lastException;
         }
 
         public async Task DeleteAsync(string name)
@@ -230,9 +279,9 @@ namespace Amazon.S3
 
         public async Task DeleteAsync(string key, string version)
         {
-            await client.DeleteObjectAsync(
-                new DeleteObjectRequest(client.Host, bucketName, key, version)
-            ).ConfigureAwait(false);
+            var request = new DeleteObjectRequest(client.Host, bucketName, key, version);
+
+            await client.DeleteObjectAsync(request).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(string[] keys)
@@ -270,7 +319,7 @@ namespace Amazon.S3
         public async Task<IUploadBlock> UploadPartAsync(IUpload upload, int number, Stream stream)
         {
             if (upload is null) throw new ArgumentNullException(nameof(upload));
-
+            
             var request = new UploadPartRequest(
                 host       : client.Host,
                 bucketName : upload.BucketName,
@@ -293,8 +342,7 @@ namespace Amazon.S3
 
         public async Task CancelUploadAsync(IUpload upload)
         {
-            if (upload is null)
-                throw new ArgumentNullException(nameof(upload));
+            if (upload is null) throw new ArgumentNullException(nameof(upload));
 
             var request = new AbortMultipartUploadRequest(
                 host       : client.Host, 
@@ -310,7 +358,43 @@ namespace Amazon.S3
 
         #region Helpers
 
-        private void SetHeaders(HttpRequestMessage request, IReadOnlyDictionary<string, string> headers)
+        private GetObjectRequest ConstructGetRequest(string key, GetBlobOptions options)
+        {
+            var request = new GetObjectRequest(
+                host        : client.Host,
+                bucketName  : bucketName,
+                key         : key
+            );
+
+            if (options.IfModifiedSince is DateTimeOffset ifModifiedSince)
+            {
+                request.IfModifiedSince = ifModifiedSince;
+            }
+
+            if (options.EncryptionKey is byte[] encryptionKey)
+            {
+                request.SetCustomerEncryptionKey(new ServerSideEncryptionKey(encryptionKey));
+            }
+
+            if (options.IfNoneMatch is string ifNoneMatch)
+            {
+                request.IfNoneMatch = ifNoneMatch;
+            }
+
+            if (options.Range is ByteRange range)
+            {
+                request.SetRange(range.Start, range.End);
+            }
+
+            if (options.BufferResponse)
+            {
+                request.CompletionOption = HttpCompletionOption.ResponseContentRead;
+            }
+
+            return request;
+        }
+
+        private static void SetHeaders(HttpRequestMessage request, IReadOnlyDictionary<string, string> headers)
         {
             if (headers is null) return;
 
@@ -319,9 +403,17 @@ namespace Amazon.S3
                 switch (item.Key)
                 {
                     case "Content-Encoding" :
-                        request.Content.Headers.ContentEncoding.Add(item.Value); break;
+                        request.Content.Headers.ContentEncoding.Add(item.Value);
+                        break;
                     case "Content-Type":
-                        request.Content.Headers.ContentType = new MediaTypeHeaderValue(item.Value); break;
+                        if (request.Content is null)
+                        {
+                            request.Content = new ByteArrayContent(Array.Empty<byte>());
+                        }
+
+                        request.Content.Headers.ContentType = new MediaTypeHeaderValue(item.Value);
+
+                        break;
 
                     // Skip list...
                     case "Accept-Ranges":
@@ -330,12 +422,16 @@ namespace Amazon.S3
                     case "ETag":
                     case "Server":
                     case "Last-Modified":
+                    case "x-amz-id-2":
                     case "x-amz-expiration":
                     case "x-amz-request-id2":
-                    case "x-amz-request-id": continue;
+                    case "x-amz-request-id":
+                        break;
 
                     default:
-                        request.Headers.Add(item.Key, item.Value); break;
+                        request.Headers.Add(item.Key, item.Value);
+
+                        break;
                 }
             }
         }
@@ -343,3 +439,7 @@ namespace Amazon.S3
         #endregion
     }
 }
+
+// NOTES:
+// As of PR #19082, HttpClient no longer disposes the HttpContent request object.
+// https://github.com/dotnet/corefx/issues/21790
