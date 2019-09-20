@@ -10,11 +10,11 @@ using Carbon.Storage;
 
 namespace Amazon.S3
 {
-    public class S3Object : IBlobResult, IDisposable
+    public sealed class S3Object : IBlobResult, IDisposable
     {
-        private Stream stream;
+        private Stream? stream;
         private readonly Dictionary<string, string> properties = new Dictionary<string, string>();
-        private readonly HttpResponseMessage response;
+        private readonly HttpResponseMessage? response;
 
         public S3Object(string name, HttpResponseMessage response)
         {
@@ -73,11 +73,22 @@ namespace Amazon.S3
             set => properties["Cache-Control"] = value.ToString(); 
         }
 
+        // x-amz-replication-status
+        // x-amz-restore
+        // x-amz-object-lock-mode
+        // x-amz-object-lock-retain-until-date
+        // x-amz-object-lock-legal-hold	
+
         #endregion
 
         public async ValueTask<Stream> OpenAsync()
         {
-            return stream ?? (stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false));
+            if (response is null)
+            {
+                throw new Exception("Response is null");
+            }
+
+            return stream ??= await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
         }
 
         #region IBlob
