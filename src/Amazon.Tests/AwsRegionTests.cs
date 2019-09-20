@@ -9,7 +9,7 @@ namespace Amazon.Tests
         [Fact]
         public void Enum()
         {
-            Assert.Equal(16, AwsRegion.All.Length);
+            Assert.Equal(17, AwsRegion.All.Length);
 
             foreach (var region in AwsRegion.All)
             {
@@ -19,7 +19,7 @@ namespace Amazon.Tests
             // Ensure there are not any dublicates
             var names = AwsRegion.All.Select(a => a.Name).Distinct().ToArray();
 
-            Assert.Equal(16, names.Length);
+            Assert.Equal(AwsRegion.All.Length, names.Length);
         }
 
         [Fact]
@@ -35,6 +35,13 @@ namespace Amazon.Tests
 
             Assert.Equal("us-east-1", r1.ToString());
             Assert.Equal("us-east-2", r2.ToString());
+        }
+
+        [Fact]
+        public void Equality()
+        {
+            Assert.True(AwsRegion.USEast1.Equals(AwsRegion.USEast1));
+            Assert.False(AwsRegion.USEast1.Equals(AwsRegion.USEast2));
         }
 
         [Fact]
