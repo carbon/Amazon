@@ -1,11 +1,11 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+
 using Amazon.Scheduling;
+
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
@@ -126,51 +126,58 @@ namespace Amazon.DynamoDb
         public async Task<PutItemResult> PutItemUsingRetryPolicyAsync(PutItemRequest request, RetryPolicy retryPolicy)
         {
             int retryCount = 0;
-            Exception lastError;
+            Exception lastException;
 
             do
             {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
                 try
                 {
                     return await PutItemAsync(request).ConfigureAwait(false);
                 }
                 catch (DynamoDbException ex) when (ex.IsTransient)
                 {
-                    lastError = ex;
+                    lastException = ex;
                 }
 
                 retryCount++;
 
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
             while (retryPolicy.ShouldRetry(retryCount));
 
-            throw lastError;
+            throw lastException;
         }
 
         public async Task<QueryResult> QueryAsync(DynamoQuery query, RetryPolicy retryPolicy)
         {
             var retryCount = 0;
-            Exception lastError;
+            Exception lastException;
 
             do
             {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
                 try
                 {
                     return await QueryAsync(query).ConfigureAwait(false);
                 }
                 catch (DynamoDbException ex) when (ex.IsTransient)
                 {
-                    lastError = ex;
+                    lastException = ex;
                 }
 
                 retryCount++;
-
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
             while (retryPolicy.ShouldRetry(retryCount));
 
-            throw new DynamoDbException($"Error querying '{query.TableName}': {lastError.Message}", lastError);
+            throw new DynamoDbException($"Error querying '{query.TableName}': {lastException.Message}", lastException);
 
         }
 
@@ -219,25 +226,28 @@ namespace Amazon.DynamoDb
         public async Task<UpdateItemResult> UpdateItemUsingRetryPolicyAsync(UpdateItemRequest request, RetryPolicy retryPolicy)
         {
             var retryCount = 0;
-            Exception? lastError = null;
 
-            while (retryPolicy.ShouldRetry(retryCount))
+            Exception lastException;
+
+            do
             {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
                 try
                 {
                     return await UpdateItemAsync(request).ConfigureAwait(false);
                 }
                 catch (DynamoDbException ex) when (ex.IsTransient)
                 {
-                    lastError = ex;
+                    lastException = ex;
                 }
 
                 retryCount++;
+            } while (retryPolicy.ShouldRetry(retryCount));
 
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
-            }
-
-            throw lastError;
+            throw lastException;
         }
 
         public Task UpdateTable()

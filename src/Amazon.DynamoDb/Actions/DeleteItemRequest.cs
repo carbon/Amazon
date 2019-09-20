@@ -6,7 +6,7 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class DeleteItemRequest
+    public sealed class DeleteItemRequest
     {
         public DeleteItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key)
         {
@@ -37,11 +37,11 @@ namespace Amazon.DynamoDb
 
         public ReturnValues ReturnValues { get; set; }
 
-        public string ConditionExpression { get; set; }
+        public string? ConditionExpression { get; set; }
 
-        public JsonObject ExpressionAttributeNames { get; set; }
+        public JsonObject? ExpressionAttributeNames { get; set; }
 
-        public AttributeCollection ExpressionAttributeValues { get; set; }
+        public AttributeCollection? ExpressionAttributeValues { get; set; }
 
         public JsonObject ToJson()
         {

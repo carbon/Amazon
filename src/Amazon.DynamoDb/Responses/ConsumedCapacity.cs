@@ -1,4 +1,6 @@
-﻿namespace Amazon.DynamoDb
+﻿#nullable disable
+
+namespace Amazon.DynamoDb
 {
     public class ConsumedCapacity
     {

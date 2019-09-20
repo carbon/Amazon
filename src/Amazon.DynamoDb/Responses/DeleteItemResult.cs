@@ -2,27 +2,34 @@
 
 namespace Amazon.DynamoDb
 {
-    public class DeleteItemResult : IConsumedResources
+    public sealed class DeleteItemResult : IConsumedResources
     {
-        public ConsumedCapacity ConsumedCapacity { get; set; }
+        public DeleteItemResult(AttributeCollection attributes, ConsumedCapacity? consumedCapacity)
+        {
+            Attributes = attributes;
+            ConsumedCapacity = consumedCapacity;
+        }
+        
+        public AttributeCollection Attributes { get; }
 
-        public AttributeCollection Attributes { get; set; }
+        public ConsumedCapacity? ConsumedCapacity { get; }
 
         public static DeleteItemResult FromJson(JsonObject json)
         {
-            var result = new DeleteItemResult();
-
-            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
-            {
-                result.ConsumedCapacity = consumedCapacityNode.As<ConsumedCapacity>();
-            }
+            AttributeCollection? attributes = null;
+            ConsumedCapacity? consumedCapacity = null;
 
             if (json.TryGetValue("Attributes", out var attributesNode))
             {
-                result.Attributes = AttributeCollection.FromJson((JsonObject)attributesNode);
+                attributes = AttributeCollection.FromJson((JsonObject)attributesNode);
             }
 
-            return result;
+            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
+            {
+                consumedCapacity = consumedCapacityNode.As<ConsumedCapacity>();
+            }
+
+            return new DeleteItemResult(attributes!, consumedCapacity);
         }
     }
 }

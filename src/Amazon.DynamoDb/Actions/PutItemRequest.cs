@@ -5,7 +5,7 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class PutItemRequest
+    public sealed class PutItemRequest
     {
         public PutItemRequest(string tableName, AttributeCollection item)
         {
@@ -17,11 +17,11 @@ namespace Amazon.DynamoDb
 
         public AttributeCollection Item { get; }
 
-        public string ConditionExpression { get; set; }
+        public string? ConditionExpression { get; set; }
 
-        public JsonObject ExpressionAttributeNames { get; set; }
+        public JsonObject? ExpressionAttributeNames { get; set; }
 
-        public AttributeCollection ExpressionAttributeValues { get; set; }
+        public AttributeCollection? ExpressionAttributeValues { get; set; }
 
         public ReturnValues ReturnValues { get; set; }
 
@@ -66,7 +66,7 @@ namespace Amazon.DynamoDb
 
             if (ReturnValues != ReturnValues.NONE)
             {
-                json.Add("ReturnValues", ReturnValues.ToString());
+                json.Add("ReturnValues", ReturnValues.Canonicalize());
             }
 
             return json;

@@ -4,7 +4,7 @@ namespace Amazon.DynamoDb
 {
     public sealed class UpdateItemResult : IConsumedResources
     {
-        public UpdateItemResult(AttributeCollection attributes, ConsumedCapacity consumedCapacity)
+        public UpdateItemResult(AttributeCollection attributes, ConsumedCapacity? consumedCapacity)
         {
             Attributes = attributes;
             ConsumedCapacity = consumedCapacity;
@@ -12,12 +12,12 @@ namespace Amazon.DynamoDb
 
         public AttributeCollection Attributes { get; }
 
-        public ConsumedCapacity ConsumedCapacity { get; }
+        public ConsumedCapacity? ConsumedCapacity { get; }
 
         public static UpdateItemResult FromJson(JsonObject json)
         {
-            ConsumedCapacity consumedCapacity = null;
-            AttributeCollection attributes = null;
+            ConsumedCapacity? consumedCapacity = null;
+            AttributeCollection? attributes = null;
 
             if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
             {
@@ -29,7 +29,7 @@ namespace Amazon.DynamoDb
                 attributes = AttributeCollection.FromJson((JsonObject)attributesNode);
             }
 
-            return new UpdateItemResult(attributes, consumedCapacity);
+            return new UpdateItemResult(attributes!, consumedCapacity);
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Carbon.Data.Expressions;
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class ScanRequest
+    public sealed class ScanRequest
     {
         public ScanRequest(string tableName)
         {
@@ -44,17 +45,17 @@ namespace Amazon.DynamoDb
 
         public int? TotalSegments { get; set; }
 
-        public AttributeCollection ExclusiveStartKey { get; set; }
+        public AttributeCollection? ExclusiveStartKey { get; set; }
 
-        public string FilterExpression { get; set; }
+        public string? FilterExpression { get; set; }
 
-        public JsonObject ExpressionAttributeNames { get; set; }
+        public JsonObject? ExpressionAttributeNames { get; set; }
 
-        public AttributeCollection ExpressionAttributeValues { get; set; }
+        public AttributeCollection? ExpressionAttributeValues { get; set; }
 
         public SelectEnum Select { get; set; }
 
-        public string ProjectionExpression { get; set; }
+        public string? ProjectionExpression { get; set; }
 
         public JsonObject ToJson()
         {

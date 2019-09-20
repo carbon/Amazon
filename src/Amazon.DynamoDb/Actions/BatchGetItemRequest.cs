@@ -12,12 +12,11 @@ namespace Amazon.DynamoDb
             Sets = sets ?? throw new ArgumentNullException(nameof(sets));
         }
 
-        // [Required]
         public TableKeys[] Sets { get; }
 
         public JsonObject ToJson()
         {
-            var o = new JsonObject();
+            var o = new JsonObject(capacity: Sets.Length);
 
             foreach (TableKeys set in Sets)
             {
@@ -42,21 +41,14 @@ namespace Amazon.DynamoDb
 
         public IEnumerable<KeyValuePair<string, object>>[] Keys { get; }
 
-        public string[] AttributesToGet { get; set; }
+        public string[]? AttributesToGet { get; set; }
 
         public bool ConsistentRead { get; set; }
 
         public JsonObject ToJson()
         {
-            var jsonKeys = new JsonNodeList();
-
-            foreach (var key in Keys)
-            {
-                jsonKeys.Add(key.ToJson());
-            }
-
             var json = new JsonObject {
-                { "Keys", jsonKeys }
+                { "Keys", Keys.ToNodeList() }
             };
 
             if (AttributesToGet != null)

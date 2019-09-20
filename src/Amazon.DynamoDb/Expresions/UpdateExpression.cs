@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+
 using Carbon.Data;
 using Carbon.Json;
 
@@ -10,10 +11,10 @@ namespace Amazon.DynamoDb
         private readonly JsonObject attributeNames;
         private readonly AttributeCollection attributeValues;
 
-        private readonly StringBuilder set = null;
-        private readonly StringBuilder remove = null;
-        private readonly StringBuilder add = null;
-        private readonly StringBuilder delete = null;
+        private readonly StringBuilder? set = null;
+        private readonly StringBuilder? remove = null;
+        private readonly StringBuilder? add = null;
+        private readonly StringBuilder? delete = null;
 
         public UpdateExpression(
             Change[] changes,
@@ -44,21 +45,14 @@ namespace Amazon.DynamoDb
                     if (change.Value is null)
                     {
                         // Remove attribute
-
-                        if (remove is null)
-                        {
-                            remove = new StringBuilder("REMOVE ");
-                        }
-
+                        remove ??= new StringBuilder("REMOVE ");
+                        
                         WriteChange(change, remove);
                     }
                     else
                     {
                         // Delete element
-                        if (delete is null)
-                        {
-                            delete = new StringBuilder("DELETE ");
-                        }
+                        delete ??= new StringBuilder("DELETE ");
 
                         WriteChange(change, delete);
                     }
@@ -66,37 +60,26 @@ namespace Amazon.DynamoDb
                 }
                 else if (change.Operation == DataOperation.Add)
                 {
-                    if (add is null)
-                    {
-                        add = new StringBuilder("ADD ");
-                    }
+                    add ??= new StringBuilder("ADD ");
 
                     WriteChange(change, add);
 
                 }
                 else if (change.Operation == DataOperation.Replace)
                 {
-                    if (set is null)
-                    {
-                        set = new StringBuilder("SET ");
-                    }
-
+                    set ??= new StringBuilder("SET ");
+                    
                     WriteChange(change, set);
                 }
                 else
                 {
-                    throw new Exception("Unexpected change operation: " + change.Operation);
+                    throw new Exception("Invalid change operation: " + change.Operation);
                 }
             }
         }
 
-        public void WriteChange(in Change change, StringBuilder sb)
+        internal void WriteChange(in Change change, StringBuilder sb)
         {
-            if (sb is null)
-            {
-                throw new ArgumentNullException(nameof(sb));
-            }
-
             if (sb[sb.Length - 1] != ' ')
             {
                 sb.Append(", ");
@@ -138,23 +121,27 @@ namespace Amazon.DynamoDb
            | DELETE delete-action , ...  
            */
 
-            var sb = new StringBuilder();
+            var sb = StringBuilderCache.Aquire();
 
             AppendSet(sb, set);
             AppendSet(sb, remove);
             AppendSet(sb, add);
             AppendSet(sb, delete);
 
-            return sb.ToString();
+            return StringBuilderCache.ExtractAndRelease(sb);
         }
 
-        private static void AppendSet(StringBuilder sb, StringBuilder segment)
+        private static void AppendSet(StringBuilder sb, StringBuilder? segment)
         {
             if (segment is null) return;
 
             if (sb.Length > 0) sb.AppendLine(); // \n ?
 
+#if NETCOREAPP2_1
+            sb.Append(segment);
+#else
             sb.Append(segment.ToString());
+#endif
         }
     }
 }

@@ -7,13 +7,13 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class UpdateItemRequest
+    public sealed class UpdateItemRequest
     {
         public UpdateItemRequest(
             string tableName, 
             IEnumerable<KeyValuePair<string, object>> key,
             Change[] changes,
-            Expression[] conditions = null,
+            Expression[]? conditions = null,
             ReturnValues? returnValues = null)
         {
             TableName    = tableName ?? throw new ArgumentNullException(nameof(tableName));
@@ -37,7 +37,7 @@ namespace Amazon.DynamoDb
 
         public Change[] Changes { get; }
 
-        public string ConditionExpression { get; }
+        public string? ConditionExpression { get; }
 
         public JsonObject ExpressionAttributeNames { get; } = new JsonObject();
 

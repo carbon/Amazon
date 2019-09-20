@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System.Text;
+﻿using System.Text;
 
 using Carbon.Json;
 
@@ -31,7 +29,7 @@ namespace Amazon.DynamoDb
 
             var convertor = DbValueConverterFactory.Get(value.GetType());
 
-            attributes[varName] = convertor.FromObject(value, null);
+            attributes[varName] = convertor.FromObject(value, null!);
 
             sb.Append(varName);
         }

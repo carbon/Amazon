@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -8,7 +6,7 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class BatchGetItemResult // : IConsumedResources
+    public sealed class BatchGetItemResult // : IConsumedResources
     {
         public BatchGetItemResult(TableItemCollection[] responses)
         {

@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,7 +65,7 @@ namespace Amazon.DynamoDb
 			if (type.IsEnum)
 			{
 				this.kind = DbValueType.N;
-				this.value = EnumConverter.Default.FromObject(value, null).Value;
+				this.value = EnumConverter.Default.FromObject(value, null!).Value;
  
 				return;
 			}
@@ -92,7 +90,7 @@ namespace Amazon.DynamoDb
 					case TypeCode.UInt32:
 					case TypeCode.UInt64:		this.kind = DbValueType.NS;		break;
 
-					default: throw new Exception("Unexpected array element type:" + type.Name);
+					default: throw new Exception("Invalid array element type:" + type.Name);
 				}
 			}
 			else
@@ -153,10 +151,10 @@ namespace Amazon.DynamoDb
 						{
                             if (!DbValueConverterFactory.TryGet(type, out IDbValueConverter converter))
                             {
-                                throw new Exception("Unexpected value type. Was: " + type.Name);
+                                throw new Exception("Invalid value type. Was: " + type.Name);
                             }
 
-                            var result = converter.FromObject(value, null);
+                            var result = converter.FromObject(value, null!);
 
                             this.value = result.Value;
                             this.kind = result.Kind;                            
@@ -364,7 +362,7 @@ namespace Amazon.DynamoDb
 			JsonType.Boolean => new DbValue(((JsonBoolean)value).Value,	DbValueType.BOOL),	// bool
 			JsonType.Number  => new DbValue(value.ToString(),			DbValueType.N),
 			JsonType.String  => new DbValue((string)value,			    DbValueType.S),
-			_                => throw new Exception("Unexpected value type:" + value.Type)
+			_                => throw new Exception("Invalid value type:" + value.Type)
 		};
 
 		public static DbValue FromJson(JsonObject json)
@@ -389,7 +387,7 @@ namespace Amazon.DynamoDb
 				"SS"   => new DbValue(((JsonArray)property.Value).ToArrayOf<string>(), DbValueType.SS),
 				"L"	   => new DbValue(GetListValues((JsonArray)property.Value).ToArray()),
                 "M"    => new DbValue(AttributeCollection.FromJson((JsonObject)property.Value)),
-				_      => throw new Exception("Unexpected value type:" + property.Key),
+				_      => throw new Exception("Invalid value type:" + property.Key),
 			};
 		}
 

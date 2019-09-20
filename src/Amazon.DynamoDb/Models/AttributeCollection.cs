@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -118,7 +116,7 @@ namespace Amazon.DynamoDb
 
         public JsonObject ToJson()
         {
-            var node = new JsonObject();
+            var node = new JsonObject(capacity:items.Count);
 
             foreach (var attribute in items)
             {
@@ -136,7 +134,7 @@ namespace Amazon.DynamoDb
 
             foreach (var property in json)
             {
-                item.Add(property.Key, DbValue.FromJson(property.Value as JsonObject));
+                item.Add(property.Key, DbValue.FromJson((JsonObject)property.Value));
             }
 
             return item;
@@ -197,7 +195,7 @@ namespace Amazon.DynamoDb
                 }
                 else if (typeInfo.IsList && typeInfo.ElementType != null)
                 {
-                    var a = (IList)value;
+                    IList a = (IList)value;
 
                     var list = new DbValue[a.Count];
 
@@ -237,7 +235,7 @@ namespace Amazon.DynamoDb
         public RecordKey ToKey()
         {
             var keyItems = new KeyValuePair<string, object>[items.Count];
-            var i = 0;
+            int i = 0;
 
             foreach(var attribute in items)
             {
@@ -253,11 +251,11 @@ namespace Amazon.DynamoDb
 
         internal T As<T>(DatasetInfo model)
         {
-            var instance = Activator.CreateInstance<T>();
+            T instance = Activator.CreateInstance<T>();
 
             foreach (var attribute in items)
             {
-                var member = model[attribute.Key];
+                MemberDescriptor member = model[attribute.Key];
 
                 if (member is null) continue;
 
@@ -286,7 +284,7 @@ namespace Amazon.DynamoDb
             return instance;
         }
 
-        private Array DeserializeArray(Type elementType, DbValue[] values)
+        private static Array DeserializeArray(Type elementType, DbValue[] values)
         {
             var elementModel = DatasetInfo.Get(elementType);
 
@@ -339,6 +337,7 @@ namespace Amazon.DynamoDb
 
             return instance;
         }
+
 
         #endregion
     }

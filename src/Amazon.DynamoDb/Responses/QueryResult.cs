@@ -7,9 +7,9 @@ namespace Amazon.DynamoDb
     public sealed class QueryResult
     {
         public QueryResult(
-            ConsumedCapacity consumedCapacity,
+            ConsumedCapacity? consumedCapacity,
             AttributeCollection[] items,
-            AttributeCollection lastEvaluatedKey,
+            AttributeCollection? lastEvaluatedKey,
             int count)
         {
             ConsumedCapacity = consumedCapacity;
@@ -18,18 +18,18 @@ namespace Amazon.DynamoDb
             Count = count;
         }
 
-        public ConsumedCapacity ConsumedCapacity { get; }
+        public ConsumedCapacity? ConsumedCapacity { get; }
 
         public AttributeCollection[] Items { get; }
 
-        public AttributeCollection LastEvaluatedKey { get; }
+        public AttributeCollection? LastEvaluatedKey { get; }
 
         public int Count { get; }
 
         public static QueryResult FromJson(JsonObject json)
         {
-            ConsumedCapacity consumedCapacity = null;
-            AttributeCollection lastEvaluatedKey = null;
+            ConsumedCapacity? consumedCapacity = null;
+            AttributeCollection? lastEvaluatedKey = null;
 
             if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
             {
@@ -60,10 +60,10 @@ namespace Amazon.DynamoDb
             }
 
             return new QueryResult(
-                consumedCapacity: consumedCapacity,
-                items: items,
-                lastEvaluatedKey: lastEvaluatedKey,
-                count: (int)json["Count"]
+                consumedCapacity : consumedCapacity,
+                items            : items,
+                lastEvaluatedKey : lastEvaluatedKey,
+                count            : (int)json["Count"]
             );
         }
     }

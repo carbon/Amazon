@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -85,8 +83,13 @@ namespace Amazon.DynamoDb
             var retryCount = 0;
             Exception? lastException = null;
 
-            while (retryPolicy.ShouldRetry(retryCount))
+            do
             {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
                 try
                 {
                     var result = await client.GetItemAsync(request).ConfigureAwait(false);
@@ -103,9 +106,8 @@ namespace Amazon.DynamoDb
                 }
 
                 retryCount++;
-
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
+            while (retryPolicy.ShouldRetry(retryCount));
 
             var key = string.Join(",", request.Key.Select(k => k.Value));
 
@@ -116,7 +118,7 @@ namespace Amazon.DynamoDb
 
         public async Task<IReadOnlyList<T>> FindAllAsync(params IEnumerable<KeyValuePair<string, object>>[] keys)
         {
-            if (keys == null || keys.Length == 0)
+            if (keys is null || keys.Length == 0)
             {
                 return Array.Empty<T>();
             }
@@ -196,11 +198,12 @@ namespace Amazon.DynamoDb
             return result.Count;
         }
 
+        // TODO IAsyncEnumerable
+
         public IEnumerable<T> Enumerate(params Expression[] conditions) // Scans the entire table
         {
             // Each scan may return upto 1MB of data
-            // TODO, consider parellel scans
-
+            
             DynamoExpression? filterExpression = null;
 
             if (conditions.Length > 0)
@@ -392,6 +395,11 @@ namespace Amazon.DynamoDb
 
             do
             {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
                 try
                 {
                     return await client.DeleteItemAsync(request).ConfigureAwait(false);
@@ -402,8 +410,6 @@ namespace Amazon.DynamoDb
                 }
 
                 retryCount++;
-
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
             while (retryPolicy.ShouldRetry(retryCount));
 
@@ -435,10 +441,16 @@ namespace Amazon.DynamoDb
                 throw new ArgumentException("Must be 25 or less.", "batch.Items");
 
             var retryCount = 0;
-            Exception? lastError = null;
 
-            while (retryPolicy.ShouldRetry(retryCount))
+            Exception? lastError;
+
+            do
             {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
                 try
                 {
                     var result = await client.BatchWriteItemAsync(batch).ConfigureAwait(false);
@@ -457,7 +469,6 @@ namespace Amazon.DynamoDb
                     }
 
                     return result;
-
                 }
                 catch (DynamoDbException ex) when (ex.IsTransient)
                 {
@@ -466,8 +477,7 @@ namespace Amazon.DynamoDb
 
                 retryCount++;
 
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
-            }
+            } while (retryPolicy.ShouldRetry(retryCount));
 
             throw lastError;
         }

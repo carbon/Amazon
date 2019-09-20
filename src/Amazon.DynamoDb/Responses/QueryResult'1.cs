@@ -20,9 +20,9 @@ namespace Amazon.DynamoDb
 			}
 		}
 
-        public AttributeCollection LastEvaluatedKey { get; }
+        public AttributeCollection? LastEvaluatedKey { get; }
 
-        public ConsumedCapacity ConsumedCapacity { get; }
+        public ConsumedCapacity? ConsumedCapacity { get; }
 
 		#region IReadOnlyList
 

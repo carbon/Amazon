@@ -22,7 +22,7 @@ namespace Amazon.DynamoDb
 
         public bool ConsistentRead { get; set; }
 
-        public string[] AttributesToGet { get; set; }
+        public string[]? AttributesToGet { get; set; }
 
         public bool ReturnConsumedCapacity { get; set; }
 

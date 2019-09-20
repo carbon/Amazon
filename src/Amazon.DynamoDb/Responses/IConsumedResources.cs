@@ -2,6 +2,6 @@
 {
 	public interface IConsumedResources
 	{
-		ConsumedCapacity ConsumedCapacity { get; }
+		ConsumedCapacity? ConsumedCapacity { get; }
 	}
 }

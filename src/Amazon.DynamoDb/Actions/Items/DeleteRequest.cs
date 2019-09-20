@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using Carbon.Json;
+﻿using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {

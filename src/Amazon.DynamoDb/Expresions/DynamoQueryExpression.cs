@@ -54,11 +54,8 @@ namespace Amazon.DynamoDb
 
         private void AddFilterExpression(Expression expression)
         {
-            if (FilterExpression is null)
-            {
-                FilterExpression = new DynamoExpression(AttributeNames, AttributeValues);
-            }
-
+            FilterExpression ??= new DynamoExpression(AttributeNames, AttributeValues);
+            
             FilterExpression.Add(expression);
         }
 
@@ -68,7 +65,7 @@ namespace Amazon.DynamoDb
 
         public DynamoExpression KeyExpression { get; }
 
-        public DynamoExpression FilterExpression { get; set; }
+        public DynamoExpression? FilterExpression { get; set; }
 
         private bool IsKey(string name)
         {
@@ -80,15 +77,15 @@ namespace Amazon.DynamoDb
             return false;
         }
     }
-
-    // attribute_not_exists(#timestamp) or #timestamp = :timestamp
-    // Price <= :p
-    // (#P between :lo and :hi) and (#PC in (:cat1, :cat2))
-
-    // expr.ExpressionAttributeNames["#timestamp"] = "last-updated";
-    // expr.ExpressionAttributeValues[":timestamp"] = lastUpdated;
-
-
-    // If you define an expression attribute value, you must use it consistently throughout the entire expression. 
-    // Also, you cannot omit the : symbol.s
 }
+
+// attribute_not_exists(#timestamp) or #timestamp = :timestamp
+// Price <= :p
+// (#P between :lo and :hi) and (#PC in (:cat1, :cat2))
+
+// expr.ExpressionAttributeNames["#timestamp"] = "last-updated";
+// expr.ExpressionAttributeValues[":timestamp"] = lastUpdated;
+
+
+// If you define an expression attribute value, you must use it consistently throughout the entire expression. 
+// Also, you cannot omit the : symbol.s
