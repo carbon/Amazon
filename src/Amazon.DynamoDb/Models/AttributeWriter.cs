@@ -53,31 +53,34 @@ namespace Amazon.DynamoDb.Models
             WriteDbValue(value);
         }
 
+     
         public void WriteDbValue(in DbValue value)
         {
             switch (value.Kind)
             {
-                case S    : WriteString(value.ToString()); break;
-                case B    : WriteValue("B", value.ToString()); break;
-                case BOOL : WriteBool(value.ToBoolean()); break;
-                case BS   : WriteSet("BS", value.ToSet<byte[]>()); break;
-                case SS   : WriteSet("SS", value.ToSet<string>()); break;
-                case NS   : WriteSet("NS", value.ToSet<string>()); break;
-                case L    : WriteList((DbValue[])value.Value); break;
-                case N    : WriteValue("N", value.ToString()); break;
+                case S    : WriteString(value.ToString());              break;
+                case B    : WriteValue("B", value.ToString());          break;
+                case BOOL : WriteBool(value.ToBoolean());               break;
+                case BS   : WriteSet("BS", value.ToSet<byte[]>());      break;
+                case SS   : WriteSet("SS", value.ToSet<string>());      break;
+                case NS   : WriteSet("NS", value.ToSet<string>());      break;
+                case L    : WriteList((DbValue[])value.Value);          break;
+                case N    : WriteValue("N", value.ToString());          break;
                 case M    : WriteMap((AttributeCollection)value.Value); break;
-                default   : throw new Exception("Unexpected type:" + value.Kind);
+                default   : throw new Exception("Invalid type:" + value.Kind);
             }
         }
+      
 
+       
         public void WriteXNode(JsonNode value)
         {
             switch (value.Type)
             {
-                case JsonType.Number  : WriteValue("N", value.ToString()); break;
-                case JsonType.String  : WriteString(value.ToString()); break;
-                case JsonType.Binary  : WriteValue("B", value.ToString()); break;
-                case JsonType.Boolean : WriteBool((value as JsonBoolean).Value); break;
+                case JsonType.Number  : WriteValue("N", value.ToString());     break;
+                case JsonType.String  : WriteString(value.ToString());         break;
+                case JsonType.Binary  : WriteValue("B", value.ToString());     break;
+                case JsonType.Boolean : WriteBool(((JsonBoolean)value).Value); break;
 
                 case JsonType.Array:
                     var array = (JsonArray)value;
