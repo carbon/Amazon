@@ -1,4 +1,6 @@
-﻿namespace Amazon.Lambda
+﻿#nullable disable
+
+namespace Amazon.Lambda
 {
     public class InvokeResult
     {

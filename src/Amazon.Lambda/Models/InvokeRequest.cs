@@ -1,9 +1,10 @@
 ﻿using System;
+
 using Carbon.Json;
 
 namespace Amazon.Lambda
 {
-    public class InvokeRequest
+    public sealed class InvokeRequest
     {
         public InvokeRequest(string functionName)
         {
@@ -23,14 +24,7 @@ namespace Amazon.Lambda
         public LogType? LogType { get; set; }
 
         // JSON that you want to provide to your Lambda function as input.
-        public string Payload { get; }
-    }
-
-    public enum InvocationType
-    {
-        Event = 1,
-        RequestResponse = 2,
-        DryRun =3
+        public string? Payload { get; }
     }
 
     public enum LogType
