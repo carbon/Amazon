@@ -1,6 +1,6 @@
 ﻿namespace Amazon.CloudWatch
 {
-    public class Statistic
+    public sealed class Statistic
     {
         public static readonly Statistic SampleCount = new Statistic("SampleCount");
         public static readonly Statistic Average     = new Statistic("Average");

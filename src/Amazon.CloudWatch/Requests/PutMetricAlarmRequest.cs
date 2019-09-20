@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿#nullable disable
+
+using System.Collections.ObjectModel;
 
 namespace Amazon.CloudWatch
 {

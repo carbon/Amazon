@@ -1,6 +1,6 @@
 ﻿namespace Amazon.CloudWatch
 {
-    public class Dimension
+    public readonly struct Dimension
     {
         public Dimension(string name, string value)
         {

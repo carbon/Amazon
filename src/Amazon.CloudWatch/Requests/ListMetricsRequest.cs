@@ -1,4 +1,6 @@
-﻿namespace Amazon.CloudWatch
+﻿#nullable disable
+
+namespace Amazon.CloudWatch
 {
     public class ListMetricsRequest
     {     

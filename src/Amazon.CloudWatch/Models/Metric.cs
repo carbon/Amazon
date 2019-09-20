@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace Amazon.CloudWatch
 {
-    public class Metric
+    public sealed class Metric
     {
         public Metric(string ns, string name)
         {

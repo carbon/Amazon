@@ -68,7 +68,7 @@ namespace Amazon.CloudWatch
                 Content = GetPostContent(request.ToParams())
             };
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            await SendAsync(httpRequest).ConfigureAwait(false);
 
             // return PutMetricDataResult.Parse(responseText);
         }
