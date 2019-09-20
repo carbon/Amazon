@@ -9,12 +9,10 @@ namespace Amazon.DynamoDb
 {
     public class DynamoDbException : Exception, IException
     {
-        private readonly List<Exception> exceptions;
-
         public DynamoDbException(string message)
             : base(message) { }
 
-        public DynamoDbException(string message, string type)
+        public DynamoDbException(string message, string? type)
           : base(message)
         {
             Type = type;
@@ -26,10 +24,10 @@ namespace Amazon.DynamoDb
         public DynamoDbException(string message, List<Exception> exceptions)
             : base(message)
         {
-            this.exceptions = exceptions;
+            Exceptions = exceptions;
         }
 
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         public int StatusCode { get; set; }
 
@@ -38,7 +36,7 @@ namespace Amazon.DynamoDb
             return FromJson(JsonObject.Parse(jsonText));
         }
 
-        public IReadOnlyList<Exception> Exceptions => exceptions;
+        public IReadOnlyList<Exception>? Exceptions { get; }
 
         public static DynamoDbException FromJson(JsonObject json)
         {
@@ -56,11 +54,11 @@ namespace Amazon.DynamoDb
 
             if (type != null)
             {
-                int indexOfPound = type.IndexOf('#');
+                int poundIndex = type.IndexOf('#');
 
-                if (indexOfPound > -1)
+                if (poundIndex > -1)
                 {
-                    type = type.Substring(indexOfPound + 1);
+                    type = type.Substring(poundIndex + 1);
                 }
             }
 
