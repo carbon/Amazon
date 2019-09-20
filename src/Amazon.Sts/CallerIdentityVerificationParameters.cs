@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System;
+﻿using System;
 using System.Runtime.Serialization;
 
 using Carbon.Json;
@@ -9,7 +7,9 @@ namespace Amazon.Sts
 {
     public sealed class CallerIdentityVerificationParameters
     {
+#nullable disable
         public CallerIdentityVerificationParameters() { }
+#nullable enable
 
         public CallerIdentityVerificationParameters(string url, JsonObject headers, string body)
         {
