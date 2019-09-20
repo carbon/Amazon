@@ -1,11 +1,14 @@
-﻿#nullable disable
-
-namespace Amazon.Sts
+﻿namespace Amazon.Sts
 {
-    public class DecodeAuthorizationMessageRequest : IStsRequest
+    public sealed class DecodeAuthorizationMessageRequest : IStsRequest
     {
         public string Action => "DecodeAuthorizationMessage";
 
-        public string EncodedMessage { get; set; }
+        public DecodeAuthorizationMessageRequest(string encodedMessage)
+        {
+            EncodedMessage = encodedMessage;
+        }
+
+        public string EncodedMessage { get; }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using Amazon.Sts.Exceptions;
+
 using Carbon.Json;
 
 namespace Amazon.Sts
@@ -102,7 +104,7 @@ namespace Amazon.Sts
         {
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            throw new Exception(response.StatusCode + "/" + responseText);
+            throw new StsException(response.StatusCode, responseText);
         }
 
         #endregion

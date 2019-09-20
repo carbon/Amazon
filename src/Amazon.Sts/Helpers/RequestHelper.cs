@@ -4,13 +4,15 @@ using Carbon.Json;
 
 namespace Amazon.Sts
 {
-    public static class StsRequestHelper
+    internal static class StsRequestHelper
     {
         public static Dictionary<string, string> ToParams(IStsRequest instance)
         {
-            var parameters = new Dictionary<string, string>();
+            var obj = JsonObject.FromObject(instance);
 
-            foreach (var member in JsonObject.FromObject(instance))
+            var parameters = new Dictionary<string, string>(obj.Keys.Count);
+
+            foreach (var member in obj)
             {
                 if (member.Value is XNull) continue;
 
@@ -40,10 +42,9 @@ namespace Amazon.Sts
                     AddParameters(parameters, member.Key, obj);
                 }
                 */
-                else
-                {
-                    parameters.Add(member.Key, member.Value.ToString());
-                }
+                // ELSE
+                parameters.Add(member.Key, member.Value.ToString());
+                
             }
 
             return parameters;

@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sts
 {
-    public static class StsSerializer<T>
+    internal static class StsSerializer<T>
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(T), StsClient.Namespace);
 

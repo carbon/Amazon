@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace Amazon.Sts.Exceptions
 {
@@ -6,5 +7,15 @@ namespace Amazon.Sts.Exceptions
     {
         public StsException(string message)
             : base(message) { }
+
+
+        public StsException(HttpStatusCode statusCode, string message)
+            : base(message)
+        {
+            StatusCode = statusCode;
+        }
+
+
+        public HttpStatusCode StatusCode { get; }
     }
 }

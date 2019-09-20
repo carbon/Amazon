@@ -21,13 +21,15 @@ namespace Amazon.Sts
 
             if (uri.Scheme != "https")
             {
-                throw new ArgumentException("endpoint must be HTTPS. was :" + uri.Scheme);
+                throw new ArgumentException("Endpoint scheme be https. Was " + uri.Scheme);
             }
 
             // https://sts.us-east-1.amazonaws.com/
 
             if (!(uri.Host.StartsWith("sts.") && uri.Host.EndsWith(".amazonaws.com")))
+            {
                 throw new Exception("Must be an STS endpoint: was:" + token.Url);
+            }
 
             var request = new HttpRequestMessage(HttpMethod.Post, token.Url) {
                 Content = new StringContent(token.Body, Encoding.UTF8, "application/x-www-form-urlencoded")
@@ -50,7 +52,7 @@ namespace Amazon.Sts
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new StsException(response.StatusCode + " / " + responseText);
+                throw new StsException(response.StatusCode, responseText);
             }
 
             return StsSerializer<GetCallerIdentityResponse>.ParseXml(responseText).GetCallerIdentityResult;

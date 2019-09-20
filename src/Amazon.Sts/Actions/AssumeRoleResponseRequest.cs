@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Sts
 {
-    public class AssumeRoleResponseRequest : IStsRequest
+    public sealed class AssumeRoleResponseRequest : IStsRequest
     {
         public string Action => "AssumeRole";
     }
