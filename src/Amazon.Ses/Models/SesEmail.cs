@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +10,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Ses
 {
-    public class SesEmail
+    public sealed class SesEmail
     {
         public string Source { get; set; }
 
@@ -32,14 +34,14 @@ namespace Amazon.Ses
                 { "Source", Source }
             };
 
-            SetContent("Message.Subject", Subject, dic);
+            SetContent("Message.Subject",   Subject, dic);
             SetContent("Message.Body.Html", Html, dic);
             SetContent("Message.Body.Text", Text, dic);
 
-            AddList(RecipientType.ReplyTo, ReplyTo, dic);
-            AddList(RecipientType.To, To, dic);
-            AddList(RecipientType.Cc, CC, dic);
-            AddList(RecipientType.Bcc, BCC, dic);
+            AddList(RecipientType.ReplyTo,  ReplyTo, dic);
+            AddList(RecipientType.To,       To, dic);
+            AddList(RecipientType.Cc,       CC, dic);
+            AddList(RecipientType.Bcc,      BCC, dic);
 
             return dic;
         }
@@ -50,23 +52,25 @@ namespace Amazon.Ses
 
             var doc = new SesEmail
             {
-                Source = SesHelper.EncodeEmail(message.From),
-                To = message.To.Select(r => SesHelper.EncodeEmail(r)).ToArray(),
+                Source = SesHelper.EncodeMailAddress(message.From),
+                To = message.To.Select(r => SesHelper.EncodeMailAddress(r)).ToArray(),
                 Subject = new SesContent(message.Subject, CharsetType.UTF8)
             };
 
             // "Carbonmade" <hello@carbonmade.com>
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            if (message.ReplyTo != null)
+
+            if (message.ReplyToList.Count > 0)
             {
-                doc.ReplyTo = new[] { SesHelper.EncodeEmail(message.ReplyTo) };
+                doc.ReplyTo = EncodeMailAddressCollection(message.ReplyToList);
+            }
+#pragma warning disable CS0618 // Type or member is obsolete
+            else if (message.ReplyTo != null)
+            {
+                doc.ReplyTo = new[] { SesHelper.EncodeMailAddress(message.ReplyTo) };
             }
 #pragma warning restore CS0618
-            else if (message.ReplyToList.Count > 0)
-            {
-                doc.ReplyTo = message.ReplyToList.Select(r => SesHelper.EncodeEmail(r)).ToArray();
-            }
+
 
             if (message.IsBodyHtml)
             {
@@ -74,7 +78,13 @@ namespace Amazon.Ses
             }
             else
             {
-                doc.Html = new SesContent(message.Body, CharsetType.UTF8);
+                doc.Text = new SesContent(message.Body, CharsetType.UTF8);
+            }
+
+
+            if (message.CC.Count > 0)
+            {
+                doc.CC = EncodeMailAddressCollection(message.CC);
             }
 
             // Alternate view support
@@ -82,15 +92,14 @@ namespace Amazon.Ses
             {
                 foreach (var view in message.AlternateViews)
                 {
-                    using (var streamReader = new StreamReader(view.ContentStream))
-                    {
-                        var text = streamReader.ReadToEnd();
+                    using var streamReader = new StreamReader(view.ContentStream);
 
-                        switch (view.ContentType.MediaType)
-                        {
-                            case "text/plain" : doc.Text = new SesContent(text, CharsetType.UTF8); break;
-                            case "text/html"  : doc.Html = new SesContent(text, CharsetType.UTF8); break;
-                        }
+                    string text = streamReader.ReadToEnd();
+
+                    switch (view.ContentType.MediaType)
+                    {
+                        case "text/plain" : doc.Text = new SesContent(text, CharsetType.UTF8); break;
+                        case "text/html"  : doc.Html = new SesContent(text, CharsetType.UTF8); break;
                     }
                 }
             }
@@ -98,7 +107,21 @@ namespace Amazon.Ses
             return doc;
         }
 
-        public enum RecipientType
+        private static string[] EncodeMailAddressCollection(MailAddressCollection collection)
+        {
+            if (collection.Count == 0) return Array.Empty<string>();
+
+            string[] addresses = new string[collection.Count];
+
+            for (int i = 0; i < collection.Count; i++)
+            {
+                addresses[i] = SesHelper.EncodeMailAddress(collection[i]);
+            }
+
+            return addresses;
+        }
+
+        private enum RecipientType : byte
         {
             ReplyTo = 1,
             To      = 2,
@@ -115,13 +138,13 @@ namespace Amazon.Ses
             if (content.Charset != null) dic.Add(prefix + ".Charset", content.Charset);
         }
 
-        public void AddList(RecipientType type, string[] list, Dictionary<string, string> dic)
+        private void AddList(RecipientType type, string[] list, Dictionary<string, string> dic)
         {
             // http://www.ietf.org/rfc/rfc0822.txt
 
             if (list is null || list.Length == 0) return;
 
-            var i = 1;
+            int i = 1;
 
             // By default, the string must be 7-bit ASCII.
             // If the text must contain any other characters, then you must use MIME encoded-word syntax (RFC 2047) instead of a literal string. 
@@ -154,14 +177,13 @@ namespace Amazon.Ses
             var namespaces = new XmlSerializerNamespaces();
 
             //  Add lib namespace with empty prefix 
-            namespaces.Add("", "http://cloudfront.amazonaws.com/doc/2010-11-01/");
+            namespaces.Add(string.Empty, "http://cloudfront.amazonaws.com/doc/2010-11-01/");
 
             var doc = new XDocument();
 
-            using (var xw = doc.CreateWriter())
-            {
-                serializer.Serialize(xw, this, namespaces);
-            }
+            using var xw = doc.CreateWriter();
+
+            serializer.Serialize(xw, this, namespaces);
 
             return doc;
         }

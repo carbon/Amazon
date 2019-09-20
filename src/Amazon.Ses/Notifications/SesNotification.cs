@@ -1,4 +1,6 @@
-﻿namespace Amazon.Ses
+﻿#nullable disable
+
+namespace Amazon.Ses
 {
     public class SesNotification
     {

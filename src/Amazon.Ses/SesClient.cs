@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -58,26 +56,29 @@ namespace Amazon.Ses
         private async Task<string> SendWithRetryPolicy(SesRequest request, RetryPolicy retryPolicy)
         {
             var retryCount = 0;
-            Exception lastError;
+            Exception lastException;
 
             do
             {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
                 try
                 {
                     return await Send(request).ConfigureAwait(false);
                 }
                 catch (SesException ex) when (ex.IsTransient)
                 {
-                    lastError = ex;
+                    lastException = ex;
                 }
 
                 retryCount++;
-
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
             while (retryPolicy.ShouldRetry(retryCount));
 
-            throw lastError;
+            throw lastException;
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)

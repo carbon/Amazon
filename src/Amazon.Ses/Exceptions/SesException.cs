@@ -1,18 +1,13 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 
 namespace Amazon.Ses
 {
-    public class SesException : Exception
+    public sealed class SesException : Exception
     {
         private readonly SesError error;
 
-        public SesException(string message)
-            : base(message) { }
-
         public SesException(SesError error)
-            : this(error.Message)
+            : base(error.Message)
         {
             this.error = error;
         }
