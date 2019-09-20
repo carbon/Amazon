@@ -1,8 +1,10 @@
-﻿using System.Runtime.Serialization;
+﻿#nullable disable
+
+using System.Runtime.Serialization;
 
 namespace Amazon.Kms
 {
-    public class KmsError
+    public sealed class KmsError
     {
         [DataMember(Name = "__type")]
         public string Type { get; set; }

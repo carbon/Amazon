@@ -84,7 +84,7 @@ namespace Amazon.Kms
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            if (responseText == "") return null;
+            if (responseText.Length == 0) return null!;
 
             return JsonObject.Parse(responseText).As<T>();
         }
@@ -93,7 +93,7 @@ namespace Amazon.Kms
         {
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            if (responseText.StartsWith("{"))
+            if (responseText.Length > 0 && responseText[0] == '{')
             {
                 var error = JsonObject.Parse(responseText).As<KmsError>();
 

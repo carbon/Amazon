@@ -7,7 +7,11 @@ namespace Amazon.Kms
 {
     public sealed class DecryptRequest : KmsRequest
     {
-        public DecryptRequest(string keyId, byte[] ciphertext, JsonObject context, string[] grantTokens = null)
+        public DecryptRequest(
+            string keyId, 
+            byte[] ciphertext, 
+            JsonObject? context, 
+            string[]? grantTokens = null)
         {
             if (keyId is null)
             {
@@ -19,7 +23,7 @@ namespace Amazon.Kms
                 throw new ArgumentException("May not be empty", nameof(keyId));
             }
 
-            if (ciphertext == null)
+            if (ciphertext is null)
             {
                 throw new ArgumentNullException(nameof(ciphertext));
             }
@@ -42,10 +46,10 @@ namespace Amazon.Kms
 
         // String Map
         [DataMember(EmitDefaultValue = false)]
-        public JsonObject EncryptionContext { get; }
+        public JsonObject? EncryptionContext { get; }
 
         [DataMember(EmitDefaultValue = false)]
-        public string[] GrantTokens { get; }
+        public string[]? GrantTokens { get; }
     }
 }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 
 namespace Amazon.Kms
 {
@@ -21,8 +23,6 @@ namespace Amazon.Kms
         public DateTime CreationDate { get; set; }
     }
 }
-
-// 1.477431461E9
 
 /*
 {

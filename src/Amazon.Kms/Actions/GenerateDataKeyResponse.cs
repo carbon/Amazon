@@ -1,6 +1,8 @@
-﻿namespace Amazon.Kms
+﻿#nullable disable
+
+namespace Amazon.Kms
 {
-    public class GenerateDataKeyResponse : KmsResponse 
+    public sealed class GenerateDataKeyResponse : KmsResponse 
     {
         public string KeyId { get; set; }
 

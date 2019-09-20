@@ -6,7 +6,7 @@ using Carbon.Json;
 
 namespace Amazon.Kms
 {
-    public class KmsProtector
+    public sealed class KmsProtector
     {
         private readonly KmsClient client;
         private readonly string keyId;
@@ -22,18 +22,8 @@ namespace Amazon.Kms
 
         public async Task<byte[]> EncryptAsync(
             byte[] plaintext, 
-            IEnumerable<KeyValuePair<string, string>> aad = null)
-        { 
-            if (plaintext is null)
-            {
-                throw new ArgumentNullException(nameof(plaintext));
-            }
-
-            if (plaintext.Length > 1024 * 4)
-            {
-                throw new ArgumentException("Must be less than 4KB", nameof(plaintext));
-            }
-            
+            IEnumerable<KeyValuePair<string, string>>? aad = null)
+        {             
             var request = new EncryptRequest(keyId, plaintext, GetEncryptionContext(aad));
 
             var result = await client.EncryptAsync(request).ConfigureAwait(false);
@@ -43,7 +33,7 @@ namespace Amazon.Kms
         
         public async Task<byte[]> DecryptAsync(
             byte[] ciphertext, 
-            IEnumerable<KeyValuePair<string, string>> aad = null)
+            IEnumerable<KeyValuePair<string, string>>? aad = null)
         {
             var request = new DecryptRequest(keyId, ciphertext, GetEncryptionContext(aad));
 
@@ -53,7 +43,7 @@ namespace Amazon.Kms
         }
 
         public async Task<GenerateDataKeyResponse> GenerateKeyAsync(
-            IEnumerable<KeyValuePair<string, string>> context = null)
+            IEnumerable<KeyValuePair<string, string>>? context = null)
         {
             var result = await client.GenerateDataKeyAsync(new GenerateDataKeyRequest(
                keyId             : keyId,
@@ -66,25 +56,21 @@ namespace Amazon.Kms
         
         public async Task RetireGrantAsync(string grantId)
         {
-            if (grantId is null)
-                throw new ArgumentNullException(nameof(grantId));
-
-            await client.RetireGrantAsync(new RetireGrantRequest {
-                GrantId = grantId,
-                KeyId = keyId
+            await client.RetireGrantAsync(new RetireGrantRequest(
+                keyId   : keyId,
+                grantId : grantId){
             }).ConfigureAwait(false);
         }
         
         #region Helpers
 
-        private static JsonObject GetEncryptionContext(
-            IEnumerable<KeyValuePair<string, string>> authenticatedProperties)
+        private static JsonObject? GetEncryptionContext(IEnumerable<KeyValuePair<string, string>>? aad)
         {
-            if (authenticatedProperties is null) return null;
+            if (aad is null) return null;
 
             var json = new JsonObject();
 
-            foreach (var pair in authenticatedProperties)
+            foreach (var pair in aad)
             {
                 json.Add(pair.Key, pair.Value);
             }
