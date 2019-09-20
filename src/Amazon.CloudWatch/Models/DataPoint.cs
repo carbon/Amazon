@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Globalization;
 using System.Xml.Linq;
 
@@ -31,12 +33,12 @@ namespace Amazon.CloudWatch
             {
                 switch (child.Name.LocalName)
                 {
-                    case "Average"      : metric.Average     = double.Parse(child.Value); break;
-                    case "Maximum"      : metric.Maximum     = double.Parse(child.Value); break;
-                    case "Minimum"      : metric.Minimum     = double.Parse(child.Value); break;
-                    case "SampleCount"  : metric.SampleCount = double.Parse(child.Value); break;
-                    case "Sum"          : metric.Sum         = double.Parse(child.Value); break;
-                    case "Unit"         : metric.Unit        = child.Value;               break;
+                    case "Average"      : metric.Average     = double.Parse(child.Value, CultureInfo.InvariantCulture); break;
+                    case "Maximum"      : metric.Maximum     = double.Parse(child.Value, CultureInfo.InvariantCulture); break;
+                    case "Minimum"      : metric.Minimum     = double.Parse(child.Value, CultureInfo.InvariantCulture); break;
+                    case "SampleCount"  : metric.SampleCount = double.Parse(child.Value, CultureInfo.InvariantCulture); break;
+                    case "Sum"          : metric.Sum         = double.Parse(child.Value, CultureInfo.InvariantCulture); break;
+                    case "Unit"         : metric.Unit        = child.Value;                                             break;
                 }
             }
 
