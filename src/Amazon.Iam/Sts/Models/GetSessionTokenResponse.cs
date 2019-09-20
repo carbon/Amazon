@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Xml.Linq;
 
 namespace Amazon.Sts.Models
@@ -7,8 +9,6 @@ namespace Amazon.Sts.Models
     {
         public static AwsSession Parse(string text)
         {
-            if (text is null) throw new ArgumentNullException(nameof(text));
-
             var rootEl = XElement.Parse(text);                              // GetSessionTokenResponse
 
             var ns = rootEl.Name.Namespace;
