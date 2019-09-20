@@ -2,7 +2,7 @@
 
 namespace Amazon.Ec2
 {
-    public class DescribeSubnetsRequest : DescribeRequest, IEc2Request
+    public sealed class DescribeSubnetsRequest : DescribeRequest, IEc2Request
     {
         public DescribeSubnetsRequest() { }
 
