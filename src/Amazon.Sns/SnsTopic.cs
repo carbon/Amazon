@@ -5,7 +5,7 @@ using Carbon.Messaging;
 
 namespace Amazon.Sns
 {
-    public class SnsTopic
+    public sealed class SnsTopic
     {
         private readonly SnsClient client;
         private readonly string arn;
@@ -24,19 +24,16 @@ namespace Amazon.Sns
 
         public Task<string> PublishAsync(string message)
         {
-            if (message is null)
-                throw new ArgumentNullException(nameof(message));
-            
             // Max payload = 256KB (262,144 bytes)
 
-            var request = new PublishRequest {
-                TopicArn = arn,
-                Message = message
-            };
+            var request = new PublishRequest(arn, message);
 
             return client.PublishAsync(request);
         }
 
-        public Task PublishAsync(IMessage<string> message) => PublishAsync(message.Body);
+        public Task PublishAsync(IMessage<string> message)
+        {
+            return PublishAsync(message.Body);
+        }
     }
 }

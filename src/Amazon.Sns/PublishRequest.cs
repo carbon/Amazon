@@ -1,20 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Amazon.Sns
 {
-    public class PublishRequest
+    public sealed class PublishRequest
     {
-        public string Subject { get; set; }
+        public PublishRequest(
+            string topicArn, 
+            string message,
+            string? subject = null)
+        {
+            TopicArn = topicArn ?? throw new ArgumentNullException(nameof(topicArn));
+            Message = message ?? throw new ArgumentNullException(nameof(message));
+            Subject = subject;
+        }
 
-        // [Required]
-        public string TopicArn { get; set; }
+        public string TopicArn { get; }
 
-        // [Required]
-        public string Message { get; set; }
+        public string Message { get; }
+
+        public string? Subject { get; }
 
         public Dictionary<string, string> ToParams()
         {
-            var dic = new Dictionary<string, string> {
+            var dic = new Dictionary<string, string>(4) {
                 { "Action", "Publish" },
                 { "TopicArn", TopicArn },
                 { "Message", Message }
@@ -22,7 +31,7 @@ namespace Amazon.Sns
 
             if (Subject != null)
             {
-                dic.Add(Subject, Subject);
+                dic.Add("Subject", Subject);
             }
 
             return dic;
