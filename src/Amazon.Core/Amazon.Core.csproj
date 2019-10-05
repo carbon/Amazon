@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Core</AssemblyName>
-    <Version>0.13.2</Version>
+    <Version>0.14.0</Version>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Json" Version="1.9.0" />
+    <PackageReference Include="Carbon.Json" Version="2.0.0" />
   </ItemGroup>
 
 </Project>

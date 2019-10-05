@@ -71,9 +71,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Kinesis.Firehose", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CodeBuild.Tests", "Amazon.CodeBuild.Tests\Amazon.CodeBuild.Tests.csproj", "{1B0E1A80-0907-4602-8303-0E28D330D094}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Route53", "Amazon.Route53\Amazon.Route53.csproj", "{FE093EF2-3893-4E36-AA05-81DF4FA4B881}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Route53", "Amazon.Route53\Amazon.Route53.csproj", "{FE093EF2-3893-4E36-AA05-81DF4FA4B881}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Route53.Tests", "Amazon.Route53.Tests\Amazon.Route53.Tests.csproj", "{7A29E5C1-A19C-48A4-9075-96658118207F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Route53.Tests", "Amazon.Route53.Tests\Amazon.Route53.Tests.csproj", "{7A29E5C1-A19C-48A4-9075-96658118207F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Translate", "Amazon.Translate\Amazon.Translate.csproj", "{C9D9E714-C3A7-437C-A0DF-D30C7AA15ACE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -221,6 +223,10 @@ Global
 		{7A29E5C1-A19C-48A4-9075-96658118207F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A29E5C1-A19C-48A4-9075-96658118207F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A29E5C1-A19C-48A4-9075-96658118207F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9D9E714-C3A7-437C-A0DF-D30C7AA15ACE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9D9E714-C3A7-437C-A0DF-D30C7AA15ACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9D9E714-C3A7-437C-A0DF-D30C7AA15ACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9D9E714-C3A7-437C-A0DF-D30C7AA15ACE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

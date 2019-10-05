@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.CodeBuild</AssemblyName>
-    <VersionPrefix>0.13.1</VersionPrefix>
+    <Version>0.14.0</Version>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>8</LangVersion>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
   </ItemGroup>
 
 </Project>
