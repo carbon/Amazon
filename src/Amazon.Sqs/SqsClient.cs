@@ -172,11 +172,25 @@ namespace Amazon.Sqs
 
         #region Helpers
 
-        private static FormUrlEncodedContent GetPostContent(SqsRequest request)
+        private static ByteArrayContent GetPostContent(SqsRequestLAI request)
         {
             request.Add("Version", Version);
 
-            return new FormUrlEncodedContent(request.Parameters);
+            // Converting the dictionary for Form Url protocol
+            var parameters = new List<string>(); 
+            foreach (var item in request.Parameters)
+            {
+                var key = WebUtility.UrlEncode(item.Key);
+                var value = WebUtility.UrlEncode(item.Value);
+                parameters.Add($"{key}={value}");
+            }
+            
+            // Creating a variable for simply the Debug proccess
+            string paramString = string.Join("&", parameters);
+
+            // Creating a variable for simply the Debug proccess
+            var content = new StringContent(paramString, null, "application/x-www-form-urlencoded");
+            return content;
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
