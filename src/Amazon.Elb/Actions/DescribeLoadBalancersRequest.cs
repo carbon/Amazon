@@ -1,8 +1,8 @@
-﻿using System.Xml.Serialization;
+﻿#nullable disable
 
 namespace Amazon.Elb
 {
-    public class DescribeLoadBalancersRequest : IElbRequest
+    public sealed class DescribeLoadBalancersRequest : IElbRequest
     {
         public string Action => "DescribeLoadBalancers";
 
@@ -13,6 +13,5 @@ namespace Amazon.Elb
         public string[] Names { get; set; }
 
         public int? PageSize { get; set; }
-
     }
 }

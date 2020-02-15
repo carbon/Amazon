@@ -14,7 +14,7 @@ namespace Amazon.Elb
 
             foreach (var member in JsonObject.FromObject(instance))
             {
-                if (member.Value is XNull) continue;
+                if (member.Value is JsonNull) continue;
 
                 if (member.Value is JsonArray array)
                 {
@@ -53,7 +53,7 @@ namespace Amazon.Elb
 
             foreach (var m in instance)
             {
-                if (m.Value is XNull) continue;
+                if (m.Value is JsonNull) continue;
 
                 string key = prefix + "." + m.Key;
 

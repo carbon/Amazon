@@ -1,6 +1,8 @@
-﻿namespace Amazon.Elb
+﻿#nullable disable
+
+namespace Amazon.Elb
 {
-    public class CreateTargetGroupRequest : IElbRequest
+    public sealed class CreateTargetGroupRequest : IElbRequest
     {
         public string Action => "CreateTargetGroup";
 
@@ -19,7 +21,6 @@
         
         public Matcher Matcher { get; set; }
 
-
         public string Name { get; set; }
 
         public int Port { get; set; }
@@ -29,6 +30,5 @@
         public int UnhealthyThresholdCount { get; set; }
         
         public string VpcId { get; set; }
-
     }
 }

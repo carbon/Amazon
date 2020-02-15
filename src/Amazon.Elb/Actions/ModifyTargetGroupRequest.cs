@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
-    public class ModifyTargetGroupRequest : IElbRequest
+    public sealed class ModifyTargetGroupRequest : IElbRequest
     {
         public string Action => "ModifyTargetGroup";
 

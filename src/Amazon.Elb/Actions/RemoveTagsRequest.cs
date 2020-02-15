@@ -1,4 +1,6 @@
-﻿namespace Amazon.Elb
+﻿#nullable disable
+
+namespace Amazon.Elb
 {
     public class RemoveTagsRequest : IElbRequest
     {

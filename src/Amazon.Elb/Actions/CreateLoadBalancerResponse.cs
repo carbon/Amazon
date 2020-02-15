@@ -1,4 +1,6 @@
-﻿using System.Xml.Serialization;
+﻿#nullable disable
+
+using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
@@ -7,7 +9,6 @@ namespace Amazon.Elb
         [XmlElement]
         public CreateLoadBalancerResult CreateLoadBalancerResult { get; set; }
     }
-
 
     public class CreateLoadBalancerResult
     {

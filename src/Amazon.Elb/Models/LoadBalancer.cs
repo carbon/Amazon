@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Xml.Serialization;
 
 namespace Amazon.Elb

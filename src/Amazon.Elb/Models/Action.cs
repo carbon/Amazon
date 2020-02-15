@@ -1,6 +1,8 @@
-﻿namespace Amazon.Elb
+﻿#nullable disable
+
+namespace Amazon.Elb
 {
-    public class Action
+    public sealed class Action
     {
         public Action() { }
 

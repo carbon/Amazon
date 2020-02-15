@@ -1,6 +1,8 @@
-﻿namespace Amazon.Elb
+﻿#nullable disable
+
+namespace Amazon.Elb
 {
-    public class DescribeTargetHealthRequest : IElbRequest
+    public sealed class DescribeTargetHealthRequest : IElbRequest
     {
         public string Action => "DescribeTargetHealth";
         

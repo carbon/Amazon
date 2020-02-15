@@ -1,9 +1,11 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
-    public class CreateLoadBalancerRequest : IElbRequest
+    public sealed class CreateLoadBalancerRequest : IElbRequest
     {
         public CreateLoadBalancerRequest() { }
 

@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Elb
 {
-    public class DeleteLoadBalancerResponse : IElbResponse
+    public sealed class DeleteLoadBalancerResponse : IElbResponse
     {
     }
 }

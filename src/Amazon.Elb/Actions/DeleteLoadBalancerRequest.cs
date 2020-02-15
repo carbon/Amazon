@@ -1,12 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
 
 namespace Amazon.Elb
 {
-    public class DeleteLoadBalancerRequest : IElbRequest
+    public sealed class DeleteLoadBalancerRequest : IElbRequest
     {
+        public DeleteLoadBalancerRequest(string loadBalancerArn)
+        {
+            LoadBalancerArn = loadBalancerArn ?? throw new ArgumentNullException(nameof(loadBalancerArn));
+        }
+
         public string Action => "DeleteLoadBalancer";
         
-        [Required]
-        public string LoadBalancerArn { get; set; }
+        public string LoadBalancerArn { get; }
     }
 }

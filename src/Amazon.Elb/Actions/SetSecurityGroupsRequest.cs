@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
-    public class SetSecurityGroupsRequest : IElbRequest
+    public sealed class SetSecurityGroupsRequest : IElbRequest
     {
         public string Action => "SetSecurityGroups";
 

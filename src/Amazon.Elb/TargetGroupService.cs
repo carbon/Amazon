@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Amazon.Elb
 {
-    public class TargetGroupService
+    public sealed class TargetGroupService
     {
         private readonly ElbClient client;
 

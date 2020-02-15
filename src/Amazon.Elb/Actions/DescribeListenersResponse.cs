@@ -1,8 +1,10 @@
-﻿using System.Xml.Serialization;
+﻿#nullable disable
+
+using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class DescribeListenersResponse : IElbResponse
+    public sealed class DescribeListenersResponse : IElbResponse
     {
        [XmlElement]
        public DescribeListenersResult DescribeListenersResult { get; set; }

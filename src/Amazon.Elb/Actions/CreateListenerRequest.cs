@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿#nullable disable
+
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
-    public class CreateListenerRequest : IElbRequest
+    public sealed class CreateListenerRequest : IElbRequest
     {
         public string Action => "CreateListener";
 

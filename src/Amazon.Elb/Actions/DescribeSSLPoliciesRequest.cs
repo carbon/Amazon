@@ -1,6 +1,8 @@
-﻿namespace Amazon.Elb
+﻿#nullable disable
+
+namespace Amazon.Elb
 {
-    public class DescribeSSLPoliciesRequest : IElbRequest
+    public sealed class DescribeSSLPoliciesRequest : IElbRequest
     {
         public string Action => "DescribeSSLPolicies";
 

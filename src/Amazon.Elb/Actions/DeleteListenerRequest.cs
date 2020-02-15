@@ -1,12 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
 
 namespace Amazon.Elb
 {
-    public class DeleteListenerRequest : IElbRequest
+    public sealed class DeleteListenerRequest : IElbRequest
     {
+        public DeleteListenerRequest(string listenerArn)
+        {
+            this.ListenerArn = listenerArn ?? throw new ArgumentNullException(nameof(listenerArn));
+        }
+
         public string Action => "DeleteListener";
         
-        [Required]
-        public string ListenerArn { get; set; }
+        public string ListenerArn { get; }
     }
 }

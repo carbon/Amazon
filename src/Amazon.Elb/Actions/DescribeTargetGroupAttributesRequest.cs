@@ -1,10 +1,8 @@
-﻿#nullable enable
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
-    public class DescribeTargetGroupAttributesRequest : IElbRequest
+    public sealed class DescribeTargetGroupAttributesRequest : IElbRequest
     {
         public string Action => "DescribeTargetGroupAttributes";
 

@@ -1,9 +1,11 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
-    public class RegisterTargetsRequest : IElbRequest
+    public sealed class RegisterTargetsRequest : IElbRequest
     {
         public RegisterTargetsRequest() { }
 

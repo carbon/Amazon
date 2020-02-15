@@ -1,8 +1,10 @@
-﻿using System.Xml.Serialization;
+﻿#nullable disable
+
+using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class TargetGroupAttribute
+    public sealed class TargetGroupAttribute
     {
         [XmlElement]
         public string Key { get; set; }

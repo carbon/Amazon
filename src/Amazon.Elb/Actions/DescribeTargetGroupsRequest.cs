@@ -1,6 +1,8 @@
-﻿namespace Amazon.Elb
+﻿#nullable disable
+
+namespace Amazon.Elb
 {
-    public class DescribeTargetGroupsRequest : IElbRequest
+    public sealed class DescribeTargetGroupsRequest : IElbRequest
     {
         public string Action => "DescribeTargetGroups";
 

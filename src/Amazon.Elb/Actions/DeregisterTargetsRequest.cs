@@ -1,9 +1,11 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
-    public class DeregisterTargetsRequest : IElbRequest
+    public sealed class DeregisterTargetsRequest : IElbRequest
     {
         public DeregisterTargetsRequest() { }
 

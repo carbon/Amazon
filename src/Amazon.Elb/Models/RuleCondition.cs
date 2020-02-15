@@ -1,6 +1,8 @@
-﻿namespace Amazon.Elb
+﻿#nullable disable
+
+namespace Amazon.Elb
 {
-    public class RuleCondition
+    public sealed class RuleCondition
     {
         // host-header, path-pattern
         public string Field { get; set; }

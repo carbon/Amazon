@@ -1,12 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
 
 namespace Amazon.Elb
 {
-    public class DescribeLoadBalancerAttributesRequest : IElbRequest
+    public sealed class DescribeLoadBalancerAttributesRequest : IElbRequest
     {
+        public DescribeLoadBalancerAttributesRequest(string loadBalancerArn)
+        {
+            LoadBalancerArn = loadBalancerArn ?? throw new ArgumentNullException(nameof(loadBalancerArn));
+        }
+
         public string Action => "DescribeLoadBalancerAttributes";
 
-        [Required]
-        public string LoadBalancerArn { get; set; }
+        public string LoadBalancerArn { get; }
     }
 }

@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
-    public class ModifyListenerRequest : IElbRequest
+    public sealed class ModifyListenerRequest : IElbRequest
     {
         public string Action => "ModifyListener";
 

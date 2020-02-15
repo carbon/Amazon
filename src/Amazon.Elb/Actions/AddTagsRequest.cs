@@ -1,8 +1,10 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 
 namespace Amazon.Elb
 {
-    public class AddTagsRequest : IElbRequest
+    public sealed class AddTagsRequest : IElbRequest
     {
         public AddTagsRequest() { }
 

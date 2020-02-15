@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
-    public class ModifyRuleRequest : IElbRequest
+    public sealed class ModifyRuleRequest : IElbRequest
     {
         public string Action => "ModifyRule";
 

@@ -1,9 +1,18 @@
-﻿using System.Xml.Serialization;
+﻿#nullable disable
+
+using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
     public class Matcher
     {
+        public Matcher() { }
+
+        public Matcher(string httpCode)
+        {
+            HttpCode = httpCode;
+        }
+
         [XmlElement]
         public string HttpCode { get; set; }
     }
