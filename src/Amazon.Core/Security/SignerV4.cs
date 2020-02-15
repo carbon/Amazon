@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -38,18 +39,16 @@ namespace Amazon.Security
             );
         }
 
-        public static string GetStringToSign(CredentialScope scope, string timestamp, string canonicalRequest)
+        public static string GetStringToSign(in CredentialScope scope, string timestamp, string canonicalRequest)
         {
             string hashedCanonicalRequest = HexString.FromBytes(ComputeSHA256(canonicalRequest));
 
             var sb = StringBuilderCache.Aquire();
 
-            sb.AppendJoin('\n', new string[] {
-                algorithmName,          // Algorithm + \n
-                timestamp,              // Timestamp + \n
-                scope.ToString(),       // Scope     + \n
-                hashedCanonicalRequest  // Hex(SHA256(CanonicalRequest))
-            });
+            sb.Append(algorithmName).Append('\n');    // Algorithm + \n
+            sb.Append(timestamp).Append('\n');        // Timestamp + \n
+            sb.Append(scope.ToString()).Append('\n'); // Scope     + \n
+            sb.Append(hashedCanonicalRequest);        // Hex(SHA256(CanonicalRequest))
 
             return StringBuilderCache.ExtractAndRelease(sb);
         }
@@ -60,15 +59,45 @@ namespace Amazon.Security
         {
             var sb = StringBuilderCache.Aquire();
 
-            sb.AppendJoin('\n', new string[] {
-                request.Method.ToString(),                 // HTTPRequestMethod      + \n
-                request.RequestUri.AbsolutePath,           // CanonicalURI           + \n
-                CanonicizeQueryString(request.RequestUri), // CanonicalQueryString   + \n
-                CanonicalizeHeaders(request),              // CanonicalHeaders       + \n
-                string.Empty,                              // \n
-                GetSignedHeaders(request),                 // SignedHeaders          + \n
-                GetPayloadHash(request)                    // HexEncode(Hash(Payload))
-            });
+            sb.Append(request.Method.Method)                            .Append('\n'); // HTTPRequestMethod      + \n
+            sb.Append(CanonicalizeUri(request.RequestUri.AbsolutePath)) .Append('\n'); // CanonicalURI           + \n
+            sb.Append(CanonicizeQueryString(request.RequestUri))        .Append('\n'); // CanonicalQueryString   + \n
+            sb.Append(CanonicalizeHeaders(request))                     .Append('\n'); // CanonicalHeaders       + \n
+            sb.Append(string.Empty)                                     .Append('\n'); //                        + \n
+            sb.Append(GetSignedHeaders(request))                        .Append('\n'); // SignedHeaders          + \n
+            sb.Append(GetPayloadHash(request));                                        // HexEncode(Hash(Payload))
+        
+            return StringBuilderCache.ExtractAndRelease(sb);
+        }
+        
+        public static string CanonicalizeUri(string path)
+        {
+            if (path.Length == 1 && path[0] == '/') return "/";
+
+            var splitter = new Splitter(path.AsSpan(), '/');
+
+            var sb = StringBuilderCache.Aquire();
+
+            while (splitter.TryGetNext(out var segment))
+            {
+                if (segment.Length == 0) continue;
+
+                sb.Append('/');
+
+                // Do not double escape
+                if (segment.IndexOf('%') > -1)
+                {
+#if NETSTANDARD2_0
+                    sb.Append(segment.ToString());
+#else
+                    sb.Append(segment);
+#endif
+                }
+                else
+                {
+                    sb.Append(Uri.EscapeDataString(segment.ToString()));
+                }
+            }
 
             return StringBuilderCache.ExtractAndRelease(sb);
         }
@@ -83,16 +112,14 @@ namespace Amazon.Security
         {
             var sb = StringBuilderCache.Aquire();
 
-            sb.AppendJoin('\n', new string[] {
-                method.ToString(),    // HTTPRequestMethod      + \n
-                canonicalURI,         // CanonicalURI           + \n
-                canonicalQueryString, // CanonicalQueryString   + \n
-                canonicalHeaders,     // CanonicalHeaders       + \n
-                string.Empty,         // \n
-                signedHeaders,        // SignedHeaders          + \n
-                payloadHash           // HexEncode(Hash(Payload))
-            });
-
+            sb.Append(method.ToString())    .Append('\n'); // HTTPRequestMethod           + \n
+            sb.Append(canonicalURI)         .Append('\n'); // CanonicalURI                + \n
+            sb.Append(canonicalQueryString) .Append('\n'); // CanonicalQueryString        + \n
+            sb.Append(canonicalHeaders)     .Append('\n'); // CanonicalHeaders            + \n
+            sb.Append(string.Empty)         .Append('\n'); //                             + \n
+            sb.Append(signedHeaders)        .Append('\n'); // SignedHeaders               + \n
+            sb.Append(payloadHash);                        // HexEncode(Hash(Payload))
+         
             return StringBuilderCache.ExtractAndRelease(sb);
         }
 
@@ -125,7 +152,7 @@ namespace Amazon.Security
 
             byte[] kSecret    = GetBytes("AWS4" + secretAccessKey);
 
-            byte[] kDate      = HMACSHA256(kSecret,  GetBytes(scope.Date.ToString("yyyyMMdd")));
+            byte[] kDate      = HMACSHA256(kSecret,  GetBytes(scope.Date.ToString("yyyyMMdd", CultureInfo.InvariantCulture)));
             byte[] kRegion    = HMACSHA256(kDate,    GetBytes(scope.Region.Name));
             byte[] kService   = HMACSHA256(kRegion,  GetBytes(scope.Service.Name));
             byte[] signingKey = HMACSHA256(kService, aws4_request_bytes);
@@ -148,18 +175,12 @@ namespace Amazon.Security
 
             byte[] signingKey = GetSigningKey(credential.SecretAccessKey, scope);
 
-            var queryParameters = new SortedDictionary<string, string>();
-
-            if (!string.IsNullOrEmpty(request.RequestUri.Query))
-            {
-                foreach (var pair in ParseQueryString(request.RequestUri.Query))
-                {
-                    queryParameters[pair.Key] = pair.Value;
-                }
-            }
-
-            var timestamp = date.ToString(format: isoDateTimeFormat);
-            var signedHeaders = "host";
+            SortedDictionary<string, string> queryParameters = !string.IsNullOrEmpty(request.RequestUri.Query)
+                ? ParseQueryString(request.RequestUri.Query)
+                : new SortedDictionary<string, string>();
+      
+            string timestamp = date.ToString(format: isoDateTimeFormat, CultureInfo.InvariantCulture);
+            string signedHeaders = "host";
 
             queryParameters["X-Amz-Algorithm"] = algorithmName;
             queryParameters["X-Amz-Credential"] = credential.AccessKeyId + "/" + scope;
@@ -170,32 +191,29 @@ namespace Amazon.Security
             }
 
             queryParameters["X-Amz-Date"] = timestamp;
-            queryParameters["X-Amz-Expires"] = expires.TotalSeconds.ToString(); // in seconds
+            queryParameters["X-Amz-Expires"] = expires.TotalSeconds.ToString(CultureInfo.InvariantCulture); // in seconds
             queryParameters["X-Amz-SignedHeaders"] = signedHeaders;
 
-            var canonicalHeaders = "host:" + request.RequestUri.Host;
+            string canonicalHeaders = request.RequestUri.IsDefaultPort
+                ? "host:" + request.RequestUri.Host
+                : "host:" + request.RequestUri.Host + ":" + request.RequestUri.Port.ToString();
 
-            if (!request.RequestUri.IsDefaultPort)
-            {
-                canonicalHeaders += ":" + request.RequestUri.Port;
-            }
-
-            var canonicalRequest = GetCanonicalRequest(
-                method: request.Method,
-                canonicalURI: request.RequestUri.AbsolutePath,
-                canonicalQueryString: CanonicizeQueryString(queryParameters),
-                canonicalHeaders: canonicalHeaders,
-                signedHeaders: signedHeaders,
-                payloadHash: payloadHash
+            string canonicalRequest = GetCanonicalRequest(
+                method               : request.Method,
+                canonicalURI         : CanonicalizeUri(request.RequestUri.AbsolutePath),
+                canonicalQueryString : CanonicizeQueryString(queryParameters),
+                canonicalHeaders     : canonicalHeaders,
+                signedHeaders        : signedHeaders,
+                payloadHash          : payloadHash
             );
 
-            var stringToSign = GetStringToSign(
+            string stringToSign = GetStringToSign(
                 scope,
                 timestamp,
                 canonicalRequest
             );
 
-            var signature = Signature.ComputeHmacSha256(
+            string signature = Signature.ComputeHmacSha256(
                 key: signingKey,
                 data: Encoding.UTF8.GetBytes(stringToSign)
             ).ToHexString();
@@ -212,7 +230,7 @@ namespace Amazon.Security
             Uri url = request.RequestUri;
             var newUrl = StringBuilderCache.Aquire();
 
-            newUrl.Append(url.Scheme).Append("://").Append(url.Host);
+            newUrl.Append("https://").Append(url.Host);
 
             if (!url.IsDefaultPort)
             {
@@ -223,7 +241,7 @@ namespace Amazon.Security
             newUrl.Append(url.AbsolutePath);
             newUrl.Append('?');
 
-            foreach (var pair in queryParameters)
+            foreach (KeyValuePair<string, string> pair in queryParameters)
             {
                 newUrl.Append(UrlEncoder.Default.Encode(pair.Key));
                 newUrl.Append('=');
@@ -273,7 +291,7 @@ namespace Amazon.Security
             return CanonicizeQueryString(ParseQueryString(uri.Query));
         }
 
-        public static string CanonicizeQueryString(IDictionary<string, string> sortedValues)
+        public static string CanonicizeQueryString(SortedDictionary<string, string> sortedValues)
         {
             if (sortedValues.Count == 0)
             {
@@ -297,26 +315,33 @@ namespace Amazon.Security
             return StringBuilderCache.ExtractAndRelease(sb);
         }
 
-        private static IDictionary<string, string> ParseQueryString(string query)
+        private static SortedDictionary<string, string> ParseQueryString(string query)
         {
-            if (string.IsNullOrEmpty(query))
+            return ParseQueryString(query.AsSpan());
+        }
+
+        private static SortedDictionary<string, string> ParseQueryString(ReadOnlySpan<char> query)
+        {
+            if (query.Length == 0)
             {
-                return new Dictionary<string, string>();
+                return new SortedDictionary<string, string>();
             }
 
             var dictionary = new SortedDictionary<string, string>();
 
             if (query[0] == '?')
             {
-                query = query.Substring(1);
+                query = query.Slice(1);
             }
 
-            foreach (string part in query.Split(Seperators.Ampersand)) // &
+            var splitter = new Splitter(query, '&');
+
+            while (splitter.TryGetNext(out var part))
             {
                 int equalIndex = part.IndexOf('=');
 
-                string lhs  = equalIndex > -1 ? part.Substring(0, equalIndex) : part;
-                string? rhs = equalIndex > -1 ? part.Substring(equalIndex + 1) : null;
+                string lhs  = equalIndex > -1 ? part.Slice(0, equalIndex).ToString() : part.ToString();
+                string? rhs = equalIndex > -1 ? part.Slice(equalIndex + 1).ToString() : null;
 
                 dictionary[WebUtility.UrlDecode(lhs)] = rhs != null
                     ? WebUtility.UrlDecode(rhs)
@@ -350,7 +375,7 @@ namespace Amazon.Security
 
             foreach (var header in request.Headers
                 .Where(item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
-                .Select(item => item.Key.ToLower())
+                .Select(item => item.Key.ToLowerInvariant())
                 .OrderBy(k => k))
             {
                 sb.Append(';');
@@ -382,11 +407,11 @@ namespace Amazon.Security
 
             foreach (var header in request.Headers
                 .Where(item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
-                .OrderBy(item => item.Key.ToLower()))
+                .OrderBy(item => item.Key.ToLowerInvariant()))
             {
                 sb.Append('\n');
 
-                sb.Append(header.Key.ToLower());
+                sb.Append(header.Key.ToLowerInvariant());
                 sb.Append(':');
                 sb.AppendJoin(';', header.Value);
             }
