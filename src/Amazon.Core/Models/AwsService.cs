@@ -2,7 +2,7 @@
 
 namespace Amazon
 {
-    public sealed class AwsService : IEquatable<AwsService> // readonly struct?
+    public sealed class AwsService : IEquatable<AwsService>
     {
         private AwsService(string name)
         {
@@ -28,17 +28,22 @@ namespace Amazon
         public static readonly AwsService Lambda           = new AwsService("lambda");
         public static readonly AwsService Monitoring       = new AwsService("monitoring"); // Cloudwatch monitoring
         public static readonly AwsService Route53          = new AwsService("route53");
-        public static readonly AwsService Ses              = new AwsService("email");
         public static readonly AwsService RdsDb            = new AwsService("rds-db");
+        public static readonly AwsService Ses              = new AwsService("email");
         public static readonly AwsService Ssm              = new AwsService("ssm"); // Amazon EC2 Systems Manager (SSM)
         public static readonly AwsService S3               = new AwsService("s3");
         public static readonly AwsService Sns              = new AwsService("sns");
         public static readonly AwsService Sts              = new AwsService("sts");
         public static readonly AwsService Sqs              = new AwsService("sqs");
+        public static readonly AwsService Translate        = new AwsService("translate");
+        public static readonly AwsService Waf              = new AwsService("waf");
+
+
+#nullable disable
 
         #region Equality
 
-        public bool Equals(AwsService other) => other != null && (object.ReferenceEquals(this, other) || Name == other.Name);
+        public bool Equals(AwsService other) => other != null && (ReferenceEquals(this, other) || Name == other.Name);
 
         public override bool Equals(object obj) => this.Equals(obj as AwsService);
 
