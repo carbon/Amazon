@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Amazon.Kinesis
 {
-    public class StreamDescription
+    public sealed class StreamDescription
     {
         public bool HasMoreShards { get; set; }
 

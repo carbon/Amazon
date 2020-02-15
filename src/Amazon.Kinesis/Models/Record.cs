@@ -4,7 +4,7 @@ using Carbon.Data.Streams;
 
 namespace Amazon.Kinesis
 {
-    public class Record : KinesisRequest, IRecord
+    public sealed class Record : KinesisRequest, IRecord
     {
         public Record() { }
 

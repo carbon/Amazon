@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Amazon.Scheduling;
+
 using Carbon.Data.Streams;
 
 namespace Amazon.Kinesis
 {
-    using Scheduling;
-
-    public class KinesisStream : IStream
+    public sealed class KinesisStream : IStream
     {
         private readonly KinesisClient client;
 
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
             initialDelay : TimeSpan.FromSeconds(1),
             maxDelay     : TimeSpan.FromSeconds(5),
-            maxRetries   : 3);
+            maxRetries   : 3
+        );
 
         public KinesisStream(string name, KinesisClient client)
         {
@@ -72,8 +73,9 @@ namespace Amazon.Kinesis
         {
             var request = new GetRecordsRequest(iterator.Value, take);
 
-            return retryPolicy.ExecuteAsync<IRecordList>(async ()
-                => await client.GetRecordsAsync(request).ConfigureAwait(false));
+            return retryPolicy.ExecuteAsync<IRecordList>(async () => 
+                await client.GetRecordsAsync(request).ConfigureAwait(false)
+            );
         }
 
         public IDisposable Subscribe(IShard shard, IObserver<IRecord> observer)
