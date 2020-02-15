@@ -2,7 +2,7 @@
 
 namespace Amazon.Kinesis
 {
-    public class PutRecordResult
+    public sealed class PutRecordResult : KinesisResponse
     {
         public string SequenceNumber { get; set; }
 
@@ -12,7 +12,7 @@ namespace Amazon.Kinesis
 
 /*
 {
-  "SequenceNumber": "string",
-  "ShardId": "string"
+  "SequenceNumber" : "string",
+  "ShardId"        : "string"
 }
 */

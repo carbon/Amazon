@@ -1,6 +1,5 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Amazon.Kinesis
 {
@@ -20,6 +19,7 @@ namespace Amazon.Kinesis
 
         public string ShardId { get; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ShardIteratorType ShardIteratorType { get; }
 
         public string? StartingSequenceNumber { get; }

@@ -18,3 +18,4 @@ namespace Amazon.Kinesis
   "ErrorMessage": "Rate exceeded for shard shardId-000000000001 in stream exampleStreamName under account 111111111111."
 }
 */
+

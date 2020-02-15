@@ -7,7 +7,7 @@ using Carbon.Data.Streams;
 
 namespace Amazon.Kinesis
 {
-    public sealed class GetRecordsResponse : IRecordList
+    public sealed class GetRecordsResponse : KinesisResponse, IRecordList
     {
         public string NextShardIterator { get; set; }
 
@@ -15,9 +15,11 @@ namespace Amazon.Kinesis
 
         public int Count => Records?.Count ?? 0;
 
+#nullable enable
+
         #region IDataRecordList
 
-        IIterator IRecordList.NextIterator
+        IIterator? IRecordList.NextIterator
         {
             get
             {

@@ -1,8 +1,10 @@
-﻿using Carbon.Data.Streams;
+﻿#nullable disable
+
+using Carbon.Data.Streams;
 
 namespace Amazon.Kinesis
 {
-	public class GetShardIteratorResponse : IIterator
+	public sealed class GetShardIteratorResponse : KinesisResponse, IIterator
 	{
 		public string ShardIterator { get; set; }
 

@@ -1,18 +1,17 @@
 ﻿#nullable disable
 
+using System.Collections.Generic;
+
 namespace Amazon.Kinesis
 {
-	using System.Collections.Generic;
-
-	public class PutRecordsResult
+	public sealed class PutRecordsResult : KinesisResponse
 	{
 		public int FailedRecordCount { get; set; }
 
 		public List<RecordResult> Records { get; set; }
 	}
 
-
-	public class RecordResult
+	public sealed class RecordResult
 	{
 		public string SequenceNumber { get; set; }
 
@@ -36,15 +35,4 @@ namespace Amazon.Kinesis
         }
     ]
 }
-*/
-
-/*
- {
-	"ErrorCode": "ProvisionedThroughputExceededException",
-    "ErrorMessage": "Rate exceeded for shard shardId-000000000001 in stream exampleStreamName under account 111111111111."
- },
- {
-	"ErrorCode": "InternalFailure",
-    "ErrorMessage": "Internal service failure."
- }
 */

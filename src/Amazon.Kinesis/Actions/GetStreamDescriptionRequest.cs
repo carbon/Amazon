@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 
 namespace Amazon.Kinesis
 {
@@ -17,42 +19,12 @@ namespace Amazon.Kinesis
 
         public string StreamName { get; set; }
     }
-
-    public class DescribeStreamResult
-    {
-        public StreamDescription StreamDescription { get; set; }
-    }
 }
+
 /*
-REQUEST
 {
     "ExclusiveStartShardId": "string",
     "Limit": "number",
     "StreamName": "string"
-}
-
-RESPONSE
-{
-    "StreamDescription": {
-        "HasMoreShards": boolean,
-        "Shards": [
-            {
-                "AdjacentParentShardId": "string",
-                "HashKeyRange": {
-                    "EndingHashKey": "string",
-                    "StartingHashKey": "string"
-                },
-                "ParentShardId": "string",
-                "SequenceNumberRange": {
-                    "EndingSequenceNumber": "string",
-                    "StartingSequenceNumber": "string"
-                },
-                "ShardId": "string"
-            }
-        ],
-        "StreamARN": "string",
-        "StreamName": "string",
-        "StreamStatus": "string"
-    }
 }
 */

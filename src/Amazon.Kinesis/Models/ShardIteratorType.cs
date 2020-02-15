@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Kinesis
 {
-    public enum ShardIteratorType : byte
+    public enum ShardIteratorType
     {
         /// <summary>
         /// Start reading exactly from the position denoted by a specific sequence number.

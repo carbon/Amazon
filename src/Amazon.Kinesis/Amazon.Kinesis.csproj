@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kinesis</AssemblyName>
-    <VersionPrefix>0.14.0</VersionPrefix>
+    <VersionPrefix>0.16.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
@@ -23,5 +23,5 @@
   <ItemGroup>
     <PackageReference Include="Carbon.Data.Streams" Version="0.10.0" />
   </ItemGroup>
-
+  
 </Project>

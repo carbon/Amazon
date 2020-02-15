@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Net.Http;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-
-using Carbon.Json;
 
 namespace Amazon.Kinesis
 {
@@ -23,11 +21,12 @@ namespace Amazon.Kinesis
 
         public Task<KinesisResponse> MergeShardsAsync(MergeShardsRequest request)
         {
-            return SendAsync<KinesisResponse>("MergeShards", request);
+            return SendAsync<MergeShardsRequest, KinesisResponse>("MergeShards", request);
         }
+
         public Task<PutRecordResult> PutRecordAsync(Record record)
         {
-            return SendAsync<PutRecordResult>("PutRecord", record);
+            return SendAsync<Record, PutRecordResult>("PutRecord", record);
         }
 
         public Task<PutRecordsResult> PutRecordsAsync(string streamName, Record[] records)
@@ -36,64 +35,68 @@ namespace Amazon.Kinesis
 
             // TODO: retry failures?
 
-            return SendAsync<PutRecordsResult>("PutRecords", request);
+            return SendAsync<PutRecordsRequest, PutRecordsResult>("PutRecords", request);
         }
 
         public Task<DescribeStreamResult> DescribeStreamAsync(DescribeStreamRequest request)
         {
-            return SendAsync<DescribeStreamResult>("DescribeStream", request);
+            return SendAsync<DescribeStreamRequest, DescribeStreamResult>("DescribeStream", request);
         }
 
         public Task<GetShardIteratorResponse> GetShardIteratorAsync(GetShardIteratorRequest request)
         {
-            return SendAsync<GetShardIteratorResponse>("GetShardIterator", request);
+            return SendAsync<GetShardIteratorRequest, GetShardIteratorResponse>("GetShardIterator", request);
         }
 
         public Task<GetRecordsResponse> GetRecordsAsync(GetRecordsRequest request)
         {
-            return SendAsync<GetRecordsResponse>("GetRecords", request);
+            return SendAsync<GetRecordsRequest, GetRecordsResponse>("GetRecords", request);
         }
 
         #region Helpers
 
-        private async Task<T> SendAsync<T>(string action, KinesisRequest request)
-            where T : notnull, new()
+        private async Task<TResult> SendAsync<TRequest, TResult>(string action, TRequest request)
+            where TRequest : KinesisRequest
+            where TResult  : KinesisResponse
         {
             var message = GetRequestMessage(action, request);
 
-            var responseText = await SendAsync(message).ConfigureAwait(false);
+            string responseText = await SendAsync(message).ConfigureAwait(false);
 
-            return JsonObject.Parse(responseText).As<T>();
+            return JsonSerializer.Deserialize<TResult>(responseText);
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
             var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            var result = JsonObject.Parse(responseText);
-
-            var error = result.As<ErrorResult>();
+            var error = JsonSerializer.Deserialize<ErrorResult>(responseText);
 
             error.Text = responseText;
 
-            return new KinesisException(error) {
+            return new KinesisException(error)
+            {
                 StatusCode = response.StatusCode
             };
         }
 
-        private HttpRequestMessage GetRequestMessage(string action, KinesisRequest request)
+        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { IgnoreNullValues = true };
+
+        private HttpRequestMessage GetRequestMessage<T>(string action, T request)
+            where T : KinesisRequest
         {
-            var json = (JsonObject)new JsonSerializer().Serialize(request,
-                    new SerializationOptions(ingoreNullValues: true));
+            byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, jso);
 
-            var postBody = json.ToString(pretty: false);
-
-            return new HttpRequestMessage(HttpMethod.Post, Endpoint)
-            {
+            return new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Headers = {
                     { "x-amz-target", TargetPrefix  + "." + action }
                 },
-                Content = new StringContent(postBody, Encoding.UTF8, "application/x-amz-json-1.1")
+                Content = new ByteArrayContent(jsonBytes)
+                {
+                    Headers = {
+                        { "Content-Type", "application/x-amz-json-1.1" }
+                    }
+                }
             };
         }
 
