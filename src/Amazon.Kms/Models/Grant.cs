@@ -1,10 +1,8 @@
 ﻿#nullable disable
 
-using System;
-
 namespace Amazon.Kms
 {
-    public class Grant
+    public sealed class Grant
     {
         public string GrantId { get; set; }
 
@@ -20,7 +18,8 @@ namespace Amazon.Kms
 
         public string RetiringPrincipal { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        // UnixTime seconds
+        public double CreationDate { get; set; }
     }
 }
 

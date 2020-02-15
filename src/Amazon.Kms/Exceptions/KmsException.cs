@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace Amazon.Kms
 {
@@ -10,8 +11,8 @@ namespace Amazon.Kms
             Type = type;
 
         }
-        public KmsException(KmsError error)
-            : base(error.Message ?? "KMS ERROR")
+        internal KmsException(KmsError error, HttpStatusCode statusCode)
+            : base(error.Message ?? "KMS ERROR - " + error.Type + "/" + statusCode.ToString())
         {
             Type = error.Type;
         }

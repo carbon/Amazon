@@ -1,14 +1,15 @@
 ﻿#nullable disable
 
-using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Amazon.Kms
 {
     public sealed class KmsError
     {
-        [DataMember(Name = "__type")]
+        [JsonPropertyName("__type")]
         public string Type { get; set; }
-        
+
+        [JsonPropertyName("Message")]
         public string Message { get; set; }
     }
 }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Carbon.Json;
-
 namespace Amazon.Kms
 {
     public sealed class KmsProtector
@@ -26,7 +24,7 @@ namespace Amazon.Kms
         {             
             var request = new EncryptRequest(keyId, plaintext, GetEncryptionContext(aad));
 
-            var result = await client.EncryptAsync(request).ConfigureAwait(false);
+            EncryptResponse result = await client.EncryptAsync(request).ConfigureAwait(false);
 
             return result.CiphertextBlob;
         }
@@ -58,17 +56,22 @@ namespace Amazon.Kms
         {
             await client.RetireGrantAsync(new RetireGrantRequest(
                 keyId   : keyId,
-                grantId : grantId){
-            }).ConfigureAwait(false);
+                grantId : grantId
+            )).ConfigureAwait(false);
         }
         
         #region Helpers
 
-        private static JsonObject? GetEncryptionContext(IEnumerable<KeyValuePair<string, string>>? aad)
+        private static IReadOnlyDictionary<string, string>? GetEncryptionContext(IEnumerable<KeyValuePair<string, string>>? aad)
         {
             if (aad is null) return null;
 
-            var json = new JsonObject();
+            if (aad is IReadOnlyDictionary<string, string> aadRod)
+            {
+                return aadRod;
+            }
+
+            var json = new Dictionary<string, string>();
 
             foreach (var pair in aad)
             {

@@ -1,19 +1,13 @@
-﻿#nullable disable
-
-using System.Runtime.Serialization;
-
-using Carbon.Json;
+﻿using System.Collections.Generic;
 
 namespace Amazon.Kms
 {
-    public class GrantConstraints
+    public sealed class GrantConstraints
     {
         // Match all
-        [DataMember(EmitDefaultValue = false)]
-        public JsonObject EncryptionContextEquals { get; set; }
+        public IReadOnlyDictionary<string, string>? EncryptionContextEquals { get; set; }
 
         // Match any
-        [DataMember(EmitDefaultValue = false)]
-        public JsonObject EncryptionContextSubset { get; set; }
+        public IReadOnlyDictionary<string, string>? EncryptionContextSubset { get; set; }
     }
 }

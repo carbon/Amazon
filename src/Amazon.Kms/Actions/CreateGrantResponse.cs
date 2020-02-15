@@ -1,4 +1,5 @@
 ﻿#nullable disable
+
 namespace Amazon.Kms
 {
     public sealed class CreateGrantResponse : KmsResponse

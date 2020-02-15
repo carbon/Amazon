@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kms</AssemblyName>
-    <VersionPrefix>0.14.0</VersionPrefix>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <VersionPrefix>0.16.3</VersionPrefix>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     
@@ -15,7 +15,7 @@
     <PackageTags>aws;kms;netstandard</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Amazon.Core\Amazon.Core.csproj" />
   </ItemGroup>

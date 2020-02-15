@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Amazon.Kms
 {
@@ -16,10 +15,8 @@ namespace Amazon.Kms
             GrantId = grantId ?? throw new ArgumentNullException(nameof(grantId));
         }
 
-        [DataMember(EmitDefaultValue = false)]
         public string? GrantId { get; }
 
-        [DataMember(EmitDefaultValue = false)]
         public string? GrantToken { get; }
 
         public string? KeyId { get; }

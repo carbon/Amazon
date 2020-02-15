@@ -1,21 +1,17 @@
-﻿#nullable disable
-
-using System.Runtime.Serialization;
-
-namespace Amazon.Kms
+﻿namespace Amazon.Kms
 {
     public sealed class CreateGrantRequest : KmsRequest
     {
-        [DataMember(EmitDefaultValue = false)]
-        public GrantConstraints Constraints { get; set; }
+        public GrantConstraints? Constraints { get; set; }
 
         /// <summary>
         /// There may a slight delay for a grant created in AWS KMS to take effect throughout a region.
         /// If you need to mitigate this delay, a grant token is a type of identifier that is 
         /// designed to let the permissions in the grant take effect immediately.
         /// </summary>
-        [DataMember(EmitDefaultValue = false)]
-        public string[] GrantTokens { get; set; }
+        public string[]? GrantTokens { get; set; }
+
+#nullable disable
 
         /// <summary>
         /// The principal that is given permission to perform the operations that the grant permits.
@@ -24,16 +20,19 @@ namespace Amazon.Kms
 
         public string KeyId { get; set; }
 
+#nullable enable
+
         /// <summary>
         /// A friendly name for identifying the grant. Use this value to prevent unintended creation of duplicate grants when retrying this request.
         /// </summary>
-        [DataMember(EmitDefaultValue = false)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
+#nullable disable
         public string[] Operations { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public string RetiringPrincipal { get; set; }
+#nullable enable
+
+        public string? RetiringPrincipal { get; set; }
     }
 }
 

@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Kms
 {
-    public class CreateAliasResponse : KmsResponse { }
+    public sealed class CreateAliasResponse : KmsResponse { }
 
 }
 

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Runtime.Serialization;
-
-using Carbon.Json;
+using System.Collections.Generic;
 
 namespace Amazon.Kms
 {
@@ -10,7 +8,7 @@ namespace Amazon.Kms
         public EncryptRequest(
             string keyId,
             byte[] plaintext, 
-            JsonObject? context = null, 
+            IReadOnlyDictionary<string, string>? context = null, 
             string[]? grantTokens = null)
         {
             if (keyId is null)
@@ -52,10 +50,8 @@ namespace Amazon.Kms
         /// and the ciphertext has not been tampered with. 
         /// The encryption context is logged by using CloudTrail.
         /// </summary>
-        [DataMember(EmitDefaultValue = false)]
-        public JsonObject? EncryptionContext { get; }
+        public IReadOnlyDictionary<string, string>? EncryptionContext { get; }
 
-        [DataMember(EmitDefaultValue = false)]
         public string[]? GrantTokens { get; }
 
         public string KeyId { get; }

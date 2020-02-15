@@ -1,36 +1,31 @@
-﻿#nullable disable
-
-using System;
-using System.Runtime.Serialization;
-
-using Carbon.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Amazon.Kms
 {
     public sealed class GenerateDataKeyRequest : KmsRequest
     {
+#nullable disable
         public GenerateDataKeyRequest() { }
+#nullable enable
 
-        public GenerateDataKeyRequest(string keyId, KeySpec keySpec, JsonObject encryptionContext)
+        public GenerateDataKeyRequest(string keyId, KeySpec keySpec, IReadOnlyDictionary<string, string>? encryptionContext)
         {
             KeyId             = keyId ?? throw new ArgumentNullException(nameof(keyId));
             KeySpec           = keySpec;
             EncryptionContext = encryptionContext;
         }
 
-        [DataMember(EmitDefaultValue = false)]
-        public JsonObject EncryptionContext { get; set; }
+        public IReadOnlyDictionary<string, string>? EncryptionContext { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public string[] GrantTokens { get; set; }
+        public string[]? GrantTokens { get; set; }
 
-        [DataMember]
         public string KeyId { get; set; }
 
-        [DataMember]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public KeySpec KeySpec { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
         public int? NumberOfBytes { get; set; }
     }
 }

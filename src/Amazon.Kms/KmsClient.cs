@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Net.Http;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-
-using Carbon.Json;
 
 namespace Amazon.Kms
 {
@@ -19,7 +17,7 @@ namespace Amazon.Kms
 
         public Task<CreateAliasResponse> CreateAliasAsync(CreateAliasRequest request)
         {
-            return SendAsync<CreateAliasResponse>("CreateAlias", request);
+            return SendAsync<CreateAliasRequest, CreateAliasResponse>("CreateAlias", request);
         }
 
         #endregion
@@ -28,83 +26,88 @@ namespace Amazon.Kms
 
         public Task<CreateGrantResponse> CreateGrantAsync(CreateGrantRequest request)
         {
-            return SendAsync<CreateGrantResponse>("CreateGrant", request);
+            return SendAsync<CreateGrantRequest, CreateGrantResponse>("CreateGrant", request);
         }
 
         public Task<RetireGrantResponse> RetireGrantAsync(RetireGrantRequest request)
         {
-            return SendAsync<RetireGrantResponse>("RetireGrant", request);
+            return SendAsync<RetireGrantRequest, RetireGrantResponse>("RetireGrant", request);
         }
 
         public Task<ListGrantsResponse> ListGrantsAsync(ListGrantsRequest request)
         {
-            return SendAsync<ListGrantsResponse>("ListGrants", request);
+            return SendAsync<ListGrantsRequest, ListGrantsResponse>("ListGrants", request);
         }
 
         #endregion
 
         public Task<EncryptResponse> EncryptAsync(EncryptRequest request)
         {
-            return SendAsync<EncryptResponse>("Encrypt", request);
+            return SendAsync<EncryptRequest, EncryptResponse>("Encrypt", request);
         }
 
         public Task<DecryptResponse> DecryptAsync(DecryptRequest request)
         {
-            return SendAsync<DecryptResponse>("Decrypt", request);
+            return SendAsync<DecryptRequest, DecryptResponse>("Decrypt", request);
         }
 
         #region Data Keys
 
         public Task<GenerateDataKeyResponse> GenerateDataKeyAsync(GenerateDataKeyRequest request)
         {
-            return SendAsync<GenerateDataKeyResponse>("GenerateDataKey", request);
+            return SendAsync<GenerateDataKeyRequest, GenerateDataKeyResponse>("GenerateDataKey", request);
         }
 
         public Task<GenerateDataKeyResponse> GenerateDataKeyWithoutPlaintextAsync(GenerateDataKeyRequest request)
         {
-            return SendAsync<GenerateDataKeyResponse>("GenerateDataKeyWithoutPlaintext", request);
+            return SendAsync<GenerateDataKeyRequest, GenerateDataKeyResponse>("GenerateDataKeyWithoutPlaintext", request);
         }
 
         #endregion
 
         #region Helpers
 
-        private async Task<T> SendAsync<T>(string action, KmsRequest request)
-            where T : KmsResponse, new()
+        private static readonly JsonSerializerOptions jsoIgnoreNullValues = new JsonSerializerOptions { IgnoreNullValues = true };
+
+        private async Task<TResult> SendAsync<TRequest, TResult>(string action, TRequest request)
+            where TRequest  : KmsRequest
+            where TResult : KmsResponse
         {
-            var jsonText = JsonObject.FromObject(request).ToString(pretty: false);
+            byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, jsoIgnoreNullValues);
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Headers = {
                     { "x-amz-target", "TrentService." + action }
                 },
 
-                Content = new StringContent(jsonText, Encoding.UTF8, "application/x-amz-json-1.1")
+                Content = new ByteArrayContent(jsonBytes) {
+                    Headers = {
+                        { "Content-Type", "application/x-amz-json-1.1" }
+                    }
+                }
             };
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
             if (responseText.Length == 0) return null!;
 
-            return JsonObject.Parse(responseText).As<T>();
+            return JsonSerializer.Deserialize<TResult>(responseText);
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (responseText.Length > 0 && responseText[0] == '{')
             {
-                var error = JsonObject.Parse(responseText).As<KmsError>();
+                var error = JsonSerializer.Deserialize<KmsError>(responseText);
 
-                if (error.Type == "AccessDeniedException")
-                {
-                    return new AccessDeniedException(error.Message);
-                }
-                else
-                {
-                    return new KmsException(error);
-                }
+                return error.Type switch {
+                    "AccessDeniedException"       => new AccessDeniedException(error.Message),
+                    "ServiceUnavailableException" => new ServiceUnavailableException(error.Message),
+                    "KeyUnavailableException"     => new KeyUnavailableException(error.Message),
+                    _                             => new KmsException(error, response.StatusCode)
+                };
             }
             else
             {
