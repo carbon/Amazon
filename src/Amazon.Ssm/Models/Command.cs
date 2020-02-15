@@ -1,22 +1,32 @@
 ﻿using System;
-using Carbon.Json;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+using Amazon.Ssm.Converters;
 
 namespace Amazon.Ssm
 {
     public class Command
     {
+        [StringLength(36)]
         public string CommandId { get; set; }
 
+        [MaxLength(100)]
         public string Comment { get; set; }
 
         public int CompletedCount { get; set; }
+
+        public int DeliveryTimedOutCount { get; set; }
 
         public int ErrorCount { get; set; }
 
         public string DocumentName { get; set; }
 
-        // scientific notation: 1.494825472676E9 
-        public DateTime ExpiresAfter { get; set; }
+        public string DocumentVersion { get; set; }
+
+        [JsonConverter(typeof(TimestampConverter))]
+        public Timestamp ExpiresAfter { get; set; }
 
         public string[] InstanceIds { get; set; }
 
@@ -31,13 +41,15 @@ namespace Amazon.Ssm
 
         public string OutputS3BucketKeyPrefix { get; set; }
 
-        public JsonObject Parameters { get; set; }
+        public Dictionary<string, string[]> Parameters { get; set; }
 
-        public DateTime RequestedDateTime { get; set; }
+        [JsonConverter(typeof(NullableTimestampConverter))]
+        public Timestamp? RequestedDateTime { get; set; }
 
         public string ServiceRole { get; set; }
 
-        public string Status { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public CommandStatus Status { get; set; }
 
         public string StatusDetails { get; set; }
 

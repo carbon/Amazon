@@ -1,8 +1,8 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.Ssm
 {
-    public class ListDocumentsRequest : ISsmRequest
+    public sealed class ListDocumentsRequest : ISsmRequest
     {
         public DocumentFilter[] DocumentFilterList { get; set; }
 
@@ -13,10 +13,10 @@ namespace Amazon.Ssm
 
     public class DocumentFilter
     {
-        [DataMember(Name = "key")]
+        [JsonPropertyName("key")]
         public string Key { get; set; }
 
-        [DataMember(Name = "value")]
+        [JsonPropertyName("value")]
         public string Value { get; set; }
     }
 }

@@ -3,9 +3,8 @@
 using System;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-
-using Carbon.Json;
 
 namespace Amazon.Ssm
 {
@@ -481,23 +480,23 @@ namespace Amazon.Ssm
             string responseText = await SendAsync(GetRequestMessage(Endpoint, request)).ConfigureAwait(false);
 
             return responseText.Length > 0
-                ? JsonObject.Parse(responseText).As<T>()
+                ? JsonSerializer.Deserialize<T>(responseText)
                 : new T();
         }
-        
-        private static readonly SerializationOptions serializationOptions = new SerializationOptions(ingoreNullValues: true);
 
-        private static HttpRequestMessage GetRequestMessage(string endpoint, ISsmRequest request)
+        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { IgnoreNullValues = true };
+
+        private static HttpRequestMessage GetRequestMessage(string endpoint, object request)
         {
-            var actionName = request.GetType().Name.Replace("Request", "");
+            string actionName = request.GetType().Name.Replace("Request", "");
 
-            var json = new JsonSerializer().Serialize(request, serializationOptions);
+            string json = JsonSerializer.Serialize(request, jso);
 
             return new HttpRequestMessage(HttpMethod.Post, endpoint) {
                 Headers = {
                     { "x-amz-target", "AmazonSSM." + actionName },
                 },
-                Content = new StringContent(json.ToString(pretty: false), Encoding.UTF8, "application/x-amz-json-1.1")
+                Content = new StringContent(json, Encoding.UTF8, "application/x-amz-json-1.1")
             };
         }
 

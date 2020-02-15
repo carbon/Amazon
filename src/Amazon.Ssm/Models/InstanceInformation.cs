@@ -1,8 +1,9 @@
-﻿using System;
+﻿using System.Text.Json.Serialization;
+using Amazon.Ssm.Converters;
 
 namespace Amazon.Ssm
 {
-    public class InstanceInformation
+    public sealed class InstanceInformation
     {
         public string ActivationId { get; set; }
 
@@ -18,38 +19,32 @@ namespace Amazon.Ssm
 
         public bool IsLatestVersion { get; set; }
 
-        public DateTime? LastAssociationExecutionDate { get; set; }
+        [JsonConverter(typeof(NullableTimestampConverter))]
+        public Timestamp? LastAssociationExecutionDate { get; set; }
 
-        public DateTime? LastPingDateTime { get; set; }
+        [JsonConverter(typeof(NullableTimestampConverter))]
+        public Timestamp? LastPingDateTime { get; set; }
 
-        public DateTime? LastSuccessfulAssociationExecutionDate { get; set; }
+        [JsonConverter(typeof(NullableTimestampConverter))]
+        public Timestamp? LastSuccessfulAssociationExecutionDate { get; set; }
 
         public string Name { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public PingStatus PingStatus { get; set; }
 
         public string PlatformName { get; set; }
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public PlatformType PlatformType { get; set; }
 
         public string PlatformVersion { get; set; }
 
-        public DateTime? RegistrationDate { get; set; }
+        [JsonConverter(typeof(NullableTimestampConverter))]
+        public Timestamp? RegistrationDate { get; set; }
 
         // ManagedInstance | Document | EC2Instance
-        public string ResourceType { get; set; }
-    }
-
-    public enum PlatformType
-    {
-        Windows,
-        Linux
-    }
-
-    public enum PingStatus
-    {
-        Online,
-        ConnectionLost,
-        Inactive
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public ResourceType ResourceType { get; set; }
     }
 }

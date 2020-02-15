@@ -1,8 +1,8 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.Ssm
 {
-    public class CommandFilter
+    public sealed class CommandFilter
     {
         public CommandFilter() { }
 
@@ -12,10 +12,10 @@ namespace Amazon.Ssm
             Value = value;
         }
 
-        [DataMember(Name = "key")]
+        [JsonPropertyName("key")]
         public string Key { get; set; }
 
-        [DataMember(Name = "value")]
+        [JsonPropertyName("value")]
         public string Value { get; set; }
     }
 }

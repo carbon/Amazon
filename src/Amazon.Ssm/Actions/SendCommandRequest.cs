@@ -1,22 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
-using Carbon.Json;
 
 namespace Amazon.Ssm
 {
-    public class SendCommandRequest : ISsmRequest
+    public sealed class SendCommandRequest : ISsmRequest
     {
         public SendCommandRequest() { }
 
-        public SendCommandRequest(string documentName, string[] instanceIds, JsonObject parameters = null)
+        public SendCommandRequest(string documentName, string[] instanceIds, Dictionary<string, string[]> parameters = null)
         {
             DocumentName = documentName ?? throw new ArgumentNullException(nameof(documentName));
             InstanceIds  = instanceIds  ?? throw new ArgumentNullException(nameof(instanceIds));
             Parameters   = parameters;
         }
 
-        public SendCommandRequest(string documentName, CommandTarget[] targets, JsonObject parameters = null)
+        public SendCommandRequest(string documentName, CommandTarget[] targets, Dictionary<string, string[]> parameters = null)
         {
             DocumentName = documentName ?? throw new ArgumentNullException(nameof(documentName));
             Targets      = targets      ?? throw new ArgumentNullException(nameof(targets));
@@ -32,16 +31,19 @@ namespace Amazon.Ssm
 
         public string[] InstanceIds { get; set; }
 
-        public string MaxConcurrency { get; set; }
+#nullable enable
 
-        public string MaxErrors { get; set; }
+        public string? MaxConcurrency { get; set; }
 
-        public JsonObject Parameters { get; set; }
+        public string? MaxErrors { get; set; }
+
+        public Dictionary<string, string[]>? Parameters { get; set; }
+
+#nullable disable
 
         public CommandTarget[] Targets { get; set; }
     }
 }
-
 
 /*
 {

@@ -1,10 +1,10 @@
-﻿using Carbon.Json;
+﻿using System.Collections.Generic;
 
 namespace Amazon.Ssm
 {
     public class AssociationOverview
     {
-        public JsonObject AssociationStatusAggregatedCount { get; set; }
+        public Dictionary<string, int> AssociationStatusAggregatedCount { get; set; }
 
         public string DetailedStatus { get; set; }
 

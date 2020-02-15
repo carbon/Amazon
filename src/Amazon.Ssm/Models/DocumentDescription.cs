@@ -1,12 +1,13 @@
-﻿using System;
+﻿using System.Text.Json.Serialization;
 
-using Carbon.Json;
+using Amazon.Ssm.Converters;
 
 namespace Amazon.Ssm
 {
-    public class DocumentDescription
+    public sealed class DocumentDescription
     {
-        public DateTime CreateDate { get; set; }
+        [JsonConverter(typeof(TimestampConverter))]
+        public Timestamp CreateDate { get; set; }
 
         public string DefaultVersion { get; set; }
 
@@ -26,7 +27,7 @@ namespace Amazon.Ssm
 
         public string Owner { get; set; }
 
-        public JsonArray Parameters { get; set; }
+        public DocumentParameter[] Parameters { get; set; }
 
         public string[] PlatformTypes { get; set; }
 

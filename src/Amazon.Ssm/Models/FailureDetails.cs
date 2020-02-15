@@ -1,10 +1,10 @@
-﻿using Carbon.Json;
+﻿using System.Collections.Generic;
 
 namespace Amazon.Ssm
 {
-    public class FailureDetails
+    public sealed class FailureDetails
     {
-        public JsonObject Details { get; set; }
+        public Dictionary<string, object> Details { get; set; }
 
         public string FailureStage { get; set; }
 

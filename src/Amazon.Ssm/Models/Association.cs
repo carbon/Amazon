@@ -1,8 +1,10 @@
-﻿using System;
+﻿using System.Text.Json.Serialization;
+
+using Amazon.Ssm.Converters;
 
 namespace Amazon.Ssm
 {
-    public class Association
+    public sealed class Association
     {
         public string AssociationId { get; set; }
 
@@ -10,7 +12,8 @@ namespace Amazon.Ssm
 
         public string InstanceId { get; set; }
 
-        public DateTime? LastExecutionDate { get; set; }
+        [JsonConverter(typeof(NullableTimestampConverter))]
+        public Timestamp? LastExecutionDate { get; set; }
 
         public string Name { get; set; }
 

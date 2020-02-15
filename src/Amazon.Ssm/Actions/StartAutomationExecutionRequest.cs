@@ -1,8 +1,8 @@
-﻿using Carbon.Json;
+﻿using System.Collections.Generic;
 
 namespace Amazon.Ssm
 {
-    public class StartAutomationExecutionRequest
+    public sealed class StartAutomationExecutionRequest
     {
         public string ClientToken { get; set; }
 
@@ -10,6 +10,6 @@ namespace Amazon.Ssm
 
         public string DocumentVersion { get; set; }
 
-        public JsonObject Parameters { get; set; }
+        public Dictionary<string, string> Parameters { get; set; }
     }
 }

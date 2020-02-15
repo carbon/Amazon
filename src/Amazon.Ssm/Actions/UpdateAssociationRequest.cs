@@ -1,8 +1,8 @@
-﻿using Carbon.Json;
+﻿using System.Collections.Generic;
 
 namespace Amazon.Ssm
 {
-    public class UpdateAssociationRequest : ISsmRequest
+    public sealed class UpdateAssociationRequest : ISsmRequest
     {
         public string AssociationId { get; set; }
 
@@ -10,7 +10,7 @@ namespace Amazon.Ssm
 
         public OutputLocation OutputLocation { get; set; }
 
-        public JsonObject Parameters { get; set; }
+        public Dictionary<string, object> Parameters { get; set; }
 
         public string ScheduleExpression { get; set; }
     }

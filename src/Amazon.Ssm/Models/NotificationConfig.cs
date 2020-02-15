@@ -4,7 +4,8 @@
     {
         public string NotificationArn { get; set; }
 
-        public string NotificationEvents { get; set; }
+        // All | InProgress | Success | TimedOut | Cancelled | Failed
+        public string[] NotificationEvents { get; set; }
 
         public string NotificationType { get; set; }
     }

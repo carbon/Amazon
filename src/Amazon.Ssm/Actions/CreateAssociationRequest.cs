@@ -1,4 +1,4 @@
-﻿using Carbon.Json;
+﻿using System.Collections.Generic;
 
 namespace Amazon.Ssm
 {
@@ -10,7 +10,7 @@ namespace Amazon.Ssm
 
         public OutputLocation OutputLocation { get; set; }
 
-        public JsonObject Parameters { get; set; }
+        public Dictionary<string, string> Parameters { get; set; }
 
         public string ScheduleExpression { get; set; }
 
