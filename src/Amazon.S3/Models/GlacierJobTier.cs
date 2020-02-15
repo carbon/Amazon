@@ -1,6 +1,6 @@
 ﻿namespace Amazon.S3
 {
-    public enum GlacierJobTier : byte
+    public enum GlacierJobTier
     {
         Standard  = 0, // $0.01 per GB   + $0.05 per 1,000 requests  [3-5 hours]
         Expedited = 1, // $0.03 per GP   + $10.00 per 1000 requests  [1-5 minutes]

@@ -1,6 +1,6 @@
 ﻿namespace Amazon.S3
 {
-    public enum ReplicationStatus : byte
+    public enum ReplicationStatus
     {
         None      = 0,
         Pending   = 1,

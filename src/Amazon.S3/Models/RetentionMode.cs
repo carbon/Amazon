@@ -1,6 +1,6 @@
 ﻿namespace Amazon.S3
 {
-    public enum RetentionMode : byte
+    public enum RetentionMode
     {
         Compliance = 1,
         Goverance = 2
