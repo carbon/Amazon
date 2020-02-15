@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-
-using Carbon.Json;
 
 namespace Amazon.Kinesis.Firehose
 {
@@ -22,46 +21,46 @@ namespace Amazon.Kinesis.Firehose
 
         public Task<CreateDeliveryStreamResult> CreateDeliveryStreamAsync(CreateDeliveryStreamRequest request)
         {
-            return SendAsync<CreateDeliveryStreamResult>("CreateDeliveryStream", request);
+            return SendAsync<CreateDeliveryStreamRequest, CreateDeliveryStreamResult>("CreateDeliveryStream", request);
         }
 
         public Task<DeleteDeliveryStreamResult> DeleteDeliveryStreamAsync(DeleteDeliveryStreamRequest request)
         {
-            return SendAsync<DeleteDeliveryStreamResult>("PutRecordBatch", request);
+            return SendAsync<DeleteDeliveryStreamRequest, DeleteDeliveryStreamResult>("PutRecordBatch", request);
         }
 
         public Task<DescribeDeliveryStreamResult> DescribeDeliveryStreamAsync(DescribeDeliveryStreamRequest request)
         {
-            return SendAsync<DescribeDeliveryStreamResult>("DescribeDeliveryStream", request);
+            return SendAsync<DescribeDeliveryStreamRequest, DescribeDeliveryStreamResult>("DescribeDeliveryStream", request);
         }
 
         public Task<ListDeliveryStreamsRequest> ListDeliveryStreamsAsync(ListDeliveryStreamsRequest request)
         {
-            return SendAsync<ListDeliveryStreamsRequest>("ListDeliveryStreams", request);
+            return SendAsync<ListDeliveryStreamsRequest, ListDeliveryStreamsRequest>("ListDeliveryStreams", request);
         }
 
         public Task<PutRecordResult> PutRecordAsync(PutRecordRequest request)
         {
-            return SendAsync<PutRecordResult>("PutRecord", request);
+            return SendAsync<PutRecordRequest, PutRecordResult>("PutRecord", request);
         }
 
         public Task<PutRecordBatchResult> PutRecordBatchAsync(PutRecordBatchRequest request)
         {
-            return SendAsync<PutRecordBatchResult>("PutRecordBatch", request);
+            return SendAsync<PutRecordBatchRequest, PutRecordBatchResult>("PutRecordBatch", request);
         }
 
         // public void UpdateDestinationAsync(UpdateDestinationRequest request) { }
 
         #region Helpers
 
-        private async Task<T> SendAsync<T>(string action, object request)
-            where T : new()
+        private async Task<TResult> SendAsync<TRequest, TResult>(string action, TRequest request)
+            where TResult : notnull, new()
         {
-            var httpRequest = GetRequestMessage(action, request);
+            var httpRequest = GetRequestMessage<TRequest>(action, request);
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            return JsonObject.Parse(responseText).As<T>();
+            return JsonSerializer.Deserialize<TResult>(responseText);
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
@@ -73,20 +72,18 @@ namespace Amazon.Kinesis.Firehose
             throw new Exception(responseText);
         }
 
-        private static readonly SerializationOptions serializationOptions = new SerializationOptions(ingoreNullValues: true);
+        private static readonly JsonSerializerOptions serializationOptions = new JsonSerializerOptions { IgnoreNullValues = true };
 
-        private HttpRequestMessage GetRequestMessage(string action, object request)
+        private HttpRequestMessage GetRequestMessage<T>(string action, T request)
         {
-            var json = (JsonObject)new JsonSerializer().Serialize(request, serializationOptions);
-
-            var postBody = json.ToString(pretty: false); // ToUtf8String 
+            var json = JsonSerializer.Serialize(request, serializationOptions);
 
             return new HttpRequestMessage(HttpMethod.Post, Endpoint)
             {
                 Headers = {
                     { "x-amz-target", TargetPrefix  + "." + action }
                 },
-                Content = new StringContent(postBody, Encoding.UTF8, "application/x-amz-json-1.1")
+                Content = new StringContent(json, Encoding.UTF8, "application/x-amz-json-1.1")
             };
         }
 
