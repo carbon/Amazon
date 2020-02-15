@@ -1,11 +1,8 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-
-using Carbon.Json;
 
 namespace Amazon.CodeBuild
 {
@@ -96,33 +93,27 @@ namespace Amazon.CodeBuild
 
             try
             {
-                return JsonObject.Parse(responseText).As<T>();
+                return JsonSerializer.Deserialize<T>(responseText, jso);
             }
-            catch
+            catch(Exception ex)
             {
-                throw new Exception("error deserializing: " + responseText);
+                throw new Exception("Dserialize error for " + responseText, ex);
             }
         }
 
-        // TODO: Fix Carbon.Json serializationOptions constructor
-        private static readonly SerializationOptions serializationOptions = new SerializationOptions(ingoreNullValues: true)
-        {
-            PropertyNameTransformer = CamelCase
+        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions {
+            IgnoreNullValues = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
-        private static string CamelCase(string text)
-        {
-            return char.ToLowerInvariant(text[0]) + text.Substring(1);
-        }
-
-        public static HttpRequestMessage GetRequestMessage(string endpoint, ICodeBuildRequest request)
+        public static HttpRequestMessage GetRequestMessage(string endpoint, object request)
         {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
 
             var actionName = request.GetType().Name.Replace("Request", string.Empty);
 
-            var json = new JsonSerializer().Serialize(request, serializationOptions);
+            byte[] json = JsonSerializer.SerializeToUtf8Bytes(request, jso);
 
             // 2016-10-06
             // X-Amz-Target: CodeBuild_20161006.StopBuild
@@ -132,13 +123,17 @@ namespace Amazon.CodeBuild
                 Headers = {
                     { "x-amz-target", "CodeBuild_20161006." + actionName },
                 },
-                Content = new StringContent(json.ToString(pretty: false), Encoding.UTF8, "application/x-amz-json-1.1")
+                Content = new ByteArrayContent(json) {
+                    Headers = {
+                        { "Content-Type", "application/x-amz-json-1.1; charset=utf-8" }
+                    }
+                }
             };
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            var responseText = await response.Content.ReadAsStringAsync();
+            string responseText = await response.Content.ReadAsStringAsync();
 
             throw new Exception(response.StatusCode + "/" + responseText);
         }

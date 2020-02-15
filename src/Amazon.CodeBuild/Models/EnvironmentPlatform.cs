@@ -1,6 +1,8 @@
-﻿namespace Amazon.CodeBuild
+﻿#nullable disable
+
+namespace Amazon.CodeBuild
 {
-    public class EnvironmentPlatform
+    public sealed class EnvironmentPlatform
     {
         /// <summary>
         /// The list of programming languages that are available for the specified platform.

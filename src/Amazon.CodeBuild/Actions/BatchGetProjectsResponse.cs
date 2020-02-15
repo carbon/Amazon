@@ -1,6 +1,8 @@
-﻿namespace Amazon.CodeBuild
+﻿#nullable disable
+
+namespace Amazon.CodeBuild
 {
-    public class BatchGetProjectsResponse
+    public sealed class BatchGetProjectsResponse
     {
         public Project[] Projects { get; set; }
     }

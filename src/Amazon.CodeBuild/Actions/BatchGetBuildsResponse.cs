@@ -1,6 +1,8 @@
-﻿namespace Amazon.CodeBuild
+﻿#nullable disable
+
+namespace Amazon.CodeBuild
 {
-    public class BatchGetBuildsResponse
+    public sealed class BatchGetBuildsResponse
     {
         public Build[] Builds { get; set; }
     }

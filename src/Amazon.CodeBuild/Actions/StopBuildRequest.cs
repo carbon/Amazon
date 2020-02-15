@@ -1,10 +1,8 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 
 namespace Amazon.CodeBuild
 {
-    public class StopBuildRequest : ICodeBuildRequest
+    public sealed class StopBuildRequest : ICodeBuildRequest
     {
         public StopBuildRequest(string id)
         {

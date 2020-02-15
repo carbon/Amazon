@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.CodeBuild</AssemblyName>
-    <Version>0.14.0</Version>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.16.0</Version>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
+    <Nullable>enable</Nullable>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
@@ -19,8 +20,8 @@
     <ProjectReference Include="..\Amazon.Core\Amazon.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
   </ItemGroup>
 
 </Project>

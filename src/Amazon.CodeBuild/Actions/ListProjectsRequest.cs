@@ -1,11 +1,13 @@
 ﻿namespace Amazon.CodeBuild
 {
-    public class ListProjectsRequest : ICodeBuildRequest
+    public sealed class ListProjectsRequest : ICodeBuildRequest
     {
-        public string SortBy { get; set; }
+        // NAME | CREATED_TIME | LAST_MODIFIED_TIME
+        public string? SortBy { get; set; }
 
-        public string SortOrder { get; set; }
+        // ASCENDING | DESCENDING
+        public string? SortOrder { get; set; }
 
-        public string NextToken { get; set; }
+        public string? NextToken { get; set; }
     }
 }

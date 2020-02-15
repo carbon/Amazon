@@ -1,4 +1,8 @@
-﻿using System;
+﻿#nullable disable
+
+using System.Text.Json.Serialization;
+
+using Amazon.CodeBuild.Converters;
 
 namespace Amazon.CodeBuild
 {
@@ -8,9 +12,11 @@ namespace Amazon.CodeBuild
 
         public long DurationInSeconds { get; set; }
 
-        public DateTime StartTime { get; set; }
+        [JsonConverter(typeof(TimestampConverter))]
+        public Timestamp StartTime { get; set; }
 
-        public DateTime? EndTime { get; set; }
+        [JsonConverter(typeof(NullableTimestampConverter))]
+        public Timestamp? EndTime { get; set; }
 
         public string PhaseStatus { get; set; }
 

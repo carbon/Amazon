@@ -1,6 +1,8 @@
-﻿namespace Amazon.CodeBuild
+﻿#nullable disable
+
+namespace Amazon.CodeBuild
 {
-    public class ListBuildsResponse
+    public sealed class ListBuildsResponse
     {
         public string[] Ids { get; set; }
 

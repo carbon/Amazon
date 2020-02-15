@@ -1,4 +1,6 @@
-﻿namespace Amazon.CodeBuild
+﻿#nullable disable
+
+namespace Amazon.CodeBuild
 {
     public sealed class CreateProjectRequest : ICodeBuildRequest
     {
