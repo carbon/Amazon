@@ -1,4 +1,8 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
+using System.Text.Json.Serialization;
+using Amazon.CodeBuild.Converters;
 
 namespace Amazon.CodeBuild
 {
@@ -35,9 +39,11 @@ namespace Amazon.CodeBuild
         // Any version identifier for the version of the source code to be built.
         public string SourceVersion { get; set; }
 
-        public DateTime StartTime { get; set; }
+        [JsonConverter(typeof(TimestampConverter))]
+        public Timestamp StartTime { get; set; }
 
-        public DateTime? EndTime { get; set; }
+        [JsonConverter(typeof(NullableTimestampConverter))]
+        public Timestamp? EndTime { get; set; }
 
         public int? TimeoutInMinutes { get; set; }
     }

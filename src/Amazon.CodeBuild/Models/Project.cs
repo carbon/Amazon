@@ -1,4 +1,8 @@
-﻿using System;
+﻿#nullable disable
+
+using System.Text.Json.Serialization;
+
+using Amazon.CodeBuild.Converters;
 
 namespace Amazon.CodeBuild
 {
@@ -16,9 +20,11 @@ namespace Amazon.CodeBuild
 
         public ProjectEnvironment Environment { get; set; }
 
-        public DateTime Created { get; set; }
+        [JsonConverter(typeof(TimestampConverter))]
+        public Timestamp Created { get; set; }
 
-        public DateTime LastModified { get; set; }
+        [JsonConverter(typeof(TimestampConverter))]
+        public Timestamp LastModified { get; set; }
 
         public string ServiceRole { get; set; }
         
