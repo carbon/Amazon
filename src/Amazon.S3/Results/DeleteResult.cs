@@ -25,7 +25,7 @@ namespace Amazon.S3
         }
     }
 
-    public class BatchItem
+    public sealed class BatchItem
     {
         public BatchItem() { }
 
@@ -38,7 +38,7 @@ namespace Amazon.S3
         public string Key { get; set; }
     }
 
-    public class BatchItemError
+    public sealed class BatchItemError
     {
         [XmlElement]
         public string Key { get; set; }

@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace Amazon.S3
 {
     [XmlRoot(Namespace = S3Client.Namespace)]
-    public class CopyObjectResult
+    public sealed class CopyObjectResult
     {
         [XmlElement(DataType = "dateTime")]
         public DateTime LastModified { get; set; }

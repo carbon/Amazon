@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace Amazon.S3
 {
     [XmlRoot("Error")]
-    public class S3Error
+    public sealed class S3Error
     {
         [XmlElement]
         public string Code { get; set; }

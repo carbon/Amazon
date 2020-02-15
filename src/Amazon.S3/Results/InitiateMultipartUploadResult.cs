@@ -7,7 +7,7 @@ using Carbon.Storage;
 namespace Amazon.S3
 {
     [XmlRoot(Namespace = S3Client.Namespace)]
-    public class InitiateMultipartUploadResult : IUpload
+    public sealed class InitiateMultipartUploadResult : IUpload
     {
         [XmlElement]
         public string Bucket { get; set; }

@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace Amazon.S3
 {
     [XmlRoot(Namespace = S3Client.Namespace)]
-    public class CompleteMultipartUploadResult
+    public sealed class CompleteMultipartUploadResult
     {
         [XmlElement]
         public string Location { get; set; }

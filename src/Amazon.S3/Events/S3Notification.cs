@@ -2,7 +2,7 @@
 
 namespace Amazon.S3.Events
 {
-    public class S3Notification
+    public sealed class S3Notification
     {
         public S3Event[] Records { get; set; }
     }

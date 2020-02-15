@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace Amazon.S3
 {
     [XmlRoot("ListBucketResult", Namespace = S3Client.Namespace)]
-    public class ListBucketResult
+    public sealed class ListBucketResult
     {
         [XmlElement("Name")]
         public string Name { get; set; }
@@ -28,7 +28,7 @@ namespace Amazon.S3
         [XmlElement("Contents")]
         public ListBucketObject[] Items { get; set; }
 
-        public static ListBucketResult ParseXml(string xmlText)
+		public static ListBucketResult ParseXml(string xmlText)
         {
             return ResponseHelper<ListBucketResult>.ParseXml(xmlText);
         }
