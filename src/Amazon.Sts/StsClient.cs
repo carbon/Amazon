@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 
 using Amazon.Sts.Exceptions;
 
-using Carbon.Json;
-
 namespace Amazon.Sts
 {
     public sealed class StsClient : AwsClient
@@ -52,11 +50,11 @@ namespace Amazon.Sts
 
             await SignAsync(httpRequest);
 
-            var headers = new JsonObject();
+            var headers = new Dictionary<string, string>();
 
             foreach (var header in httpRequest.Headers)
             {
-                if (header.Key.StartsWith("x-amz-") || header.Key == "Authorization")
+                if (header.Key.StartsWith("x-amz-", StringComparison.Ordinal) || header.Key == "Authorization")
                 {
                     headers.Add(header.Key, string.Join(";", header.Value));
                 }

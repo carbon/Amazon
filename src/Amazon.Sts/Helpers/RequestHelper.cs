@@ -1,50 +1,22 @@
 ﻿using System.Collections.Generic;
-
-using Carbon.Json;
+using System.Text.Json;
 
 namespace Amazon.Sts
 {
     internal static class StsRequestHelper
     {
-        public static Dictionary<string, string> ToParams(IStsRequest instance)
+        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { IgnoreNullValues = true };
+
+        public static Dictionary<string, string> ToParams<T>(T instance)
+           where T : IStsRequest
         {
-            var obj = JsonObject.FromObject(instance);
+            using var doc = JsonDocument.Parse(JsonSerializer.SerializeToUtf8Bytes(instance, jso));
 
-            var parameters = new Dictionary<string, string>(obj.Keys.Count);
+            var parameters = new Dictionary<string, string>();
 
-            foreach (var member in obj)
+            foreach (var member in doc.RootElement.EnumerateObject())
             {
-                if (member.Value is XNull) continue;
-
-                /*
-                if (member.Value is JsonArray array)
-                {
-                    for (var i = 0; i < array.Count; i++)
-                    {
-                        var prefix = member.Key + ".member." + (i + 1);
-
-                        var element = array[i];
-
-                        if (element is JsonObject obj)
-                        {
-                            AddParameters(parameters, prefix, obj);
-                        }
-                        else
-                        {
-                            parameters.Add(prefix, element.ToString());
-                        }
-                    }
-                }
-                */
-                /*
-                else if (member.Value is JsonObject obj)
-                {
-                    AddParameters(parameters, member.Key, obj);
-                }
-                */
-                // ELSE
-                parameters.Add(member.Key, member.Value.ToString());
-                
+                parameters.Add(member.Name, member.Value.ToString());
             }
 
             return parameters;

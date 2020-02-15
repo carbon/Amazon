@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sts
 {
-    public class AssumeRoleWithWebIdentityResponse : IStsResponse
+    public sealed class AssumeRoleWithWebIdentityResponse : IStsResponse
     {
         [XmlElement]
         public AssumeRoleWithWebIdentityResult AssumeRoleWithWebIdentityResult { get; set; }

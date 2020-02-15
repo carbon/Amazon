@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Runtime.Serialization;
-
-using Carbon.Json;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Amazon.Sts
 {
@@ -11,22 +10,23 @@ namespace Amazon.Sts
         public CallerIdentityVerificationParameters() { }
 #nullable enable
 
-        public CallerIdentityVerificationParameters(string url, JsonObject headers, string body)
+        public CallerIdentityVerificationParameters(string url, IReadOnlyDictionary<string, string> headers, string body)
         {
             Url     = url     ?? throw new ArgumentNullException(nameof(url));
             Headers = headers ?? throw new ArgumentNullException(nameof(headers));
             Body    = body    ?? throw new ArgumentNullException(nameof(body));
         }
 
-        [DataMember(Name = "url", Order = 1)]
+        [JsonPropertyName("url")]
         public string Url { get; set; }
 
-        // includes the Authentication Header    
-        [DataMember(Name = "headers", Order = 2)]
-        public JsonObject Headers { get; set; }
+        // includes the Authentication Header
+
+        [JsonPropertyName("headers")]
+        public IReadOnlyDictionary<string, string> Headers { get; set; }
 
         // Always POST
-        [DataMember(Name = "body", Order = 3)]
+        [JsonPropertyName("body")]
         public string Body { get; set; }
     }
 }

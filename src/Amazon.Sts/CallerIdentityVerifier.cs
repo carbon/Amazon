@@ -7,9 +7,9 @@ using Amazon.Sts.Exceptions;
 
 namespace Amazon.Sts
 {
-    public class CallerIdentityVerifier 
+    public sealed class CallerIdentityVerifier 
     {
-        protected readonly HttpClient httpClient = new HttpClient {
+        private readonly HttpClient httpClient = new HttpClient {
             DefaultRequestHeaders = {
                 { "User-Agent", "Carbon/2.1" }
             }
@@ -26,7 +26,7 @@ namespace Amazon.Sts
 
             // https://sts.us-east-1.amazonaws.com/
 
-            if (!(uri.Host.StartsWith("sts.") && uri.Host.EndsWith(".amazonaws.com")))
+            if (!(uri.Host.StartsWith("sts.", StringComparison.Ordinal) && uri.Host.EndsWith(".amazonaws.com", StringComparison.Ordinal)))
             {
                 throw new Exception("Must be an STS endpoint: was:" + token.Url);
             }
@@ -37,12 +37,10 @@ namespace Amazon.Sts
 
             foreach (var header in token.Headers)
             {
-                request.Headers.TryAddWithoutValidation(header.Key, header.Value.ToString());
+                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
 
             request.Headers.Host = uri.Host;
-
-            // throw new Exception(JsonObject.FromObject(request).ToString(true));
 
             // Our message should be signed
 
@@ -57,6 +55,5 @@ namespace Amazon.Sts
 
             return StsSerializer<GetCallerIdentityResponse>.ParseXml(responseText).GetCallerIdentityResult;
         }
-      
     }
 }
