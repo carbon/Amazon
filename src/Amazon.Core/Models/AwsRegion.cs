@@ -48,9 +48,10 @@ namespace Amazon
         public static readonly AwsRegion USEast2      = new AwsRegion("us-east-2");      // | US            | Ohio          | 2016-10-17
         public static readonly AwsRegion CACentral1   = new AwsRegion("ca-central-1");   // | Canada        | Central       | 2016-12-08
         public static readonly AwsRegion EUWest2      = new AwsRegion("eu-west-2");      // | EU            | London        | 2016-12-13
-        public static readonly AwsRegion MESouth1     = new AwsRegion("me-south-1");     // | ME            | Bahrain       | ?
+        public static readonly AwsRegion EUWest3      = new AwsRegion("eu-west-3");      // | EU            | Paris         | 2017-12-18
+        public static readonly AwsRegion MESouth1     = new AwsRegion("me-south-1");     // | ME            | Bahrain       | 2019-07-29
 
-        // Soon: Paris (France), Ningxia (China)
+        // Soon:  Ningxia (China)
 
         public static AwsRegion[] All = new AwsRegion[] {
             USEast1,
@@ -69,6 +70,7 @@ namespace Amazon
             USEast2,      
             CACentral1,   
             EUWest2,
+            EUWest3,
             MESouth1
         };
         
@@ -87,6 +89,7 @@ namespace Amazon
             "eu-central-1"   => EUCentral1,
             "eu-west-1"      => EUWest1,
             "eu-west-2"      => EUWest2,
+            "eu-west-3"      => EUWest3,
             "sa-east-1"      => SAEast1,
             "cn-north-1"     => CNNorth1,
             "us-gov-west-1"  => USGovWest1,
@@ -101,7 +104,7 @@ namespace Amazon
         {
             if (current is null)
             {
-                var availabilityZone = await InstanceMetadata.GetAvailabilityZoneAsync().ConfigureAwait(false);
+                string availabilityZone = await InstanceMetadataService.Instance.GetAvailabilityZoneAsync().ConfigureAwait(false);
 
                 current = FromAvailabilityZone(availabilityZone);
             }
