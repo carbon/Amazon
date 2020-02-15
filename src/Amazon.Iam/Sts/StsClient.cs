@@ -3,11 +3,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using Amazon.Helpers;
+using Amazon.Sts.Models;
 
 namespace Amazon.Sts
 {
-    using Models;
-
     public sealed class StsClient : AwsClient
     {
         public const string Version = "2011-06-15";
@@ -30,7 +29,7 @@ namespace Amazon.Sts
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
-            var responseText = await SendAsync(httpRequest);
+            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
             return GetSessionTokenResponse.Parse(responseText);
         }

@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
-using System.Threading.Tasks;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Amazon.Iam
 {
@@ -13,27 +13,27 @@ namespace Amazon.Iam
             : base(AwsService.Iam, AwsRegion.USEast1, credential)
         { }
 
-        public async Task CreateAccessKey(string userName)
+        public async Task CreateAccessKeyAsync(string userName)
         {
             var parameters = new AwsRequest {
                 { "Action", "CreateAccessKey" },
                 { "UserName", userName }
             };
 
-            await SendAsync(parameters);
+            await SendAsync(parameters).ConfigureAwait(false);
         }
 
-        public async Task CreateUser(string userName)
+        public async Task CreateUserAsync(string userName)
         {
             var parameters = new AwsRequest {
                 { "Action", "CreateUser" },
                 { "UserName", userName }
             };
 
-            await SendAsync(parameters);
+            await SendAsync(parameters).ConfigureAwait(false);
         }
 
-        public async Task PutUserPolicy(string userName, string policyName, string policyDocument)
+        public async Task PutUserPolicyAsync(string userName, string policyName, string policyDocument)
         {
             var parameters = new AwsRequest {
                 { "Action", "PutUserPolicy" },
@@ -42,7 +42,7 @@ namespace Amazon.Iam
                 { "PolicyDocument", policyDocument }
             };
 
-            await SendAsync(parameters);
+            await SendAsync(parameters).ConfigureAwait(false);
         }
 
         #region Helpers
@@ -51,8 +51,7 @@ namespace Amazon.Iam
         {
             request.Add("Version", Version);
 
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-            {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Content = new FormUrlEncodedContent(request.Parameters)
             };
 
