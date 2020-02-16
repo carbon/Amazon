@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,11 +10,12 @@ namespace Amazon
 {
     public abstract class AwsClient
     {
-        protected readonly HttpClient httpClient = new HttpClient(
-            new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip }
-        ) {
+        protected readonly HttpClient httpClient = new HttpClient(new HttpClientHandler { 
+            AutomaticDecompression = DecompressionMethods.GZip 
+        })
+        {
             DefaultRequestHeaders = {
-                { "User-Agent", "Carbon/2.2" }
+                { "User-Agent", "Carbon/2.3" }
             }
         };
         
@@ -64,14 +66,14 @@ namespace Amazon
                 request.Headers.Add("x-amz-security-token", credential.SecurityToken);
             }
 
-            request.Headers.Add("x-amz-date", date.UtcDateTime.ToString("yyyyMMddTHHmmssZ"));
+            request.Headers.Add("x-amz-date", date.UtcDateTime.ToString("yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture));
 
             SignerV4.Default.Sign(credential, scope: GetCredentialScope(request), request: request);
         }
 
         protected virtual async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             return new Exception(responseText);
         }
