@@ -12,10 +12,12 @@ namespace Amazon.Ec2
             Tags = tags;
         }
 
-        // instance and volume.
-        public string ResourceType { get; set; }
+
 
         [DataMember(Name = "Tag")]
         public Tag[] Tags { get; set; }
+
+        // instance and volume.
+        public string ResourceType { get; set; }
     }
 }

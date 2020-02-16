@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class RunInstancesRequest : IEc2Request
+    public sealed class RunInstancesRequest : IEc2Request
     {
         public RunInstancesRequest() { }
 

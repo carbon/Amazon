@@ -4,9 +4,7 @@ namespace Amazon.Ec2
 {
     public sealed class DescribeInstancesRequest : DescribeRequest, IEc2Request
     {
-        public DescribeInstancesRequest() { }
-
-        public DescribeInstancesRequest(string[] instanceIds)
+        public DescribeInstancesRequest(params string[] instanceIds)
         {
             InstanceIds = instanceIds;
         }

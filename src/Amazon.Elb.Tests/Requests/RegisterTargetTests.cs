@@ -4,10 +4,11 @@ using Xunit;
 
 namespace Amazon.Elb.Tests
 {
+
     public class RegisterTargetTests
     {
         [Fact]
-        public void SerializeRequest()
+        public void Serialize()
         {
             var registerTargets = new RegisterTargetsRequest {
                 TargetGroupArn = "arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067",
@@ -19,11 +20,29 @@ namespace Amazon.Elb.Tests
 
             var p = RequestHelper.ToParams(registerTargets);
 
-            var data = string.Join("&", p.Select(a => a.Key + "=" + a.Value));
+            var data = string.Join('&', p.Select(a => a.Key + "=" + a.Value));
 
             Assert.Equal("Action=RegisterTargets&TargetGroupArn=arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067&Targets.member.1.Id=i-80c8dd94&Targets.member.1.Port=1&Targets.member.2.Id=i-ceddcd4d", data);
 
             // throw new System.Exception(data);
+        }
+
+        [Fact]
+        public void SerializeRequest_FromConstructor()
+        {
+            var registerTargets = new RegisterTargetsRequest(
+                targetGroupArn : "arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067",
+                targets         : new[] {
+                    new TargetDescription("i-80c8dd94", 1),
+                    new TargetDescription("i-ceddcd4d")
+                }
+            );
+
+            var p = RequestHelper.ToParams(registerTargets);
+
+            var data = string.Join('&', p.Select(a => a.Key + "=" + a.Value));
+
+            Assert.Equal("Action=RegisterTargets&TargetGroupArn=arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067&Targets.member.1.Id=i-80c8dd94&Targets.member.1.Port=1&Targets.member.2.Id=i-ceddcd4d", data);
         }
     }
 }

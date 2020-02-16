@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Amazon.Helpers
 {
-    public static class StringBuilderExtensions
+    internal static class StringBuilderExtensions
     {
         public static StringBuilder AppendJoin(this StringBuilder sb, char separator, params string[] values)
         {
@@ -22,7 +22,7 @@ namespace Amazon.Helpers
 
             return sb;
         }
-
+      
         public static StringBuilder AppendJoin(this StringBuilder sb, char separator, IEnumerable<string> values)
         {
             int i = 0;

@@ -4,9 +4,7 @@ namespace Amazon.Ec2
 {
     public sealed class DescribeVpcsRequest : DescribeRequest, IEc2Request
     {
-        public DescribeVpcsRequest() { }
-
-        public DescribeVpcsRequest(string[] vpcIds)
+        public DescribeVpcsRequest(params string[] vpcIds)
         {
             VpcIds = vpcIds;
         }

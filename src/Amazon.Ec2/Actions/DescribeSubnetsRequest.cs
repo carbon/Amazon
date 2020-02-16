@@ -4,9 +4,7 @@ namespace Amazon.Ec2
 {
     public sealed class DescribeSubnetsRequest : DescribeRequest, IEc2Request
     {
-        public DescribeSubnetsRequest() { }
-
-        public DescribeSubnetsRequest(string[] subnetIds)
+        public DescribeSubnetsRequest(params string[] subnetIds)
         {
             SubnetIds = subnetIds;
         }

@@ -4,23 +4,19 @@ using System.Runtime.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class StopInstancesRequest : IEc2Request
+    public sealed class StopInstancesRequest : IEc2Request
     {
-        public StopInstancesRequest() { }
-
         public StopInstancesRequest(params string[] instanceIds)
         {
             InstanceIds = instanceIds ?? throw new ArgumentNullException(nameof(instanceIds));
         }
 
-        [DataMember]
         public bool? DryRun { get; set; }
 
-        [DataMember]
         public bool? Force { get; set; }
 
         [DataMember(Name = "InstanceId")]
-        public string[] InstanceIds { get; set; }
+        public string[] InstanceIds { get; }
 
         public Dictionary<string, string> ToParams()
         {

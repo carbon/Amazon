@@ -5,7 +5,7 @@ namespace Amazon.Ec2.Tests
     public class DescribeSecurityGroupsTest
     {
         [Fact]
-        public void X()
+        public void CanParse()
         {
             var text =
 @"<DescribeSecurityGroupsResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
@@ -60,7 +60,7 @@ namespace Amazon.Ec2.Tests
             var response = Ec2ResponseHelper<DescribeSecurityGroupsResponse>.ParseXml(text);
 
 
-            Assert.Equal(1, response.SecurityGroups.Length);
+            Assert.Single(response.SecurityGroups);
 
             var group = response.SecurityGroups[0];
 
@@ -69,8 +69,8 @@ namespace Amazon.Ec2.Tests
             Assert.Equal("SSHAccess", group.GroupName);
             Assert.Equal("Security group for SSH access", group.GroupDescription);
 
-            Assert.Equal(1, group.IpPermissions.Length);
-            Assert.Equal(1, group.IpPermissionsEgress.Length);
+            Assert.Single(group.IpPermissions);
+            Assert.Single(group.IpPermissionsEgress);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-
+﻿
 using Xunit;
 
 namespace Amazon.Ec2.Tests
@@ -7,7 +6,7 @@ namespace Amazon.Ec2.Tests
     public class DescribeVpcsResponseTests
     {
         [Fact]
-        public void X()
+        public void CanParse()
         {
             var text =
 
@@ -37,7 +36,7 @@ namespace Amazon.Ec2.Tests
 
             var response = Ec2ResponseHelper<DescribeVpcsResponse>.ParseXml(text);
 
-            Assert.Equal(1, response.Vpcs.Length);
+            Assert.Single(response.Vpcs);
 
             var vpc = response.Vpcs[0];
 
@@ -49,7 +48,6 @@ namespace Amazon.Ec2.Tests
             Assert.False(vpc.IsDefault);
 
             Assert.Equal("2001:db8:1234:1a00::/56", vpc.Ipv6CidrBlockAssociations[0].Ipv6CidrBlock);
-
         }
     }
 }

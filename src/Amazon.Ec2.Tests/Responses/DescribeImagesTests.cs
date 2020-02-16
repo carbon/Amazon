@@ -49,7 +49,7 @@ namespace Amazon.Ec2.Tests
 
             var response = Ec2ResponseHelper<DescribeImagesResponse>.ParseXml(text);
 
-            Assert.Equal(1, response.Images.Length);
+            Assert.Single(response.Images);
 
             var image = response.Images[0];
 

@@ -41,7 +41,7 @@ namespace Amazon.Ec2.Tests
             var response = Ec2ResponseHelper<DescribeVolumesResponse>.ParseXml(text);
 
 
-            Assert.Equal(1, response.Volumes.Length);
+            Assert.Single(response.Volumes);
 
             var volume = response.Volumes[0];
             var date = DateTime.Parse("2016-01-05T03:15:30Z", null, DateTimeStyles.AdjustToUniversal);
@@ -58,7 +58,7 @@ namespace Amazon.Ec2.Tests
             Assert.Equal("i-1234567890abcdef0", a1.InstanceId);
             Assert.Equal(date, a1.AttachTime);
 
-            Assert.Equal(1, volume.Attachments.Length);
+            Assert.Single(volume.Attachments);
         }
     }
 }

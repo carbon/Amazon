@@ -126,7 +126,7 @@ namespace Amazon.Ec2.Tests
 
             var response = DescribeInstancesResponse.Parse(text);
             
-            Assert.Equal(1, response.Instances.Count);
+            Assert.Single(response.Instances);
 
             var instance = response.Instances[0];
 
@@ -136,7 +136,7 @@ namespace Amazon.Ec2.Tests
             Assert.Equal("xen", instance.Hypervisor);
 
 
-            Assert.Equal(1, instance.NetworkInterfaces.Length);
+            Assert.Single(instance.NetworkInterfaces);
             Assert.Equal("eni-551ba033", instance.NetworkInterfaces[0].NetworkInterfaceId);
             Assert.Equal("vpc-11112222", instance.NetworkInterfaces[0].VpcId);
 

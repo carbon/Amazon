@@ -2,7 +2,7 @@
 
 namespace Amazon.Ec2.Models.Tests
 {
-    public class InstanceTypes
+    public class InstanceTypeTests
     {
         [Fact]
         public void A()

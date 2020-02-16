@@ -1,8 +1,6 @@
-﻿#nullable enable
-
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-
-using Carbon.Json;
 
 namespace Amazon.Elb
 {
@@ -12,21 +10,25 @@ namespace Amazon.Elb
         {
             var parameters = new Dictionary<string, string>();
 
-            foreach (var member in JsonObject.FromObject(instance))
+            var model = InstanceModel.Get(instance.GetType());
+
+            foreach (var member in model.Members)
             {
-                if (member.Value is JsonNull) continue;
+                var value = member.GetValue(instance);
 
-                if (member.Value is JsonArray array)
+                if (value is null) continue;
+
+                if (value is IList list)
                 {
-                    for (var i = 0; i < array.Count; i++)
+                    for (int i = 0; i < list.Count; i++)
                     {
-                        var prefix = member.Key + ".member." + (i + 1);
+                        string prefix = member.Name + ".member." + (i + 1);
 
-                        var element = array[i];
+                        var element = list[i];
 
-                        if (element is JsonObject obj)
+                        if (Type.GetTypeCode(element.GetType()) == TypeCode.Object)
                         {
-                            AddParameters(parameters, prefix, obj);
+                            AddParameters(parameters, prefix, element);
                         }
                         else
                         {
@@ -34,36 +36,40 @@ namespace Amazon.Elb
                         }
                     }
                 }
-                else if (member.Value is JsonObject obj)
+                else if (Type.GetTypeCode(value.GetType()) == TypeCode.Object)
                 {
-                    AddParameters(parameters, member.Key, obj);
+                    AddParameters(parameters, member.Name, value);
                 }
                 else
                 {
-                    parameters.Add(member.Key, member.Value.ToString());
+                    parameters.Add(member.Name, value.ToString());
                 }
             }
 
             return parameters;
         }
 
-        private static void AddParameters(Dictionary<string, string> parameters, string prefix, JsonObject instance)
+        private static void AddParameters(Dictionary<string, string> parameters, string prefix, object instance)
         {
-            if (parameters.Count > 100) throw new System.Exception("excedeeded max of 100 parameters");
+            if (parameters.Count > 100) throw new Exception("excedeeded max of 100 parameters");
 
-            foreach (var m in instance)
+            var model = InstanceModel.Get(instance.GetType());
+
+            foreach (var m in model.Members)
             {
-                if (m.Value is JsonNull) continue;
+                var value = m.GetValue(instance);
 
-                string key = prefix + "." + m.Key;
+                if (value is null) continue;
 
-                if (m.Value is JsonObject obj)
+                string key = prefix + "." + m.Name;
+
+                if (Type.GetTypeCode(value.GetType()) == TypeCode.Object)
                 {
-                    AddParameters(parameters, key, obj);
+                    AddParameters(parameters, key, value);
                 }
                 else
                 {
-                    parameters.Add(key, m.Value.ToString());
+                    parameters.Add(key, value.ToString());
                 }
             }
         }

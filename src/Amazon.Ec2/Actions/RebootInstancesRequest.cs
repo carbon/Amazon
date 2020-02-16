@@ -4,20 +4,17 @@ using System.Runtime.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class RebootInstancesRequest : IEc2Request
+    public sealed class RebootInstancesRequest : IEc2Request
     {
-        public RebootInstancesRequest() { }
-
         public RebootInstancesRequest(params string[] instanceIds)
         {
             InstanceIds = instanceIds ?? throw new ArgumentNullException(nameof(instanceIds));
         }
 
-        [DataMember]
         public bool? DryRun { get; set; }
 
         [DataMember(Name = "InstanceId")]
-        public string[] InstanceIds { get; set; }
+        public string[] InstanceIds { get; }
 
         public Dictionary<string, string> ToParams()
         {

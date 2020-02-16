@@ -2,11 +2,9 @@
 
 namespace Amazon.Ec2
 {
-    public class DescribeVolumesRequest : DescribeRequest, IEc2Request
+    public sealed class DescribeVolumesRequest : DescribeRequest, IEc2Request
     {
-        public DescribeVolumesRequest() { }
-
-        public DescribeVolumesRequest(string[] volumeIds)
+        public DescribeVolumesRequest(params string[] volumeIds)
         {
             VolumeIds = volumeIds;
         }
