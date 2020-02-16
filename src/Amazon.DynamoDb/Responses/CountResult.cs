@@ -1,6 +1,6 @@
 ﻿namespace Amazon.DynamoDb
 {
-    public class CountResult
+    public sealed class CountResult
     {
         public CountResult() { }
 

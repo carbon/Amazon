@@ -6,7 +6,7 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class UpdateExpression
+    public sealed class UpdateExpression
     {
         private readonly JsonObject attributeNames;
         private readonly AttributeCollection attributeValues;
@@ -135,9 +135,12 @@ namespace Amazon.DynamoDb
         {
             if (segment is null) return;
 
-            if (sb.Length > 0) sb.AppendLine(); // \n ?
+            if (sb.Length > 0)
+            {
+                sb.AppendLine(); // \n ?
+            }
 
-#if NETCOREAPP2_1
+#if NETSTANDARD2_1
             sb.Append(segment);
 #else
             sb.Append(segment.ToString());

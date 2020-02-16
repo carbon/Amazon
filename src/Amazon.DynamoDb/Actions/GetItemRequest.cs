@@ -6,7 +6,7 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class GetItemRequest
+    public sealed class GetItemRequest
     {
         public GetItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key)
         {

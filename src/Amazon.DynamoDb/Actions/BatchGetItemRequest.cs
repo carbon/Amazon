@@ -5,7 +5,7 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class BatchGetItemRequest
+    public sealed class BatchGetItemRequest
     {
         public BatchGetItemRequest(params TableKeys[] sets)
         {
@@ -29,7 +29,7 @@ namespace Amazon.DynamoDb
         }
     }
 
-    public class TableKeys
+    public sealed class TableKeys
     {
         public TableKeys(string tableName, params IEnumerable<KeyValuePair<string, object>>[] keys)
         {
