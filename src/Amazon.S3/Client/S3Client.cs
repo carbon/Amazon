@@ -47,7 +47,7 @@ namespace Amazon.S3
 
         public async Task<InitiateMultipartUploadResult> InitiateMultipartUploadAsync(InitiateMultipartUploadRequest request)
         {
-            var responseText = await SendAsync(request).ConfigureAwait(false);
+            string responseText = await SendAsync(request).ConfigureAwait(false);
 
             return InitiateMultipartUploadResult.ParseXml(responseText);
         }
@@ -67,22 +67,31 @@ namespace Amazon.S3
         {
             var responseText = await SendAsync(request).ConfigureAwait(false);
 
-            return CompleteMultipartUploadResult.ParseXml(responseText);
+            return ResponseHelper<CompleteMultipartUploadResult>.ParseXml(responseText);
         }
 
         #endregion
 
         public async Task<PutObjectResult> PutObjectAsync(PutObjectRequest request)
         {
-            using (var response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false))
+            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
+
+            string? versionId = null;
+
+            if (response.Headers.TryGetValues("x-amz-version-id", out var xVersionId))
             {
-                return new PutObjectResult(response);
+                versionId = xVersionId.ToString();
             }
+
+            return new PutObjectResult(
+                eTag      : response.Headers.ETag.Tag, 
+                versionId : versionId
+            );
         }
 
         public async Task<CopyObjectResult> CopyObjectAsync(CopyObjectRequest request)
         {
-            var responseText = await SendAsync(request).ConfigureAwait(false);
+            string responseText = await SendAsync(request).ConfigureAwait(false);
 
             return CopyObjectResult.ParseXml(responseText);
         }
@@ -115,19 +124,14 @@ namespace Amazon.S3
         {
             var response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
 
-            return new S3Object(request.ObjectName, response);
+            return new S3Object(request.ObjectName!, response);
         }
 
         public async Task<S3ObjectInfo> GetObjectHeadAsync(ObjectHeadRequest request)
         {
-            using (var response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false))
-            {
-                return new S3ObjectInfo(
-                    bucketName : request.BucketName,
-                    name       : request.ObjectName,
-                    response   : response
-                );
-            }
+            using var response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
+
+            return S3ObjectInfo.FromResponse(request.BucketName, request.ObjectName!, response);
         }
 
         private async Task<HttpResponseMessage> SendAsync2(HttpRequestMessage request, HttpCompletionOption completionOption)

@@ -1,12 +1,14 @@
 using System;
 using System.Net.Http;
-using System.Text;
+
 using Amazon.Security;
 
 namespace Amazon.S3
 {
     public static class S3Helper
     {
+        private const string UnsignedPayload = "UNSIGNED-PAYLOAD";
+
         public static string GetPresignedUrl(GetPresignedUrlRequest request, IAwsCredential credential)
         {
             return GetPresignedUrl(request, credential, DateTime.UtcNow);
@@ -14,25 +16,19 @@ namespace Amazon.S3
 
         public static string GetPresignedUrl(GetPresignedUrlRequest request, IAwsCredential credential, DateTime now)
         {
-            var scope = new CredentialScope(now, request.Region, AwsService.S3);
-
-            var urlBuilder = StringBuilderCache.Aquire()
-                .Append("https://")
-                .Append(request.Host)
-                .Append('/')
-                .Append(request.BucketName)
-                .Append('/')
-                .Append(request.Key);
+            HttpMethod method = request.Method.Equals("GET") ? HttpMethod.Get : new HttpMethod(request.Method);
 
             // TODO: support version querystring
 
-            var message = new HttpRequestMessage(new HttpMethod(request.Method), StringBuilderCache.ExtractAndRelease(urlBuilder));
-
-            SignerV4.Default.Presign(credential, scope, now, request.ExpiresIn, message, "UNSIGNED-PAYLOAD");
-
-            string signedUrl = message.RequestUri.ToString();
-
-            return signedUrl;
+            return SignerV4.GetPresignedUrl(
+                credential  : credential, 
+                scope       : new CredentialScope(now, request.Region, AwsService.S3),
+                date        : now,
+                expires     : request.ExpiresIn, 
+                method      : method,
+                requestUri  : new Uri(request.GetUrl()),
+                payloadHash : UnsignedPayload
+            );
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Amazon.S3
         {
             var root = new XElement("Delete");
 
-            foreach (var key in keys)
+            foreach (string key in keys)
             {
                 root.Add(new XElement("Object",
                     new XElement("Key", key)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 
 using Amazon.Helpers;
@@ -59,7 +60,7 @@ namespace Amazon.S3
 
         public int MaxKeys
         {
-            get => int.Parse(QueryList["max-keys"]);
+            get => int.Parse(QueryList["max-keys"], CultureInfo.InvariantCulture);
             set => QueryList["max-keys"] = value.ToString();
         }
 

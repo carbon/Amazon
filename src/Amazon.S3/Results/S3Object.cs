@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 
 using Carbon.Storage;
+using System.Globalization;
 
 namespace Amazon.S3
 {
@@ -58,13 +59,13 @@ namespace Amazon.S3
 
         public long ContentLength
         {
-            get => long.Parse(properties["Content-Length"]);
+            get => long.Parse(properties["Content-Length"], CultureInfo.InvariantCulture);
             set => properties["Content-Length"] = value.ToString();
         }
 
         public DateTimeOffset? LastModified
         {
-           get => DateTime.ParseExact(properties["Last-Modified"], "r", null).ToUniversalTime();
+           get => DateTime.ParseExact(properties["Last-Modified"], "r", CultureInfo.InvariantCulture).ToUniversalTime();
         }
 
         public CacheControlHeaderValue CacheControl
@@ -85,7 +86,7 @@ namespace Amazon.S3
         {
             if (response is null)
             {
-                throw new Exception("Response is null");
+                throw new Exception("response is null");
             }
 
             return stream ??= await response.Content.ReadAsStreamAsync().ConfigureAwait(false);

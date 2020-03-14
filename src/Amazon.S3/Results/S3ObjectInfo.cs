@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 using Carbon.Storage;
@@ -23,35 +24,20 @@ namespace Amazon.S3
             Modified = modified;
         }
 
-        public S3ObjectInfo(string bucketName, string name, HttpResponseMessage response)
+        internal S3ObjectInfo(
+            string bucketName, 
+            string key,
+            long contentLength, 
+            DateTime modified, 
+            ETag eTag, 
+            IReadOnlyDictionary<string, string> properties)
         {
-            if (response is null)
-                throw new ArgumentNullException(nameof(response));
-
-            BucketName = bucketName;
-            Key = name;
-
-            ContentLength = response.Content.Headers.ContentLength!.Value;             // Content-Length
-            Modified = response.Content.Headers.LastModified!.Value.UtcDateTime;  // Last-Modified
-
-            if (response.Headers.ETag != null)
-            {
-                ETag = new ETag(response.Headers.ETag.Tag);
-            }
-
-            var headers = new Dictionary<string, string>();
-
-            foreach (var header in response.Headers)
-            {
-                headers.Add(header.Key, string.Join(";", header.Value));
-            }
-
-            foreach (var header in response.Content.Headers)
-            {
-                headers.Add(header.Key, string.Join(";", header.Value));
-            }
-
-            Properties = headers;
+            BucketName    = bucketName;
+            Key           = key;
+            ContentLength = contentLength;
+            Modified      = modified;
+            ETag          = eTag;
+            Properties    = properties;
         }
 
         public string? BucketName { get; }
@@ -64,7 +50,9 @@ namespace Amazon.S3
 
         public DateTime Modified { get; }
 
+#nullable disable
         public IReadOnlyDictionary<string, string> Properties { get; }
+#nullable enable
 
         #region IBlob
 
@@ -81,6 +69,38 @@ namespace Amazon.S3
 
         #region Helpers
 
+        internal static S3ObjectInfo FromResponse(string bucketName, string key, HttpResponseMessage response)
+        {
+            ETag eTag = default;
+
+            if (response.Headers.ETag is EntityTagHeaderValue et)
+            {
+                eTag = new ETag(et.Tag);
+            }
+
+            var properties = new Dictionary<string, string>();
+
+            foreach (var header in response.Headers)
+            {
+                properties.Add(header.Key, string.Join(";", header.Value));
+            }
+
+            foreach (var header in response.Content.Headers)
+            {
+                properties.Add(header.Key, string.Join(";", header.Value));
+            }
+
+            return new S3ObjectInfo(
+                bucketName    : bucketName,
+                key           : key,
+                contentLength : response.Content.Headers.ContentLength!.Value,            // Content-Length
+                modified      : response.Content.Headers.LastModified!.Value.UtcDateTime, // Last-Modified
+                eTag          : eTag,
+                properties    : properties
+            );
+        }
+
+
         public string? ContentType => Properties?["Content-Type"];
 
         public string? VersionId
@@ -89,7 +109,7 @@ namespace Amazon.S3
             {
                 if (Properties is null) return null;
 
-                return Properties.TryGetValue("x-amz-version-id", out var version) ? version : null;
+                return Properties.TryGetValue("x-amz-version-id", out string version) ? version : null;
             }
         }
 

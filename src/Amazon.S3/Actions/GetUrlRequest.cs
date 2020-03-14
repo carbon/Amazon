@@ -1,8 +1,11 @@
 using System;
+using System.Text;
+
+using Amazon.Security;
 
 namespace Amazon.S3
 {
-    public class GetPresignedUrlRequest
+    public sealed class GetPresignedUrlRequest
     {
         public GetPresignedUrlRequest(
             string method,
@@ -31,5 +34,21 @@ namespace Amazon.S3
         public string Key { get; }
 
         public TimeSpan ExpiresIn { get; }
+
+        internal string GetUrl()
+        {
+            int length = 10 + Host.Length + BucketName.Length + Key.Length;
+
+            var sb = new StringBuilder(length);
+
+            sb.Append("https://");
+            sb.Append(Host);
+            sb.Append('/');
+            sb.Append(BucketName);
+            sb.Append('/');
+            sb.Append(Key);
+
+            return sb.ToString();
+        }
     }
 }

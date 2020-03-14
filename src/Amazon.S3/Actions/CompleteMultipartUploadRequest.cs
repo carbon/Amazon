@@ -25,7 +25,7 @@ namespace Amazon.S3
         }
     }
 
-    public class CompleteMultipartUpload
+    public sealed class CompleteMultipartUpload
     {
         public CompleteMultipartUpload(IUploadBlock[] parts)
         {

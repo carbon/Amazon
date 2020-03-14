@@ -9,9 +9,11 @@ namespace Amazon.S3
             : base(host, bucketName, key + $"?partNumber={partNumber}&uploadId={uploadId}")
         {
             if (partNumber < 1 || partNumber > 10_000)
+            {
                 throw new ArgumentOutOfRangeException(nameof(partNumber), partNumber, "Must be between 1 and 10,000");
+            }
 
-            UploadId   = uploadId ?? throw new ArgumentNullException(nameof(uploadId));
+            UploadId = uploadId ?? throw new ArgumentNullException(nameof(uploadId));
             PartNumber = partNumber;
         }
 
