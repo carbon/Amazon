@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sqs.Models
 {
-    public class CreateQueueResponse
+    public sealed class CreateQueueResponse
     {
         [XmlElement("CreateQueueResult")]
         public CreateQueueResult CreateQueueResult { get; set; }
@@ -15,7 +15,7 @@ namespace Amazon.Sqs.Models
         }
     }
 
-    public class CreateQueueResult
+    public sealed class CreateQueueResult
     {
         [XmlElement("QueueUrl")]
         public string QueueUrl { get; set; }

@@ -1,18 +1,24 @@
-﻿using Carbon.Json;
+﻿using System.Text.Json;
+
 using Carbon.Messaging;
 
 namespace Amazon.Sqs
 {
     public sealed class JsonEncodedMessage<T> : IQueueMessage<T>
-        where T : notnull, new()
+        where T : notnull
     {
+        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions {
+            IgnoreNullValues = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
         private readonly SqsMessage model;
 
-        public JsonEncodedMessage(SqsMessage model)
+        internal JsonEncodedMessage(SqsMessage model)
         {
             this.model = model;
 
-            Body = JsonObject.Parse(model.Body).As<T>();
+            Body = JsonSerializer.Deserialize<T>(model.Body, jso);
         }
 
         public static JsonEncodedMessage<T> Create(SqsMessage message)

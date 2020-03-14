@@ -2,12 +2,12 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using Amazon.Sqs.Models;
+
 using Carbon.Messaging;
 
 namespace Amazon.Sqs
 {
-    using Models;
-
     public sealed class SqsClient : AwsClient
     {
         public const string Version = "2012-11-05";
@@ -85,7 +85,7 @@ namespace Amazon.Sqs
             if (request is null) throw new ArgumentNullException(nameof(request));
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
-                Content = GetPostContent(request.ToParams())
+                Content = GetPostContent(request.GetParameters())
             };
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
@@ -101,7 +101,7 @@ namespace Amazon.Sqs
                 Content = GetPostContent(request.ToParams())
             };
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
             var response = ReceiveMessageResponse.Parse(responseText);
 
@@ -181,7 +181,7 @@ namespace Amazon.Sqs
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            var responseText = await response.Content.ReadAsStringAsync();
+            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             throw new QueueException(response.StatusCode + "/" + responseText);
         }

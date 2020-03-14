@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sqs.Models
 {
-    public class SendMessageResponse
+    public sealed class SendMessageResponse
     {
         [XmlElement("SendMessageResult")]
         public SendMessageResult SendMessageResult { get; set; }
@@ -15,10 +15,13 @@ namespace Amazon.Sqs.Models
         }
     }
 
-    public class SendMessageResult
+    public sealed class SendMessageResult
     {
         [XmlElement("MD5OfMessageBody")]
         public string MD5OfMessageBody { get; set; }
+
+        [XmlElement("MD5OfMessageAttributes")]
+        public string MD5OfMessageAttributes { get; set; }
 
         [XmlElement("MessageId")]
         public string MessageId { get; set; }
@@ -29,6 +32,7 @@ namespace Amazon.Sqs.Models
 <SendMessageResponse xmlns="http://queue.amazonaws.com/doc/2009-02-01/">
     <SendMessageResult>
         <MD5OfMessageBody>5d41402abc4b2a76b9719d911017c592</MD5OfMessageBody>
+        <MD5OfMessageAttributes>3ae8f24a165a8cedc005670c81a27295</MD5OfMessageAttributes>
         <MessageId>cafaea9a-70f8-47c7-89b3-7bbb572cf061</MessageId>
     </SendMessageResult>
 </SendMessageResponse>

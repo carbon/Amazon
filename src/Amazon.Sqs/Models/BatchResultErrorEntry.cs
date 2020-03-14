@@ -2,7 +2,7 @@
 
 namespace Amazon.Sqs.Models
 {
-    public class BatchResultErrorEntry
+    public sealed class BatchResultErrorEntry
     {
         public string Code { get; set; }
 

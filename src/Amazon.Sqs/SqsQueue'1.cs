@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Amazon.Scheduling;
 
-using Carbon.Json;
 using Carbon.Messaging;
 
 namespace Amazon.Sqs
@@ -84,14 +84,23 @@ namespace Amazon.Sqs
             return result;
         }
 
-        public Task PutAsync(T message, TimeSpan? delay = null)
+        public async Task<string> PutAsync(T message, TimeSpan? delay = null)
         {
-            var serializer = new JsonSerializer();
+            string text = JsonSerializer.Serialize(message, jso);
 
-            var text = serializer.Serialize(message).ToString(pretty: false);
+            var request = new SendMessageRequest(text) {
+                Delay = delay
+            };
 
-            return client.SendMessageAsync(url, new SendMessageRequest(text) { Delay = delay });
+            var result = await client.SendMessageAsync(url, request).ConfigureAwait(false);
+
+            return result.MessageId;
         }
+
+        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { 
+            IgnoreNullValues = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
         public async Task PutAsync(params IMessage<T>[] messages)
         {
@@ -101,15 +110,13 @@ namespace Amazon.Sqs
 
             // Convert the message payload to JSON
 
-            var serializer = new JsonSerializer();
-
             foreach (var batch in messages.Batch(10))
             {
                 string[] messageBatch = new string[batch.Count];
 
                 for (int i = 0; i < batch.Count; i++)
                 {
-                    messageBatch[i] = serializer.Serialize(batch[i].Body).ToString(pretty: false);
+                    messageBatch[i] = JsonSerializer.Serialize(batch[i].Body, jso);
                 }
 
                 await client.SendMessageBatchAsync(url, messageBatch).ConfigureAwait(false);
@@ -118,7 +125,9 @@ namespace Amazon.Sqs
 
         public async Task UpdateMessageVisibilityAsync(string receiptHandle, TimeSpan duration)
         {
-            await client.ChangeMessageVisibilityAsync(url, new ChangeMessageVisibilityRequest(receiptHandle, duration)).ConfigureAwait(false);
+            var request = new ChangeMessageVisibilityRequest(receiptHandle, duration);
+
+            await client.ChangeMessageVisibilityAsync(url, request).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(params IQueueMessage<T>[] messages)

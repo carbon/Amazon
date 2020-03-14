@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sqs
 {
-    public class DeleteMessageBatchResponse
+    public sealed class DeleteMessageBatchResponse
     {
         [XmlElement("DeleteMessageBatchResult")]
         public DeleteMessageBatchResult DeleteMessageBatchResult { get; set; }
@@ -15,7 +15,7 @@ namespace Amazon.Sqs
         }
     }
 
-    public class DeleteMessageBatchResult
+    public sealed class DeleteMessageBatchResult
     {
         [XmlElement("DeleteMessageBatchResultEntry")]
         public DeleteMessageBatchResultEntry[] Items { get; set; }

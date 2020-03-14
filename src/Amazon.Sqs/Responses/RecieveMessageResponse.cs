@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sqs.Models
 {
-    public class ReceiveMessageResponse
+    public sealed class ReceiveMessageResponse
     {
         [XmlElement("ReceiveMessageResult")]
         public ReceiveMessageResult ReceiveMessageResult { get; set; }
@@ -15,7 +15,7 @@ namespace Amazon.Sqs.Models
         }
     }
 
-    public class ReceiveMessageResult
+    public sealed class ReceiveMessageResult
     {
         [XmlElement("Message")]
         public SqsMessage[] Items { get; set; }

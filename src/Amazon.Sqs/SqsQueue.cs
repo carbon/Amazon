@@ -15,9 +15,10 @@ namespace Amazon.Sqs
         private readonly Uri url;
 
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
-            initialDelay: TimeSpan.FromSeconds(1),
-            maxDelay: TimeSpan.FromSeconds(5),
-            maxRetries: 3);
+            initialDelay : TimeSpan.FromSeconds(1),
+            maxDelay     : TimeSpan.FromSeconds(5),
+            maxRetries   : 3
+        );
 
         public SqsQueue(AwsRegion region, string accountId, string queueName, IAwsCredential credential)
         {
@@ -35,8 +36,6 @@ namespace Amazon.Sqs
             this.client = new SqsClient(region, credential);
         }
 
-        // Rename PollOnce ?
-
         public async Task<IReadOnlyList<IQueueMessage<string>>> PollAsync(
             int take, 
             TimeSpan? lockTime,
@@ -44,9 +43,11 @@ namespace Amazon.Sqs
         {
             // Blocks until we recieve a message
 
+            var request = new RecieveMessagesRequest(take, lockTime, TimeSpan.FromSeconds(20));
+
             while (!cancellationToken.IsCancellationRequested)
             {
-                var result = await client.ReceiveMessagesAsync(url, new RecieveMessagesRequest(take, lockTime, TimeSpan.FromSeconds(20))).ConfigureAwait(false);
+                var result = await client.ReceiveMessagesAsync(url, request).ConfigureAwait(false);
 
                 if (result.Length > 0)
                 {
@@ -65,6 +66,7 @@ namespace Amazon.Sqs
         public async Task PutAsync(params IMessage<string>[] messages)
         {
             // Max payload = 256KB (262,144 bytes)
+            // Max batch size = 10
 
             foreach (List<IMessage<string>> batch in messages.Batch(10))
             {
@@ -81,7 +83,9 @@ namespace Amazon.Sqs
 
         public async Task UpdateMessageVisibilityAsync(string receiptHandle, TimeSpan visibilityTimeout)
         {
-            await client.ChangeMessageVisibilityAsync(url, new ChangeMessageVisibilityRequest(receiptHandle, visibilityTimeout)).ConfigureAwait(false);
+            var request = new ChangeMessageVisibilityRequest(receiptHandle, visibilityTimeout);
+
+            await client.ChangeMessageVisibilityAsync(url, request).ConfigureAwait(false);
         }
         
         public async Task DeleteAsync(params IQueueMessage<string>[] messages)

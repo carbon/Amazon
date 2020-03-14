@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sqs
 {
-    public class SqsError
+    public sealed class SqsError
     {
         [XmlElement("Type")]
         public string Type { get; set; }
