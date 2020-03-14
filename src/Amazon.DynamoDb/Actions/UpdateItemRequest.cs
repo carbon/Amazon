@@ -73,7 +73,7 @@ namespace Amazon.DynamoDb
 
             if (ReturnValues != null)
             {
-                json.Add("ReturnValues", ReturnValues.ToString());
+                json.Add("ReturnValues", ReturnValues.ToString()!);
             }
 
             return json;

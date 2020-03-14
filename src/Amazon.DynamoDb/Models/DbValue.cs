@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 using Carbon.Json;
@@ -178,13 +179,12 @@ namespace Amazon.DynamoDb
 
 		internal object ToPrimitiveValue()
 		{
-			switch (kind)
-			{
-				case DbValueType.B : return ToBinary();
-				case DbValueType.N : return ToInt64();	// TODO, return a double if there's a floating point
-				case DbValueType.S : return ToString();
-				default			   : throw new Exception($"Cannot convert {kind} to native value.");
-			}
+			return kind switch {
+				DbValueType.B => ToBinary(),
+				DbValueType.N => ToInt64(),// TODO, return a double if there's a floating point
+				DbValueType.S => ToString(),
+				_			  => throw new Exception($"Cannot convert {kind} to native value."),
+			};
 		}
 
 		#region To Helpers
@@ -204,7 +204,7 @@ namespace Amazon.DynamoDb
 
 			foreach (var item in (IEnumerable)value)
 			{
-				set.Add(item.ToString());
+				set.Add(item.ToString()!);
 			}
 
 			return set;
@@ -248,7 +248,7 @@ namespace Amazon.DynamoDb
 			
 			for (int i = 0; i < collection.Count; i++)
 			{
-				array[i] = (T)Convert.ChangeType(collection[i], typeof(T));
+				array[i] = (T)Convert.ChangeType(collection[i], typeof(T))!;
 			}
 
 			return array;
@@ -285,10 +285,10 @@ namespace Amazon.DynamoDb
 		{
             return value is byte[] data
                 ? data
-                : Convert.FromBase64String(value.ToString());
+                : Convert.FromBase64String(value.ToString()!);
 		}
 
-		public override string ToString() => value.ToString();
+		public override string ToString() => value.ToString()!;
 
 		#endregion
 
@@ -334,7 +334,7 @@ namespace Amazon.DynamoDb
 
 					foreach (var item in (IEnumerable)value)
 					{
-						list.Add(item.ToString());
+						list.Add(item.ToString()!);
 					}
 
 					node = new XList<string>(list);
@@ -348,7 +348,7 @@ namespace Amazon.DynamoDb
 			}
 			else
 			{
-				node = new JsonString(value.ToString());
+				node = new JsonString(value.ToString()!);
 			}
 
             return new JsonObject {
@@ -425,53 +425,47 @@ namespace Amazon.DynamoDb
 
 		TypeCode IConvertible.GetTypeCode() => throw new NotImplementedException();
 		
-        bool IConvertible.ToBoolean(IFormatProvider provider) => ToBoolean();
+        bool IConvertible.ToBoolean(IFormatProvider? provider) => ToBoolean();
 
-		byte IConvertible.ToByte(IFormatProvider provider) => (byte)ToInt();
+		byte IConvertible.ToByte(IFormatProvider? provider) => (byte)ToInt();
 
-        char IConvertible.ToChar(IFormatProvider provider) => throw new NotImplementedException();
+        char IConvertible.ToChar(IFormatProvider? provider) => throw new NotImplementedException();
 		
-		DateTime IConvertible.ToDateTime(IFormatProvider provider) => throw new NotImplementedException();
+		DateTime IConvertible.ToDateTime(IFormatProvider? provider) => throw new NotImplementedException();
 		
-        decimal IConvertible.ToDecimal(IFormatProvider provider) => ToDecimal();
+        decimal IConvertible.ToDecimal(IFormatProvider? provider) => ToDecimal();
 
-        double IConvertible.ToDouble(IFormatProvider provider) => ToDouble();
+        double IConvertible.ToDouble(IFormatProvider? provider) => ToDouble();
 
-        short IConvertible.ToInt16(IFormatProvider provider) => ToInt16();
+        short IConvertible.ToInt16(IFormatProvider? provider) => ToInt16();
 
-        int IConvertible.ToInt32(IFormatProvider provider) => ToInt();
+        int IConvertible.ToInt32(IFormatProvider? provider) => ToInt();
 
-        long IConvertible.ToInt64(IFormatProvider provider) => ToInt64();
+        long IConvertible.ToInt64(IFormatProvider? provider) => ToInt64();
 
-		sbyte IConvertible.ToSByte(IFormatProvider provider)
+		sbyte IConvertible.ToSByte(IFormatProvider? provider) => (sbyte)ToInt16();
+
+		float IConvertible.ToSingle(IFormatProvider? provider) => ToSingle();
+
+        string IConvertible.ToString(IFormatProvider? provider) => ToString();
+
+		ushort IConvertible.ToUInt16(IFormatProvider? provider) => (ushort)ToInt();
+
+		uint IConvertible.ToUInt32(IFormatProvider? provider) => (uint)ToInt64();
+
+		ulong IConvertible.ToUInt64(IFormatProvider? provider) => ulong.Parse(ToString(), CultureInfo.InvariantCulture);
+
+		object IConvertible.ToType(Type conversionType, IFormatProvider? provider) => (Type.GetTypeCode(conversionType)) switch
 		{
-			throw new NotImplementedException();
-		}
-
-        float IConvertible.ToSingle(IFormatProvider provider) => ToSingle();
-
-        string IConvertible.ToString(IFormatProvider provider) => ToString();
-
-		object IConvertible.ToType(Type conversionType, IFormatProvider provider)
-		{
-			switch (Type.GetTypeCode(conversionType))
-			{
-				case TypeCode.String : return ToString();
-				case TypeCode.Int16	 : return ToInt16();
-				case TypeCode.Int32	 : return ToInt();
-				case TypeCode.Int64	 : return ToInt64();
-				case TypeCode.Single : return ToSingle();
-				case TypeCode.Double : return ToDouble();
-				default				 : throw new Exception("No convertor for " + conversionType.GetType().Name);
-			}
-		}
-
-        ushort IConvertible.ToUInt16(IFormatProvider provider) => (ushort)ToInt();
-
-		uint IConvertible.ToUInt32(IFormatProvider provider) => (uint)ToInt64();
-
-        ulong IConvertible.ToUInt64(IFormatProvider provider) => ulong.Parse(ToString());
-
+			TypeCode.String => ToString(),
+			TypeCode.Int16  => ToInt16(),
+			TypeCode.Int32  => ToInt(),
+			TypeCode.Int64  => ToInt64(),
+			TypeCode.Single => ToSingle(),
+			TypeCode.Double => ToDouble(),
+			_				=> throw new Exception("No converter for " + conversionType.GetType().Name),
+		};
+		
 		#endregion
 	}
 }

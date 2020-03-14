@@ -116,7 +116,7 @@ namespace Amazon.DynamoDb
 
         public JsonObject ToJson()
         {
-            var node = new JsonObject(capacity:items.Count);
+            var node = new JsonObject(capacity: items.Count);
 
             foreach (var attribute in items)
             {
@@ -188,7 +188,7 @@ namespace Amazon.DynamoDb
 
                     for (int i = 0; i < list.Length; i++)
                     {
-                        list[i] = new DbValue(FromObject(a.GetValue(i)));
+                        list[i] = new DbValue(FromObject(a.GetValue(i)!));
                     }
 
                     attributes.Add(member.Name, new DbValue(list));
@@ -203,14 +203,14 @@ namespace Amazon.DynamoDb
                     {
                         for (int i = 0; i < list.Length; i++)
                         {
-                            list[i] = c.FromObject(a[i], member);
+                            list[i] = c.FromObject(a[i]!, member);
                         }
                     }
                     else
                     {
                         for (int i = 0; i < list.Length; i++)
                         {
-                            list[i] = new DbValue(FromObject(a[i]));
+                            list[i] = new DbValue(FromObject(a[i]!));
                         }
                     }
 
@@ -247,9 +247,10 @@ namespace Amazon.DynamoDb
             return new RecordKey(keyItems);
         }
 
-        public T As<T>() => As<T>(DatasetInfo.Get<T>());
+        public T As<T>() where T : notnull => As<T>(DatasetInfo.Get<T>());
 
         internal T As<T>(DatasetInfo model)
+            where T : notnull
         {
             T instance = Activator.CreateInstance<T>();
 
@@ -275,7 +276,7 @@ namespace Amazon.DynamoDb
                 }
                 else if (member.Type.IsArray)
                 {
-                    var list = DeserializeArray(member.Type.GetElementType(), (DbValue[])attribute.Value.Value);
+                    var list = DeserializeArray(member.Type.GetElementType()!, (DbValue[])attribute.Value.Value);
 
                     member.SetValue(instance, list);
                 }
@@ -305,7 +306,7 @@ namespace Amazon.DynamoDb
 
         private object DeserializeMap(DatasetInfo model)
         {
-            var instance = Activator.CreateInstance(model.Type);
+            object instance = Activator.CreateInstance(model.Type)!;
 
             foreach (var attribute in items)
             {
@@ -329,7 +330,7 @@ namespace Amazon.DynamoDb
                 }
                 else if (member.Type.IsArray)
                 {
-                    var list = DeserializeArray(member.Type.GetElementType(), (DbValue[])attribute.Value.Value);
+                    var list = DeserializeArray(member.Type.GetElementType()!, (DbValue[])attribute.Value.Value);
 
                     member.SetValue(instance, list);
                 }

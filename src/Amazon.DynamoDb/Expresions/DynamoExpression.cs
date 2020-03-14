@@ -63,7 +63,7 @@ namespace Amazon.DynamoDb
                 case BinaryExpression binary   : WriteBinaryExpression(binary);    break;
                 case BetweenExpression between : WriteBetweenExpression(between);  break;
                 case FunctionExpression func   : WriteFunctionExpression(func);    break;
-                default: throw new Exception("Unexpected primary expression: " + expression.Kind);
+                default                        : throw new Exception("Invalid primary expression: " + expression.Kind);
             }
         }
 
@@ -99,7 +99,7 @@ namespace Amazon.DynamoDb
                 case FunctionExpression func   : WriteFunctionExpression(func);     break;
                 case BetweenExpression between : WriteBetweenExpression(between);   break;
                 default:
-                    throw new Exception("Unexpected expression:" + e.Kind);
+                    throw new Exception("Invalid expression:" + e.Kind);
             }
         }
 
@@ -190,7 +190,7 @@ namespace Amazon.DynamoDb
             Gte      => ">=",
             Lt       => "<",
             Lte      => "<=",
-            _        => throw new Exception("Unexpected expression:" + kind)
+            _        => throw new Exception("Invalid expression:" + kind)
         };        
 
         #endregion

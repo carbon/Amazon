@@ -178,7 +178,6 @@ namespace Amazon.DynamoDb
             while (retryPolicy.ShouldRetry(retryCount));
 
             throw new DynamoDbException($"Error querying '{query.TableName}': {lastException.Message}", lastException);
-
         }
 
         public async Task<QueryResult> QueryAsync(DynamoQuery query)
@@ -197,10 +196,9 @@ namespace Amazon.DynamoDb
 
             var httpRequest = Setup("Query", query.ToJson());
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-            var responseJson = JsonObject.Parse(responseText);
+            string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            return responseJson.As<CountResult>();
+            return System.Text.Json.JsonSerializer.Deserialize<CountResult>(responseText);
         }
 
         public async Task<QueryResult> ScanAsync(ScanRequest request)
@@ -268,7 +266,7 @@ namespace Amazon.DynamoDb
 
             if (jsonContent != null)
             {
-                var postBody = jsonContent.ToString(pretty: false);
+                string postBody = jsonContent.ToString(pretty: false);
 
                 request.Content = new StringContent(postBody, Encoding.UTF8, "application/x-amz-json-1.0");
             }
@@ -278,9 +276,9 @@ namespace Amazon.DynamoDb
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            var ex = DynamoDbException.FromJson(JsonObject.Parse(responseText));
+            var ex = DynamoDbException.Parse(responseText);
 
             ex.StatusCode = (int)response.StatusCode;
 

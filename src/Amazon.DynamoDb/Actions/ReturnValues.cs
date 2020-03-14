@@ -1,4 +1,6 @@
-﻿namespace Amazon.DynamoDb
+﻿using System;
+
+namespace Amazon.DynamoDb
 {
     public enum ReturnValues
     {
@@ -24,4 +26,18 @@
         /// </summary>
         UPDATED_NEW = 4
     }
+
+    internal static class ReturnValuesExtensions
+    {
+        public static string Canonicalize(this ReturnValues value) => value switch
+        {
+            ReturnValues.NONE        => "NONE",
+            ReturnValues.ALL_OLD     => "ALL_OLD",
+            ReturnValues.UPDATED_OLD => "UPDATED_OLD",
+            ReturnValues.ALL_NEW     => "ALL_NEW",
+            ReturnValues.UPDATED_NEW => "UPDATED_NEW",
+            _                        => throw new Exception("Unexpected ReturnValue:" + value.ToString()),
+        };        
+    }
+
 }

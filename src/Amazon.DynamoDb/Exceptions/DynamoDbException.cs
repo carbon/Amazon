@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 using Amazon.Scheduling;
-
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -31,29 +30,31 @@ namespace Amazon.DynamoDb
 
         public int StatusCode { get; set; }
 
-        public static DynamoDbException Parse(string jsonText)
-        {
-            return FromJson(JsonObject.Parse(jsonText));
-        }
-
         public IReadOnlyList<Exception>? Exceptions { get; }
 
-        public static DynamoDbException FromJson(JsonObject json)
+        public static DynamoDbException Parse(string jsonText)
         {
-            string type = json["__type"];
+            using var doc = JsonDocument.Parse(jsonText);
+
+            var json = doc.RootElement;
+
+            string type = "";
+
             string message = "";
 
-            if (json.TryGetValue("message", out var m))
+            if (json.TryGetProperty("message", out JsonElement m))
             {
-                message = m;
+                message = m.GetString();
             }
-            else if (json.TryGetValue("Message", out m))
+            else if (json.TryGetProperty("Message", out m))
             {
-                message = m;
+                message = m.GetString();
             }
 
-            if (type != null)
+            if (json.TryGetProperty("__type", out var typeNode) && typeNode.ValueKind == JsonValueKind.String)
             {
+                type = typeNode.GetString();
+
                 int poundIndex = type.IndexOf('#');
 
                 if (poundIndex > -1)

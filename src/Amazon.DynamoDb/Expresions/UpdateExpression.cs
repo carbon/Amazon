@@ -140,10 +140,10 @@ namespace Amazon.DynamoDb
                 sb.AppendLine(); // \n ?
             }
 
-#if NETSTANDARD2_1
-            sb.Append(segment);
-#else
+#if NETSTANDARD2_0
             sb.Append(segment.ToString());
+#else
+            sb.Append(segment);
 #endif
         }
     }

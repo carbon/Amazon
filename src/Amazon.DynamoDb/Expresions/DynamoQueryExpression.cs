@@ -21,7 +21,7 @@ namespace Amazon.DynamoDb
             {
                 if (expression is BinaryExpression be)
                 {
-                    if (IsKey(be.Left.ToString()))
+                    if (IsKey(be.Left.ToString()!))
                     {
                         KeyExpression.Add(be);
                     }
