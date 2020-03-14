@@ -2,20 +2,20 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ses</AssemblyName>
-    <VersionPrefix>0.14.2</VersionPrefix>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
+    <VersionPrefix>0.16.1</VersionPrefix>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
+    <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A .NET Standard library for Amazon's Simple Email Service.</Description>    
+    <Description>A modern library for Amazon's Simple Email Service.</Description>    
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;ses;netstandard</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\Amazon.Core\Amazon.Core.csproj" />
   </ItemGroup>
