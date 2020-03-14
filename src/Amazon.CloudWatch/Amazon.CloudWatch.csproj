@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.CloudWatch</AssemblyName>
-    <Version>0.7.0</Version>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.8.0</Version>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     
