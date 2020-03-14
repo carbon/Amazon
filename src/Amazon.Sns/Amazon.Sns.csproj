@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sns</AssemblyName>
-    <VersionPrefix>0.14.0</VersionPrefix>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
+    <VersionPrefix>0.16.1</VersionPrefix>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
+    <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern .NET Standard library for Amazon's Simple Notification Service.</Description>
+    <Description>A modern library for Amazon's Simple Notification Service.</Description>
     
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;sns;netstandard</PackageTags>
