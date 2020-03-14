@@ -11,10 +11,8 @@ namespace Amazon.Ses
             Data    = data ?? throw new ArgumentNullException(nameof(data));            
         }
 
-        [DataMember(IsRequired = false)]
         public string? Charset { get; }
 
-        [DataMember(IsRequired = true)]
         public string Data { get; }
     }
 

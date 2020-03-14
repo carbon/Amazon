@@ -4,17 +4,15 @@ using System.Xml.Serialization;
 
 namespace Amazon.Ses
 {
-    using Helpers;
-
     [XmlRoot(Namespace = SesClient.Namespace)]
-    public class SendEmailResponse
+    public sealed class SendEmailResponse
     {
         [XmlElement]
         public SendEmailResult SendEmailResult { get; set; }
 
         public static SendEmailResponse Parse(string text)
         {
-            return XmlText.ToObject<SendEmailResponse>(text);
+            return XmlHelper<SendEmailResponse>.Deserialize(text);
         }
     }
 

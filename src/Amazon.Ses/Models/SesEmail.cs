@@ -48,7 +48,8 @@ namespace Amazon.Ses
 
         public static SesEmail FromMailMessage(MailMessage message)
         {
-            if (message is null) throw new ArgumentNullException(nameof(message));
+            if (message is null) 
+                throw new ArgumentNullException(nameof(message));
 
             var doc = new SesEmail
             {
@@ -176,7 +177,7 @@ namespace Amazon.Ses
         {
             var namespaces = new XmlSerializerNamespaces();
 
-            //  Add lib namespace with empty prefix 
+            // Add lib namespace with empty prefix 
             namespaces.Add(string.Empty, "http://cloudfront.amazonaws.com/doc/2010-11-01/");
 
             var doc = new XDocument();

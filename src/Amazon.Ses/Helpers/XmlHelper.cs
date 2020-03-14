@@ -1,15 +1,15 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
 
-namespace Amazon.Helpers
+namespace Amazon.Ses
 {
-    internal static class XmlText
+    internal static class XmlHelper<T>
     {
-        public static T ToObject<T>(string text)
+        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(T));
+
+        public static T Deserialize(string text)
         {
             using var reader = new StringReader(text);
-
-            var serializer = new XmlSerializer(typeof(T));
 
             return (T)serializer.Deserialize(reader);
         }

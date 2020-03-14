@@ -4,21 +4,19 @@ using System.Xml.Serialization;
 
 namespace Amazon.Ses
 {
-    using Helpers;
-
     [XmlRoot(Namespace = SesClient.Namespace)]
-    public class GetSendQuotaResponse
+    public sealed class GetSendQuotaResponse
     {
         [XmlElement]
         public GetSendQuotaResult GetSendQuotaResult { get; set; }
 
         public static GetSendQuotaResponse Parse(string text)
         {
-            return XmlText.ToObject<GetSendQuotaResponse>(text);
+            return XmlHelper<GetSendQuotaResponse>.Deserialize(text);
         }
     }
 
-    public class GetSendQuotaResult
+    public sealed class GetSendQuotaResult
     {
         [XmlElement]
         public float SentLast24Hours { get; set; }

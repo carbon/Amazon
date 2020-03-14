@@ -4,7 +4,7 @@ using System;
 
 namespace Amazon.Ses
 {
-    public class SesComplaint
+    public sealed class SesComplaint
     {
         public string UserAgent { get; set; }
 
@@ -12,7 +12,9 @@ namespace Amazon.Ses
 
         public string ComplaintFeedbackType { get; set; }
 
-        public DateTime Timestamp { get; set; }
+        //2012-05-25T14:59:38.613-07:00
+
+        public DateTimeOffset Timestamp { get; set; }
 
         public string FeedbackId { get; set; }
     }

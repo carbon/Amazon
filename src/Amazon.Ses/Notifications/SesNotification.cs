@@ -1,10 +1,13 @@
 ﻿#nullable disable
 
+using System.Text.Json.Serialization;
+
 namespace Amazon.Ses
 {
     public class SesNotification
     {
-        public SesNotificationType NotificationType { get; set; }
+		[JsonConverter(typeof(JsonStringEnumConverter))]
+		public SesNotificationType NotificationType { get; set; }
 
         public SesComplaint Complaint { get; set; }
 
@@ -13,7 +16,6 @@ namespace Amazon.Ses
         public SesMail Mail { get; set; }
     }
 }
-
 
 
 /*

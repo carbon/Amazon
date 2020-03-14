@@ -1,30 +1,22 @@
 ﻿#nullable disable
 
 using System;
+using System.Text.Json.Serialization;
 
 namespace Amazon.Ses
 {
-    public class SesBounce
+    public sealed class SesBounce
     {
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public SesBounceType BounceType { get; set; }
 
-        public SesBounceSubtype BounceSubtype { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public SesBounceSubtype BounceSubType { get; set; }
 
         public BouncedRecipient[] BouncedRecipients { get; set; }
 
         public DateTime Timestamp { get; set; }
 
         public string ReportingMta { get; set; }
-    }
-
-    public class BouncedRecipient
-    {
-        public string Status { get; set; }
-
-        public string Action { get; set; }
-
-        public string DiagnosticCode { get; set; }
-
-        public string EmailAddress { get; set; }
     }
 }

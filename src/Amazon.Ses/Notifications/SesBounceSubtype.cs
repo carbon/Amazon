@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Ses
 {
-    public enum SesBounceSubtype : byte
+    public enum SesBounceSubtype
     {
         Undetermined       = 1,
         General            = 2,
