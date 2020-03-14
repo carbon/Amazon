@@ -10,7 +10,7 @@ namespace Amazon.Ec2
         {
             if (nameOrArn is null) throw new ArgumentNullException(nameof(nameOrArn));
 
-            if (nameOrArn.StartsWith("arn:"))
+            if (nameOrArn.StartsWith("arn:", StringComparison.Ordinal))
             {
                 Arn = nameOrArn;
             }

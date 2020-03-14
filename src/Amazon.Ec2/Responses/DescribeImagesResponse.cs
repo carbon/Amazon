@@ -2,7 +2,7 @@
 
 namespace Amazon.Ec2
 {
-    public class DescribeImagesResponse : IEc2Response
+    public sealed class DescribeImagesResponse : IEc2Response
     {
         [XmlArray("imagesSet")]
         [XmlArrayItem("item")]

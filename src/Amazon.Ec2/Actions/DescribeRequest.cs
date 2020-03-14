@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 
 namespace Amazon.Ec2
@@ -7,11 +9,11 @@ namespace Amazon.Ec2
     {
         public int? MaxResults { get; set; }
 
-        public string NextToken { get; set; }
+        public string? NextToken { get; set; }
 
         public List<Filter> Filters { get; } = new List<Filter>();
 
-        protected void AddIds(Dictionary<string, string> parameters, string prefix, IReadOnlyList<string> ids)
+        protected void AddIds(Dictionary<string, string> parameters, string prefix, IReadOnlyList<string>? ids)
         {
             if (ids is null) return;
 
@@ -33,9 +35,9 @@ namespace Amazon.Ec2
 
             var i = 1;
 
-            foreach (var filter in Filters)
+            foreach (Filter filter in Filters)
             {
-                var prefix = "Filter." + i + ".";
+                string prefix = "Filter." + i + ".";
 
                 parameters.Add(prefix + "Name", filter.Name);
                 parameters.Add(prefix + "Value", filter.Value);

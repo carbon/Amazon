@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#nullable enable
 
-using Carbon.Json;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Amazon.Ec2
 {
@@ -9,48 +10,46 @@ namespace Amazon.Ec2
     {
         public static Dictionary<string, string> ToParams(string actionName, object instance)
         {
-            if (actionName is null)
-                throw new ArgumentNullException(nameof(actionName));
-
-            if (instance is null)
-                throw new ArgumentNullException(nameof(instance));
-
             var parameters = new Dictionary<string, string> {
                 { "Action", actionName }
             };
 
-            foreach (var member in JsonObject.FromObject(instance))
-            {
-                if (member.Value is XNull) continue;
+            var model = InstanceModel.Get(instance.GetType());
 
-                if (member.Value is JsonArray arr)
+            foreach (var member in model.Members)
+            {
+                var value = member.GetValue(instance);
+
+                if (value is null) continue;
+
+                if (value is IList list)
                 {
-                    AddArray(parameters, member.Key, arr);
+                    AddArray(parameters, member.Name, list);
                 }
-                else if (member.Value is JsonObject obj)
+                else if (Type.GetTypeCode(value.GetType()) == TypeCode.Object)
                 {
-                    AddObject(parameters, member.Key, obj);
+                    AddObject(parameters, member.Name, value);
                 }
                 else
                 {
-                    parameters.Add(member.Key, member.Value.ToString());
+                    parameters.Add(member.Name, value.ToString());
                 }
             }
 
             return parameters;
         }
 
-        private static void AddArray(Dictionary<string, string> parameters, string prefix, JsonArray array)
+        private static void AddArray(Dictionary<string, string> parameters, string prefix, IList array)
         {
-            for (var i = 0; i < array.Count; i++)
+            for (int i = 0; i < array.Count; i++)
             {
                 var key = prefix + "." + (i + 1);
 
                 var element = array[i];
 
-                if (element is JsonObject obj)
+                if (Type.GetTypeCode(element.GetType()) == TypeCode.Object)
                 {
-                    AddObject(parameters, key, obj);
+                    AddObject(parameters, key, element);
                 }
                 else
                 {
@@ -59,28 +58,34 @@ namespace Amazon.Ec2
             }
         }
 
-        private static void AddObject(Dictionary<string, string> parameters, string prefix, JsonObject instance)
+        private static void AddObject(Dictionary<string, string> parameters, string prefix, object instance)
         {
             if (parameters.Count > 100)
-                throw new ArgumentException("Must be less than 100 values", nameof(parameters));
-
-            foreach (var m in instance)
             {
-                if (m.Value is XNull) continue;
+                throw new ArgumentException("Exceeded 100 arg limit", nameof(parameters));
+            }
 
-                var key = prefix + "." + m.Key;
+            var model = InstanceModel.Get(instance.GetType());
 
-                if (m.Value is JsonObject obj)
+            foreach (var member in model.Members)
+            {
+                object value = member.GetValue(instance);
+
+                if (value is null) continue;
+
+                var key = prefix + "." + member.Name;
+
+                if (value is IList list)
                 {
-                    AddObject(parameters, key, obj);
+                    AddArray(parameters, key, list);
                 }
-                else if (m.Value is JsonArray arr)
+                else if (Type.GetTypeCode(value.GetType()) == TypeCode.Object)
                 {
-                    AddArray(parameters, key, arr);
+                    AddObject(parameters, key, value);
                 }
                 else
                 {
-                    parameters.Add(key, m.Value.ToString());
+                    parameters.Add(key, value.ToString());
                 }
             }
         }

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿#nullable enable
+
+using System.IO;
 using System.Xml.Serialization;
 
 namespace Amazon.Ec2
@@ -10,10 +12,9 @@ namespace Amazon.Ec2
 
         public static T ParseXml(string xml)
         {
-            using (var reader = new StringReader(xml))
-            {
-                return (T)serializer.Deserialize(reader);
-            }
+            using var reader = new StringReader(xml);
+
+            return (T)serializer.Deserialize(reader);
         }
     }
 }

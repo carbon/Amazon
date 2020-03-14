@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,42 +18,42 @@ namespace Amazon.Ec2
 
         #region Shortcuts
 
-        public async Task<Image> DescribeImageAsync(string imageId)
+        public async Task<Image?> DescribeImageAsync(string imageId)
         {
             var result = await DescribeImagesAsync(new DescribeImagesRequest(imageIds: new[] { imageId }));
 
             return result.Images.Length > 0 ? result.Images[0] : null;
         }
 
-        public async Task<Subnet> DescribeSubnetAsync(string subnetId)
+        public async Task<Subnet?> DescribeSubnetAsync(string subnetId)
         {
             var result = await DescribeSubnetsAsync(new DescribeSubnetsRequest(new[] { subnetId }));
 
             return result.Subnets.Length > 0 ? result.Subnets[0] : null;
         }
 
-        public async Task<NetworkInterface> DescribeNetworkInterfaceAsync(string networkInterfaceId)
+        public async Task<NetworkInterface?> DescribeNetworkInterfaceAsync(string networkInterfaceId)
         {
             var result = await DescribeNetworkInterfacesAsync(new DescribeNetworkInterfacesRequest(new[] { networkInterfaceId }));
 
             return result.NetworkInterfaces.Length > 0 ? result.NetworkInterfaces[0] : null;
         }
 
-        public async Task<Instance> DescribeInstanceAsync(string instanceId)
+        public async Task<Instance?> DescribeInstanceAsync(string instanceId)
         {
             var result = await DescribeInstancesAsync(new DescribeInstancesRequest(new[] { instanceId }));
 
             return result.Instances.Count > 0 ? result.Instances[0] : null;
         }
 
-        public async Task<Volume> DescribeVolumeAsync(string volumeId)
+        public async Task<Volume?> DescribeVolumeAsync(string volumeId)
         {
             var result = await DescribeVolumesAsync(new DescribeVolumesRequest(new[] { volumeId }));
 
             return result.Volumes.Length > 0 ? result.Volumes[0] : null;
         }
 
-        public async Task<Vpc> DescribeVpcAsync(string vpcId)
+        public async Task<Vpc?> DescribeVpcAsync(string vpcId)
         {
             var result = await DescribeVpcsAsync(new DescribeVpcsRequest(new[] { vpcId }));
 
