@@ -15,7 +15,7 @@ namespace Amazon
         })
         {
             DefaultRequestHeaders = {
-                { "User-Agent", "Carbon/2.3" }
+                { "User-Agent", "Carbon/2.4" }
             }
         };
         

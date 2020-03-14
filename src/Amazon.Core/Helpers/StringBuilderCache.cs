@@ -25,7 +25,7 @@ namespace System.Text
 
         public static string ExtractAndRelease(StringBuilder sb)
         {
-            var text = sb.ToString();
+            string text = sb.ToString();
 
             cachedInstance = sb;
 

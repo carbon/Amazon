@@ -19,11 +19,8 @@ namespace Amazon
 
         #region IEnumerable
 
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
-        {
-            return Parameters.GetEnumerator();
-        }
-
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => Parameters.GetEnumerator();
+        
         IEnumerator IEnumerable.GetEnumerator() => Parameters.GetEnumerator();
 
         #endregion

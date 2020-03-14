@@ -5,8 +5,6 @@ namespace Amazon.Scheduling
 {
     public static class Scheduler
     {
-        const string ExceededMaximumRetryCount = "The action has exceeded the maximum number of retries.";
-
         public static async Task<T> ExecuteAsync<T>(this RetryPolicy policy, Func<Task<T>> action)
         {
             Exception lastError;
