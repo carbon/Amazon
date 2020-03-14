@@ -173,34 +173,56 @@ namespace Amazon.Security
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
 
+            string presignedUrl = GetPresignedUrl(
+                credential            : credential,
+                scope                 : scope,
+                date                  : date,
+                expires               : expires,
+                method                : request.Method,
+                requestUri            : request.RequestUri,
+                payloadHash           : payloadHash
+            );
+
+            request.RequestUri = new Uri(presignedUrl);
+        }
+
+        public static string GetPresignedUrl(
+            IAwsCredential credential,
+            CredentialScope scope,
+            DateTime date,
+            TimeSpan expires,
+            HttpMethod method,
+            Uri requestUri,
+            string payloadHash = emptySha256)
+        {
             byte[] signingKey = GetSigningKey(credential.SecretAccessKey, scope);
 
-            SortedDictionary<string, string> queryParameters = !string.IsNullOrEmpty(request.RequestUri.Query)
-                ? ParseQueryString(request.RequestUri.Query)
+            SortedDictionary<string, string> queryParameters = !string.IsNullOrEmpty(requestUri.Query)
+                ? ParseQueryString(requestUri.Query)
                 : new SortedDictionary<string, string>();
       
             string timestamp = date.ToString(format: isoDateTimeFormat, CultureInfo.InvariantCulture);
             string signedHeaders = "host";
 
-            queryParameters["X-Amz-Algorithm"] = algorithmName;
-            queryParameters["X-Amz-Credential"] = credential.AccessKeyId + "/" + scope;
+            queryParameters[SigningParameterNames.Algorithm] = algorithmName;
+            queryParameters[SigningParameterNames.Credential] = credential.AccessKeyId + "/" + scope;
 
             if (credential.SecurityToken != null)
             {
-                queryParameters["X-Amz-Security-Token"] = credential.SecurityToken;
+                queryParameters[SigningParameterNames.SecurityToken] = credential.SecurityToken;
             }
 
-            queryParameters["X-Amz-Date"] = timestamp;
-            queryParameters["X-Amz-Expires"] = expires.TotalSeconds.ToString(CultureInfo.InvariantCulture); // in seconds
-            queryParameters["X-Amz-SignedHeaders"] = signedHeaders;
+            queryParameters[SigningParameterNames.Date]          = timestamp;
+            queryParameters[SigningParameterNames.Expires]       = expires.TotalSeconds.ToString(CultureInfo.InvariantCulture); // in seconds
+            queryParameters[SigningParameterNames.SignedHeaders] = signedHeaders;
 
-            string canonicalHeaders = request.RequestUri.IsDefaultPort
-                ? "host:" + request.RequestUri.Host
-                : "host:" + request.RequestUri.Host + ":" + request.RequestUri.Port.ToString();
+            string canonicalHeaders = requestUri.IsDefaultPort
+                ? "host:" + requestUri.Host
+                : "host:" + requestUri.Host + ":" + requestUri.Port.ToString(CultureInfo.InvariantCulture);
 
             string canonicalRequest = GetCanonicalRequest(
-                method               : request.Method,
-                canonicalURI         : CanonicalizeUri(request.RequestUri.AbsolutePath),
+                method               : method,
+                canonicalURI         : CanonicalizeUri(requestUri.AbsolutePath),
                 canonicalQueryString : CanonicizeQueryString(queryParameters),
                 canonicalHeaders     : canonicalHeaders,
                 signedHeaders        : signedHeaders,
@@ -227,18 +249,17 @@ namespace Amazon.Security
             queryString += &X-Amz-SignedHeaders=signed_headers
             */
 
-            Uri url = request.RequestUri;
             var newUrl = StringBuilderCache.Aquire();
 
-            newUrl.Append("https://").Append(url.Host);
+            newUrl.Append("https://").Append(requestUri.Host);
 
-            if (!url.IsDefaultPort)
+            if (!requestUri.IsDefaultPort)
             {
                 newUrl.Append(':');
-                newUrl.Append(url.Port);
+                newUrl.Append(requestUri.Port);
             }
 
-            newUrl.Append(url.AbsolutePath);
+            newUrl.Append(requestUri.AbsolutePath);
             newUrl.Append('?');
 
             foreach (KeyValuePair<string, string> pair in queryParameters)
@@ -249,9 +270,9 @@ namespace Amazon.Security
                 newUrl.Append('&');
             }
 
-            newUrl.Append("X-Amz-Signature=").Append(signature);
+            newUrl.Append(SigningParameterNames.Signature).Append('=').Append(signature);
 
-            request.RequestUri = new Uri(StringBuilderCache.ExtractAndRelease(newUrl));
+            return StringBuilderCache.ExtractAndRelease(newUrl);
         }
 
         public void Sign(IAwsCredential credential, CredentialScope scope, HttpRequestMessage request)
