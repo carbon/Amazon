@@ -4,7 +4,7 @@ namespace Amazon.Route53
 {
     internal static class XmlSerializerNamespacesCache
     {
-        private static XmlSerializerNamespaces ns;
+        private static XmlSerializerNamespaces? ns;
 
         public static XmlSerializerNamespaces Get()
         {

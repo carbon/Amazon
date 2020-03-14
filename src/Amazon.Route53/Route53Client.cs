@@ -42,6 +42,7 @@ namespace Amazon.Route53
         private const string baseUrl = "https://route53.amazonaws.com/";
 
         private async Task<TResult> GetAsync<TResult>(string path)
+            where TResult: notnull
         {
             string url = baseUrl + Version + path;
 
@@ -51,6 +52,8 @@ namespace Amazon.Route53
         }
 
         private async Task<TResult> PostXmlAsync<T, TResult>(string path, T instance)
+            where T: notnull
+            where TResult: notnull
         {
             string url = baseUrl + Version + path;
 
@@ -58,9 +61,7 @@ namespace Amazon.Route53
 
             content.Headers.ContentType = new MediaTypeHeaderValue("application/xml");
           
-
-            var responseText = await SendAsync(new HttpRequestMessage(HttpMethod.Post, url)
-            {
+            string responseText = await SendAsync(new HttpRequestMessage(HttpMethod.Post, url) {
                 Content = content
             });
 
@@ -69,7 +70,7 @@ namespace Amazon.Route53
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             return new Route53Exception(responseText);
         }
