@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace Amazon.Sts.Models
 {
-    public class GetSessionTokenResponse
+    public sealed class GetSessionTokenResponse
     {
         public static AwsSession Parse(string text)
         {
