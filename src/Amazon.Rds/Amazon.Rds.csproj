@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Rds</AssemblyName>
-    <Version>0.8.0</Version>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <Version>0.10.0</Version>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
 
