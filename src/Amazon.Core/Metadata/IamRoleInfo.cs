@@ -2,9 +2,9 @@
 
 using System;
 
-namespace Amazon
+namespace Amazon.Metadata
 {
-    internal class IamRoleInfo
+    internal sealed class IamRoleInfo
     {
         public string Code { get; set; }
 

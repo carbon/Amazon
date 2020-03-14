@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
 using System;
-using System.Threading.Tasks;
 
 namespace Amazon.Metadata
 {
-    internal class IamSecurityCredentials
+    internal sealed class IamSecurityCredentials
     {
         public string Code { get; set; }
 
@@ -20,16 +19,6 @@ namespace Amazon.Metadata
         public DateTime LastUpdated { get; set; }
 
         public DateTime Expiration { get; set; }
-        
-        public static Task<IamSecurityCredentials> GetAsync(string roleName)
-        {
-            if (roleName is null)
-            {
-                throw new ArgumentNullException(nameof(roleName));
-            }
-
-            return InstanceMetadata.GetIamSecurityCredentials(roleName);
-        }
     }
 }
 

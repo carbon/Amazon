@@ -1,11 +1,12 @@
-﻿#nullable disable
-
+﻿
 using System.Threading.Tasks;
 
 namespace Amazon.Metadata
 {
-    public class InstanceIdentity
+    public sealed class InstanceIdentity
     {
+#nullable disable
+
         public string InstanceId { get; set; }
 
         public string AccountId { get; set; }
@@ -21,10 +22,14 @@ namespace Amazon.Metadata
         public string AvailabilityZone { get; set; }
 
         public string PrivateIp { get; set; }
-        
+
+#nullable enable
+
+        public string? KernelId { get; set; }
+
         public static Task<InstanceIdentity> GetAsync()
         {
-            return InstanceMetadata.GetIdentityAsync();    
+            return InstanceMetadataService.Instance.GetInstanceIdentityAsync();
         }
     }
 }

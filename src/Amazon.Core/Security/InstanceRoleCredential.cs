@@ -66,7 +66,6 @@ namespace Amazon
 
         #endregion
 
-
         // aws note: refresh 5 minutes before expiration
 
         public async Task<bool> RenewAsync()
@@ -83,14 +82,14 @@ namespace Amazon
             {
                 if (ShouldRenew)
                 {
-                    RoleName ??= await InstanceMetadata.GetIamRoleNameAsync().ConfigureAwait(false);
+                    RoleName ??= await InstanceMetadataService.Instance.GetIamRoleNameAsync().ConfigureAwait(false);
 
                     if (RoleName is null)
                     {
                         throw new Exception("The instance is not configured with an IAM role");
                     }
 
-                    var iamCredential = await IamSecurityCredentials.GetAsync(RoleName).ConfigureAwait(false);
+                    var iamCredential = await InstanceMetadataService.Instance.GetIamSecurityCredentials(RoleName).ConfigureAwait(false);
 
                     Set(iamCredential);
 
@@ -107,16 +106,18 @@ namespace Amazon
 
         public static async Task<InstanceRoleCredential> GetAsync()
         {
-            string roleName = await InstanceMetadata.GetIamRoleNameAsync().ConfigureAwait(false);
+            var ims = InstanceMetadataService.Instance;
 
-            var iamCredential = await IamSecurityCredentials.GetAsync(roleName).ConfigureAwait(false);
+            string roleName = await ims.GetIamRoleNameAsync().ConfigureAwait(false);
+
+            var iamCredential = await ims.GetIamSecurityCredentials(roleName).ConfigureAwait(false);
 
             return new InstanceRoleCredential(roleName, iamCredential);
         }
 
         public static async Task<InstanceRoleCredential> GetAsync(string roleName)
         {
-            var iamCredential = await IamSecurityCredentials.GetAsync(roleName).ConfigureAwait(false);
+            var iamCredential = await InstanceMetadataService.Instance.GetIamSecurityCredentials(roleName).ConfigureAwait(false);
 
             return new InstanceRoleCredential(roleName, iamCredential);
         }
