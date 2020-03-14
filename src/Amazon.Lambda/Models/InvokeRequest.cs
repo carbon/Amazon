@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Carbon.Json;
-
 namespace Amazon.Lambda
 {
     public sealed class InvokeRequest
@@ -11,10 +9,18 @@ namespace Amazon.Lambda
             FunctionName = functionName ?? throw new ArgumentNullException(nameof(functionName));
         }
 
+        /*
         public InvokeRequest(string functionName, JsonNode payload)
         {
             FunctionName = functionName ?? throw new ArgumentNullException(nameof(functionName));
             Payload = payload?.ToString(pretty: false) ?? throw new ArgumentNullException(nameof(payload));
+        }
+        */
+
+        public InvokeRequest(string functionName, string payload)
+        {
+            FunctionName = functionName;
+            Payload = payload;
         }
 
         public string FunctionName { get; }
@@ -25,11 +31,5 @@ namespace Amazon.Lambda
 
         // JSON that you want to provide to your Lambda function as input.
         public string? Payload { get; }
-    }
-
-    public enum LogType
-    {
-        None = 0,
-        Tail = 1
     }
 }

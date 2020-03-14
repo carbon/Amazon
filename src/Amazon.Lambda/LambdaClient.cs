@@ -1,8 +1,7 @@
 ﻿using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-
-using Carbon.Json;
 
 namespace Amazon.Lambda
 {
@@ -16,8 +15,10 @@ namespace Amazon.Lambda
 
         // lambda:InvokeFunction
 
-        public Task<InvokeResult> InvokeAsync(string functionName, object param) =>
-            InvokeFunctionAsync(new InvokeRequest(functionName, JsonNode.FromObject(param)));
+        public Task<InvokeResult> InvokeAsync<T>(string functionName, T param)
+        {
+            return InvokeFunctionAsync(new InvokeRequest(functionName, JsonSerializer.Serialize(param)));
+        }
 
         public async Task<InvokeResult> InvokeFunctionAsync(InvokeRequest message)
         {
