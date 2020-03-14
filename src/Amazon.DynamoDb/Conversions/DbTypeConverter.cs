@@ -12,8 +12,8 @@ namespace Amazon.DynamoDb
 
         DbValue IDbValueConverter.FromObject(object value, IMember meta) => ToDbValue((T)value);
 
-        object IDbValueConverter.ToObject(DbValue item, IMember meta) => Parse(item);
+        object IDbValueConverter.ToObject(DbValue item, IMember meta) => Parse(item)!;
 
         #endregion
-    }   
+    }
 }
