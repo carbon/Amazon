@@ -9,4 +9,5 @@ restore.dg
 bin/
 obj/
 /release
+src/packages
 .vs
