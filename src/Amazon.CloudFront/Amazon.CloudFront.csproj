@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Amazon.Cloudfront</AssemblyName>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
+    <LangVersion>8</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Amazon.Core\Amazon.Core.csproj" />
+  </ItemGroup>
+
+</Project>
