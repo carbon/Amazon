@@ -2,7 +2,7 @@
 
 namespace Amazon.Sqs
 {
-    public class SendMessageRequest
+    public sealed class SendMessageRequest
     {
         public SendMessageRequest(string body)
         {
@@ -31,9 +31,9 @@ namespace Amazon.Sqs
         /// </summary>
         public TimeSpan? Delay { get; set; }
 
-        // TODO: Attributes
+        public MessageAttribute[]? MessageAttributes { get; set; }
 
-        internal SqsRequest ToParams()
+        internal SqsRequest GetParameters()
         {
             var parameters = new SqsRequest {
                 { "Action", "SendMessage" },
@@ -54,6 +54,29 @@ namespace Amazon.Sqs
             if (MessageGroupId != null)
             {
                 parameters.Add("MessageGroupId", MessageGroupId);
+            }
+
+            if (MessageAttributes != null)
+            {
+                for (int i = 0; i < MessageAttributes.Length; i++)
+                {
+                    ref MessageAttribute attr = ref MessageAttributes[i];
+
+                    string prefix = "MessageAttribute." + (i + 1).ToString() + ".";
+
+                    parameters.Add(prefix + "Name", attr.Name);
+
+                    if (attr.Value.DataType == MessageAttributeDataType.Binary)
+                    {
+                        parameters.Add(prefix + "Value.BinaryValue", attr.Value.Value);
+                    }
+                    else
+                    {
+                        parameters.Add(prefix + "Value.StringValue", attr.Value.Value);
+                    }
+
+                    parameters.Add(prefix + "Value.DataType", attr.Value.DataType.ToString());
+                }
             }
 
             return parameters;

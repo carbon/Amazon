@@ -2,7 +2,7 @@
 
 namespace Amazon.Sqs
 {
-    public class RecieveMessagesRequest
+    public sealed class RecieveMessagesRequest
     {
         private readonly int take;
         private readonly TimeSpan? lockTime;
@@ -40,20 +40,44 @@ namespace Amazon.Sqs
             this.waitTime = waitTime;
         }
 
+        public string[]? AttributeNames { get; set; }
+
+        public string[]? MessageAttributeNames { get; set; }
+
         internal SqsRequest ToParams()
         {
             var parameters = new SqsRequest {
-                { "Action", "ReceiveMessage" },
-                { "MaxNumberOfMessages", take },
+                { "Action", "ReceiveMessage" }
             };
+
+            if (take > 1) // default is 1
+            {
+                parameters.Add("MaxNumberOfMessages", take);
+            }
+
+            if (AttributeNames != null)
+            {
+
+                for (int i = 0; i < AttributeNames.Length; i++)
+                {
+                    parameters.Add("AttributeName." + (i + 1), AttributeNames[i]);
+                }
+            }
+
+            if (MessageAttributeNames != null)
+            {
+                for (int i = 0; i < MessageAttributeNames.Length; i++)
+                {
+                    parameters.Add("MessageAttributeName." + (i + 1), MessageAttributeNames[i]);
+                }
+            }
 
             if (lockTime != null) // Defaults to the queue visibility timeout
             {
                 parameters.Add("VisibilityTimeout", (int)lockTime.Value.TotalSeconds);
             }
 
-            // Default: The ReceiveMessageWaitTimeSeconds of the queue.
-            if (waitTime != null)
+            if (waitTime != null) // Defaults to queue default
             {
                 parameters.Add("WaitTimeSeconds", (int)waitTime.Value.TotalSeconds);
             }
