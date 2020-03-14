@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.S3</AssemblyName>
-    <Version>0.14.1</Version>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <Version>0.16.5</Version>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern .NET Standard library for Amazon's Simple Storage Service.</Description>
+    <Description>A simple library for Amazon's Simple Storage Service.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;s3;netstandard</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
