@@ -93,6 +93,7 @@ namespace Amazon.S3
             throw lastException;
         }
 
+
         public string GetPresignedUrl(string key, TimeSpan expiresIn, string method = "GET")
         {
             var request = new GetPresignedUrlRequest(method, client.Host, client.Region, bucketName, key, expiresIn);
@@ -137,11 +138,35 @@ namespace Amazon.S3
 
         public async Task<IReadOnlyDictionary<string, string>> GetPropertiesAsync(string key)
         {
-            var request = new ObjectHeadRequest(client.Host, bucketName, key: key);
+            int retryCount = 0;
+            Exception lastException;
 
-            using var result = await client.GetObjectHeadAsync(request).ConfigureAwait(false);
+            do
+            {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
 
-            return result.Properties!;
+                try
+                {
+                    var request = new ObjectHeadRequest(client.Host, bucketName, key);
+
+                    using var result = await client.GetObjectHeadAsync(request).ConfigureAwait(false);
+
+                    return result.Properties;
+                }
+                catch (S3Exception ex) when (ex.IsTransient)
+                {
+                    lastException = ex;
+                }
+
+                retryCount++;
+
+            }
+            while (retryPolicy.ShouldRetry(retryCount));
+
+            throw lastException;
         }
 
         public Task<RestoreObjectResult> InitiateRestoreAsync(string key, int days)
@@ -318,7 +343,8 @@ namespace Amazon.S3
 
         public async Task<IUploadBlock> UploadPartAsync(IUpload upload, int number, Stream stream)
         {
-            if (upload is null) throw new ArgumentNullException(nameof(upload));
+            if (upload is null) 
+                throw new ArgumentNullException(nameof(upload));
             
             var request = new UploadPartRequest(
                 host       : client.Host,
