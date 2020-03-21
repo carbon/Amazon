@@ -92,13 +92,6 @@ namespace Amazon.S3.Models.Tests
             // Assert.Equal("STANDARD", result.Items[0].StorageClass);
             Assert.Equal(DateTime.Parse("2009-06-20T09:54:05.000Z", null, DateTimeStyles.AdjustToUniversal), result.Items[0].LastModified);
 
-            foreach (var item in result.Items)
-            {
-                // Console.WriteLine(item.Key);
-            }
-        }
-
-
-     
+        }     
     }
 }

@@ -39,8 +39,8 @@ namespace Amazon.S3.Models.Tests
             var result = DeleteResult.Parse(xml);
 
 
-            Assert.Equal(1, result.Deleted.Length);
-            Assert.Equal(1, result.Errors.Length);
+            Assert.Single(result.Deleted);
+            Assert.Single(result.Errors);
 
             Assert.Equal("sample1.txt", result.Deleted[0].Key);
             Assert.Equal("sample2.txt", result.Errors[0].Key);

@@ -1,16 +1,17 @@
 ﻿using Xunit;
-
-using Carbon.Json;
+using System.Text.Json;
 
 namespace Amazon.S3.Events.Tests
 {
     public class S3EventTests
     {
+        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
         [Fact]
         public void A()
         {
 
-            var text = @"
+            string text = @"
 {  
     ""eventVersion"":""2.0"",
     ""eventSource"":""aws:s3"",
@@ -42,14 +43,13 @@ namespace Amazon.S3.Events.Tests
             ""size"": 1,
             ""eTag"":""object eTag"",
             ""versionId"":""1"",
-            ""sequencer"": ""a string representation of a hexadecimal value used to determine event sequence, 
-                only used with PUTs and DELETEs""            
+            ""sequencer"": ""a string representation of a hexadecimal value used to determine event sequence, only used with PUTs and DELETEs""            
         }
     }
 }";
-            
-            var model = JsonObject.Parse(text).As<S3Event>();
-            
+
+            var model = JsonSerializer.Deserialize<S3Event>(text, jso);
+
             Assert.Equal("2.0",                             model.EventVersion);
             Assert.Equal("aws:s3",                          model.EventSource);
             Assert.Equal("us-east-1",                       model.AwsRegion);
