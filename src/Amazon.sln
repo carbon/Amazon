@@ -75,7 +75,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Route53", "Amazon.Ro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Route53.Tests", "Amazon.Route53.Tests\Amazon.Route53.Tests.csproj", "{7A29E5C1-A19C-48A4-9075-96658118207F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Translate", "Amazon.Translate\Amazon.Translate.csproj", "{C9D9E714-C3A7-437C-A0DF-D30C7AA15ACE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Translate", "Amazon.Translate\Amazon.Translate.csproj", "{C9D9E714-C3A7-437C-A0DF-D30C7AA15ACE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudFront", "Amazon.Cloudfront\Amazon.CloudFront.csproj", "{2680CCF6-497D-4AA5-B488-C13A2E06B43F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -227,6 +229,10 @@ Global
 		{C9D9E714-C3A7-437C-A0DF-D30C7AA15ACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9D9E714-C3A7-437C-A0DF-D30C7AA15ACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9D9E714-C3A7-437C-A0DF-D30C7AA15ACE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2680CCF6-497D-4AA5-B488-C13A2E06B43F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2680CCF6-497D-4AA5-B488-C13A2E06B43F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2680CCF6-497D-4AA5-B488-C13A2E06B43F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2680CCF6-497D-4AA5-B488-C13A2E06B43F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
