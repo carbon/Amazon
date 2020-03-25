@@ -71,7 +71,7 @@ namespace Amazon.Metadata
 
                     return await JsonSerializer.DeserializeAsync<IamSecurityCredentials>(responseStream).ConfigureAwait(false);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     token = null;
 
@@ -88,7 +88,7 @@ namespace Amazon.Metadata
         {
             using var response = await GetAsync("http://169.254.169.254/latest/dynamic/instance-identity/document").ConfigureAwait(false);
 
-            using var responseStream = await response.Content.ReadAsStreamAsync();
+            using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
             return await JsonSerializer.DeserializeAsync<InstanceIdentity>(responseStream, camelCasePolicy).ConfigureAwait(false);
         }
