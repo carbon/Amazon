@@ -14,5 +14,16 @@
 			Assert.Equal("SerializationException", ex.Type);
 			Assert.Equal("Start of list found where not expected", ex.Message);
 		}
+
+		[Fact]
+		public void DynamoParseException_Lowercase()
+		{
+			var text = @"{""__type"":""Exception"",""message"":""Something went wrong""}";
+
+			var ex = DynamoDbException.Parse(text);
+
+			Assert.Equal("Exception", ex.Type);
+			Assert.Equal("Something went wrong", ex.Message);
+		}
 	}
 }
