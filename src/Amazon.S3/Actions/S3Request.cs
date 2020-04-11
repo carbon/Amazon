@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 
 namespace Amazon.S3
 {
@@ -26,13 +28,13 @@ namespace Amazon.S3
                 .Append("https://")
                 .Append(host)
                 .Append('/')
-                .Append(bucketName)
-                .Append('/');
+                .Append(bucketName);
 
             // s3.dualstack.{region.Name}.amazonaws.com
 
             if (objectName != null)
             {
+                urlBuilder.Append('/');
                 urlBuilder.Append(objectName);
             }
 
@@ -43,6 +45,42 @@ namespace Amazon.S3
             }
 
             RequestUri = new Uri(StringBuilderCache.ExtractAndRelease(urlBuilder));
+            Method = method;
+        }
+
+        internal S3Request(
+           HttpMethod method,
+           string host,
+           string bucketName,
+           Dictionary<string, string> queryParamaters)
+        {
+            if (host is null) throw new ArgumentNullException(nameof(host));
+
+            BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
+
+            using var urlBuilder = new StringWriter();
+
+            urlBuilder.Write("https://");
+            urlBuilder.Write(host);
+            urlBuilder.Write('/');
+            urlBuilder.Write(bucketName); 
+
+            if (queryParamaters.Count > 0)
+            {
+                int i = 0;
+
+                foreach (KeyValuePair<string, string> pair in queryParamaters)
+                {
+                    urlBuilder.Write(i == 0 ? '?' : '&');
+                    urlBuilder.Write(pair.Key);
+                    urlBuilder.Write('=');
+                    UrlEncoder.Default.Encode(urlBuilder, pair.Value);
+
+                    i++;
+                }
+            }
+
+            RequestUri = new Uri(urlBuilder.ToString());
             Method = method;
         }
 
