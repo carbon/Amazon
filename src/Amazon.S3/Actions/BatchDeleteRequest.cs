@@ -21,7 +21,7 @@ namespace Amazon.S3
         }
     }
 
-    public readonly struct DeleteBatch
+    public sealed class DeleteBatch
     {
         private readonly string[] keys;
 
