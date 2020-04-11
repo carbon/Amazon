@@ -33,7 +33,7 @@ namespace Amazon.S3
         {
             var request = new ListBucketRequest(Host, bucketName, options);
 
-            var responseText = await SendAsync(request).ConfigureAwait(false);          
+            string responseText = await SendAsync(request).ConfigureAwait(false);
 
             return ListBucketResult.ParseXml(responseText);
         }
@@ -179,13 +179,28 @@ namespace Amazon.S3
                 throw StorageException.NotFound(key);
             }
 
-            if (responseText.Contains("<Error>"))
+            try
             {
-                throw new S3Exception(
-                    error      : S3Error.ParseXml(responseText),
-                    statusCode : response.StatusCode
-                );
+                // Wasabi returns a non-standard ErrorResponse
+                if (responseText.Contains("<ErrorResponse"))
+                {
+                    var errorResponse = ResponseHelper<S3ErrorResponse>.ParseXml(responseText);
+
+                    throw new S3Exception(
+                       error: errorResponse.Error,
+                       statusCode: response.StatusCode
+                   );
+
+                }
+                if (responseText.Contains("<Error>"))
+                {
+                    throw new S3Exception(
+                        error: S3Error.ParseXml(responseText),
+                        statusCode: response.StatusCode
+                    );
+                }
             }
+            catch { }
 
             throw new S3Exception("Unexpected S3 error. " + response.StatusCode + ":" + responseText, response.StatusCode);
         }

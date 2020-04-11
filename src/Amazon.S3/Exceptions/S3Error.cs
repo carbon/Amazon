@@ -24,6 +24,8 @@ namespace Amazon.S3
             return ResponseHelper<S3Error>.ParseXml(xmlText);
         }
     }
+
+
 }
 
 // https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html
