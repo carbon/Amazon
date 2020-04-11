@@ -1,6 +1,4 @@
-﻿using System;
-
-using Xunit;
+﻿using Xunit;
 
 namespace Amazon.Security.Tests
 {
@@ -23,7 +21,7 @@ namespace Amazon.Security.Tests
 
             Assert.Equal("roleName", credential.RoleName);
             Assert.Equal(0, credential.RenewCount);
-            Assert.True(credential.Expires == default(DateTime));
+            Assert.True(credential.Expires == default);
 
             Assert.True(credential.ShouldRenew);
         }
