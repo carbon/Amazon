@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -25,6 +26,11 @@ namespace Amazon
                 key  : Encoding.UTF8.GetBytes(key), 
                 data : Encoding.UTF8.GetBytes(data)
            );
+        }
+
+        public void WriteHexString(TextWriter output)
+        {
+            HexString.WriteHexStringTo(output, Data);
         }
 
         public static Signature ComputeHmacSha256(byte[] key, byte[] data)
