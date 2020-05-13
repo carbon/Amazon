@@ -18,7 +18,7 @@ namespace Amazon
 
         #region Equality
 
-        public bool Equals(AwsRegion? other) => ReferenceEquals(this, other) || Name == other?.Name;
+        public bool Equals(AwsRegion? other) => ReferenceEquals(this, other) || Name.Equals(other?.Name, StringComparison.Ordinal);
 
         public override bool Equals(object? obj) => Equals(obj as AwsRegion);
 
@@ -50,6 +50,8 @@ namespace Amazon
         public static readonly AwsRegion EUWest2      = new AwsRegion("eu-west-2");      // | EU            | London        | 2016-12-13
         public static readonly AwsRegion EUWest3      = new AwsRegion("eu-west-3");      // | EU            | Paris         | 2017-12-18
         public static readonly AwsRegion MESouth1     = new AwsRegion("me-south-1");     // | ME            | Bahrain       | 2019-07-29
+        public static readonly AwsRegion AFSouth1     = new AwsRegion("af-south-1");     // |               | Cape Town     | ~2020-04
+        public static readonly AwsRegion EUSouth1     = new AwsRegion("eu-south-1");     // | EU            | Milan         | ~2020-05	
 
         // Soon:  Ningxia (China)
 
@@ -71,7 +73,9 @@ namespace Amazon
             CACentral1,   
             EUWest2,
             EUWest3,
-            MESouth1
+            MESouth1,
+            AFSouth1,
+            EUSouth1
         };
         
         public static AwsRegion Get(string name) => name switch
@@ -94,13 +98,14 @@ namespace Amazon
             "cn-north-1"     => CNNorth1,
             "us-gov-west-1"  => USGovWest1,
             "me-south-1"     => MESouth1,
+            "af-south-1"     => AFSouth1,
+            "eu-south-1"     => EUSouth1,
             _                => new AwsRegion(name)
         };
 
         private static AwsRegion? current;
 
-        // TODO: Return ValueTask<AwsRegion>
-        public static async Task<AwsRegion> GetAsync()
+        public static async ValueTask<AwsRegion> GetAsync()
         {
             if (current is null)
             {
