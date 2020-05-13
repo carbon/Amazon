@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -12,30 +13,26 @@ using Amazon.Helpers;
 
 namespace Amazon.Security
 {
-    public sealed class SignerV4
+    public static class SignerV4
     {
         private const string algorithmName = "AWS4-HMAC-SHA256";
         private const string isoDateTimeFormat = "yyyyMMddTHHmmssZ";  // ISO8601
 
-        public static readonly SignerV4 Default = new SignerV4();
-
-        public string GetStringToSign(CredentialScope scope, HttpRequestMessage request)
+        public static string GetStringToSign(CredentialScope scope, HttpRequestMessage request)
         {
-            string timestamp;
+            return GetStringToSign(scope, request, out _);
+        }
 
-            if (request.Headers.TryGetValues("x-amz-date", out IEnumerable<string> dateHeaderValues))
-            {
-                timestamp = dateHeaderValues.First();
-            }
-            else
-            {
-                throw new Exception("Missing 'x-amz-date' header");
-            }
+        public static string GetStringToSign(CredentialScope scope, HttpRequestMessage request, out List<string> signedHeaders)
+        {
+            string timestamp = request.Headers.TryGetValues("x-amz-date", out IEnumerable<string> dateHeaderValues)
+                ? dateHeaderValues.First()
+                : throw new Exception("Missing 'x-amz-date' header");
 
             return GetStringToSign(
                 scope            : scope,
                 timestamp        : timestamp,
-                canonicalRequest : GetCanonicalRequest(request)
+                canonicalRequest : GetCanonicalRequest(request, out signedHeaders)
             );
         }
 
@@ -43,63 +40,91 @@ namespace Amazon.Security
         {
             string hashedCanonicalRequest = HexString.FromBytes(ComputeSHA256(canonicalRequest));
 
-            var sb = StringBuilderCache.Aquire();
+            using var output = new StringWriter();
 
-            sb.Append(algorithmName).Append('\n');    // Algorithm + \n
-            sb.Append(timestamp).Append('\n');        // Timestamp + \n
-            sb.Append(scope.ToString()).Append('\n'); // Scope     + \n
-            sb.Append(hashedCanonicalRequest);        // Hex(SHA256(CanonicalRequest))
+            output.Write(algorithmName)           ;  output.Write('\n'); // Algorithm + \n
+            output.Write(timestamp)               ;  output.Write('\n'); // Timestamp + \n
+            scope.WriteTo(output)                 ;  output.Write('\n'); // Scope     + \n
+            output.Write(hashedCanonicalRequest);                        // Hex(SHA256(CanonicalRequest))
 
-            return StringBuilderCache.ExtractAndRelease(sb);
+            return output.ToString();
         }
 
         // Timestamp format: ISO8601 Basic format, YYYYMMDD'T'HHMMSS'Z'
 
         public static string GetCanonicalRequest(HttpRequestMessage request)
         {
-            var sb = StringBuilderCache.Aquire();
-
-            sb.Append(request.Method.Method)                            .Append('\n'); // HTTPRequestMethod      + \n
-            sb.Append(CanonicalizeUri(request.RequestUri.AbsolutePath)) .Append('\n'); // CanonicalURI           + \n
-            sb.Append(CanonicizeQueryString(request.RequestUri))        .Append('\n'); // CanonicalQueryString   + \n
-            sb.Append(CanonicalizeHeaders(request))                     .Append('\n'); // CanonicalHeaders       + \n
-            sb.Append(string.Empty)                                     .Append('\n'); //                        + \n
-            sb.Append(GetSignedHeaders(request))                        .Append('\n'); // SignedHeaders          + \n
-            sb.Append(GetPayloadHash(request));                                        // HexEncode(Hash(Payload))
-        
-            return StringBuilderCache.ExtractAndRelease(sb);
+            return GetCanonicalRequest(request, out _);
         }
         
+        public static string GetCanonicalRequest(HttpRequestMessage request, out List<string> signedHeaderNames)
+        {
+            using var output = new StringWriter();
+
+            output.Write(request.Method.Method)                               ; output.Write('\n'); // HTTPRequestMethod      + \n
+            WriteCanonicalizedUri(output, request.RequestUri.AbsolutePath)    ; output.Write('\n'); // CanonicalURI           + \n
+            WriteCanonicalizedQueryString(output, request.RequestUri)         ; output.Write('\n'); // CanonicalQueryString   + \n
+            WriteCanonicalizedHeaders(output, request, out signedHeaderNames) ; output.Write('\n'); // CanonicalHeaders       + \n
+            output.Write(string.Empty)                                        ; output.Write('\n'); //                        + \n
+            WriteList(output, ';', signedHeaderNames)                         ; output.Write('\n'); // SignedHeaders          + \n
+            output.Write(GetPayloadHash(request));                                                  // HexEncode(Hash(Payload))
+
+            return output.ToString();
+        }
+
+        private static void WriteList(TextWriter writer, char seperator, List<string> items)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (i > 0)
+                {
+                    writer.Write(seperator);
+                }
+
+                writer.Write(items[i]);
+            }
+        }
+
         public static string CanonicalizeUri(string path)
         {
             if (path.Length == 1 && path[0] == '/') return "/";
 
-            var splitter = new Splitter(path.AsSpan(), '/');
+            using var output = new StringWriter();
 
-            var sb = StringBuilderCache.Aquire();
+            WriteCanonicalizedUri(output, path);
+
+            return output.ToString();
+        }
+
+        private static void WriteCanonicalizedUri(StringWriter output, string path)
+        {
+            if (path.Length == 1 && path[0] == '/')
+            {
+                output.Write('/');
+            }
+
+            var splitter = new Splitter(path.AsSpan(), '/');
 
             while (splitter.TryGetNext(out var segment))
             {
                 if (segment.Length == 0) continue;
 
-                sb.Append('/');
+                output.Write('/');
 
                 // Do not double escape
                 if (segment.IndexOf('%') > -1)
                 {
 #if NETSTANDARD2_0
-                    sb.Append(segment.ToString());
+                    output.Write(segment.ToString());
 #else
-                    sb.Append(segment);
+                    output.Write(segment);
 #endif
                 }
                 else
                 {
-                    sb.Append(Uri.EscapeDataString(segment.ToString()));
+                    output.Write(Uri.EscapeDataString(segment.ToString()));
                 }
             }
-
-            return StringBuilderCache.ExtractAndRelease(sb);
         }
 
         public static string GetCanonicalRequest(
@@ -110,17 +135,17 @@ namespace Amazon.Security
             string signedHeaders,
             string payloadHash)
         {
-            var sb = StringBuilderCache.Aquire();
+            var sb = new StringBuilder();
 
-            sb.Append(method.ToString())    .Append('\n'); // HTTPRequestMethod           + \n
+            sb.Append(method.Method)        .Append('\n'); // HTTPRequestMethod           + \n
             sb.Append(canonicalURI)         .Append('\n'); // CanonicalURI                + \n
             sb.Append(canonicalQueryString) .Append('\n'); // CanonicalQueryString        + \n
             sb.Append(canonicalHeaders)     .Append('\n'); // CanonicalHeaders            + \n
             sb.Append(string.Empty)         .Append('\n'); //                             + \n
             sb.Append(signedHeaders)        .Append('\n'); // SignedHeaders               + \n
             sb.Append(payloadHash);                        // HexEncode(Hash(Payload))
-         
-            return StringBuilderCache.ExtractAndRelease(sb);
+
+            return sb.ToString();
         }
 
         // HexEncode(Hash(Payload))
@@ -133,23 +158,17 @@ namespace Amazon.Security
             // STREAMING-AWS4-HMAC-SHA256-PAYLOAD
             // UNSIGNED-PAYLOAD
 
-            if (request.Headers.TryGetValues("x-amz-content-sha256", out IEnumerable<string> contentSha256Header))
-            {
-                return contentSha256Header.First();
-            }
-
-            return ComputeSHA256(request.Content);
+            return (request.Headers.TryGetValues("x-amz-content-sha256", out var contentSha256Header))
+                ? contentSha256Header.First()
+                : ComputeSHA256(request.Content);
         }
 
         private static readonly byte[] aws4_request_bytes = Encoding.ASCII.GetBytes("aws4_request");
 
         public static byte[] GetSigningKey(string secretAccessKey, in CredentialScope scope)
         {
-            static byte[] GetBytes(string text)
-            {
-                return Encoding.ASCII.GetBytes(text);
-            }
-
+            static byte[] GetBytes(string text) => Encoding.ASCII.GetBytes(text);
+           
             byte[] kSecret    = GetBytes("AWS4" + secretAccessKey);
 
             byte[] kDate      = HMACSHA256(kSecret,  GetBytes(scope.Date.ToString("yyyyMMdd", CultureInfo.InvariantCulture)));
@@ -162,7 +181,7 @@ namespace Amazon.Security
 
         // http://docs.aws.amazon.com/general/latest/gr/sigv4-add-signature-to-request.html
 
-        public void Presign(
+        public static void Presign(
             IAwsCredential credential,
             CredentialScope scope,
             DateTime date,
@@ -174,13 +193,13 @@ namespace Amazon.Security
                 throw new ArgumentNullException(nameof(request));
 
             string presignedUrl = GetPresignedUrl(
-                credential            : credential,
-                scope                 : scope,
-                date                  : date,
-                expires               : expires,
-                method                : request.Method,
-                requestUri            : request.RequestUri,
-                payloadHash           : payloadHash
+                credential  : credential,
+                scope       : scope,
+                date        : date,
+                expires     : expires,
+                method      : request.Method,
+                requestUri  : request.RequestUri,
+                payloadHash : payloadHash
             );
 
             request.RequestUri = new Uri(presignedUrl);
@@ -195,6 +214,8 @@ namespace Amazon.Security
             Uri requestUri,
             string payloadHash = emptySha256)
         {
+            const string signedHeaders = "host";
+
             byte[] signingKey = GetSigningKey(credential.SecretAccessKey, scope);
 
             SortedDictionary<string, string> queryParameters = !string.IsNullOrEmpty(requestUri.Query)
@@ -202,18 +223,17 @@ namespace Amazon.Security
                 : new SortedDictionary<string, string>();
       
             string timestamp = date.ToString(format: isoDateTimeFormat, CultureInfo.InvariantCulture);
-            string signedHeaders = "host";
-
-            queryParameters[SigningParameterNames.Algorithm] = algorithmName;
+            
+            queryParameters[SigningParameterNames.Algorithm]  = algorithmName;
             queryParameters[SigningParameterNames.Credential] = credential.AccessKeyId + "/" + scope;
+            queryParameters[SigningParameterNames.Date]       = timestamp;
+            queryParameters[SigningParameterNames.Expires]    = expires.TotalSeconds.ToString(CultureInfo.InvariantCulture); // in seconds
 
             if (credential.SecurityToken != null)
             {
                 queryParameters[SigningParameterNames.SecurityToken] = credential.SecurityToken;
             }
 
-            queryParameters[SigningParameterNames.Date]          = timestamp;
-            queryParameters[SigningParameterNames.Expires]       = expires.TotalSeconds.ToString(CultureInfo.InvariantCulture); // in seconds
             queryParameters[SigningParameterNames.SignedHeaders] = signedHeaders;
 
             string canonicalHeaders = requestUri.IsDefaultPort
@@ -223,7 +243,7 @@ namespace Amazon.Security
             string canonicalRequest = GetCanonicalRequest(
                 method               : method,
                 canonicalURI         : CanonicalizeUri(requestUri.AbsolutePath),
-                canonicalQueryString : CanonicizeQueryString(queryParameters),
+                canonicalQueryString : CanonicalizeQueryString(queryParameters),
                 canonicalHeaders     : canonicalHeaders,
                 signedHeaders        : signedHeaders,
                 payloadHash          : payloadHash
@@ -235,10 +255,10 @@ namespace Amazon.Security
                 canonicalRequest
             );
 
-            string signature = Signature.ComputeHmacSha256(
-                key: signingKey,
-                data: Encoding.UTF8.GetBytes(stringToSign)
-            ).ToHexString();
+            Signature signature = Signature.ComputeHmacSha256(
+                key  : signingKey,
+                data : Encoding.UTF8.GetBytes(stringToSign)
+            );
 
             /*
             queryString = Action=action
@@ -249,36 +269,41 @@ namespace Amazon.Security
             queryString += &X-Amz-SignedHeaders=signed_headers
             */
 
-            var newUrl = StringBuilderCache.Aquire();
+            using var newUrlOuput = new StringWriter();
 
-            newUrl.Append("https://").Append(requestUri.Host);
+            newUrlOuput.Write("https://");
+            newUrlOuput.Write(requestUri.Host);
 
             if (!requestUri.IsDefaultPort)
             {
-                newUrl.Append(':');
-                newUrl.Append(requestUri.Port);
+                newUrlOuput.Write(':');
+                newUrlOuput.Write(requestUri.Port);
             }
 
-            newUrl.Append(requestUri.AbsolutePath);
-            newUrl.Append('?');
+            newUrlOuput.Write(requestUri.AbsolutePath);
+            newUrlOuput.Write('?');
 
             foreach (KeyValuePair<string, string> pair in queryParameters)
             {
-                newUrl.Append(UrlEncoder.Default.Encode(pair.Key));
-                newUrl.Append('=');
-                newUrl.Append(UrlEncoder.Default.Encode(pair.Value));
-                newUrl.Append('&');
+                UrlEncoder.Default.Encode(newUrlOuput, pair.Key);
+                newUrlOuput.Write('=');
+                UrlEncoder.Default.Encode(newUrlOuput, pair.Value);
+                newUrlOuput.Write('&');
             }
 
-            newUrl.Append(SigningParameterNames.Signature).Append('=').Append(signature);
+            newUrlOuput.Write(SigningParameterNames.Signature);
+            newUrlOuput.Write('=');
+            signature.WriteHexString(newUrlOuput);
 
-            return StringBuilderCache.ExtractAndRelease(newUrl);
+            return newUrlOuput.ToString();
         }
 
-        public void Sign(IAwsCredential credential, CredentialScope scope, HttpRequestMessage request)
+        public static void Sign(IAwsCredential credential, CredentialScope scope, HttpRequestMessage request)
         {
             if (credential is null)
+            {
                 throw new ArgumentNullException(nameof(credential));
+            }
 
             // If we're using S3, ensure the request content has been signed
             if (scope.Service.Equals(AwsService.S3) && !request.Headers.Contains("x-amz-content-sha256"))
@@ -288,52 +313,78 @@ namespace Amazon.Security
 
             byte[] signingKey = GetSigningKey(credential.SecretAccessKey, scope);
 
-            string stringToSign = GetStringToSign(scope, request);
+            string stringToSign = GetStringToSign(scope, request, out var signedHeaderNames);
 
-            var signature = Signature.ComputeHmacSha256(signingKey, Encoding.UTF8.GetBytes(stringToSign)).ToHexString();
+            Signature signature = Signature.ComputeHmacSha256(signingKey, Encoding.UTF8.GetBytes(stringToSign));
 
-            string signedHeaders = GetSignedHeaders(request);
+            using var authWriter = new StringWriter();
 
             // AWS4-HMAC-SHA256 Credential={0},SignedHeaders={0},Signature={0}
-            var auth = $"AWS4-HMAC-SHA256 Credential={credential.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
+            // var auth = $"AWS4-HMAC-SHA256 Credential={credential.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
 
-            request.Headers.TryAddWithoutValidation("Authorization", auth);
+            authWriter.Write("AWS4-HMAC-SHA256 Credential=");
+            authWriter.Write(credential.AccessKeyId);
+            authWriter.Write('/');
+            scope.WriteTo(authWriter);
+            authWriter.Write(",SignedHeaders=");
+            WriteList(authWriter, ';', signedHeaderNames);
+            authWriter.Write(",Signature=");
+            signature.WriteHexString(authWriter);
+
+            request.Headers.TryAddWithoutValidation("Authorization", authWriter.ToString());
         }
 
-        // e.g. ?a=1&
-
-        public static string CanonicizeQueryString(Uri uri)
+        public static string CanonicalizeQueryString(Uri uri)
         {
             if (string.IsNullOrEmpty(uri.Query) || uri.Query.Length == 1 && uri.Query[0] == '?')
             {
                 return string.Empty;
             }
 
-            return CanonicizeQueryString(ParseQueryString(uri.Query));
+            return CanonicalizeQueryString(ParseQueryString(uri.Query));
         }
 
-        public static string CanonicizeQueryString(SortedDictionary<string, string> sortedValues)
+        private static string CanonicalizeQueryString(SortedDictionary<string, string> sortedValues)
         {
             if (sortedValues.Count == 0)
             {
                 return string.Empty;
             }
 
-            var sb = StringBuilderCache.Aquire();
+            using var output = new StringWriter();
+
+            WriteCanonicalQueryString(output, sortedValues);
+
+            return output.ToString();
+        }
+
+        private static void WriteCanonicalizedQueryString(StringWriter output, Uri uri)
+        {
+            if (string.IsNullOrEmpty(uri.Query) || uri.Query.Length == 1 && uri.Query[0] == '?')
+            {
+                return;
+            }
+
+            WriteCanonicalQueryString(output, ParseQueryString(uri.Query));
+        }
+
+        private static void WriteCanonicalQueryString(TextWriter output, SortedDictionary<string, string> sortedValues)
+        {
+            int i = 0;
 
             foreach (var pair in sortedValues)
             {
-                if (sb.Length > 0)
+                if (i > 0)
                 {
-                    sb.Append('&');
+                    output.Write('&');
                 }
 
-                sb.Append(UrlEncoder.Default.Encode(pair.Key));
-                sb.Append('=');
-                sb.Append(UrlEncoder.Default.Encode(pair.Value));
-            }
+                UrlEncoder.Default.Encode(output, pair.Key);
+                output.Write("=");
+                UrlEncoder.Default.Encode(output, pair.Value);
 
-            return StringBuilderCache.ExtractAndRelease(sb);
+                i++;
+            }
         }
 
         private static SortedDictionary<string, string> ParseQueryString(string query)
@@ -357,8 +408,10 @@ namespace Amazon.Security
 
             var splitter = new Splitter(query, '&');
 
-            while (splitter.TryGetNext(out var part))
+            while (splitter.TryGetNext(out ReadOnlySpan<char> part))
             {
+                if (part.Length == 0) continue;
+
                 int equalIndex = part.IndexOf('=');
 
                 string lhs  = equalIndex > -1 ? part.Slice(0, equalIndex).ToString() : part.ToString();
@@ -372,73 +425,66 @@ namespace Amazon.Security
             return dictionary;
         }
 
-        public static string GetSignedHeaders(HttpRequestMessage request)
+
+        public static string CanonicalizeHeaders(HttpRequestMessage request, out List<string> signedHeaderNames)
         {
-            // Convert all header names to lowercase
-            // Sort them by character code
-            // Use a semicolon to separate the header names
+            using var writer = new StringWriter();
 
-            // The host header must be included as a signed header.
+            WriteCanonicalizedHeaders(writer, request, out signedHeaderNames);
 
-            var sb = StringBuilderCache.Aquire();
-
-            if (request.Content?.Headers.Contains("Content-MD5") == true)
-            {
-                sb.Append("content-md5;");
-            }
-
-            if (!request.Headers.Contains("x-amz-date") && request.Headers.Contains("Date"))
-            {
-                sb.Append("date;");
-            }
-
-            sb.Append("host");
-
-            foreach (var header in request.Headers
-                .Where(item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
-                .Select(item => item.Key.ToLowerInvariant())
-                .OrderBy(k => k))
-            {
-                sb.Append(';');
-                sb.Append(header);
-            }
-
-            return StringBuilderCache.ExtractAndRelease(sb);
+            return writer.ToString();
         }
 
-        public static string CanonicalizeHeaders(HttpRequestMessage request)
+        public static void WriteCanonicalizedHeaders(TextWriter writer, HttpRequestMessage request, out List<string> signedHeaderNames)
         {
-            var sb = StringBuilderCache.Aquire();
+            signedHeaderNames = new List<string>(8);
 
-            if (request.Content?.Headers.Contains("Content-MD5") == true)
+            if (request.Content != null && request.Content.Headers.TryGetValues("Content-MD5", out var md5Header))
             {
-                sb.Append("content-md5:");
-                sb.Append(request.Content.Headers.GetValues("Content-MD5").FirstOrDefault());
-                sb.Append('\n');
+                signedHeaderNames.Add("content-md5");
+
+                writer.Write("content-md5:");
+                writer.Write(md5Header.First());
+                writer.Write('\n');
             }
 
-            if (!request.Headers.Contains("x-amz-date") && request.Headers.Contains("Date"))
+            if (!request.Headers.Contains("x-amz-date") && request.Headers.TryGetValues("Date", out var dateHeader))
             {
-                sb.Append("date:");
-                sb.Append(request.Headers.GetValues("Date").First());
-                sb.Append('\n');
+                signedHeaderNames.Add("date");
+
+                writer.Write("date:");
+                writer.Write(dateHeader.First());
+                writer.Write('\n');
             }
 
-            sb.Append("host:").Append(request.Headers.Host);
+            signedHeaderNames.Add("host");
+
+            writer.Write("host:");
+            writer.Write(request.Headers.Host);
 
             foreach (var header in request.Headers
                 .Where(item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
                 .OrderBy(item => item.Key.ToLowerInvariant()))
             {
-                sb.Append('\n');
+                var headerName = header.Key.ToLowerInvariant();
 
-                sb.Append(header.Key.ToLowerInvariant());
-                sb.Append(':');
-                sb.AppendJoin(';', header.Value);
+                writer.Write('\n');
+
+                writer.Write(headerName);
+                writer.Write(':');
+                writer.Write(header.Value.First());
+
+                signedHeaderNames.Add(headerName);
             }
-
-            return StringBuilderCache.ExtractAndRelease(sb);
         }
+
+        // Convert all header names to lowercase
+        // Sort them by character code
+        // Use a semicolon to separate the header names
+
+        // The host header must be included as a signed header.
+
+
 
         #region SHA Helpers
 
@@ -472,6 +518,12 @@ namespace Amazon.Security
             return hmac.ComputeHash(data);
         }
 
-        #endregion
+#endregion
     }
 }
+
+// Signed Header Notes ---
+
+// - Convert all header names to lowercase
+// - Sort them by character code
+// - Use a semicolon to separate the header names
