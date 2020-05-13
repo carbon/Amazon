@@ -1,4 +1,6 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
     public class GetMaintenanceWindowResponse
     {
@@ -21,6 +23,3 @@
         public string WindowId { get; set; }
     }
 }
-
-
-

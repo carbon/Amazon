@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm
 {
-    public class UpdateManagedInstanceRoleRequest : ISsmRequest
+    public sealed class UpdateManagedInstanceRoleRequest : ISsmRequest
     {
         [Required]
         public string IamRole { get; set; }

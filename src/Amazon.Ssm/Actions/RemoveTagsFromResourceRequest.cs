@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm
 {
-    public class RemoveTagsFromResourceRequest : ISsmRequest
+    public sealed class RemoveTagsFromResourceRequest : ISsmRequest
     {
         [Required]
         public string ResourceId { get; set; }

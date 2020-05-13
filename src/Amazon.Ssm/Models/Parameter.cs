@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class Parameter
+    public sealed class Parameter
     {
         public Parameter() { }
 

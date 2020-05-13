@@ -1,12 +1,9 @@
-﻿using System.Text.Json.Serialization;
-
-using Amazon.Ssm.Converters;
+﻿#nullable disable
 
 namespace Amazon.Ssm
 {
     public sealed class DocumentDescription
     {
-        [JsonConverter(typeof(TimestampConverter))]
         public Timestamp CreateDate { get; set; }
 
         public string DefaultVersion { get; set; }
@@ -38,7 +35,6 @@ namespace Amazon.Ssm
         public string Status { get; set; }
     }
 }
-
 
 /*
 {

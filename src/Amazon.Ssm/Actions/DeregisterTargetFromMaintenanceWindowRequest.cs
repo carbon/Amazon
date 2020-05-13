@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class DeregisterTargetFromMaintenanceWindowRequest
+    public sealed class DeregisterTargetFromMaintenanceWindowRequest
     {
         public string WindowId { get; set; }
 

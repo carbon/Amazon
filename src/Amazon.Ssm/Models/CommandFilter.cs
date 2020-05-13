@@ -4,7 +4,9 @@ namespace Amazon.Ssm
 {
     public sealed class CommandFilter
     {
+#nullable disable
         public CommandFilter() { }
+#nullable enable
 
         public CommandFilter(string key, string value)
         {

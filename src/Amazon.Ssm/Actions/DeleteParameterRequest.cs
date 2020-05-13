@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm
 {
-    public class DeleteParameterRequest : ISsmRequest
+    public sealed class DeleteParameterRequest : ISsmRequest
     {
         public DeleteParameterRequest() { }
 

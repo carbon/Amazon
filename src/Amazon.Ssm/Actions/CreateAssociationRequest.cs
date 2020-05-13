@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿#nullable disable
+
+using System.Collections.Generic;
 
 namespace Amazon.Ssm
 {
-    public class CreateAssociationRequest : ISsmRequest
+    public sealed class CreateAssociationRequest : ISsmRequest
     {
         public string DocumentVersion { get; set; }
 

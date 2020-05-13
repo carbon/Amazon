@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class PutParameterRequest : ISsmRequest
+    public sealed class PutParameterRequest : ISsmRequest
     {
         public string Description { get; set; }
 

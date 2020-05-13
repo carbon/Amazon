@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class DescribeAutomationExecutionsRequest
+    public sealed class DescribeAutomationExecutionsRequest
     {
         public AutomationExecutionFilter[] Filters { get; set; }
 
@@ -9,7 +11,7 @@
         public string NextToken { get; set; }
     }
 
-    public class AutomationExecutionFilter
+    public sealed class AutomationExecutionFilter
     {
         public string Key { get; set; }
 

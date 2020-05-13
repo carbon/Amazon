@@ -3,9 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm
 {
-    public class Target
+    public sealed class Target
     {
+#nullable disable
         public Target() { }
+#nullable enable
 
         public Target(string key, string[] values)
         {

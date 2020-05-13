@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm
 {
-    public class GetCommandInvocationRequest : ISsmRequest
+    public sealed class GetCommandInvocationRequest : ISsmRequest
     {
         public GetCommandInvocationRequest() { }
 

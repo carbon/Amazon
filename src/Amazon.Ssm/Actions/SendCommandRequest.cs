@@ -6,30 +6,32 @@ namespace Amazon.Ssm
 {
     public sealed class SendCommandRequest : ISsmRequest
     {
+#nullable disable
         public SendCommandRequest() { }
+#nullable enable
 
-        public SendCommandRequest(string documentName, string[] instanceIds, Dictionary<string, string[]> parameters = null)
+        public SendCommandRequest(string documentName, string[] instanceIds, Dictionary<string, string[]>? parameters = null)
         {
             DocumentName = documentName ?? throw new ArgumentNullException(nameof(documentName));
             InstanceIds  = instanceIds  ?? throw new ArgumentNullException(nameof(instanceIds));
             Parameters   = parameters;
         }
 
-        public SendCommandRequest(string documentName, CommandTarget[] targets, Dictionary<string, string[]> parameters = null)
+        public SendCommandRequest(string documentName, CommandTarget[] targets, Dictionary<string, string[]>? parameters = null)
         {
             DocumentName = documentName ?? throw new ArgumentNullException(nameof(documentName));
             Targets      = targets      ?? throw new ArgumentNullException(nameof(targets));
             Parameters   = parameters;
         }
 
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
-        public string DocumentHash { get; set; }
+        public string? DocumentHash { get; set; }
 
         [Required]
         public string DocumentName { get; set; }
 
-        public string[] InstanceIds { get; set; }
+        public string[]? InstanceIds { get; set; }
 
 #nullable enable
 

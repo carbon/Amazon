@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-using Amazon.Ssm.Converters;
+﻿#nullable disable
 
 namespace Amazon.Ssm
 {
@@ -12,7 +10,6 @@ namespace Amazon.Ssm
 
         public string InstanceId { get; set; }
 
-        [JsonConverter(typeof(NullableTimestampConverter))]
         public Timestamp? LastExecutionDate { get; set; }
 
         public string Name { get; set; }

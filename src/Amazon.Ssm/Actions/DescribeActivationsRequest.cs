@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class DescribeActivationsRequest : ISsmRequest
+    public sealed class DescribeActivationsRequest : ISsmRequest
     {
         public DescribeActivationsFilter[] Filters { get; set; }
 

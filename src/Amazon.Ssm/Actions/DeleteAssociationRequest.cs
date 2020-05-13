@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class DeleteAssociationRequest
+    public sealed class DeleteAssociationRequest
     {
         public string AssociationId { get; set; }
 

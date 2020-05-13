@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class DescribeInstanceInformationRequest : ISsmRequest
+    public sealed class DescribeInstanceInformationRequest : ISsmRequest
     {
         
         // Filters

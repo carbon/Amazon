@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm
 {
-    public class DeregisterManagedInstanceRequest : ISsmRequest
+    public sealed class DeregisterManagedInstanceRequest : ISsmRequest
     {
         public DeregisterManagedInstanceRequest() { }
 

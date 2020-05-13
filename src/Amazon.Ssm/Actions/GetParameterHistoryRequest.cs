@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class GetParameterHistoryRequest : ISsmRequest
+    public sealed class GetParameterHistoryRequest : ISsmRequest
     {
         public int? MaxResults { get; set; }
 

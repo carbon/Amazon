@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class ListCommandsRequest : ISsmRequest
+    public sealed class ListCommandsRequest : ISsmRequest
     {
         public string CommandId { get; set; }
 

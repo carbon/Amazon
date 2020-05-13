@@ -1,4 +1,6 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
     public sealed class AddTagsToResourceRequest : ISsmRequest
     {

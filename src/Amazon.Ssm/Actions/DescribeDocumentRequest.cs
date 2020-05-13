@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm
 {
-    public class DescribeDocumentRequest : ISsmRequest
+    public sealed class DescribeDocumentRequest : ISsmRequest
     {
         public string DocumentVersion { get; set; }
 

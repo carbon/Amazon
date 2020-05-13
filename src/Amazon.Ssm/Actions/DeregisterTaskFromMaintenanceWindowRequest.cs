@@ -1,9 +1,17 @@
-﻿namespace Amazon.Ssm
-{
-    public class DeregisterTaskFromMaintenanceWindowRequest
-    {
-        public string WindowId { get; set; }
+﻿using System;
 
-        public string WindowTaskId { get; set; }
+namespace Amazon.Ssm
+{
+    public sealed class DeregisterTaskFromMaintenanceWindowRequest
+    {
+        public DeregisterTaskFromMaintenanceWindowRequest(string windowId, string windowTaskId)
+        {
+            WindowId = windowId ?? throw new ArgumentNullException(nameof(windowId));
+            WindowTaskId = windowTaskId ?? throw new ArgumentNullException(nameof(windowTaskId));
+        }
+
+        public string WindowId { get; }
+
+        public string WindowTaskId { get;  }
     }
 }

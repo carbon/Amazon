@@ -1,12 +1,9 @@
-﻿using System.Text.Json.Serialization;
-using Amazon.Ssm.Converters;
+﻿#nullable disable
 
 namespace Amazon.Ssm
 {
     public class Patch
     {
-#nullable disable
-
         public string Id { get; set; }
 
         public string Classification { get; set; }
@@ -29,7 +26,6 @@ namespace Amazon.Ssm
 
         public string? ProductFamily { get; set; }
 
-        [JsonConverter(typeof(NullableTimestampConverter))]
         public Timestamp? ReleaseDate { get; set; }
 
         public string? Title { get; set; }

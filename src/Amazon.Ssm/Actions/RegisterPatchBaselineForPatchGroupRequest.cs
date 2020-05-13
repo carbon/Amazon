@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class RegisterPatchBaselineForPatchGroupRequest
+    public sealed class RegisterPatchBaselineForPatchGroupRequest
     {
         public string BaselineId { get; set; }
 

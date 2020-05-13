@@ -2,7 +2,9 @@
 {
     public class Tag
     {
+#nullable disable
         public Tag() { }
+#nullable enable
 
         public Tag(string key, string value)
         {

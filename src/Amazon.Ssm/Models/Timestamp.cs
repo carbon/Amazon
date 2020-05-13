@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Text.Json.Serialization;
+
+using Amazon.Ssm.Converters;
 
 namespace Amazon.Ssm
 {
+    [JsonConverter(typeof(TimestampConverter))]
     public readonly struct Timestamp
     {
         private readonly double value;

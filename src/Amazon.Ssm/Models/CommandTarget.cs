@@ -4,7 +4,9 @@ namespace Amazon.Ssm
 {
     public class CommandTarget
     {
+#nullable disable
         public CommandTarget() { }
+#nullable enable
 
         public CommandTarget(string key, params string[] values)
         {

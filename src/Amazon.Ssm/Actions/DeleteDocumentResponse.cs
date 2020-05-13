@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Ssm
 {
-    public class DeleteDocumentResponse
+    public sealed class DeleteDocumentResponse
     {
         // Empty
     }

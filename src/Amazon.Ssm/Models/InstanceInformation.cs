@@ -1,5 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using Amazon.Ssm.Converters;
+﻿#nullable disable
+
+using System.Text.Json.Serialization;
 
 namespace Amazon.Ssm
 {
@@ -19,13 +20,10 @@ namespace Amazon.Ssm
 
         public bool IsLatestVersion { get; set; }
 
-        [JsonConverter(typeof(NullableTimestampConverter))]
         public Timestamp? LastAssociationExecutionDate { get; set; }
 
-        [JsonConverter(typeof(NullableTimestampConverter))]
         public Timestamp? LastPingDateTime { get; set; }
 
-        [JsonConverter(typeof(NullableTimestampConverter))]
         public Timestamp? LastSuccessfulAssociationExecutionDate { get; set; }
 
         public string Name { get; set; }
@@ -40,7 +38,6 @@ namespace Amazon.Ssm
 
         public string PlatformVersion { get; set; }
 
-        [JsonConverter(typeof(NullableTimestampConverter))]
         public Timestamp? RegistrationDate { get; set; }
 
         // ManagedInstance | Document | EC2Instance

@@ -1,10 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
 
 namespace Amazon.Ssm
 {
-    public class DeleteMaintenanceWindowRequest
+    public sealed class DeleteMaintenanceWindowRequest : ISsmRequest
     {
-        [Required]
-        public string WindowId { get; set; }
+        public DeleteMaintenanceWindowRequest(string windowId)
+        {
+            this.WindowId = windowId ?? throw new ArgumentNullException(nameof(windowId));
+        }
+
+        public string WindowId { get; }
     }
 }

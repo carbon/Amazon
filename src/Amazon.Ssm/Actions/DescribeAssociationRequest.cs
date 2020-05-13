@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class DescribeAssociationRequest
+    public sealed class DescribeAssociationRequest
     {
         public string AssociationId { get; set; }
 

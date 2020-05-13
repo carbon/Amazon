@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm
 {
-    public class UpdateDocumentDefaultVersionRequest : ISsmRequest
+    public sealed class UpdateDocumentDefaultVersionRequest : ISsmRequest
     {
         [Required]
         public string DocumentVersion { get; set; }

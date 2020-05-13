@@ -1,13 +1,12 @@
-﻿using System;
+﻿#nullable disable
+
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-using Amazon.Ssm.Converters;
-
 namespace Amazon.Ssm
 {
-    public class Command
+    public sealed class Command
     {
         [StringLength(36)]
         public string CommandId { get; set; }
@@ -25,7 +24,6 @@ namespace Amazon.Ssm
 
         public string DocumentVersion { get; set; }
 
-        [JsonConverter(typeof(TimestampConverter))]
         public Timestamp ExpiresAfter { get; set; }
 
         public string[] InstanceIds { get; set; }
@@ -43,7 +41,6 @@ namespace Amazon.Ssm
 
         public Dictionary<string, string[]> Parameters { get; set; }
 
-        [JsonConverter(typeof(NullableTimestampConverter))]
         public Timestamp? RequestedDateTime { get; set; }
 
         public string ServiceRole { get; set; }

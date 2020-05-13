@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm
 {
-    public class ModifyDocumentPermissionRequest : ISsmRequest
+    public sealed class ModifyDocumentPermissionRequest : ISsmRequest
     {
         public string[] AccountIdsToAdd { get; set; }
 

@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class GetDocumentResponse
+    public sealed class GetDocumentResponse
     {
         public string Content { get; set; }
 

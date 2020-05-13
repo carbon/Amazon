@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm
 {
-    public class CancelCommandRequest : ISsmRequest
+    public sealed class CancelCommandRequest : ISsmRequest
     {
         [Required]
         public string CommandId { get; set; }

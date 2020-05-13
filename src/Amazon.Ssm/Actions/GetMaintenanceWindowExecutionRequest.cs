@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ssm
+﻿#nullable disable
+
+namespace Amazon.Ssm
 {
-    public class GetMaintenanceWindowExecutionRequest : ISsmRequest
+    public sealed class GetMaintenanceWindowExecutionRequest : ISsmRequest
     {
         public string WindowExecutionId { get; set; }
     }
