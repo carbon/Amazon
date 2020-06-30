@@ -35,6 +35,7 @@ namespace Amazon.DynamoDb
             Add<Int64[]>(new ArrayConverter<Int64>());
             Add<float[]>(new ArrayConverter<float>());
             Add<double[]>(new ArrayConverter<double>());
+            Add<DbValue[]>(new DbValueArrayConverter());
 
             Add<HashSet<string>>(new StringHashSetConverter());
             Add<HashSet<Int16>>(new HashSetConverter<Int16>());
