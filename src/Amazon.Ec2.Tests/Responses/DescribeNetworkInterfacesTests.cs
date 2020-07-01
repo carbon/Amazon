@@ -105,7 +105,7 @@ namespace Amazon.Ec2.Tests
      </networkInterfaceSet>
 </DescribeNetworkInterfacesResponse>";
 
-            var response = Ec2ResponseHelper<DescribeNetworkInterfacesResponse>.ParseXml(text);
+            var response = Ec2Serializer<DescribeNetworkInterfacesResponse>.Deserialize(text);
 
             Assert.Equal(2, response.NetworkInterfaces.Length);
 

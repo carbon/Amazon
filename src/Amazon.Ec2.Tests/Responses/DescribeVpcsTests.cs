@@ -6,7 +6,7 @@ namespace Amazon.Ec2.Tests
     public class DescribeVpcsResponseTests
     {
         [Fact]
-        public void CanParse()
+        public void Deserialize()
         {
             var text =
 
@@ -34,7 +34,7 @@ namespace Amazon.Ec2.Tests
   </vpcSet>
 </DescribeVpcsResponse>";
 
-            var response = Ec2ResponseHelper<DescribeVpcsResponse>.ParseXml(text);
+            var response = Ec2Serializer<DescribeVpcsResponse>.Deserialize(text);
 
             Assert.Single(response.Vpcs);
 

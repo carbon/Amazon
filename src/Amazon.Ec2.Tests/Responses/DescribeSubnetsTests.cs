@@ -5,7 +5,7 @@ namespace Amazon.Ec2.Tests
     public class DescribeSubnetsTests
     {
         [Fact]
-        public void X()
+        public void Deserialize()
         {
             var text =
 @"<DescribeSubnetsResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
@@ -47,7 +47,7 @@ namespace Amazon.Ec2.Tests
   </subnetSet>
 </DescribeSubnetsResponse>";
 
-            var response = Ec2ResponseHelper<DescribeSubnetsResponse>.ParseXml(text);
+            var response = Ec2Serializer<DescribeSubnetsResponse>.Deserialize(text);
 
             Assert.Equal(2, response.Subnets.Length);
 

@@ -38,8 +38,7 @@ namespace Amazon.Ec2.Tests
    </volumeSet>
 </DescribeVolumesResponse>";
 
-            var response = Ec2ResponseHelper<DescribeVolumesResponse>.ParseXml(text);
-
+            var response = Ec2Serializer<DescribeVolumesResponse>.Deserialize(text);
 
             Assert.Single(response.Volumes);
 

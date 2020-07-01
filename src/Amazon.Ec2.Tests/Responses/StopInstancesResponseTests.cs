@@ -2,13 +2,10 @@
 
 namespace Amazon.Ec2.Tests
 {
-
     public class StopInstancesResponseTest
     {
-
-
         [Fact]
-        public void Parse1()
+        public void Deserialize()
         {
             var xml = @"<StopInstancesResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
   <requestId>59dbff89-35bd-4eac-99ed-be587EXAMPLE</requestId>
@@ -27,7 +24,7 @@ namespace Amazon.Ec2.Tests
   </instancesSet>
 </StopInstancesResponse>";
 
-            var response = Ec2ResponseHelper<StopInstancesResponse>.ParseXml(xml);
+            var response = Ec2Serializer<StopInstancesResponse>.Deserialize(xml);
 
             Assert.Equal("i-1234567890abcdef0", response.Instances[0].InstanceId);
 

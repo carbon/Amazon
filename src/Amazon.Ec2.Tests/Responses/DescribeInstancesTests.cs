@@ -2,6 +2,7 @@
 
 namespace Amazon.Ec2.Tests
 {
+
     public class DescribeInstancesResponseTests
     {
         [Fact]
@@ -124,7 +125,7 @@ namespace Amazon.Ec2.Tests
     </reservationSet>
 </DescribeInstancesResponse>";
 
-            var response = DescribeInstancesResponse.Parse(text);
+            var response = DescribeInstancesResponse.Deserialize(text);
             
             Assert.Single(response.Instances);
 

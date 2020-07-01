@@ -47,7 +47,7 @@ namespace Amazon.Ec2.Tests
   </imagesSet>
 </DescribeImagesResponse>";
 
-            var response = Ec2ResponseHelper<DescribeImagesResponse>.ParseXml(text);
+            var response = Ec2Serializer<DescribeImagesResponse>.Deserialize(text);
 
             Assert.Single(response.Images);
 

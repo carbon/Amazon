@@ -57,7 +57,7 @@ namespace Amazon.Ec2.Tests
     </securityGroupInfo>
 </DescribeSecurityGroupsResponse>";
 
-            var response = Ec2ResponseHelper<DescribeSecurityGroupsResponse>.ParseXml(text);
+            var response = Ec2Serializer<DescribeSecurityGroupsResponse>.Deserialize(text);
 
 
             Assert.Single(response.SecurityGroups);
