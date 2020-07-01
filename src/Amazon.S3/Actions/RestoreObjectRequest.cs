@@ -12,10 +12,13 @@ namespace Amazon.S3
         {
             if (key is null) throw new ArgumentNullException(nameof(key));
 
-            var xmlText = GetXmlString();
+            string xmlText = GetXmlString();
 
             Content = new StringContent(xmlText, Encoding.UTF8, "text/xml");
-            Content.Headers.ContentMD5 = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(xmlText));
+
+            using MD5 md5 = MD5.Create();
+
+            Content.Headers.ContentMD5 = md5.ComputeHash(Encoding.UTF8.GetBytes(xmlText));
 
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }
