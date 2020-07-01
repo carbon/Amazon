@@ -28,6 +28,9 @@ namespace Amazon.S3
         [XmlElement("StorageClass")]
         public string StorageClass { get; set; }
 
+        [XmlElement("Owner")]
+        public Owner Owner { get; set; }
+
         #region IBlob
 
         DateTime IBlob.Modified => LastModified;
