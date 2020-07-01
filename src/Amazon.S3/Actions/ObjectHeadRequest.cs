@@ -13,9 +13,9 @@ namespace Amazon.S3
 
         internal void SetCustomerEncryptionKey(in ServerSideEncryptionKey key)
         {
-            Headers.Add("x-amz-server-side-encryption-customer-algorithm", key.Algorithm);
-            Headers.Add("x-amz-server-side-encryption-customer-key",       Convert.ToBase64String(key.Key));
-            Headers.Add("x-amz-server-side-encryption-customer-key-MD5",   Convert.ToBase64String(key.KeyMD5));
+            Headers.Add(S3HeaderNames.ServerSideEncryptionCustomerAlgorithm, key.Algorithm);
+            Headers.Add(S3HeaderNames.ServerSideEncryptionCustomerKey,       Convert.ToBase64String(key.Key));
+            Headers.Add(S3HeaderNames.ServerSideEncryptionCustomerKeyMD5,    Convert.ToBase64String(key.KeyMD5));
         }
     }
 }
