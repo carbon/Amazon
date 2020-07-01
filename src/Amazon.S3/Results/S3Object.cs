@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Net;
 
 using Carbon.Storage;
-using System.Globalization;
 
 namespace Amazon.S3
 {
@@ -15,7 +15,7 @@ namespace Amazon.S3
     {
         private Stream? stream;
         private readonly Dictionary<string, string> properties = new Dictionary<string, string>();
-        private readonly HttpResponseMessage? response;
+        private HttpResponseMessage? response;
 
         public S3Object(string name, HttpResponseMessage response)
         {
@@ -68,28 +68,42 @@ namespace Amazon.S3
            get => DateTime.ParseExact(properties["Last-Modified"], "r", CultureInfo.InvariantCulture).ToUniversalTime();
         }
 
-        public CacheControlHeaderValue CacheControl
+        public CacheControlHeaderValue? CacheControl
         {
-            get => CacheControlHeaderValue.Parse(properties["Cache-Control"]);
-            set => properties["Cache-Control"] = value.ToString(); 
+            get => properties.TryGetValue("Cache-Control", out var cacheControl) ? CacheControlHeaderValue.Parse(cacheControl) : null;
+            set
+            {
+                if (value != null)
+                {
+                    properties["Cache-Control"] = value.ToString();
+                }
+                else
+                {
+                    properties.Remove("Cache-Control");
+                }
+            }
         }
 
-        // x-amz-replication-status
-        // x-amz-restore
-        // x-amz-object-lock-mode
-        // x-amz-object-lock-retain-until-date
-        // x-amz-object-lock-legal-hold	
+        public ContentRangeHeaderValue? ContentRange
+        {
+            get => properties.TryGetValue("Content-Range", out var contentRange) ? ContentRangeHeaderValue.Parse(contentRange) : null;
+        }
+
 
         #endregion
 
         public async ValueTask<Stream> OpenAsync()
         {
-            if (response is null)
-            {
-                throw new Exception("response is null");
-            }
+            if (response is null) throw new ObjectDisposedException(nameof(S3Object));
 
             return stream ??= await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        }
+
+        public async Task CopyToAsync(Stream output)
+        {
+            if (response is null) throw new ObjectDisposedException(nameof(S3Object));
+
+            await response.Content.CopyToAsync(output).ConfigureAwait(false);
         }
 
         #region IBlob
@@ -106,6 +120,8 @@ namespace Amazon.S3
         {
             stream?.Dispose();
             response?.Dispose();
+
+            response = null;
         }
     }
 }
