@@ -5,7 +5,7 @@ using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class DynamoQueryExpression
+    public sealed class DynamoQueryExpression
     {
         public readonly string[] keyNames;
         
