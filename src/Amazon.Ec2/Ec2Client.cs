@@ -46,6 +46,13 @@ namespace Amazon.Ec2
             return result.Instances.Count > 0 ? result.Instances[0] : null;
         }
 
+        public async Task<InstanceTypeInfo?> DescribeInstanceTypeAsync(string instanceType)
+        {
+            var result = await DescribeInstanceTypesAsync(new DescribeInstanceTypesRequest(instanceType));
+
+            return result.InstanceTypes.Length > 0 ? result.InstanceTypes[0] : null;
+        }
+   
         public async Task<Volume?> DescribeVolumeAsync(string volumeId)
         {
             var result = await DescribeVolumesAsync(new DescribeVolumesRequest(new[] { volumeId }));
@@ -64,11 +71,9 @@ namespace Amazon.Ec2
 
         #region Instances
 
-        public async Task<DescribeInstancesResponse> DescribeInstancesAsync(DescribeInstancesRequest request)
+        public Task<DescribeInstancesResponse> DescribeInstancesAsync(DescribeInstancesRequest request)
         {
-            var responseText = await SendAsync(request).ConfigureAwait(false);
-
-            return DescribeInstancesResponse.Parse(responseText);
+            return SendAsync<DescribeInstancesResponse>(request);
         }
 
         public Task<RunInstancesResponse> RunInstancesAsync(RunInstancesRequest request)
@@ -94,6 +99,17 @@ namespace Amazon.Ec2
         public Task<TerminateInstancesResponse> TerminateInstancesAsync(TerminateInstancesRequest request)
         {
             return SendAsync<TerminateInstancesResponse>(request);
+        }
+
+        #endregion
+
+        #region Instance Types
+
+        public async Task<DescribeInstanceTypesResponse> DescribeInstanceTypesAsync(DescribeInstanceTypesRequest request)
+        {
+            string responseText = await SendAsync(request).ConfigureAwait(false);
+
+            return DescribeInstanceTypesResponse.Deserialize(responseText);
         }
 
         #endregion
@@ -162,9 +178,9 @@ namespace Amazon.Ec2
                 Content = GetPostContent(request.ToParams())
             };
 
-            var responseXml = await SendAsync(httpRequest).ConfigureAwait(false);
+            string responseXml = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            return Ec2ResponseHelper<TResponse>.ParseXml(responseXml);
+            return Ec2Serializer<TResponse>.Deserialize(responseXml);
         }
 
         private FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)
