@@ -71,42 +71,30 @@ namespace Amazon.DynamoDb
 
         public HashSet<string>? GetStringSet(string key)
         {
-            if (TryGet(key, out DbValue value))
-            {
-                return value.ToStringSet();
-            }
-
-            return null;
+            return TryGet(key, out DbValue value)
+                ? value.ToStringSet()
+                : null;
         }
 
         public byte[]? GetBinary(string key)
         {
-            if (TryGet(key, out DbValue value))
-            {
-                return value.ToBinary();
-            }
-
-            return null;
+            return TryGet(key, out DbValue value)
+                ? value.ToBinary()
+                : null;
         }
 
         public int GetInt(string key)
         {
-            if (TryGet(key, out DbValue value))
-            {
-                return value.ToInt();
-            }
-
-            return 0;
+            return TryGet(key, out DbValue value)
+                ? value.ToInt()
+                : 0;
         }
 
         public string? GetString(string key)
         {
-            if (TryGet(key, out DbValue value))
-            {
-                return value.ToString();
-            }
-
-            return null;
+            return TryGet(key, out DbValue value)
+                ? value.ToString()
+                : null;
         }
 
         public void Set(string name, DbValue value)
@@ -256,7 +244,7 @@ namespace Amazon.DynamoDb
 
             foreach (var attribute in items)
             {
-                MemberDescriptor member = model[attribute.Key];
+                MemberDescriptor member = model[attribute.Key]!;
 
                 if (member is null) continue;
 
@@ -310,7 +298,7 @@ namespace Amazon.DynamoDb
 
             foreach (var attribute in items)
             {
-                MemberDescriptor member = model[attribute.Key];
+                MemberDescriptor member = model[attribute.Key]!;
 
                 if (member is null) continue;
 
