@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sts
 {
-    public class GetCallerIdentityResponse : IStsResponse
+    public sealed class GetCallerIdentityResponse : IStsResponse
     {
         [XmlElement]
         public GetCallerIdentityResult GetCallerIdentityResult { get; set; }
