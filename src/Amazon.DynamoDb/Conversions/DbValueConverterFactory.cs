@@ -96,11 +96,4 @@ namespace Amazon.DynamoDb
             converters.Add(typeof(T), converter);
         }
     }
-
-    public interface IDbValueConverter
-    {
-        DbValue FromObject(object value, IMember meta = null!);
-
-        object ToObject(DbValue item, IMember meta);
-    }
 }
