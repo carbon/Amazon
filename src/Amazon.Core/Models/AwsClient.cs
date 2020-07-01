@@ -10,14 +10,7 @@ namespace Amazon
 {
     public abstract class AwsClient
     {
-        protected readonly HttpClient httpClient = new HttpClient(new HttpClientHandler { 
-            AutomaticDecompression = DecompressionMethods.GZip 
-        })
-        {
-            DefaultRequestHeaders = {
-                { "User-Agent", "Carbon/2.4" }
-            }
-        };
+        protected readonly HttpClient httpClient;
         
         private readonly AwsService service;
         protected readonly IAwsCredential credential;
@@ -27,6 +20,25 @@ namespace Amazon
             this.service    = service    ?? throw new ArgumentNullException(nameof(service));
             Region          = region     ?? throw new ArgumentNullException(nameof(region));
             this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
+
+            Endpoint = $"https://{service.Name}.{region.Name}.amazonaws.com/";
+
+            this.httpClient = new HttpClient(new HttpClientHandler {
+                AutomaticDecompression = DecompressionMethods.GZip
+            })
+            {
+                DefaultRequestHeaders = {
+                    { "User-Agent", "Carbon/2.5" }
+                }
+            };
+        }
+
+        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient)
+        {
+            this.service    = service ?? throw new ArgumentNullException(nameof(service));
+            Region          = region ?? throw new ArgumentNullException(nameof(region));
+            this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
             Endpoint = $"https://{service.Name}.{region.Name}.amazonaws.com/";
         }
@@ -49,14 +61,14 @@ namespace Amazon
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
         
-        protected async Task SignAsync(HttpRequestMessage request)
+        protected async ValueTask SignAsync(HttpRequestMessage request)
         {
             if (credential.ShouldRenew)
             {
                 await credential.RenewAsync().ConfigureAwait(false);   
             }
 
-            var date = DateTimeOffset.UtcNow;
+            DateTimeOffset date = DateTimeOffset.UtcNow;
 
             request.Headers.Host = request.RequestUri.Host;
             request.Headers.Date = date;
@@ -68,7 +80,7 @@ namespace Amazon
 
             request.Headers.Add("x-amz-date", date.UtcDateTime.ToString("yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture));
 
-            SignerV4.Default.Sign(credential, scope: GetCredentialScope(request), request: request);
+            SignerV4.Sign(credential, scope: GetCredentialScope(request), request: request);
         }
 
         protected virtual async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
