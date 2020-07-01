@@ -15,7 +15,7 @@ namespace Amazon.S3
             string host, 
             string bucketName, 
             string? objectName, 
-            string? version = null)
+            string? versionId = null)
         {
             if (host is null) throw new ArgumentNullException(nameof(host));
 
@@ -24,7 +24,7 @@ namespace Amazon.S3
 
             // https://{bucket}.s3.amazonaws.com/{key}
 
-            var urlBuilder = StringBuilderCache.Aquire()
+            var urlBuilder = new StringBuilder()
                 .Append("https://")
                 .Append(host)
                 .Append('/')
@@ -38,13 +38,20 @@ namespace Amazon.S3
                 urlBuilder.Append(objectName);
             }
 
-            if (version != null)
+            if (versionId != null && versionId.Length > 0)
             {
-                urlBuilder.Append("?version=");
-                urlBuilder.Append(version);
+                if (versionId[0] == '?')
+                {
+                    urlBuilder.Append(versionId);
+                }
+                else
+                {
+                    urlBuilder.Append("?versionId=");
+                    urlBuilder.Append(versionId);
+                }
             }
 
-            RequestUri = new Uri(StringBuilderCache.ExtractAndRelease(urlBuilder));
+            RequestUri = new Uri(urlBuilder.ToString());
             Method = method;
         }
 
@@ -52,7 +59,8 @@ namespace Amazon.S3
            HttpMethod method,
            string host,
            string bucketName,
-           Dictionary<string, string> queryParamaters)
+           string? r,
+           Dictionary<string, string> paramaters)
         {
             if (host is null) throw new ArgumentNullException(nameof(host));
 
@@ -65,14 +73,22 @@ namespace Amazon.S3
             urlBuilder.Write('/');
             urlBuilder.Write(bucketName); 
 
-            if (queryParamaters.Count > 0)
+            if (paramaters.Count > 0)
             {
                 int i = 0;
 
-                foreach (KeyValuePair<string, string> pair in queryParamaters)
+                if (r != null)
+                {
+                    urlBuilder.Write('?');
+                    urlBuilder.Write(r);
+                    i++;
+                }
+
+                foreach (KeyValuePair<string, string> pair in paramaters)
                 {
                     urlBuilder.Write(i == 0 ? '?' : '&');
                     urlBuilder.Write(pair.Key);
+
                     urlBuilder.Write('=');
                     UrlEncoder.Default.Encode(urlBuilder, pair.Value);
 
@@ -86,7 +102,7 @@ namespace Amazon.S3
 
         public void SetStorageClass(StorageClass storageClass)
         {
-            Headers.Add("x-amz-storage-class", storageClass.Name);
+            Headers.Add(S3HeaderNames.StorageClass, storageClass.Name);
         }
 
         public string BucketName { get; }
