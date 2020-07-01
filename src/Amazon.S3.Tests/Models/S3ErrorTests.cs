@@ -2,7 +2,8 @@
 
 namespace Amazon.S3.Models.Tests
 {
-    public class S3ErrorTests
+
+	public class S3ErrorTests
 	{
 		[Fact]
 		public void ParseS3ErrorXml()

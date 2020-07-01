@@ -10,7 +10,7 @@ namespace Amazon.S3.Models.Tests
         [Fact]
         public void Test2()
         {
-            var text = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            var xml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <ListBucketResult xmlns=""http://s3.amazonaws.com/doc/2006-03-01/"">
 	<Name>cmcdn</Name>
 	<Prefix>1</Prefix>
@@ -42,7 +42,7 @@ namespace Amazon.S3.Models.Tests
 	</Contents>
 </ListBucketResult>";
 
-            var result = ListBucketResult.ParseXml(text);
+            var result = ListBucketResult.ParseXml(xml);
 
             Assert.Equal("cmcdn", result.Name);
             Assert.Equal("1", result.Prefix);

@@ -7,7 +7,7 @@ namespace Amazon.S3.Models.Tests
         [Fact]
         public void Test()
         {
-            var batch = new DeleteBatch("1", "2");
+            var batch = new DeleteBatch(new[] { "1", "2" });
 
             Assert.Equal(expected: @"<Delete>
   <Object>
