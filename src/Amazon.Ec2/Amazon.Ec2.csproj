@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ec2</AssemblyName>
-    <VersionPrefix>0.16.2</VersionPrefix>
+    <VersionPrefix>0.17.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
+    <Nullable>enable</Nullable>
     
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
@@ -17,6 +18,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Amazon.Core\Amazon.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
   </ItemGroup>
 
 </Project>
