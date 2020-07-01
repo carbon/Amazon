@@ -9,7 +9,7 @@ namespace Amazon.Tests
         [Fact]
         public void Enum()
         {
-            Assert.Equal(18, AwsRegion.All.Length);
+            Assert.Equal(20, AwsRegion.All.Length);
 
             foreach (var region in AwsRegion.All)
             {
