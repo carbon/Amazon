@@ -19,7 +19,7 @@ namespace Amazon.S3
         {
             get
             {
-                if (this.Headers.TryGetValues("x-amz-metadata-directive", out var values))
+                if (this.Headers.TryGetValues(S3HeaderNames.MetadataDirective, out var values))
                 {
                     switch (values.FirstOrDefault())
                     {
@@ -45,10 +45,9 @@ namespace Amazon.S3
                         break;
                 }
 
-                Set("x-amz-metadata-directive", val);
+                Set(S3HeaderNames.MetadataDirective, val);
             }
         }
-
 
         private void Set(string name, string? value)
         {
@@ -59,21 +58,5 @@ namespace Amazon.S3
 
             this.Headers.TryAddWithoutValidation(name, value);
         }
-
-        /*
-        x-amz-metadata-directive: metadata_directive
-        x-amz-copy-source-if-match: etag
-        x-amz-copy-source-if-none-match: etag
-        x-amz-copy-source-if-unmodified-since: time_stamp
-        x-amz-copy-source-if-modified-since: time_stamp
-        */
-
-    }
-
-
-    public enum MetadataDirectiveValue
-    {
-        Copy = 1,
-        Replace = 2
     }
 }
