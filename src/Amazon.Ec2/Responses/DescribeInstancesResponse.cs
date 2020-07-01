@@ -3,19 +3,24 @@ using System.Xml.Linq;
 
 namespace Amazon.Ec2
 {
-    public class DescribeInstancesResponse
+    public sealed class DescribeInstancesResponse : IEc2Response
     {
-        public List<Instance> Instances { get; } = new List<Instance>();
-
-        public static DescribeInstancesResponse Parse(string text)
+        public DescribeInstancesResponse(List<Instance> instances)
         {
-            var result = new DescribeInstancesResponse();
+            Instances = instances;
+        }
 
+        public IReadOnlyList<Instance> Instances { get; }
+
+        public static DescribeInstancesResponse Deserialize(string text)
+        {
             var rootEl = XElement.Parse(text);
 
             var ns = rootEl.Name.Namespace;
 
             var reservationSet = rootEl.Element(ns + "reservationSet");
+
+            var instances = new List<Instance>();
 
             foreach (var itemEl in reservationSet.Elements())
             {
@@ -23,13 +28,12 @@ namespace Amazon.Ec2
 
                 foreach (var instanceItemEl in instanceSetEl.Elements())
                 {
-                    result.Instances.Add(Instance.Deserialize(instanceItemEl));
+                    instances.Add(Instance.Deserialize(instanceItemEl));
                 }
             }
 
-            return result;
+            return new DescribeInstancesResponse(instances);
         }
-
     }
 }
 
