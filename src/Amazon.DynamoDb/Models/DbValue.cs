@@ -170,14 +170,14 @@ namespace Amazon.DynamoDb
 			this.value = value;
 		}
 
-		public DbValueType Kind => kind;
+		public readonly DbValueType Kind => kind;
 
 		/// <summary>
 		/// int, long, string, string [ ]
 		/// </summary>
-		public object Value => value;
+		public readonly object Value => value;
 
-		internal object ToPrimitiveValue()
+		internal readonly object ToPrimitiveValue()
 		{
 			return kind switch {
 				DbValueType.B => ToBinary(),
@@ -189,7 +189,7 @@ namespace Amazon.DynamoDb
 
 		#region To Helpers
 
-		public HashSet<string> ToStringSet()
+		public readonly HashSet<string> ToStringSet()
 		{
 			if (!(kind == DbValueType.NS || kind == DbValueType.SS || kind == DbValueType.BS)) {
 				throw new Exception("Cannot be converted to a set.");
@@ -210,7 +210,7 @@ namespace Amazon.DynamoDb
 			return set;
 		}
 
-		public HashSet<T> ToSet<T>()
+		public readonly HashSet<T> ToSet<T>()
 		{
 			if (!(kind == DbValueType.NS || kind == DbValueType.SS || kind == DbValueType.BS))
 			{
@@ -233,7 +233,7 @@ namespace Amazon.DynamoDb
 			return set;
 		}
 
-		public T[] ToArray<T>()
+		public readonly T[] ToArray<T>()
 		{
 			var type = value.GetType();
 		
@@ -254,7 +254,7 @@ namespace Amazon.DynamoDb
 			return array;
 		}
 
-		public bool ToBoolean()
+		public readonly bool ToBoolean()
 		{
             if (kind == DbValueType.N)
             {
@@ -269,19 +269,19 @@ namespace Amazon.DynamoDb
             throw new Exception($"Cannot convert '{value.GetType().Name}' to a Boolean");
 		}
 
-		public float ToSingle() => Convert.ToSingle(value);
+		public readonly float ToSingle() => Convert.ToSingle(value);
 
-		public short ToInt16() => Convert.ToInt16(value);
+		public readonly short ToInt16() => Convert.ToInt16(value);
 
-		public int ToInt() => Convert.ToInt32(value);
+		public readonly int ToInt() => Convert.ToInt32(value);
 
-		public long ToInt64() => Convert.ToInt64(value);
+		public readonly long ToInt64() => Convert.ToInt64(value);
 
-		public double ToDouble() => Convert.ToDouble(value);
+		public readonly double ToDouble() => Convert.ToDouble(value);
 
-		public decimal ToDecimal() => Convert.ToDecimal(value);
+		public readonly decimal ToDecimal() => Convert.ToDecimal(value);
 
-		public byte[] ToBinary()
+		public readonly byte[] ToBinary()
 		{
             return value is byte[] data
                 ? data
@@ -292,7 +292,7 @@ namespace Amazon.DynamoDb
 
 		#endregion
 
-		public JsonObject ToJson()
+		public readonly JsonObject ToJson()
 		{
 			// {"N":"225"}
 			// {"S":"Hello"}
@@ -423,39 +423,39 @@ namespace Amazon.DynamoDb
 
 		#region IConvertible
 
-		TypeCode IConvertible.GetTypeCode() => throw new NotImplementedException();
-		
-        bool IConvertible.ToBoolean(IFormatProvider? provider) => ToBoolean();
+		readonly TypeCode IConvertible.GetTypeCode() => throw new NotImplementedException();
 
-		byte IConvertible.ToByte(IFormatProvider? provider) => (byte)ToInt();
+		readonly bool IConvertible.ToBoolean(IFormatProvider? provider) => ToBoolean();
 
-        char IConvertible.ToChar(IFormatProvider? provider) => throw new NotImplementedException();
-		
-		DateTime IConvertible.ToDateTime(IFormatProvider? provider) => throw new NotImplementedException();
-		
-        decimal IConvertible.ToDecimal(IFormatProvider? provider) => ToDecimal();
+		readonly byte IConvertible.ToByte(IFormatProvider? provider) => (byte)ToInt();
 
-        double IConvertible.ToDouble(IFormatProvider? provider) => ToDouble();
+		readonly char IConvertible.ToChar(IFormatProvider? provider) => throw new NotImplementedException();
 
-        short IConvertible.ToInt16(IFormatProvider? provider) => ToInt16();
+		readonly DateTime IConvertible.ToDateTime(IFormatProvider? provider) => throw new NotImplementedException();
 
-        int IConvertible.ToInt32(IFormatProvider? provider) => ToInt();
+		readonly decimal IConvertible.ToDecimal(IFormatProvider? provider) => ToDecimal();
 
-        long IConvertible.ToInt64(IFormatProvider? provider) => ToInt64();
+		readonly double IConvertible.ToDouble(IFormatProvider? provider) => ToDouble();
 
-		sbyte IConvertible.ToSByte(IFormatProvider? provider) => (sbyte)ToInt16();
+		readonly short IConvertible.ToInt16(IFormatProvider? provider) => ToInt16();
 
-		float IConvertible.ToSingle(IFormatProvider? provider) => ToSingle();
+		readonly int IConvertible.ToInt32(IFormatProvider? provider) => ToInt();
 
-        string IConvertible.ToString(IFormatProvider? provider) => ToString();
+		readonly long IConvertible.ToInt64(IFormatProvider? provider) => ToInt64();
 
-		ushort IConvertible.ToUInt16(IFormatProvider? provider) => (ushort)ToInt();
+		readonly sbyte IConvertible.ToSByte(IFormatProvider? provider) => (sbyte)ToInt16();
 
-		uint IConvertible.ToUInt32(IFormatProvider? provider) => (uint)ToInt64();
+		readonly float IConvertible.ToSingle(IFormatProvider? provider) => ToSingle();
 
-		ulong IConvertible.ToUInt64(IFormatProvider? provider) => ulong.Parse(ToString(), CultureInfo.InvariantCulture);
+		readonly string IConvertible.ToString(IFormatProvider? provider) => ToString();
 
-		object IConvertible.ToType(Type conversionType, IFormatProvider? provider) => (Type.GetTypeCode(conversionType)) switch
+		readonly ushort IConvertible.ToUInt16(IFormatProvider? provider) => (ushort)ToInt();
+
+		readonly uint IConvertible.ToUInt32(IFormatProvider? provider) => (uint)ToInt64();
+
+		readonly ulong IConvertible.ToUInt64(IFormatProvider? provider) => ulong.Parse(ToString(), CultureInfo.InvariantCulture);
+
+		readonly object IConvertible.ToType(Type conversionType, IFormatProvider? provider) => (Type.GetTypeCode(conversionType)) switch
 		{
 			TypeCode.String => ToString(),
 			TypeCode.Int16  => ToInt16(),
