@@ -28,7 +28,7 @@ namespace Amazon.Helpers
 
         private static string ToPostData(this Dictionary<string, string> nvc, string? prefix)
         {
-            var sb = StringBuilderCache.Aquire();
+            var sb = new StringBuilder();
 
             if (prefix != null)
             {
@@ -37,7 +37,9 @@ namespace Amazon.Helpers
 
             foreach (string key in nvc.Keys)
             {
-                if (sb.Length > 0)
+                if (string.IsNullOrEmpty(key)) continue;
+
+                if (sb.Length > 1)
                 {
                     sb.Append('&');
                 }
@@ -47,7 +49,7 @@ namespace Amazon.Helpers
                 sb.Append(UrlEncoder.Default.Encode(nvc[key]));
             }
 
-            return StringBuilderCache.ExtractAndRelease(sb);
+            return sb.ToString();
         }
     }
 }
