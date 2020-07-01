@@ -5,7 +5,7 @@ namespace Amazon.S3
     public sealed class ListBucketRequest : S3Request
     {
         public ListBucketRequest(string host, string bucketName, ListBucketOptions options)
-            : base(HttpMethod.Get, host, bucketName, options.Items)
+            : base(HttpMethod.Get, host, bucketName, null, options.Items)
         {
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }

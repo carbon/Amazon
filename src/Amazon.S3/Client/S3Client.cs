@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Carbon.Storage;
@@ -16,6 +17,12 @@ namespace Amazon.S3
         
         public S3Client(AwsRegion region, string host, IAwsCredential credential)
             : base(AwsService.S3, region, credential)
+        {
+            Host = host ?? throw new ArgumentNullException(nameof(host));
+        }
+
+        public S3Client(AwsRegion region, string host, IAwsCredential credential, HttpClient httpClient)
+          : base(AwsService.S3, region, credential, httpClient)
         {
             Host = host ?? throw new ArgumentNullException(nameof(host));
         }
@@ -38,6 +45,16 @@ namespace Amazon.S3
             return ListBucketResult.ParseXml(responseText);
         }
 
+
+        public async Task<ListVersionsResult> ListObjectVersionsAsync(string bucketName, ListVersionsOptions options)
+        {
+            var request = new ListVersionsRequest(Host, bucketName, options);
+
+            string responseText = await SendAsync(request).ConfigureAwait(false);
+
+            return ListVersionsResult.ParseXml(responseText);
+        }
+
         #region Multipart Uploads
 
         public async Task AbortMultipartUploadAsync(AbortMultipartUploadRequest request)
@@ -52,9 +69,9 @@ namespace Amazon.S3
             return InitiateMultipartUploadResult.ParseXml(responseText);
         }
 
-        public async Task<UploadPartResult> UploadPartAsync(UploadPartRequest request)
+        public async Task<UploadPartResult> UploadPartAsync(UploadPartRequest request, CancellationToken cancellationToken = default)
         {
-            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
+            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption, cancellationToken).ConfigureAwait(false);
 
             return new UploadPartResult(
                 uploadId   : request.UploadId,
@@ -70,15 +87,15 @@ namespace Amazon.S3
             return ResponseHelper<CompleteMultipartUploadResult>.ParseXml(responseText);
         }
 
-        #endregion
+#endregion
 
-        public async Task<PutObjectResult> PutObjectAsync(PutObjectRequest request)
+        public async Task<PutObjectResult> PutObjectAsync(PutObjectRequest request, CancellationToken cancellationToken = default)
         {
-            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
+            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption, cancellationToken).ConfigureAwait(false);
 
             string? versionId = null;
 
-            if (response.Headers.TryGetValues("x-amz-version-id", out var xVersionId))
+            if (response.Headers.TryGetValues(S3HeaderNames.VersionId, out var xVersionId))
             {
                 versionId = xVersionId.ToString();
             }
@@ -96,9 +113,10 @@ namespace Amazon.S3
             return CopyObjectResult.ParseXml(responseText);
         }
 
-        public async Task DeleteObjectAsync(DeleteObjectRequest request)
+        public async Task DeleteObjectAsync(DeleteObjectRequest request, CancellationToken cancelationToken = default)
         {
-            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
+
+            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption, cancelationToken).ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.NoContent)
             {
@@ -106,39 +124,42 @@ namespace Amazon.S3
             }
         }
 
-        public async Task<DeleteResult> DeleteObjectsAsync(BatchDeleteRequest request)
+        public async Task<DeleteResult> DeleteObjectsAsync(DeleteObjectBatchRequest request)
         {
             var responseText = await SendAsync(request).ConfigureAwait(false);
             
             return DeleteResult.Parse(responseText);
         }
 
-        public async Task<RestoreObjectResult> RestoreObjectAsync(RestoreObjectRequest request)
+        public async Task<RestoreObjectResult> RestoreObjectAsync(RestoreObjectRequest request, CancellationToken cancelationToken = default)
         {
-            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
+            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption, cancelationToken).ConfigureAwait(false);
 
             return new RestoreObjectResult(response.StatusCode);
         }
 
-        public async Task<S3Object> GetObjectAsync(GetObjectRequest request)
+        public async Task<S3Object> GetObjectAsync(GetObjectRequest request, CancellationToken cancelationToken = default)
         {
-            var response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
+            var response = await SendAsync2(request, request.CompletionOption, cancelationToken).ConfigureAwait(false);
 
             return new S3Object(request.ObjectName!, response);
         }
 
-        public async Task<S3ObjectInfo> GetObjectHeadAsync(ObjectHeadRequest request)
+        public async Task<S3ObjectInfo> GetObjectHeadAsync(ObjectHeadRequest request, CancellationToken cancelationToken = default)
         {
-            using var response = await SendAsync2(request, request.CompletionOption).ConfigureAwait(false);
+            using var response = await SendAsync2(request, HttpCompletionOption.ResponseHeadersRead, cancelationToken).ConfigureAwait(false);
 
             return S3ObjectInfo.FromResponse(request.BucketName, request.ObjectName!, response);
         }
 
-        private async Task<HttpResponseMessage> SendAsync2(HttpRequestMessage request, HttpCompletionOption completionOption)
+        private async Task<HttpResponseMessage> SendAsync2(
+            HttpRequestMessage request,
+            HttpCompletionOption completionOption, 
+            CancellationToken cancellationToken)
         {
             await SignAsync(request).ConfigureAwait(false);
 
-            var response = await httpClient.SendAsync(request, completionOption).ConfigureAwait(false);
+            var response = await httpClient.SendAsync(request, completionOption, cancellationToken).ConfigureAwait(false);
             
             if (response.StatusCode == HttpStatusCode.NotModified)
             {
@@ -187,16 +208,16 @@ namespace Amazon.S3
                     var errorResponse = ResponseHelper<S3ErrorResponse>.ParseXml(responseText);
 
                     throw new S3Exception(
-                       error: errorResponse.Error,
-                       statusCode: response.StatusCode
+                       error      : errorResponse.Error,
+                       statusCode : response.StatusCode
                    );
 
                 }
                 if (responseText.Contains("<Error>"))
                 {
                     throw new S3Exception(
-                        error: S3Error.ParseXml(responseText),
-                        statusCode: response.StatusCode
+                        error      : S3Error.ParseXml(responseText),
+                        statusCode : response.StatusCode
                     );
                 }
             }
@@ -205,6 +226,6 @@ namespace Amazon.S3
             throw new S3Exception("Unexpected S3 error. " + response.StatusCode + ":" + responseText, response.StatusCode);
         }
 
-        #endregion
+#endregion
     }
 }
