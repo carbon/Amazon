@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -32,7 +30,7 @@ namespace Amazon.Ec2
                 }
                 else
                 {
-                    parameters.Add(member.Name, value.ToString());
+                    parameters.Add(member.Name, value.ToString()!);
                 }
             }
 
@@ -43,9 +41,9 @@ namespace Amazon.Ec2
         {
             for (int i = 0; i < array.Count; i++)
             {
-                var key = prefix + "." + (i + 1);
+                string key = prefix + "." + (i + 1);
 
-                var element = array[i];
+                object element = array[i]!;
 
                 if (Type.GetTypeCode(element.GetType()) == TypeCode.Object)
                 {
@@ -53,7 +51,7 @@ namespace Amazon.Ec2
                 }
                 else
                 {
-                    parameters.Add(key, element.ToString());
+                    parameters.Add(key, element.ToString()!);
                 }
             }
         }
@@ -85,7 +83,7 @@ namespace Amazon.Ec2
                 }
                 else
                 {
-                    parameters.Add(key, value.ToString());
+                    parameters.Add(key, value.ToString()!);
                 }
             }
         }

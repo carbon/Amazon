@@ -5,12 +5,11 @@ using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public static class Ec2ResponseHelper<T>
-        where T: IEc2Response
+    public static class Ec2Serializer<T>
     {
         private static readonly XmlSerializer serializer = new XmlSerializer(typeof(T), Ec2Client.Namespace);
 
-        public static T ParseXml(string xml)
+        public static T Deserialize(string xml)
         {
             using var reader = new StringReader(xml);
 
