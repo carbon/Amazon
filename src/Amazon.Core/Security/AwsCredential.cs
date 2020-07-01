@@ -7,7 +7,7 @@ namespace Amazon
     {
         public AwsCredential(string accessKeyId, string secretAccessKey)
         {
-            AccessKeyId     = accessKeyId     ?? throw new ArgumentNullException(nameof(accessKeyId));
+            AccessKeyId = accessKeyId ?? throw new ArgumentNullException(nameof(accessKeyId));
             SecretAccessKey = secretAccessKey ?? throw new ArgumentNullException(nameof(secretAccessKey));
         }
 
@@ -25,25 +25,21 @@ namespace Amazon
             if (text is null)
                 throw new ArgumentNullException(nameof(text));
 
-            var colonIndex = text.IndexOf(':');
-            
+            int colonIndex = text.IndexOf(':');
+
             if (colonIndex == -1)
             {
                 throw new Exception("accessKeyId & secretAccessKey must be seperated by ':'");
             }
 
             return new AwsCredential(
-                accessKeyId     : text.Substring(0, colonIndex), 
+                accessKeyId     : text.Substring(0, colonIndex),
                 secretAccessKey : text.Substring(colonIndex + 1)
             );
         }
 
-        #region Renewable
-
         public bool ShouldRenew => false;
 
-        public Task<bool> RenewAsync() => throw new NotImplementedException("AwsCredential is not renewable");
-
-        #endregion
+        public Task<bool> RenewAsync() => Task.FromResult(false);
     }
 }
