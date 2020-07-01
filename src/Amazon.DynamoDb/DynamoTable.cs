@@ -127,7 +127,16 @@ namespace Amazon.DynamoDb
 
             var result = await client.BatchGetItemAsync(request).ConfigureAwait(false);
 
-            return result.Responses[0].Select(i => i.As<T>(metadata)).ToArray();
+            TableItemCollection r0 = result.Responses[0];
+
+            var items = new T[r0.Count];
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                items[i] = r0[i].As<T>(metadata);
+            }
+
+            return items;
         }
 
         public Task<IReadOnlyList<T>> QueryAsync(params Expression[] expressions)
@@ -136,7 +145,7 @@ namespace Amazon.DynamoDb
 
             var query = new DynamoQuery {
                 KeyConditionExpression    = e.KeyExpression.Text,
-                ExpressionAttributeNames  = (e.HasAttributeNames) ? e.AttributeNames : null,
+                ExpressionAttributeNames  = e.HasAttributeNames ? e.AttributeNames : null,
                 ExpressionAttributeValues = e.AttributeValues,
                 FilterExpression          = e.FilterExpression?.Text
             };
