@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ReturnValues
     {
         /// <summary>

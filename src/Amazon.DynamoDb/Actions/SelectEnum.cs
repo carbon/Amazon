@@ -1,5 +1,8 @@
-﻿namespace Amazon.DynamoDb
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.DynamoDb
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum SelectEnum
     {
         Unknown = 0,
