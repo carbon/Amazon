@@ -12,7 +12,7 @@ namespace Amazon.Sts
         {
             using var doc = JsonDocument.Parse(JsonSerializer.SerializeToUtf8Bytes(instance, jso));
 
-            var parameters = new Dictionary<string, string>();
+            var parameters = new Dictionary<string, string>(2);
 
             foreach (var member in doc.RootElement.EnumerateObject())
             {
