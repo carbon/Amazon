@@ -1,8 +1,10 @@
-﻿using System.Runtime.Serialization;
+﻿#nullable disable
+
+using System.Runtime.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class TagSpecification
+    public sealed class TagSpecification
     {
         public TagSpecification() { }
 
@@ -11,8 +13,6 @@ namespace Amazon.Ec2
             ResourceType = resourceType;
             Tags = tags;
         }
-
-
 
         [DataMember(Name = "Tag")]
         public Tag[] Tags { get; set; }

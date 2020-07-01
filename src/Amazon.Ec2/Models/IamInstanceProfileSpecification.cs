@@ -1,8 +1,10 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 
 namespace Amazon.Ec2
 {
-    public class IamInstanceProfileSpecification
+    public sealed class IamInstanceProfileSpecification
     {
         public IamInstanceProfileSpecification() { }
 

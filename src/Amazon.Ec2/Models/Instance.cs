@@ -1,10 +1,12 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class Instance
+    public sealed class Instance
     {
         [XmlElement("architechure")]
         public string Architecture { get; set; } // i386 | x86_64

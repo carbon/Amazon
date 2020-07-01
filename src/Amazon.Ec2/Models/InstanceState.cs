@@ -1,8 +1,10 @@
-﻿using System.Xml.Serialization;
+﻿#nullable disable
+
+using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class InstanceState
+    public sealed class InstanceState
     {
         /*
         0 : pending

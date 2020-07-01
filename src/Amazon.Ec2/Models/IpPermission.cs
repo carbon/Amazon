@@ -1,8 +1,11 @@
-﻿using System.Xml.Serialization;
+﻿#nullable disable
+
+
+using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class IpPermission
+    public sealed class IpPermission
     {
         // -1
         [XmlElement("ipProtocal")]

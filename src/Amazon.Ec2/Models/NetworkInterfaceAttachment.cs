@@ -1,9 +1,11 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class NetworkInterfaceAttachment
+    public sealed class NetworkInterfaceAttachment
     {
         [XmlElement("attachmentId")]
         public string AttachmentId  { get; set; }

@@ -4,30 +4,22 @@ using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public sealed class SecurityGroup
+    public sealed class IpPermissionGroup
     {
-        [XmlElement("ownerId")]
-        public long OwnerId { get; set; }
-        
+        [XmlElement("userId")]
+        public string UserId { get; set; }
+
         [XmlElement("groupId")]
         public string GroupId { get; set; }
-
-        [XmlElement("groupName")]
-        public string GroupName { get; set; }
-
-        [XmlElement("groupDescription")]
-        public string GroupDescription { get; set; }
 
         [XmlElement("vpcId")]
         public string VpcId { get; set; }
 
-        [XmlArray("ipPermissions")]
-        [XmlArrayItem("item")]
-        public IpPermission[] IpPermissions { get; set; }
+        [XmlElement("vpcPeeringConnectionId")]
+        public string VpcPeeringConnectionId { get; set; }
 
-        [XmlArray("ipPermissionsEgress")]
-        [XmlArrayItem("item")]
-        public IpPermission[] IpPermissionsEgress { get; set; }
+        [XmlElement("peeringStatus")]
+        public string PeeringStatus { get; set; }
     }
 }
 

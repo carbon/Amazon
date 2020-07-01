@@ -1,6 +1,8 @@
-﻿namespace Amazon.Ec2
+﻿#nullable disable
+
+namespace Amazon.Ec2
 {
-    public class AvailabilityZone
+    public sealed class AvailabilityZone
     {
         public string RegionName { get; set; }
         

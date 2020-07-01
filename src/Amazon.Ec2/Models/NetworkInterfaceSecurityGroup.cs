@@ -4,6 +4,16 @@ namespace Amazon.Ec2
 {
     public class NetworkInterfaceSecurityGroup
     {
+#nullable disable
+        public NetworkInterfaceSecurityGroup() { }
+#nullable enable
+
+        public NetworkInterfaceSecurityGroup(string groupId, string groupName)
+        {
+            GroupId = groupId;
+            GroupName = groupName;
+        }
+
         [XmlElement("groupId")]
         public string GroupId { get; set; }
 

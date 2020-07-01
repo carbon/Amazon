@@ -1,16 +1,17 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class BlockDeviceMapping
+    public sealed class BlockDeviceMapping
     {
+#nullable disable
         public BlockDeviceMapping() { }
+#nullable enable
 
         public BlockDeviceMapping(string deviceName, EbsBlockDevice ebs)
         {
-            DeviceName = deviceName ?? throw new ArgumentNullException(nameof(deviceName));
-            Ebs        = ebs ?? throw new ArgumentNullException(nameof(ebs));
+            DeviceName = deviceName;
+            Ebs = ebs;
         }
 
         [XmlElement("deviceName")]
@@ -20,19 +21,10 @@ namespace Amazon.Ec2
         public EbsBlockDevice Ebs { get; set; }
 
         [XmlElement("virtualName")]
-        public string VirtualName { get; set; }
-    }
-
-    public static class BlockDeviceNames
-    {
-        public const string Root = "/dev/sda1";
-
-        public const string sda1 = "/dev/sda1";
-        public const string xvda = "/dev/xvda";
+        public string? VirtualName { get; set; }
     }
 
 }
-
 
 /*
 <deviceName>/dev/xvda</deviceName>

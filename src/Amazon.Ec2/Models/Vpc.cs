@@ -1,8 +1,10 @@
-﻿using System.Xml.Serialization;
+﻿#nullable disable
+
+using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class Vpc
+    public sealed class Vpc
     {
         [XmlElement("vpcId")]
         public string VpcId { get; set; }

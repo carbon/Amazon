@@ -1,8 +1,10 @@
-﻿using System.Xml.Serialization;
+﻿#nullable disable
+
+using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class NetworkInterface
+    public sealed class NetworkInterface
     {
         [XmlElement("networkInterfaceId")]
         public string NetworkInterfaceId { get; set; }

@@ -1,8 +1,10 @@
 ﻿namespace Amazon.Ec2
 {
-    public class Tag
+    public sealed class Tag
     {
+#nullable disable
         public Tag() { }
+#nullable enable
 
         public Tag(string key, string value)
         {

@@ -2,7 +2,9 @@
 {
     public sealed class InstanceType
     {
+#nullable disable
         public InstanceType() { }
+#nullable enable
 
         public InstanceType(string name)
         {

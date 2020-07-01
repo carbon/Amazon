@@ -1,8 +1,10 @@
-﻿using System.Xml.Serialization;
+﻿#nullable disable
+
+using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class Subnet
+    public sealed class Subnet
     {
         [XmlElement("subnetId")]
         public string SubnetId { get; set; }

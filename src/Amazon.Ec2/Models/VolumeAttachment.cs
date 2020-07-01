@@ -1,9 +1,11 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Xml.Serialization;
 
 namespace Amazon.Ec2
 {
-    public class VolumeAttachment
+    public sealed class VolumeAttachment
     {
         [XmlElement("volumeId")]
         public string VolumeId { get; set; }
