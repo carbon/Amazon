@@ -16,6 +16,8 @@ namespace Amazon.Ses
 
         public string Code => error.Code;
 
-        public bool IsTransient => Code == "Throttling" || Code == "ServiceUnavailable";
+        public bool IsTransient => 
+            string.Equals(Code, "Throttling", StringComparison.Ordinal) || 
+            string.Equals(Code, "ServiceUnavailable", StringComparison.Ordinal);
     }
 }
