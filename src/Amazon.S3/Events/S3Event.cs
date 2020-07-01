@@ -1,31 +1,31 @@
 ﻿#nullable disable
 
 using System;
-using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Amazon.S3.Events
 {
     public sealed class S3Event
     {
-        [DataMember(Name = "eventVersion")]
+        [JsonPropertyName("eventVersion")]
         public string EventVersion { get; set; } // 2.0 d
 
-        [DataMember(Name = "eventSource")]
+        [JsonPropertyName("eventSource")]
         public string EventSource { get; set; } // aws:s3
 
-        [DataMember(Name = "awsRegion")]
+        [JsonPropertyName("awsRegion")]
         public string AwsRegion { get; set; } // us-east-1
 
-        [DataMember(Name = "eventTime")]
+        [JsonPropertyName("eventTime")]
         public DateTime EventTime { get; set; } // 2017-10-31T23:52:06.033Z
 
-        [DataMember(Name = "eventName")]
+        [JsonPropertyName("eventName")]
         public string EventName { get; set; } // ObjectCreated:Put
 
-        [DataMember(Name = "userIdentity")]
+        [JsonPropertyName("userIdentity")]
         public S3UserIdentity UserIdentity { get; set; }
 
-        [DataMember(Name = "s3")]
+        [JsonPropertyName("s3")]
         public S3EventDetails S3 { get; set; }     
     }
 }
