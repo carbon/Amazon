@@ -71,7 +71,7 @@ namespace Amazon.DynamoDb
         {
             foreach (string key in keyNames)
             {
-                if (name == key) return true;
+                if (name.Equals(key, StringComparison.Ordinal)) return true;
             }
 
             return false;

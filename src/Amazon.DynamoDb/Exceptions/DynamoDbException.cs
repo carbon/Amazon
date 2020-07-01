@@ -63,7 +63,7 @@ namespace Amazon.DynamoDb
                 }
             }
 
-            if (type == "ConditionalCheckFailedException")
+            if (string.Equals(type, "ConditionalCheckFailedException", StringComparison.Ordinal))
             {
                 return new Conflict(message);
             }

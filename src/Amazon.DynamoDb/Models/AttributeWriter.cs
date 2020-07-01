@@ -183,7 +183,7 @@ namespace Amazon.DynamoDb.Models
 
                 writer.Write('"');
 
-                if (type == "S")
+                if (string.Equals(type, "S", StringComparison.Ordinal))
                 {
                     JavaScriptEncoder.Default.Encode(writer, value.ToString());
                 }
