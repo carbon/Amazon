@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 using Amazon.Sts.Exceptions;
@@ -42,19 +43,22 @@ namespace Amazon.Sts
             return SendAsync<GetCallerIdentityResponse>(GetCallerIdentityRequest.Default);
         }
         
-        public async Task<CallerIdentityVerificationParameters> GetCallerIdentityVerificationParametersAsync()
+        public async ValueTask<CallerIdentityVerificationParameters> GetCallerIdentityVerificationParametersAsync()
         {
+            const string body = "Action=GetCallerIdentity&Version=" + Version;
+
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
-                Content = GetPostContent(StsRequestHelper.ToParams(GetCallerIdentityRequest.Default))
+                Content = new ByteArrayContent(Encoding.ASCII.GetBytes(body))
             };
 
-            await SignAsync(httpRequest);
+            await SignAsync(httpRequest).ConfigureAwait(false);
 
-            var headers = new Dictionary<string, string>();
+            var headers = new Dictionary<string, string>(4);
 
             foreach (var header in httpRequest.Headers)
             {
-                if (header.Key.StartsWith("x-amz-", StringComparison.Ordinal) || header.Key == "Authorization")
+                if (header.Key.StartsWith("x-amz-", StringComparison.Ordinal)
+                 || header.Key.Equals("Authorization", StringComparison.Ordinal))
                 {
                     headers.Add(header.Key, string.Join(";", header.Value));
                 }
@@ -63,7 +67,7 @@ namespace Amazon.Sts
             return new CallerIdentityVerificationParameters(
                 url     : httpRequest.RequestUri.ToString(), 
                 headers : headers, 
-                body    : await httpRequest.Content.ReadAsStringAsync().ConfigureAwait(false)
+                body    : body
             );
         }
 
@@ -86,7 +90,7 @@ namespace Amazon.Sts
                 Content = GetPostContent(StsRequestHelper.ToParams(request))
             };
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
             return StsSerializer<TResponse>.ParseXml(responseText);
         }
@@ -100,7 +104,7 @@ namespace Amazon.Sts
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             throw new StsException(response.StatusCode, responseText);
         }
