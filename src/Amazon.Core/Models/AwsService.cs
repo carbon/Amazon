@@ -38,22 +38,18 @@ namespace Amazon
         public static readonly AwsService Translate        = new AwsService("translate");
         public static readonly AwsService Waf              = new AwsService("waf");
 
+        public bool Equals(AwsService? other)
+        {
+            return ReferenceEquals(this, other) || Name.Equals(other?.Name, StringComparison.Ordinal);
+        }
 
-#nullable disable
-
-        #region Equality
-
-        public bool Equals(AwsService other) => other != null && (ReferenceEquals(this, other) || Name == other.Name);
-
-        public override bool Equals(object obj) => this.Equals(obj as AwsService);
+        public override bool Equals(object? obj) => this.Equals(obj as AwsService);
 
         public static bool operator ==(AwsService lhs, AwsService rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(AwsService lhs, AwsService rhs) => lhs?.Name != rhs?.Name;
+        public static bool operator !=(AwsService lhs, AwsService rhs) => !lhs.Equals(rhs);
 
         public override int GetHashCode() => Name.GetHashCode();
-
-        #endregion
 
         public static implicit operator AwsService(string name) => new AwsService(name);
     }
