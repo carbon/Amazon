@@ -1,43 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace Amazon.Ec2
 {
     public sealed class RunInstancesRequest : IEc2Request
     {
+#nullable disable
         public RunInstancesRequest() { }
+#nullable enable
 
         public RunInstancesRequest(
-            int minCount,
-            int maxCount, 
-            string keyName = null,
-            string imageId = null,
-            string subnetId = null, 
-            string userData = null,
-            string clientToken = null)
+            string imageId,
+            string instanceType,
+            int minCount = 1,
+            int maxCount = 1,
+            string? keyName = null,
+            string? subnetId = null, 
+            string? userData = null,
+            string? clientToken = null,
+            InstanceMetadataOptionsRequest? metadataOptions = null,
+            string[]? securityGroupIds = null)
         {
             if (minCount <= 0)
                 throw new ArgumentException("Must be > 0", nameof(minCount));
 
-            if (maxCount <= 0)
-                throw new ArgumentException("Must be > 0", nameof(maxCount));
+            if (maxCount <= 0 || maxCount > 100)
+                throw new ArgumentException("Must be between 1 and 100", nameof(maxCount));
 
-            MinCount    = minCount;
-            MaxCount    = maxCount;
-            KeyName     = keyName;
-            ImageId     = imageId;
-            SubnetId    = subnetId;
-            UserData    = userData;
-            ClientToken = clientToken;
+            ImageId          = imageId;
+            InstanceType     = instanceType;
+            MinCount         = minCount;
+            MaxCount         = maxCount;
+            KeyName          = keyName;
+           
+            SubnetId         = subnetId;
+            UserData         = userData;
+            ClientToken      = clientToken;
+            MetadataOptions  = metadataOptions;
+            SecurityGroupIds = securityGroupIds;
         }
 
         [DataMember(Name = "BlockDeviceMapping", Order = 1)]
-        public BlockDeviceMapping[] BlockDeviceMappings { get; set; }
+        public BlockDeviceMapping[]? BlockDeviceMappings { get; set; }
 
         // Unique, case-sensitive identifier you provide to ensure the idempotency of the request. 
+        [MaxLength(64)]
         [DataMember(Order = 2)]
-        public string ClientToken { get; set; }
+        public string? ClientToken { get; set; }
 
         [DataMember(Order = 3)]
         public bool? DisableApiTermination { get; set; }
@@ -49,7 +60,7 @@ namespace Amazon.Ec2
         public bool? EbsOptimized { get; set; }
 
         [DataMember(Order = 6)]
-        public IamInstanceProfileSpecification IamInstanceProfile { get; set; }
+        public IamInstanceProfileSpecification? IamInstanceProfile { get; set; }
 
         // [Required]
         [DataMember(Order = 7)]
@@ -57,49 +68,56 @@ namespace Amazon.Ec2
         
         // stop | terminate
         [DataMember(Order = 8)]
-        public string InstanceInitiatedShutdownBehavior { get; set; }
+        public string? InstanceInitiatedShutdownBehavior { get; set; }
 
         // default = m1.small
         [DataMember(Order = 9)]
-        public string InstanceType { get; set; }
+        public string? InstanceType { get; set; }
 
         [DataMember(Order = 10)]
         public int? Ipv6AddressCount { get; set; }
 
         [DataMember(Order = 11)]
-        public string KernelId { get; set; }
+        public string? KernelId { get; set; }
 
         [DataMember(Order = 12)]
-        public string KeyName { get; set; }
+        public string? KeyName { get; set; }
 
+        [Range(1, 100)]
         [DataMember(Order = 13)]
-        // [Range(1, 100)]
         public int MaxCount { get; set; }
 
+        [Range(1, 100)]
         [DataMember(Order = 14)]
-        // [Range(1, 100)]
         public int MinCount { get; set; }
 
         [DataMember(Order = 15)]
-        public RunInstancesMonitoringEnabled Monitoring { get; set; }
+        public InstanceMetadataOptionsRequest? MetadataOptions { get; set; }
 
         [DataMember(Order = 16)]
-        public Placement Placement { get; set; }
+        public RunInstancesMonitoringEnabled? Monitoring { get; set; }
 
         [DataMember(Order = 17)]
-        public string PrivateIpAddress { get; set; }
+        public Placement? Placement { get; set; }
 
-        [DataMember(Name = "SecurityGroupId", Order = 18)]
-        public string[] SecurityGroupIds { get; set; }
+        [DataMember(Order = 18)]
+        public string? PrivateIpAddress { get; set; }
 
-        [DataMember(Order = 19)]
-        public string SubnetId { get; set; }
+        [DataMember(Name = "SecurityGroupId", Order = 19)]
+        public string[]? SecurityGroupIds { get; set; }
 
-        [DataMember(Name = "TagSpecification", Order = 20)]
-        public TagSpecification[] TagSpecifications { get; set; }
+        // [EC2-VPC] 
+        // - If you don't specify a subnet ID, we choose a default subnet from your default VPC for you.
+        // - If you don't have a default VPC, you must specify a subnet ID in the request.
+
+        [DataMember(Order = 20)]
+        public string? SubnetId { get; set; }
+
+        [DataMember(Name = "TagSpecification", Order = 21)]
+        public TagSpecification[]? TagSpecifications { get; set; }
  
-        [DataMember(Order = 21)]
-        public string UserData { get; set; }
+        [DataMember(Order = 22)]
+        public string? UserData { get; set; }
 
         public Dictionary<string, string> ToParams()
         {
