@@ -46,12 +46,13 @@ namespace Amazon.Ec2
             return result.Instances.Count > 0 ? result.Instances[0] : null;
         }
 
-        public async Task<InstanceTypeInfo?> DescribeInstanceTypeAsync(string instanceType)
-        {
-            var result = await DescribeInstanceTypesAsync(new DescribeInstanceTypesRequest(instanceType));
+        // todo: Implement this
+        //public async Task<InstanceTypeInfo?> DescribeInstanceTypeAsync(string instanceType)
+        //{
+        //    var result = await DescribeInstanceTypesAsync(new DescribeInstanceTypesRequest(instanceType));
 
-            return result.InstanceTypes.Length > 0 ? result.InstanceTypes[0] : null;
-        }
+        //    return result.InstanceTypes.Length > 0 ? result.InstanceTypes[0] : null;
+        //}
    
         public async Task<Volume?> DescribeVolumeAsync(string volumeId)
         {
@@ -105,12 +106,12 @@ namespace Amazon.Ec2
 
         #region Instance Types
 
-        public async Task<DescribeInstanceTypesResponse> DescribeInstanceTypesAsync(DescribeInstanceTypesRequest request)
-        {
-            string responseText = await SendAsync(request).ConfigureAwait(false);
+        //public async Task<DescribeInstanceTypesResponse> DescribeInstanceTypesAsync(DescribeInstanceTypesRequest request)
+        //{
+        //    string responseText = await SendAsync(request).ConfigureAwait(false);
 
-            return DescribeInstanceTypesResponse.Deserialize(responseText);
-        }
+        //    return DescribeInstanceTypesResponse.Deserialize(responseText);
+        //}
 
         #endregion
 

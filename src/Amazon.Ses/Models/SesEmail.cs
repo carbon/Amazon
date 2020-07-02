@@ -53,8 +53,8 @@ namespace Amazon.Ses
 
             var doc = new SesEmail
             {
-                Source = SesHelper.EncodeMailAddress(message.From),
-                To = message.To.Select(r => SesHelper.EncodeMailAddress(r)).ToArray(),
+                Source = SesHelper.EncodeEmail(message.From),
+                To = message.To.Select(r => SesHelper.EncodeEmail(r)).ToArray(),
                 Subject = new SesContent(message.Subject, CharsetType.UTF8)
             };
 
@@ -68,7 +68,7 @@ namespace Amazon.Ses
 #pragma warning disable CS0618 // Type or member is obsolete
             else if (message.ReplyTo != null)
             {
-                doc.ReplyTo = new[] { SesHelper.EncodeMailAddress(message.ReplyTo) };
+                doc.ReplyTo = new[] { SesHelper.EncodeEmail(message.ReplyTo) };
             }
 #pragma warning restore CS0618
 
@@ -116,7 +116,7 @@ namespace Amazon.Ses
 
             for (int i = 0; i < collection.Count; i++)
             {
-                addresses[i] = SesHelper.EncodeMailAddress(collection[i]);
+                addresses[i] = SesHelper.EncodeEmail(collection[i]);
             }
 
             return addresses;
