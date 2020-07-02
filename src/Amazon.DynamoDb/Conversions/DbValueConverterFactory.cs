@@ -27,6 +27,7 @@ namespace Amazon.DynamoDb
             Add<Int64>(new Int64Converter());
             Add<string>(new StringConverter());
             Add<TimeSpan>(new TimeSpanConverter());
+            Add<AttributeCollection>(new AttributeCollectionConverter());
 
             Add<byte[]>(new BinaryConverter());
             Add<string[]>(new StringArrayConverter());
