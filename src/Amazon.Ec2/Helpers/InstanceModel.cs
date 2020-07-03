@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
@@ -12,14 +10,12 @@ namespace Amazon.Ec2
     {
         private static readonly ConcurrentDictionary<Type, InstanceModel> models = new ConcurrentDictionary<Type, InstanceModel>();
 
-        private readonly IReadOnlyList<InstanceModelMember> members;
-
         public InstanceModel(IReadOnlyList<InstanceModelMember> members)
         {
-            this.members = members;
+            Members = members;
         }
 
-        public IReadOnlyList<InstanceModelMember> Members => members;
+        public IReadOnlyList<InstanceModelMember> Members { get; }
 
         public static InstanceModel Get(Type type)
         {
@@ -64,9 +60,6 @@ namespace Amazon.Ec2
 
         public PropertyInfo Property { get; }
 
-        public object GetValue(object instance)
-        {
-            return Property.GetValue(instance);
-        }
+        public object GetValue(object instance) => Property.GetValue(instance)!;
     }
 }
