@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 
 using Carbon.Json;
 
@@ -365,13 +366,35 @@ namespace Amazon.DynamoDb
 			_                => throw new Exception("Invalid value type:" + value.Type)
 		};
 
+		public static DbValue FromJsonElement(JsonElement json)
+		{
+			var enumerator = json.EnumerateObject();
+
+			enumerator.MoveNext();
+
+			JsonProperty property = enumerator.Current;
+
+			return property.Name switch
+			{
+				"B"    => new DbValue(property.Value.GetString(),     DbValueType.B),
+				"N"    => new DbValue(property.Value.GetString(),     DbValueType.N),
+				"S"    => new DbValue(property.Value.GetString(),     DbValueType.S),
+				"BOOL" => new DbValue(property.Value.GetBoolean(),    DbValueType.BOOL),
+				"BS"   => new DbValue(GetStringArray(property.Value), DbValueType.BS),
+				"NS"   => new DbValue(GetStringArray(property.Value), DbValueType.NS),
+				"SS"   => new DbValue(GetStringArray(property.Value), DbValueType.SS),
+				"L"    => new DbValue(GetListValues(property.Value)),
+				"M"    => new DbValue(AttributeCollection.FromJsonElement(property.Value)),
+				_      => throw new Exception("Invalid value type:" + property.Name),
+			};
+		}
+
 		public static DbValue FromJson(JsonObject json)
 		{
 			// {"N":"225"}
 			// {"S":"Hello"}
 			// {"B":"dmFsdWU="}
 			// {"SS": ["Keneau", "Alexis", "John"]}
-
 			// { "L": [ { "N": "1" }, { "N":"2" } ]
 
 			var property = json.First();
@@ -417,6 +440,38 @@ namespace Amazon.DynamoDb
 			{
 				yield return FromJson((JsonObject)item);
 			}
+		}
+
+		private static DbValue[] GetListValues(JsonElement array)
+		{
+			DbValue[] items = new DbValue[array.GetArrayLength()];
+
+			int i = 0;
+
+			foreach (var item in array.EnumerateArray())
+			{
+				items[i] = FromJsonElement(item);
+
+				i++;
+			}
+
+			return items;
+		}
+
+		private static string[] GetStringArray(JsonElement element)
+		{
+			string[] items = new string[element.GetArrayLength()];
+
+			int i = 0;
+
+			foreach (var el in element.EnumerateArray())
+			{
+				items[i] = el.GetString();
+
+				i++;
+			}
+
+			return items;
 		}
 
 		#endregion

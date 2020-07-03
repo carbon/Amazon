@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using Carbon.Json;
 using Carbon.Data;
+using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -123,6 +124,18 @@ namespace Amazon.DynamoDb
             foreach (var property in json)
             {
                 item.Add(property.Key, DbValue.FromJson((JsonObject)property.Value));
+            }
+
+            return item;
+        }
+
+        public static AttributeCollection FromJsonElement(JsonElement json)
+        {
+            var item = new AttributeCollection();
+
+            foreach (var property in json.EnumerateObject())
+            {
+                item.Add(property.Name, DbValue.FromJsonElement(property.Value));
             }
 
             return item;
