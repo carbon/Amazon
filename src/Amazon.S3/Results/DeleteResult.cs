@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace Amazon.S3
 {
     [XmlRoot("DeleteResult", Namespace = S3Client.Namespace)]
-    public class DeleteResult
+    public sealed class DeleteResult
     {        
         [XmlElement("Deleted")]
         public BatchItem[] Deleted { get; set; }

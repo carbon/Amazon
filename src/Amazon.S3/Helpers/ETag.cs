@@ -12,7 +12,7 @@ namespace Amazon.S3
 
         public string Value { get; }
 
-        public byte[]? AsMD5()
+        public readonly byte[]? AsMD5()
         {
             if (Value is null || Value.IndexOf('-') > -1)
             {

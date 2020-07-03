@@ -12,7 +12,7 @@ namespace Amazon.S3
                 throw new ArgumentException("Must be 256 bits", nameof(key));
             }
 
-            Algorithm = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
+            Algorithm = algorithm;
             Key = key;
         }
 

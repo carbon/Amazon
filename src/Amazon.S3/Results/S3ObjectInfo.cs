@@ -78,7 +78,7 @@ namespace Amazon.S3
                 eTag = new ETag(et.Tag);
             }
 
-            var properties = new Dictionary<string, string>();
+            var properties = new Dictionary<string, string>(14);
 
             foreach (var header in response.Headers)
             {
@@ -100,7 +100,6 @@ namespace Amazon.S3
             );
         }
 
-
         public string? ContentType => Properties?["Content-Type"];
 
         public string? VersionId
@@ -109,11 +108,11 @@ namespace Amazon.S3
             {
                 if (Properties is null) return null;
 
-                return Properties.TryGetValue("x-amz-version-id", out string version) ? version : null;
+                return Properties.TryGetValue(S3HeaderNames.VersionId, out string? version) ? version : null;
             }
         }
 
-        public string? StorageClass => Properties?["x-amz-storage-class"];
+        public string? StorageClass => Properties?[S3HeaderNames.StorageClass];
 
         #endregion
     }

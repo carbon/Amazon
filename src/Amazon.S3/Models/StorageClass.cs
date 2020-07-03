@@ -9,7 +9,7 @@
 
         public string Name { get; }
 
-        public override string ToString() => Name;
+        public readonly override string ToString() => Name;
 
         public static readonly StorageClass Standard                 = new StorageClass("STANDARD");
         public static readonly StorageClass StandardInfrequentAccess = new StorageClass("STANDARD_IA");
