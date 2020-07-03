@@ -1,12 +1,13 @@
-﻿
-using Xunit;
+﻿using Xunit;
 
-using Carbon.Json;
+using System.Text.Json;
 
 namespace Amazon.Ses.Tests
 {
     public class NotificationTests
     {
+        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
         [Fact]
         public void ParseComplaint()
         {
@@ -34,12 +35,17 @@ namespace Amazon.Ses.Tests
 			  }
 		   }";
 
-            var notification = JsonObject.Parse(text).As<SesNotification>();
+            var notification = JsonSerializer.Deserialize<SesNotification>(text, jso);
 
             Assert.Equal(SesNotificationType.Complaint, notification.NotificationType);
+            Assert.Equal(2012, notification.Complaint.Timestamp.Year);
+            Assert.Equal(-7, notification.Complaint.Timestamp.Offset.Hours);
+
+            Assert.Equal(4, notification.Mail.Destination.Length);
 
             Assert.Equal("recipient1@example.com", notification.Mail.Destination[0]);
             Assert.Equal("recipient1@example.com", notification.Complaint.ComplainedRecipients[0].EmailAddress);
+
 
             Assert.Equal("0000013786031775-163e3910-53eb-4c8e-a04a-f29debf88a84-000000", notification.Mail.MessageId);
         }
@@ -49,12 +55,12 @@ namespace Amazon.Ses.Tests
         {
             var text = @"{""notificationType"":""Bounce"",""bounce"":{""bounceSubType"":""Suppressed"",""bounceType"":""Permanent"",""bouncedRecipients"":[{""action"":""failed"",""diagnosticCode"":""Amazon SES has suppressed sending to this address because it has a recent history of bouncing as an invalid address. For more information about how to remove an address from the suppression list, see the Amazon SES Developer Guide: http://docs.aws.amazon.com/ses/latest/DeveloperGuide/remove-from-suppressionlist.html"",""status"":""5.1.1"",""emailAddress"":""hi@simulator.amazonses.com""}],""reportingMTA"":""dns; amazonses.com"",""timestamp"":""2014-01-14T07:24:56.332Z"",""feedbackId"":""000001438fa38a49-f7cb046b-7cec-11e3-b22a-31634d3963ed-000000""},""mail"":{""timestamp"":""2014-01-14T07:24:53.000Z"",""destination"":[""hi@simulator.amazonses.com""],""messageId"":""000001438fa37fa1-08180675-1d15-4bfc-b388-3b71a75f5a31-000000"",""source"":""hello@carbonmade.com""}}";
 
-            var notification = JsonObject.Parse(text).As<SesNotification>();
+            var notification = JsonSerializer.Deserialize<SesNotification>(text, jso);
 
             Assert.Equal(SesNotificationType.Bounce, notification.NotificationType);
 
             Assert.Equal(SesBounceType.Permanent, notification.Bounce.BounceType);
-            Assert.Equal(SesBounceSubtype.Suppressed, notification.Bounce.BounceSubtype);
+            Assert.Equal(SesBounceSubtype.Suppressed, notification.Bounce.BounceSubType);
 
             Assert.Equal("Amazon SES has suppressed sending to this address because it has a recent history of bouncing as an invalid address. For more information about how to remove an address from the suppression list, see the Amazon SES Developer Guide: http://docs.aws.amazon.com/ses/latest/DeveloperGuide/remove-from-suppressionlist.html", notification.Bounce.BouncedRecipients[0].DiagnosticCode);
 
