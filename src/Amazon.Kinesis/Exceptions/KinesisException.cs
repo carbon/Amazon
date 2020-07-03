@@ -20,8 +20,8 @@ namespace Amazon.Kinesis
 		public HttpStatusCode StatusCode { get; set; }
 
 		public bool IsTransient
-		    => error.Type == "ProvisionedThroughputExceededException"
-		    || error.Type == "InternalFailure"; 
+			=> string.Equals(error.Type, "ProvisionedThroughputExceededException", StringComparison.Ordinal)
+			|| string.Equals(error.Type, "InternalFailure", StringComparison.Ordinal);
 	}
 }
 
