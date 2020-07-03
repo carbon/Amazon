@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Amazon.Scheduling;
@@ -39,10 +40,9 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("BatchGetItem", request.ToJson());
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-            var responseJson = JsonObject.Parse(responseText);
+            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
-            return BatchGetItemResult.FromJson(responseJson);
+            return BatchGetItemResult.FromJsonElement(json);
         }
 
         /*
@@ -56,10 +56,9 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("DeleteItem", request.ToJson());
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-            var responseJson = JsonObject.Parse(responseText);
+            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
-            return DeleteItemResult.FromJson(responseJson);
+            return DeleteItemResult.FromJsonElement(json);
         }
 
         /*
@@ -78,9 +77,9 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("GetItem", request.ToJson());
 
-            var json = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
+            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
-            return GetItemResult.FromJson(json);
+            return GetItemResult.FromJsonElement(json);
         }
 
         public Task ListTables()
@@ -104,18 +103,18 @@ namespace Amazon.DynamoDb
 
             var httpRequest = Setup("BatchWriteItem", requestJson);
 
-            var json = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
+            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
-            return BatchWriteItemResult.FromJson(json);
+            return BatchWriteItemResult.FromJsonElement(json);
         }
 
         public async Task<PutItemResult> PutItemAsync(PutItemRequest request)
         {
             var httpRequest = Setup("PutItem", request.ToJson());
 
-            var json = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
+            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
-            return PutItemResult.FromJson(json);
+            return PutItemResult.FromJsonElement(json);
         }
 
         public async Task<PutItemResult> PutItemUsingRetryPolicyAsync(PutItemRequest request, RetryPolicy retryPolicy)
@@ -179,9 +178,9 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("Query", query.ToJson());
 
-            var json = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
+            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
-            return QueryResult.FromJson(json);
+            return QueryResult.FromJsonElement(json);
         }
 
         public async Task<CountResult> QueryCountAsync(DynamoQuery query)
@@ -199,18 +198,18 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("Scan", request.ToJson());
 
-            var json = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
+            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
-            return QueryResult.FromJson(json);
+            return QueryResult.FromJsonElement(json);
         }
 
         public async Task<UpdateItemResult> UpdateItemAsync(UpdateItemRequest request)
         {
             var httpRequest = Setup("UpdateItem", request.ToJson());
 
-            var json = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
+            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
-            return UpdateItemResult.FromJson(json);
+            return UpdateItemResult.FromJsonElement(json);
         }
 
         public async Task<UpdateItemResult> UpdateItemUsingRetryPolicyAsync(UpdateItemRequest request, RetryPolicy retryPolicy)
@@ -247,7 +246,7 @@ namespace Amazon.DynamoDb
 
         #region Helpers
 
-        private async Task<JsonObject> SendAndReadJsonAsync(HttpRequestMessage request)
+        private async Task<JsonElement> SendAndReadJsonElementAsync(HttpRequestMessage request)
         {
             await SignAsync(request).ConfigureAwait(false);
 
@@ -260,7 +259,7 @@ namespace Amazon.DynamoDb
 
             var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await System.Text.Json.JsonSerializer.DeserializeAsync<JsonObject>(stream).ConfigureAwait(false);
+            return await System.Text.Json.JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
         }
 
         private HttpRequestMessage Setup(string action, JsonObject jsonContent)

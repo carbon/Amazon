@@ -1,4 +1,4 @@
-﻿using Carbon.Json;
+﻿using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -14,72 +14,22 @@ namespace Amazon.DynamoDb
 
         public ConsumedCapacity? ConsumedCapacity { get; }
 
-        public static DeleteItemResult FromJson(JsonObject json)
+        public static DeleteItemResult FromJsonElement(JsonElement json)
         {
             AttributeCollection? attributes = null;
             ConsumedCapacity? consumedCapacity = null;
 
-            if (json.TryGetValue("Attributes", out var attributesNode))
+            if (json.TryGetProperty("Attributes", out var attributesEl))
             {
-                attributes = AttributeCollection.FromJson((JsonObject)attributesNode);
+                attributes = AttributeCollection.FromJsonElement(attributesEl);
             }
 
-            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
+            if (json.TryGetProperty("ConsumedCapacity", out var consumedCapacityEl))
             {
-                consumedCapacity = consumedCapacityNode.As<ConsumedCapacity>();
+                consumedCapacity = ConsumedCapacity.FromJsonElement(consumedCapacityEl);
             }
 
             return new DeleteItemResult(attributes!, consumedCapacity);
         }
     }
 }
-
-/*
-{
-    "Attributes": 
-        {
-            "string" :
-                {
-                    "B": "blob",
-                    "BS": [
-                        "blob"
-                    ],
-                    "N": "string",
-                    "NS": [
-                        "string"
-                    ],
-                    "S": "string",
-                    "SS": [
-                        "string"
-                    ]
-                }
-        },
-    "ConsumedCapacity": {
-        "CapacityUnits": "number",
-        "TableName": "string"
-    },
-    "ItemCollectionMetrics": {
-        "ItemCollectionKey": 
-            {
-                "string" :
-                    {
-                        "B": "blob",
-                        "BS": [
-                            "blob"
-                        ],
-                        "N": "string",
-                        "NS": [
-                            "string"
-                        ],
-                        "S": "string",
-                        "SS": [
-                            "string"
-                        ]
-                    }
-            },
-        "SizeEstimateRangeGB": [
-            "number"
-        ]
-    }
-}
-*/

@@ -1,21 +1,21 @@
 ﻿#nullable disable
 
 using System.Collections.Generic;
-
-using Carbon.Json;
+using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
     public class BatchWriteItemResult // : IConsumedResources
     {
-        public ConsumedCapacity[] ConsumedCapacity { get; set; }
+        // public ConsumedCapacity[] ConsumedCapacity { get; set; }
 
         public List<TableRequests> UnprocessedItems { get; set; }
 
-        public static BatchWriteItemResult FromJson(JsonObject json)
+        public static BatchWriteItemResult FromJsonElement(JsonElement json)
         {
             var unprocessed = new List<TableRequests>();
 
+            /*
             if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode)) // Array
             {
                 foreach (var item in (JsonArray)consumedCapacityNode)
@@ -25,12 +25,13 @@ namespace Amazon.DynamoDb
                     // TODO
                 }
             }
+            */
 
-            if (json.TryGetValue("UnprocessedItems", out var unprocessedItemsNode))
+            if (json.TryGetProperty("UnprocessedItems", out var unprocessedItemsEl))
             {
-                foreach (var batch in (JsonObject)unprocessedItemsNode)
+                foreach (JsonProperty batch in unprocessedItemsEl.EnumerateObject())
                 {
-                    unprocessed.Add(TableRequests.FromJson(batch.Key, (JsonArray)batch.Value));
+                    unprocessed.Add(TableRequests.FromElementJson(batch.Name, batch.Value));
                 }
             }
 

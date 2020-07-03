@@ -1,4 +1,4 @@
-﻿using Carbon.Json;
+﻿using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -14,19 +14,19 @@ namespace Amazon.DynamoDb
 
         public ConsumedCapacity? ConsumedCapacity { get; }
 
-        public static GetItemResult FromJson(JsonObject json)
+        public static GetItemResult FromJsonElement(JsonElement json)
         {
             AttributeCollection? item = null;
             ConsumedCapacity? consumedCapacity = null;
 
-            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
+            if (json.TryGetProperty("ConsumedCapacity", out var consumedCapacityEl))
             {
-                consumedCapacity = consumedCapacityNode.As<ConsumedCapacity>();
+                consumedCapacity = ConsumedCapacity.FromJsonElement(consumedCapacityEl);
             }
 
-            if (json.TryGetValue("Item", out var itemNode))
+            if (json.TryGetProperty("Item", out var itemEl))
             {
-                item = AttributeCollection.FromJson((JsonObject)itemNode);
+                item = AttributeCollection.FromJsonElement(itemEl);
             }
 
             return  new GetItemResult(item!, consumedCapacity);

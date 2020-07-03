@@ -1,5 +1,6 @@
-﻿using Carbon.Data;
-using Carbon.Json;
+﻿using System.Linq;
+using System.Text.Json;
+
 using Xunit;
 
 namespace Amazon.DynamoDb.Models.Tests
@@ -55,7 +56,7 @@ namespace Amazon.DynamoDb.Models.Tests
                     ""N"":""47""
                 }
             }
-        ]
+        ],
         ""Thread"": [
             {
                 ""Tags"":{
@@ -81,15 +82,25 @@ namespace Amazon.DynamoDb.Models.Tests
     ]
 }";
 
-            var result = BatchGetItemResult.FromJson(JsonObject.Parse(text));
+            using var doc = JsonDocument.Parse(text);
 
-            Assert.Equal(2, result.Responses.Length);
+            var result = BatchGetItemResult.FromJsonElement(doc.RootElement);
 
+            Assert.Equal(2, result.Responses.Count);
             Assert.Equal(3, result.Responses[0].Count);
 
-            Assert.Equal("Amazon DynamoDB", result.Responses[0][0].GetString("Name"));
-            Assert.Equal("How many users can read a single data item at a time? Are there any limits?", result.Responses[1][0].GetString("Message"));
+            Assert.Equal("Forum",           result.Responses[0].Name);
 
+            Assert.Equal("Amazon DynamoDB", result.Responses[0][0].GetString("Name"));
+            Assert.Equal("Amazon RDS",      result.Responses[0][1].GetString("Name"));
+
+            Assert.Equal("Thread", result.Responses[1].Name);
+
+            var thread_0 = result.Responses[1][0];
+
+            Assert.Equal("How many users can read a single data item at a time? Are there any limits?", thread_0.GetString("Message"));
+
+            Assert.Equal(new[] { "Reads", "MultipleUsers" }, thread_0.Get("Tags").ToArray<string>());
         }
     }
 }

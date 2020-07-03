@@ -1,6 +1,5 @@
 ﻿using System;
-
-using Carbon.Json;
+using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -26,32 +25,34 @@ namespace Amazon.DynamoDb
 
         public int Count { get; }
 
-        public static QueryResult FromJson(JsonObject json)
+        public static QueryResult FromJsonElement(JsonElement json)
         {
             ConsumedCapacity? consumedCapacity = null;
             AttributeCollection? lastEvaluatedKey = null;
 
-            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode))
+            if (json.TryGetProperty("ConsumedCapacity", out JsonElement consumedCapacityEl))
             {
-                consumedCapacity = consumedCapacityNode.As<ConsumedCapacity>();
+                consumedCapacity = ConsumedCapacity.FromJsonElement(consumedCapacityEl);
             }
 
-            if (json.TryGetValue("LastEvaluatedKey", out var lastEvaluatedKeyNode))
+            if (json.TryGetProperty("LastEvaluatedKey", out JsonElement lastEvaluatedKeyEl))
             {
-                lastEvaluatedKey = AttributeCollection.FromJson((JsonObject)lastEvaluatedKeyNode);
+                lastEvaluatedKey = AttributeCollection.FromJsonElement(lastEvaluatedKeyEl);
             }
 
             AttributeCollection[] items;
 
-            if (json.TryGetValue("Items", out var itemsNode))
+            if (json.TryGetProperty("Items", out JsonElement itemsEl))
             {
-                var itemsJson = (JsonArray)itemsNode;
+                items = new AttributeCollection[itemsEl.GetArrayLength()];
 
-                items = new AttributeCollection[itemsJson.Count];
+                int i = 0;
 
-                for (int i = 0; i < items.Length; i++)
+                foreach (var itemEl in itemsEl.EnumerateArray())
                 {
-                    items[i] = AttributeCollection.FromJson((JsonObject)itemsJson[i]);
+                    items[i] = AttributeCollection.FromJsonElement(itemEl);
+
+                    i++;
                 }
             }
             else
@@ -63,7 +64,7 @@ namespace Amazon.DynamoDb
                 consumedCapacity : consumedCapacity,
                 items            : items,
                 lastEvaluatedKey : lastEvaluatedKey,
-                count            : (int)json["Count"]
+                count            : json.GetProperty("Count").GetInt32()
             );
         }
     }

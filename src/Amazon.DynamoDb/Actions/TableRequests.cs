@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class TableRequests
+    public sealed class TableRequests
     {
-        public TableRequests(string tableName, List<ItemRequest> requests)
+        public TableRequests(string tableName, IReadOnlyList<ItemRequest> requests)
         {
             if (requests.Count > 25)
                 throw new ArgumentException("Must be 25 or fewer", "requests.Count");
@@ -18,16 +19,14 @@ namespace Amazon.DynamoDb
 
         public string TableName { get; }
 
-        public List<ItemRequest> Requests { get; }
+        public IReadOnlyList<ItemRequest> Requests { get; }
 
-        public static TableRequests FromJson(string key, JsonArray batch)
+        public static TableRequests FromElementJson(string key, JsonElement batch)
         {
-            var requests = new List<ItemRequest>(batch.Count);
+            var requests = new List<ItemRequest>(batch.GetArrayLength());
 
-            foreach (var r in batch)
+            foreach (var request in batch.EnumerateArray())
             {
-                var request = (JsonObject)r;
-
                 /* 
 				{ 
 					""PutRequest"": { 
@@ -46,15 +45,15 @@ namespace Amazon.DynamoDb
 				}
 				*/
 
-                if (request.TryGetValue("PutRequest", out var putRequestNode))
+                if (request.TryGetProperty("PutRequest", out var putRequestNode))
                 {
-                    var itemAttributes = AttributeCollection.FromJson((JsonObject)putRequestNode["Item"]);
+                    var itemAttributes = AttributeCollection.FromJsonElement(putRequestNode.GetProperty("Item"));
 
                     requests.Add(new PutRequest(itemAttributes));
                 }
-                else if (request.TryGetValue("DeleteRequest", out var deleteRequestNode))
+                else if (request.TryGetProperty("DeleteRequest", out var deleteRequestNode))
                 {
-                    var keyAttributes = AttributeCollection.FromJson((JsonObject)deleteRequestNode["Key"]);
+                    var keyAttributes = AttributeCollection.FromJsonElement(deleteRequestNode.GetProperty("Key"));
 
                     requests.Add(new DeleteRequest(keyAttributes));
                 }

@@ -159,7 +159,10 @@ namespace Amazon.DynamoDb
 
         #region Helpers
 
-        public static AttributeCollection FromObject(object instance) => FromObject(instance, DatasetInfo.Get(instance.GetType()));
+        public static AttributeCollection FromObject(object instance)
+        {
+            return FromObject(instance, DatasetInfo.Get(instance.GetType()));
+        }
 
         internal static AttributeCollection FromObject(object instance, DatasetInfo schema)
         {
@@ -339,7 +342,6 @@ namespace Amazon.DynamoDb
 
             return instance;
         }
-
 
         #endregion
     }

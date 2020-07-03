@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-
-using Carbon.Json;
+using System.Text.Json;
 
 using Xunit;
 
@@ -74,7 +73,9 @@ namespace Amazon.DynamoDb.Models.Tests
   } 
 }";
 
-			var result = BatchWriteItemResult.FromJson(JsonObject.Parse(text));
+			using var doc = JsonDocument.Parse(text);
+
+			var result = BatchWriteItemResult.FromJsonElement(doc.RootElement);
 
 			Assert.Single(result.UnprocessedItems);
 			Assert.Equal(3, result.UnprocessedItems[0].Requests.Count);

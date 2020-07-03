@@ -125,7 +125,7 @@ namespace Amazon.DynamoDb
 
             sb.Append('(');
 
-            var i = 0;
+            int i = 0;
 
             foreach (Expression e in funcExp.Args)
             {

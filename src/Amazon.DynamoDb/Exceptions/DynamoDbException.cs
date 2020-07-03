@@ -36,7 +36,7 @@ namespace Amazon.DynamoDb
         {
             using var doc = JsonDocument.Parse(jsonText);
 
-            var json = doc.RootElement;
+            JsonElement json = doc.RootElement;
 
             string type = "";
 
