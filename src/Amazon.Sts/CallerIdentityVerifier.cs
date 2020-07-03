@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,27 +12,34 @@ namespace Amazon.Sts
     {
         private readonly HttpClient httpClient = new HttpClient {
             DefaultRequestHeaders = {
-                { "User-Agent", "Carbon/2.1" }
+                { "User-Agent", "Carbon/2" }
             }
         };
 
+        public TimeSpan GetAge(CallerIdentityVerificationParameters token)
+        {
+            DateTime date = DateTime.ParseExact(token.Headers["x-amz-date"], "yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+
+            TimeSpan age = DateTime.UtcNow - date;
+
+            return (age < TimeSpan.Zero) ? TimeSpan.Zero : age;
+        }
+        
         public async Task<GetCallerIdentityResult> VerifyCallerIdentityAsync(CallerIdentityVerificationParameters token)
         {
-            var uri = new Uri(token.Url);
+            var url = new Uri(token.Url);
 
-            if (uri.Scheme != "https")
+            if (!string.Equals(url.Scheme, "https", StringComparison.Ordinal))
             {
-                throw new ArgumentException("Endpoint scheme be https. Was " + uri.Scheme);
+                throw new ArgumentException("Endpoint scheme be https. Was " + url.Scheme);
             }
 
-            // https://sts.us-east-1.amazonaws.com/
-
-            if (!(uri.Host.StartsWith("sts.", StringComparison.Ordinal) && uri.Host.EndsWith(".amazonaws.com", StringComparison.Ordinal)))
+            if (!(url.Host.StartsWith("sts.", StringComparison.Ordinal) && url.Host.EndsWith(".amazonaws.com", StringComparison.Ordinal)))
             {
                 throw new Exception("Must be an STS endpoint: was:" + token.Url);
             }
 
-            var request = new HttpRequestMessage(HttpMethod.Post, token.Url) {
+            var request = new HttpRequestMessage(HttpMethod.Post, url) {
                 Content = new StringContent(token.Body, Encoding.UTF8, "application/x-www-form-urlencoded")
             };
 
@@ -40,7 +48,7 @@ namespace Amazon.Sts
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
 
-            request.Headers.Host = uri.Host;
+            request.Headers.Host = url.Host;
 
             // Our message should be signed
 
@@ -57,3 +65,6 @@ namespace Amazon.Sts
         }
     }
 }
+
+// NOTES -------------------------------------------------------------------------------------
+// Endpoint: https://sts.us-east-1.amazonaws.com/
