@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 
+using Amazon.S3.Helpers;
 using Amazon.Scheduling;
 
 using Carbon.Storage;
@@ -28,7 +29,7 @@ namespace Amazon.S3
         public S3Bucket(string bucketName, S3Client client)
         {
             this.bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
-            this.client     = client     ?? throw new ArgumentNullException(nameof(client));
+            this.client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         public string Name => bucketName;
@@ -40,7 +41,7 @@ namespace Amazon.S3
             return this;
         }
 
-        public Task<IReadOnlyList<IBlob>> ListAsync(string? prefix)
+        public Task<IReadOnlyList<IBlob>> ListAsync(string? prefix = null)
         {
             return ListAsync(prefix, null, 1000);
         }
@@ -58,7 +59,12 @@ namespace Amazon.S3
             return result.Items;
         }
 
-        public async Task<IBlob> GetAsync(string key)
+        public Task<IBlob> GetAsync(string key)
+        {
+            return GetAsync(key, default(CancellationToken));
+        }
+
+        public async Task<IBlob> GetAsync(string key, CancellationToken cancellationToken)
         {
             int retryCount = 0;
             Exception lastException;
@@ -67,7 +73,9 @@ namespace Amazon.S3
             {
                 if (retryCount > 0)
                 {
-                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    await Task.Delay(retryPolicy.GetDelay(retryCount), cancellationToken).ConfigureAwait(false);
                 }
 
                 try
@@ -93,7 +101,6 @@ namespace Amazon.S3
             throw lastException;
         }
 
-
         public string GetPresignedUrl(string key, TimeSpan expiresIn, string method = "GET")
         {
             var request = new GetPresignedUrlRequest(method, client.Host, client.Region, bucketName, key, expiresIn);
@@ -103,7 +110,13 @@ namespace Amazon.S3
 
         // If-Modified-Since                    OR 304
         // If-None-Match        -- ETag         OR 304
-        public async Task<IBlobResult> GetAsync(string key, GetBlobOptions options)
+
+        public Task<IBlobResult> GetAsync(string key, GetBlobOptions options)
+        {
+            return GetAsync(key, options, default);
+        }
+
+        public async Task<IBlobResult> GetAsync(string key, GetBlobOptions options, CancellationToken cancellationToken)
         {
             if (options is null) throw new ArgumentNullException(nameof(options));
 
@@ -114,6 +127,8 @@ namespace Amazon.S3
             {
                 if (retryCount > 0)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    
                     await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
                 }
 
@@ -121,7 +136,7 @@ namespace Amazon.S3
                 {
                     var request = ConstructGetRequest(key, options);
 
-                    return await client.GetObjectAsync(request).ConfigureAwait(false);
+                    return await client.GetObjectAsync(request, cancellationToken).ConfigureAwait(false);
                 }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {
@@ -136,7 +151,12 @@ namespace Amazon.S3
             throw lastException;
         }
 
-        public async Task<IReadOnlyDictionary<string, string>> GetPropertiesAsync(string key)
+        public Task<IReadOnlyDictionary<string, string>> GetPropertiesAsync(string key)
+        {
+            return GetPropertiesAsync(key, default);
+        }
+
+        public async Task<IReadOnlyDictionary<string, string>> GetPropertiesAsync(string key, CancellationToken cancellationToken)
         {
             int retryCount = 0;
             Exception lastException;
@@ -145,6 +165,8 @@ namespace Amazon.S3
             {
                 if (retryCount > 0)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
                 }
 
@@ -152,7 +174,7 @@ namespace Amazon.S3
                 {
                     var request = new ObjectHeadRequest(client.Host, bucketName, key);
 
-                    using var result = await client.GetObjectHeadAsync(request).ConfigureAwait(false);
+                    using var result = await client.GetObjectHeadAsync(request, cancellationToken).ConfigureAwait(false);
 
                     return result.Properties;
                 }
@@ -208,7 +230,7 @@ namespace Amazon.S3
                 {
                     request.MetadataDirective = MetadataDirectiveValue.Replace;
 
-                    SetHeaders(request, metadata);
+                    request.UpdateHeaders(metadata);
                 }
 
                 try
@@ -256,11 +278,15 @@ namespace Amazon.S3
             #endregion
 
             int retryCount = 0;
-
             Exception lastException;
 
             do
             {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
                 var request = new PutObjectRequest(client.Host, bucketName, blob.Key);
 
                 request.SetStream(stream);
@@ -271,7 +297,7 @@ namespace Amazon.S3
                     request.SetCustomerEncryptionKey(new ServerSideEncryptionKey(options.EncryptionKey));
                 }
 
-                SetHeaders(request, blob.Properties);
+                request.UpdateHeaders(blob.Properties);
 
                 try
                 {
@@ -287,8 +313,6 @@ namespace Amazon.S3
                 stream.Position = 0; // reset the stream position
                 
                 retryCount++;
-
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
             while (retryPolicy.ShouldRetry(retryCount));
             
@@ -309,11 +333,11 @@ namespace Amazon.S3
             await client.DeleteObjectAsync(request).ConfigureAwait(false);
         }
 
-        public async Task DeleteAsync(string[] keys)
+        public async Task<DeleteResult> DeleteAsync(IReadOnlyList<string> keys)
         {
             var batch = new DeleteBatch(keys);
 
-            var request = new BatchDeleteRequest(client.Host, bucketName, batch);
+            var request = new DeleteObjectBatchRequest(client.Host, bucketName, batch);
 
             var result = await client.DeleteObjectsAsync(request).ConfigureAwait(false);
 
@@ -322,48 +346,119 @@ namespace Amazon.S3
                 throw new Exception(result.Errors[0].Message);
             }
 
-            if (result.Deleted.Length != keys.Length)
+            if (result.Deleted.Length != keys.Count)
             {
-                throw new Exception("Deleted count not equal to keys.Count");
+                throw new Exception($"Only {result.Deleted.Length} of {keys.Count} were deleted.");
             }
+
+            return result;
         }
 
         #region Uploads
 
         public async Task<IUpload> InitiateUploadAsync(string key, IReadOnlyDictionary<string, string> properties)
         {
-            var request = new InitiateMultipartUploadRequest(client.Host, bucketName, key) {
-                Content = new StringContent(string.Empty)
-            };
+            int retryCount = 0;
+            Exception lastException;
 
-            SetHeaders(request, properties);
+            do
+            {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
 
-            return await client.InitiateMultipartUploadAsync(request).ConfigureAwait(false);
+                var request = new InitiateMultipartUploadRequest(client.Host, bucketName, key, properties);
+
+                try
+                {
+                    return await client.InitiateMultipartUploadAsync(request).ConfigureAwait(false);
+                }
+                catch (S3Exception ex) when (ex.IsTransient)
+                {
+                    lastException = ex;
+                }
+
+                retryCount++;
+            }
+            while (retryPolicy.ShouldRetry(retryCount));
+
+            throw lastException;
         }
 
         public async Task<IUploadBlock> UploadPartAsync(IUpload upload, int number, Stream stream)
         {
             if (upload is null) 
                 throw new ArgumentNullException(nameof(upload));
-            
-            var request = new UploadPartRequest(
-                host       : client.Host,
-                bucketName : upload.BucketName,
-                key        : upload.ObjectName,
-                uploadId   : upload.UploadId,
-                partNumber : number
-            );
 
-            request.SetStream(stream);
+            int retryCount = 0;
+            Exception lastException;
 
-            return await client.UploadPartAsync(request).ConfigureAwait(false);
+            do
+            {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
+                var request = new UploadPartRequest(
+                    host        : client.Host,
+                    bucketName  : upload.BucketName,
+                    key         : upload.ObjectName,
+                    uploadId    : upload.UploadId,
+                    partNumber  : number
+                );
+
+                request.SetStream(stream);
+
+                try
+                {
+                    return await client.UploadPartAsync(request).ConfigureAwait(false);
+                }
+                catch (S3Exception ex) when (ex.IsTransient)
+                {
+                    lastException = ex;
+                }
+
+                stream.Position = 0;
+
+                retryCount++;
+            }
+            while (retryPolicy.ShouldRetry(retryCount));
+
+            throw lastException;
         }
-
+    
         public async Task FinalizeUploadAsync(IUpload upload, IUploadBlock[] blocks)
         {
-            var request = new CompleteMultipartUploadRequest(client.Host, upload, blocks);
+            int retryCount = 0;
+            Exception lastException;
 
-            await client.CompleteMultipartUploadAsync(request).ConfigureAwait(false);
+            do
+            {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
+                try
+                {
+                    var request = new CompleteMultipartUploadRequest(client.Host, upload, blocks);
+
+                    await client.CompleteMultipartUploadAsync(request).ConfigureAwait(false);
+
+                    return;
+                }
+                catch (S3Exception ex) when (ex.IsTransient)
+                {
+                    lastException = ex;
+                }
+
+                retryCount++;
+            }
+            while (retryPolicy.ShouldRetry(retryCount));
+
+            throw lastException;
         }
 
         public async Task CancelUploadAsync(IUpload upload)
@@ -418,48 +513,6 @@ namespace Amazon.S3
             }
 
             return request;
-        }
-
-        private static void SetHeaders(HttpRequestMessage request, IReadOnlyDictionary<string, string> headers)
-        {
-            if (headers is null) return;
-
-            foreach (var item in headers)
-            {
-                switch (item.Key)
-                {
-                    case "Content-Encoding" :
-                        request.Content.Headers.ContentEncoding.Add(item.Value);
-                        break;
-                    case "Content-Type":
-                        if (request.Content is null)
-                        {
-                            request.Content = new ByteArrayContent(Array.Empty<byte>());
-                        }
-
-                        request.Content.Headers.ContentType = new MediaTypeHeaderValue(item.Value);
-
-                        break;
-
-                    // Skip list...
-                    case "Accept-Ranges":
-                    case "Content-Length":
-                    case "Date":
-                    case "ETag":
-                    case "Server":
-                    case "Last-Modified":
-                    case "x-amz-id-2":
-                    case "x-amz-expiration":
-                    case "x-amz-request-id2":
-                    case "x-amz-request-id":
-                        break;
-
-                    default:
-                        request.Headers.Add(item.Key, item.Value);
-
-                        break;
-                }
-            }
         }
 
         #endregion
