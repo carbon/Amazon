@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace Amazon.S3.Tests
+namespace Amazon.S3.Actions.Tests
 {
     public class CopyObjectRequestTests
     {
