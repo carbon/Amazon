@@ -25,8 +25,9 @@ namespace Amazon.DynamoDb.Models.Tests
             var tableBatch = new TableRequests("Posts", requests).ToJson();
 
             Assert.Equal("Posts", tableBatch.Key);
+
 			Assert.Equal(
-@"[
+	@"[
   {
     ""PutRequest"": {
       ""Item"": {
@@ -53,7 +54,6 @@ namespace Amazon.DynamoDb.Models.Tests
   }
 ]", tableBatch.Value.ToString());
 		} 
-
 
 		[Fact]
 		public void BatchWriteRequest1()

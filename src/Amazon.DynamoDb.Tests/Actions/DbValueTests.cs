@@ -180,6 +180,21 @@ namespace Amazon.DynamoDb.Models.Tests
   }
 }", value.ToJson().ToString());
 
+
+
+            Assert.Equal(@"{
+  ""a"": {
+    ""M"": {
+      ""a"": {
+        ""N"": ""1""
+      },
+      ""b"": {
+        ""S"": ""boat""
+      }
+    }
+  }
+}", System.Text.Json.JsonSerializer.Serialize(value.ToJson(), new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+
             var a = AttributeCollection.FromJson(value.ToJson()).As<Hi>();
 
             Assert.Equal(1, a.A.A);
