@@ -1,13 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Amazon.CloudWatch.Tests
 {
-    public class ListMetricsTests
+    public class ListMetricsResponseTests
     {
         [Fact]
-        public void ListMetricResponse()
+        public void ParseResponse()
         {
             var text = @"
 <ListMetricsResponse xmlns=""http://monitoring.amazonaws.com/doc/2010-08-01/"">
@@ -139,10 +137,11 @@ namespace Amazon.CloudWatch.Tests
 
             Assert.Equal("AWS/ELB"                 , result[0].Namespace);
             Assert.Equal("BackendConnectionErrors" , result[0].MetricName);
-            Assert.Equal(1                         , result[0].Dimensions.Count);
+
+            Assert.Single(result[0].Dimensions);
+
             Assert.Equal("Namespace"               , result[0].Dimensions[0].Name);
             Assert.Equal("AWS"                     , result[0].Dimensions[0].Value);
-
         }
     }
 }
