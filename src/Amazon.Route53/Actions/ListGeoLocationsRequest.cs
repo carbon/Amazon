@@ -17,7 +17,6 @@ namespace Amazon.Route53
 
         public string ToQueryString()
         {
-
             var items = new Dictionary<string, string>();
 
             if (MaxItems != null)           items.Add("maxitems", MaxItems.Value.ToString());

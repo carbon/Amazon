@@ -79,7 +79,6 @@ namespace Amazon.Kms
                 Headers = {
                     { "x-amz-target", "TrentService." + action }
                 },
-
                 Content = new ByteArrayContent(jsonBytes) {
                     Headers = {
                         { "Content-Type", "application/x-amz-json-1.1" }

@@ -52,7 +52,5 @@ namespace Amazon.Route53
 
             return dic.ToQueryString();
         }
-
-
     }
 }
