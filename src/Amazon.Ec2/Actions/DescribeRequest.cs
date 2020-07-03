@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
-using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Amazon.Ec2
 {
@@ -17,7 +17,7 @@ namespace Amazon.Ec2
         {
             if (ids is null) return;
 
-            for (var i = 0; i < ids.Count; i++)
+            for (int i = 0; i < ids.Count; i++)
             {
                 // e.g. VpcId.1
                 parameters.Add(prefix + "." + (i + 1), ids[i]);
@@ -26,18 +26,15 @@ namespace Amazon.Ec2
 
         protected Dictionary<string, string> GetParameters(string actionName)
         {
-            if (actionName is null)
-                throw new ArgumentNullException(nameof(actionName));
-
             var parameters = new Dictionary<string, string> {
                 { "Action", actionName }
             };
 
-            var i = 1;
+            int i = 1;
 
             foreach (Filter filter in Filters)
             {
-                string prefix = "Filter." + i + ".";
+                string prefix = "Filter." + i.ToString(CultureInfo.InvariantCulture) + ".";
 
                 parameters.Add(prefix + "Name", filter.Name);
                 parameters.Add(prefix + "Value", filter.Value);
@@ -45,9 +42,9 @@ namespace Amazon.Ec2
                 i++;
             }
 
-            if (MaxResults != null)
+            if (MaxResults is int maxResults)
             {
-                parameters.Add("MaxResults", MaxResults.Value.ToString());
+                parameters.Add("MaxResults", maxResults.ToString(CultureInfo.InvariantCulture));
             }
 
             if (NextToken != null)
