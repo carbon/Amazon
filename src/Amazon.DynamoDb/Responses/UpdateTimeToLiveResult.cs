@@ -1,26 +1,21 @@
-﻿using Amazon.DynamoDb.Models;
+﻿#nullable disable
+
+using Amazon.DynamoDb.Extensions;
+using Amazon.DynamoDb.Models;
 using Carbon.Json;
 using System;
+using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class UpdateTimeToLiveResult
+    public class UpdateTimeToLiveResult : IConvertibleFromJson
     {
-        public UpdateTimeToLiveResult(TimeToLiveSpecification timeToLiveDescription)
+        public TimeToLiveSpecification TimeToLiveSpecification { get; set; }
+
+        public void FillField(JsonProperty property)
         {
-            TimeToLiveDescription = timeToLiveDescription;
-        }
-
-        public TimeToLiveSpecification TimeToLiveDescription { get; set; }
-
-        public static UpdateTimeToLiveResult FromJson(JsonObject json)
-        {
-            if (json.TryGetValue("TimeToLiveSpecification", out var ttlNode))
-            {
-                return new UpdateTimeToLiveResult(TimeToLiveSpecification.FromJson(ttlNode));
-            }
-
-            throw new ArgumentException("UpdateTimeToLiveResult must contain TimeToLiveSpecification");
+            if (property.NameEquals("TimeToLiveSpecification"))
+                TimeToLiveSpecification = property.Value.GetObject<TimeToLiveSpecification>();
         }
     }
 }

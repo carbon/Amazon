@@ -1,20 +1,21 @@
-﻿using Carbon.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#nullable disable
+
+using Carbon.Json;
+using System.Text.Json;
 
 namespace Amazon.DynamoDb.Models
 {
-    public class TimeToLiveSpecification
+    public class TimeToLiveSpecification : IConvertibleFromJson
     {
+        public TimeToLiveSpecification() { }
         public TimeToLiveSpecification(string attributeName, bool enabled)
         {
             AttributeName = attributeName;
             Enabled = enabled;
         }
 
-        public string AttributeName { get; }
-        public bool Enabled { get; }
+        public string AttributeName { get; set; }
+        public bool Enabled { get; set; }
 
         public JsonObject ToJson()
         {
@@ -40,6 +41,12 @@ namespace Amazon.DynamoDb.Models
             }
 
             return new TimeToLiveSpecification(attributeName, enabled);
+        }
+
+        public void FillField(JsonProperty property)
+        {
+            if (property.NameEquals("AttributeName")) AttributeName = property.Value.GetString();
+            else if (property.NameEquals("Enabled")) Enabled = property.Value.GetBoolean();
         }
     }
 }

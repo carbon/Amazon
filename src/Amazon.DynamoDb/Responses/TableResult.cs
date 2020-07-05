@@ -1,29 +1,24 @@
-﻿using Amazon.DynamoDb.Models;
+﻿#nullable disable
+
+using Amazon.DynamoDb.Extensions;
+using Amazon.DynamoDb.Models;
 using System;
 using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public sealed class TableResult
+    public sealed class TableResult : IConvertibleFromJson
     {
-        public TableResult(TableDescription tableDescription)
-        {
-            TableDescription = tableDescription;
-        }
+        public TableResult() { }
 
         public TableDescription TableDescription { get; set; }
 
-        public static TableResult FromJsonElement(JsonElement el)
+        public void FillField(JsonProperty property)
         {
-            foreach (var property in el.EnumerateObject())
+            if (property.NameEquals("TableDescription"))
             {
-                if (property.NameEquals("TableName"))
-                {
-                    result.TableName = JsonSerializer.Deserialize<TableDescription>(property)
-                }
+                TableDescription = property.Value.GetObject<TableDescription>();
             }
-
-            throw new ArgumentException("Json is missing required TableName element");
         }
     }
 }

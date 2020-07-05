@@ -7,6 +7,7 @@ using Carbon.Data;
 using System.Linq;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -84,6 +85,21 @@ namespace Amazon.DynamoDb
             {
                 Enum.TryParse(property.Value.ToString(), out DbValueType dbValueType);
                 item.Add(property.Key, dbValueType);
+            }
+
+            return item;
+        }
+
+        public static AttributeDefinitions FromJsonElement(JsonElement json)
+        {
+            var item = new AttributeDefinitions();
+
+            foreach (var property in json.EnumerateObject())
+            {
+                if (Enum.TryParse<DbValueType>(property.Value.GetString(), out DbValueType kind))
+                {
+                    item.Add(property.Name, kind);
+                }
             }
 
             return item;

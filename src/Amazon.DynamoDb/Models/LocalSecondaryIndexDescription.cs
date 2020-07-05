@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Amazon.DynamoDb.Models
 {
-    public class LocalSecondaryIndexDescription : IndexDescription
+    public sealed class LocalSecondaryIndexDescription : IndexDescription
     {
 
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Amazon.DynamoDb.Extensions;
 using Amazon.DynamoDb.Responses;
 using Amazon.Scheduling;
 
@@ -269,18 +270,18 @@ namespace Amazon.DynamoDb
 
         #region Helpers
 
+
+        private async Task<T> SendAndReadJsonAsync<T>(HttpRequestMessage request) where T : IConvertibleFromJson, new()
+        {
+            var jsonElement = await SendAndReadJsonElementAsync(request);
+            return jsonElement.GetObject<T>();
+        }
+
         private async Task<JsonElement> SendAndReadJsonElementAsync(HttpRequestMessage request)
         {
             using var stream = await SendAndReadStreamAsync(request);
 
             return await System.Text.Json.JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
-        }
-
-        private async Task<T> SendAndReadJsonAsync<T>(HttpRequestMessage request)
-        {
-            using var stream = await SendAndReadStreamAsync(request);
-
-            return await System.Text.Json.JsonSerializer.DeserializeAsync<T>(stream).ConfigureAwait(false);
         }
 
         private async Task<Stream> SendAndReadStreamAsync(HttpRequestMessage request)
