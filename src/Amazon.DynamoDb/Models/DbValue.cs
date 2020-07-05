@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
-
+using Amazon.DynamoDb.Extensions;
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
@@ -380,9 +380,9 @@ namespace Amazon.DynamoDb
 				"N"    => new DbValue(property.Value.GetString(),     DbValueType.N),
 				"S"    => new DbValue(property.Value.GetString(),     DbValueType.S),
 				"BOOL" => new DbValue(property.Value.GetBoolean(),    DbValueType.BOOL),
-				"BS"   => new DbValue(GetStringArray(property.Value), DbValueType.BS),
-				"NS"   => new DbValue(GetStringArray(property.Value), DbValueType.NS),
-				"SS"   => new DbValue(GetStringArray(property.Value), DbValueType.SS),
+				"BS"   => new DbValue(property.Value.GetStringArray(), DbValueType.BS),
+				"NS"   => new DbValue(property.Value.GetStringArray(), DbValueType.NS),
+				"SS"   => new DbValue(property.Value.GetStringArray(), DbValueType.SS),
 				"L"    => new DbValue(GetListValues(property.Value)),
 				"M"    => new DbValue(AttributeCollection.FromJsonElement(property.Value)),
 				_      => throw new Exception("Invalid value type:" + property.Name),
@@ -451,22 +451,6 @@ namespace Amazon.DynamoDb
 			foreach (var item in array.EnumerateArray())
 			{
 				items[i] = FromJsonElement(item);
-
-				i++;
-			}
-
-			return items;
-		}
-
-		private static string[] GetStringArray(JsonElement element)
-		{
-			string[] items = new string[element.GetArrayLength()];
-
-			int i = 0;
-
-			foreach (var el in element.EnumerateArray())
-			{
-				items[i] = el.GetString();
 
 				i++;
 			}

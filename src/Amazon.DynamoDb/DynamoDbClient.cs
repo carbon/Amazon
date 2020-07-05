@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -49,9 +50,7 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("CreateTable", request.ToJson());
 
-            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
-
-            return TableResult.FromJson(responseJson);
+            return await SendAndReadJsonAsync<TableResult>(httpRequest).ConfigureAwait(false);
         }
 
         public async Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
@@ -67,27 +66,21 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("DeleteTable", new TableRequest(tableName).ToJson());
 
-            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
-
-            return TableResult.FromJson(responseJson);
+            return await SendAndReadJsonAsync<TableResult>(httpRequest).ConfigureAwait(false);
         }
 
         public async Task<TableResult> DescribeTableAsync(string tableName)
         {
             var httpRequest = Setup("DescribeTable", new TableRequest(tableName).ToJson());
 
-            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
-
-            return TableResult.FromJson(responseJson);
+            return await SendAndReadJsonAsync<TableResult>(httpRequest).ConfigureAwait(false);
         }
 
         public async Task<DescribeTimeToLiveResult> DescribeTimeToLiveAsync(string tableName)
         {
             var httpRequest = Setup("DescribeTimeToLive", new TableRequest(tableName).ToJson());
 
-            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
-
-            return DescribeTimeToLiveResult.FromJson(responseJson);
+            return await SendAndReadJsonAsync<DescribeTimeToLiveResult>(httpRequest).ConfigureAwait(false);
         }
 
         public async Task<GetItemResult> GetItemAsync(GetItemRequest request)
@@ -103,9 +96,9 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("ListTables", request.ToJson());
 
-            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
+            var responseJson = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
-            return ListTablesResult.FromJson(responseJson);
+            return ListTablesResult.FromJsonElement(responseJson);
         }
 
         public async Task<BatchWriteItemResult> BatchWriteItemAsync(params TableRequests[] batches)
@@ -264,23 +257,33 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("UpdateTable", request.ToJson());
 
-            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
-
-            return TableResult.FromJson(responseJson);
+            return await SendAndReadJsonAsync<TableResult>(httpRequest).ConfigureAwait(false);
         }
 
         public async Task<UpdateTimeToLiveResult> UpdateTimeToLiveAsync(UpdateTimeToLiveRequest request)
         {
             var httpRequest = Setup("UpdateTimeToLiveAsync", request.ToJson());
 
-            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
-
-            return UpdateTimeToLiveResult.FromJson(responseJson);
+            return await SendAndReadJsonAsync<UpdateTimeToLiveResult>(httpRequest).ConfigureAwait(false);
         }
 
         #region Helpers
 
         private async Task<JsonElement> SendAndReadJsonElementAsync(HttpRequestMessage request)
+        {
+            using var stream = await SendAndReadStreamAsync(request);
+
+            return await System.Text.Json.JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
+        }
+
+        private async Task<T> SendAndReadJsonAsync<T>(HttpRequestMessage request)
+        {
+            using var stream = await SendAndReadStreamAsync(request);
+
+            return await System.Text.Json.JsonSerializer.DeserializeAsync<T>(stream).ConfigureAwait(false);
+        }
+
+        private async Task<Stream> SendAndReadStreamAsync(HttpRequestMessage request)
         {
             await SignAsync(request).ConfigureAwait(false);
 
@@ -291,9 +294,7 @@ namespace Amazon.DynamoDb
                 throw await GetExceptionAsync(response).ConfigureAwait(false);
             }
 
-            var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-            return await System.Text.Json.JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
+            return await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
         }
 
         private HttpRequestMessage Setup(string action, JsonObject jsonContent)

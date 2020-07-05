@@ -1,8 +1,6 @@
 ﻿using Amazon.DynamoDb.Models;
-using Carbon.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -15,14 +13,17 @@ namespace Amazon.DynamoDb
 
         public TableDescription TableDescription { get; set; }
 
-        public static TableResult FromJson(JsonObject json)
+        public static TableResult FromJsonElement(JsonElement el)
         {
-            if (json.TryGetValue("TableDescription", out var tableNode))
+            foreach (var property in el.EnumerateObject())
             {
-                return new TableResult(tableNode.As<TableDescription>());
+                if (property.NameEquals("TableName"))
+                {
+                    result.TableName = JsonSerializer.Deserialize<TableDescription>(property)
+                }
             }
 
-            return new TableResult(new TableDescription());
+            throw new ArgumentException("Json is missing required TableName element");
         }
     }
 }

@@ -1,41 +1,38 @@
-﻿using Carbon.Json;
+﻿#nullable disable
+using Amazon.DynamoDb.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Text.Json;
 
 namespace Amazon.DynamoDb.Responses
 {
     public sealed class ListTablesResult
     {
-        public ListTablesResult(string[] tableNames)
-        {
-            TableNames = tableNames ?? throw new ArgumentNullException(nameof(tableNames));
-        }
-
-        public string? LastEvaluatedTableName { get; set; }
+        public string LastEvaluatedTableName { get; set; }
         public bool HasMoreTables => LastEvaluatedTableName != null;
         public string[] TableNames { get; set; }
 
-        public static ListTablesResult FromJson(JsonObject json)
+        public static ListTablesResult FromJsonElement(JsonElement el)
         {
-            string[] tableNames;
-            if (json.TryGetValue("TableNames", out var tableNamesNode))
-            {
-                tableNames = tableNamesNode.ToArrayOf<string>();
-            }
-            else
-            {
-                tableNames = new string[0];
-            }
+            string[] tableNames = null;
+            string lastEvaluatedTableName = null;
 
-            var result = new ListTablesResult(tableNames);
-
-            if (json.TryGetValue("LastEvaluatedTableName", out var lastEvaluatedNode))
+            foreach (var property in el.EnumerateObject())
             {
-                result.LastEvaluatedTableName = lastEvaluatedNode.ToString();
+                if (property.NameEquals("TableNames"))
+                {
+                    tableNames = property.Value.GetStringArray();
+                }
+                else if (property.NameEquals("LastEvaluatedTableName"))
+                {
+                    lastEvaluatedTableName = property.Value.GetString();
+                }
             }
 
-            return result;
+            return new ListTablesResult()
+            {
+                TableNames = tableNames,
+                LastEvaluatedTableName = lastEvaluatedTableName,
+            };
         }
     }
 }
