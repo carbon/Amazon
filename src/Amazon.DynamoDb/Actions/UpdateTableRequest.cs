@@ -18,7 +18,7 @@ namespace Amazon.DynamoDb
 
         public AttributeDefinitions? AttributeDefinitions { get; set; } 
         public BillingMode? BillingMode { get; set; }
-        public IEnumerable<GlobalSecondaryIndex>? GlobalSecondaryIndexes { get; set; }
+        public GlobalSecondaryIndexUpdate[]? GlobalSecondaryIndexes { get; set; }
 
         public ProvisionedThroughput? ProvisionedThroughput { get; set; }
         public ReplicationGroupUpdate[]? ReplicaUpdates { get; set; }
