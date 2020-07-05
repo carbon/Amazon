@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-
+using Amazon.DynamoDb.Responses;
 using Amazon.Scheduling;
 
 using Carbon.Json;
@@ -49,8 +49,7 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("CreateTable", request.ToJson());
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-            var responseJson = JsonObject.Parse(responseText);
+            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
 
             return TableResult.FromJson(responseJson);
         }
@@ -68,8 +67,7 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("DeleteTable", new TableRequest(tableName).ToJson());
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-            var responseJson = JsonObject.Parse(responseText);
+            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
 
             return TableResult.FromJson(responseJson);
         }
@@ -78,8 +76,7 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("DescribeTable", new TableRequest(tableName).ToJson());
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-            var responseJson = JsonObject.Parse(responseText);
+            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
 
             return TableResult.FromJson(responseJson);
         }
@@ -88,8 +85,7 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("DescribeTimeToLive", new TableRequest(tableName).ToJson());
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-            var responseJson = JsonObject.Parse(responseText);
+            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
 
             return DescribeTimeToLiveResult.FromJson(responseJson);
         }
@@ -103,9 +99,13 @@ namespace Amazon.DynamoDb
             return GetItemResult.FromJsonElement(json);
         }
 
-        public Task ListTables()
+        public async Task<ListTablesResult> ListTables(ListTablesRequest request)
         {
-            throw new NotImplementedException();
+            var httpRequest = Setup("ListTables", request.ToJson());
+
+            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
+
+            return ListTablesResult.FromJson(responseJson);
         }
 
         public async Task<BatchWriteItemResult> BatchWriteItemAsync(params TableRequests[] batches)
@@ -264,8 +264,7 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("UpdateTable", request.ToJson());
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-            var responseJson = JsonObject.Parse(responseText);
+            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
 
             return TableResult.FromJson(responseJson);
         }
@@ -274,8 +273,7 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup("UpdateTimeToLiveAsync", request.ToJson());
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-            var responseJson = JsonObject.Parse(responseText);
+            var responseJson = await SendAndReadJsonAsync(httpRequest).ConfigureAwait(false);
 
             return UpdateTimeToLiveResult.FromJson(responseJson);
         }
