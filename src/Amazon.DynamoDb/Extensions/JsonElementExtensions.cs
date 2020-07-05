@@ -11,35 +11,35 @@ namespace Amazon.DynamoDb.Extensions
     {
         public static string[] GetStringArray(this JsonElement element)
         {
-			string[] items = new string[element.GetArrayLength()];
+            string[] items = new string[element.GetArrayLength()];
 
-			int i = 0;
+            int i = 0;
 
-			foreach (var el in element.EnumerateArray())
-			{
-				items[i] = el.GetString();
-
-				i++;
-			}
-
-			return items;
-		}
-
-		public static T GetEnum<T>(this JsonElement element) where T : struct, Enum
-        {
-			if (Enum.TryParse<T>(element.GetString(), out T enumValue))
+            foreach (var el in element.EnumerateArray())
             {
-				return enumValue;
+                items[i] = el.GetString();
+
+                i++;
             }
 
-			throw new InvalidEnumArgumentException($"{element.GetString()} could not be parsed as enum {typeof(T)}");
+            return items;
         }
 
-		public static DateTimeOffset GetDynamoDateTimeOffset(this JsonElement element)
+        public static T GetEnum<T>(this JsonElement element) where T : struct, Enum
         {
-			long timestampSeconds = element.GetInt64();
+            if (Enum.TryParse<T>(element.GetString(), out T enumValue))
+            {
+                return enumValue;
+            }
 
-			return DateTimeOffset.FromUnixTimeSeconds(timestampSeconds);
+            throw new InvalidEnumArgumentException($"{element.GetString()} could not be parsed as enum {typeof(T)}");
+        }
+
+        public static DateTimeOffset GetDynamoDateTimeOffset(this JsonElement element)
+        {
+            long timestampSeconds = element.GetInt64();
+
+            return DateTimeOffset.FromUnixTimeSeconds(timestampSeconds);
         }
 
         public static T GetObject<T>(this JsonElement el) where T : IConvertibleFromJson, new()
