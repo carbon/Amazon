@@ -45,12 +45,15 @@ namespace Amazon.DynamoDb
             return BatchGetItemResult.FromJsonElement(json);
         }
 
-        /*
-        public void CreateTable()
+        public async Task<TableResult> CreateTableAsync(CreateTableRequest request)
         {
-            throw new NotImplementedException();
+            var httpRequest = Setup("CreateTable", request.ToJson());
+
+            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            var responseJson = JsonObject.Parse(responseText);
+
+            return TableResult.FromJson(responseJson);
         }
-        */
 
         public async Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
         {
@@ -61,17 +64,35 @@ namespace Amazon.DynamoDb
             return DeleteItemResult.FromJsonElement(json);
         }
 
-        /*
-        public void DeleteTable()
+        public async Task<TableResult> DeleteTableAsync(string tableName)
         {
-            throw new NotImplementedException();
+            var httpRequest = Setup("DeleteTable", new TableRequest(tableName).ToJson());
+
+            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            var responseJson = JsonObject.Parse(responseText);
+
+            return TableResult.FromJson(responseJson);
         }
 
-        public void DescribeTable()
+        public async Task<TableResult> DescribeTableAsync(string tableName)
         {
-            throw new NotImplementedException();
+            var httpRequest = Setup("DescribeTable", new TableRequest(tableName).ToJson());
+
+            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            var responseJson = JsonObject.Parse(responseText);
+
+            return TableResult.FromJson(responseJson);
         }
-        */
+
+        public async Task<DescribeTimeToLiveResult> DescribeTimeToLiveAsync(string tableName)
+        {
+            var httpRequest = Setup("DescribeTimeToLive", new TableRequest(tableName).ToJson());
+
+            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            var responseJson = JsonObject.Parse(responseText);
+
+            return DescribeTimeToLiveResult.FromJson(responseJson);
+        }
 
         public async Task<GetItemResult> GetItemAsync(GetItemRequest request)
         {
@@ -239,9 +260,24 @@ namespace Amazon.DynamoDb
             throw lastException;
         }
 
-        public Task UpdateTable()
+        public async Task<TableResult> UpdateTableAsync(UpdateTableRequest request)
         {
-            throw new NotImplementedException();
+            var httpRequest = Setup("UpdateTable", request.ToJson());
+
+            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            var responseJson = JsonObject.Parse(responseText);
+
+            return TableResult.FromJson(responseJson);
+        }
+
+        public async Task<UpdateTimeToLiveResult> UpdateTimeToLiveAsync(UpdateTimeToLiveRequest request)
+        {
+            var httpRequest = Setup("UpdateTimeToLiveAsync", request.ToJson());
+
+            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            var responseJson = JsonObject.Parse(responseText);
+
+            return UpdateTimeToLiveResult.FromJson(responseJson);
         }
 
         #region Helpers
