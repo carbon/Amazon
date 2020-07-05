@@ -18,7 +18,7 @@ namespace Amazon.DynamoDb
 
         public AttributeDefinitions? AttributeDefinitions { get; set; } 
         public BillingMode? BillingMode { get; set; }
-        public GlobalSecondaryIndexUpdate[]? GlobalSecondaryIndexes { get; set; }
+        public GlobalSecondaryIndexUpdate[]? GlobalSecondaryIndexUpdates { get; set; }
 
         public ProvisionedThroughput? ProvisionedThroughput { get; set; }
         public ReplicationGroupUpdate[]? ReplicaUpdates { get; set; }
@@ -34,7 +34,7 @@ namespace Amazon.DynamoDb
 
             if (AttributeDefinitions != null)    json.Add("AttributeDefinitions", AttributeDefinitions.ToJson());
             if (BillingMode.HasValue)            json.Add("BillingMode", BillingMode.Value.ToQuickString());
-            if (GlobalSecondaryIndexes != null)  json.Add("GlobalSecondaryIndexes", GlobalSecondaryIndexes.ToJson());
+            if (GlobalSecondaryIndexUpdates != null)  json.Add("GlobalSecondaryIndexUpdates", GlobalSecondaryIndexUpdates.ToJson());
             if (ProvisionedThroughput != null)   json.Add("ProvisionedThroughput", ProvisionedThroughput.ToJson());
             if (ReplicaUpdates != null)          json.Add("ReplicaUpdates", ReplicaUpdates.ToJson());
             if (SSESpecification != null)        json.Add("SSESpecification", SSESpecification.ToJson());
