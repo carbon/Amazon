@@ -262,7 +262,7 @@ namespace Amazon.DynamoDb
 
         public async Task<UpdateTimeToLiveResult> UpdateTimeToLiveAsync(UpdateTimeToLiveRequest request)
         {
-            var httpRequest = Setup("UpdateTimeToLiveAsync", request.ToJson());
+            var httpRequest = Setup("UpdateTimeToLive", request.ToJson());
 
             return await SendAndReadJsonAsync<UpdateTimeToLiveResult>(httpRequest).ConfigureAwait(false);
         }
