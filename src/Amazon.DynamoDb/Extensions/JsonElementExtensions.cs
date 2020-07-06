@@ -37,9 +37,9 @@ namespace Amazon.DynamoDb.Extensions
 
         public static DateTimeOffset GetDynamoDateTimeOffset(this JsonElement element)
         {
-            long timestampSeconds = element.GetInt64();
+            double timestampSeconds = element.GetDouble();
 
-            return DateTimeOffset.FromUnixTimeSeconds(timestampSeconds);
+            return DateTimeOffset.FromUnixTimeMilliseconds((long)(timestampSeconds * 1000d));
         }
 
         public static T GetObject<T>(this JsonElement el) where T : IConvertibleFromJson, new()
