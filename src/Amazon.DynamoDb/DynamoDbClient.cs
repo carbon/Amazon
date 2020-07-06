@@ -278,13 +278,6 @@ namespace Amazon.DynamoDb
 
         private async Task<JsonElement> SendAndReadJsonElementAsync(HttpRequestMessage request)
         {
-            using var stream = await SendAndReadStreamAsync(request);
-
-            return await System.Text.Json.JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
-        }
-
-        private async Task<Stream> SendAndReadStreamAsync(HttpRequestMessage request)
-        {
             await SignAsync(request).ConfigureAwait(false);
 
             using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
@@ -294,7 +287,9 @@ namespace Amazon.DynamoDb
                 throw await GetExceptionAsync(response).ConfigureAwait(false);
             }
 
-            return await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+            return await System.Text.Json.JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
         }
 
         private HttpRequestMessage Setup(string action, JsonObject jsonContent)
