@@ -16,7 +16,7 @@ namespace Amazon.DynamoDb
 
         public string TableName { get; }
 
-        public AttributeDefinitions? AttributeDefinitions { get; set; } 
+        public AttributeDefinition[]? AttributeDefinitions { get; set; } 
         public BillingMode? BillingMode { get; set; }
         public GlobalSecondaryIndexUpdate[]? GlobalSecondaryIndexUpdates { get; set; }
 

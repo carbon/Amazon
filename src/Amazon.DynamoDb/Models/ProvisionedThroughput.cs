@@ -1,7 +1,7 @@
 ﻿using Carbon.Json;
 using System.Text.Json;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb
 {
     public class ProvisionedThroughput : IConvertibleFromJson
     {

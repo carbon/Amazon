@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb
 {
     public class ReplicaGlobalSecondaryIndexDescription : IConvertibleFromJson
     {

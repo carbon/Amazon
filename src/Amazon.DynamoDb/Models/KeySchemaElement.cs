@@ -5,7 +5,7 @@ using Carbon.Json;
 using System;
 using System.Text.Json;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb
 {
     public class KeySchemaElement : IConvertibleFromJson
     {

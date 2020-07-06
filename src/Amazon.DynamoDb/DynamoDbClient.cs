@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Amazon.DynamoDb.Extensions;
-using Amazon.DynamoDb.Responses;
 using Amazon.Scheduling;
 
 using Carbon.Json;
@@ -93,7 +92,7 @@ namespace Amazon.DynamoDb
             return GetItemResult.FromJsonElement(json);
         }
 
-        public async Task<ListTablesResult> ListTables(ListTablesRequest request)
+        public async Task<ListTablesResult> ListTablesAsync(ListTablesRequest request)
         {
             var httpRequest = Setup("ListTables", request.ToJson());
 

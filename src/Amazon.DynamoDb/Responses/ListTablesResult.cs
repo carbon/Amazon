@@ -3,7 +3,7 @@ using Amazon.DynamoDb.Extensions;
 using System;
 using System.Text.Json;
 
-namespace Amazon.DynamoDb.Responses
+namespace Amazon.DynamoDb
 {
     public sealed class ListTablesResult
     {

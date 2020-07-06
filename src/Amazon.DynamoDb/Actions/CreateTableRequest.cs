@@ -9,7 +9,7 @@ namespace Amazon.DynamoDb
 {
     public sealed class CreateTableRequest
     {
-        public CreateTableRequest(string tableName, AttributeDefinitions attributeDefinitions, IEnumerable<KeySchemaElement> keySchema)
+        public CreateTableRequest(string tableName, AttributeDefinition[] attributeDefinitions, IEnumerable<KeySchemaElement> keySchema)
         {
             TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             AttributeDefinitions = attributeDefinitions ?? throw new ArgumentNullException(nameof(attributeDefinitions));
@@ -20,7 +20,7 @@ namespace Amazon.DynamoDb
 
         public BillingMode BillingMode { get; set; }
 
-        public AttributeDefinitions AttributeDefinitions { get; }
+        public AttributeDefinition[] AttributeDefinitions { get; }
 
         public IEnumerable<KeySchemaElement> KeySchema { get; }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb
 {
     public enum TimeToLiveStatus : byte
     {

@@ -37,6 +37,16 @@ namespace Amazon.DynamoDb.Extensions
             return jsonList;
         }
 
+        public static JsonNode ToJson(this IEnumerable<AttributeDefinition> attrs)
+        {
+            var jsonList = new JsonNodeList();
+            foreach (var item in attrs)
+            {
+                jsonList.Add(item.ToJson());
+            }
+            return jsonList;
+        }
+
         public static JsonNode ToJson(this IEnumerable<GlobalSecondaryIndexUpdate> indexes)
         {
             var jsonList = new JsonNodeList();

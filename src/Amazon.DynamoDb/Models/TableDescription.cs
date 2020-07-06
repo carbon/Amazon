@@ -5,14 +5,14 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb
 {
     public class TableDescription : IConvertibleFromJson
     {
         public TableDescription() { }
 
         public ArchivalSummary? ArchivalSummary { get; set; }
-        public AttributeDefinitions? AttributeDefinitions { get; set; }
+        public AttributeDefinition[]? AttributeDefinitions { get; set; }
         public BillingModeSummary? BillingModeSummary { get; set; }
         public DateTimeOffset CreationDateTime { get; set; }
         public GlobalSecondaryIndexDescription[]? GlobalSecondaryIndexes { get; set; }
@@ -36,7 +36,7 @@ namespace Amazon.DynamoDb.Models
         public void FillField(JsonProperty p)
         {
             if (p.NameEquals("ArchivalSummary")) ArchivalSummary = p.Value.GetObject<ArchivalSummary>();
-            else if (p.NameEquals("AttributeDefinitions")) AttributeDefinitions = AttributeDefinitions.FromJsonElement(p.Value);
+            else if (p.NameEquals("AttributeDefinitions")) AttributeDefinitions = p.Value.GetObjectArray<AttributeDefinition>();
             else if (p.NameEquals("BillingModeSummary")) BillingModeSummary = p.Value.GetObject<BillingModeSummary>();
             else if (p.NameEquals("CreationDateTime")) CreationDateTime = p.Value.GetDynamoDateTimeOffset();
             else if (p.NameEquals("GlobalSecondaryIndexes")) GlobalSecondaryIndexes = p.Value.GetObjectArray<GlobalSecondaryIndexDescription>();
