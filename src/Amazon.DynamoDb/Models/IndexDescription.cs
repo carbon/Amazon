@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Amazon.DynamoDb.Extensions;
 using System.Text.Json;
 
 namespace Amazon.DynamoDb
@@ -18,7 +16,7 @@ namespace Amazon.DynamoDb
             if (property.NameEquals("IndexName")) IndexName = property.Value.GetString();
             else if (property.NameEquals("IndexSizeBytes")) IndexSizeBytes = property.Value.GetInt64();
             else if (property.NameEquals("ItemCount")) ItemCount = property.Value.GetInt64();
-            else if (property.NameEquals("KeySchema")) IndexName = property.Value.GetString();
+            else if (property.NameEquals("KeySchema")) KeySchema = property.Value.GetObjectArray<KeySchemaElement>();
             else if (property.NameEquals("Projection")) Projection = Projection.FromJsonElement(property.Value);
         }
     }
