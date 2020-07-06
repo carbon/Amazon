@@ -20,10 +20,14 @@ namespace Amazon.DynamoDb
 
         public JsonObject ToJson()
         {
-            return new JsonObject {
-                { "NonKeyAttributes", new XImmutableArray<string>(NonKeyAttributes) },
+            var json = new JsonObject {
                 { "ProjectionType", ProjectionType.ToQuickString() }
             };
+
+            if (NonKeyAttributes != null && NonKeyAttributes.Length > 0)
+                json.Add("NonKeyAttributes", new XImmutableArray<string>(NonKeyAttributes));
+
+            return json;
         }
 
         public static Projection FromJsonElement(JsonElement element)
