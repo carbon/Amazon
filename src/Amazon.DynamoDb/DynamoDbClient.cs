@@ -46,11 +46,11 @@ namespace Amazon.DynamoDb
             return BatchGetItemResult.FromJsonElement(json);
         }
 
-        public async Task<TableResult> CreateTableAsync(CreateTableRequest request)
+        public async Task<CreateTableResult> CreateTableAsync(CreateTableRequest request)
         {
             var httpRequest = Setup("CreateTable", request.ToJson());
 
-            return await SendAndReadJsonAsync<TableResult>(httpRequest).ConfigureAwait(false);
+            return await SendAndReadJsonAsync<CreateTableResult>(httpRequest).ConfigureAwait(false);
         }
 
         public async Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
@@ -62,18 +62,18 @@ namespace Amazon.DynamoDb
             return DeleteItemResult.FromJsonElement(json);
         }
 
-        public async Task<TableResult> DeleteTableAsync(string tableName)
+        public async Task<DeleteTableResult> DeleteTableAsync(string tableName)
         {
             var httpRequest = Setup("DeleteTable", new TableRequest(tableName).ToJson());
 
-            return await SendAndReadJsonAsync<TableResult>(httpRequest).ConfigureAwait(false);
+            return await SendAndReadJsonAsync<DeleteTableResult>(httpRequest).ConfigureAwait(false);
         }
 
-        public async Task<TableResult> DescribeTableAsync(string tableName)
+        public async Task<DescribeTableResult> DescribeTableAsync(string tableName)
         {
             var httpRequest = Setup("DescribeTable", new TableRequest(tableName).ToJson());
 
-            return await SendAndReadJsonAsync<TableResult>(httpRequest).ConfigureAwait(false);
+            return await SendAndReadJsonAsync<DescribeTableResult>(httpRequest).ConfigureAwait(false);
         }
 
         public async Task<DescribeTimeToLiveResult> DescribeTimeToLiveAsync(string tableName)
@@ -253,11 +253,11 @@ namespace Amazon.DynamoDb
             throw lastException;
         }
 
-        public async Task<TableResult> UpdateTableAsync(UpdateTableRequest request)
+        public async Task<UpdateTableResult> UpdateTableAsync(UpdateTableRequest request)
         {
             var httpRequest = Setup("UpdateTable", request.ToJson());
 
-            return await SendAndReadJsonAsync<TableResult>(httpRequest).ConfigureAwait(false);
+            return await SendAndReadJsonAsync<UpdateTableResult>(httpRequest).ConfigureAwait(false);
         }
 
         public async Task<UpdateTimeToLiveResult> UpdateTimeToLiveAsync(UpdateTimeToLiveRequest request)

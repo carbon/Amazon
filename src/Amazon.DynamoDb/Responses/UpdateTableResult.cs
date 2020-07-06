@@ -7,9 +7,9 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public sealed class TableResult : IConvertibleFromJson
+    public sealed class UpdateTableResult : IConvertibleFromJson
     {
-        public TableResult() { }
+        public UpdateTableResult() { }
 
         public TableDescription TableDescription { get; set; }
 
