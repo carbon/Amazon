@@ -1,9 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-
+using Amazon.DynamoDb.Extensions;
 using Amazon.Scheduling;
 
 using Carbon.Json;
@@ -14,10 +15,15 @@ namespace Amazon.DynamoDb
     {
         private const string TargetPrefix = "DynamoDB_20120810";
 
+        private readonly JsonSerializerOptions SerializerOptions;
+
         public DynamoDbClient(AwsRegion region, IAwsCredential credential)
             : base(AwsService.DynamoDb, region, credential)
         {
             httpClient.Timeout = TimeSpan.FromSeconds(10);
+
+            SerializerOptions = new JsonSerializerOptions();
+            SerializerOptions.Converters.Add(new JsonConverters.DateTimeOffsetConverter());
         }
 
         #region Helpers
@@ -45,12 +51,10 @@ namespace Amazon.DynamoDb
             return BatchGetItemResult.FromJsonElement(json);
         }
 
-        /*
-        public void CreateTable()
+        public async Task<CreateTableResult> CreateTableAsync(CreateTableRequest request)
         {
-            throw new NotImplementedException();
+            return await HandleRequestAsync<CreateTableRequest, CreateTableResult>("CreateTable", request);
         }
-        */
 
         public async Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
         {
@@ -61,17 +65,20 @@ namespace Amazon.DynamoDb
             return DeleteItemResult.FromJsonElement(json);
         }
 
-        /*
-        public void DeleteTable()
+        public async Task<DeleteTableResult> DeleteTableAsync(string tableName)
         {
-            throw new NotImplementedException();
+            return await HandleRequestAsync<TableRequest, DeleteTableResult>("DeleteTable", new TableRequest(tableName));
         }
 
-        public void DescribeTable()
+        public async Task<DescribeTableResult> DescribeTableAsync(string tableName)
         {
-            throw new NotImplementedException();
+            return await HandleRequestAsync<TableRequest, DescribeTableResult>("DescribeTable", new TableRequest(tableName));
         }
-        */
+
+        public async Task<DescribeTimeToLiveResult> DescribeTimeToLiveAsync(string tableName)
+        {
+            return await HandleRequestAsync<TableRequest, DescribeTimeToLiveResult>("DescribeTimeToLive", new TableRequest(tableName));
+        }
 
         public async Task<GetItemResult> GetItemAsync(GetItemRequest request)
         {
@@ -82,9 +89,9 @@ namespace Amazon.DynamoDb
             return GetItemResult.FromJsonElement(json);
         }
 
-        public Task ListTables()
+        public async Task<ListTablesResult> ListTablesAsync(ListTablesRequest request)
         {
-            throw new NotImplementedException();
+            return await HandleRequestAsync<ListTablesRequest, ListTablesResult>("ListTables", request);
         }
 
         public async Task<BatchWriteItemResult> BatchWriteItemAsync(params TableRequests[] batches)
@@ -239,12 +246,24 @@ namespace Amazon.DynamoDb
             throw lastException;
         }
 
-        public Task UpdateTable()
+        public async Task<UpdateTableResult> UpdateTableAsync(UpdateTableRequest request)
         {
-            throw new NotImplementedException();
+            return await HandleRequestAsync<UpdateTableRequest, UpdateTableResult>("UpdateTable", request);
+        }
+
+        public async Task<UpdateTimeToLiveResult> UpdateTimeToLiveAsync(UpdateTimeToLiveRequest request)
+        {
+            return await HandleRequestAsync<UpdateTimeToLiveRequest, UpdateTimeToLiveResult>("UpdateTimeToLive", request);
         }
 
         #region Helpers
+
+        private async Task<TResult> HandleRequestAsync<TRequest, TResult>(string apiName, TRequest request)
+        {
+            var httpRequest = Setup(apiName, System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(request));
+
+            return await SendAndReadObjectAsync<TResult>(httpRequest).ConfigureAwait(false);
+        }
 
         private async Task<JsonElement> SendAndReadJsonElementAsync(HttpRequestMessage request)
         {
@@ -257,12 +276,38 @@ namespace Amazon.DynamoDb
                 throw await GetExceptionAsync(response).ConfigureAwait(false);
             }
 
-            var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
             return await System.Text.Json.JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
         }
 
+        private async Task<T> SendAndReadObjectAsync<T>(HttpRequestMessage request)
+        {
+            await SignAsync(request).ConfigureAwait(false);
+
+            using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await GetExceptionAsync(response).ConfigureAwait(false);
+            }
+
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+            return await System.Text.Json.JsonSerializer.DeserializeAsync<T>(stream, SerializerOptions).ConfigureAwait(false);
+        }
+
         private HttpRequestMessage Setup(string action, JsonObject jsonContent)
+        {
+            if (jsonContent == null)
+            {
+                return Setup(action, (byte[]?)null);
+            }
+
+            return Setup(action, System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(jsonContent));
+        }
+
+        private HttpRequestMessage Setup(string action, byte[]? utf8Json)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Headers = {
@@ -271,10 +316,8 @@ namespace Amazon.DynamoDb
                 }
             };
 
-            if (jsonContent != null)
+            if (utf8Json != null)
             {
-                byte[] utf8Json = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(jsonContent);
-
                 request.Content = new ByteArrayContent(utf8Json) {
                     Headers = { { "Content-Type", "application/x-amz-json-1.0" } }
                 };
