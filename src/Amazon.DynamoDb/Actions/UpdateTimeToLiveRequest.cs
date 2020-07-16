@@ -17,16 +17,6 @@ namespace Amazon.DynamoDb
 
         public string TableName { get; }
         public TimeToLiveSpecification TimeToLiveSpecification { get; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject {
-                { "TableName", TableName },
-                { "TimeToLiveSpecification", TimeToLiveSpecification.ToJson() },
-            };
-
-            return json;
-        }
     }
 }
 

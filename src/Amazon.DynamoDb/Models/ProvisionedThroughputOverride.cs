@@ -6,21 +6,8 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class ProvisionedThroughputOverride : IConvertibleFromJson
+    public class ProvisionedThroughputOverride
     {
         public int ReadCapacityUnits { get; set; }
-
-        public void FillField(JsonProperty property)
-        {
-            if (property.NameEquals("ReadCapacityUnits")) ReadCapacityUnits = property.Value.GetInt32();
-        }
-
-        public JsonObject ToJson()
-        {
-            return new JsonObject()
-            {
-                { "ReadCapacityUnits", ReadCapacityUnits }
-            };
-        }
     }
 }

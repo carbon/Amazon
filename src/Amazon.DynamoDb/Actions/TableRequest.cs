@@ -15,15 +15,6 @@ namespace Amazon.DynamoDb
         }
 
         public string TableName { get; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject {
-                { "TableName", TableName },
-            };
-
-            return json;
-        }
     }
 }
 

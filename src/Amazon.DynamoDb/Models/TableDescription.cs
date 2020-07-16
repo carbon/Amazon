@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class TableDescription : IConvertibleFromJson
+    public class TableDescription
     {
         public TableDescription() { }
 
@@ -32,31 +32,6 @@ namespace Amazon.DynamoDb
         public string? TableName { get; set; }
         public long TableSizeBytes { get; set; }
         public TableStatus TableStatus { get; set; }
-
-        public void FillField(JsonProperty p)
-        {
-            if (p.NameEquals("ArchivalSummary")) ArchivalSummary = p.Value.GetObject<ArchivalSummary>();
-            else if (p.NameEquals("AttributeDefinitions")) AttributeDefinitions = p.Value.GetObjectArray<AttributeDefinition>();
-            else if (p.NameEquals("BillingModeSummary")) BillingModeSummary = p.Value.GetObject<BillingModeSummary>();
-            else if (p.NameEquals("CreationDateTime")) CreationDateTime = p.Value.GetDynamoDateTimeOffset();
-            else if (p.NameEquals("GlobalSecondaryIndexes")) GlobalSecondaryIndexes = p.Value.GetObjectArray<GlobalSecondaryIndexDescription>();
-            else if (p.NameEquals("GlobalTableVersion")) GlobalTableVersion = p.Value.GetString();
-            else if (p.NameEquals("ItemCount")) ItemCount = p.Value.GetInt64();
-            else if (p.NameEquals("KeySchema")) KeySchema = p.Value.GetObjectArray<KeySchemaElement>();
-            else if (p.NameEquals("LatestStreamArn")) LatestStreamArn = p.Value.GetString();
-            else if (p.NameEquals("LatestStreamLabel")) LatestStreamLabel = p.Value.GetString();
-            else if (p.NameEquals("LocalSecondaryIndexes")) LocalSecondaryIndexes = p.Value.GetObjectArray<LocalSecondaryIndexDescription>();
-            else if (p.NameEquals("ProvisionedThroughput")) ProvisionedThroughput = p.Value.GetObject<ProvisionedThroughput>();
-            else if (p.NameEquals("Replicas")) Replicas = p.Value.GetObjectArray<ReplicaDescription>();
-            else if (p.NameEquals("RestoreSummary")) RestoreSummary = p.Value.GetObjectArray<RestoreSummary>();
-            else if (p.NameEquals("SSEDescription")) SSEDescription = p.Value.GetObject<SSEDescription>();
-            else if (p.NameEquals("StreamSpecification")) StreamSpecification = p.Value.GetObject<StreamSpecification>();
-            else if (p.NameEquals("TableArn")) TableArn = p.Value.GetString();
-            else if (p.NameEquals("TableId")) TableId = p.Value.GetString();
-            else if (p.NameEquals("TableName")) TableName = p.Value.GetString();
-            else if (p.NameEquals("TableSizeBytes")) TableSizeBytes = p.Value.GetInt64();
-            else if (p.NameEquals("TableStatus")) TableStatus = p.Value.GetEnum<TableStatus>();
-        }
 
     }
 }

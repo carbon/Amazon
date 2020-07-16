@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class StreamSpecification : IConvertibleFromJson
+    public class StreamSpecification
     {
         public StreamSpecification() { }
         public StreamSpecification(bool streamEnabled, StreamViewType streamViewType)
@@ -18,20 +18,5 @@ namespace Amazon.DynamoDb
 
         public bool StreamEnabled { get; set; }
         public StreamViewType StreamViewType { get; set; }
-
-        public void FillField(JsonProperty property)
-        {
-            if (property.NameEquals("StreamEnabled")) StreamEnabled = property.Value.GetBoolean();
-            else if (property.NameEquals("StreamViewType")) StreamViewType = property.Value.GetEnum<StreamViewType>();
-        }
-
-        public JsonObject ToJson()
-        {
-            return new JsonObject()
-            {
-                { "StreamEnabled", StreamEnabled },
-                { "StreamViewType", StreamViewType.ToQuickString() }
-            };
-        }
     }
 }

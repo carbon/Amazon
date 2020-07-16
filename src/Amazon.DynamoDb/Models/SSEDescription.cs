@@ -7,20 +7,11 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class SSEDescription : IConvertibleFromJson
+    public class SSEDescription
     {
         public DateTimeOffset InaccessibleEncryptionDateTime { get; set; }
         public string? KMSMasterKeyArn { get; set; }
         public SSEType? SSEType { get; set; }
         public string? Status { get; set; }
-
-
-        public void FillField(JsonProperty property)
-        {
-            if (property.NameEquals("InaccessibleEncryptionDateTime")) InaccessibleEncryptionDateTime = property.Value.GetDynamoDateTimeOffset();
-            else if (property.NameEquals("KMSMasterKeyArn")) KMSMasterKeyArn = property.Value.GetString();
-            else if (property.NameEquals("SSEType")) SSEType = property.Value.GetEnum<SSEType>();
-            else if (property.NameEquals("Status")) Status = property.Value.GetString();
-        }
     }
 }

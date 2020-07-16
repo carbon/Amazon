@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum StreamViewType : byte
     {
         KEYS_ONLY,
@@ -11,19 +10,4 @@ namespace Amazon.DynamoDb
         OLD_IMAGE,
         NEW_AND_OLD_IMAGES,
     };
-
-    public static class StreamViewTypeExtensions
-    {
-        public static string ToQuickString(this StreamViewType type)
-        {
-            return type switch
-            {
-                StreamViewType.KEYS_ONLY => "KEYS_ONLY",
-                StreamViewType.NEW_IMAGE => "NEW_IMAGE",
-                StreamViewType.OLD_IMAGE => "OLD_IMAGE",
-                StreamViewType.NEW_AND_OLD_IMAGES => "NEW_AND_OLD_IMAGES",
-                _ => throw new Exception("Unexpected type:" + type.ToString()),
-            };
-        }
-    }
 }

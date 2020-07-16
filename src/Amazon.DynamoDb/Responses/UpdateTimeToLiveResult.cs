@@ -8,14 +8,8 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class UpdateTimeToLiveResult : IConvertibleFromJson
+    public class UpdateTimeToLiveResult
     {
         public TimeToLiveSpecification TimeToLiveSpecification { get; set; }
-
-        public void FillField(JsonProperty property)
-        {
-            if (property.NameEquals("TimeToLiveSpecification"))
-                TimeToLiveSpecification = property.Value.GetObject<TimeToLiveSpecification>();
-        }
     }
 }

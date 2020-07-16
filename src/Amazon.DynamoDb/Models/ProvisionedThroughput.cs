@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class ProvisionedThroughput : IConvertibleFromJson
+    public class ProvisionedThroughput
     {
         public ProvisionedThroughput() { }
         public ProvisionedThroughput(int readCapacityUnits, int writeCapacityUnits)
@@ -14,12 +14,6 @@ namespace Amazon.DynamoDb
 
         public int ReadCapacityUnits { get; set; }
         public int WriteCapacityUnits { get; set; }
-
-        public void FillField(JsonProperty property)
-        {
-            if (property.NameEquals("ReadCapacityUnits")) ReadCapacityUnits = property.Value.GetInt32();
-            else if (property.NameEquals("WriteCapacityUnits")) WriteCapacityUnits = property.Value.GetInt32();
-        }
 
         public JsonObject ToJson()
         {

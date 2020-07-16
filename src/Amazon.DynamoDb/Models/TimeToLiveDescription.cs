@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class TimeToLiveDescription : IConvertibleFromJson
+    public class TimeToLiveDescription
     {
         public string? AttributeName { get; set; }
         public TimeToLiveStatus TimeToLiveStatus { get; set; }

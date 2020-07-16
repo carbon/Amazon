@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class KeySchemaElement : IConvertibleFromJson
+    public class KeySchemaElement
     {
         public KeySchemaElement() { }
         public KeySchemaElement(string attributeName, KeyType keyType)
@@ -20,18 +20,6 @@ namespace Amazon.DynamoDb
 
         public KeyType KeyType { get; set; }
 
-        public void FillField(JsonProperty property)
-        {
-            if (property.NameEquals("AttributeName")) AttributeName = property.Value.GetString();
-            else if (property.NameEquals("KeyType")) KeyType = property.Value.GetEnum<KeyType>();
-        }
-
-        public JsonObject ToJson()
-        {
-            return new JsonObject {
-                { "AttributeName", AttributeName },
-                { "KeyType", KeyType.ToQuickString() }
-            };
-        }
+        
     }
 }

@@ -18,15 +18,5 @@ namespace Amazon.DynamoDb
         public string IndexName { get; }
         public KeySchemaElement[] KeySchema { get; }
         public Projection Projection { get; }
-
-        public JsonObject ToJson()
-        {
-            return new JsonObject
-            {
-                { "IndexName", IndexName },
-                { "KeySchema", KeySchema.ToJson() },
-                { "Projection", Projection.ToJson() }
-            };
-        }
     }
 }

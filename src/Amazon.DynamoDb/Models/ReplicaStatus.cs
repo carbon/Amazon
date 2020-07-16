@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ReplicaStatus : byte
     {
         CREATING,
@@ -11,19 +10,4 @@ namespace Amazon.DynamoDb
         DELETING,
         ACTIVE,
     };
-
-    public static class ReplicaStatusExtensions
-    {
-        public static string ToQuickString(this ReplicaStatus type)
-        {
-            return type switch
-            {
-                ReplicaStatus.CREATING => "CREATING",
-                ReplicaStatus.UPDATING => "UPDATING",
-                ReplicaStatus.DELETING => "DELETING",
-                ReplicaStatus.ACTIVE => "ACTIVE",
-                _ => throw new Exception("Unexpected type:" + type.ToString()),
-            };
-        }
-    }
 }

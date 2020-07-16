@@ -7,19 +7,11 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public sealed class DescribeTableResult : IConvertibleFromJson
+    public sealed class DescribeTableResult
     {
         public DescribeTableResult() { }
 
-        public TableDescription TableDescription { get; set; }
-
-        public void FillField(JsonProperty property)
-        {
-            if (property.NameEquals("Table"))
-            {
-                TableDescription = property.Value.GetObject<TableDescription>();
-            }
-        }
+        public TableDescription Table { get; set; }
     }
 }
 

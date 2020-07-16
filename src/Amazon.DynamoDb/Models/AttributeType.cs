@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum AttributeType : byte
     {
         Unknown = 0,
@@ -22,20 +23,5 @@ namespace Amazon.DynamoDb
         /// String
         /// </summary>
         S,
-    }
-
-
-    public static class AttributeTypeExtensions
-    {
-        public static string ToQuickString(this AttributeType type)
-        {
-            return type switch
-            {
-                AttributeType.B    => "B",
-                AttributeType.N    => "N",
-                AttributeType.S    => "S",
-                _                => throw new Exception("Unexpected type:" + type.ToString()),
-            };
-        }
     }
 }

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TimeToLiveStatus : byte
     {
         ENABLING,
@@ -11,19 +10,4 @@ namespace Amazon.DynamoDb
         ENABLED,
         DISABLED,
     };
-
-    public static class TimeToLiveStatusExtensions
-    {
-        public static string ToQuickString(this TimeToLiveStatus type)
-        {
-            return type switch
-            {
-                TimeToLiveStatus.ENABLING => "ENABLING",
-                TimeToLiveStatus.DISABLING => "DISABLING",
-                TimeToLiveStatus.ENABLED => "ENABLED",
-                TimeToLiveStatus.DISABLED => "DISABLED",
-                _ => throw new Exception("Unexpected type:" + type.ToString()),
-            };
-        }
-    }
 }

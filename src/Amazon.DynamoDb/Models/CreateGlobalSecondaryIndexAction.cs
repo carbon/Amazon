@@ -19,19 +19,5 @@ namespace Amazon.DynamoDb
         public KeySchemaElement[] KeySchema { get; }
         public Projection Projection { get; }
         public ProvisionedThroughput? ProvisionedThroughput { get; set; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject
-            {
-                { "IndexName", IndexName },
-                { "KeySchema", KeySchema.ToJson() },
-                { "Projection", Projection.ToJson() }
-            };
-
-            if (ProvisionedThroughput != null) json.Add("ProvisionedThroughput", ProvisionedThroughput.ToJson());
-
-            return json;
-        }
     }
 }

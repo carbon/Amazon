@@ -14,18 +14,5 @@ namespace Amazon.DynamoDb
 
         public string IndexName;
         public ProvisionedThroughputOverride? ProvisionedThroughputOverride { get; set; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject
-            {
-                { "IndexName", IndexName }
-            };
-
-            if (ProvisionedThroughputOverride != null)
-                json.Add("ProvisionedThroughputOverride", ProvisionedThroughputOverride.ToJson());
-
-            return json;
-        }
     }
 }

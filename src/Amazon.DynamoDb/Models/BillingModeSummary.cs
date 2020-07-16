@@ -6,21 +6,9 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class BillingModeSummary : IConvertibleFromJson
+    public class BillingModeSummary
     {
         public BillingMode BillingMode { get; set; }
         public DateTimeOffset LastUpdateToPayPerRequestDateTime { get; set; }
-
-        public void FillField(JsonProperty property)
-        {
-            if (property.NameEquals("BillingMode"))
-            {
-                BillingMode = property.Value.GetEnum<BillingMode>();
-            }
-            else if (property.NameEquals("LastUpdateToPayPerRequestDateTime"))
-            {
-                LastUpdateToPayPerRequestDateTime = property.Value.GetDynamoDateTimeOffset();
-            }
-        }
     }
 }

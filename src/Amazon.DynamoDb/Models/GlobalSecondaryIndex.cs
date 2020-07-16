@@ -14,15 +14,5 @@ namespace Amazon.DynamoDb
         }
 
         public ProvisionedThroughput? ProvisionedThroughput { get; set; }
-
-        public new JsonObject ToJson()
-        {
-            JsonObject json = base.ToJson();
-
-            if (ProvisionedThroughput != null) 
-                json.Add("ProvisionedThroughput", ProvisionedThroughput.ToJson());
-
-            return json;
-        }
     }
 }

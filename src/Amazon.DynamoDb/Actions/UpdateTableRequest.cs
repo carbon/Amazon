@@ -25,23 +25,6 @@ namespace Amazon.DynamoDb
         public SSESpecification? SSESpecification { get; set; }
 
         public StreamSpecification? StreamSpecification { get; set; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject {
-                { "TableName", TableName },
-            };
-
-            if (AttributeDefinitions != null)    json.Add("AttributeDefinitions", AttributeDefinitions.ToJson());
-            if (BillingMode.HasValue)            json.Add("BillingMode", BillingMode.Value.ToQuickString());
-            if (GlobalSecondaryIndexUpdates != null)  json.Add("GlobalSecondaryIndexUpdates", GlobalSecondaryIndexUpdates.ToJson());
-            if (ProvisionedThroughput != null)   json.Add("ProvisionedThroughput", ProvisionedThroughput.ToJson());
-            if (ReplicaUpdates != null)          json.Add("ReplicaUpdates", ReplicaUpdates.ToJson());
-            if (SSESpecification != null)        json.Add("SSESpecification", SSESpecification.ToJson());
-            if (StreamSpecification != null)     json.Add("StreamSpecification", StreamSpecification.ToJson());
-
-            return json;
-        }
     }
 }
 

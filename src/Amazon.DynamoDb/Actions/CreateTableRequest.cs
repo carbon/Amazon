@@ -33,26 +33,7 @@ namespace Amazon.DynamoDb
 
         public StreamSpecification? StreamSpecification { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>>? Tags { get; set; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject {
-                { "TableName", TableName },
-                { "BillingMode", BillingMode.ToQuickString() },
-                { "KeySchema", KeySchema.ToJson() },
-                { "AttributeDefinitions", AttributeDefinitions.ToJson() },
-            };
-
-            if (LocalSecondaryIndexes != null)   json.Add("LocalSecondaryIndexes", LocalSecondaryIndexes.ToJson());
-            if (GlobalSecondaryIndexes != null)  json.Add("GlobalSecondaryIndexes", GlobalSecondaryIndexes.ToJson());
-            if (ProvisionedThroughput != null)   json.Add("ProvisionedThroughput", ProvisionedThroughput.ToJson());
-            if (SSESpecification != null)        json.Add("SSESpecification", SSESpecification.ToJson());
-            if (StreamSpecification != null)     json.Add("StreamSpecification", StreamSpecification.ToJson());
-            if (Tags != null)                    json.Add("Tags", Tags.ToJson());
-
-            return json;
-        }
+        public IEnumerable<Tag>? Tags { get; set; }
     }
 }
 

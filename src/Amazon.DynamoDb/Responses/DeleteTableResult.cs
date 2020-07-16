@@ -7,19 +7,11 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public sealed class DeleteTableResult : IConvertibleFromJson
+    public sealed class DeleteTableResult
     {
         public DeleteTableResult() { }
 
         public TableDescription TableDescription { get; set; }
-
-        public void FillField(JsonProperty property)
-        {
-            if (property.NameEquals("TableDescription"))
-            {
-                TableDescription = property.Value.GetObject<TableDescription>();
-            }
-        }
     }
 }
 

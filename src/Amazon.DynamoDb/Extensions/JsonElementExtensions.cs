@@ -41,28 +41,5 @@ namespace Amazon.DynamoDb.Extensions
 
             return DateTimeOffset.FromUnixTimeMilliseconds((long)(timestampSeconds * 1000d));
         }
-
-        public static T GetObject<T>(this JsonElement el) where T : IConvertibleFromJson, new()
-        {
-            T obj = new T();
-            foreach (var prop in el.EnumerateObject())
-            {
-                obj.FillField(prop);
-            }
-            return obj;
-        }
-
-        public static T[] GetObjectArray<T>(this JsonElement el) where T : IConvertibleFromJson, new()
-        {
-            T[] objArray = new T[el.GetArrayLength()];
-
-            int i = 0;
-            foreach (var childElement in el.EnumerateArray())
-            {
-                objArray[i++] = GetObject<T>(childElement);
-            }
-
-            return objArray;
-        }
     }
 }
