@@ -15,10 +15,15 @@ namespace Amazon.DynamoDb
     {
         private const string TargetPrefix = "DynamoDB_20120810";
 
+        private readonly JsonSerializerOptions SerializerOptions;
+
         public DynamoDbClient(AwsRegion region, IAwsCredential credential)
             : base(AwsService.DynamoDb, region, credential)
         {
             httpClient.Timeout = TimeSpan.FromSeconds(10);
+
+            SerializerOptions = new JsonSerializerOptions();
+            SerializerOptions.Converters.Add(new JsonConverters.DateTimeOffsetConverter());
         }
 
         #region Helpers
@@ -289,7 +294,7 @@ namespace Amazon.DynamoDb
 
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await System.Text.Json.JsonSerializer.DeserializeAsync<T>(stream).ConfigureAwait(false);
+            return await System.Text.Json.JsonSerializer.DeserializeAsync<T>(stream, SerializerOptions).ConfigureAwait(false);
         }
 
         private HttpRequestMessage Setup(string action, JsonObject jsonContent)
