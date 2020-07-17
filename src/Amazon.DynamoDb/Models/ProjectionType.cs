@@ -3,7 +3,7 @@
 namespace Amazon.DynamoDb
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum ProjectionType : byte
+    public enum ProjectionType
     {
         KEYS_ONLY,
         INCLUDE,

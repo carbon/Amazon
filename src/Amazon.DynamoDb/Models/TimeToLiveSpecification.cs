@@ -1,13 +1,11 @@
-﻿#nullable disable
-
-using Carbon.Json;
-using System.Text.Json;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
-    public class TimeToLiveSpecification
+    public sealed class TimeToLiveSpecification
     {
+#nullable disable
         public TimeToLiveSpecification() { }
+#nullable enable
+
         public TimeToLiveSpecification(string attributeName, bool enabled)
         {
             AttributeName = attributeName;
@@ -15,6 +13,7 @@ namespace Amazon.DynamoDb
         }
 
         public string AttributeName { get; set; }
+
         public bool Enabled { get; set; }
     }
 }

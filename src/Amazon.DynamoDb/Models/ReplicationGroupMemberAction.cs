@@ -1,12 +1,6 @@
-﻿using Amazon.DynamoDb.Extensions;
-using Carbon.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
-    public class ReplicationGroupMemberAction
+    public abstract class ReplicationGroupMemberAction
     {
         public ReplicationGroupMemberAction(string regionName)
         {
@@ -14,9 +8,11 @@ namespace Amazon.DynamoDb
         }
 
         public string RegionName { get; }
-        public ReplicaGlobalSecondaryIndex[]? GlobalSecondaryIndexes { get; set; }
-        public string? KMSMasterKeyId { get; set; }
-        public ProvisionedThroughputOverride? ProvisionedThroughputOverride { get; set; }
 
+        public ReplicaGlobalSecondaryIndex[]? GlobalSecondaryIndexes { get; set; }
+
+        public string? KMSMasterKeyId { get; set; }
+
+        public ProvisionedThroughputOverride? ProvisionedThroughputOverride { get; set; }
     }
 }

@@ -3,7 +3,7 @@
 namespace Amazon.DynamoDb
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum KeyType : byte
+    public enum KeyType
     {
         HASH,
         RANGE,

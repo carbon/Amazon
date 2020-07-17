@@ -1,26 +1,34 @@
-﻿namespace Amazon.DynamoDb.Tests
-{
-	using Xunit;
+﻿using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
-	public class DbExceptionTests
+using Xunit;
+
+namespace Amazon.DynamoDb.Tests
+{
+    public class DbExceptionTests
 	{
 		[Fact]
-		public void DynamoParseException()
+		public async Task DynamoParseException()
 		{
 			var text = @"{""__type"":""com.amazon.coral.service#SerializationException"",""Message"":""Start of list found where not expected""}";
 
-			var ex = DynamoDbException.Parse(text);
+			var ms = new MemoryStream(Encoding.UTF8.GetBytes(text));
+
+			var ex = await DynamoDbException.DeserializeAsync(ms);
 
 			Assert.Equal("SerializationException", ex.Type);
 			Assert.Equal("Start of list found where not expected", ex.Message);
 		}
 
 		[Fact]
-		public void DynamoParseException_Lowercase()
+		public async Task DynamoParseException_Lowercase()
 		{
 			var text = @"{""__type"":""Exception"",""message"":""Something went wrong""}";
 
-			var ex = DynamoDbException.Parse(text);
+			var ms = new MemoryStream(Encoding.UTF8.GetBytes(text));
+
+			var ex = await DynamoDbException.DeserializeAsync(ms);
 
 			Assert.Equal("Exception", ex.Type);
 			Assert.Equal("Something went wrong", ex.Message);

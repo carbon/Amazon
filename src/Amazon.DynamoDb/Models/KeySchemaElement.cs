@@ -1,15 +1,11 @@
-﻿#nullable disable
-
-using Amazon.DynamoDb.Extensions;
-using Carbon.Json;
-using System;
-using System.Text.Json;
+﻿using System;
 
 namespace Amazon.DynamoDb
 {
-    public class KeySchemaElement
+    public sealed class KeySchemaElement
     {
         public KeySchemaElement() { }
+
         public KeySchemaElement(string attributeName, KeyType keyType)
         {
             AttributeName = attributeName ?? throw new ArgumentNullException(nameof(attributeName));
@@ -19,7 +15,5 @@ namespace Amazon.DynamoDb
         public string? AttributeName { get; set; }
 
         public KeyType KeyType { get; set; }
-
-        
     }
 }

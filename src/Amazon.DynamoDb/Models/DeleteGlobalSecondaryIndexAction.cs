@@ -1,12 +1,8 @@
-﻿using Amazon.DynamoDb.Extensions;
-using Carbon.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Amazon.DynamoDb
 {
-    public class DeleteGlobalSecondaryIndexAction
+    public sealed class DeleteGlobalSecondaryIndexAction
     {
         public DeleteGlobalSecondaryIndexAction(string indexName)
         {
@@ -14,15 +10,5 @@ namespace Amazon.DynamoDb
         }
 
         public string IndexName { get; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject
-            {
-                { "IndexName", IndexName },
-            };
-
-            return json;
-        }
     }
 }

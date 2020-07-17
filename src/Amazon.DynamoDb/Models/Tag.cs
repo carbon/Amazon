@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Amazon.DynamoDb
 {
     public class Tag
     {
+        public Tag() { }
+
         public Tag(string key, string value)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
@@ -13,6 +13,7 @@ namespace Amazon.DynamoDb
         }
 
         public string Key { get; set; }
+
         public string Value { get; set; }
     }
 }

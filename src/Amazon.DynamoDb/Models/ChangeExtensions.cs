@@ -1,8 +1,8 @@
-﻿using Carbon.Data;
-using Carbon.Json;
-using System;
-
+﻿using System;
 using System.Collections.Generic;
+
+using Carbon.Data;
+using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {

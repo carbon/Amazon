@@ -1,8 +1,4 @@
-﻿using Amazon.DynamoDb.Extensions;
-using Carbon.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Amazon.DynamoDb
 {
@@ -16,7 +12,9 @@ namespace Amazon.DynamoDb
         }
 
         public string IndexName { get; }
+
         public KeySchemaElement[] KeySchema { get; }
+
         public Projection Projection { get; }
     }
 }
