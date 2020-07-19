@@ -17,8 +17,8 @@ namespace Amazon.DynamoDb
 
         private readonly JsonSerializerOptions SerializerOptions;
 
-        public DynamoDbClient(AwsRegion region, IAwsCredential credential)
-            : base(AwsService.DynamoDb, region, credential)
+        public DynamoDbClient(AwsRegion region, IAwsCredential credential, string? endpoint = null)
+            : base(AwsService.DynamoDb, region, credential, endpoint)
         {
             httpClient.Timeout = TimeSpan.FromSeconds(10);
 

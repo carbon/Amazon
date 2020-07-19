@@ -15,13 +15,13 @@ namespace Amazon
         private readonly AwsService service;
         protected readonly IAwsCredential credential;
 
-        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential)
+        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, string? endpoint = null)
         {
             this.service    = service    ?? throw new ArgumentNullException(nameof(service));
             Region          = region     ?? throw new ArgumentNullException(nameof(region));
             this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
 
-            Endpoint = $"https://{service.Name}.{region.Name}.amazonaws.com/";
+            Endpoint = endpoint ?? $"https://{service.Name}.{region.Name}.amazonaws.com/";
 
             this.httpClient = new HttpClient(new HttpClientHandler {
                 AutomaticDecompression = DecompressionMethods.GZip
@@ -33,14 +33,14 @@ namespace Amazon
             };
         }
 
-        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient)
+        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient, string? endpoint = null)
         {
             this.service    = service ?? throw new ArgumentNullException(nameof(service));
             Region          = region ?? throw new ArgumentNullException(nameof(region));
             this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
-            Endpoint = $"https://{service.Name}.{region.Name}.amazonaws.com/";
+            Endpoint = endpoint ?? $"https://{service.Name}.{region.Name}.amazonaws.com/";
         }
 
         public string Endpoint { get; }
