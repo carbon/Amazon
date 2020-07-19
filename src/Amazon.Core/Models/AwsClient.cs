@@ -15,6 +15,18 @@ namespace Amazon
         private readonly AwsService service;
         protected readonly IAwsCredential credential;
 
+        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential)
+            : this(service, region, credential, (string?)null) { }
+
+        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient)
+            : this(service, region, credential, httpClient, null) { }
+
+        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient, string? endpoint = null)
+            : this(service, region, credential, endpoint)
+        {
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        }
+
         public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, string? endpoint = null)
         {
             this.service    = service    ?? throw new ArgumentNullException(nameof(service));
@@ -33,15 +45,7 @@ namespace Amazon
             };
         }
 
-        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient, string? endpoint = null)
-        {
-            this.service    = service ?? throw new ArgumentNullException(nameof(service));
-            Region          = region ?? throw new ArgumentNullException(nameof(region));
-            this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
-            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-
-            Endpoint = endpoint ?? $"https://{service.Name}.{region.Name}.amazonaws.com/";
-        }
+        
 
         public string Endpoint { get; }
 
