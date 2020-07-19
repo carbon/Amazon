@@ -21,13 +21,13 @@ namespace Amazon
         public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient)
             : this(service, region, credential, httpClient, null) { }
 
-        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient, string? endpoint = null)
+        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient, string? endpoint)
             : this(service, region, credential, endpoint)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, string? endpoint = null)
+        public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, string? endpoint)
         {
             this.service    = service    ?? throw new ArgumentNullException(nameof(service));
             Region          = region     ?? throw new ArgumentNullException(nameof(region));
