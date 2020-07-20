@@ -3,7 +3,7 @@
 namespace Amazon.DynamoDb
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum TimeToLiveStatus : byte
+    public enum TimeToLiveStatus
     {
         ENABLING,
         DISABLING,

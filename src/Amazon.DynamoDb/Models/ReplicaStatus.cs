@@ -3,7 +3,7 @@
 namespace Amazon.DynamoDb
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum ReplicaStatus : byte
+    public enum ReplicaStatus
     {
         CREATING,
         UPDATING,

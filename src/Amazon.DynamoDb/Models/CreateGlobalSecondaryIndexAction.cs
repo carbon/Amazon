@@ -1,12 +1,8 @@
-﻿using Amazon.DynamoDb.Extensions;
-using Carbon.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Amazon.DynamoDb
 {
-    public class CreateGlobalSecondaryIndexAction
+    public sealed class CreateGlobalSecondaryIndexAction
     {
         public CreateGlobalSecondaryIndexAction(string indexName, KeySchemaElement[] keySchema, Projection projection)
         {
@@ -16,8 +12,11 @@ namespace Amazon.DynamoDb
         }
 
         public string IndexName { get; }
+
         public KeySchemaElement[] KeySchema { get; }
+
         public Projection Projection { get; }
+
         public ProvisionedThroughput? ProvisionedThroughput { get; set; }
     }
 }

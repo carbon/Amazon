@@ -1,11 +1,6 @@
-﻿using Carbon.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
-    public class ReplicaGlobalSecondaryIndex
+    public sealed class ReplicaGlobalSecondaryIndex
     {
         public ReplicaGlobalSecondaryIndex(string indexName)
         {
@@ -13,6 +8,7 @@ namespace Amazon.DynamoDb
         }
 
         public string IndexName;
+
         public ProvisionedThroughputOverride? ProvisionedThroughputOverride { get; set; }
     }
 }

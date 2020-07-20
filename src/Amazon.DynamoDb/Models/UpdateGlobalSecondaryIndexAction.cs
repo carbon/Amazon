@@ -1,12 +1,8 @@
-﻿using Amazon.DynamoDb.Extensions;
-using Carbon.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Amazon.DynamoDb
 {
-    public class UpdateGlobalSecondaryIndexAction
+    public sealed class UpdateGlobalSecondaryIndexAction
     {
         public UpdateGlobalSecondaryIndexAction(string indexName, ProvisionedThroughput provisionedThroughput)
         {
@@ -15,17 +11,7 @@ namespace Amazon.DynamoDb
         }
 
         public string IndexName { get; }
+
         public ProvisionedThroughput ProvisionedThroughput { get; set; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject
-            {
-                { "IndexName", IndexName },
-                { "ProvisionedThroughput", ProvisionedThroughput.ToJson() },
-            };
-
-            return json;
-        }
     }
 }

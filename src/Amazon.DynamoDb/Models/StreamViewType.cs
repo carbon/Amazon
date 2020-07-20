@@ -3,7 +3,7 @@
 namespace Amazon.DynamoDb
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum StreamViewType : byte
+    public enum StreamViewType
     {
         KEYS_ONLY,
         NEW_IMAGE,

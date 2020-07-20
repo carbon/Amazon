@@ -1,10 +1,5 @@
 ﻿#nullable disable
 
-using Amazon.DynamoDb.Extensions;
-using Amazon.DynamoDb.Models;
-using System;
-using System.Text.Json;
-
 namespace Amazon.DynamoDb
 {
     public sealed class CreateTableResult

@@ -1,11 +1,9 @@
-﻿using Carbon.Json;
-using System.Text.Json;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
-    public class ProvisionedThroughput
+    public sealed class ProvisionedThroughput
     {
         public ProvisionedThroughput() { }
+
         public ProvisionedThroughput(int readCapacityUnits, int writeCapacityUnits)
         {
             ReadCapacityUnits = readCapacityUnits;
@@ -13,15 +11,7 @@ namespace Amazon.DynamoDb
         }
 
         public int ReadCapacityUnits { get; set; }
-        public int WriteCapacityUnits { get; set; }
 
-        public JsonObject ToJson()
-        {
-            return new JsonObject
-            {
-                { "ReadCapacityUnits", ReadCapacityUnits },
-                { "WriteCapacityUnits", WriteCapacityUnits }
-            };
-        }
+        public int WriteCapacityUnits { get; set; }
     }
 }

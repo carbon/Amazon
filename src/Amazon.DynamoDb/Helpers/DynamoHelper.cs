@@ -10,12 +10,14 @@ namespace Amazon.DynamoDb
         {
             if (DynamoKeyword.IsReserved(name))
             {
-                if (!map.ContainsKey("#" + name))
+                string key = "#" + name;
+
+                if (!map.ContainsKey(key))
                 {
-                    map.Add("#" + name, name);
+                    map.Add(key, name);
                 }
 
-                sb.Append('#').Append(name);
+                sb.Append(key);
             }
             else
             {

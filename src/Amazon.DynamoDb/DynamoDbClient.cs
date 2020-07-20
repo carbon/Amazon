@@ -1,13 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Amazon.DynamoDb.Extensions;
-using Amazon.Scheduling;
 
-using Carbon.Json;
+using Amazon.Scheduling;
 
 namespace Amazon.DynamoDb
 {
@@ -15,15 +12,16 @@ namespace Amazon.DynamoDb
     {
         private const string TargetPrefix = "DynamoDB_20120810";
 
-        private readonly JsonSerializerOptions SerializerOptions;
+        private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
+            Converters = {
+                new JsonConverters.DateTimeOffsetConverter()
+            }
+        };
 
         public DynamoDbClient(AwsRegion region, IAwsCredential credential, string? endpoint = null)
             : base(AwsService.DynamoDb, region, credential, endpoint)
         {
             httpClient.Timeout = TimeSpan.FromSeconds(10);
-
-            SerializerOptions = new JsonSerializerOptions();
-            SerializerOptions.Converters.Add(new JsonConverters.DateTimeOffsetConverter());
         }
 
         #region Helpers
@@ -104,8 +102,8 @@ namespace Amazon.DynamoDb
 			}
 			*/
 
-            var requestJson = new JsonObject {
-                { "RequestItems", new JsonObject(batches.Select(b => b.ToJson())) }
+            var requestJson = new Carbon.Json.JsonObject {
+                { "RequestItems", new Carbon.Json.JsonObject(batches.Select(b => b.ToJson())) }
             };
 
             var httpRequest = Setup("BatchWriteItem", requestJson);
@@ -198,7 +196,7 @@ namespace Amazon.DynamoDb
 
             string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            return System.Text.Json.JsonSerializer.Deserialize<CountResult>(responseText);
+            return JsonSerializer.Deserialize<CountResult>(responseText);
         }
 
         public async Task<QueryResult> ScanAsync(ScanRequest request)
@@ -258,9 +256,9 @@ namespace Amazon.DynamoDb
 
         #region Helpers
 
-        private async Task<TResult> HandleRequestAsync<TRequest, TResult>(string apiName, TRequest request)
+        private async Task<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
         {
-            var httpRequest = Setup(apiName, System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(request));
+            var httpRequest = Setup(action, JsonSerializer.SerializeToUtf8Bytes(request));
 
             return await SendAndReadObjectAsync<TResult>(httpRequest).ConfigureAwait(false);
         }
@@ -278,7 +276,7 @@ namespace Amazon.DynamoDb
 
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await System.Text.Json.JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
+            return await JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
         }
 
         private async Task<T> SendAndReadObjectAsync<T>(HttpRequestMessage request)
@@ -294,17 +292,17 @@ namespace Amazon.DynamoDb
 
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await System.Text.Json.JsonSerializer.DeserializeAsync<T>(stream, SerializerOptions).ConfigureAwait(false);
+            return await JsonSerializer.DeserializeAsync<T>(stream, serializerOptions).ConfigureAwait(false);
         }
 
-        private HttpRequestMessage Setup(string action, JsonObject jsonContent)
+        private HttpRequestMessage Setup(string action, Carbon.Json.JsonObject jsonContent)
         {
-            if (jsonContent == null)
+            if (jsonContent is null)
             {
                 return Setup(action, (byte[]?)null);
             }
 
-            return Setup(action, System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(jsonContent));
+            return Setup(action, JsonSerializer.SerializeToUtf8Bytes(jsonContent));
         }
 
         private HttpRequestMessage Setup(string action, byte[]? utf8Json)
@@ -328,9 +326,9 @@ namespace Amazon.DynamoDb
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            var ex = DynamoDbException.Parse(responseText);
+            var ex = await DynamoDbException.DeserializeAsync(stream).ConfigureAwait(false);
 
             ex.StatusCode = (int)response.StatusCode;
 

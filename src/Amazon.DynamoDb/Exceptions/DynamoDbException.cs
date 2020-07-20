@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 using Amazon.Scheduling;
 
@@ -32,14 +34,13 @@ namespace Amazon.DynamoDb
 
         public IReadOnlyList<Exception>? Exceptions { get; }
 
-        public static DynamoDbException Parse(string jsonText)
+        public static async Task<DynamoDbException> DeserializeAsync(Stream stream)
         {
-            using var doc = JsonDocument.Parse(jsonText);
+            using var doc = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
 
             JsonElement json = doc.RootElement;
 
             string type = "";
-
             string message = "";
 
             if (json.TryGetProperty("message", out JsonElement m))

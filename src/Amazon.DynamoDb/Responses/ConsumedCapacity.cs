@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class ConsumedCapacity
+    public sealed class ConsumedCapacity
     {
         public string TableName { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb
 {
-    public class BatchResult
+    public sealed class BatchResult
     {
         public TimeSpan ResponseTime { get; set; }
 

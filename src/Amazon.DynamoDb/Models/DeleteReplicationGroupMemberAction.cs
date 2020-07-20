@@ -1,12 +1,6 @@
-﻿using Amazon.DynamoDb.Extensions;
-using Carbon.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
-    public class DeleteReplicationGroupMemberAction
+    public sealed class DeleteReplicationGroupMemberAction
     {
         public DeleteReplicationGroupMemberAction(string regionName)
         {
@@ -14,15 +8,5 @@ namespace Amazon.DynamoDb
         }
 
         public string RegionName { get; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject()
-            {
-                { "RegionName", RegionName }
-            };
-
-            return json;
-        }
     }
 }

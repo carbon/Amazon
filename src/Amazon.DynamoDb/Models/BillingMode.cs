@@ -3,7 +3,7 @@
 namespace Amazon.DynamoDb
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum BillingMode : byte
+    public enum BillingMode
     {
         PROVISIONED,
         PAY_PER_REQUEST,

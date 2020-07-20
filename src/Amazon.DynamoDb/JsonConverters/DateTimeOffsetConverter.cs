@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb.JsonConverters
 {
-    public class DateTimeOffsetConverter : JsonConverter<DateTimeOffset>
+    internal class DateTimeOffsetConverter : JsonConverter<DateTimeOffset>
     {
         public override DateTimeOffset Read(
             ref Utf8JsonReader reader,
