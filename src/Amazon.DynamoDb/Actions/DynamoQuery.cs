@@ -59,7 +59,7 @@ namespace Amazon.DynamoDb
         /// If set to TOTAL, ConsumedCapacity is included in the response; 
         /// if set to NONE (the default), ConsumedCapacity is not included.
         /// </summary>
-        public bool? ReturnConsumedCapacity { get; set; }
+        public ReturnConsumedCapacity? ReturnConsumedCapacity { get; set; }
 
         public AttributeCollection? ExclusiveStartKey { get; set; }
 
