@@ -6,8 +6,8 @@ namespace System.Text
 {
     internal static class ObjectListCache<T>
     {
-        [ThreadStatic]
-        static List<List<T>> pool = new List<List<T>>();
+        private static List<List<T>> pool = new List<List<T>>();
+        private static object lockObject = new object();
 
         internal struct Handle : IDisposable
         {
@@ -26,22 +26,29 @@ namespace System.Text
 
         public static Handle AcquireHandle()
         {
-            if (pool.Count == 0)
+            lock (lockObject)
             {
-                return new Handle(new List<T>());
-            }
-            else
-            {
-                var handle = new Handle(pool[pool.Count - 1]);
-                pool.RemoveAt(pool.Count - 1);
-                return handle;
+                if (pool.Count == 0)
+                {
+                    return new Handle(new List<T>());
+                }
+                else
+                {
+                    var handle = new Handle(pool[pool.Count - 1]);
+                    pool.RemoveAt(pool.Count - 1);
+                    return handle;
+                }
             }
         }
 
         public static void Release(List<T> list)
         {
             list.Clear();
-            pool.Add(list);
+
+            lock (lockObject)
+            {
+                pool.Add(list);
+            }
         }
     }
 }
