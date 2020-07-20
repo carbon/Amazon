@@ -31,14 +31,20 @@ namespace Amazon.DynamoDb.Tests
         [Fact]
         public void UpdateTest2()
         {
+            var attrNames = new Dictionary<string, string>();
+            var attrValues = new AttributeCollection();
+
             var expression = new UpdateExpression(new[]
             {
                 Change.Add("list", new[] { "A", "B", "C" }),
                 Change.Remove("deleted")
-            }, new Dictionary<string, string>(), new AttributeCollection());
+            }, attrNames, attrValues);
 
             Assert.Equal(@"REMOVE deleted
-ADD list :v0", expression.ToString());
+ADD #list :v0", expression.ToString());
+
+            Assert.Single(attrNames);
+            Assert.Equal("list", attrNames["#list"]);
         }
 
         [Fact]

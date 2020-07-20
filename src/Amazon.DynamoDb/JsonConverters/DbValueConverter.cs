@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -8,11 +9,6 @@ namespace Amazon.DynamoDb.JsonConverters
     public class DbValueConverter : JsonConverter<DbValue>
     {
         // These are used to prevent additional allocations when reading arrays
-        [ThreadStatic]
-        private static List<string> stringList = new List<string>();
-        [ThreadStatic]
-        private static List<DbValue> dbValueList = new List<DbValue>();
-
         public DbValueConverter() { }
 
         #region Read
@@ -95,7 +91,7 @@ namespace Amazon.DynamoDb.JsonConverters
 
         private static string[] ReadValueAsStringArray(ref Utf8JsonReader reader)
         {
-            stringList.Clear();
+            using var stringListHandle = ObjectListCache<string>.AcquireHandle();
 
             reader.Read();
             if (reader.TokenType != JsonTokenType.StartArray)
@@ -110,15 +106,15 @@ namespace Amazon.DynamoDb.JsonConverters
                     break;
                 }
 
-                stringList.Add(reader.GetString());
+                stringListHandle.Value.Add(reader.GetString());
             }
 
-            return stringList.ToArray();
+            return stringListHandle.Value.ToArray();
         }
 
         private static DbValue[] ReadValueAsDbValueArray(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
-            dbValueList.Clear();
+            using var dbValueListHandle = ObjectListCache<DbValue>.AcquireHandle();
 
             reader.Read();
             if (reader.TokenType != JsonTokenType.StartArray)
@@ -133,10 +129,10 @@ namespace Amazon.DynamoDb.JsonConverters
                     break;
                 }
 
-                dbValueList.Add(StaticRead(ref reader, typeof(DbValue), options));
+                dbValueListHandle.Value.Add(StaticRead(ref reader, typeof(DbValue), options));
             }
 
-            return dbValueList.ToArray();
+            return dbValueListHandle.Value.ToArray();
         }
         #endregion
 

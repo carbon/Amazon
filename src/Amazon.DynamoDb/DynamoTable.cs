@@ -116,7 +116,7 @@ namespace Amazon.DynamoDb
             throw new Exception(errorMessage, lastException);
         }
 
-        public async Task<IReadOnlyList<T>> FindAllAsync(params IEnumerable<KeyValuePair<string, object>>[] keys)
+        public async Task<IReadOnlyList<T>> FindAllAsync(params Dictionary<string, DbValue>[] keys)
         {
             if (keys is null || keys.Length == 0)
             {
