@@ -12,7 +12,7 @@ namespace Amazon.DynamoDb
         public Dictionary<string, Capacity> LocalSecondaryIndexes { get; set; }
         public float ReadCapacityUnits { get; set; }
         public Capacity Table { get; set; }
-        public string TableNAme { get; set; }
+        public string TableName { get; set; }
         public float WriteCapacityUnits { get; set; }
 
     }
