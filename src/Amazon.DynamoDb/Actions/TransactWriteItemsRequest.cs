@@ -1,21 +1,23 @@
-﻿using Carbon.Data.Expressions;
+﻿using Carbon.Data;
+using Carbon.Data.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb
 {
     public sealed class TransactWriteItemsRequest
     {
-        public TransactWriteItem[] TransactItems { get; set; }
-        public string? ClientRequestToken { get; set; }
-        public ReturnConsumedCapacity? ReturnConsumedCapacity { get; set; }
-        public ReturnItemCollectionMetrics? ReturnItemCollectionMetrics { get; set; }
-
         public TransactWriteItemsRequest(TransactWriteItem[] transactItems)
         {
             TransactItems = transactItems ?? throw new ArgumentNullException(nameof(transactItems));
         }
+
+        public TransactWriteItem[] TransactItems { get; set; }
+        public string? ClientRequestToken { get; set; }
+        public ReturnConsumedCapacity? ReturnConsumedCapacity { get; set; }
+        public ReturnItemCollectionMetrics? ReturnItemCollectionMetrics { get; set; }
     }
 
     public class TransactWriteItem
@@ -28,19 +30,20 @@ namespace Amazon.DynamoDb
 
     public class ConditionCheck
     {
-        public string ConditionExpression { get; set; }
-        public Dictionary<string, DbValue> Key { get; set; }
-        public string TableName { get; set; }
-        public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
-        public AttributeCollection? ExpressionAttributeValues { get; set; }
-        public ReturnValuesOnConditionCheckFailure? ReturnValuesOnConditionCheckFailure { get; set; }
-
         public ConditionCheck(string tableName, Dictionary<string, DbValue> key, string conditionExpression)
         {
             TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             Key = key ?? throw new ArgumentNullException(nameof(key));
             ConditionExpression = conditionExpression ?? throw new ArgumentNullException(nameof(conditionExpression));
         }
+
+        public string ConditionExpression { get; set; }
+        public Dictionary<string, DbValue> Key { get; set; }
+        public string TableName { get; set; }
+        public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
+        public AttributeCollection? ExpressionAttributeValues { get; set; }
+        public ReturnValuesOnConditionCheckFailure? ReturnValuesOnConditionCheckFailure { get; set; }
+        
 
         internal void SetConditions(Expression[] conditions)
         {
@@ -62,51 +65,79 @@ namespace Amazon.DynamoDb
 
     public class DeleteItem
     {
+        public DeleteItem(string tableName, AttributeCollection key)
+        {
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+            Key = key ?? throw new ArgumentNullException(nameof(key));
+        }
+
         public AttributeCollection Key { get; set; }
         public string TableName { get; set; }
         public string? ConditionExpression { get; set; }
         public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
         public AttributeCollection? ExpressionAttributeValues { get; set; }
         public ReturnValuesOnConditionCheckFailure? ReturnValuesOnConditionCheckFailure { get; set; }
-
-        public DeleteItem(string tableName, AttributeCollection key)
-        {
-            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-            Key = key ?? throw new ArgumentNullException(nameof(key));
-        }
     }
 
     public class PutItem
     {
+        public PutItem(string tableName, AttributeCollection item)
+        {
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+            Item = item ?? throw new ArgumentNullException(nameof(item));
+        }
+
         public AttributeCollection Item { get; set; }
         public string TableName { get; set; }
         public string? ConditionExpression { get; set; }
         public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
         public AttributeCollection? ExpressionAttributeValues { get; set; }
         public ReturnValuesOnConditionCheckFailure? ReturnValuesOnConditionCheckFailure { get; set; }
-
-        public PutItem(string tableName, AttributeCollection item)
-        {
-            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-            Item = item ?? throw new ArgumentNullException(nameof(item));
-        }
     }
 
     public class UpdateItem
     {
+        public UpdateItem(
+            string tableName, 
+            AttributeCollection key, 
+            Change[] changes,
+            Expression[]? conditions = null)
+        {
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+            Key = key ?? throw new ArgumentNullException(nameof(key));
+            Changes = changes ?? throw new ArgumentNullException(nameof(changes));
+
+            Dictionary<string, string> attrNames = new Dictionary<string, string>();
+            var updateExpression = new UpdateExpression(Changes, attrNames, ExpressionAttributeValues);
+
+            UpdateExpression = updateExpression.ToString();
+
+            if (conditions != null && conditions.Length > 0)
+            {
+                var expression = new DynamoExpression(attrNames, ExpressionAttributeValues);
+
+                expression.AddRange(conditions);
+
+                ConditionExpression = expression.Text;
+            }
+
+            if (attrNames.Count > 0)
+            {
+                ExpressionAttributeNames = attrNames;
+            }
+        }
+
         public AttributeCollection Key { get; set; }
         public string TableName { get; set; }
         public string UpdateExpression { get; set; }
         public string? ConditionExpression { get; set; }
         public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
-        public AttributeCollection? ExpressionAttributeValues { get; set; }
+        public AttributeCollection ExpressionAttributeValues { get; set; } = new AttributeCollection();
         public ReturnValuesOnConditionCheckFailure? ReturnValuesOnConditionCheckFailure { get; set; }
 
-        public UpdateItem(string tableName, AttributeCollection key, string updateExpression)
-        {
-            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-            Key = key ?? throw new ArgumentNullException(nameof(key));
-            UpdateExpression = updateExpression ?? throw new ArgumentNullException(nameof(updateExpression));
-        }
+        [JsonIgnore]
+        public Change[] Changes { get; }
+
+        
     }
 }
