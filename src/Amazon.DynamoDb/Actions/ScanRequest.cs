@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Carbon.Data.Expressions;
 using Carbon.Json;
 
@@ -49,34 +49,12 @@ namespace Amazon.DynamoDb
 
         public string? FilterExpression { get; set; }
 
-        public JsonObject? ExpressionAttributeNames { get; set; }
+        public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
 
         public AttributeCollection? ExpressionAttributeValues { get; set; }
 
         public SelectEnum Select { get; set; }
 
         public string? ProjectionExpression { get; set; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject {
-                { "TableName", TableName }
-            };
-
-            if (Limit != 0)                         json.Add("Limit", Limit);
-            if (Select != SelectEnum.Unknown)       json.Add("Select", Select.ToString());
-            if (Segment != null)                    json.Add("Segment", Segment.Value);
-            if (TotalSegments != null)              json.Add("TotalSegments", TotalSegments.Value);
-            if (ExclusiveStartKey != null)          json.Add("ExclusiveStartKey", ExclusiveStartKey.ToJson());
-
-            if (ExpressionAttributeNames != null)   json.Add("ExpressionAttributeNames", ExpressionAttributeNames);
-            if (ExpressionAttributeValues != null)  json.Add("ExpressionAttributeValues", ExpressionAttributeValues.ToJson());
-
-            if (FilterExpression != null)           json.Add("FilterExpression", FilterExpression);
-
-            if (ProjectionExpression != null)       json.Add("ProjectionExpression", ProjectionExpression);
-
-            return json;
-        }
     }
 }

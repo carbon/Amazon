@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Net.Http.Headers;
+using System.Text;
 
 using Carbon.Data.Expressions;
 using Carbon.Json;
@@ -29,15 +31,14 @@ namespace Amazon.DynamoDb
         // [Required]
         public string TableName { get; set; }
 
-        public bool ConsistentRead { get; set; }
+        public bool? ConsistentRead { get; set; }
 
         public string? IndexName { get; set; }
 
-        public int Limit { get; set; }
 
         public string KeyConditionExpression { get; set; }
 
-        public JsonObject? ExpressionAttributeNames { get; set; }
+        public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
 
         public AttributeCollection? ExpressionAttributeValues { get; set; }
 
@@ -46,17 +47,19 @@ namespace Amazon.DynamoDb
         /// <summary>
         /// Default is true (ascending).	
         /// </summary>
-        public bool ScanIndexForward { get; set; } = true;
+        public bool? ScanIndexForward { get; set; }
 
         public string ProjectionExpression { get; set; }
 
-        public SelectEnum Select { get; set; }
+        public int? Limit { get; set; }
+
+        public SelectEnum? Select { get; set; }
 
         /// <summary>
         /// If set to TOTAL, ConsumedCapacity is included in the response; 
         /// if set to NONE (the default), ConsumedCapacity is not included.
         /// </summary>
-        public bool ReturnConsumedCapacity { get; set; }
+        public bool? ReturnConsumedCapacity { get; set; }
 
         public AttributeCollection? ExclusiveStartKey { get; set; }
 
@@ -79,18 +82,23 @@ namespace Amazon.DynamoDb
         {
             if (_filter is null)
             {
-                ExpressionAttributeNames ??= new JsonObject();
+                Dictionary<string, string> attrNames = ExpressionAttributeNames ?? new Dictionary<string, string>();
                 ExpressionAttributeValues ??= new AttributeCollection();
 
-                _filter = new DynamoExpression(ExpressionAttributeNames, ExpressionAttributeValues);
+                _filter = new DynamoExpression(attrNames, ExpressionAttributeValues);
             }
 
             foreach (Expression condition in conditions)
             {
                 _filter.Add(condition);
+
             }
 
             this.FilterExpression = _filter.Text;
+            if (_filter.HasAttributeNames && ExpressionAttributeNames == null)
+            {
+                ExpressionAttributeNames = _filter.AttributeNames;
+            }
 
             return this;
         }
@@ -104,7 +112,7 @@ namespace Amazon.DynamoDb
 
         public DynamoQuery Include(params string[] values)
         {
-            ExpressionAttributeNames ??= new JsonObject();
+            ExpressionAttributeNames ??= new Dictionary<string, string>();
 
             var sb = StringBuilderCache.Aquire();
 
@@ -132,52 +140,6 @@ namespace Amazon.DynamoDb
         }
 
         #endregion
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject {
-                { "TableName", TableName }
-            };
-
-            if (KeyConditionExpression != null)
-            {
-                json.Add("KeyConditionExpression", KeyConditionExpression);
-            }
-
-            if (ExpressionAttributeNames != null && ExpressionAttributeNames.Keys.Count > 0)
-            {
-                json.Add("ExpressionAttributeNames", ExpressionAttributeNames);
-            }
-
-            if (ExpressionAttributeValues != null && ExpressionAttributeValues.Count > 0)
-            {
-                json.Add("ExpressionAttributeValues", ExpressionAttributeValues.ToJson());
-            }
-
-            if (FilterExpression != null)
-            {
-                json.Add("FilterExpression", FilterExpression);
-            }
-
-            if (Select != SelectEnum.Unknown)
-            {
-                json.Add("Select", Select.ToString());
-            }
-
-            if (ProjectionExpression != null)
-            {
-                json.Add("ProjectionExpression", ProjectionExpression);
-            }
-
-            if (Limit != 0)                 json.Add("Limit", Limit);
-            if (IndexName != null)          json.Add("IndexName", IndexName);
-            if (ConsistentRead)             json.Add("ConsistentRead", ConsistentRead);
-            if (ExclusiveStartKey != null)  json.Add("ExclusiveStartKey", ExclusiveStartKey.ToJson());
-            if (!ScanIndexForward)          json.Add("ScanIndexForward", ScanIndexForward);                      // Default = true
-            if (ReturnConsumedCapacity)     json.Add("ReturnConsumedCapacity", "TOTAL");
-
-            return json;
-        }
     }
 }
 

@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Carbon.Data;
+using System;
+using System.Collections.Generic;
 using System.Text;
-
-using Carbon.Data;
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
     public sealed class UpdateExpression
     {
-        private readonly JsonObject attributeNames;
+        private readonly Dictionary<string, string> attributeNames;
         private readonly AttributeCollection attributeValues;
 
         private readonly StringBuilder? set = null;
@@ -18,7 +17,7 @@ namespace Amazon.DynamoDb
 
         public UpdateExpression(
             Change[] changes,
-            JsonObject attributeNames,
+            Dictionary<string, string> attributeNames,
             AttributeCollection attributeValues)
         {
             this.attributeNames  = attributeNames;

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 using Carbon.Json;
 
@@ -6,6 +7,25 @@ namespace Amazon.DynamoDb
 {
     internal static class DynamoExtensions
     {
+        public static void WriteName(this StringBuilder sb, string name, Dictionary<string, string> map)
+        {
+            if (DynamoKeyword.IsReserved(name))
+            {
+                string key = "#" + name;
+
+                if (!map.ContainsKey(key))
+                {
+                    map.Add(key, name);
+                }
+
+                sb.Append(key);
+            }
+            else
+            {
+                sb.Append(name);
+            }
+        }
+
         public static void WriteName(this StringBuilder sb, string name, JsonObject map)
         {
             if (DynamoKeyword.IsReserved(name))

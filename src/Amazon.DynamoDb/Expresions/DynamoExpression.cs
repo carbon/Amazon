@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 using Carbon.Data.Expressions;
@@ -15,16 +16,16 @@ namespace Amazon.DynamoDb
         private int expressionCount = 0;
 
         public DynamoExpression()
-            : this(new JsonObject(), new AttributeCollection())
+            : this(new Dictionary<string, string>(), new AttributeCollection())
         { }
 
-        public DynamoExpression(JsonObject attributeNames, AttributeCollection attributeValues)
+        public DynamoExpression(Dictionary<string, string> attributeNames, AttributeCollection attributeValues)
         {
             AttributeNames = attributeNames;
             AttributeValues = attributeValues;
         }
 
-        public JsonObject AttributeNames { get; }
+        public Dictionary<string, string> AttributeNames { get; }
 
         public AttributeCollection AttributeValues { get; }
 

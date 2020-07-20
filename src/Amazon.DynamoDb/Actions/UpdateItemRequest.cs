@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Collections.Specialized;
+using System.Text.Json.Serialization;
 using Carbon.Data;
 using Carbon.Data.Expressions;
 using Carbon.Json;
@@ -11,7 +12,7 @@ namespace Amazon.DynamoDb
     {
         public UpdateItemRequest(
             string tableName, 
-            IEnumerable<KeyValuePair<string, object>> key,
+            Dictionary<string, DbValue> key,
             Change[] changes,
             Expression[]? conditions = null,
             ReturnValues? returnValues = null)
@@ -21,63 +22,42 @@ namespace Amazon.DynamoDb
             Changes      = changes   ?? throw new ArgumentNullException(nameof(changes));
             ReturnValues = returnValues;
 
+            Dictionary<string, string> attrNames = new Dictionary<string, string>();
+            var updateExpression = new UpdateExpression(Changes, attrNames, ExpressionAttributeValues);
+
+            UpdateExpression = updateExpression.ToString();
+
             if (conditions != null && conditions.Length > 0)
             {
-                var expression = new DynamoExpression(ExpressionAttributeNames, ExpressionAttributeValues);
+                var expression = new DynamoExpression(attrNames, ExpressionAttributeValues);
 
                 expression.AddRange(conditions);
 
                 ConditionExpression = expression.Text;
             }
+
+            if (attrNames.Count > 0)
+            {
+                ExpressionAttributeNames = attrNames;
+            }
         }
 
         public string TableName { get; }
 
-        public IEnumerable<KeyValuePair<string, object>> Key { get; }
+        public Dictionary<string, DbValue> Key { get; }
 
+        [JsonIgnore]
         public Change[] Changes { get; }
 
         public string? ConditionExpression { get; }
 
-        public JsonObject ExpressionAttributeNames { get; } = new JsonObject();
+        public Dictionary<string, string> ExpressionAttributeNames { get; }
 
         public AttributeCollection ExpressionAttributeValues { get; } = new AttributeCollection();
 
         public ReturnValues? ReturnValues { get; }
 
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject {
-                { "TableName", TableName },
-                { "Key", Key.ToJson() }
-            };
-
-            var updateExpression = new UpdateExpression(Changes, ExpressionAttributeNames, ExpressionAttributeValues);
-
-            if (ConditionExpression != null)
-            {
-                json.Add("ConditionExpression", ConditionExpression);
-            }
-
-            if (ExpressionAttributeNames != null && ExpressionAttributeNames.Keys.Count > 0)
-            {
-                json.Add("ExpressionAttributeNames", ExpressionAttributeNames);
-            }
-
-            if (ExpressionAttributeValues.Count > 0)
-            {
-                json.Add("ExpressionAttributeValues", ExpressionAttributeValues.ToJson());
-            }
-
-            json.Add("UpdateExpression", updateExpression.ToString());
-
-            if (ReturnValues != null)
-            {
-                json.Add("ReturnValues", ReturnValues.ToString()!);
-            }
-
-            return json;
-        }
+        public string UpdateExpression { get; }
     }
 }
 

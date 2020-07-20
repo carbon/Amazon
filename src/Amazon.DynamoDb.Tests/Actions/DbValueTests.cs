@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
+using Amazon.DynamoDb.JsonConverters;
 using Carbon.Data.Sequences;
 using Carbon.Json;
 
@@ -39,7 +42,7 @@ namespace Amazon.DynamoDb.Models.Tests
 			Assert.Equal(DbValueType.B, value.Kind);
 			Assert.Equal("dmFsdWU=", Convert.ToBase64String(value.ToBinary()));
 
-			Assert.Equal(@"{""B"":""dmFsdWU=""}", value.ToJson().ToString(pretty: false));
+			Assert.Equal(@"{""B"":""dmFsdWU=""}", value.ToSystemTextJson());
 		}
 
 		[Fact]
@@ -120,7 +123,7 @@ namespace Amazon.DynamoDb.Models.Tests
       ""S"": ""boat""
     }
   }
-}", value.ToJson().ToString());
+}", value.ToSystemTextJsonIndented());
         }
 
         [Fact]
@@ -152,7 +155,7 @@ namespace Amazon.DynamoDb.Models.Tests
       ]
     }
   }
-}", value.ToJson().ToString());
+}", value.ToSystemTextJsonIndented());
         }
 
 
@@ -178,7 +181,7 @@ namespace Amazon.DynamoDb.Models.Tests
       }
     }
   }
-}", value.ToJson().ToString());
+}", value.ToSystemTextJsonIndented());
 
 
 
@@ -193,9 +196,9 @@ namespace Amazon.DynamoDb.Models.Tests
       }
     }
   }
-}", System.Text.Json.JsonSerializer.Serialize(value.ToJson(), new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+}", value.ToSystemTextJsonIndented());
 
-            var a = AttributeCollection.FromJson(value.ToJson()).As<Hi>();
+            var a = System.Text.Json.JsonSerializer.Deserialize<AttributeCollection>(value.ToSystemTextJson()).As<Hi>();
 
             Assert.Equal(1, a.A.A);
             Assert.Equal("boat", a.A.B);
@@ -217,9 +220,9 @@ namespace Amazon.DynamoDb.Models.Tests
   ""id"": {
     ""B"": ""ZKWQKAIkHUiA4MGBMfFiGg==""
   }
-}", value.ToJson().ToString());
+}", value.ToSystemTextJsonIndented());
 
-            var a = AttributeCollection.FromJson(value.ToJson()).As<Entity>();
+            var a = System.Text.Json.JsonSerializer.Deserialize<AttributeCollection>(value.ToSystemTextJson()).As<Entity>();
 
             Assert.Equal(id, a.Id);
 
@@ -228,7 +231,8 @@ namespace Amazon.DynamoDb.Models.Tests
         [Fact]
         public void DbMap3()
         {
-            var meta = new Meta {
+            var meta = new Meta
+            {
                 Name = "faces",
                 Annotations = new[] {
                     new Annotation {
@@ -242,7 +246,7 @@ namespace Amazon.DynamoDb.Models.Tests
 
             var value = AttributeCollection.FromObject(meta);
 
-            Assert.Equal(@"{
+            string json = @"{
   ""name"": {
     ""S"": ""faces""
   },
@@ -282,14 +286,16 @@ namespace Amazon.DynamoDb.Models.Tests
       }
     ]
   }
-}", value.ToJson().ToString());
+}";
+
+            Assert.Equal(json, value.ToSystemTextJsonIndented());
 
 
+            var a = System.Text.Json.JsonSerializer.Deserialize<AttributeCollection>(json);
+            var m = a.As<Meta>();
 
-            var a = AttributeCollection.FromJson(value.ToJson()).As<Meta>();
-
-            Assert.Equal("dog", a.Annotations[0].Description);
-            Assert.Equal(1f, a.Annotations[0].Position.X);
+            Assert.Equal("dog", m.Annotations[0].Description);
+            Assert.Equal(1f, m.Annotations[0].Position.X);
 
         }
 
@@ -298,11 +304,44 @@ namespace Amazon.DynamoDb.Models.Tests
 		public void DbList2()
 		{
 
-			var value = DbValue.FromJson(JsonObject.Parse(@"{ ""L"": [ { ""N"": ""1.1"" }, { ""N"":""7.543"" } ] }"));
+			var value = System.Text.Json.JsonSerializer.Deserialize<DbValue>(@"{ ""L"": [ { ""N"": ""1.1"" }, { ""N"":""7.543"" } ] }");
 
 			Assert.Equal(DbValueType.L, value.Kind);
 
 			Assert.Equal(new[] { 1.1f, 7.543f }, value.ToArray<float>());
 		}
-	}
+
+        
+    }
+
+    public static class DynamoTestHelper
+    {
+        public static JsonSerializerOptions IndentedSerializerOptions;
+        public static JsonSerializerOptions SerializerOptions;
+
+        static DynamoTestHelper()
+        {
+            IndentedSerializerOptions = new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                IgnoreNullValues = true,
+            };
+
+            SerializerOptions = new JsonSerializerOptions()
+            {
+                WriteIndented = false,
+                IgnoreNullValues = true,
+            };
+        }
+
+        public static string ToSystemTextJson(this object obj)
+        {
+            return System.Text.Json.JsonSerializer.Serialize(obj, obj.GetType(), SerializerOptions);
+        }
+
+        public static string ToSystemTextJsonIndented(this object obj)
+        {
+            return System.Text.Json.JsonSerializer.Serialize(obj, obj.GetType(), IndentedSerializerOptions);
+        }
+    }
 }
