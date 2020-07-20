@@ -189,6 +189,16 @@ namespace Amazon.DynamoDb
             return await HandleRequestAsync<ScanRequest, QueryResult>("Scan", request);
         }
 
+        public async Task<TransactGetItemsResult> TransactGetItems(TransactGetItemRequest request)
+        {
+            return await HandleRequestAsync<TransactGetItemRequest, TransactGetItemsResult>("TransactGetItems", request);
+        }
+
+        public async Task<TransactWriteItemsResult> TransactGetItems(TransactWriteItemsRequest request)
+        {
+            return await HandleRequestAsync<TransactGetItemRequest, TransactGetItemsResult>("TransactWriteItems", request);
+        }
+
         public async Task<UpdateItemResult> UpdateItemAsync(UpdateItemRequest request)
         {
             return await HandleRequestAsync<UpdateItemRequest, UpdateItemResult>("UpdateItem", request);
