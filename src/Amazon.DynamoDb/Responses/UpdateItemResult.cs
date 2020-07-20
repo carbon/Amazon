@@ -1,9 +1,11 @@
-﻿using System.Text.Json;
+﻿#nullable disable
+using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
     public sealed class UpdateItemResult : IConsumedResources
     {
+        public UpdateItemResult() { }
         public UpdateItemResult(AttributeCollection? attributes, ConsumedCapacity? consumedCapacity)
         {
             Attributes = attributes;

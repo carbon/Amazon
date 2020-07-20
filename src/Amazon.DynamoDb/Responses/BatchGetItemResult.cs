@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable disable
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.Json;
@@ -7,6 +8,7 @@ namespace Amazon.DynamoDb
 {
     public sealed class BatchGetItemResult // : IConsumedResources
     {
+        public BatchGetItemResult() { }
         public BatchGetItemResult(IReadOnlyList<TableItemCollection> responses)
         {
             this.Responses = responses;

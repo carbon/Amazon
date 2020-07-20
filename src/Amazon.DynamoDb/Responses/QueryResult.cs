@@ -1,10 +1,12 @@
-﻿using System;
+﻿#nullable disable
+using System;
 using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
     public sealed class QueryResult
     {
+        public QueryResult() { }
         public QueryResult(
             ConsumedCapacity? consumedCapacity,
             AttributeCollection[] items,
