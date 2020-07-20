@@ -16,9 +16,9 @@ namespace Amazon.DynamoDb
 
         // public ConsumedCapacity[] ConsumedCapacity { get; set; }
 
-        public IReadOnlyList<TableItemCollection> Responses { get; }
+        public IReadOnlyList<TableItemCollection> Responses { get; set; }
 
-        public IReadOnlyList<TableKeys> UnprocessedKeys => Array.Empty<TableKeys>();
+        public IReadOnlyList<TableKeys> UnprocessedKeys { get; set; }
 
         public static BatchGetItemResult FromJsonElement(JsonElement json)
         {

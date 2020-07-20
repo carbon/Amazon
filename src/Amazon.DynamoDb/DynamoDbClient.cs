@@ -43,7 +43,7 @@ namespace Amazon.DynamoDb
 
         public async Task<BatchGetItemResult> BatchGetItemAsync(BatchGetItemRequest request)
         {
-            var httpRequest = Setup("BatchGetItem", request.ToJson());
+            var httpRequest = Setup("BatchGetItem", System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(request));
 
             var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
