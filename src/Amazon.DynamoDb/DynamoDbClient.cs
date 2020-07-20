@@ -196,7 +196,7 @@ namespace Amazon.DynamoDb
 
         public async Task<TransactWriteItemsResult> TransactGetItems(TransactWriteItemsRequest request)
         {
-            return await HandleRequestAsync<TransactGetItemRequest, TransactGetItemsResult>("TransactWriteItems", request);
+            return await HandleRequestAsync<TransactWriteItemsRequest, TransactWriteItemsResult>("TransactWriteItems", request);
         }
 
         public async Task<UpdateItemResult> UpdateItemAsync(UpdateItemRequest request)
