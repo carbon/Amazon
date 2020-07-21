@@ -19,7 +19,10 @@ namespace Amazon.DynamoDb
         };
 
         public DynamoDbClient(AwsRegion region, IAwsCredential credential)
-            : base(AwsService.DynamoDb, region, credential)
+            : this(region, credential, null) { }
+
+        public DynamoDbClient(AwsRegion region, IAwsCredential credential, string? endpoint)
+            : base(AwsService.DynamoDb, region, credential, endpoint)
         {
             httpClient.Timeout = TimeSpan.FromSeconds(10);
         }
