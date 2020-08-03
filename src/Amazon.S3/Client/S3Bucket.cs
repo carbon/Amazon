@@ -249,12 +249,24 @@ namespace Amazon.S3
             throw new S3Exception($"Error copying '{sourceLocation}' to '{destinationKey}'", lastException);
         }
 
+        private static readonly PutBlobOptions defaultPutOptions = new PutBlobOptions();
+
         public Task PutAsync(IBlob blob)
         {
-            return PutAsync(blob, new PutBlobOptions());
+            return PutAsync(blob, defaultPutOptions);
         }
 
-        public async Task PutAsync(IBlob blob, PutBlobOptions options)
+        public Task PutAsync(IBlob blob, CancellationToken cancelationToken)
+        {
+            return PutAsync(blob, defaultPutOptions, cancelationToken);
+        }
+
+        public Task PutAsync(IBlob blob, PutBlobOptions options)
+        {
+            return PutAsync(blob, options, default(CancellationToken));
+        }
+
+        public async Task PutAsync(IBlob blob, PutBlobOptions options, CancellationToken cancellationToken)
         {
             if (blob is null)
                 throw new ArgumentNullException(nameof(blob));
@@ -284,6 +296,8 @@ namespace Amazon.S3
             {
                 if (retryCount > 0)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
                 }
 
@@ -301,7 +315,7 @@ namespace Amazon.S3
 
                 try
                 {
-                    await client.PutObjectAsync(request).ConfigureAwait(false);
+                    await client.PutObjectAsync(request, cancellationToken).ConfigureAwait(false);
 
                     return;
                 }
