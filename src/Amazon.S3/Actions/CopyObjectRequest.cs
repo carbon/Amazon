@@ -33,17 +33,12 @@ namespace Amazon.S3
 
             set
             {
-                string? val = null;
-
-                switch (value)
+                string? val = value switch
                 {
-                    case MetadataDirectiveValue.Copy:
-                        val = "COPY";
-                        break;
-                    case MetadataDirectiveValue.Replace:
-                        val = "REPLACE";
-                        break;
-                }
+                    MetadataDirectiveValue.Copy    => "COPY",
+                    MetadataDirectiveValue.Replace => "REPLACE",
+                    _                              => null
+                };
 
                 Set(S3HeaderNames.MetadataDirective, val);
             }
