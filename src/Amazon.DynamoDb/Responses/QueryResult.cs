@@ -1,10 +1,12 @@
-﻿using System;
+﻿#nullable disable
+using System;
 using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
     public sealed class QueryResult
     {
+        public QueryResult() { }
         public QueryResult(
             ConsumedCapacity? consumedCapacity,
             AttributeCollection[] items,
@@ -17,56 +19,14 @@ namespace Amazon.DynamoDb
             Count = count;
         }
 
-        public ConsumedCapacity? ConsumedCapacity { get; }
+        public ConsumedCapacity ConsumedCapacity { get; set; }
 
-        public AttributeCollection[] Items { get; }
+        public AttributeCollection[] Items { get; set; }
 
-        public AttributeCollection? LastEvaluatedKey { get; }
+        public AttributeCollection LastEvaluatedKey { get; set; }
 
-        public int Count { get; }
+        public int Count { get; set; }
 
-        public static QueryResult FromJsonElement(JsonElement json)
-        {
-            ConsumedCapacity? consumedCapacity = null;
-            AttributeCollection? lastEvaluatedKey = null;
-
-            if (json.TryGetProperty("ConsumedCapacity", out JsonElement consumedCapacityEl))
-            {
-                consumedCapacity = ConsumedCapacity.FromJsonElement(consumedCapacityEl);
-            }
-
-            if (json.TryGetProperty("LastEvaluatedKey", out JsonElement lastEvaluatedKeyEl))
-            {
-                lastEvaluatedKey = AttributeCollection.FromJsonElement(lastEvaluatedKeyEl);
-            }
-
-            AttributeCollection[] items;
-
-            if (json.TryGetProperty("Items", out JsonElement itemsEl))
-            {
-                items = new AttributeCollection[itemsEl.GetArrayLength()];
-
-                int i = 0;
-
-                foreach (var itemEl in itemsEl.EnumerateArray())
-                {
-                    items[i] = AttributeCollection.FromJsonElement(itemEl);
-
-                    i++;
-                }
-            }
-            else
-            {
-                items = Array.Empty<AttributeCollection>();
-            }
-
-            return new QueryResult(
-                consumedCapacity : consumedCapacity,
-                items            : items,
-                lastEvaluatedKey : lastEvaluatedKey,
-                count            : json.GetProperty("Count").GetInt32()
-            );
-        }
     }
 }
 

@@ -15,7 +15,8 @@ namespace Amazon.DynamoDb
         private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
             Converters = {
                 new JsonConverters.DateTimeOffsetConverter()
-            }
+            },
+            IgnoreNullValues = true,
         };
 
         public DynamoDbClient(AwsRegion region, IAwsCredential credential)
@@ -42,7 +43,7 @@ namespace Amazon.DynamoDb
 
         public async Task<BatchGetItemResult> BatchGetItemAsync(BatchGetItemRequest request)
         {
-            var httpRequest = Setup("BatchGetItem", request.ToJson());
+            var httpRequest = Setup("BatchGetItem", System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(request));
 
             var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
@@ -56,11 +57,7 @@ namespace Amazon.DynamoDb
 
         public async Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
         {
-            var httpRequest = Setup("DeleteItem", request.ToJson());
-
-            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
-
-            return DeleteItemResult.FromJsonElement(json);
+            return await HandleRequestAsync<DeleteItemRequest, DeleteItemResult>("DeleteItem", request);
         }
 
         public async Task<DeleteTableResult> DeleteTableAsync(string tableName)
@@ -115,11 +112,7 @@ namespace Amazon.DynamoDb
 
         public async Task<PutItemResult> PutItemAsync(PutItemRequest request)
         {
-            var httpRequest = Setup("PutItem", request.ToJson());
-
-            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
-
-            return PutItemResult.FromJsonElement(json);
+            return await HandleRequestAsync<PutItemRequest, PutItemResult>("PutItem", request);
         }
 
         public async Task<PutItemResult> PutItemUsingRetryPolicyAsync(PutItemRequest request, RetryPolicy retryPolicy)
@@ -181,40 +174,34 @@ namespace Amazon.DynamoDb
 
         public async Task<QueryResult> QueryAsync(DynamoQuery query)
         {
-            var httpRequest = Setup("Query", query.ToJson());
-
-            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
-
-            return QueryResult.FromJsonElement(json);
+            return await HandleRequestAsync<DynamoQuery, QueryResult>("Query", query);
         }
 
         public async Task<CountResult> QueryCountAsync(DynamoQuery query)
         {
             query.Select = SelectEnum.COUNT;
 
-            var httpRequest = Setup("Query", query.ToJson());
-
-            string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-
-            return JsonSerializer.Deserialize<CountResult>(responseText);
+            return await HandleRequestAsync<DynamoQuery, CountResult>("Query", query);
         }
 
         public async Task<QueryResult> ScanAsync(ScanRequest request)
         {
-            var httpRequest = Setup("Scan", request.ToJson());
+            return await HandleRequestAsync<ScanRequest, QueryResult>("Scan", request);
+        }
 
-            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
+        public async Task<TransactGetItemsResult> TransactGetItems(TransactGetItemRequest request)
+        {
+            return await HandleRequestAsync<TransactGetItemRequest, TransactGetItemsResult>("TransactGetItems", request);
+        }
 
-            return QueryResult.FromJsonElement(json);
+        public async Task<TransactWriteItemsResult> TransactWriteItems(TransactWriteItemsRequest request)
+        {
+            return await HandleRequestAsync<TransactWriteItemsRequest, TransactWriteItemsResult>("TransactWriteItems", request);
         }
 
         public async Task<UpdateItemResult> UpdateItemAsync(UpdateItemRequest request)
         {
-            var httpRequest = Setup("UpdateItem", request.ToJson());
-
-            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
-
-            return UpdateItemResult.FromJsonElement(json);
+            return await HandleRequestAsync<UpdateItemRequest, UpdateItemResult>("UpdateItem", request);
         }
 
         public async Task<UpdateItemResult> UpdateItemUsingRetryPolicyAsync(UpdateItemRequest request, RetryPolicy retryPolicy)

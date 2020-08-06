@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Carbon.Data;
+using Carbon.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-
-using Carbon.Json;
-using Carbon.Data;
 using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
+    [System.Text.Json.Serialization.JsonConverter(typeof(Amazon.DynamoDb.JsonConverters.AttributeCollectionConverter))]
     public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbValue>>
     {
         private readonly Dictionary<string, DbValue> items;

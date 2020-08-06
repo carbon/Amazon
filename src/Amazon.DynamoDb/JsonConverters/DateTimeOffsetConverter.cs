@@ -6,6 +6,8 @@ namespace Amazon.DynamoDb.JsonConverters
 {
     internal class DateTimeOffsetConverter : JsonConverter<DateTimeOffset>
     {
+        public DateTimeOffsetConverter() { }
+
         public override DateTimeOffset Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,

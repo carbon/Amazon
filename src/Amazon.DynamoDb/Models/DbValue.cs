@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Amazon.DynamoDb.Extensions;
+using Amazon.DynamoDb.JsonConverters;
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
+	[JsonConverter(typeof(DbValueConverter))]
     public readonly struct DbValue : IConvertible
 	{
 		public static readonly DbValue Empty = new DbValue(string.Empty, DbValueType.Unknown);

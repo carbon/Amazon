@@ -1,4 +1,5 @@
-﻿using Carbon.Data.Expressions;
+﻿using Amazon.DynamoDb.Models.Tests;
+using Carbon.Data.Expressions;
 
 using Xunit;
 
@@ -23,7 +24,7 @@ namespace Amazon.DynamoDb.Tests
     }
   },
   ""Limit"": 1
-}", request.ToJson().ToString());
+}", request.ToSystemTextJsonIndented());
         }
 
 
@@ -47,7 +48,7 @@ namespace Amazon.DynamoDb.Tests
     }
   },
   ""FilterExpression"": ""contains(participantIds, :v1)""
-}", query.ToJson().ToString());
+}", query.ToSystemTextJsonIndented());
         }
 
         // You can use any attribute name in a document path, provided that the first character is a-z or A-Z and the second character (if present) is a-z, A-Z, or 0-9. If an attribute name does not meet this requirement, you will need to define an expression attribute name as a placeholder. 
@@ -104,7 +105,7 @@ namespace Amazon.DynamoDb.Tests
     }
   },
   ""Limit"": 1
-}", request.ToJson().ToString());
+}", request.ToSystemTextJsonIndented());
         }
 
         [Fact]
@@ -135,7 +136,7 @@ namespace Amazon.DynamoDb.Tests
   },
   ""ProjectionExpression"": ""#name,version"",
   ""Limit"": 1
-}", request.ToJson().ToString());
+}", request.ToSystemTextJsonIndented());
         }
 
 
@@ -166,7 +167,7 @@ namespace Amazon.DynamoDb.Tests
     }
   },
   ""Limit"": 1
-}", request.ToJson().ToString());
+}", request.ToSystemTextJsonIndented());
         }
     }
 }
