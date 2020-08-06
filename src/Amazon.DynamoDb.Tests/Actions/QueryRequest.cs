@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDb.Models.Tests;
+
 using Carbon.Data.Expressions;
 
 using Xunit;
@@ -27,7 +28,6 @@ namespace Amazon.DynamoDb.Tests
 }", request.ToSystemTextJsonIndented());
         }
 
-
         [Fact]
         public void QueryRequestTest5()
         {
@@ -52,7 +52,6 @@ namespace Amazon.DynamoDb.Tests
         }
 
         // You can use any attribute name in a document path, provided that the first character is a-z or A-Z and the second character (if present) is a-z, A-Z, or 0-9. If an attribute name does not meet this requirement, you will need to define an expression attribute name as a placeholder. 
-
 
         /*
         [Fact]
@@ -138,9 +137,6 @@ namespace Amazon.DynamoDb.Tests
   ""Limit"": 1
 }", request.ToSystemTextJsonIndented());
         }
-
-
-
 
         [Fact]
         public void QueryRequestTest3()

@@ -1,9 +1,11 @@
 ﻿
 using Amazon.DynamoDb.Models.Tests;
+
 using Xunit;
 
 namespace Amazon.DynamoDb.Tests
 {
+
     public class PutItemRequestTests
     {
         [Fact]

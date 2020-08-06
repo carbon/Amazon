@@ -1,5 +1,4 @@
 ﻿using Amazon.DynamoDb.Models.Tests;
-using Carbon.Data;
 
 using Xunit;
 
@@ -70,20 +69,6 @@ namespace Amazon.DynamoDb.Tests
     ""S"": ""Amazing""
   }
 }", x.ToJson().ToString());
-            
-            var key = RecordKey.Create<Fruit>("banana");
-
-            var x2 = new GetItemRequest("Fruits", key);
-
-            Assert.Equal(@"{
-  ""TableName"": ""Fruits"",
-  ""Key"": {
-    ""name"": {
-      ""S"": ""banana""
-    }
-  }
-}", x2.ToJson().ToString());
-
         }
     }
 }
