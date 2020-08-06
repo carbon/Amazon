@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Text.Json.Serialization;
+using Amazon.DynamoDb.JsonConverters;
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
+    [JsonConverter(typeof(BatchGetItemRequestConverter))]
     public sealed class BatchGetItemRequest
     {
         public BatchGetItemRequest(params TableKeys[] sets)
@@ -13,25 +15,11 @@ namespace Amazon.DynamoDb
         }
 
         public TableKeys[] Sets { get; }
-
-        public JsonObject ToJson()
-        {
-            var o = new JsonObject(capacity: Sets.Length);
-
-            foreach (TableKeys set in Sets)
-            {
-                o.Add(set.TableName, set.ToJson());
-            }
-
-            return new JsonObject {
-                { "RequestItems", o }
-            };
-        }
     }
 
     public sealed class TableKeys
     {
-        public TableKeys(string tableName, params IEnumerable<KeyValuePair<string, object>>[] keys)
+        public TableKeys(string tableName, params Dictionary<string, DbValue>[] keys)
         {
             TableName = tableName ?? throw new ArgumentNullException(nameof(TableName));
             Keys = keys;
@@ -39,30 +27,11 @@ namespace Amazon.DynamoDb
 
         public string TableName { get; }
 
-        public IEnumerable<KeyValuePair<string, object>>[] Keys { get; }
+        public Dictionary<string, DbValue>[] Keys { get; }
 
         public string[]? AttributesToGet { get; set; }
 
         public bool ConsistentRead { get; set; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject {
-                { "Keys", Keys.ToNodeList() }
-            };
-
-            if (AttributesToGet != null)
-            {
-                json.Add("AttributesToGet", JsonArray.Create(AttributesToGet));
-            }
-
-            if (ConsistentRead)
-            {
-                json.Add("ConsistentRead", ConsistentRead);
-            }
-
-            return json;
-        }
 
         /* 
 		{

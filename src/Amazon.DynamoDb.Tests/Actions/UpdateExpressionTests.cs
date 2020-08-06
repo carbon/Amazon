@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using Carbon.Data;
 using Carbon.Json;
 
@@ -14,7 +15,7 @@ namespace Amazon.DynamoDb.Tests
         {
             var locked = DateTimeOffset.FromUnixTimeSeconds(1497212690).UtcDateTime;
 
-            var attributeNames = new JsonObject();
+            var attributeNames = new Dictionary<string, string>();
 
             var values = new AttributeCollection();
 
@@ -30,14 +31,20 @@ namespace Amazon.DynamoDb.Tests
         [Fact]
         public void UpdateTest2()
         {
+            var attrNames = new Dictionary<string, string>();
+            var attrValues = new AttributeCollection();
+
             var expression = new UpdateExpression(new[]
             {
                 Change.Add("list", new[] { "A", "B", "C" }),
                 Change.Remove("deleted")
-            }, new JsonObject(), new AttributeCollection());
+            }, attrNames, attrValues);
 
             Assert.Equal(@"REMOVE deleted
-ADD list :v0", expression.ToString());
+ADD #list :v0", expression.ToString());
+
+            Assert.Single(attrNames);
+            Assert.Equal("list", attrNames["#list"]);
         }
 
         [Fact]
@@ -48,7 +55,7 @@ ADD list :v0", expression.ToString());
                 Change.Replace("deleted", new DateTime(2015, 01, 01)),
                 Change.Replace("colors", new [] { "red", "yellow", "blue" }),
                 Change.Replace("version", 1)
-            }, new JsonObject(), new AttributeCollection());
+            }, new Dictionary<string, string>(), new AttributeCollection());
 
             Assert.Equal(@"SET deleted = :v0, colors = :v1, version = :v2", expression.ToString());
         }
@@ -63,7 +70,7 @@ ADD list :v0", expression.ToString());
                 Change.Remove("deleted"),
                 Change.Add("version", 1),
                 Change.Replace("modified", DateTime.UtcNow)
-            }, new JsonObject(), new AttributeCollection());
+            }, new Dictionary<string, string>(), new AttributeCollection());
 
             Assert.Equal(@"SET deleted = :v0, colors = :v1, modified = :v3
 REMOVE deleted

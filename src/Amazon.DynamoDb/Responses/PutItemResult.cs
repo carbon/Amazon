@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿#nullable disable
+using System.Text.Json;
 
 using Carbon.Json;
 
@@ -6,6 +7,7 @@ namespace Amazon.DynamoDb
 {
     public sealed class PutItemResult : IConsumedResources
     {
+        public PutItemResult() { }
         public PutItemResult(AttributeCollection attributes, ConsumedCapacity? consumedCapacity)
         {
             Attributes = attributes;

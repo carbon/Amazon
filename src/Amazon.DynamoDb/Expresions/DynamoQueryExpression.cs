@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Carbon.Data.Expressions;
 using Carbon.Json;
 
@@ -59,7 +59,7 @@ namespace Amazon.DynamoDb
             FilterExpression.Add(expression);
         }
 
-        public JsonObject AttributeNames { get; } = new JsonObject();
+        public Dictionary<string, string> AttributeNames { get; } = new Dictionary<string, string>();
 
         public AttributeCollection AttributeValues { get; } = new AttributeCollection();
 

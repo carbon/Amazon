@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Carbon.Data.Expressions;
 using Carbon.Json;
 
@@ -19,11 +19,11 @@ namespace Amazon.DynamoDb
 
         public string? ConditionExpression { get; set; }
 
-        public JsonObject? ExpressionAttributeNames { get; set; }
+        public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
 
         public AttributeCollection? ExpressionAttributeValues { get; set; }
 
-        public ReturnValues ReturnValues { get; set; }
+        public ReturnValues? ReturnValues { get; set; }
 
         internal void SetConditions(Expression[] conditions)
         {
@@ -40,36 +40,6 @@ namespace Amazon.DynamoDb
             {
                 ExpressionAttributeValues = expression.AttributeValues;
             }
-        }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject {
-                { "TableName" , TableName },
-                { "Item", Item.ToJson() }
-            };
-
-            if (ConditionExpression != null)
-            {
-                json.Add("ConditionExpression", ConditionExpression);
-            }
-
-            if (ExpressionAttributeNames != null && ExpressionAttributeNames.Keys.Count > 0)
-            {
-                json.Add("ExpressionAttributeNames", ExpressionAttributeNames);
-            }
-
-            if (ExpressionAttributeValues != null && ExpressionAttributeValues.Count > 0)
-            {
-                json.Add("ExpressionAttributeValues", ExpressionAttributeValues.ToJson());
-            }
-
-            if (ReturnValues != ReturnValues.NONE)
-            {
-                json.Add("ReturnValues", ReturnValues.Canonicalize());
-            }
-
-            return json;
         }
     }
 }

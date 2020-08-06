@@ -116,7 +116,7 @@ namespace Amazon.DynamoDb
             throw new Exception(errorMessage, lastException);
         }
 
-        public async Task<IReadOnlyList<T>> FindAllAsync(params IEnumerable<KeyValuePair<string, object>>[] keys)
+        public async Task<IReadOnlyList<T>> FindAllAsync(params Dictionary<string, DbValue>[] keys)
         {
             if (keys is null || keys.Length == 0)
             {
@@ -318,7 +318,7 @@ namespace Amazon.DynamoDb
 
         public async Task<UpdateItemResult> PatchAsync(Key<T> key, params Change[] changes)
         {
-            var request = new UpdateItemRequest(tableName, key, changes);
+            var request = new UpdateItemRequest(tableName, key.ToDictionary(x => x.Key, y => new DbValue(y.Value)), changes);
 
             return await client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy).ConfigureAwait(false);
         }
@@ -330,14 +330,14 @@ namespace Amazon.DynamoDb
             Expression[] conditions,
             ReturnValues? returnValues = null)
         {
-            var request = new UpdateItemRequest(tableName, key, changes, conditions, returnValues);
+            var request = new UpdateItemRequest(tableName, key.ToDictionary(x => x.Key, y => new DbValue(y.Value)), changes, conditions, returnValues);
 
             return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
         }
 
         public Task<UpdateItemResult> PatchAsync(Key<T> key, Change[] changes, ReturnValues returnValues)
         {
-            var request = new UpdateItemRequest(tableName, key, changes, returnValues: returnValues);
+            var request = new UpdateItemRequest(tableName, key.ToDictionary(x => x.Key, y => new DbValue(y.Value)), changes, returnValues: returnValues);
 
             return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
         }

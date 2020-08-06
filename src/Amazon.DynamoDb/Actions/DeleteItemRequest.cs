@@ -39,24 +39,9 @@ namespace Amazon.DynamoDb
 
         public string? ConditionExpression { get; set; }
 
-        public JsonObject? ExpressionAttributeNames { get; set; }
+        public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
 
         public AttributeCollection? ExpressionAttributeValues { get; set; }
-
-        public JsonObject ToJson()
-        {
-            var json = new JsonObject {
-                { "TableName",  TableName },
-                { "Key",        Key.ToJson() }
-            };
-
-            if (ConditionExpression != null)        json.Add("ConditionExpression", ConditionExpression);
-            if (ExpressionAttributeNames != null)   json.Add("ExpressionAttributeNames", ExpressionAttributeNames);
-            if (ExpressionAttributeValues != null)  json.Add("ExpressionAttributeValues", ExpressionAttributeValues.ToJson());
-            if (ReturnValues != ReturnValues.NONE)  json.Add("ReturnValues", ReturnValues.ToString());
-
-            return json;
-        }
     }
 }
 

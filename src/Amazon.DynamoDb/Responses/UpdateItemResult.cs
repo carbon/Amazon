@@ -1,36 +1,20 @@
-﻿using System.Text.Json;
+﻿#nullable disable
+using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
     public sealed class UpdateItemResult : IConsumedResources
     {
-        public UpdateItemResult(AttributeCollection? attributes, ConsumedCapacity? consumedCapacity)
+        public UpdateItemResult() { }
+        public UpdateItemResult(AttributeCollection attributes, ConsumedCapacity consumedCapacity)
         {
             Attributes = attributes;
             ConsumedCapacity = consumedCapacity;
         }
 
-        public AttributeCollection? Attributes { get; }
+        public AttributeCollection Attributes { get; set; }
 
-        public ConsumedCapacity? ConsumedCapacity { get; }
-
-        public static UpdateItemResult FromJsonElement(JsonElement json)
-        {
-            ConsumedCapacity? consumedCapacity = null;
-            AttributeCollection? attributes = null;
-
-            if (json.TryGetProperty("ConsumedCapacity", out var consumedCapacityEl))
-            {
-                consumedCapacity = ConsumedCapacity.FromJsonElement(consumedCapacityEl);
-            }
-
-            if (json.TryGetProperty("Attributes", out var attributesEl))
-            {
-                attributes = AttributeCollection.FromJsonElement(attributesEl);
-            }
-
-            return new UpdateItemResult(attributes, consumedCapacity);
-        }
+        public ConsumedCapacity ConsumedCapacity { get; set; }
     }
 }
 
