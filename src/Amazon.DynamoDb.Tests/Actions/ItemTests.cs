@@ -95,9 +95,9 @@ namespace Amazon.DynamoDb.Models.Tests
             Assert.Equal("candy", item.GetString("C"));
             Assert.Null(item.GetString("D"));
 
-            Assert.Equal(jsonText, item.ToJson().ToString(pretty: false));
+            Assert.Equal(jsonText, item.ToSystemTextJson());
 
-            // Assert.Equal(jsonText, AttributeCollection.FromJson(JsonObject.Parse(jsonText)).ToJson().ToString(pretty: false));
+            Assert.Equal(jsonText, JsonSerializer.Deserialize<AttributeCollection>(jsonText).ToSystemTextJson());
         }
 
         [Fact]
@@ -119,9 +119,9 @@ namespace Amazon.DynamoDb.Models.Tests
 
             item.Add("containedIn", new DbValue(new[] { 1, 2, 3 }));
 
-            var jsonText = item.ToJson().ToString(pretty: false);
+            var jsonText = item.ToSystemTextJson();
 
-            item = JsonSerializer.Deserialize<AttributeCollection >(jsonText);
+            item = JsonSerializer.Deserialize<AttributeCollection>(jsonText);
 
             Assert.Equal(3, item.GetStringSet("colors").Count);
             Assert.Contains("red", item.GetStringSet("colors"));
@@ -146,7 +146,7 @@ namespace Amazon.DynamoDb.Models.Tests
   ""Boolean"": {
     ""BOOL"": true
   }
-}", item.ToJson().ToString());
+}", item.ToSystemTextJsonIndented());
 
         }
     }

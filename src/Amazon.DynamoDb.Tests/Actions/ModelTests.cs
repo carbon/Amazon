@@ -43,7 +43,7 @@ namespace Amazon.DynamoDb.Tests
   ""3"": {
     ""N"": ""3""
   }
-}", x.ToJson().ToString());
+}", x.ToSystemTextJsonIndented());
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Amazon.DynamoDb.Tests
   ""description"": {
     ""S"": ""Amazing""
   }
-}", x.ToJson().ToString());
+}", x.ToSystemTextJsonIndented());
         }
     }
 }

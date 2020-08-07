@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 
-namespace Amazon.DynamoDb.Models.Tests
+namespace Amazon.DynamoDb
 {
-    public static class DynamoTestHelper
+    internal static class DynamoTestHelper
     {
         public static readonly JsonSerializerOptions IndentedSerializerOptions = new JsonSerializerOptions()
         {

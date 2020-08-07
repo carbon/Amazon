@@ -21,9 +21,7 @@ namespace Amazon.DynamoDb.Models.Tests
 				})
 			};
 
-            var tableBatch = new TableRequests("Posts", requests).ToJson();
-
-            Assert.Equal("Posts", tableBatch.Key);
+            var tableBatch = new TableRequests("Posts", requests).SerializeList();
 
 			Assert.Equal(
 	@"[
@@ -51,7 +49,7 @@ namespace Amazon.DynamoDb.Models.Tests
       }
     }
   }
-]", tableBatch.Value.ToString());
+]", tableBatch.ToSystemTextJsonIndented());
 		} 
 
 		[Fact]
