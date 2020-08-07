@@ -50,41 +50,17 @@ namespace Amazon.DynamoDb
             return BatchGetItemResult.FromJsonElement(json);
         }
 
-        public async Task<CreateTableResult> CreateTableAsync(CreateTableRequest request)
-        {
-            return await HandleRequestAsync<CreateTableRequest, CreateTableResult>("CreateTable", request).ConfigureAwait(false);
-        }
 
         public async Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
         {
             return await HandleRequestAsync<DeleteItemRequest, DeleteItemResult>("DeleteItem", request).ConfigureAwait(false);
         }
 
-        public async Task<DeleteTableResult> DeleteTableAsync(string tableName)
-        {
-            return await HandleRequestAsync<TableRequest, DeleteTableResult>("DeleteTable", new TableRequest(tableName)).ConfigureAwait(false);
-        }
-
-        public async Task<DescribeTableResult> DescribeTableAsync(string tableName)
-        {
-            return await HandleRequestAsync<TableRequest, DescribeTableResult>("DescribeTable", new TableRequest(tableName)).ConfigureAwait(false);
-        }
-
-        public async Task<DescribeTimeToLiveResult> DescribeTimeToLiveAsync(string tableName)
-        {
-            return await HandleRequestAsync<TableRequest, DescribeTimeToLiveResult>("DescribeTimeToLive", new TableRequest(tableName)).ConfigureAwait(false);
-        }
 
         public async Task<GetItemResult> GetItemAsync(GetItemRequest request)
         {
             return await HandleRequestAsync<GetItemRequest, GetItemResult>("GetItem", request).ConfigureAwait(false);
         }
-
-        public async Task<ListTablesResult> ListTablesAsync(ListTablesRequest request)
-        {
-            return await HandleRequestAsync<ListTablesRequest, ListTablesResult>("ListTables", request).ConfigureAwait(false);
-        }
-
 
         public async Task<BatchWriteItemResult> BatchWriteItemAsync(params TableRequests[] batches)
         {
@@ -231,16 +207,6 @@ namespace Amazon.DynamoDb
             } while (retryPolicy.ShouldRetry(retryCount));
 
             throw lastException;
-        }
-
-        public async Task<UpdateTableResult> UpdateTableAsync(UpdateTableRequest request)
-        {
-            return await HandleRequestAsync<UpdateTableRequest, UpdateTableResult>("UpdateTable", request).ConfigureAwait(false);
-        }
-
-        public async Task<UpdateTimeToLiveResult> UpdateTimeToLiveAsync(UpdateTimeToLiveRequest request)
-        {
-            return await HandleRequestAsync<UpdateTimeToLiveRequest, UpdateTimeToLiveResult>("UpdateTimeToLive", request).ConfigureAwait(false);
         }
 
         #region Helpers

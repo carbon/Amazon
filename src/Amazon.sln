@@ -79,6 +79,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Translate", "Amazon.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudFront", "Amazon.Cloudfront\Amazon.CloudFront.csproj", "{2680CCF6-497D-4AA5-B488-C13A2E06B43F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.DynamoDb.Management", "Amazon.DynamoDb.Management\Amazon.DynamoDb.Management.csproj", "{619C51F9-0853-4CFB-8C80-3E70819C8766}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -233,6 +235,10 @@ Global
 		{2680CCF6-497D-4AA5-B488-C13A2E06B43F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2680CCF6-497D-4AA5-B488-C13A2E06B43F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2680CCF6-497D-4AA5-B488-C13A2E06B43F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{619C51F9-0853-4CFB-8C80-3E70819C8766}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{619C51F9-0853-4CFB-8C80-3E70819C8766}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{619C51F9-0853-4CFB-8C80-3E70819C8766}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{619C51F9-0853-4CFB-8C80-3E70819C8766}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,8 +1,8 @@
-﻿namespace Amazon.DynamoDb
-{
-	using Xunit;
+﻿using Xunit;
 
-	public class DbKeyTests
+namespace Amazon.DynamoDb
+{
+    public sealed class DbKeyTests
 	{
 		[Fact]
 		public void KeyFromDbItem()
@@ -19,13 +19,5 @@
 			Assert.Equal(123L,  key[0].Value);
 			Assert.Equal("abc", key[1].Value);
 		}
-
-		[Fact]
-		public void ReservedKeywords()
-        {
-			Assert.True(DynamoKeyword.IsReserved("TTL"));
-			Assert.True(DynamoKeyword.IsReserved("ttl"));
-			Assert.False(DynamoKeyword.IsReserved("notakeyword"));
-        }
 	}
 }

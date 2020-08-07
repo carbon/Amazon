@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 using Xunit;
 
-namespace Amazon.DynamoDb.Models.Tests
+namespace Amazon.DynamoDb.Results.Tests
 {
-    public class BatchTests
+    public class BatchGetItemResultTests
     {
         [Fact]
         public void BatchGetItemsResult1()

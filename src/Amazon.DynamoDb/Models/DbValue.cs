@@ -230,7 +230,7 @@ namespace Amazon.DynamoDb
 
 			foreach (var item in (IEnumerable)value)
 			{
-				set.Add((T)Convert.ChangeType(item, typeof(T)));
+				set.Add((T)Convert.ChangeType(item, typeof(T))!);
 			}
 
 			return set;

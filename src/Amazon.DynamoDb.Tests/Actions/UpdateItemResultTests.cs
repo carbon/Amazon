@@ -24,15 +24,13 @@ namespace Amazon.DynamoDb.Models.Tests
             var attrCollection = JsonSerializer.Deserialize<UpdateItemResult>(json).Attributes;
 
             var ds0 = attrCollection["Ds"].ToArray<DbValue>()[0].Value as AttributeCollection;
-            var c0 = ds0["C"].ToArray<DbValue>()[0];
-            var c1 = ds0["C"].ToArray<DbValue>()[1];
-            var c2 = ds0["C"].ToArray<DbValue>()[2];
-            var c3 = ds0["C"].ToArray<DbValue>()[3];
 
-            Assert.Equal(2, c0.ToInt());
-            Assert.Equal(88, c1.ToInt());
-            Assert.Equal(89, c2.ToInt());
-            Assert.Equal(46, c3.ToInt());
+            DbValue[] cArray = ds0["C"].ToArray<DbValue>();
+
+            Assert.Equal(2,  cArray[0].ToInt());
+            Assert.Equal(88, cArray[1].ToInt());
+            Assert.Equal(89, cArray[2].ToInt());
+            Assert.Equal(46, cArray[3].ToInt());
         }
     }
 }
