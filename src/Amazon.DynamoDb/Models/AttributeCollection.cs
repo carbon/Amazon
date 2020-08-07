@@ -4,11 +4,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb
 {
-    [System.Text.Json.Serialization.JsonConverter(typeof(Amazon.DynamoDb.JsonConverters.AttributeCollectionConverter))]
-    public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbValue>>
+    [JsonConverter(typeof(JsonConverters.AttributeCollectionConverter))]
+    public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbValue>>, IReadOnlyDictionary<string, DbValue>
     {
         private readonly Dictionary<string, DbValue> items;
 
@@ -58,6 +59,14 @@ namespace Amazon.DynamoDb
 
         public int Count => items.Count;
 
+        #region IReadOnlyDictionary
+
+        IEnumerable<string> IReadOnlyDictionary<string, DbValue>.Keys => items.Keys;
+
+        IEnumerable<DbValue> IReadOnlyDictionary<string, DbValue>.Values => items.Values;
+
+        #endregion
+
         public bool TryGet(string name, out DbValue value) => 
             items.TryGetValue(name, out value);
 
@@ -103,31 +112,7 @@ namespace Amazon.DynamoDb
             items[name] = value;
         }
 
-        public JsonObject ToJson()
-        {
-            var node = new JsonObject(capacity: items.Count);
-
-            foreach (var attribute in items)
-            {
-                node.Add(attribute.Key, attribute.Value.ToJson());
-            }
-
-            return node;
-        }
-
-        // { "hitCount":{"N":"225"}, "date":{"S":"2011-05-31T00:00:00Z"}, "siteId":{"N":"221051"} }
-
-        public static AttributeCollection FromJson(JsonObject json)
-        {
-            var item = new AttributeCollection(json.Keys.Count);
-
-            foreach (var property in json)
-            {
-                item.Add(property.Key, DbValue.FromJson((JsonObject)property.Value));
-            }
-
-            return item;
-        }
+      
 
         public static AttributeCollection FromJsonElement(JsonElement json)
         {
@@ -152,8 +137,7 @@ namespace Amazon.DynamoDb
         IEnumerator<KeyValuePair<string, DbValue>> IEnumerable<KeyValuePair<string, DbValue>>.GetEnumerator()
             => items.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-            => items.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 
         #endregion
 
@@ -341,6 +325,11 @@ namespace Amazon.DynamoDb
             }
 
             return instance;
+        }
+
+        bool IReadOnlyDictionary<string, DbValue>.TryGetValue(string key, out DbValue value)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
