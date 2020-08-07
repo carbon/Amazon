@@ -69,22 +69,6 @@ namespace Amazon.DynamoDb
             return await SendAndReadObjectAsync<TResult>(httpRequest).ConfigureAwait(false);
         }
 
-        private async Task<JsonElement> SendAndReadJsonElementAsync(HttpRequestMessage request)
-        {
-            await SignAsync(request).ConfigureAwait(false);
-
-            using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw await GetExceptionAsync(response).ConfigureAwait(false);
-            }
-
-            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-            return await JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
-        }
-
         private async Task<T> SendAndReadObjectAsync<T>(HttpRequestMessage request)
         {
             await SignAsync(request).ConfigureAwait(false);

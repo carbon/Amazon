@@ -348,10 +348,7 @@ namespace Amazon.DynamoDb
             if (record is null)
                 throw new ArgumentNullException(nameof(record));
 
-            var request = new DeleteItemRequest(
-                tableName : tableName,
-                key       : Key<T>.FromObject(record)
-            );
+            var request = new DeleteItemRequest(tableName, Key<T>.FromObject(record));
 
             return InternalDelete(request);
         }
