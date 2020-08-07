@@ -37,7 +37,7 @@ namespace Amazon.DynamoDb
     {
         public ConditionCheck(
             string tableName, 
-            Dictionary<string, DbValue> key, 
+            IReadOnlyDictionary<string, DbValue> key, 
             string conditionExpression)
         {
             TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
@@ -47,7 +47,7 @@ namespace Amazon.DynamoDb
 
         public string ConditionExpression { get; set; }
 
-        public Dictionary<string, DbValue> Key { get; set; }
+        public IReadOnlyDictionary<string, DbValue> Key { get; set; }
 
         public string TableName { get; set; }
 
