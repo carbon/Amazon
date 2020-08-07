@@ -4,7 +4,7 @@
     <AssemblyName>Amazon.Core</AssemblyName>
     <Version>0.17.1</Version>
     <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
 
     <!-- Package Details-->

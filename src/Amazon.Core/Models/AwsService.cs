@@ -13,30 +13,30 @@ namespace Amazon
 
         public override string ToString() => Name;
 
-        public static readonly AwsService Cloudfront       = new AwsService("cloudfront");
-        public static readonly AwsService CloudwatchEvents = new AwsService("events");
-        public static readonly AwsService CodeBuild        = new AwsService("codebuild");
-        public static readonly AwsService DynamoDb         = new AwsService("dynamodb");
-        public static readonly AwsService Ec2              = new AwsService("ec2");
-        public static readonly AwsService Elb              = new AwsService("elasticloadbalancing");
-        public static readonly AwsService ElastiCache      = new AwsService("elasticache");
-        public static readonly AwsService Glacier          = new AwsService("glacier");
-        public static readonly AwsService Iam              = new AwsService("iam");
-        public static readonly AwsService Kinesis          = new AwsService("kinesis");
-        public static readonly AwsService KinesisFirehose  = new AwsService("firehose");
-        public static readonly AwsService Kms              = new AwsService("kms");
-        public static readonly AwsService Lambda           = new AwsService("lambda");
-        public static readonly AwsService Monitoring       = new AwsService("monitoring"); // Cloudwatch monitoring
-        public static readonly AwsService Route53          = new AwsService("route53");
-        public static readonly AwsService RdsDb            = new AwsService("rds-db");
-        public static readonly AwsService Ses              = new AwsService("email");
-        public static readonly AwsService Ssm              = new AwsService("ssm"); // Amazon EC2 Systems Manager (SSM)
-        public static readonly AwsService S3               = new AwsService("s3");
-        public static readonly AwsService Sns              = new AwsService("sns");
-        public static readonly AwsService Sts              = new AwsService("sts");
-        public static readonly AwsService Sqs              = new AwsService("sqs");
-        public static readonly AwsService Translate        = new AwsService("translate");
-        public static readonly AwsService Waf              = new AwsService("waf");
+        public static readonly AwsService Cloudfront       = new ("cloudfront");
+        public static readonly AwsService CloudwatchEvents = new ("events");
+        public static readonly AwsService CodeBuild        = new ("codebuild");
+        public static readonly AwsService DynamoDb         = new ("dynamodb");
+        public static readonly AwsService Ec2              = new ("ec2");
+        public static readonly AwsService Elb              = new ("elasticloadbalancing");
+        public static readonly AwsService ElastiCache      = new ("elasticache");
+        public static readonly AwsService Glacier          = new ("glacier");
+        public static readonly AwsService Iam              = new ("iam");
+        public static readonly AwsService Kinesis          = new ("kinesis");
+        public static readonly AwsService KinesisFirehose  = new ("firehose");
+        public static readonly AwsService Kms              = new ("kms");
+        public static readonly AwsService Lambda           = new ("lambda");
+        public static readonly AwsService Monitoring       = new ("monitoring"); // Cloudwatch monitoring
+        public static readonly AwsService Route53          = new ("route53");
+        public static readonly AwsService RdsDb            = new ("rds-db");
+        public static readonly AwsService Ses              = new ("email");
+        public static readonly AwsService Ssm              = new ("ssm"); // Amazon EC2 Systems Manager (SSM)
+        public static readonly AwsService S3               = new ("s3");
+        public static readonly AwsService Sns              = new ("sns");
+        public static readonly AwsService Sts              = new ("sts");
+        public static readonly AwsService Sqs              = new ("sqs");
+        public static readonly AwsService Translate        = new ("translate");
+        public static readonly AwsService Waf              = new ("waf");
 
         public bool Equals(AwsService? other)
         {
