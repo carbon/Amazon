@@ -4,7 +4,7 @@
     <AssemblyName>Amazon.DynamoDb</AssemblyName>
     <VersionPrefix>0.17.3</VersionPrefix>
     <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
 
     <!-- Package Details-->
