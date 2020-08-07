@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace Amazon.DynamoDb.Models
+﻿namespace Amazon.DynamoDb.Models
 {
     public sealed class RestoreSummary
     {
-        public DateTimeOffset RestoreDateTime { get; set; }
+        public Timestamp RestoreDateTime { get; set; }
 
         public bool RestoreInProgress { get; set; }
 

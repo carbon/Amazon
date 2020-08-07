@@ -5,7 +5,7 @@ namespace Amazon.DynamoDb.Models
 {
     public sealed class SseDescription
     {
-        public DateTimeOffset InaccessibleEncryptionDateTime { get; set; }
+        public Timestamp InaccessibleEncryptionDateTime { get; set; }
 
         [JsonPropertyName("KMSMasterKeyArn")]
         public string? KmsMasterKeyArn { get; set; }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb.Models
 {
@@ -11,7 +10,7 @@ namespace Amazon.DynamoDb.Models
 
         public BillingModeSummary? BillingModeSummary { get; set; }
 
-        public DateTimeOffset CreationDateTime { get; set; }
+        public Timestamp CreationDateTime { get; set; }
 
         public GlobalSecondaryIndexDescription[]? GlobalSecondaryIndexes { get; set; }
 

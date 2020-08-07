@@ -6,6 +6,6 @@ namespace Amazon.DynamoDb.Models
     {
         public BillingMode BillingMode { get; set; }
 
-        public DateTimeOffset LastUpdateToPayPerRequestDateTime { get; set; }
+        public Timestamp LastUpdateToPayPerRequestDateTime { get; set; }
     }
 }
