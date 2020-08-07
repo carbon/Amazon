@@ -21,24 +21,20 @@ namespace Amazon.DynamoDb
 			}
 		}
 
-        public AttributeCollection? LastEvaluatedKey { get; }
+        public Dictionary<string, DbValue>? LastEvaluatedKey { get; }
 
         public ConsumedCapacity? ConsumedCapacity { get; }
 
-		#region IReadOnlyList
+		// IReadOnlyList<T> ---
 
 		public T this[int index] => items[index];
 	
         public int Count => items.Length;
 
-		#endregion		
-
-		#region IEnumerable
+		// IEnumerable<T> ---
 
 		public IEnumerator<T> GetEnumerator() => ((IList<T>)items).GetEnumerator();
 
 		IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
-
-		#endregion
 	}
 }

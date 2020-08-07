@@ -57,7 +57,7 @@ namespace Amazon.DynamoDb
         /// </summary>
         public ReturnConsumedCapacity? ReturnConsumedCapacity { get; set; }
 
-        public AttributeCollection? ExclusiveStartKey { get; set; }
+        public Dictionary<string, DbValue>? ExclusiveStartKey { get; set; }
 
         #region Helpers
 
