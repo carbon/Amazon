@@ -77,11 +77,7 @@ namespace Amazon.DynamoDb
 
         public async Task<GetItemResult> GetItemAsync(GetItemRequest request)
         {
-            var httpRequest = Setup("GetItem", request.ToJson());
-
-            var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
-
-            return GetItemResult.FromJsonElement(json);
+            return await HandleRequestAsync<GetItemRequest, GetItemResult>("GetItem", request).ConfigureAwait(false);
         }
 
         public async Task<ListTablesResult> ListTablesAsync(ListTablesRequest request)
