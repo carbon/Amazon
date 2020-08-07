@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Amazon.DynamoDb.Models;
+
 namespace Amazon.DynamoDb
 {
     public sealed class CreateTableRequest

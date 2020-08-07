@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Amazon.DynamoDb.Models;
+
 namespace Amazon.DynamoDb
 {
     public sealed class UpdateTableRequest

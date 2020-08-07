@@ -1,4 +1,4 @@
-﻿namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb.Models
 {
     public class ReplicationGroupUpdate
     {

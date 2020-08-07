@@ -1,6 +1,8 @@
 ﻿using System;
 
-namespace Amazon.DynamoDb
+using Amazon.DynamoDb.Models;
+
+namespace Amazon.DynamoDb.Models
 {
     public sealed class CreateGlobalSecondaryIndexAction
     {

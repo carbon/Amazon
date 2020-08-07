@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb.Models
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ReplicaStatus
