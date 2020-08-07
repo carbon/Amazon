@@ -16,7 +16,7 @@ namespace Amazon.DynamoDb
             Converters = {
                 new JsonConverters.DateTimeOffsetConverter()
             },
-            IgnoreNullValues = true,
+            IgnoreNullValues = true
         };
 
         public DynamoDbClient(AwsRegion region, IAwsCredential credential)
@@ -52,27 +52,27 @@ namespace Amazon.DynamoDb
 
         public async Task<CreateTableResult> CreateTableAsync(CreateTableRequest request)
         {
-            return await HandleRequestAsync<CreateTableRequest, CreateTableResult>("CreateTable", request);
+            return await HandleRequestAsync<CreateTableRequest, CreateTableResult>("CreateTable", request).ConfigureAwait(false);
         }
 
         public async Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
         {
-            return await HandleRequestAsync<DeleteItemRequest, DeleteItemResult>("DeleteItem", request);
+            return await HandleRequestAsync<DeleteItemRequest, DeleteItemResult>("DeleteItem", request).ConfigureAwait(false);
         }
 
         public async Task<DeleteTableResult> DeleteTableAsync(string tableName)
         {
-            return await HandleRequestAsync<TableRequest, DeleteTableResult>("DeleteTable", new TableRequest(tableName));
+            return await HandleRequestAsync<TableRequest, DeleteTableResult>("DeleteTable", new TableRequest(tableName)).ConfigureAwait(false);
         }
 
         public async Task<DescribeTableResult> DescribeTableAsync(string tableName)
         {
-            return await HandleRequestAsync<TableRequest, DescribeTableResult>("DescribeTable", new TableRequest(tableName));
+            return await HandleRequestAsync<TableRequest, DescribeTableResult>("DescribeTable", new TableRequest(tableName)).ConfigureAwait(false);
         }
 
         public async Task<DescribeTimeToLiveResult> DescribeTimeToLiveAsync(string tableName)
         {
-            return await HandleRequestAsync<TableRequest, DescribeTimeToLiveResult>("DescribeTimeToLive", new TableRequest(tableName));
+            return await HandleRequestAsync<TableRequest, DescribeTimeToLiveResult>("DescribeTimeToLive", new TableRequest(tableName)).ConfigureAwait(false);
         }
 
         public async Task<GetItemResult> GetItemAsync(GetItemRequest request)
@@ -82,7 +82,7 @@ namespace Amazon.DynamoDb
 
         public async Task<ListTablesResult> ListTablesAsync(ListTablesRequest request)
         {
-            return await HandleRequestAsync<ListTablesRequest, ListTablesResult>("ListTables", request);
+            return await HandleRequestAsync<ListTablesRequest, ListTablesResult>("ListTables", request).ConfigureAwait(false);
         }
 
 
@@ -114,7 +114,7 @@ namespace Amazon.DynamoDb
 
         public async Task<PutItemResult> PutItemAsync(PutItemRequest request)
         {
-            return await HandleRequestAsync<PutItemRequest, PutItemResult>("PutItem", request);
+            return await HandleRequestAsync<PutItemRequest, PutItemResult>("PutItem", request).ConfigureAwait(false);
         }
 
         public async Task<PutItemResult> PutItemUsingRetryPolicyAsync(PutItemRequest request, RetryPolicy retryPolicy)
@@ -176,34 +176,34 @@ namespace Amazon.DynamoDb
 
         public async Task<QueryResult> QueryAsync(DynamoQuery query)
         {
-            return await HandleRequestAsync<DynamoQuery, QueryResult>("Query", query);
+            return await HandleRequestAsync<DynamoQuery, QueryResult>("Query", query).ConfigureAwait(false);
         }
 
         public async Task<CountResult> QueryCountAsync(DynamoQuery query)
         {
             query.Select = SelectEnum.COUNT;
 
-            return await HandleRequestAsync<DynamoQuery, CountResult>("Query", query);
+            return await HandleRequestAsync<DynamoQuery, CountResult>("Query", query).ConfigureAwait(false);
         }
 
         public async Task<QueryResult> ScanAsync(ScanRequest request)
         {
-            return await HandleRequestAsync<ScanRequest, QueryResult>("Scan", request);
+            return await HandleRequestAsync<ScanRequest, QueryResult>("Scan", request).ConfigureAwait(false);
         }
 
         public async Task<TransactGetItemsResult> TransactGetItemsAsync(TransactGetItemRequest request)
         {
-            return await HandleRequestAsync<TransactGetItemRequest, TransactGetItemsResult>("TransactGetItems", request);
+            return await HandleRequestAsync<TransactGetItemRequest, TransactGetItemsResult>("TransactGetItems", request).ConfigureAwait(false);
         }
 
         public async Task<TransactWriteItemsResult> TransactWriteItemsAsync(TransactWriteItemsRequest request)
         {
-            return await HandleRequestAsync<TransactWriteItemsRequest, TransactWriteItemsResult>("TransactWriteItems", request);
+            return await HandleRequestAsync<TransactWriteItemsRequest, TransactWriteItemsResult>("TransactWriteItems", request).ConfigureAwait(false);
         }
 
         public async Task<UpdateItemResult> UpdateItemAsync(UpdateItemRequest request)
         {
-            return await HandleRequestAsync<UpdateItemRequest, UpdateItemResult>("UpdateItem", request);
+            return await HandleRequestAsync<UpdateItemRequest, UpdateItemResult>("UpdateItem", request).ConfigureAwait(false);
         }
 
         public async Task<UpdateItemResult> UpdateItemUsingRetryPolicyAsync(UpdateItemRequest request, RetryPolicy retryPolicy)
@@ -235,12 +235,12 @@ namespace Amazon.DynamoDb
 
         public async Task<UpdateTableResult> UpdateTableAsync(UpdateTableRequest request)
         {
-            return await HandleRequestAsync<UpdateTableRequest, UpdateTableResult>("UpdateTable", request);
+            return await HandleRequestAsync<UpdateTableRequest, UpdateTableResult>("UpdateTable", request).ConfigureAwait(false);
         }
 
         public async Task<UpdateTimeToLiveResult> UpdateTimeToLiveAsync(UpdateTimeToLiveRequest request)
         {
-            return await HandleRequestAsync<UpdateTimeToLiveRequest, UpdateTimeToLiveResult>("UpdateTimeToLive", request);
+            return await HandleRequestAsync<UpdateTimeToLiveRequest, UpdateTimeToLiveResult>("UpdateTimeToLive", request).ConfigureAwait(false);
         }
 
         #region Helpers
