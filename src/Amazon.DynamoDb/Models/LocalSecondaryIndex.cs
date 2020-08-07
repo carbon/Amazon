@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb.Models
 {
-    public class LocalSecondaryIndex
+    public sealed class LocalSecondaryIndex
     {
         public LocalSecondaryIndex(string indexName, KeySchemaElement[] keySchema, Projection projection)
         {

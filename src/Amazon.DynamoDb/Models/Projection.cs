@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb.Models
 {
     public sealed class Projection
     {
