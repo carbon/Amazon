@@ -10,6 +10,9 @@
             WriteCapacityUnits = writeCapacityUnits;
         }
 
+
+        public int NumberOfDecreasesToday { get; set; }
+
         public int ReadCapacityUnits { get; set; }
 
         public int WriteCapacityUnits { get; set; }
