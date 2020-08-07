@@ -5,7 +5,7 @@ namespace Amazon.DynamoDb
 {
     public static class DynamoKeyword
     {
-        private static HashSet<string> ReservedKeywords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        private static readonly HashSet<string> ReservedKeywords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "ABORT",
             "ABSOLUTE",

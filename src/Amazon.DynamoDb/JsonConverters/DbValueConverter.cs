@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb.JsonConverters
 {
-    public class DbValueConverter : JsonConverter<DbValue>
+    internal sealed class DbValueConverter : JsonConverter<DbValue>
     {
         // These are used to prevent additional allocations when reading arrays
         public DbValueConverter() { }
@@ -69,7 +69,7 @@ namespace Amazon.DynamoDb.JsonConverters
             else if (reader.ValueTextEquals("M"))
             {
                 reader.Read();
-                value = new DbValue(AttributeCollectionConverter.StaticRead(ref reader, typeof(AttributeCollection), options));
+                value = new DbValue(AttributeCollectionConverter.StaticRead(ref reader, options));
             }
             else
             {
@@ -79,8 +79,6 @@ namespace Amazon.DynamoDb.JsonConverters
             reader.Read();
             return value;
         }
-
-        
 
         private static string ReadValueAsString(ref Utf8JsonReader reader)
         {
@@ -136,6 +134,7 @@ namespace Amazon.DynamoDb.JsonConverters
         #endregion
 
         #region Write
+
         public override void Write(
             Utf8JsonWriter writer,
             DbValue dbValue,

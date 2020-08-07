@@ -207,7 +207,7 @@ namespace Amazon.DynamoDb
 
 			foreach (var item in (IEnumerable)value)
 			{
-				set.Add(item.ToString()!);
+				set.Add(item!.ToString()!);
 			}
 
 			return set;

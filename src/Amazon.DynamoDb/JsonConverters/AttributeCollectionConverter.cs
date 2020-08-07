@@ -9,7 +9,7 @@ namespace Amazon.DynamoDb.JsonConverters
     {
         public AttributeCollectionConverter() { }
 
-        public static AttributeCollection StaticRead(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public static AttributeCollection StaticRead(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartObject)
             {
@@ -37,7 +37,7 @@ namespace Amazon.DynamoDb.JsonConverters
 
         public override AttributeCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return StaticRead(ref reader, typeToConvert, options);
+            return StaticRead(ref reader, options);
         }
 
         public override void Write(Utf8JsonWriter writer, AttributeCollection value, JsonSerializerOptions options)
