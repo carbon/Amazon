@@ -13,9 +13,6 @@ namespace Amazon.DynamoDb
         private const string TargetPrefix = "DynamoDB_20120810";
 
         private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
-            Converters = {
-                new JsonConverters.DateTimeOffsetConverter()
-            },
             IgnoreNullValues = true
         };
 
