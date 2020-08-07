@@ -8,6 +8,9 @@ namespace Amazon.DynamoDb
     public sealed class DeleteItemRequest
     {
         public DeleteItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key)
+            : this(tableName, key.ToDictionary()) { }
+
+        public DeleteItemRequest(string tableName, Dictionary<string, DbValue> key)
         {
             TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             Key = key;
@@ -32,9 +35,9 @@ namespace Amazon.DynamoDb
 
         public string TableName { get; }
 
-        public IEnumerable<KeyValuePair<string, object>> Key { get; }
+        public Dictionary<string, DbValue> Key { get; }
 
-        public ReturnValues ReturnValues { get; set; }
+        public ReturnValues? ReturnValues { get; set; }
 
         public string? ConditionExpression { get; set; }
 
