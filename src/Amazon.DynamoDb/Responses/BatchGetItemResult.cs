@@ -1,4 +1,5 @@
 ﻿#nullable disable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,9 +7,10 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public sealed class BatchGetItemResult // : IConsumedResources
+    public sealed class BatchGetItemResult
     {
         public BatchGetItemResult() { }
+
         public BatchGetItemResult(IReadOnlyList<TableItemCollection> responses)
         {
             this.Responses = responses;
@@ -65,64 +67,3 @@ namespace Amazon.DynamoDb
         public string Name { get; }
     }
 }
-
-/*
-{
-    "ConsumedCapacity": [
-        {
-            "CapacityUnits": "number",
-            "TableName": "string"
-        }
-    ],
-    "Responses": 
-        {
-            "tableName" : [
-                    
-                {
-                    "string" : {
-                            "B": "blob",
-                            "BS": [
-                                "blob"
-                            ],
-                            "N": "string",
-                            "NS": [
-                                "string"
-                            ],
-                            "S": "string",
-                            "SS": [
-                                "string"
-                            ]
-                        }
-                }
-            ]
-        },
-    "UnprocessedKeys": 
-        {
-            "string" :
-                {
-                    "AttributesToGet": [
-                        "string"
-                    ],
-                    "ConsistentRead": "boolean",
-                    "Keys": [
-                        
-                            { "string" : { 
-                                        "B": "blob",
-                                        "BS": [
-                                            "blob"
-                                        ],
-                                        "N": "string",
-                                        "NS": [
-                                            "string"
-                                        ],
-                                        "S": "string",
-                                        "SS": [
-                                            "string"
-                                        ]
-                                    }
-                            }
-                    ]
-                }
-        }
-}
-*/
