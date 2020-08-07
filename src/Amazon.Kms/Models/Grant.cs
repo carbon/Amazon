@@ -6,6 +6,10 @@ namespace Amazon.Kms
     {
         public string GrantId { get; set; }
 
+#nullable enable
+        public string? KeyId { get; set; }
+#nullable disable
+
         public GrantConstraints Constraints { get; set; }
 
         public string GranteePrincipal { get; set; }
