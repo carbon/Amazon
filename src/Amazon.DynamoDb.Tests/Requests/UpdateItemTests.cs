@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Amazon.DynamoDb.Models.Tests;
+
 using Carbon.Data;
 
 using Xunit;

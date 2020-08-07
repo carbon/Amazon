@@ -10,7 +10,7 @@ namespace Amazon.DynamoDb
     {
         public UpdateItemRequest(
             string tableName, 
-            Dictionary<string, DbValue> key,
+            IReadOnlyDictionary<string, DbValue> key,
             Change[] changes,
             Expression[]? conditions = null,
             ReturnValues? returnValues = null)
@@ -42,7 +42,7 @@ namespace Amazon.DynamoDb
 
         public string TableName { get; }
 
-        public Dictionary<string, DbValue> Key { get; }
+        public IReadOnlyDictionary<string, DbValue> Key { get; }
 
         public string? ConditionExpression { get; }
 

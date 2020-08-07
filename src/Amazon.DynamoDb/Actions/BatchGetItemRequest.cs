@@ -25,6 +25,17 @@ namespace Amazon.DynamoDb
             Keys = keys;
         }
 
+        public TableKeys(string tableName, params IEnumerable<KeyValuePair<string, object>>[] keys)
+        {
+            TableName = tableName ?? throw new ArgumentNullException(nameof(TableName));
+            Keys = new Dictionary<string, DbValue>[keys.Length];
+
+            for (int i = 0; i < Keys.Length; i++)
+            {
+                Keys[i] = keys[i].ToDictionary();
+            }
+        }
+
         public string TableName { get; }
 
         public Dictionary<string, DbValue>[] Keys { get; }
@@ -32,36 +43,5 @@ namespace Amazon.DynamoDb
         public string[]? AttributesToGet { get; set; }
 
         public bool ConsistentRead { get; set; }
-
-        /* 
-		{
-		 "AttributesToGet": [ "string" ],
-         "ConsistentRead": "boolean",
-         "Keys": [
-                   { "Name":{"S":"Amazon DynamoDB"} },
-                   { "Name":{"S":"Amazon RDS"} },
-                   { "Name":{"S":"Amazon Redshift"} }
-                 ]
-		}
-		*/
-
     }
 }
-
-/*
-{ 
-  "RequestItems":  {
-	  "tableName" : {
-			"AttributesToGet": [ "string" ],
-			"ConsistentRead": "boolean",
-			"Keys": [
-					  { "Name":{"S":"Amazon DynamoDB"} },
-					  { "Name":{"S":"Amazon RDS"} },
-					  { "Name":{"S":"Amazon Redshift"} }
-					]
-		}
-	  }
-  },
-  "ReturnConsumedCapacity": "string"
-}
-*/

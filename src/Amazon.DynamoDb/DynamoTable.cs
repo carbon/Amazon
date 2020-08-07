@@ -266,7 +266,7 @@ namespace Amazon.DynamoDb
 
             if (startKey != null)
             {
-                request.ExclusiveStartKey = startKey.ToReadOnlyDictionary();
+                request.ExclusiveStartKey = startKey.ToDictionary();
             }
 
             var result = await client.ScanAsync(request).ConfigureAwait(false);
@@ -319,7 +319,7 @@ namespace Amazon.DynamoDb
 
         public async Task<UpdateItemResult> PatchAsync(Key<T> key, params Change[] changes)
         {
-            var request = new UpdateItemRequest(tableName, key.ToDictionary(x => x.Key, y => new DbValue(y.Value)), changes);
+            var request = new UpdateItemRequest(tableName, key.ToDictionary(), changes);
 
             return await client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy).ConfigureAwait(false);
         }
@@ -331,14 +331,14 @@ namespace Amazon.DynamoDb
             Expression[] conditions,
             ReturnValues? returnValues = null)
         {
-            var request = new UpdateItemRequest(tableName, key.ToDictionary(x => x.Key, y => new DbValue(y.Value)), changes, conditions, returnValues);
+            var request = new UpdateItemRequest(tableName, key.ToDictionary(), changes, conditions, returnValues);
 
             return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
         }
 
         public Task<UpdateItemResult> PatchAsync(Key<T> key, Change[] changes, ReturnValues returnValues)
         {
-            var request = new UpdateItemRequest(tableName, key.ToDictionary(x => x.Key, y => new DbValue(y.Value)), changes, returnValues: returnValues);
+            var request = new UpdateItemRequest(tableName, key.ToDictionary(), changes, returnValues: returnValues);
 
             return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
         }

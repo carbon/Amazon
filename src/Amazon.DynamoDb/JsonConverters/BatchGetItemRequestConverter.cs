@@ -33,6 +33,7 @@ namespace Amazon.DynamoDb.JsonConverters
                     writer.WriteEndObject();
                 }
                 writer.WriteEndArray();
+
                 if (set.AttributesToGet != null)
                 {
                     writer.WriteStartArray("AttributesToGet");
@@ -42,10 +43,12 @@ namespace Amazon.DynamoDb.JsonConverters
                     }
                     writer.WriteEndArray();
                 }
+
                 if (set.ConsistentRead)
                 {
                     writer.WriteBoolean("ConsistentRead", set.ConsistentRead);
                 }
+
                 writer.WriteEndObject();
             }
 

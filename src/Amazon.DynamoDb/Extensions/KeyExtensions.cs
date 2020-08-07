@@ -4,7 +4,7 @@ namespace Amazon.DynamoDb
 {
     internal static class KeyExtensions
     {
-        public static IReadOnlyDictionary<string, DbValue> ToReadOnlyDictionary(this IEnumerable<KeyValuePair<string, object>> key)
+        public static Dictionary<string, DbValue> ToDictionary(this IEnumerable<KeyValuePair<string, object>> key)
         {
             var collection = new Dictionary<string, DbValue>();
 

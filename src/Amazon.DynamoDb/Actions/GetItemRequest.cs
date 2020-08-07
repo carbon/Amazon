@@ -6,7 +6,7 @@ namespace Amazon.DynamoDb
     public sealed class GetItemRequest
     {
         public GetItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key)
-            : this(tableName, key.ToReadOnlyDictionary()) { }
+            : this(tableName, key.ToDictionary()) { }
 
         public GetItemRequest(string tableName, IReadOnlyDictionary<string, DbValue> key)
         {
