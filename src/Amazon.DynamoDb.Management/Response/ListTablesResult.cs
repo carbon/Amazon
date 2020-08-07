@@ -1,7 +1,7 @@
 ﻿#nullable disable
-using Amazon.DynamoDb.Extensions;
-using System;
 using System.Text.Json;
+
+using Amazon.DynamoDb.Extensions;
 
 namespace Amazon.DynamoDb
 {
