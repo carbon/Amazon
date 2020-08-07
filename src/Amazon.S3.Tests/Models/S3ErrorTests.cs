@@ -2,7 +2,6 @@
 
 namespace Amazon.S3.Models.Tests
 {
-
 	public class S3ErrorTests
 	{
 		[Fact]
@@ -42,6 +41,23 @@ namespace Amazon.S3.Models.Tests
 			Assert.Equal("The Content-MD5 you specified did not match what we received.", error.Message);
 			Assert.Null(error.Resource);
 			Assert.Equal("FE689C8C5E73D8B6", error.RequestId);
+		}
+
+		[Fact]
+		public void ParseNonStandardWasabiError()
+		{
+			string xmlText = @"<ErrorResponse xmlns=""https://iam.amazonaws.com/doc/2010-05-08/"">
+<Error>
+<Type>Sender</Type>
+<Code>TemporarilyUnavailable</Code>
+<Message>Maximum number of server active requests exceeded</Message>
+</Error>
+</ErrorResponse>";
+
+			var a = S3ResponseHelper<S3ErrorResponse>.ParseXml(xmlText);
+
+			Assert.Equal("TemporarilyUnavailable", a.Error.Code);
+			Assert.Equal("Maximum number of server active requests exceeded", a.Error.Message);
 		}
 	}
 }
