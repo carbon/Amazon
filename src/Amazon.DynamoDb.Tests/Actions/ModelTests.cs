@@ -18,18 +18,17 @@ namespace Amazon.DynamoDb.Tests
             Assert.Equal(Color.Red, record.As<Thing>().Color);
             Assert.Null(record.As<Thing>().Y);
 
-            entity = new Thing { Color = Color.Red, Y = Color2.C };
+            entity = new Thing { Color = Color.Red, Y = ABCEnum.C };
 
             record = AttributeCollection.FromObject(entity);
 
-            Assert.Equal(Color2.C, record.As<Thing>().Y);
+            Assert.Equal(ABCEnum.C, record.As<Thing>().Y);
         }
 
         [Fact]
         public void TestIntegerColumns()
         {
             var point = new Point { X = 1, Y = 2, Z = 3 };
-
 
             var x = AttributeCollection.FromObject(point);
 

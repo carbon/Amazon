@@ -1,6 +1,4 @@
-﻿using Amazon.DynamoDb.Models.Tests;
-
-using Carbon.Data.Expressions;
+﻿using Carbon.Data.Expressions;
 
 using Xunit;
 

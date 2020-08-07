@@ -38,7 +38,6 @@ namespace Amazon.DynamoDb
     public enum EntityType
     {
         Organization = 1,
-        Person = 1,
-
+        Person = 2
     }
 }

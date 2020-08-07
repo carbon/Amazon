@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Amazon.DynamoDb.Models.Tests
 {
-    public class ItemTests
+    public class AttributeCollectionTests
     {
         [Fact]
         public void DbItem_Enum_Test()

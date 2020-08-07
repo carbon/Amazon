@@ -14,17 +14,10 @@ namespace Amazon.DynamoDb.Models.Tests
         public Color Color { get; set; }
         
         [Member("color2")]
-        public Color2 X { get; set; }
+        public ABCEnum X { get; set; }
 
         [Member("color3")]
-        public Color2? Y { get; set; }
-    }
-
-    public enum Color2
-    {
-        A,
-        B,
-        C
+        public ABCEnum? Y { get; set; }
     }
 
     public enum Color : byte
