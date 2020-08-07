@@ -6,7 +6,7 @@ namespace Amazon.S3
     {
         // /ObjectName?uploadId=UploadId 
         public AbortMultipartUploadRequest(string host, string bucketName, string key, string uploadId)
-            : base(HttpMethod.Delete, host, bucketName, key + "?uploadId=" + uploadId)
+            : base(HttpMethod.Delete, host, bucketName, objectName: key + "?uploadId=" + uploadId)
         { }
     }
 }
