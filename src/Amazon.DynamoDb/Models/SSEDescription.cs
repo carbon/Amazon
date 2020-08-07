@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb.Models
 {
-    public sealed class SSEDescription
+    public sealed class SseDescription
     {
         public DateTimeOffset InaccessibleEncryptionDateTime { get; set; }
 
-        public string? KMSMasterKeyArn { get; set; }
+        [JsonPropertyName("KMSMasterKeyArn")]
+        public string? KmsMasterKeyArn { get; set; }
 
-        public SSEType? SSEType { get; set; }
+        [JsonPropertyName("SSEType")]
+        public SseType? SseType { get; set; }
 
         public string? Status { get; set; }
     }

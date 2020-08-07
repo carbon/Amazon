@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 using Amazon.DynamoDb.Models;
 
@@ -23,80 +24,9 @@ namespace Amazon.DynamoDb
 
         public ReplicationGroupUpdate[]? ReplicaUpdates { get; set; }
 
-        public SSESpecification? SSESpecification { get; set; }
+        [JsonPropertyName("SSESpecification")]
+        public SseSpecification? SseSpecification { get; set; }
 
         public StreamSpecification? StreamSpecification { get; set; }
     }
 }
-
-/*
-{
-   "AttributeDefinitions": [ 
-      { 
-         "AttributeName": "string",
-         "AttributeType": "string"
-      }
-   ],
-   "BillingMode": "string",
-   "GlobalSecondaryIndexes": [ 
-      { 
-         "IndexName": "string",
-         "KeySchema": [ 
-            { 
-               "AttributeName": "string",
-               "KeyType": "string"
-            }
-         ],
-         "Projection": { 
-            "NonKeyAttributes": [ "string" ],
-            "ProjectionType": "string"
-         },
-         "ProvisionedThroughput": { 
-            "ReadCapacityUnits": number,
-            "WriteCapacityUnits": number
-         }
-      }
-   ],
-   "KeySchema": [ 
-      { 
-         "AttributeName": "string",
-         "KeyType": "string"
-      }
-   ],
-   "LocalSecondaryIndexes": [ 
-      { 
-         "IndexName": "string",
-         "KeySchema": [ 
-            { 
-               "AttributeName": "string",
-               "KeyType": "string"
-            }
-         ],
-         "Projection": { 
-            "NonKeyAttributes": [ "string" ],
-            "ProjectionType": "string"
-         }
-      }
-   ],
-   "ProvisionedThroughput": { 
-      "ReadCapacityUnits": number,
-      "WriteCapacityUnits": number
-   },
-   "SSESpecification": { 
-      "Enabled": boolean,
-      "KMSMasterKeyId": "string",
-      "SSEType": "string"
-   },
-   "StreamSpecification": { 
-      "StreamEnabled": boolean,
-      "StreamViewType": "string"
-   },
-   "TableName": "string",
-   "Tags": [ 
-      { 
-         "Key": "string",
-         "Value": "string"
-      }
-   ]
-}
-*/

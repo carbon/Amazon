@@ -1,6 +1,6 @@
 ﻿namespace Amazon.DynamoDb.Models
 {
-    public class ReplicationGroupUpdate
+    public sealed class ReplicationGroupUpdate
     {
         public CreateReplicationGroupMemberAction? Create { get; set; }
 

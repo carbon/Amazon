@@ -1,10 +1,13 @@
-﻿namespace Amazon.DynamoDb.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.DynamoDb.Models
 {
     public sealed class ReplicaDescription
     {
         public ReplicaGlobalSecondaryIndexDescription[]? GlobalSecondaryIndexes { get; set; }
 
-        public string? KMSMasterKeyId { get; set; }
+        [JsonPropertyName("KMSMasterKeyId")]
+        public string? KmsMasterKeyId { get; set; }
 
         public ProvisionedThroughputOverride? ProvisionedThroughputOverride { get; set; }
 

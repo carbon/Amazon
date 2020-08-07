@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 using Amazon.DynamoDb.Models;
 
@@ -31,7 +32,8 @@ namespace Amazon.DynamoDb
 
         public ProvisionedThroughput? ProvisionedThroughput { get; set; }
 
-        public SSESpecification? SSESpecification { get; set; }
+        [JsonPropertyName("SSESpecification")]
+        public SseSpecification? SseSpecification { get; set; }
 
         public StreamSpecification? StreamSpecification { get; set; }
 

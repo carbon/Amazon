@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb.Models
 {
@@ -32,7 +33,8 @@ namespace Amazon.DynamoDb.Models
 
         public RestoreSummary[]? RestoreSummary { get; set; }
 
-        public SSEDescription? SSEDescription { get; set; }
+        [JsonPropertyName("SSEDescription")]
+        public SseDescription? SseDescription { get; set; }
 
         public StreamSpecification? StreamSpecification { get; set; }
 
