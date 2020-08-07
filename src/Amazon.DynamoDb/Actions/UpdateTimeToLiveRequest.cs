@@ -15,13 +15,3 @@ namespace Amazon.DynamoDb
         public TimeToLiveSpecification TimeToLiveSpecification { get; }
     }
 }
-
-/*
-{
-   "TableName": "string",
-   "TimeToLiveSpecification": { 
-      "AttributeName": "string",
-      "Enabled": boolean
-   }
-}
-*/

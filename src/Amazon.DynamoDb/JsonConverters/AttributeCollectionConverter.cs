@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb.JsonConverters
 {
-    internal class AttributeCollectionConverter : JsonConverter<AttributeCollection>
+    internal sealed class AttributeCollectionConverter : JsonConverter<AttributeCollection>
     {
         public AttributeCollectionConverter() { }
 
@@ -29,7 +29,7 @@ namespace Amazon.DynamoDb.JsonConverters
 
                 reader.Read();
 
-                attributes.Add(attrName, DbValueConverter.StaticRead(ref reader, typeof(DbValue), options));
+                attributes.Add(attrName, DbValueConverter.StaticRead(ref reader, options));
             }
 
             return attributes;

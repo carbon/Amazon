@@ -17,12 +17,11 @@ namespace Amazon.DynamoDb.JsonConverters
             Type typeToConvert,
             JsonSerializerOptions options)
         {
-            return StaticRead(ref reader, typeToConvert, options);
+            return StaticRead(ref reader, options);
         }
 
         public static DbValue StaticRead(
             ref Utf8JsonReader reader,
-            Type typeToConvert,
             JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartObject)
@@ -129,7 +128,7 @@ namespace Amazon.DynamoDb.JsonConverters
                     break;
                 }
 
-                dbValueListHandle.Value.Add(StaticRead(ref reader, typeof(DbValue), options));
+                dbValueListHandle.Value.Add(StaticRead(ref reader,  options));
             }
 
             return dbValueListHandle.Value.ToArray();
