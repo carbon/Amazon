@@ -37,7 +37,7 @@ namespace Amazon.DynamoDb
 
         public StreamSpecification? StreamSpecification { get; set; }
 
-        public IEnumerable<Tag>? Tags { get; set; }
+        public IList<Tag>? Tags { get; set; }
     }
 }
 
