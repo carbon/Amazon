@@ -13,6 +13,6 @@ namespace Amazon.DynamoDb
         /// <summary>
         /// ALL_OLD is specified, and UpdateItem overwrote an attribute name-value pair, the content of the old item is returned. 
         /// </summary>
-        ALL_OLD = 1,
+        ALL_OLD = 1
     }
 }

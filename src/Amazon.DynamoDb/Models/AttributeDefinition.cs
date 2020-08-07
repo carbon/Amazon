@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb
 {
-    public class AttributeDefinition
+    public sealed class AttributeDefinition
     {
         public string AttributeName { get; set; }
 
