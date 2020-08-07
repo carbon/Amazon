@@ -1,6 +1,6 @@
 ﻿namespace Amazon.DynamoDb
 {
-    public class ArchivalSummary
+    public sealed class ArchivalSummary
     {
         public string? ArchivalBackupArn { get; set; }
 

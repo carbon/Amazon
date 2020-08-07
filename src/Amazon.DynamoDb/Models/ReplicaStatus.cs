@@ -5,9 +5,9 @@ namespace Amazon.DynamoDb
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ReplicaStatus
     {
-        CREATING,
-        UPDATING,
-        DELETING,
-        ACTIVE,
+        CREATING = 1,
+        UPDATING = 2,
+        DELETING = 3,
+        ACTIVE = 4
     };
 }

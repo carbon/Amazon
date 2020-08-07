@@ -18,23 +18,3 @@ namespace Amazon.DynamoDb
         }
     }
 }
-
-/*
-{
-"string" :
-    {
-        "B": "blob",
-        "BS": [
-            "blob"
-        ],
-        "N": "string",
-        "NS": [
-            "string"
-        ],
-        "S": "string",
-        "SS": [
-            "string"
-        ]
-    }
-},
-*/

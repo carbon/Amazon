@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Amazon.DynamoDb
 {
     public sealed class TransactGetItemRequest
     {
         public TransactGetItem[] TransactItems { get; set; }
+
         public ReturnConsumedCapacity? ReturnConsumedCapacity { get; set; }
 
         public TransactGetItemRequest(TransactGetItem[] transactItems)
@@ -27,12 +27,15 @@ namespace Amazon.DynamoDb
 
     public class Get
     {
-        public IDictionary<string, DbValue> Key { get; set; }
+        public IReadOnlyDictionary<string, DbValue> Key { get; set; }
+
         public string TableName { get; set; }
+
         public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
+
         public string? ProjectionExpression { get; set; }
 
-        public Get(string tableName, IDictionary<string, DbValue> key)
+        public Get(string tableName, IReadOnlyDictionary<string, DbValue> key)
         {
             TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             Key = key ?? throw new ArgumentNullException(nameof(key));

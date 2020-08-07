@@ -6,7 +6,7 @@ namespace Amazon.DynamoDb
 {
     public static class DynamoKeyword
     {
-        private static HashSet<string> RESERVED_KEYWORDS = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        private static HashSet<string> ReservedKeywords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "ABORT",
             "ABSOLUTE",
@@ -585,7 +585,7 @@ namespace Amazon.DynamoDb
 
         public static bool IsReserved(string name)
         {
-            if (RESERVED_KEYWORDS.Contains(name))
+            if (ReservedKeywords.Contains(name))
             {
                 return true;
             }

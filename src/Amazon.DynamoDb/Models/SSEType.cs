@@ -5,7 +5,7 @@ namespace Amazon.DynamoDb
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum SSEType
     {
-        AES256,
-        KMS,
+        AES256 = 1,
+        KMS = 2
     };
 }

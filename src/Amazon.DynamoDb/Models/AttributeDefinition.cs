@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-
 namespace Amazon.DynamoDb
 {
     public class AttributeDefinition

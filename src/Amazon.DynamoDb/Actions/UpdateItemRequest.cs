@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 using Carbon.Data;
 using Carbon.Data.Expressions;
@@ -18,11 +17,11 @@ namespace Amazon.DynamoDb
         {
             TableName    = tableName ?? throw new ArgumentNullException(nameof(tableName));
             Key          = key       ?? throw new ArgumentNullException(nameof(key));
-            Changes      = changes   ?? throw new ArgumentNullException(nameof(changes));
             ReturnValues = returnValues;
 
             Dictionary<string, string> attrNames = new Dictionary<string, string>();
-            var updateExpression = new UpdateExpression(Changes, attrNames, ExpressionAttributeValues);
+
+            var updateExpression = new UpdateExpression(changes, attrNames, ExpressionAttributeValues);
 
             UpdateExpression = updateExpression.ToString();
 
@@ -45,12 +44,9 @@ namespace Amazon.DynamoDb
 
         public Dictionary<string, DbValue> Key { get; }
 
-        [JsonIgnore]
-        public Change[] Changes { get; }
-
         public string? ConditionExpression { get; }
 
-        public Dictionary<string, string> ExpressionAttributeNames { get; }
+        public Dictionary<string, string>? ExpressionAttributeNames { get; }
 
         public AttributeCollection ExpressionAttributeValues { get; } = new AttributeCollection();
 
@@ -59,16 +55,3 @@ namespace Amazon.DynamoDb
         public string UpdateExpression { get; }
     }
 }
-
-/*
-{	"TableName":"Table1",
-    "Key": {"HashKeyElement":{"S":"AttributeValue1"},
-        "RangeKeyElement":{"N":"AttributeValue2"}
-	},
-    "AttributeUpdates":{
-		"AttributeName3":{"Value":{"S":"AttributeValue3_New"},"Action":"PUT"}
-	},
-    "Expected":{"AttributeName3":{"Value":{"S":"AttributeValue3_Current"}}},
-    "ReturnValues":"ReturnValuesConstant"
-}
-*/

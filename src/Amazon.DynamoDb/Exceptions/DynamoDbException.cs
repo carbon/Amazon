@@ -66,7 +66,7 @@ namespace Amazon.DynamoDb
 
             if (string.Equals(type, "ConditionalCheckFailedException", StringComparison.Ordinal))
             {
-                return new Conflict(message);
+                return new ConflictException(message);
             }
 
             return new DynamoDbException(message, type);

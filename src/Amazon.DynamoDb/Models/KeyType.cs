@@ -5,7 +5,7 @@ namespace Amazon.DynamoDb
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum KeyType
     {
-        HASH,
-        RANGE,
+        HASH = 1,
+        RANGE = 2
     };
 }

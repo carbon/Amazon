@@ -1,8 +1,8 @@
 ﻿namespace Amazon.DynamoDb
 {
-    public sealed class Conflict : DynamoDbException
+    public sealed class ConflictException : DynamoDbException
     {
-        public Conflict(string message)
+        public ConflictException(string message)
             : base(message)
         {
             Type = "ConditionalCheckFailedException";
