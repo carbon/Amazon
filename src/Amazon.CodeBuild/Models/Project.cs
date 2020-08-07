@@ -1,9 +1,5 @@
 ﻿#nullable disable
 
-using System.Text.Json.Serialization;
-
-using Amazon.CodeBuild.Converters;
-
 namespace Amazon.CodeBuild
 {
     public class Project
@@ -20,10 +16,8 @@ namespace Amazon.CodeBuild
 
         public ProjectEnvironment Environment { get; set; }
 
-        [JsonConverter(typeof(TimestampConverter))]
         public Timestamp Created { get; set; }
 
-        [JsonConverter(typeof(TimestampConverter))]
         public Timestamp LastModified { get; set; }
 
         public string ServiceRole { get; set; }

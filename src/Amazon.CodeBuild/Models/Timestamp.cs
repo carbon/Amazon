@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Text.Json.Serialization;
+
+using Amazon.CodeBuild.Converters;
 
 namespace Amazon.CodeBuild
 {
+    [JsonConverter(typeof(TimestampConverter))]
     public readonly struct Timestamp
     {
-        private readonly double value;
-
         public Timestamp(double value)
         {
-            this.value = value;
+            Value = value;
         }
 
-        public double Value => value;
+        public double Value { get; }
         
         public static implicit operator DateTime(Timestamp timestamp)
         {
