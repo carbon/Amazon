@@ -26,7 +26,6 @@ namespace Amazon.DynamoDb
 
 #nullable enable
 
-        // [Required]
         public string TableName { get; set; }
 
         public bool? ConsistentRead { get; set; }
