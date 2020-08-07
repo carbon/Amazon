@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Amazon.DynamoDb.Extensions;
-using Amazon.DynamoDb.Models;
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class UpdateTimeToLiveRequest
+    public sealed class UpdateTimeToLiveRequest
     {
         public UpdateTimeToLiveRequest(string tableName, string attributeName, bool enabled)
         {
@@ -16,6 +11,7 @@ namespace Amazon.DynamoDb
         }
 
         public string TableName { get; }
+
         public TimeToLiveSpecification TimeToLiveSpecification { get; }
     }
 }

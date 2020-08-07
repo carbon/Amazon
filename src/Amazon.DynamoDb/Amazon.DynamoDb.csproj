@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <PackageReference Include="Carbon.Data" Version="0.42.1" />
-    <PackageReference Include="Carbon.Json" Version="2.4.0" />
   </ItemGroup>
 
 </Project>

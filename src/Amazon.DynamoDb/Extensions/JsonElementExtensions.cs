@@ -1,8 +1,5 @@
-﻿using Amazon.DynamoDb.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Text;
 using System.Text.Json;
 
 namespace Amazon.DynamoDb.Extensions

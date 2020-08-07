@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Amazon.DynamoDb.Extensions;
-using Amazon.DynamoDb.Models;
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
     public sealed class CreateTableRequest
     {
-        public CreateTableRequest(string tableName, AttributeDefinition[] attributeDefinitions, IEnumerable<KeySchemaElement> keySchema)
+        public CreateTableRequest(
+            string tableName, 
+            AttributeDefinition[] attributeDefinitions,
+            IEnumerable<KeySchemaElement> keySchema)
         {
             TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             AttributeDefinitions = attributeDefinitions ?? throw new ArgumentNullException(nameof(attributeDefinitions));
@@ -25,6 +24,7 @@ namespace Amazon.DynamoDb
         public IEnumerable<KeySchemaElement> KeySchema { get; }
 
         public IEnumerable<LocalSecondaryIndex>? LocalSecondaryIndexes { get; set; }
+
         public IEnumerable<GlobalSecondaryIndex>? GlobalSecondaryIndexes { get; set; }
 
         public ProvisionedThroughput? ProvisionedThroughput { get; set; }

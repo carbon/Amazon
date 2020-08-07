@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 
 using Carbon.Data.Expressions;
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {

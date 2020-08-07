@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -43,7 +43,7 @@ namespace Amazon.DynamoDb
 
         public async Task<BatchGetItemResult> BatchGetItemAsync(BatchGetItemRequest request)
         {
-            var httpRequest = Setup("BatchGetItem", System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(request));
+            var httpRequest = Setup("BatchGetItem", JsonSerializer.SerializeToUtf8Bytes(request));
 
             var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
@@ -85,6 +85,7 @@ namespace Amazon.DynamoDb
             return await HandleRequestAsync<ListTablesRequest, ListTablesResult>("ListTables", request);
         }
 
+
         public async Task<BatchWriteItemResult> BatchWriteItemAsync(params TableRequests[] batches)
         {
             /*
@@ -95,11 +96,16 @@ namespace Amazon.DynamoDb
 			}
 			*/
 
-            var requestJson = new Carbon.Json.JsonObject {
-                { "RequestItems", new Carbon.Json.JsonObject(batches.Select(b => b.ToJson())) }
-            };
+            Dictionary<string, object> tableBatches = new Dictionary<string, object>(batches.Length);
 
-            var httpRequest = Setup("BatchWriteItem", requestJson);
+            foreach (var batch in batches)
+            {
+                tableBatches.Add(batch.TableName, batch.SerializeList());
+            }
+
+            var httpRequest = Setup("BatchWriteItem", JsonSerializer.SerializeToUtf8Bytes(new {
+                RequestItems = tableBatches
+            }));
 
             var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
@@ -276,16 +282,6 @@ namespace Amazon.DynamoDb
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
             return await JsonSerializer.DeserializeAsync<T>(stream, serializerOptions).ConfigureAwait(false);
-        }
-
-        private HttpRequestMessage Setup(string action, Carbon.Json.JsonObject jsonContent)
-        {
-            if (jsonContent is null)
-            {
-                return Setup(action, (byte[]?)null);
-            }
-
-            return Setup(action, JsonSerializer.SerializeToUtf8Bytes(jsonContent));
         }
 
         private HttpRequestMessage Setup(string action, byte[]? utf8Json)

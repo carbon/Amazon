@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb.JsonConverters
 {
-    public class AttributeCollectionConverter : JsonConverter<AttributeCollection>
+    internal class AttributeCollectionConverter : JsonConverter<AttributeCollection>
     {
         public AttributeCollectionConverter() { }
 

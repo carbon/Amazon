@@ -1,10 +1,10 @@
-﻿using Carbon.Data;
-using Carbon.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
+using Carbon.Data;
 
 namespace Amazon.DynamoDb
 {
@@ -112,9 +112,7 @@ namespace Amazon.DynamoDb
             items[name] = value;
         }
 
-      
-
-        public static AttributeCollection FromJsonElement(JsonElement json)
+        public static AttributeCollection FromJsonElement(in JsonElement json)
         {
             var item = new AttributeCollection();
 

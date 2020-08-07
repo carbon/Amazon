@@ -2,37 +2,43 @@
 using System.Collections.Generic;
 
 using Carbon.Data;
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
     public static class ChangeExtensions
     {
-        public static KeyValuePair<string, JsonObject> ToProperty(this in Change change)
+        public static KeyValuePair<string, B> ToProperty(this in Change change)
         {
-            var o = new JsonObject();
+            var o = new B();
 
             if (change.Operation == DataOperation.Replace)
             {
                 // Delete Null Values
                 if (change.Value is null)
                 {
-                    o.Add("Action", "DELETE");
+                    o.Action = "DELETE";
                 }
 
                 // Default action is Replace
             }
             else
             {
-                o.Add("Action", DataOpToAction(change.Operation));
+                o.Action = DataOpToAction(change.Operation);
             }
 
             if (change.Value != null)
             {
-                o.Add("Value", new DbValue(change.Value).ToJson());
+                o.Value = new DbValue(change.Value);
             }
 
-            return new KeyValuePair<string, JsonObject>(change.Name, o);
+            return new KeyValuePair<string, B>(change.Name, o);
+        }
+
+        public class B
+        {
+            public string? Action { get; set; }
+
+            public DbValue? Value { get; set; }
         }
 
         internal static string DataOpToAction(DataOperation op) => op switch

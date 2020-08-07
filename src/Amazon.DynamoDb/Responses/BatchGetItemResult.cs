@@ -20,7 +20,7 @@ namespace Amazon.DynamoDb
 
         public IReadOnlyList<TableKeys> UnprocessedKeys { get; set; }
 
-        public static BatchGetItemResult FromJsonElement(JsonElement json)
+        public static BatchGetItemResult FromJsonElement(in JsonElement json)
         {
             // TODO: ConsumedCapacity
 

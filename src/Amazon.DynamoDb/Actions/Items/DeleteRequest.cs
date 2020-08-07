@@ -1,6 +1,4 @@
-﻿using Carbon.Json;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
     public sealed class DeleteRequest : ItemRequest
     {
@@ -10,9 +8,5 @@ namespace Amazon.DynamoDb
         }
 
         public AttributeCollection Key { get; }
-
-        public override JsonObject ToJson() => new JsonObject {
-            { "Key", Key.ToJson() }
-        };
     }
 }

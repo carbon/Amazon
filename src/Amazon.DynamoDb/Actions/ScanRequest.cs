@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Carbon.Data.Expressions;
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -45,7 +45,7 @@ namespace Amazon.DynamoDb
 
         public int? TotalSegments { get; set; }
 
-        public AttributeCollection? ExclusiveStartKey { get; set; }
+        public IReadOnlyDictionary<string, DbValue>? ExclusiveStartKey { get; set; }
 
         public string? FilterExpression { get; set; }
 

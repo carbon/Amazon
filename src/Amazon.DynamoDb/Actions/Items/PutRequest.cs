@@ -1,6 +1,4 @@
-﻿using Carbon.Json;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
     public sealed class PutRequest : ItemRequest
     {
@@ -10,9 +8,5 @@ namespace Amazon.DynamoDb
         }
 
         public AttributeCollection Item { get; }
-
-        public override JsonObject ToJson() => new JsonObject {
-            { "Item", Item.ToJson() }
-        };   
     }
 }

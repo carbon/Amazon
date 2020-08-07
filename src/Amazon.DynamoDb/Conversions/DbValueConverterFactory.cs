@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 
 using Carbon.Data;
-using Carbon.Json;
-using Carbon.Data.Annotations;
-using Carbon.Data.Sequences;
 
 namespace Amazon.DynamoDb
 {
@@ -55,8 +50,8 @@ namespace Amazon.DynamoDb
             Add(new UidConverter());
 
             // Custom
-            Add<JsonObject>(new JsonObjectConverter());
-            Add<JsonArray>(new JsonArrayConverter());
+            // Add<JsonObject>(new JsonObjectConverter());
+            // Add<JsonArray>(new JsonArrayConverter());
         }
 
         public static IDbValueConverter Get(Type type)
@@ -67,7 +62,7 @@ namespace Amazon.DynamoDb
 
             if (!TryGet(details.NonNullType, out IDbValueConverter? converter))
             {
-                throw new ConversionException($"No converter found for '{type.Name}'.");
+                throw new Exception($"No converter found for '{type.Name}'.");
             }
 
             return converter;

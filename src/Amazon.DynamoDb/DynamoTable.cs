@@ -56,7 +56,6 @@ namespace Amazon.DynamoDb
 
             var result = await FindAsync(new GetItemRequest(tableName, key) {
                 ConsistentRead = false,
-                ReturnConsumedCapacity = false,
                 AttributesToGet = key.Select(k => k.Key).ToArray()
             }).ConfigureAwait(false);
 
@@ -73,10 +72,12 @@ namespace Amazon.DynamoDb
             return FindAsync(Key<T>.FromTuple(keyValue), isConsistent: false);
         }
 
-        public Task<T?> FindAsync(Key<T> key, bool isConsistent) => FindAsync(new GetItemRequest(tableName, key) {
-            ConsistentRead = isConsistent,
-            ReturnConsumedCapacity = false
-        });
+        public Task<T?> FindAsync(Key<T> key, bool isConsistent)
+        {
+            return FindAsync(new GetItemRequest(tableName, key) {
+                ConsistentRead = isConsistent
+            });
+        }
 
         internal async Task<T?> FindAsync(GetItemRequest request)
         {
@@ -265,7 +266,7 @@ namespace Amazon.DynamoDb
 
             if (startKey != null)
             {
-                request.ExclusiveStartKey = AttributeCollection.FromJson(startKey.ToJson());
+                request.ExclusiveStartKey = startKey.ToReadOnlyDictionary();
             }
 
             var result = await client.ScanAsync(request).ConfigureAwait(false);

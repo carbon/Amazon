@@ -11,7 +11,7 @@ namespace Amazon.DynamoDb
 
         public List<TableRequests> UnprocessedItems { get; set; }
 
-        public static BatchWriteItemResult FromJsonElement(JsonElement json)
+        public static BatchWriteItemResult FromJsonElement(in JsonElement json)
         {
             var unprocessed = new List<TableRequests>();
 
@@ -31,7 +31,7 @@ namespace Amazon.DynamoDb
             {
                 foreach (JsonProperty batch in unprocessedItemsEl.EnumerateObject())
                 {
-                    unprocessed.Add(TableRequests.FromElementJson(batch.Name, batch.Value));
+                    unprocessed.Add(TableRequests.FromJsonElement(batch.Name, batch.Value));
                 }
             }
 

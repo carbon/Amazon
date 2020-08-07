@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Carbon.Data.Expressions;
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text.Json;
 
-using Carbon.Json;
-
 namespace Amazon.DynamoDb
 {
     public sealed class TableRequests
@@ -21,7 +19,7 @@ namespace Amazon.DynamoDb
 
         public IReadOnlyList<ItemRequest> Requests { get; }
 
-        public static TableRequests FromElementJson(string key, JsonElement batch)
+        public static TableRequests FromJsonElement(string key, in JsonElement batch)
         {
             var requests = new List<ItemRequest>(batch.GetArrayLength());
 
@@ -62,27 +60,23 @@ namespace Amazon.DynamoDb
             return new TableRequests(key, requests);
         }
 
-        public KeyValuePair<string, JsonNode> ToJson()
+        public List<object> SerializeList()
         {
-            var requests = new JsonNodeList();
+            var requests = new List<object>();
 
             foreach (ItemRequest request in Requests)
             {
-                if (request is PutRequest)
+                if (request is PutRequest put)
                 {
-                    requests.Add(new JsonObject {
-                        { "PutRequest", request.ToJson() }
-                    });
+                    requests.Add(new { PutRequest = put });
                 }
-                else if (request is DeleteRequest)
+                else if (request is DeleteRequest delete)
                 {
-                    requests.Add(new JsonObject {
-                        { "DeleteRequest", request.ToJson() }
-                    });
+                    requests.Add(new { DeleteRequest = delete });
                 }
             }
 
-            return new KeyValuePair<string, JsonNode>(TableName, requests);
+            return requests;
         }
     }
 }

@@ -1,24 +1,9 @@
 ﻿#nullable disable
-using System;
-using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
     public sealed class QueryResult
     {
-        public QueryResult() { }
-        public QueryResult(
-            ConsumedCapacity? consumedCapacity,
-            AttributeCollection[] items,
-            AttributeCollection? lastEvaluatedKey,
-            int count)
-        {
-            ConsumedCapacity = consumedCapacity;
-            LastEvaluatedKey = lastEvaluatedKey;
-            Items = items;
-            Count = count;
-        }
-
         public ConsumedCapacity ConsumedCapacity { get; set; }
 
         public AttributeCollection[] Items { get; set; }
@@ -26,7 +11,6 @@ namespace Amazon.DynamoDb
         public AttributeCollection LastEvaluatedKey { get; set; }
 
         public int Count { get; set; }
-
     }
 }
 

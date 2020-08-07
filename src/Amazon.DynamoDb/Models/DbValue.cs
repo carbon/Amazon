@@ -2,16 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
 using Amazon.DynamoDb.Extensions;
 using Amazon.DynamoDb.JsonConverters;
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
-	[JsonConverter(typeof(DbValueConverter))]
+    [JsonConverter(typeof(DbValueConverter))]
     public readonly struct DbValue : IConvertible
 	{
 		public static readonly DbValue Empty = new DbValue(string.Empty, DbValueType.Unknown);
@@ -296,80 +295,7 @@ namespace Amazon.DynamoDb
 
 		#endregion
 
-		public readonly JsonObject ToJson()
-		{
-			// {"N":"225"}
-			// {"S":"Hello"}
-			// {"SS": ["Keneau", "Alexis", "John"]}
-			// {"NS": ["1", "2", "3"]}
-
-			JsonNode node;
-
-            if (kind == DbValueType.M)
-            {
-                node = ((AttributeCollection)value).ToJson();
-            }
-			else if (kind == DbValueType.B && value is byte[] data)
-			{
-				node = new JsonString(Convert.ToBase64String(data));
-			}
-			else if (kind == DbValueType.L)
-			{
-				var list = new JsonNodeList();
-
-                foreach (var item in (IEnumerable<DbValue>)value)
-                {
-                    list.Add(item.ToJson());
-                }
-
-				node = list;
-			}
-			else if (value.GetType().IsArray)
-			{
-				var elementType = value.GetType().GetElementType();
-
-				if (elementType == typeof(string))
-				{
-					node = new XImmutableArray<string>((string[])value);
-				}
-				else
-				{
-					var list = new List<string>();
-
-					foreach (var item in (IEnumerable)value)
-					{
-						list.Add(item.ToString()!);
-					}
-
-					node = new XList<string>(list);
-				}
-			}
-			else if (kind == DbValueType.BOOL)
-			{
-                var val = (bool)value;
-
-                node = val ? JsonBoolean.True : JsonBoolean.False;
-			}
-			else
-			{
-				node = new JsonString(value.ToString()!);
-			}
-
-            return new JsonObject {
-                { kind.ToQuickString(), node }
-            };
-		}
-
-		public static DbValue FromValue(JsonNode value) => value.Type switch
-		{
-			JsonType.Binary  => new DbValue(((XBinary)value).Value,	    DbValueType.B),		// byte[]
-			JsonType.Boolean => new DbValue(((JsonBoolean)value).Value,	DbValueType.BOOL),	// bool
-			JsonType.Number  => new DbValue(value.ToString(),			DbValueType.N),
-			JsonType.String  => new DbValue((string)value,			    DbValueType.S),
-			_                => throw new Exception("Invalid value type:" + value.Type)
-		};
-
-		public static DbValue FromJsonElement(JsonElement json)
+		public static DbValue FromJsonElement(in JsonElement json)
 		{
 			var enumerator = json.EnumerateObject();
 
@@ -392,31 +318,6 @@ namespace Amazon.DynamoDb
 			};
 		}
 
-		public static DbValue FromJson(JsonObject json)
-		{
-			// {"N":"225"}
-			// {"S":"Hello"}
-			// {"B":"dmFsdWU="}
-			// {"SS": ["Keneau", "Alexis", "John"]}
-			// { "L": [ { "N": "1" }, { "N":"2" } ]
-
-			var property = json.First();
-
-			return property.Key switch
-			{
-				"B"	   => new DbValue(property.Value.ToString(), DbValueType.B),
-				"N"	   => new DbValue(property.Value.ToString(), DbValueType.N),
-				"S"	   => new DbValue(property.Value.ToString(), DbValueType.S),
-				"BOOL" => new DbValue((bool)property.Value,      DbValueType.BOOL),
-				"BS"   => new DbValue(((JsonArray)property.Value).ToArrayOf<string>(), DbValueType.BS),
-				"NS"   => new DbValue(((JsonArray)property.Value).ToArrayOf<string>(), DbValueType.NS),
-				"SS"   => new DbValue(((JsonArray)property.Value).ToArrayOf<string>(), DbValueType.SS),
-				"L"	   => new DbValue(GetListValues((JsonArray)property.Value).ToArray()),
-                "M"    => new DbValue(AttributeCollection.FromJson((JsonObject)property.Value)),
-				_      => throw new Exception("Invalid value type:" + property.Key),
-			};
-		}
-
 		#region Casting
 
 		public static explicit operator string(DbValue value) => value.ToString();
@@ -436,14 +337,6 @@ namespace Amazon.DynamoDb
 		#endregion
 
 		#region Helpers
-
-		private static IEnumerable<DbValue> GetListValues(JsonArray array)
-		{
-			foreach (var item in array)
-			{
-				yield return FromJson((JsonObject)item);
-			}
-		}
 
 		private static DbValue[] GetListValues(JsonElement array)
 		{

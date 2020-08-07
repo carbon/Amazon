@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Amazon.DynamoDb.Extensions;
-using Amazon.DynamoDb.Models;
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -16,12 +11,16 @@ namespace Amazon.DynamoDb
 
         public string TableName { get; }
 
-        public AttributeDefinition[]? AttributeDefinitions { get; set; } 
+        public AttributeDefinition[]? AttributeDefinitions { get; set; }
+
         public BillingMode? BillingMode { get; set; }
+
         public GlobalSecondaryIndexUpdate[]? GlobalSecondaryIndexUpdates { get; set; }
 
         public ProvisionedThroughput? ProvisionedThroughput { get; set; }
+
         public ReplicationGroupUpdate[]? ReplicaUpdates { get; set; }
+
         public SSESpecification? SSESpecification { get; set; }
 
         public StreamSpecification? StreamSpecification { get; set; }

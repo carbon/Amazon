@@ -1,6 +1,5 @@
-﻿using System.Net;
-
-using Carbon.Json;
+﻿using System;
+using System.Net;
 
 namespace Amazon.DynamoDb
 {
@@ -10,7 +9,7 @@ namespace Amazon.DynamoDb
         {
             DbValueType.S => IPAddress.Parse(item.ToString()),
             DbValueType.B => new IPAddress(item.ToBinary()),
-            _             => throw new ConversionException($"Cannot DB type: {item.Kind} to IPAddress")
+            _             => throw new Exception($"Cannot DB type: {item.Kind} to IPAddress")
         };
         
         // Serialize IP addresses as bytes

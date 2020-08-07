@@ -1,4 +1,5 @@
-﻿using Carbon.Data;
+﻿/*
+using Carbon.Data;
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
@@ -10,3 +11,4 @@ namespace Amazon.DynamoDb
         public object ToObject(DbValue item, IMember member) => JsonObject.Parse(item.ToString());
     }
 }
+*/

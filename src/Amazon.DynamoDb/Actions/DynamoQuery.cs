@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http.Headers;
 using System.Text;
 
 using Carbon.Data.Expressions;
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -34,7 +32,6 @@ namespace Amazon.DynamoDb
         public bool? ConsistentRead { get; set; }
 
         public string? IndexName { get; set; }
-
 
         public string KeyConditionExpression { get; set; }
 

@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Amazon.DynamoDb.Extensions;
-using Amazon.DynamoDb.Models;
-using Carbon.Json;
 
 namespace Amazon.DynamoDb
 {
@@ -17,9 +12,3 @@ namespace Amazon.DynamoDb
         public string TableName { get; }
     }
 }
-
-/*
-{
-   "TableName": "string"
-}
-*/

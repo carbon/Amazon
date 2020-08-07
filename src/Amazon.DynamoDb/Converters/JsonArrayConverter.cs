@@ -1,4 +1,5 @@
-﻿using Carbon.Data;
+﻿/*
+using Carbon.Data;
 using Carbon.Json;
 
 namespace Amazon.DynamoDb
@@ -15,3 +16,4 @@ namespace Amazon.DynamoDb
         }
     }
 }
+*/
