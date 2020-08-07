@@ -208,13 +208,6 @@ namespace Amazon.DynamoDb
 
         #region Helpers
 
-        private async Task<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
-        {
-            var httpRequest = Setup(action, JsonSerializer.SerializeToUtf8Bytes(request));
-
-            return await SendAndReadObjectAsync<TResult>(httpRequest).ConfigureAwait(false);
-        }
-
         private async Task<JsonElement> SendAndReadJsonElementAsync(HttpRequestMessage request)
         {
             await SignAsync(request).ConfigureAwait(false);
@@ -231,11 +224,13 @@ namespace Amazon.DynamoDb
             return await JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
         }
 
-        private async Task<T> SendAndReadObjectAsync<T>(HttpRequestMessage request)
+        private async Task<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
         {
-            await SignAsync(request).ConfigureAwait(false);
+            var httpRequest = Setup(action, JsonSerializer.SerializeToUtf8Bytes(request));
 
-            using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            await SignAsync(httpRequest).ConfigureAwait(false);
+
+            using HttpResponseMessage response = await httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -244,7 +239,7 @@ namespace Amazon.DynamoDb
 
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await JsonSerializer.DeserializeAsync<T>(stream, serializerOptions).ConfigureAwait(false);
+            return await JsonSerializer.DeserializeAsync<TResult>(stream, serializerOptions).ConfigureAwait(false);
         }
 
         private HttpRequestMessage Setup(string action, byte[]? utf8Json)

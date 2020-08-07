@@ -19,13 +19,11 @@ namespace Amazon.DynamoDb
             httpClient.Timeout = TimeSpan.FromSeconds(10);
         }
 
-  
         public async Task<CreateTableResult> CreateTableAsync(CreateTableRequest request)
         {
             return await HandleRequestAsync<CreateTableRequest, CreateTableResult>("CreateTable", request).ConfigureAwait(false);
         }
 
-     
         public async Task<DeleteTableResult> DeleteTableAsync(string tableName)
         {
             return await HandleRequestAsync<TableRequest, DeleteTableResult>("DeleteTable", new TableRequest(tableName)).ConfigureAwait(false);
@@ -40,7 +38,6 @@ namespace Amazon.DynamoDb
         {
             return await HandleRequestAsync<TableRequest, DescribeTimeToLiveResult>("DescribeTimeToLive", new TableRequest(tableName)).ConfigureAwait(false);
         }
-
 
         public async Task<ListTablesResult> ListTablesAsync(ListTablesRequest request)
         {
@@ -63,14 +60,9 @@ namespace Amazon.DynamoDb
         {
             var httpRequest = Setup(action, JsonSerializer.SerializeToUtf8Bytes(request));
 
-            return await SendAndReadObjectAsync<TResult>(httpRequest).ConfigureAwait(false);
-        }
+            await SignAsync(httpRequest).ConfigureAwait(false);
 
-        private async Task<T> SendAndReadObjectAsync<T>(HttpRequestMessage request)
-        {
-            await SignAsync(request).ConfigureAwait(false);
-
-            using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            using HttpResponseMessage response = await httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -79,7 +71,7 @@ namespace Amazon.DynamoDb
 
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await JsonSerializer.DeserializeAsync<T>(stream, serializerOptions).ConfigureAwait(false);
+            return await JsonSerializer.DeserializeAsync<TResult>(stream, serializerOptions).ConfigureAwait(false);
         }
 
         private HttpRequestMessage Setup(string action, byte[]? utf8Json)
