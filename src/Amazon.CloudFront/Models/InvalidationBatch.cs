@@ -4,13 +4,15 @@ using System.Xml.Linq;
 
 namespace Amazon.CloudFront
 {
-	public class InvalidationBatch
+	public sealed class InvalidationBatch
 	{
 		public InvalidationBatch(IList<string> paths)
 		{
-			if (paths == null) throw new ArgumentNullException(nameof(paths));
+			if (paths is null)
+				throw new ArgumentNullException(nameof(paths));
 
-			if (paths.Count == 0) throw new ArgumentException("May not be empty", "paths");
+			if (paths.Count == 0) 
+				throw new ArgumentException("May not be empty", "paths");
 
 			Paths = paths;
 		}
