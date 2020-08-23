@@ -128,7 +128,7 @@ namespace Amazon.DynamoDb
             TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             Key = key ?? throw new ArgumentNullException(nameof(key));
 
-            Dictionary<string, string> attrNames = new Dictionary<string, string>();
+            var attrNames = new Dictionary<string, string>();
             var updateExpression = new UpdateExpression(changes, attrNames, ExpressionAttributeValues);
 
             UpdateExpression = updateExpression.ToString();

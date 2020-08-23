@@ -13,10 +13,10 @@ namespace Amazon.DynamoDb
     [JsonConverter(typeof(DbValueConverter))]
     public readonly struct DbValue : IConvertible
 	{
-		public static readonly DbValue Empty = new DbValue(string.Empty, DbValueType.Unknown);
-		public static readonly DbValue Null	 = new DbValue(string.Empty, DbValueType.NULL);
-		public static readonly DbValue True = new DbValue(true);
-		public static readonly DbValue False = new DbValue(false);
+		public static readonly DbValue Empty = new (string.Empty, DbValueType.Unknown);
+		public static readonly DbValue Null	 = new (string.Empty, DbValueType.NULL);
+		public static readonly DbValue True  = new (true);
+		public static readonly DbValue False = new (false);
 
 		private readonly DbValueType kind;
 		private readonly object value;

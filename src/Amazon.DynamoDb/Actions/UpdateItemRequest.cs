@@ -19,7 +19,7 @@ namespace Amazon.DynamoDb
             Key          = key       ?? throw new ArgumentNullException(nameof(key));
             ReturnValues = returnValues;
 
-            Dictionary<string, string> attrNames = new Dictionary<string, string>();
+            var attrNames = new Dictionary<string, string>();
 
             var updateExpression = new UpdateExpression(changes, attrNames, ExpressionAttributeValues);
 

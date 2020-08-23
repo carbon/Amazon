@@ -7,7 +7,7 @@ namespace Amazon.DynamoDb
 {
     public sealed class DbValueConverterFactory
     {
-        private static readonly Dictionary<Type, IDbValueConverter> converters = new Dictionary<Type, IDbValueConverter>();
+        private static readonly Dictionary<Type, IDbValueConverter> converters = new ();
 
         static DbValueConverterFactory()
         {

@@ -12,7 +12,7 @@ namespace Amazon.DynamoDb
     {
         private const string TargetPrefix = "DynamoDB_20120810";
 
-        private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
+        private static readonly JsonSerializerOptions serializerOptions = new () {
             IgnoreNullValues = true
         };
 
@@ -53,7 +53,6 @@ namespace Amazon.DynamoDb
             return await HandleRequestAsync<DeleteItemRequest, DeleteItemResult>("DeleteItem", request).ConfigureAwait(false);
         }
 
-
         public async Task<GetItemResult> GetItemAsync(GetItemRequest request)
         {
             return await HandleRequestAsync<GetItemRequest, GetItemResult>("GetItem", request).ConfigureAwait(false);
@@ -69,7 +68,7 @@ namespace Amazon.DynamoDb
 			}
 			*/
 
-            Dictionary<string, object> tableBatches = new Dictionary<string, object>(batches.Length);
+            var tableBatches = new Dictionary<string, object>(batches.Length);
 
             foreach (var batch in batches)
             {

@@ -59,7 +59,7 @@ namespace Amazon.DynamoDb
             FilterExpression.Add(expression);
         }
 
-        public Dictionary<string, string> AttributeNames { get; } = new Dictionary<string, string>();
+        public Dictionary<string, string> AttributeNames { get; } = new ();
 
         public AttributeCollection AttributeValues { get; } = new AttributeCollection();
 

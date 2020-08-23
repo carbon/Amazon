@@ -78,7 +78,7 @@ namespace Amazon.DynamoDb
         {
             if (_filter is null)
             {
-                Dictionary<string, string> attrNames = ExpressionAttributeNames ?? new Dictionary<string, string>();
+                var attrNames = ExpressionAttributeNames ?? new Dictionary<string, string>();
                 ExpressionAttributeValues ??= new AttributeCollection();
 
                 _filter = new DynamoExpression(attrNames, ExpressionAttributeValues);
