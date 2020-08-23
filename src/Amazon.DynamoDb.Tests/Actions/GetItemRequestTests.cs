@@ -35,7 +35,6 @@ namespace Amazon.DynamoDb.Tests
                 new ("secondary", "2")
             });
 
-
             var x2 = new GetItemRequest("Products", key) {
                 ConsistentRead = true,
                 ReturnConsumedCapacity = ReturnConsumedCapacity.TOTAL

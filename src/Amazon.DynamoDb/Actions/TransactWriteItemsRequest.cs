@@ -133,7 +133,7 @@ namespace Amazon.DynamoDb
 
             UpdateExpression = updateExpression.ToString();
 
-            if (conditions != null && conditions.Length > 0)
+            if (conditions is { Length: > 0 })
             {
                 var expression = new DynamoExpression(attrNames, ExpressionAttributeValues);
 

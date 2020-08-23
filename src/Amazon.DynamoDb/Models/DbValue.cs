@@ -194,7 +194,8 @@ namespace Amazon.DynamoDb
 
 		public readonly HashSet<string> ToStringSet()
 		{
-			if (!(kind == DbValueType.NS || kind == DbValueType.SS || kind == DbValueType.BS)) {
+			if (!(kind is DbValueType.NS or DbValueType.SS or DbValueType.BS)) 
+			{
 				throw new Exception("Cannot be converted to a set.");
 			}
 
@@ -215,7 +216,7 @@ namespace Amazon.DynamoDb
 
 		public readonly HashSet<T> ToSet<T>()
 		{
-			if (!(kind == DbValueType.NS || kind == DbValueType.SS || kind == DbValueType.BS))
+			if (!(kind is DbValueType.NS or DbValueType.SS or DbValueType.BS))
 			{
 				throw new Exception($"The value type '{kind}' cannot be converted to a Int32 Set.");
 			}

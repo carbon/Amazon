@@ -225,7 +225,7 @@ namespace Amazon.DynamoDb
 
             foreach(var attribute in items)
             {
-                keyItems[i] = new KeyValuePair<string, object>(attribute.Key, attribute.Value.ToPrimitiveValue());
+                keyItems[i] = new (attribute.Key, attribute.Value.ToPrimitiveValue());
 
                 i++;
             }

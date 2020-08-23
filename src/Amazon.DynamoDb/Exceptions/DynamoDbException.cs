@@ -79,15 +79,11 @@ namespace Amazon.DynamoDb
                 // Client Errors = 4xx (Don't retry)
                 // Server Errors = 5xx (Retry)
 
-                switch (Type)
-                {
-                    case "InternalServerError":
-                    case "InternalFailure":
-                    case "ProvisionedThroughputExceededException":
-                    case "ThrottlingException": return true;
-                }
-
-                return false;
+                return Type
+                    is "InternalServerError"
+                    or "InternalFailure"
+                    or "ProvisionedThroughputExceededException"
+                    or "ThrottlingException";
             }
         }
     }

@@ -259,7 +259,7 @@ namespace Amazon.DynamoDb
                 Limit = take
             };
 
-            if (conditions != null && conditions.Length > 0)
+            if (conditions is { Length: > 0 })
             {
                 request.SetFilterExpression(DynamoExpression.Conjunction(conditions));
             }

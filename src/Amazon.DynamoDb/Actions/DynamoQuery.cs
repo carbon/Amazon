@@ -91,7 +91,7 @@ namespace Amazon.DynamoDb
             }
 
             this.FilterExpression = _filter.Text;
-            if (_filter.HasAttributeNames && ExpressionAttributeNames == null)
+            if (_filter.HasAttributeNames && ExpressionAttributeNames is null)
             {
                 ExpressionAttributeNames = _filter.AttributeNames;
             }
