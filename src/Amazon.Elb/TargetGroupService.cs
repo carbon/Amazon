@@ -22,7 +22,7 @@ namespace Amazon.Elb
 
             var targets = new TargetDescription[instanceIds.Length];
 
-            for (var i = 0; i < targets.Length; i++)
+            for (int i = 0; i < targets.Length; i++)
             {
                 targets[i] = new TargetDescription(instanceIds[i]);
             }
@@ -42,7 +42,7 @@ namespace Amazon.Elb
 
             var targets = new TargetDescription[instanceIds.Length];
 
-            for (var i = 0; i < targets.Length; i++)
+            for (int i = 0; i < targets.Length; i++)
             {
                 targets[i] = new TargetDescription(instanceIds[i]);
             }
