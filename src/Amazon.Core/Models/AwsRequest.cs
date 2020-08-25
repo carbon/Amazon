@@ -5,7 +5,7 @@ namespace Amazon
 {
     public class AwsRequest : IEnumerable<KeyValuePair<string, string>>
     {
-        public Dictionary<string, string> Parameters { get; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Parameters { get; } = new ();
 
         public void Add(string name, string value)
         {
