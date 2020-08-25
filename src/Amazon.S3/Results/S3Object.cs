@@ -14,7 +14,7 @@ namespace Amazon.S3
     public sealed class S3Object : IBlobResult, IDisposable
     {
         private Stream? stream;
-        private readonly Dictionary<string, string> properties = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> properties = new();
         private HttpResponseMessage? response;
 
         public S3Object(string name, HttpResponseMessage response)

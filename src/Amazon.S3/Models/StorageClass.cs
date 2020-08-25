@@ -11,10 +11,10 @@
 
         public readonly override string ToString() => Name;
 
-        public static readonly StorageClass Standard                 = new StorageClass("STANDARD");
-        public static readonly StorageClass StandardInfrequentAccess = new StorageClass("STANDARD_IA");
-        public static readonly StorageClass ReducedRedundancy        = new StorageClass("REDUCED_REDUNDANCY");
-        public static readonly StorageClass Glacier                  = new StorageClass("GLACIER"); 
+        public static readonly StorageClass Standard                 = new ("STANDARD");
+        public static readonly StorageClass StandardInfrequentAccess = new ("STANDARD_IA");
+        public static readonly StorageClass ReducedRedundancy        = new ("REDUCED_REDUNDANCY");
+        public static readonly StorageClass Glacier                  = new ("GLACIER"); 
     }
 
     // STANDARD | STANDARD_IA | REDUCED_REDUNDANCY
