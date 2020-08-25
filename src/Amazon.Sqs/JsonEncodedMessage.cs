@@ -7,7 +7,7 @@ namespace Amazon.Sqs
     public sealed class JsonEncodedMessage<T> : IQueueMessage<T>
         where T : notnull
     {
-        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions {
+        private static readonly JsonSerializerOptions jso = new () {
             IgnoreNullValues = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
