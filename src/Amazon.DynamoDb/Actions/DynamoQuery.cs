@@ -15,13 +15,19 @@ namespace Amazon.DynamoDb
         {
             if (keyConditions.Length == 0) return;
 
-            var x = DynamoExpression.Conjunction(keyConditions);
+            var conjuction = DynamoExpression.Conjunction(keyConditions);
 
-            if (x.HasAttributeNames) ExpressionAttributeNames = x.AttributeNames;
+            if (conjuction.HasAttributeNames)
+            {
+                ExpressionAttributeNames = conjuction.AttributeNames;
+            }
 
-            if (x.HasAttributeValues) ExpressionAttributeValues = x.AttributeValues;
+            if (conjuction.HasAttributeValues)
+            {
+                ExpressionAttributeValues = conjuction.AttributeValues;
+            }
 
-            KeyConditionExpression = x.Text;
+            KeyConditionExpression = conjuction.Text;
         }
 
 #nullable enable
@@ -78,10 +84,11 @@ namespace Amazon.DynamoDb
         {
             if (_filter is null)
             {
-                var attrNames = ExpressionAttributeNames ?? new Dictionary<string, string>();
+                var attributeNames = ExpressionAttributeNames ?? new Dictionary<string, string>();
+
                 ExpressionAttributeValues ??= new AttributeCollection();
 
-                _filter = new DynamoExpression(attrNames, ExpressionAttributeValues);
+                _filter = new DynamoExpression(attributeNames, ExpressionAttributeValues);
             }
 
             foreach (Expression condition in conditions)
@@ -138,41 +145,3 @@ namespace Amazon.DynamoDb
         #endregion
     }
 }
-
-
-// For a query on a table, you can only have conditions on the table primary key attributes. 
-// you must specify the hash key attribute name and value as an EQ condition. 
-// You can optionally specify a second condition, referring to the range key attribute.
-
-/*
-{
-    "AttributesToGet": [ "string" ],
-    "ConditionalOperator": "string",
-    "ConsistentRead": "boolean",
-    "ExclusiveStartKey": {
-        "string" :
-            {
-                "B": "blob",
-                "BS": [
-                    "blob"
-                ],
-                "N": "string",
-                "NS": [
-                    "string"
-                ],
-                "S": "string",
-                "SS": [
-                    "string"
-                ]
-            }
-    },
-    "IndexName": "string",
-  
-    "Limit": "number",
-    
-    "ReturnConsumedCapacity": "string",
-    "ScanIndexForward": "boolean",
-    "Select": "string",
-    "TableName": "string"
-}
-*/

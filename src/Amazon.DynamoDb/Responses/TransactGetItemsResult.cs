@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
-    public class TransactGetItemsResult : IConsumedResources
+    public sealed class TransactGetItemsResult : IConsumedResources
     {
         public ConsumedCapacity? ConsumedCapacity { get; set; }
+
         public ItemResult[]? Responses { get; set; }
     }
 
-    public class ItemResult
+    public sealed class ItemResult
     {
         public AttributeCollection? Item { get; set; }
     }

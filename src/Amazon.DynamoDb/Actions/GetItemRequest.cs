@@ -25,31 +25,3 @@ namespace Amazon.DynamoDb
         public ReturnConsumedCapacity? ReturnConsumedCapacity { get; set; }
     }
 }
-
-/*
-{
-    "AttributesToGet": [
-        "string"
-    ],
-    "ConsistentRead": "boolean",
-    "Key": {
-        "string" :
-            {
-                "B": "blob",
-                "BS": [
-                    "blob"
-                ],
-                "N": "string",
-                "NS": [
-                    "string"
-                ],
-                "S": "string",
-                "SS": [
-                    "string"
-                ]
-            }
-    },
-    "ReturnConsumedCapacity": "string",
-    "TableName": "string"
-}
-*/

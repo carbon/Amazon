@@ -175,8 +175,6 @@ namespace Amazon.DynamoDb
             return result;
         }
 
-        #region Helpers
-
         private static string GetName(ExpressionKind kind) => kind switch
         {
             And      => "and",
@@ -192,8 +190,6 @@ namespace Amazon.DynamoDb
             Lte      => "<=",
             _        => throw new Exception("Invalid expression:" + kind)
         };        
-
-        #endregion
     }
 
     // attribute_not_exists(#timestamp) or #timestamp = :timestamp

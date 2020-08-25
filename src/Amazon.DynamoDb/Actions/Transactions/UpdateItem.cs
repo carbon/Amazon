@@ -6,21 +6,18 @@ using Carbon.Data.Expressions;
 
 namespace Amazon.DynamoDb
 {
-    public sealed class UpdateItemRequest
+    public sealed class UpdateItem
     {
-        public UpdateItemRequest(
+        public UpdateItem(
             string tableName, 
-            IReadOnlyDictionary<string, DbValue> key,
+            AttributeCollection key, 
             Change[] changes,
-            Expression[]? conditions = null,
-            ReturnValues? returnValues = null)
+            Expression[]? conditions = null)
         {
-            TableName    = tableName ?? throw new ArgumentNullException(nameof(tableName));
-            Key          = key       ?? throw new ArgumentNullException(nameof(key));
-            ReturnValues = returnValues;
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+            Key = key ?? throw new ArgumentNullException(nameof(key));
 
             var attributeNames = new Dictionary<string, string>();
-
             var updateExpression = new UpdateExpression(changes, attributeNames, ExpressionAttributeValues);
 
             UpdateExpression = updateExpression.ToString();
@@ -40,18 +37,18 @@ namespace Amazon.DynamoDb
             }
         }
 
-        public string TableName { get; }
+        public AttributeCollection Key { get; set; }
 
-        public IReadOnlyDictionary<string, DbValue> Key { get; }
+        public string TableName { get; set; }
 
-        public string? ConditionExpression { get; }
+        public string UpdateExpression { get; set; }
 
-        public Dictionary<string, string>? ExpressionAttributeNames { get; }
+        public string? ConditionExpression { get; set; }
 
-        public AttributeCollection ExpressionAttributeValues { get; } = new AttributeCollection();
+        public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
 
-        public ReturnValues? ReturnValues { get; }
+        public AttributeCollection ExpressionAttributeValues { get; set; } = new AttributeCollection();
 
-        public string UpdateExpression { get; }
+        public ReturnValuesOnConditionCheckFailure? ReturnValuesOnConditionCheckFailure { get; set; }        
     }
 }

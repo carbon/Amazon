@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Amazon.DynamoDb
 {
-    public class TransactWriteItemsResult
+    public sealed class TransactWriteItemsResult
     {
         public TransactionConsumedCapacity[]? ConsumedCapacity { get; set; }
+
         public Dictionary<string, ReturnItemCollectionMetrics>? ItemCollectionMetrics { get; set; }
     }
 }
