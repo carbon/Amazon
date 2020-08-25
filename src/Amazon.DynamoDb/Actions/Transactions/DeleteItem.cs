@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb.Transactions
 {
     public sealed class DeleteItem
     {

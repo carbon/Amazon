@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+using Amazon.DynamoDb.Transactions;
 using Amazon.Scheduling;
 
 namespace Amazon.DynamoDb

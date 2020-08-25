@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Carbon.Data.Expressions;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb.Transactions
 {
     public sealed class ConditionCheck
     {
