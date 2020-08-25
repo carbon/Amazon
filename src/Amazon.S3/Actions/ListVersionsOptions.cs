@@ -5,7 +5,7 @@ namespace Amazon.S3
 {
     public sealed class ListVersionsOptions
     {
-        private readonly Dictionary<string, string> items = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> items = new ();
 
         public string? Delimiter
         {

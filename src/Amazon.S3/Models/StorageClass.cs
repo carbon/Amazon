@@ -16,6 +16,4 @@
         public static readonly StorageClass ReducedRedundancy        = new ("REDUCED_REDUNDANCY");
         public static readonly StorageClass Glacier                  = new ("GLACIER"); 
     }
-
-    // STANDARD | STANDARD_IA | REDUCED_REDUNDANCY
 }

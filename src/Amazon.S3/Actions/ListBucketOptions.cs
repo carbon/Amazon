@@ -5,7 +5,7 @@ namespace Amazon.S3
 {
     public sealed class ListBucketOptions
     {
-        private readonly Dictionary<string, string> items = new Dictionary<string, string>(5) {
+        private readonly Dictionary<string, string> items = new (5) {
             { "list-type", "2" } // https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjectsV2.html
         };
 
@@ -60,7 +60,7 @@ namespace Amazon.S3
 
         private string? Get(string name)
         {
-            items.TryGetValue(name, out string value);
+            items.TryGetValue(name, out string? value);
             
             return value;
         }
