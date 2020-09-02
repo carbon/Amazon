@@ -1,8 +1,6 @@
 using System;
 using System.Text;
 
-using Amazon.Security;
-
 namespace Amazon.S3
 {
     public sealed class GetPresignedUrlRequest

@@ -19,14 +19,12 @@ namespace Amazon.S3
 
         public string ETag { get; }
 
-        #region IUploadBlock
+        // IUploadBlock
 
         int IUploadBlock.Number => PartNumber;
 
         string IUploadBlock.BlockId => ETag;
 
         ByteRange? IUploadBlock.Range => null;
-
-        #endregion
     }
 }

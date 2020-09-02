@@ -59,7 +59,7 @@ namespace Amazon.S3
 
         private string? Get(string name)
         {
-            items.TryGetValue(name, out string value);
+            items.TryGetValue(name, out string? value);
 
             return value;
         }
