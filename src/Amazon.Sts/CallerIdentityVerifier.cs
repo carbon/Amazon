@@ -10,7 +10,7 @@ namespace Amazon.Sts
 {
     public sealed class CallerIdentityVerifier 
     {
-        private readonly HttpClient httpClient = new HttpClient {
+        private readonly HttpClient httpClient = new () {
             DefaultRequestHeaders = {
                 { "User-Agent", "Carbon/2" }
             }
@@ -18,7 +18,11 @@ namespace Amazon.Sts
 
         public TimeSpan GetAge(CallerIdentityVerificationParameters token)
         {
-            DateTime date = DateTime.ParseExact(token.Headers["x-amz-date"], "yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+            DateTime date = DateTime.ParseExact(
+                s        : token.Headers["x-amz-date"], 
+                format   : "yyyyMMddTHHmmssZ",
+                provider : CultureInfo.InvariantCulture, 
+                style    : DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
 
             TimeSpan age = DateTime.UtcNow - date;
 
@@ -29,7 +33,7 @@ namespace Amazon.Sts
         {
             var url = new Uri(token.Url);
 
-            if (!string.Equals(url.Scheme, "https", StringComparison.Ordinal))
+            if (url.Scheme is not "https")
             {
                 throw new ArgumentException("Endpoint scheme be https. Was " + url.Scheme);
             }
