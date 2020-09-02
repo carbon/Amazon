@@ -12,7 +12,7 @@ namespace Amazon.CloudFront
 				throw new ArgumentNullException(nameof(paths));
 
 			if (paths.Count == 0) 
-				throw new ArgumentException("May not be empty", "paths");
+				throw new ArgumentException("May not be empty", nameof(paths));
 
 			Paths = paths;
 		}
