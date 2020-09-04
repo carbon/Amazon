@@ -54,12 +54,19 @@ namespace Amazon.DynamoDb
         {
             var key = Key<T>.FromTuple(keyValue);
 
+            string[] keyNames = new string[key.Length];
+
+            for (int i = 0; i < keyNames.Length; i++)
+            {
+                keyNames[i] = key[i].Key;
+            }
+
             var result = await FindAsync(new GetItemRequest(tableName, key) {
                 ConsistentRead = false,
-                AttributesToGet = key.Select(k => k.Key).ToArray()
+                AttributesToGet = keyNames
             }).ConfigureAwait(false);
 
-            return result != null;
+            return result is not null;
         }
 
         public Task<T?> FindAsync(Key<T> key)
@@ -188,7 +195,7 @@ namespace Amazon.DynamoDb
                 query.Limit = remaining;
 
             }
-            while (a.LastEvaluatedKey != null && remaining >= 0);
+            while (a.LastEvaluatedKey is not null && remaining >= 0);
 
             return result;
         }
@@ -208,15 +215,13 @@ namespace Amazon.DynamoDb
             return result.Count;
         }
 
-        // TODO IAsyncEnumerable
-
-        public IEnumerable<T> Enumerate(params Expression[] conditions) // Scans the entire table
+        public async IAsyncEnumerable<T> ScanAsync(params Expression[] conditions) // Scans the entire table
         {
             // Each scan may return upto 1MB of data
             
             DynamoExpression? filterExpression = null;
 
-            if (conditions.Length > 0)
+            if (conditions is { Length: > 0 })
             {
                 filterExpression = DynamoExpression.Conjunction(conditions);
             }
@@ -226,16 +231,16 @@ namespace Amazon.DynamoDb
             do
             {
                 var request = new ScanRequest(tableName) {
-                    Limit = 1000,
+                    Limit = 1_000,
                     ExclusiveStartKey = result?.LastEvaluatedKey
                 };
 
-                if (filterExpression != null)
+                if (filterExpression is not null)
                 {
                     request.SetFilterExpression(filterExpression);
                 }
 
-                result = client.ScanAsync(request).Result;
+                result = await client.ScanAsync(request).ConfigureAwait(false);
 
                 // If LastEvaluatedKey is null, then the "last page" of results has been processed and there is no more data to be retrieved.
                 // If LastEvaluatedKey is anything other than null, this does not necessarily mean that there is more data in the result set. 
@@ -246,7 +251,7 @@ namespace Amazon.DynamoDb
                     yield return item.As<T>(metadata);
                 }
             }
-            while (result.LastEvaluatedKey != null);
+            while (result.LastEvaluatedKey is not null);
         }
 
         public async Task<IReadOnlyList<T>> ScanAsync(
@@ -254,8 +259,7 @@ namespace Amazon.DynamoDb
             Expression[]? conditions = null,
             int take = 1000)
         {
-            var request = new ScanRequest(tableName)
-            {
+            var request = new ScanRequest(tableName) {
                 Limit = take
             };
 
@@ -264,7 +268,7 @@ namespace Amazon.DynamoDb
                 request.SetFilterExpression(DynamoExpression.Conjunction(conditions));
             }
 
-            if (startKey != null)
+            if (startKey is not null)
             {
                 request.ExclusiveStartKey = startKey.ToDictionary();
             }
@@ -292,7 +296,7 @@ namespace Amazon.DynamoDb
         {
             var request = new PutItemRequest(tableName, AttributeCollection.FromObject(entity, metadata));
 
-            if (conditions != null)
+            if (conditions is not null)
             {
                 request.SetConditions(conditions);
             }
