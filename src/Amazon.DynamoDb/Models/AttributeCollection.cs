@@ -179,7 +179,7 @@ namespace Amazon.DynamoDb
 
                     attributes.Add(member.Name, new DbValue(list));
                 }
-                else if (typeInfo.IsList && typeInfo.ElementType != null)
+                else if (typeInfo.IsList && typeInfo.ElementType is not null)
                 {
                     IList a = (IList)value;
 
@@ -327,7 +327,7 @@ namespace Amazon.DynamoDb
 
         bool IReadOnlyDictionary<string, DbValue>.TryGetValue(string key, out DbValue value)
         {
-            throw new NotImplementedException();
+            return items.TryGetValue(key, out value);
         }
 
         #endregion

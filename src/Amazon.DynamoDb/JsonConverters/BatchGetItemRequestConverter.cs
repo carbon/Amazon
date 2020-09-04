@@ -34,7 +34,7 @@ namespace Amazon.DynamoDb.JsonConverters
                 }
                 writer.WriteEndArray();
 
-                if (set.AttributesToGet != null)
+                if (set.AttributesToGet is not null)
                 {
                     writer.WriteStartArray("AttributesToGet");
                     foreach (var attr in set.AttributesToGet)

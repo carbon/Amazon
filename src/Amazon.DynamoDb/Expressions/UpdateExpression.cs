@@ -86,7 +86,7 @@ namespace Amazon.DynamoDb
 
             WriteName(change.Name, sb);
 
-            if (change.Value != null)
+            if (change.Value is not null)
             {
                 if (change.Operation == DataOperation.Replace)
                 {

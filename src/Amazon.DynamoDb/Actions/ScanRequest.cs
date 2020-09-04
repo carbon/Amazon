@@ -16,7 +16,7 @@ namespace Amazon.DynamoDb
         {
             TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
 
-            if (conditions != null)
+            if (conditions is not null)
             {
                 SetFilterExpression(DynamoExpression.Conjunction(conditions));
             }

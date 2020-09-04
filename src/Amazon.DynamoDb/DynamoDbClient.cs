@@ -251,7 +251,7 @@ namespace Amazon.DynamoDb
                 }
             };
 
-            if (utf8Json != null)
+            if (utf8Json is not null)
             {
                 request.Content = new ByteArrayContent(utf8Json) {
                     Headers = { { "Content-Type", "application/x-amz-json-1.0" } }
