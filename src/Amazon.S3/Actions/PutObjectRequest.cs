@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Encodings.Web;
 
 using Amazon.Helpers;
 
@@ -48,6 +50,46 @@ namespace Amazon.S3
             Headers.Add(S3HeaderNames.ServerSideEncryptionCustomerAlgorithm, key.Algorithm);
             Headers.Add(S3HeaderNames.ServerSideEncryptionCustomerKey,       Convert.ToBase64String(key.Key));
             Headers.Add(S3HeaderNames.ServerSideEncryptionCustomerKeyMD5,    Convert.ToBase64String(key.KeyMD5));
+        }
+
+        internal void SetTagSet(IReadOnlyList<KeyValuePair<string, string>> tags)
+        {
+            if (tags is null || tags.Count == 0) return;
+
+            if (tags.Count > 10)
+            {
+                throw new ArgumentException("Must be less than 10", nameof(tags));
+            }
+
+            // The tag-set for the object. The tag-set must be encoded as URL Query parameters. (For example, "Key1=Value1")
+
+            using var writer = new StringWriter();
+
+            for (int i = 0; i < tags.Count; i++)
+            {
+                if (i > 0)
+                {
+                    writer.Write('&');
+                }
+
+                KeyValuePair<string, string> tag = tags[i];
+
+                if (tag.Key.Length > 128)
+                {
+                    throw new ArgumentException("Tag key > 128 chars. Was " + tag.Key);
+                }
+
+                if (tag.Value.Length > 256)
+                {
+                    throw new ArgumentException("Tag value > 256 chars. Was " + tag.Value);
+                }
+
+                UrlEncoder.Default.Encode(writer, tag.Key);
+                writer.Write('=');
+                UrlEncoder.Default.Encode(writer, tag.Value);
+            }
+
+            Headers.Add(S3HeaderNames.Tagging, writer.ToString());
         }
 
         public void SetStream(Stream stream, long length, string mediaType = "application/octet-stream")

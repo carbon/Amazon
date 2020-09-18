@@ -253,7 +253,7 @@ namespace Amazon.S3
 
         public Task PutAsync(IBlob blob)
         {
-            return PutAsync(blob, defaultPutOptions);
+            return PutAsync(blob, defaultPutOptions, default);
         }
 
         public Task PutAsync(IBlob blob, CancellationToken cancelationToken)
@@ -261,12 +261,10 @@ namespace Amazon.S3
             return PutAsync(blob, defaultPutOptions, cancelationToken);
         }
 
-        public Task PutAsync(IBlob blob, PutBlobOptions options)
-        {
-            return PutAsync(blob, options, default(CancellationToken));
-        }
-
-        public async Task PutAsync(IBlob blob, PutBlobOptions options, CancellationToken cancellationToken)
+        public async Task PutAsync(
+            IBlob blob,
+            PutBlobOptions options, 
+            CancellationToken cancellationToken = default)
         {
             if (blob is null)
                 throw new ArgumentNullException(nameof(blob));
@@ -278,8 +276,6 @@ namespace Amazon.S3
 
             Stream stream = await blob.OpenAsync().ConfigureAwait(false);
 
-            #region Stream conditions
-
             if (stream.Length == 0)
                 throw new ArgumentException("May not be empty", nameof(blob));
 
@@ -287,7 +283,6 @@ namespace Amazon.S3
             if (stream.CanSeek && stream.Position != 0)
                 throw new ArgumentException($"Must be 0. Was {stream.Position}.", paramName: "blob.Position");
 
-            #endregion
 
             int retryCount = 0;
             Exception lastException;
@@ -309,6 +304,11 @@ namespace Amazon.S3
                 if (options.EncryptionKey != null)
                 {
                     request.SetCustomerEncryptionKey(new ServerSideEncryptionKey(options.EncryptionKey));
+                }
+
+                if (options.Tags is { Count: > 0 })
+                {
+                    request.SetTagSet(options.Tags);
                 }
 
                 request.UpdateHeaders(blob.Properties);
