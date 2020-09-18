@@ -7,8 +7,8 @@ namespace Amazon.S3
 {
     public sealed class RestoreObjectRequest : S3Request
     {
-        public RestoreObjectRequest(string host, string bucketName, string key)
-            : base(HttpMethod.Post, host, bucketName, key + "?restore")
+        public RestoreObjectRequest(string host, string bucketName, string key, string? version = null)
+            : base(HttpMethod.Post, host, bucketName, key, version, S3ActionName.Restore)
         {
             if (key is null) throw new ArgumentNullException(nameof(key));
 

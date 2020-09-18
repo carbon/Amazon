@@ -10,7 +10,7 @@ namespace Amazon.S3
     public sealed class DeleteObjectBatchRequest : S3Request
     {
         public DeleteObjectBatchRequest(string host, string bucketName, DeleteBatch batch)
-            : base(HttpMethod.Post, host, bucketName, null, "?delete")
+            : base(HttpMethod.Post, host, bucketName, objectName: null, actionName: S3ActionName.Delete)
         {
             string xmlText = batch.ToXmlString();
 
@@ -47,7 +47,7 @@ namespace Amazon.S3
             this.keys = keys;
         }
 
-        public string ToXmlString()
+        public string ToXmlString(SaveOptions options = SaveOptions.DisableFormatting)
         {
             var root = new XElement("Delete");
 
@@ -58,7 +58,7 @@ namespace Amazon.S3
                 ));
             }
 
-            return root.ToString();
+            return root.ToString(options);
         }
     }
 }

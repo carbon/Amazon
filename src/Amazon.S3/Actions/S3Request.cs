@@ -10,12 +10,13 @@ namespace Amazon.S3
 {
     public abstract class S3Request : HttpRequestMessage
     {
-        public S3Request(
+        internal S3Request(
             HttpMethod method,
             string host, 
             string bucketName, 
-            string? objectName, 
-            string? versionId = null)
+            string? objectName,
+            string? versionId = null,
+            S3ActionName actionName = default)
         {
             if (host is null) throw new ArgumentNullException(nameof(host));
 
@@ -32,23 +33,22 @@ namespace Amazon.S3
 
             // s3.dualstack.{region.Name}.amazonaws.com
 
-            if (objectName != null)
+            if (objectName is not null)
             {
                 urlBuilder.Append('/');
                 urlBuilder.Append(objectName);
             }
 
-            if (versionId != null && versionId.Length > 0)
+            if (actionName != default)
             {
-                if (versionId[0] == '?')
-                {
-                    urlBuilder.Append(versionId);
-                }
-                else
-                {
-                    urlBuilder.Append("?versionId=");
-                    urlBuilder.Append(versionId);
-                }
+                urlBuilder.Append(GetSegment(actionName));
+            }
+
+            if (versionId is { Length: > 0 })
+            {
+                urlBuilder.Append(actionName == default ? '?' : '&');
+                urlBuilder.Append("versionId=");
+                urlBuilder.Append(versionId);
             }
 
             RequestUri = new Uri(urlBuilder.ToString());
@@ -59,8 +59,8 @@ namespace Amazon.S3
            HttpMethod method,
            string host,
            string bucketName,
-           string? r,
-           Dictionary<string, string> paramaters)
+           Dictionary<string, string> parameters,
+           S3ActionName actionName = default)
         {
             if (host is null) throw new ArgumentNullException(nameof(host));
 
@@ -71,20 +71,20 @@ namespace Amazon.S3
             urlBuilder.Write("https://");
             urlBuilder.Write(host);
             urlBuilder.Write('/');
-            urlBuilder.Write(bucketName); 
+            urlBuilder.Write(bucketName);
 
-            if (paramaters.Count > 0)
+            int i = 0;
+
+            if (actionName != default)
             {
-                int i = 0;
+                urlBuilder.Write(GetSegment(actionName));
 
-                if (r != null)
-                {
-                    urlBuilder.Write('?');
-                    urlBuilder.Write(r);
-                    i++;
-                }
+                i++;
+            }
 
-                foreach (KeyValuePair<string, string> pair in paramaters)
+            if (parameters.Count > 0)
+            {
+                foreach (KeyValuePair<string, string> pair in parameters)
                 {
                     urlBuilder.Write(i == 0 ? '?' : '&');
                     urlBuilder.Write(pair.Key);
@@ -98,6 +98,20 @@ namespace Amazon.S3
 
             RequestUri = new Uri(urlBuilder.ToString());
             Method = method;
+        }
+
+
+        private static string GetSegment(S3ActionName action)
+        {
+            return action switch
+            {
+                S3ActionName.Tagging  => "?tagging",
+                S3ActionName.Delete   => "?delete",
+                S3ActionName.Restore  => "?restore",
+                S3ActionName.Uploads  => "?uploads",
+                S3ActionName.Versions => "?versions",
+                _ => throw new Exception("Invalid")
+            };
         }
 
         public void SetStorageClass(StorageClass storageClass)
