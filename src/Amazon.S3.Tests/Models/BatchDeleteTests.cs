@@ -1,11 +1,13 @@
-﻿using Xunit;
+﻿using System.Xml.Linq;
+
+using Xunit;
 
 namespace Amazon.S3.Models.Tests
 {
     public class BatchDeleteTests
     {
         [Fact]
-        public void Test()
+        public void Serialize()
         {
             var batch = new DeleteBatch(new[] { "1", "2" });
 
@@ -17,7 +19,7 @@ namespace Amazon.S3.Models.Tests
     <Key>2</Key>
   </Object>
 </Delete>",
-          actual: batch.ToXmlString());
+          actual: batch.ToXmlString(SaveOptions.None));
         }
 
 
@@ -37,7 +39,6 @@ namespace Amazon.S3.Models.Tests
 </DeleteResult>";
 
             var result = DeleteResult.Parse(xml);
-
 
             Assert.Single(result.Deleted);
             Assert.Single(result.Errors);

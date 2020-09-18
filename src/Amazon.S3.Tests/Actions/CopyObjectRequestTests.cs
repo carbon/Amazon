@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+
 using Xunit;
 
 namespace Amazon.S3.Actions.Tests
@@ -18,6 +19,7 @@ namespace Amazon.S3.Actions.Tests
             Assert.Equal(new Uri("https://s3.amazon.com/targetBucket/video.mp4"), request.RequestUri);
             Assert.Null(request.MetadataDirective);
             Assert.False(request.Headers.Contains("x-amz-metadata-directive"));
+            Assert.Equal("/sourceBucket/video.mp4", request.Headers.GetValues("x-amz-copy-source").FirstOrDefault());
         }
 
         [Fact]

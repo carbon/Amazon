@@ -14,12 +14,16 @@ namespace Amazon.S3.Actions.Tests
                 ContentType = "application/json"
             };
 
+            Assert.Equal("/bucket-name/object-key?uploads", request.RequestUri.PathAndQuery);
+
+
             Assert.Equal("application/json", request.Content.Headers.ContentType.ToString());
             Assert.Equal("application/json", request.ContentType);
 
             request.ContentType = "text/plain";
 
             Assert.Equal("text/plain", request.Content.Headers.ContentType.ToString());
+
         }
 
         [Fact]

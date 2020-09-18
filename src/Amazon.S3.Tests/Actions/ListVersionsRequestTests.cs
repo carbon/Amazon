@@ -12,7 +12,7 @@ namespace Amazon.S3.Actions.Tests
                 MaxKeys = 1000
             });
 
-            Assert.Equal("https://s3.amazon.com/bucket?versions&prefix=apples&max-keys=1000", request.RequestUri.ToString());
+            Assert.Equal("/bucket?versions&prefix=apples&max-keys=1000", request.RequestUri.PathAndQuery);
         }
     }
 }

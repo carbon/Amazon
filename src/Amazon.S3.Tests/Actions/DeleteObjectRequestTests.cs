@@ -13,7 +13,6 @@ namespace Amazon.S3.Actions.Tests
 
             Assert.Equal("https://s3.amazon.com/bucket/key?versionId=1", request.RequestUri.ToString());
             Assert.Equal(HttpMethod.Delete, request.Method);
-            Assert.Equal(HttpCompletionOption.ResponseHeadersRead, request.CompletionOption);
         }
     }
 }
