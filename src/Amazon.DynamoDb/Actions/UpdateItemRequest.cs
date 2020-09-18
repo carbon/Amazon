@@ -20,14 +20,15 @@ namespace Amazon.DynamoDb
             ReturnValues = returnValues;
 
             var attributeNames = new Dictionary<string, string>();
+            var attributeValues = new AttributeCollection();
 
-            var updateExpression = new UpdateExpression(changes, attributeNames, ExpressionAttributeValues);
+            var updateExpression = new UpdateExpression(changes, attributeNames, attributeValues);
 
             UpdateExpression = updateExpression.ToString();
 
             if (conditions is { Length: > 0 })
             {
-                var expression = new DynamoExpression(attributeNames, ExpressionAttributeValues);
+                var expression = new DynamoExpression(attributeNames, attributeValues);
 
                 expression.AddRange(conditions);
 
@@ -38,6 +39,11 @@ namespace Amazon.DynamoDb
             {
                 ExpressionAttributeNames = attributeNames;
             }
+
+            if (attributeValues.Count > 0)
+            {
+                ExpressionAttributeValues = attributeValues;
+            }
         }
 
         public string TableName { get; }
@@ -46,9 +52,9 @@ namespace Amazon.DynamoDb
 
         public string? ConditionExpression { get; }
 
-        public Dictionary<string, string>? ExpressionAttributeNames { get; }
+        public IReadOnlyDictionary<string, string>? ExpressionAttributeNames { get; }
 
-        public AttributeCollection ExpressionAttributeValues { get; } = new AttributeCollection();
+        public AttributeCollection? ExpressionAttributeValues { get; }
 
         public ReturnValues? ReturnValues { get; }
 
