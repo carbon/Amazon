@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb.JsonConverters
 {
-    internal class BatchGetItemRequestConverter : JsonConverter<BatchGetItemRequest>
+    internal sealed class BatchGetItemRequestConverter : JsonConverter<BatchGetItemRequest>
     {
         public BatchGetItemRequestConverter() { }
 
@@ -22,25 +22,31 @@ namespace Amazon.DynamoDb.JsonConverters
             {
                 writer.WriteStartObject(set.TableName);
                 writer.WriteStartArray("Keys");
+
                 foreach (var keySet in set.Keys)
                 {
                     writer.WriteStartObject();
+
                     foreach (var kvp in keySet)
                     {
                         writer.WritePropertyName(kvp.Key);
-                        DbValueConverter.StaticWriteFullObject(writer, kvp.Value, options);
+                        DbValueJsonSerializer.Write(writer, kvp.Value);
                     }
+
                     writer.WriteEndObject();
                 }
+
                 writer.WriteEndArray();
 
-                if (set.AttributesToGet is not null)
+                if (set.AttributesToGet is { Length: > 0 })
                 {
                     writer.WriteStartArray("AttributesToGet");
+
                     foreach (var attr in set.AttributesToGet)
                     {
                         writer.WriteStringValue(attr);
                     }
+
                     writer.WriteEndArray();
                 }
 
