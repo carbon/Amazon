@@ -48,9 +48,7 @@ namespace Amazon.DynamoDb
             }
         }
 
-        public bool HasAttributeNames => AttributeNames.Keys.Count > 0;
-
-        public bool HasAttributeValues => AttributeValues.Count > 0;
+        internal bool HasAttributeValues => AttributeValues.Count > 0;
 
         private void AddFilterExpression(Expression expression)
         {
@@ -78,14 +76,3 @@ namespace Amazon.DynamoDb
         }
     }
 }
-
-// attribute_not_exists(#timestamp) or #timestamp = :timestamp
-// Price <= :p
-// (#P between :lo and :hi) and (#PC in (:cat1, :cat2))
-
-// expr.ExpressionAttributeNames["#timestamp"] = "last-updated";
-// expr.ExpressionAttributeValues[":timestamp"] = lastUpdated;
-
-
-// If you define an expression attribute value, you must use it consistently throughout the entire expression. 
-// Also, you cannot omit the : symbol.s

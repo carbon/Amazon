@@ -11,11 +11,14 @@ namespace Amazon.DynamoDb
 
         public DynamoQuery() { }
 
-        public DynamoQuery(params Expression[] keyConditions)
+        public DynamoQuery(params Expression[] conditions)
         {
-            if (keyConditions.Length == 0) return;
+            if (conditions.Length == 0)
+            {
+                return;
+            }
 
-            var conjuction = DynamoExpression.Conjunction(keyConditions);
+            var conjuction = DynamoExpression.Conjunction(conditions);
 
             if (conjuction.HasAttributeNames)
             {
@@ -51,7 +54,7 @@ namespace Amazon.DynamoDb
         /// </summary>
         public bool? ScanIndexForward { get; set; }
 
-        public string ProjectionExpression { get; set; }
+        public string? ProjectionExpression { get; set; }
 
         public int? Limit { get; set; }
 
@@ -64,6 +67,7 @@ namespace Amazon.DynamoDb
         public ReturnConsumedCapacity? ReturnConsumedCapacity { get; set; }
 
         public Dictionary<string, DbValue>? ExclusiveStartKey { get; set; }
+
 
         #region Helpers
 
@@ -98,6 +102,7 @@ namespace Amazon.DynamoDb
             }
 
             this.FilterExpression = _filter.Text;
+
             if (_filter.HasAttributeNames && ExpressionAttributeNames is null)
             {
                 ExpressionAttributeNames = _filter.AttributeNames;

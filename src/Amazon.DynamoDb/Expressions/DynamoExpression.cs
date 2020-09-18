@@ -18,7 +18,9 @@ namespace Amazon.DynamoDb
             : this(new Dictionary<string, string>(), new AttributeCollection())
         { }
 
-        public DynamoExpression(Dictionary<string, string> attributeNames, AttributeCollection attributeValues)
+        public DynamoExpression(
+            Dictionary<string, string> attributeNames,
+            AttributeCollection attributeValues)
         {
             AttributeNames = attributeNames;
             AttributeValues = attributeValues;
@@ -191,18 +193,6 @@ namespace Amazon.DynamoDb
             _        => throw new Exception("Invalid expression:" + kind)
         };        
     }
-
-    // attribute_not_exists(#timestamp) or #timestamp = :timestamp
-    // Price <= :p
-    // (#P between :lo and :hi) and (#PC in (:cat1, :cat2))
-
-    // expr.ExpressionAttributeNames["#timestamp"] = "last-updated";
-    // expr.ExpressionAttributeValues[":timestamp"] = lastUpdated;
-
-    // If you define an expression attribute value, 
-    // you must use it consistently throughout the entire expression. 
-    // Also, you cannot omit the : symbol.
-
 
     /*
     Functions: attribute_exists | attribute_not_exists | attribute_type | contains | begins_with | size

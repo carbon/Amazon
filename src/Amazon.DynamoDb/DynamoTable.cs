@@ -153,7 +153,7 @@ namespace Amazon.DynamoDb
 
             var query = new DynamoQuery {
                 KeyConditionExpression    = e.KeyExpression.Text,
-                ExpressionAttributeNames  = e.HasAttributeNames ? e.AttributeNames : null,
+                ExpressionAttributeNames  = e.AttributeNames.Count > 0 ? e.AttributeNames : null,
                 ExpressionAttributeValues = e.AttributeValues,
                 FilterExpression          = e.FilterExpression?.Text
             };
