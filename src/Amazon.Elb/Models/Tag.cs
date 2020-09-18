@@ -2,7 +2,7 @@
 
 namespace Amazon.Elb
 {
-    public class Tag
+    public sealed class Tag
     {
         public Tag() { }
 
