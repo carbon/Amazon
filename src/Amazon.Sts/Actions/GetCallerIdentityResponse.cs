@@ -10,7 +10,7 @@ namespace Amazon.Sts
         public GetCallerIdentityResult GetCallerIdentityResult { get; set; }
     }
 
-    public class GetCallerIdentityResult
+    public sealed class GetCallerIdentityResult
     {
         [XmlElement]
         public string Arn { get; set; }
@@ -27,7 +27,7 @@ namespace Amazon.Sts
 /*
 <GetCallerIdentityResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
   <GetCallerIdentityResult>
-   <Arn>arn:aws:iam::123456789012:user/Alice</Arn>
+    <Arn>arn:aws:iam::123456789012:user/Alice</Arn>
     <UserId>AKIAI44QH8DHBEXAMPLE</UserId>
     <Account>123456789012</Account>
   </GetCallerIdentityResult>
