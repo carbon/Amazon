@@ -15,6 +15,7 @@ namespace Amazon.DynamoDb
 
     public class DynamoTable<T, TKey>
         where T: class
+        where TKey: notnull
     {
         private readonly string tableName;
         private readonly DynamoDbClient client;

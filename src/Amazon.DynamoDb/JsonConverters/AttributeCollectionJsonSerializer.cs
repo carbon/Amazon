@@ -21,7 +21,7 @@ namespace Amazon.DynamoDb.JsonConverters
                     break;
                 }
 
-                string attributeName = reader.GetString();
+                string attributeName = reader.GetString()!;
 
                 reader.Read();
 

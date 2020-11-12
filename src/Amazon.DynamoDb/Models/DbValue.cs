@@ -139,7 +139,8 @@ namespace Amazon.DynamoDb
 						return;
 
 					default: {
-						if (type == typeof(DbValue)) {
+						if (type == typeof(DbValue))
+						{
 							var dbValue = (DbValue)value;
 
 							this.kind = dbValue.Kind;
@@ -306,10 +307,10 @@ namespace Amazon.DynamoDb
 
 			return property.Name switch
 			{
-				"B"    => new DbValue(property.Value.GetString(),     DbValueType.B),
-				"N"    => new DbValue(property.Value.GetString(),     DbValueType.N),
-				"S"    => new DbValue(property.Value.GetString(),     DbValueType.S),
-				"BOOL" => new DbValue(property.Value.GetBoolean(),    DbValueType.BOOL),
+				"B"    => new DbValue(property.Value.GetString()!,     DbValueType.B),
+				"N"    => new DbValue(property.Value.GetString()!,     DbValueType.N),
+				"S"    => new DbValue(property.Value.GetString()!,     DbValueType.S),
+				"BOOL" => new DbValue(property.Value.GetBoolean(),     DbValueType.BOOL),
 				"BS"   => new DbValue(property.Value.GetStringArray(), DbValueType.BS),
 				"NS"   => new DbValue(property.Value.GetStringArray(), DbValueType.NS),
 				"SS"   => new DbValue(property.Value.GetStringArray(), DbValueType.SS),

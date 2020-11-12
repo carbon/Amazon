@@ -27,12 +27,14 @@ namespace Amazon.DynamoDb
 
         public DynamoTable<T, TKey> GetTable<T, TKey>(string name)
             where T : class
+            where TKey: notnull
         {
             return new DynamoTable<T, TKey>(name, this);
         }
 
         public DynamoTable<T, TKey> GetTable<T, TKey>()
             where T : class
+            where TKey : notnull
         {
             return new DynamoTable<T, TKey>(this);
         }

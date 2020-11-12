@@ -45,16 +45,16 @@ namespace Amazon.DynamoDb
 
             if (json.TryGetProperty("message", out JsonElement m))
             {
-                message = m.GetString();
+                message = m.GetString()!;
             }
             else if (json.TryGetProperty("Message", out m))
             {
-                message = m.GetString();
+                message = m.GetString()!;
             }
 
             if (json.TryGetProperty("__type", out var typeNode) && typeNode.ValueKind == JsonValueKind.String)
             {
-                type = typeNode.GetString();
+                type = typeNode.GetString()!;
 
                 int poundIndex = type.IndexOf('#');
 
