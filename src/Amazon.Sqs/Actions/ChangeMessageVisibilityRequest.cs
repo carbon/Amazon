@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Amazon.Sqs
 {
@@ -8,12 +10,12 @@ namespace Amazon.Sqs
         {
             if (visibilityTimeout < TimeSpan.Zero)
             {
-                throw new ArgumentException("Must be greater than 0.", nameof(visibilityTimeout));
+                throw new ArgumentException("Must be greater than 0", nameof(visibilityTimeout));
             }
 
             if (visibilityTimeout > TimeSpan.FromHours(12))
             {
-                throw new ArgumentException("Must be less than 12 hours.", nameof(visibilityTimeout));
+                throw new ArgumentException("Must be less than 12 hours", nameof(visibilityTimeout));
             }
 
             ReceiptHandle = receiptHandle ?? throw new ArgumentNullException(nameof(receiptHandle));
@@ -23,15 +25,13 @@ namespace Amazon.Sqs
 
         public TimeSpan VisibilityTimeout { get; }
 
-        internal SqsRequest ToParams()
+        internal List<KeyValuePair<string, string>> ToParams()
         {
-            var parameters = new SqsRequest {
-                { "Action", "ChangeMessageVisibility" },
-                { "ReceiptHandle", ReceiptHandle },
-                { "VisibilityTimeout", (int)VisibilityTimeout.TotalSeconds }
+            return new(4) {
+               new ("Action",            "ChangeMessageVisibility"),
+               new ("ReceiptHandle",     ReceiptHandle),
+               new ("VisibilityTimeout", ((int)VisibilityTimeout.TotalSeconds).ToString(CultureInfo.InvariantCulture))
             };
-            
-            return parameters;
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Amazon.Sqs
 {
@@ -25,14 +27,14 @@ namespace Amazon.Sqs
                 throw new ArgumentException("Must be less than 10", nameof(take));
             }
 
-            if (lockTime != null && lockTime.Value.TotalHours > 12)
+            if (lockTime.HasValue && lockTime.Value.TotalHours > 12)
             {
-                throw new ArgumentException("Must be less than 12 hours ", nameof(lockTime));
+                throw new ArgumentException("Must be less than 12 hours", nameof(lockTime));
             }
 
-            if (waitTime != null && waitTime.Value.TotalSeconds > 20)
+            if (waitTime.HasValue && waitTime.Value.TotalSeconds > 20)
             {
-                throw new ArgumentException("Must be less than 20 seconds ", nameof(waitTime));
+                throw new ArgumentException("Must be less than 20 seconds", nameof(waitTime));
             }
 
             this.take = take;
@@ -44,23 +46,22 @@ namespace Amazon.Sqs
 
         public string[]? MessageAttributeNames { get; set; }
 
-        internal SqsRequest ToParams()
+        internal List<KeyValuePair<string, string>> GetParameters()
         {
-            var parameters = new SqsRequest {
-                { "Action", "ReceiveMessage" }
+            var parameters = new List<KeyValuePair<string, string>> {
+                new ("Action", "ReceiveMessage")
             };
 
             if (take > 1) // default is 1
             {
-                parameters.Add("MaxNumberOfMessages", take);
+                parameters.Add(new ("MaxNumberOfMessages", take.ToString(CultureInfo.InvariantCulture)));
             }
 
             if (AttributeNames != null)
             {
-
                 for (int i = 0; i < AttributeNames.Length; i++)
                 {
-                    parameters.Add("AttributeName." + (i + 1), AttributeNames[i]);
+                    parameters.Add(new ("AttributeName." + (i + 1).ToString(CultureInfo.InvariantCulture), AttributeNames[i]));
                 }
             }
 
@@ -68,18 +69,18 @@ namespace Amazon.Sqs
             {
                 for (int i = 0; i < MessageAttributeNames.Length; i++)
                 {
-                    parameters.Add("MessageAttributeName." + (i + 1), MessageAttributeNames[i]);
+                    parameters.Add(new ("MessageAttributeName." + (i + 1), MessageAttributeNames[i]));
                 }
             }
 
-            if (lockTime != null) // Defaults to the queue visibility timeout
+            if (lockTime.HasValue) // Defaults to the queue visibility timeout
             {
-                parameters.Add("VisibilityTimeout", (int)lockTime.Value.TotalSeconds);
+                parameters.Add(new ("VisibilityTimeout", ((int)lockTime.Value.TotalSeconds).ToString(CultureInfo.InvariantCulture)));
             }
 
-            if (waitTime != null) // Defaults to queue default
+            if (waitTime.HasValue) // Defaults to queue default
             {
-                parameters.Add("WaitTimeSeconds", (int)waitTime.Value.TotalSeconds);
+                parameters.Add(new ("WaitTimeSeconds", ((int)waitTime.Value.TotalSeconds).ToString(CultureInfo.InvariantCulture)));
             }
 
             return parameters;

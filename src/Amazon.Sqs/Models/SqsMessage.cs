@@ -7,7 +7,6 @@ using Carbon.Messaging;
 
 namespace Amazon.Sqs
 {
-
     public sealed class SqsMessage : IQueueMessage<string>
     {
         public SqsMessage() { }
@@ -34,7 +33,6 @@ namespace Amazon.Sqs
         // ...
         [XmlElement("Attribute")]
         public SqsSystemMessageAttribute[] Attributes { get; set; }
-
 
         [XmlElement("MessageAttribute")]
         public SqsMessageAttribute[] MessageAttributes { get; set; }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Amazon.Sqs
 {
@@ -33,27 +35,27 @@ namespace Amazon.Sqs
 
         public MessageAttribute[]? MessageAttributes { get; set; }
 
-        internal SqsRequest GetParameters()
+        internal List<KeyValuePair<string, string>> GetParameters()
         {
-            var parameters = new SqsRequest {
-                { "Action", "SendMessage" },
-                { "MessageBody", MessageBody }
+            var parameters = new List<KeyValuePair<string, string>> {
+                new ("Action", "SendMessage"),
+                new ("MessageBody", MessageBody)
             };
 
             // Defaults to the queue visibility timeout
-            if (Delay != null)
+            if (Delay.HasValue)
             {
-                parameters.Add("DelaySeconds", (int)Delay.Value.TotalSeconds);
+                parameters.Add(new ("DelaySeconds", ((int)Delay.Value.TotalSeconds).ToString(CultureInfo.InvariantCulture)));
             }
 
             if (MessageDeduplicationId != null)
             {
-                parameters.Add("MessageDeduplicationId", MessageDeduplicationId);
+                parameters.Add(new ("MessageDeduplicationId", MessageDeduplicationId));
             }
 
             if (MessageGroupId != null)
             {
-                parameters.Add("MessageGroupId", MessageGroupId);
+                parameters.Add(new ("MessageGroupId", MessageGroupId));
             }
 
             if (MessageAttributes != null)
@@ -62,20 +64,20 @@ namespace Amazon.Sqs
                 {
                     ref MessageAttribute attr = ref MessageAttributes[i];
 
-                    string prefix = "MessageAttribute." + (i + 1).ToString() + ".";
+                    string prefix = "MessageAttribute." + (i + 1).ToString(CultureInfo.InvariantCulture) + ".";
 
-                    parameters.Add(prefix + "Name", attr.Name);
+                    parameters.Add(new (prefix + "Name", attr.Name));
 
                     if (attr.Value.DataType == MessageAttributeDataType.Binary)
                     {
-                        parameters.Add(prefix + "Value.BinaryValue", attr.Value.Value);
+                        parameters.Add(new (prefix + "Value.BinaryValue", attr.Value.Value));
                     }
                     else
                     {
-                        parameters.Add(prefix + "Value.StringValue", attr.Value.Value);
+                        parameters.Add(new (prefix + "Value.StringValue", attr.Value.Value));
                     }
 
-                    parameters.Add(prefix + "Value.DataType", attr.Value.DataType.ToString());
+                    parameters.Add(new (prefix + "Value.DataType", attr.Value.DataType.Canonicalize()));
                 }
             }
 
