@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ses</AssemblyName>
-    <VersionPrefix>0.17.0</VersionPrefix>
+    <VersionPrefix>0.19.0</VersionPrefix>
     <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
