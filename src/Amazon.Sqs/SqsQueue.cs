@@ -47,7 +47,7 @@ namespace Amazon.Sqs
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                var result = await client.ReceiveMessagesAsync(url, request).ConfigureAwait(false);
+                SqsMessage[] result = await client.ReceiveMessagesAsync(url, request, cancellationToken).ConfigureAwait(false);
 
                 if (result.Length > 0)
                 {
@@ -58,9 +58,34 @@ namespace Amazon.Sqs
             return Array.Empty<IQueueMessage<string>>();
         }
 
-        public async Task<IReadOnlyList<IQueueMessage<string>>> GetAsync(int take, TimeSpan? lockTime)
+        public async Task<IReadOnlyList<IQueueMessage<string>>> GetAsync(
+            int take, 
+            TimeSpan? lockTime, 
+            CancellationToken cancellationToken = default)
         {
-            return await client.ReceiveMessagesAsync(url, new RecieveMessagesRequest(take, lockTime)).ConfigureAwait(false);
+            var request = new RecieveMessagesRequest(take, lockTime);
+
+            int retryCount = 0;
+            Exception lastError;
+
+            do
+            {
+                try
+                {
+                    return await client.ReceiveMessagesAsync(url, request, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception ex) when (retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
+                {
+                    lastError = ex;
+                }
+
+                retryCount++;
+
+                await Task.Delay(retryPolicy.GetDelay(retryCount), cancellationToken).ConfigureAwait(false);
+            }
+            while (retryPolicy.ShouldRetry(retryCount));
+
+            throw lastError;
         }
 
         public async Task PutAsync(params IMessage<string>[] messages)
@@ -97,7 +122,7 @@ namespace Amazon.Sqs
                 receiptHandles[i] = messages[i].Receipt.Handle;
             }
 
-            var retryCount = 0;
+            int retryCount = 0;
             Exception lastError;
 
             do
@@ -108,12 +133,10 @@ namespace Amazon.Sqs
 
                     return;
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
                 {
-                    // TODO: Make sure it's recoverable
-
                     lastError = ex;
-                }
+                }                
 
                 retryCount++;
 

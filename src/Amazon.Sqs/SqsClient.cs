@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
+using Amazon.Exceptions;
 using Amazon.Sqs.Models;
 
 using Carbon.Messaging;
@@ -23,10 +28,10 @@ namespace Amazon.Sqs
             if (queueName is null)
                 throw new ArgumentNullException(nameof(queueName));
 
-            var parameters = new SqsRequest {
-                { "Action", "CreateQueue" },
-                { "QueueName", queueName },
-                { "DefaultVisibilityTimeout", defaultVisibilityTimeout } /* in seconds */
+            var parameters = new List<KeyValuePair<string, string>>(4) {
+                new ("Action", "CreateQueue"),
+                new ("QueueName", queueName),
+                new ("DefaultVisibilityTimeout", defaultVisibilityTimeout.ToString(CultureInfo.InvariantCulture)) /* in seconds */
             };
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
@@ -39,7 +44,7 @@ namespace Amazon.Sqs
         }
 
         /*
-        public Task DeleteQueue(string queueName)
+        public Task DeleteQueueAsync(string queueName)
         {
             throw new NotImplementedException();
         }
@@ -51,31 +56,29 @@ namespace Amazon.Sqs
                 throw new ArgumentNullException(nameof(messages));
 
             if (messages.Length > 10)
-                throw new ArgumentException("Must be 10 or fewer.", nameof(messages));
+                throw new ArgumentException("Must be 10 or fewer", nameof(messages));
 
             // Max payload = 256KB (262,144 bytes)
 
-            var parameters = new SqsRequest {
-                { "Action", "SendMessageBatch" }
+            var parameters = new List<KeyValuePair<string, string>>((messages.Length * 2) + 2) {
+                new ("Action", "SendMessageBatch")
             };
 
             for (int i = 0; i < messages.Length; i++)
             {
-                var message = messages[i];
+                string message = messages[i];
+                string prefix = "SendMessageBatchRequestEntry." + (i + 1).ToString(CultureInfo.InvariantCulture) + ".";
 
-                var prefix = "SendMessageBatchRequestEntry." + (i + 1) + ".";
-
-                parameters.Add(prefix + "Id", i);                   // .Id				Required
-                parameters.Add(prefix + "MessageBody", message);    // .MessageBody		Required
-                                                                    // .DelaySeconds	Optional, Max 900(15min)
-
+                parameters.Add(new (prefix + "Id", i.ToString(CultureInfo.InvariantCulture)));    // .Id				Required
+                parameters.Add(new (prefix + "MessageBody", message));                            // .MessageBody		Required
+                                                                                                  // .DelaySeconds	Optional, Max 900(15min)
             }
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(parameters)
             };
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
             return SendMessageBatchResponse.Parse(responseText).SendMessageBatchResult.Items;
         }
@@ -93,15 +96,18 @@ namespace Amazon.Sqs
             return SendMessageResponse.Parse(responseText).SendMessageResult;
         }
 
-        public async Task<SqsMessage[]> ReceiveMessagesAsync(Uri queueUrl, RecieveMessagesRequest request)
+        public async Task<SqsMessage[]> ReceiveMessagesAsync(
+            Uri queueUrl,
+            RecieveMessagesRequest request, 
+            CancellationToken cancellationToken = default)
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
-                Content = GetPostContent(request.ToParams())
+                Content = GetPostContent(request.GetParameters())
             };
 
-            string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            string responseText = await SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 
             var response = ReceiveMessageResponse.Parse(responseText);
 
@@ -112,9 +118,9 @@ namespace Amazon.Sqs
         {
             if (recieptHandle is null) throw new ArgumentNullException(nameof(recieptHandle));
 
-            var parameters = new SqsRequest {
-                { "Action", "DeleteMessage" },
-                { "ReceiptHandle", recieptHandle }
+            var parameters = new List<KeyValuePair<string, string>>(3) {
+                new ("Action", "DeleteMessage"),
+                new ("ReceiptHandle", recieptHandle)
             };
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
@@ -145,25 +151,24 @@ namespace Amazon.Sqs
 
             // Max payload = 64KB (65,536 bytes)
 
-            var parameters = new SqsRequest {
-                { "Action", "DeleteMessageBatch" }
+            var parameters = new List<KeyValuePair<string, string>>((recieptHandles.Length * 2) + 2) {
+                new ("Action", "DeleteMessageBatch")
             };
 
             for (int i = 0; i < recieptHandles.Length; i++)
             {
-                var handle = recieptHandles[i];
+                string handle = recieptHandles[i];
+                string prefix = "DeleteMessageBatchRequestEntry." + (i + 1).ToString(CultureInfo.InvariantCulture) + ".";
 
-                var prefix = "DeleteMessageBatchRequestEntry." + (i + 1) + ".";
-
-                parameters.Add(prefix + "Id", i);                   // DeleteMessageBatchRequestEntry.n.Id
-                parameters.Add(prefix + "ReceiptHandle", handle);   // DeleteMessageBatchRequestEntry.n.ReceiptHandle			Required
+                parameters.Add(new (prefix + "Id", i.ToString(CultureInfo.InvariantCulture))); // DeleteMessageBatchRequestEntry.n.Id
+                parameters.Add(new (prefix + "ReceiptHandle", handle));                        // DeleteMessageBatchRequestEntry.n.ReceiptHandle
             }
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(parameters)
             };
 
-            var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
             // Because the batch request can result in a combination of successful and unsuccessful actions, 
             // you should check for batch errors even when the call returns an HTTP status code of 200.
@@ -172,22 +177,28 @@ namespace Amazon.Sqs
 
         #region Helpers
 
-        private static FormUrlEncodedContent GetPostContent(SqsRequest request)
+        private static FormUrlEncodedContent GetPostContent(List<KeyValuePair<string, string>> parameters)
         {
-            request.Add("Version", Version);
+            parameters.Add(new ("Version", Version));
 
-            return new FormUrlEncodedContent(request.Parameters);
+            return new FormUrlEncodedContent(parameters);
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            if (response.StatusCode == HttpStatusCode.ServiceUnavailable) // 503
+            {
+                return new ServiceUnavailableException();
+            }
+
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             throw new QueueException(response.StatusCode + "/" + responseText);
         }
 
         #endregion
     }
+
 }
 
 // http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/Welcome.html

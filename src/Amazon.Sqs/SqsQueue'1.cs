@@ -48,7 +48,7 @@ namespace Amazon.Sqs
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                var result = await client.ReceiveMessagesAsync(url, request).ConfigureAwait(false);
+                var result = await client.ReceiveMessagesAsync(url, request, cancellationToken).ConfigureAwait(false);
 
                 if (result.Length == 0) continue;
 
@@ -58,11 +58,14 @@ namespace Amazon.Sqs
             return Array.Empty<IQueueMessage<T>>();
         }
 
-        public async Task<IReadOnlyList<IQueueMessage<T>>> GetAsync(int take, TimeSpan? lockTime)
+        public async Task<IReadOnlyList<IQueueMessage<T>>> GetAsync(
+            int take,
+            TimeSpan? lockTime, 
+            CancellationToken cancellationToken)
         {
             var request = new RecieveMessagesRequest(take, lockTime);
 
-            var result = await client.ReceiveMessagesAsync(url, request).ConfigureAwait(false);
+            var result = await client.ReceiveMessagesAsync(url, request, cancellationToken).ConfigureAwait(false);
 
             return Convert(result);
         }
@@ -132,7 +135,10 @@ namespace Amazon.Sqs
 
         public async Task DeleteAsync(params IQueueMessage<T>[] messages)
         {
-            if (messages is null) throw new ArgumentNullException(nameof(messages));
+            if (messages is null)
+            {
+                throw new ArgumentNullException(nameof(messages));
+            }
 
             if (messages.Length == 0) return;
 
@@ -154,7 +160,7 @@ namespace Amazon.Sqs
 
                     return;
                 }
-                catch (Exception ex) // TODO: Make sure it's recoverable
+                catch (Exception ex) when (retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
                 {
                     lastError = ex;
                 }
