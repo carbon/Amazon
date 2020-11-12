@@ -62,7 +62,7 @@ namespace Amazon.Security
             using var output = new StringWriter();
 
             output.Write(request.Method.Method)                               ; output.Write('\n'); // HTTPRequestMethod      + \n
-            WriteCanonicalizedUri(output, request.RequestUri.AbsolutePath)    ; output.Write('\n'); // CanonicalURI           + \n
+            WriteCanonicalizedUri(output, request.RequestUri!.AbsolutePath)   ; output.Write('\n'); // CanonicalURI           + \n
             WriteCanonicalizedQueryString(output, request.RequestUri)         ; output.Write('\n'); // CanonicalQueryString   + \n
             WriteCanonicalizedHeaders(output, request, out signedHeaderNames) ; output.Write('\n'); // CanonicalHeaders       + \n
             output.Write(string.Empty)                                        ; output.Write('\n'); //                        + \n
@@ -158,7 +158,7 @@ namespace Amazon.Security
             // STREAMING-AWS4-HMAC-SHA256-PAYLOAD
             // UNSIGNED-PAYLOAD
 
-            return (request.Headers.TryGetValues("x-amz-content-sha256", out var contentSha256Header))
+            return request.Headers.TryGetValues("x-amz-content-sha256", out var contentSha256Header)
                 ? contentSha256Header.First()
                 : ComputeSHA256(request.Content);
         }
@@ -490,21 +490,29 @@ namespace Amazon.Security
 
         public static byte[] ComputeSHA256(string text)
         {
+#if NET5_0
+            return SHA256.HashData(Encoding.UTF8.GetBytes(text));
+#else
             using SHA256 algorithm = SHA256.Create();
 
             return algorithm.ComputeHash(Encoding.UTF8.GetBytes(text));
+#endif
         }
 
         public static byte[] ComputeSHA256(byte[] data)
         {
+#if NET5_0
+            return SHA256.HashData(data);
+#else
             using SHA256 algorithm = SHA256.Create();
 
             return algorithm.ComputeHash(data);
+#endif
         }
 
         public static string ComputeSHA256(HttpContent content)
         {
-            return content?.ReadAsByteArrayAsync().Result is byte[] data && data.Length > 0
+            return content?.ReadAsByteArrayAsync().Result is byte[] { Length: > 0 } data
                 ? HexString.FromBytes(ComputeSHA256(data))
                 : emptySha256;
         }

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Core</AssemblyName>
-    <Version>0.17.1</Version>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
+    <Version>0.18.2</Version>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
 
@@ -16,8 +16,8 @@
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Text.Json" Version="4.7.2" />
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net5.0' ">
+    <PackageReference Include="System.Text.Json" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
