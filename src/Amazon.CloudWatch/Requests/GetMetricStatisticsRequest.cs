@@ -1,10 +1,11 @@
 ﻿#nullable disable
 
 using System;
+using System.Globalization;
 
 namespace Amazon.CloudWatch
 {
-    public class GetMetricStatisticsRequest
+    public sealed class GetMetricStatisticsRequest
     {
         public GetMetricStatisticsRequest(string nameSpace, string metricName)
         {
@@ -59,7 +60,7 @@ namespace Amazon.CloudWatch
                 {
                     var dimension = Dimensions[i];
 
-                    var prefix = "Dimensions.member." + (i + 1) + ".";
+                    string prefix = "Dimensions.member." + (i + 1).ToString(CultureInfo.InvariantCulture) + ".";
 
                     parameters.Add(prefix + "Name", dimension.Name);
                     parameters.Add(prefix + "Value", dimension.Value);
