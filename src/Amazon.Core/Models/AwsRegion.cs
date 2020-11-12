@@ -55,7 +55,7 @@ namespace Amazon
 
         // Soon:  Ningxia (China)
 
-        public static AwsRegion[] All = new AwsRegion[] {
+        public static readonly AwsRegion[] All = new [] {
             USEast1,
             EUWest1,  
             USWest1,     
@@ -104,6 +104,22 @@ namespace Amazon
         };
 
         private static AwsRegion? current;
+
+#if NET5_0
+
+        public static AwsRegion Get()
+        {
+            if (current is null)
+            {
+                string availabilityZone = InstanceMetadataService.Instance.GetAvailabilityZone();
+
+                current = FromAvailabilityZone(availabilityZone);
+            }
+
+            return current;
+        }
+
+#endif
 
         public static async ValueTask<AwsRegion> GetAsync()
         {
