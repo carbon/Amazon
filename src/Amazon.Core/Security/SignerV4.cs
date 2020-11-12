@@ -490,13 +490,7 @@ namespace Amazon.Security
 
         public static byte[] ComputeSHA256(string text)
         {
-#if NET5_0
-            return SHA256.HashData(Encoding.UTF8.GetBytes(text));
-#else
-            using SHA256 algorithm = SHA256.Create();
-
-            return algorithm.ComputeHash(Encoding.UTF8.GetBytes(text));
-#endif
+            return ComputeSHA256(Encoding.UTF8.GetBytes(text));
         }
 
         public static byte[] ComputeSHA256(byte[] data)
