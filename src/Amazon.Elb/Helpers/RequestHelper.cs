@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Amazon.Elb
 {
@@ -22,7 +23,7 @@ namespace Amazon.Elb
                 {
                     for (int i = 0; i < list.Count; i++)
                     {
-                        string prefix = member.Name + ".member." + (i + 1);
+                        string prefix = member.Name + ".member." + (i + 1).ToString(CultureInfo.InvariantCulture);
 
                         var element = list[i];
 

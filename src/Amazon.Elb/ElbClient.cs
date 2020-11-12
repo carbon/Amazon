@@ -190,8 +190,8 @@ namespace Amazon.Elb
 
         #region Helpers
 
-        private async Task<T> SendAsync<T>(IElbRequest request)
-            where T: IElbResponse
+        private async Task<TResult> SendAsync<TResult>(IElbRequest request)
+            where TResult: IElbResponse
         {
             var parameters = RequestHelper.ToParams(request);
 
@@ -202,7 +202,7 @@ namespace Amazon.Elb
 
             var responseText = await base.SendAsync(httpRequest).ConfigureAwait(false);
 
-            return ElbSerializer<T>.DeserializeXml(responseText);
+            return ElbSerializer<TResult>.DeserializeXml(responseText);
         }
 
         private FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)
