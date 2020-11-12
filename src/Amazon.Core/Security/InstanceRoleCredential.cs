@@ -73,7 +73,7 @@ namespace Amazon
             if (!ShouldRenew) return false;
 
             // Lock so we only renew the credentials once
-            if (!(await gate.WaitAsync(2000).ConfigureAwait(false)))
+            if (!(await gate.WaitAsync(2_000).ConfigureAwait(false)))
             {
                 throw new TimeoutException("Timeout waiting for mutex to renew credentials (2s)");
             }
@@ -89,7 +89,7 @@ namespace Amazon
                         throw new Exception("The instance is not configured with an IAM role");
                     }
 
-                    var iamCredential = await InstanceMetadataService.Instance.GetIamSecurityCredentials(RoleName).ConfigureAwait(false);
+                    var iamCredential = await InstanceMetadataService.Instance.GetIamSecurityCredentialsAsync(RoleName).ConfigureAwait(false);
 
                     Set(iamCredential);
 
@@ -104,20 +104,33 @@ namespace Amazon
             return true;
         }
 
+#if NET5_0
+        public static InstanceRoleCredential Get()
+        {
+            var ims = InstanceMetadataService.Instance;
+
+            string roleName = ims.GetIamRoleName();
+
+            var iamCredential = ims.GetIamSecurityCredentials(roleName);
+
+            return new InstanceRoleCredential(roleName, iamCredential);
+        }
+#endif
+
         public static async Task<InstanceRoleCredential> GetAsync()
         {
             var ims = InstanceMetadataService.Instance;
 
             string roleName = await ims.GetIamRoleNameAsync().ConfigureAwait(false);
 
-            var iamCredential = await ims.GetIamSecurityCredentials(roleName).ConfigureAwait(false);
+            var iamCredential = await ims.GetIamSecurityCredentialsAsync(roleName).ConfigureAwait(false);
 
             return new InstanceRoleCredential(roleName, iamCredential);
         }
 
         public static async Task<InstanceRoleCredential> GetAsync(string roleName)
         {
-            var iamCredential = await InstanceMetadataService.Instance.GetIamSecurityCredentials(roleName).ConfigureAwait(false);
+            var iamCredential = await InstanceMetadataService.Instance.GetIamSecurityCredentialsAsync(roleName).ConfigureAwait(false);
 
             return new InstanceRoleCredential(roleName, iamCredential);
         }

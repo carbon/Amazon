@@ -7,18 +7,16 @@ using System.Threading.Tasks;
 
 namespace Amazon.Metadata
 {
-    public sealed class InstanceMetadataService
+    public sealed partial class InstanceMetadataService
     {
-        public static readonly InstanceMetadataService Instance = new InstanceMetadataService();
+        public static readonly InstanceMetadataService Instance = new ();
 
         private InstanceMetadataService() { }
-
-        private static readonly JsonSerializerOptions camelCasePolicy = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
         private const string baseMetadataUri = "http://169.254.169.254/latest/meta-data";
 
         private readonly HttpClient httpClient = new HttpClient {
-            Timeout = TimeSpan.FromSeconds(5)
+            Timeout = TimeSpan.FromSeconds(3)
         };
 
         // If Amazon EC2 is not preparing to stop or terminate the instance, 
@@ -34,7 +32,7 @@ namespace Amazon.Metadata
             return JsonSerializer.Deserialize<InstanceAction>(value);
         }
 
-        internal async Task<IamSecurityCredentials> GetIamSecurityCredentials(string roleName)
+        internal async Task<IamSecurityCredentials> GetIamSecurityCredentialsAsync(string roleName)
         {
             string requestUri = baseMetadataUri + "/iam/security-credentials/" + roleName;
 
@@ -53,7 +51,9 @@ namespace Amazon.Metadata
                     
                     using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-                    return await JsonSerializer.DeserializeAsync<IamSecurityCredentials>(responseStream).ConfigureAwait(false);
+                    var result = await JsonSerializer.DeserializeAsync<IamSecurityCredentials>(responseStream).ConfigureAwait(false);
+
+                    return result!;
                 }
                 catch (Exception ex)
                 {
@@ -72,7 +72,9 @@ namespace Amazon.Metadata
 
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await JsonSerializer.DeserializeAsync<InstanceIdentity>(responseStream, camelCasePolicy).ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync<InstanceIdentity>(responseStream).ConfigureAwait(false);
+
+            return result!;
         }
 
         // us-east-1a
@@ -123,9 +125,13 @@ namespace Amazon.Metadata
                 throw new ArgumentException("Must be > 0 & less than 6 hours", nameof(lifetime));
             }
 
+            int lifetimeInSeconds = (int)lifetime.TotalSeconds;
+
             var request = new HttpRequestMessage(HttpMethod.Put, "http://169.254.169.254/latest/api/token")
             {
-                Headers = { { "X-aws-ec2-metadata-token-ttl-seconds", ((int)lifetime.TotalSeconds).ToString(CultureInfo.InvariantCulture) } }
+                Headers = { 
+                    { "X-aws-ec2-metadata-token-ttl-seconds", lifetimeInSeconds.ToString(CultureInfo.InvariantCulture) } 
+                }
             };
 
             using HttpResponseMessage response = await httpClient.SendAsync(request).ConfigureAwait(false);
@@ -135,10 +141,10 @@ namespace Amazon.Metadata
             return new MetadataToken(responseText, DateTime.UtcNow + lifetime);
         }
 
-        private async ValueTask<MetadataToken> GetTokenAsync()
+        private async Task<MetadataToken> GetTokenAsync()
         {
             // does not expire within 5 minutes
-            if (token != null && token.Expires > DateTime.UtcNow.AddMinutes(5))
+            if (token is not null && token.Expires > DateTime.UtcNow.AddMinutes(5))
             {
                 return token;
             }
