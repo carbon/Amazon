@@ -11,3 +11,4 @@ obj/
 /release
 src/packages
 .vs
+src/Amazon.S3.Tests/ClientTests.cs

@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Amazon.Security;
@@ -28,7 +29,7 @@ namespace Amazon
             })
             {
                 DefaultRequestHeaders = {
-                    { "User-Agent", "Carbon/2.5" }
+                    { "User-Agent", "Carbon/2.6" }
                 }
             };
         }
@@ -47,11 +48,16 @@ namespace Amazon
 
         public AwsRegion Region { get; }
 
-        protected async Task<string> SendAsync(HttpRequestMessage request)
+        protected Task<string> SendAsync(HttpRequestMessage request)
+        {
+            return SendAsync(request, default);
+        }
+
+        protected async Task<string> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             await SignAsync(request).ConfigureAwait(false);
 
-            using HttpResponseMessage response = await httpClient.SendAsync(request).ConfigureAwait(false);
+            using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -61,7 +67,7 @@ namespace Amazon
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
         
-        protected async ValueTask SignAsync(HttpRequestMessage request)
+        protected async Task SignAsync(HttpRequestMessage request)
         {
             if (credential.ShouldRenew)
             {
@@ -70,10 +76,10 @@ namespace Amazon
 
             DateTimeOffset date = DateTimeOffset.UtcNow;
 
-            request.Headers.Host = request.RequestUri.Host;
+            request.Headers.Host = request.RequestUri!.Host;
             request.Headers.Date = date;
 
-            if (credential.SecurityToken != null)
+            if (credential.SecurityToken is not null)
             {
                 request.Headers.Add("x-amz-security-token", credential.SecurityToken);
             }

@@ -1,11 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Amazon
 {
     public class AwsRequest : IEnumerable<KeyValuePair<string, string>>
     {
-        public Dictionary<string, string> Parameters { get; } = new ();
+        public AwsRequest() 
+        {
+            Parameters = new Dictionary<string, string>();
+        }
+
+        public AwsRequest(KeyValuePair<string, string>[] parameters)
+        {
+            Parameters = new Dictionary<string, string>(parameters.Length);
+
+            foreach (var parameter in parameters)
+            {
+                Parameters.Add(parameter.Key, parameter.Value);
+            }
+        }
+
+        public Dictionary<string, string> Parameters { get; }
 
         public void Add(string name, string value)
         {
@@ -14,15 +30,13 @@ namespace Amazon
 
         public void Add(string name, int value)
         {
-            Parameters.Add(name, value.ToString());
+            Parameters.Add(name, value.ToString(CultureInfo.InvariantCulture));
         }
 
-        #region IEnumerable
+        // IEnumerable
 
         public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => Parameters.GetEnumerator();
         
         IEnumerator IEnumerable.GetEnumerator() => Parameters.GetEnumerator();
-
-        #endregion
     }
 }

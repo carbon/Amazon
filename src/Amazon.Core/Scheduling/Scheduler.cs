@@ -12,6 +12,11 @@ namespace Amazon.Scheduling
 
             do
             {
+                if (retryCount > 0)
+                {
+                    await Task.Delay(policy.GetDelay(retryCount)).ConfigureAwait(false);
+                }
+
                 try
                 {
                     return await action().ConfigureAwait(false);
@@ -22,8 +27,6 @@ namespace Amazon.Scheduling
                 }
 
                 retryCount++;
-
-                await Task.Delay(policy.GetDelay(retryCount)).ConfigureAwait(false);
             }
             while (policy.ShouldRetry(retryCount));
 
