@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 
 namespace Amazon.S3
 {
@@ -20,14 +19,6 @@ namespace Amazon.S3
 
         public byte[] Key { get; }
 
-        public readonly byte[] KeyMD5
-        {
-            get
-            {
-                using MD5 md5 = MD5.Create();
-
-                return md5.ComputeHash(Key);
-            }
-        }
+        public readonly byte[] KeyMD5 => HashHelper.ComputeMD5Hash(Key);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Amazon.S3
@@ -16,9 +15,7 @@ namespace Amazon.S3
 
             Content = new StringContent(xmlText, Encoding.UTF8, "text/xml");
 
-            using MD5 md5 = MD5.Create();
-
-            Content.Headers.ContentMD5 = md5.ComputeHash(Encoding.UTF8.GetBytes(xmlText));
+            Content.Headers.ContentMD5 = HashHelper.ComputeMD5Hash(xmlText);
 
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }
@@ -28,12 +25,12 @@ namespace Amazon.S3
         public int Days { get; set; } = 7; // Default to 7
 
         public string GetXmlString() =>
-$@"<RestoreRequest>
+FormattableString.Invariant($@"<RestoreRequest>
   <Days>{Days}</Days>
   <GlacierJobParameters>
     <Tier>{Tier}</Tier>
   </GlacierJobParameters>
-</RestoreRequest>";
+</RestoreRequest>");
     }
 }
 
