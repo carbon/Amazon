@@ -63,21 +63,18 @@ namespace Amazon.Kinesis
 
             string responseText = await SendAsync(message).ConfigureAwait(false);
 
-            return JsonSerializer.Deserialize<TResult>(responseText);
+            return JsonSerializer.Deserialize<TResult>(responseText)!;
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var error = JsonSerializer.Deserialize<ErrorResult>(responseText);
 
             error.Text = responseText;
 
-            return new KinesisException(error)
-            {
-                StatusCode = response.StatusCode
-            };
+            return new KinesisException(error, response.StatusCode);
         }
 
         private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { IgnoreNullValues = true };

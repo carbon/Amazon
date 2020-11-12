@@ -9,19 +9,18 @@ namespace Amazon.Kinesis
 	{
 		private readonly ErrorResult error;
 
-		public KinesisException(ErrorResult error)
+		public KinesisException(ErrorResult error, HttpStatusCode statusCode)
 			: base(error.Type ?? error.Text)
 		{
 			this.error = error;
+			StatusCode = statusCode;
 		}
 
         public string Type => error.Type;
 
-		public HttpStatusCode StatusCode { get; set; }
+		public HttpStatusCode StatusCode { get; }
 
-		public bool IsTransient
-			=> string.Equals(error.Type, "ProvisionedThroughputExceededException", StringComparison.Ordinal)
-			|| string.Equals(error.Type, "InternalFailure", StringComparison.Ordinal);
+		public bool IsTransient => error.Type is "ProvisionedThroughputExceededException" or "InternalFailure";
 	}
 }
 
