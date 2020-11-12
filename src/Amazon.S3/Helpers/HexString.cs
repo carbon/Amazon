@@ -30,6 +30,9 @@ namespace Amazon.Helpers
         // COPYRIGHT: https://stackoverflow.com/a/17923942
         public static byte[] ToBytes(ReadOnlySpan<char> hexString)
         {
+#if NET5_0
+            return Convert.FromHexString(hexString);
+#else
             byte[] bytes = new byte[hexString.Length / 2];
 
             for (int i = 0; i < bytes.Length; i++)
@@ -38,7 +41,10 @@ namespace Amazon.Helpers
             }
 
             return bytes;
+#endif
         }
+
+#if !NET5_0
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static byte ToByte(char a, char b)
@@ -53,5 +59,7 @@ namespace Amazon.Helpers
 
             return (byte)(lo | hi << 4);
         }
+
+#endif
     }
 }
