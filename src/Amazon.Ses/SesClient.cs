@@ -13,7 +13,7 @@ namespace Amazon.Ses
 
         public const string Namespace = "http://ses.amazonaws.com/doc/2010-12-01/";
 
-        private static readonly RetryPolicy retryPolicy = new ExponentialBackoffRetryPolicy(
+        private static readonly ExponentialBackoffRetryPolicy retryPolicy = new (
             initialDelay : TimeSpan.FromSeconds(1),
             maxDelay     : TimeSpan.FromSeconds(10),
             maxRetries   : 5
@@ -87,7 +87,7 @@ namespace Amazon.Ses
 
             var errorResponse = ErrorResponse.Parse(responseText);
 
-            return new SesException(errorResponse.Error);
+            return new SesException(errorResponse.Error, response.StatusCode);
         }
 
         private Task<string> Send(SesRequest request)
