@@ -1,10 +1,12 @@
-﻿using System;
+﻿using System.Net;
+
+using Amazon.Exceptions;
 
 namespace Amazon.Route53.Exceptions
 {
-    public class Route53Exception : Exception
+    public sealed class Route53Exception : AwsException
     {
-        public Route53Exception(string message)
-            : base(message) { }
+        public Route53Exception(string message, HttpStatusCode statusCode)
+            : base(message, statusCode) { }
     }
 }

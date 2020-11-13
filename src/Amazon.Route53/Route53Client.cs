@@ -72,7 +72,7 @@ namespace Amazon.Route53
         {
             string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            return new Route53Exception(responseText);
+            return new Route53Exception(responseText, response.StatusCode);
         }
     }
 }

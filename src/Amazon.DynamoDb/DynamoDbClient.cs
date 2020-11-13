@@ -265,13 +265,9 @@ namespace Amazon.DynamoDb
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            var result = await DynamoDbException.FromResponseAsync(response).ConfigureAwait(false);
 
-            var ex = await DynamoDbException.DeserializeAsync(stream).ConfigureAwait(false);
-
-            ex.StatusCode = (int)response.StatusCode;
-
-            return ex;
+            return result;
         }
 
         #endregion

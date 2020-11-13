@@ -1,13 +1,15 @@
-﻿using System;
+﻿using System.Net;
+
+using Amazon.Exceptions;
 
 namespace Amazon.Ses
 {
-    public sealed class SesException : Exception
+    public sealed class SesException : AwsException
     {
         private readonly SesError error;
 
-        public SesException(SesError error)
-            : base(error.Message)
+        public SesException(SesError error, HttpStatusCode statusCode)
+            : base(error.Message, statusCode)
         {
             this.error = error;
         }
@@ -16,8 +18,6 @@ namespace Amazon.Ses
 
         public string Code => error.Code;
 
-        public bool IsTransient => 
-            string.Equals(Code, "Throttling", StringComparison.Ordinal) || 
-            string.Equals(Code, "ServiceUnavailable", StringComparison.Ordinal);
+        public bool IsTransient => HttpStatusCode is HttpStatusCode.InternalServerError or HttpStatusCode.ServiceUnavailable || Code is "Throttling";
     }
 }

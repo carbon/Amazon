@@ -1,47 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+using Amazon.Exceptions;
 using Amazon.Scheduling;
 
 namespace Amazon.DynamoDb
 {
-    public class DynamoDbException : Exception, IException
+    public class DynamoDbException : AwsException, IException
     {
-        public DynamoDbException(string message)
-            : base(message) { }
+        public DynamoDbException(string message, HttpStatusCode statusCode)
+            : base(message, statusCode) { }
 
-        public DynamoDbException(string message, string? type)
-          : base(message)
+        public DynamoDbException(string message, string? type, HttpStatusCode statusCode)
+          : base(message, statusCode)
         {
             Type = type;
         }
 
-        public DynamoDbException(string message, Exception innerException)
-            : base(message, innerException) { }
+        public DynamoDbException(string message, Exception innerException, HttpStatusCode statusCode = default)
+            : base(message, innerException, statusCode) { }
 
-        public DynamoDbException(string message, List<Exception> exceptions)
-            : base(message)
+        public string? Type { get; }
+
+        public static async Task<DynamoDbException> FromResponseAsync(HttpResponseMessage response)
         {
-            Exceptions = exceptions;
-        }
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-        public string? Type { get; set; }
-
-        public int StatusCode { get; set; }
-
-        public IReadOnlyList<Exception>? Exceptions { get; }
-
-        public static async Task<DynamoDbException> DeserializeAsync(Stream stream)
-        {
             using var doc = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
 
             JsonElement json = doc.RootElement;
 
-            string type = "";
-            string message = "";
+            string type = string.Empty;
+            string message = string.Empty;
 
             if (json.TryGetProperty("message", out JsonElement m))
             {
@@ -66,10 +59,10 @@ namespace Amazon.DynamoDb
 
             if (string.Equals(type, "ConditionalCheckFailedException", StringComparison.Ordinal))
             {
-                return new ConflictException(message);
+                return new ConflictException(message, response.StatusCode);
             }
 
-            return new DynamoDbException(message, type);
+            return new DynamoDbException(message, type, response.StatusCode);
         }
 
         public bool IsTransient

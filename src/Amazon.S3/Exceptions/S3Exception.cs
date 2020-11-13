@@ -11,10 +11,10 @@ namespace Amazon.S3
             HttpStatusCode = statusCode;
         }
 
-        public S3Exception(string message, Exception ex)
-            : base(message, ex)
+        public S3Exception(string message, Exception innerException)
+            : base(message, innerException)
         {
-            if (ex is S3Exception s3Exception)
+            if (innerException is S3Exception s3Exception)
             {
                 HttpStatusCode = s3Exception.HttpStatusCode;
                 ErrorCode      = s3Exception.ErrorCode;
@@ -41,6 +41,6 @@ namespace Amazon.S3
 
         public string? RequestId { get; }
 
-        public bool IsTransient => HttpStatusCode == HttpStatusCode.InternalServerError || HttpStatusCode == HttpStatusCode.ServiceUnavailable; // 500 || 503
+        public bool IsTransient => HttpStatusCode is HttpStatusCode.InternalServerError or HttpStatusCode.ServiceUnavailable; // 500 || 503
     }
 }

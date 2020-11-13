@@ -1,24 +1,21 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 
+using Amazon.Exceptions;
 using Amazon.Scheduling;
 
 namespace Amazon.Kinesis
 {
-    public sealed class KinesisException : Exception, IException
+    public sealed class KinesisException : AwsException, IException
 	{
 		private readonly ErrorResult error;
 
 		public KinesisException(ErrorResult error, HttpStatusCode statusCode)
-			: base(error.Type ?? error.Text)
+			: base(error.Type ?? error.Text, statusCode)
 		{
 			this.error = error;
-			StatusCode = statusCode;
 		}
 
         public string Type => error.Type;
-
-		public HttpStatusCode StatusCode { get; }
 
 		public bool IsTransient => error.Type is "ProvisionedThroughputExceededException" or "InternalFailure";
 	}
