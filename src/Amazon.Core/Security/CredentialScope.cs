@@ -13,16 +13,16 @@ namespace Amazon.Security
             Service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public readonly DateTime Date;
+        public DateTime Date { get; }
 
-        public readonly AwsRegion Region;
+        public AwsRegion Region { get; }
 
-        public readonly AwsService Service;
+        public AwsService Service { get; }
 
         // 20120228/us-east-1/iam/aws4_request
         public readonly override string ToString() => $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request";
 
-        public readonly void WriteTo(TextWriter output)
+        internal readonly void WriteTo(TextWriter output)
         {
             output.Write(Date.ToString("yyyyMMdd", CultureInfo.InvariantCulture));
             output.Write('/');

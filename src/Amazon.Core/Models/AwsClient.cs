@@ -48,12 +48,7 @@ namespace Amazon
 
         public AwsRegion Region { get; }
 
-        protected Task<string> SendAsync(HttpRequestMessage request)
-        {
-            return SendAsync(request, default);
-        }
-
-        protected async Task<string> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected async Task<string> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
         {
             await SignAsync(request).ConfigureAwait(false);
 
@@ -67,7 +62,7 @@ namespace Amazon
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
         
-        protected async Task SignAsync(HttpRequestMessage request)
+        protected async ValueTask SignAsync(HttpRequestMessage request)
         {
             if (credential.ShouldRenew)
             {

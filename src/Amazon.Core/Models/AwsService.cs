@@ -6,7 +6,7 @@ namespace Amazon
     {
         private AwsService(string name)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name;
         }
 
         public string Name { get; }
@@ -40,10 +40,12 @@ namespace Amazon
 
         public bool Equals(AwsService? other)
         {
-            return ReferenceEquals(this, other) || Name.Equals(other?.Name, StringComparison.Ordinal);
+            if (other is null) return this is null;
+
+            return ReferenceEquals(this, other) || Name.Equals(other.Name, StringComparison.Ordinal);
         }
 
-        public override bool Equals(object? obj) => this.Equals(obj as AwsService);
+        public override bool Equals(object? obj) => obj is AwsService other && Equals(other);
 
         public static bool operator ==(AwsService lhs, AwsService rhs) => lhs.Equals(rhs);
 
@@ -51,7 +53,15 @@ namespace Amazon
 
         public override int GetHashCode() => Name.GetHashCode();
 
-        public static implicit operator AwsService(string name) => new AwsService(name);
+        public static implicit operator AwsService(string name)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return new AwsService(name);
+        }
     }
 }
 

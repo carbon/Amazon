@@ -87,7 +87,10 @@ namespace Amazon.Security
 
         public static string CanonicalizeUri(string path)
         {
-            if (path.Length == 1 && path[0] == '/') return "/";
+            if (path.Length == 1 && path[0] == '/')
+            {
+                return "/";
+            }
 
             using var output = new StringWriter();
 

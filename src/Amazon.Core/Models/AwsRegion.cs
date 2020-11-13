@@ -18,7 +18,12 @@ namespace Amazon
 
         #region Equality
 
-        public bool Equals(AwsRegion? other) => ReferenceEquals(this, other) || Name.Equals(other?.Name, StringComparison.Ordinal);
+        public bool Equals(AwsRegion? other)
+        {
+            if (other is null) return this is null;
+
+            return ReferenceEquals(this, other) || Name.Equals(other.Name, StringComparison.Ordinal);
+        }
 
         public override bool Equals(object? obj) => Equals(obj as AwsRegion);
 
