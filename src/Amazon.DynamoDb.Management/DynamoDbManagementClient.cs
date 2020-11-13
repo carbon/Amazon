@@ -97,7 +97,7 @@ namespace Amazon.DynamoDb
         {
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            var ex = await DynamoDbException.DeserializeAsync(stream).ConfigureAwait(false);
+            var ex = await DynamoDbException.FromResponseAsync(stream).ConfigureAwait(false);
 
             ex.StatusCode = (int)response.StatusCode;
 
