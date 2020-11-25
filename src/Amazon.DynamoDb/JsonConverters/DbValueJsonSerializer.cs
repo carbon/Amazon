@@ -90,7 +90,7 @@ namespace Amazon.DynamoDb.JsonConverters
                     break;
                 }
 
-                stringListHandle.Value.Add(reader.GetString());
+                stringListHandle.Value.Add(reader.GetString()!);
             }
 
             return stringListHandle.Value.ToArray();

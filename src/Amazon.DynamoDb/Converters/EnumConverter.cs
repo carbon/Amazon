@@ -6,7 +6,7 @@ namespace Amazon.DynamoDb
 {
     internal sealed class EnumConverter : IDbValueConverter
     {
-        public static readonly EnumConverter Default = new EnumConverter();
+        public static readonly EnumConverter Default = new ();
 
         // ulong?
 

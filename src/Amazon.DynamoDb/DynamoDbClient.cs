@@ -218,7 +218,7 @@ namespace Amazon.DynamoDb
 
             if (!response.IsSuccessStatusCode)
             {
-                throw await GetExceptionAsync(response).ConfigureAwait(false);
+                throw await DynamoDbException.FromResponseAsync(response).ConfigureAwait(false);
             }
 
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
@@ -227,6 +227,7 @@ namespace Amazon.DynamoDb
         }
 
         private async Task<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
+            where TResult: notnull
         {
             var httpRequest = Setup(action, JsonSerializer.SerializeToUtf8Bytes(request));
 
@@ -236,12 +237,14 @@ namespace Amazon.DynamoDb
 
             if (!response.IsSuccessStatusCode)
             {
-                throw await GetExceptionAsync(response).ConfigureAwait(false);
+                throw await DynamoDbException.FromResponseAsync(response).ConfigureAwait(false);
             }
 
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await JsonSerializer.DeserializeAsync<TResult>(stream, serializerOptions).ConfigureAwait(false);
+            var result = await JsonSerializer.DeserializeAsync<TResult>(stream, serializerOptions).ConfigureAwait(false);
+
+            return result!;
         }
 
         private HttpRequestMessage Setup(string action, byte[]? utf8Json)
@@ -261,13 +264,6 @@ namespace Amazon.DynamoDb
             }
 
             return request;
-        }
-
-        protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
-        {
-            var result = await DynamoDbException.FromResponseAsync(response).ConfigureAwait(false);
-
-            return result;
         }
 
         #endregion
