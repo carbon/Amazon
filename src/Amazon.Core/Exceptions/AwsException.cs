@@ -3,7 +3,7 @@ using System.Net;
 
 namespace Amazon.Exceptions
 {
-    public abstract class AwsException : Exception
+    public class AwsException : Exception
     {
         public AwsException(string message, HttpStatusCode httpStatusCode)
             : base(message) 

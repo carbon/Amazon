@@ -36,8 +36,8 @@ namespace Amazon
 
         public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient)
         {
-            this.service    = service ?? throw new ArgumentNullException(nameof(service));
-            Region          = region ?? throw new ArgumentNullException(nameof(region));
+            this.service    = service    ?? throw new ArgumentNullException(nameof(service));
+            Region          = region     ?? throw new ArgumentNullException(nameof(region));
             this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
@@ -61,7 +61,7 @@ namespace Amazon
 
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
-        
+
         protected async ValueTask SignAsync(HttpRequestMessage request)
         {
             if (credential.ShouldRenew)

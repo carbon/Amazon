@@ -311,7 +311,7 @@ namespace Amazon.Security
             // If we're using S3, ensure the request content has been signed
             if (scope.Service.Equals(AwsService.S3) && !request.Headers.Contains("x-amz-content-sha256"))
             {
-                request.Headers.Add("x-amz-content-sha256", ComputeSHA256(request.Content));
+                request.Headers.Add("x-amz-content-sha256", ComputeSHA256(request.Content!));
             }
 
             byte[] signingKey = GetSigningKey(credential.SecretAccessKey, scope);
