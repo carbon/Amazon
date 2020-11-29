@@ -25,7 +25,7 @@ namespace Amazon.Security
 
         public static string GetStringToSign(CredentialScope scope, HttpRequestMessage request, out List<string> signedHeaders)
         {
-            string timestamp = request.Headers.TryGetValues("x-amz-date", out IEnumerable<string> dateHeaderValues)
+            string timestamp = request.Headers.TryGetValues("x-amz-date", out IEnumerable<string>? dateHeaderValues)
                 ? dateHeaderValues.First()
                 : throw new Exception("Missing 'x-amz-date' header");
 
@@ -201,7 +201,7 @@ namespace Amazon.Security
                 date        : date,
                 expires     : expires,
                 method      : request.Method,
-                requestUri  : request.RequestUri,
+                requestUri  : request.RequestUri!,
                 payloadHash : payloadHash
             );
 
@@ -428,7 +428,6 @@ namespace Amazon.Security
             return dictionary;
         }
 
-
         public static string CanonicalizeHeaders(HttpRequestMessage request, out List<string> signedHeaderNames)
         {
             using var writer = new StringWriter();
@@ -467,9 +466,9 @@ namespace Amazon.Security
 
             foreach (var header in request.Headers
                 .Where(item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
-                .OrderBy(item => item.Key.ToLowerInvariant()))
+                .OrderBy(item => item.Key, StringComparer.OrdinalIgnoreCase))
             {
-                var headerName = header.Key.ToLowerInvariant();
+                string headerName = header.Key.ToLowerInvariant();
 
                 writer.Write('\n');
 
