@@ -15,7 +15,7 @@ namespace Amazon.Metadata
 
         private const string baseMetadataUri = "http://169.254.169.254/latest/meta-data";
 
-        private readonly HttpClient httpClient = new HttpClient {
+        private readonly HttpClient httpClient = new () {
             Timeout = TimeSpan.FromSeconds(3)
         };
 
@@ -72,9 +72,7 @@ namespace Amazon.Metadata
 
             using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            var result = await JsonSerializer.DeserializeAsync<InstanceIdentity>(responseStream).ConfigureAwait(false);
-
-            return result!;
+            return (await JsonSerializer.DeserializeAsync<InstanceIdentity>(responseStream).ConfigureAwait(false))!;
         }
 
         // us-east-1a
