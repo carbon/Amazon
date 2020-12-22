@@ -6,9 +6,9 @@ using System.Xml.Linq;
 
 namespace Amazon.S3
 {
-    public sealed class DeleteObjectBatchRequest : S3Request
+    public sealed class DeleteObjectsRequest : S3Request
     {
-        public DeleteObjectBatchRequest(string host, string bucketName, DeleteBatch batch)
+        public DeleteObjectsRequest(string host, string bucketName, DeleteBatch batch)
             : base(HttpMethod.Post, host, bucketName, objectName: null, actionName: S3ActionName.Delete)
         {
             string xmlText = batch.ToXmlString();
@@ -29,24 +29,32 @@ namespace Amazon.S3
     {
         private readonly IReadOnlyList<string> keys;
 
-        public DeleteBatch(IReadOnlyList<string> keys)
+        public DeleteBatch(IReadOnlyList<string> keys, bool quite = false)
         {
             if (keys is null)
             {
                 throw new ArgumentNullException(nameof(keys));
             }
 
-            if (keys.Count > 1000)
+            if (keys.Count > 1_000)
             {
-                throw new ArgumentException($"May not exceed 1000 items. Was {keys.Count} items.", nameof(keys));
+                throw new ArgumentException($"May not exceed 1,000 items. Was {keys.Count} items.", nameof(keys));
             }
 
             this.keys = keys;
+            Quite = quite;
         }
+
+        public bool Quite { get; }
 
         public string ToXmlString(SaveOptions options = SaveOptions.DisableFormatting)
         {
             var root = new XElement("Delete");
+
+            if (Quite)
+            {
+                root.Add(new XElement("Quiet", true));
+            }
 
             foreach (string key in keys)
             {
