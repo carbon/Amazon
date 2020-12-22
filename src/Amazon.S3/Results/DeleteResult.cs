@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.S3
 {
@@ -8,22 +6,20 @@ namespace Amazon.S3
     public sealed class DeleteResult
     {        
         [XmlElement("Deleted")]
-        public BatchItem[] Deleted { get; set; }
+        public BatchItem[]? Deleted { get; set; }
 
         [XmlElement("Error")]
-        public BatchItemError[] Errors { get; set; }
+        public DeleteResultError[]? Errors { get; set; }
 
-        #region Helpers
-
-        public bool HasErrors => Errors != null && Errors.Length > 0;
-
-        #endregion
+        public bool HasErrors => Errors is { Length: > 0 };
 
         public static DeleteResult Parse(string xmlText)
         {
             return ResponseHelper<DeleteResult>.ParseXml(xmlText);
         }
     }
+
+#nullable disable
 
     public sealed class BatchItem
     {
@@ -38,7 +34,7 @@ namespace Amazon.S3
         public string Key { get; set; }
     }
 
-    public sealed class BatchItemError
+    public sealed class DeleteResultError
     {
         [XmlElement]
         public string Key { get; set; }

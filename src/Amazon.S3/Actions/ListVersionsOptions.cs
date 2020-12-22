@@ -30,8 +30,6 @@ namespace Amazon.S3
             get => Get("key-marker");
             set => Set("key-marker", value);
         }
-
-
         
         public string? EncodingType
         {
