@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb.Extensions
 {
-    public static class JsonElementExtensions
+    internal static class JsonElementExtensions
     {
         public static string[] GetStringArray(this JsonElement element)
         {
@@ -14,7 +14,7 @@ namespace Amazon.DynamoDb.Extensions
 
             foreach (var el in element.EnumerateArray())
             {
-                items[i] = el.GetString();
+                items[i] = el.GetString()!;
 
                 i++;
             }

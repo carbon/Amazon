@@ -17,14 +17,9 @@ namespace Amazon.DynamoDb
 
         public object ToObject(DbValue item, IMember member)
         {
-            // Parse strings to allow graceful migration to integers
-
-            if (item.Kind == DbValueType.S)
-            {
-                return Enum.Parse(member.Type, item.ToString());
-            }
-
-            return Enum.ToObject(member.Type, item.ToInt());
+            return item.Kind == DbValueType.S
+                ? Enum.Parse(member.Type, item.ToString())
+                : Enum.ToObject(member.Type, item.ToInt());
         }
     }
 }
