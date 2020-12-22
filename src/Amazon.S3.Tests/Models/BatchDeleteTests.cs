@@ -7,6 +7,23 @@ namespace Amazon.S3.Models.Tests
     public class BatchDeleteTests
     {
         [Fact]
+        public void Serialize_Silent()
+        {
+            var batch = new DeleteBatch(new[] { "1", "2" }, quite: true);
+
+            Assert.Equal(expected: @"<Delete>
+  <Quiet>true</Quiet>
+  <Object>
+    <Key>1</Key>
+  </Object>
+  <Object>
+    <Key>2</Key>
+  </Object>
+</Delete>",
+          actual: batch.ToXmlString(SaveOptions.None));
+        }
+
+        [Fact]
         public void Serialize()
         {
             var batch = new DeleteBatch(new[] { "1", "2" });
