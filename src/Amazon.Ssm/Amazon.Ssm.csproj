@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ssm</AssemblyName>
-    <Version>0.15.0</Version>
+    <Version>0.16.0</Version>
     <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
