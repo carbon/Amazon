@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+
+using Amazon.Exceptions;
 
 namespace Amazon.Kms
 {
@@ -67,7 +70,9 @@ namespace Amazon.Kms
 
         #region Helpers
 
-        private static readonly JsonSerializerOptions jsoIgnoreNullValues = new JsonSerializerOptions { IgnoreNullValues = true };
+        private static readonly JsonSerializerOptions jsoIgnoreNullValues = new () {
+            IgnoreNullValues = true
+        };
 
         private async Task<TResult> SendAsync<TRequest, TResult>(string action, TRequest request)
             where TRequest  : KmsRequest
@@ -86,22 +91,37 @@ namespace Amazon.Kms
                 }
             };
 
-            string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+            await SignAsync(httpRequest).ConfigureAwait(false);
 
-            if (responseText.Length == 0) return null!;
+            using var response = await httpClient.SendAsync(httpRequest).ConfigureAwait(false);
 
-            return JsonSerializer.Deserialize<TResult>(responseText);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw await GetExceptionFromResponseAsync(response).ConfigureAwait(false);
+            }
+
+            if (response.StatusCode == HttpStatusCode.NoContent || response.Content.Headers.ContentLength is 0)
+            {
+                return null!;
+            }
+
+            using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+            var result = await JsonSerializer.DeserializeAsync<TResult>(responseStream).ConfigureAwait(false);
+
+            return result!;
         }
 
-        protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
+        private static async Task<Exception> GetExceptionFromResponseAsync(HttpResponseMessage response)
         {
             string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (responseText.Length > 0 && responseText[0] == '{')
             {
-                var error = JsonSerializer.Deserialize<KmsError>(responseText);
+                var error = JsonSerializer.Deserialize<KmsError>(responseText)!;
 
-                return error.Type switch {
+                return error.Type switch 
+                {
                     "AccessDeniedException"       => new AccessDeniedException(error.Message),
                     "ServiceUnavailableException" => new ServiceUnavailableException(error.Message),
                     "KeyUnavailableException"     => new KeyUnavailableException(error.Message),
@@ -110,7 +130,7 @@ namespace Amazon.Kms
             }
             else
             {
-                throw new Exception(responseText);
+                throw new AwsException(responseText, response.StatusCode);
             }
         }
 
