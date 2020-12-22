@@ -9,7 +9,9 @@ namespace Amazon.DynamoDb
         public TableRequests(string tableName, IReadOnlyList<ItemRequest> requests)
         {
             if (requests.Count > 25)
-                throw new ArgumentException("Must be 25 or fewer", "requests.Count");
+            {
+                throw new ArgumentException($"May not exceed 25 items. Was {requests.Count} items.", nameof(requests));
+            }
 
             TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             Requests = requests;
