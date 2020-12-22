@@ -2,7 +2,7 @@
 
 namespace Amazon.CodeBuild
 {
-    public class Tag
+    public sealed class Tag
     {
         public Tag() { }
 

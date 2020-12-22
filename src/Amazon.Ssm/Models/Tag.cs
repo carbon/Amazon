@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Ssm
 {
-    public class Tag
+    public sealed class Tag
     {
 #nullable disable
         public Tag() { }

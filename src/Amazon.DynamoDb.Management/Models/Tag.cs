@@ -2,9 +2,11 @@
 
 namespace Amazon.DynamoDb.Models
 {
-    public class Tag
+    public sealed class Tag
     {
+#nullable disable
         public Tag() { }
+#nullable enable
 
         public Tag(string key, string value)
         {
