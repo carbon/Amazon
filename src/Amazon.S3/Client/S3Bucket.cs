@@ -81,7 +81,7 @@ namespace Amazon.S3
                         key        : key
                     );
 
-                    return await client.GetObjectAsync(request).ConfigureAwait(false);
+                    return await client.GetObjectAsync(request, cancellationToken).ConfigureAwait(false);
                 }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {
@@ -124,7 +124,7 @@ namespace Amazon.S3
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                     
-                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                    await Task.Delay(retryPolicy.GetDelay(retryCount), cancellationToken).ConfigureAwait(false);
                 }
 
                 try
@@ -162,7 +162,7 @@ namespace Amazon.S3
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                    await Task.Delay(retryPolicy.GetDelay(retryCount), cancellationToken).ConfigureAwait(false);
                 }
 
                 try
@@ -283,7 +283,7 @@ namespace Amazon.S3
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                    await Task.Delay(retryPolicy.GetDelay(retryCount), cancellationToken).ConfigureAwait(false);
                 }
 
                 var request = new PutObjectRequest(client.Host, bucketName, blob.Key);
