@@ -18,7 +18,7 @@ namespace Amazon.S3
         private readonly string bucketName;
 
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
-             initialDelay : TimeSpan.FromMilliseconds(100),
+             initialDelay : TimeSpan.FromMilliseconds(50),
              maxDelay     : TimeSpan.FromSeconds(3),
              maxRetries   : 4
         );
@@ -59,12 +59,7 @@ namespace Amazon.S3
             return result.Items;
         }
 
-        public Task<IBlob> GetAsync(string key)
-        {
-            return GetAsync(key, default(CancellationToken));
-        }
-
-        public async Task<IBlob> GetAsync(string key, CancellationToken cancellationToken)
+        public async Task<IBlob> GetAsync(string key, CancellationToken cancellationToken = default)
         {
             int retryCount = 0;
             Exception lastException;
@@ -251,12 +246,7 @@ namespace Amazon.S3
 
         private static readonly PutBlobOptions defaultPutOptions = new PutBlobOptions();
 
-        public Task PutAsync(IBlob blob)
-        {
-            return PutAsync(blob, defaultPutOptions, default);
-        }
-
-        public Task PutAsync(IBlob blob, CancellationToken cancelationToken)
+        public Task PutAsync(IBlob blob, CancellationToken cancelationToken = default)
         {
             return PutAsync(blob, defaultPutOptions, cancelationToken);
         }
@@ -349,20 +339,15 @@ namespace Amazon.S3
 
         public async Task<DeleteResult> DeleteAsync(IReadOnlyList<string> keys)
         {
-            var batch = new DeleteBatch(keys);
+            var batch = new DeleteBatch(keys, quite: true);
 
-            var request = new DeleteObjectBatchRequest(client.Host, bucketName, batch);
+            var request = new DeleteObjectsRequest(client.Host, bucketName, batch);
 
             var result = await client.DeleteObjectsAsync(request).ConfigureAwait(false);
 
-            if (result.HasErrors)
+            if (result.Errors is { Length: > 0 })
             {
                 throw new Exception(result.Errors[0].Message);
-            }
-
-            if (result.Deleted.Length != keys.Count)
-            {
-                throw new Exception($"Only {result.Deleted.Length} of {keys.Count} were deleted.");
             }
 
             return result;
@@ -405,6 +390,9 @@ namespace Amazon.S3
             if (upload is null) 
                 throw new ArgumentNullException(nameof(upload));
 
+            if (stream is null)
+                throw new ArgumentNullException(nameof(stream));
+
             int retryCount = 0;
             Exception lastException;
 
@@ -416,11 +404,11 @@ namespace Amazon.S3
                 }
 
                 var request = new UploadPartRequest(
-                    host        : client.Host,
-                    bucketName  : upload.BucketName,
-                    key         : upload.ObjectName,
-                    uploadId    : upload.UploadId,
-                    partNumber  : number
+                    host       : client.Host,
+                    bucketName : upload.BucketName,
+                    key        : upload.ObjectName,
+                    uploadId   : upload.UploadId,
+                    partNumber : number
                 );
 
                 request.SetStream(stream);
