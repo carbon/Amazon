@@ -113,18 +113,24 @@ namespace Amazon.S3
             return CopyObjectResult.ParseXml(responseText);
         }
 
-        public async Task DeleteObjectAsync(DeleteObjectRequest request, CancellationToken cancelationToken = default)
+        public async Task<DeleteObjectResult> DeleteObjectAsync(DeleteObjectRequest request, CancellationToken cancelationToken = default)
         {
-
-            using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption, cancelationToken).ConfigureAwait(false);
+            using HttpResponseMessage response = await SendAsync2(request, HttpCompletionOption.ResponseHeadersRead, cancelationToken).ConfigureAwait(false);
 
             if (response.StatusCode != HttpStatusCode.NoContent)
             {
                 throw new S3Exception("Expected 204", response.StatusCode);
             }
+
+            return new DeleteObjectResult(
+                deleteMarker   : response.Headers.GetValueOrDefault("x-amz-delete-marker"),
+                requestCharged : response.Headers.GetValueOrDefault("x-amz-request-charged"),
+                versionId      : response.Headers.GetValueOrDefault("x-amz-version-id"),
+                isDeleteMarker : response.Headers.GetValueOrDefault("x-amz-delete-marker") is "true"
+            );
         }
 
-        public async Task<DeleteResult> DeleteObjectsAsync(DeleteObjectBatchRequest request)
+        public async Task<DeleteResult> DeleteObjectsAsync(DeleteObjectsRequest request)
         {
             var responseText = await SendAsync(request).ConfigureAwait(false);
             
