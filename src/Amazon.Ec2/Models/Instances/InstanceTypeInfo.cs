@@ -77,11 +77,14 @@ namespace Amazon.Ec2
         [XmlElement("hypervisor")]
         public string Hypervisor { get; set; }
 
+#nullable enable
         /// <summary>
         /// Describes the Inference accelerator settings for the instance type.
         /// </summary>
         [XmlElement("inferenceAcceleratorInfo")]
-        public InferenceAcceleratorInfo InferenceAcceleratorInfo { get; set; }
+        public InferenceAcceleratorInfo? InferenceAcceleratorInfo { get; set; }
+
+#nullable disable
 
         /// <summary>
         /// Describes the disks for the instance type.
@@ -150,8 +153,7 @@ namespace Amazon.Ec2
 
         private static readonly XmlSerializer serializer = new XmlSerializer(
             typeof(InstanceTypeInfo),
-            new XmlRootAttribute
-            {
+            new XmlRootAttribute {
                 ElementName = "item",
                 Namespace = Ec2Client.Namespace
             }
