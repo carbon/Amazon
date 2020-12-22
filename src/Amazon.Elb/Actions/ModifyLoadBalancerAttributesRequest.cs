@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
-    public class ModifyLoadBalancerAttributesRequest : IElbRequest
+    public sealed class ModifyLoadBalancerAttributesRequest : IElbRequest
     {
         public string Action => "ModifyLoadBalancerAttributes";
 

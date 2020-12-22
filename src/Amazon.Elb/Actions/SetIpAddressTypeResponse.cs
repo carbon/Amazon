@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Elb
 {
-    public class SetIpAddressTypeResponse : IElbResponse
+    public sealed class SetIpAddressTypeResponse : IElbResponse
     {
     }
 }

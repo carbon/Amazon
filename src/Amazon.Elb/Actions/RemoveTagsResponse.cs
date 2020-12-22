@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Elb
 {
-    public class RemoveTagsResponse : IElbResponse
+    public sealed class RemoveTagsResponse : IElbResponse
     {
     }
 }

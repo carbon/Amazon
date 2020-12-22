@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class TargetGroup
+    public sealed class TargetGroup
     {
         [XmlElement]
         public string TargetGroupArn { get; set; }

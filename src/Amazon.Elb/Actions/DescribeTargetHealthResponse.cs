@@ -4,20 +4,20 @@ using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class DescribeTargetHealthResponse : IElbResponse
+    public sealed class DescribeTargetHealthResponse : IElbResponse
     {
         [XmlElement]
         public DescribeTargetHealthResult DescribeTargetHealthResult { get; set; }
     }
 
-    public class DescribeTargetHealthResult
+    public sealed class DescribeTargetHealthResult
     {
         [XmlArray]
         [XmlArrayItem("member")]
         public TargetHealthDescription[] TargetHealthDescriptions { get; set; }
     }
 
-    public class TargetHealthDescription
+    public sealed class TargetHealthDescription
     {
         [XmlElement]
         public string HealthCheckPort { get; set; }

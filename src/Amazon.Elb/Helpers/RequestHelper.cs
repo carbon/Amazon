@@ -43,7 +43,7 @@ namespace Amazon.Elb
                 }
                 else
                 {
-                    parameters.Add(member.Name, value.ToString());
+                    parameters.Add(member.Name, value.ToString()!);
                 }
             }
 

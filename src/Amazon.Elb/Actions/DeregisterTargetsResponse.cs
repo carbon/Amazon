@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Elb
 {
-    public class DeregisterTargetsResponse : IElbResponse
+    public sealed class DeregisterTargetsResponse : IElbResponse
     {
     }
 }

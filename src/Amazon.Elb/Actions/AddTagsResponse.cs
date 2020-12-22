@@ -1,8 +1,7 @@
 ﻿namespace Amazon.Elb
 {
-    public class AddTagsResponse : IElbResponse
+    public sealed class AddTagsResponse : IElbResponse
     {
         
     }
-
 }

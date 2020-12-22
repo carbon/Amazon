@@ -10,14 +10,14 @@ namespace Amazon.Elb
         public DescribeTagsResult DescribeTagsResult { get; set; }
     }
 
-    public class DescribeTagsResult
+    public sealed class DescribeTagsResult
     {
         [XmlArray]
         [XmlArrayItem("member")]
         public TagDescription[] TagDescriptions { get; set; }
     }
 
-    public class TagDescription
+    public sealed class TagDescription
     {
         [XmlElement]
         public string ResourceArn { get; set; }

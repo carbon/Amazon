@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb
 {
-    public class CreateRuleRequest : IElbRequest
+    public sealed class CreateRuleRequest : IElbRequest
     {
         public string Action => "CreateRule";
 

@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Elb
 {
-    public class SetSubnetsRequest : IElbRequest
+    public sealed class SetSubnetsRequest : IElbRequest
     {
         public string Action => "SetSubnetsRequest";
     }

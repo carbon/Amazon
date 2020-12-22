@@ -4,13 +4,13 @@ using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class ModifyLoadBalancerAttributesResponse : IElbResponse
+    public sealed class ModifyLoadBalancerAttributesResponse : IElbResponse
     {
         [XmlElement]
         public ModifyLoadBalancerAttributesResult ModifyLoadBalancerAttributesResult { get; set; }
     }
 
-    public class ModifyLoadBalancerAttributesResult
+    public sealed class ModifyLoadBalancerAttributesResult
     {
         [XmlArray]
         [XmlArrayItem("member")]

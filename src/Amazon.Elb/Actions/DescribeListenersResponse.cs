@@ -10,7 +10,7 @@ namespace Amazon.Elb
        public DescribeListenersResult DescribeListenersResult { get; set; }
     }
 
-    public class DescribeListenersResult
+    public sealed class DescribeListenersResult
     {
         [XmlArray]
         [XmlArrayItem("member")]

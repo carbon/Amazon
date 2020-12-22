@@ -4,13 +4,13 @@ using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class SetRulePrioritiesResponse : IElbResponse
+    public sealed class SetRulePrioritiesResponse : IElbResponse
     {
         [XmlElement]
         public SetRulePrioritiesResult SetRulePrioritiesResult { get; set; }
     }
 
-    public class SetRulePrioritiesResult
+    public sealed class SetRulePrioritiesResult
     {
         [XmlArray]
         [XmlArrayItem("member")]

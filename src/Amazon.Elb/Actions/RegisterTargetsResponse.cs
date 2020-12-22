@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Elb
 {
-    public class RegisterTargetsResponse : IElbResponse
+    public sealed class RegisterTargetsResponse : IElbResponse
     {
     }
 }

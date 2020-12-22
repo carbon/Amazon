@@ -4,13 +4,13 @@ using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class SetSecurityGroupsResponse : IElbResponse
+    public sealed class SetSecurityGroupsResponse : IElbResponse
     {
         [XmlElement]
         public SetSecurityGroupsResult SetSecurityGroupsResult { get; set; }
     }
 
-    public class SetSecurityGroupsResult
+    public sealed class SetSecurityGroupsResult
     {
         [XmlArray]
         [XmlArrayItem("member")]
