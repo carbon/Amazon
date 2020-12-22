@@ -99,12 +99,16 @@ namespace Amazon.Ec2.Tests
             Assert.Equal("Very Low", instance.NetworkInfo.NetworkPerformance);
 
 
+            Assert.Null(instance.GpuInfo);
+
             // vCPU
             Assert.Equal(1, instance.VCpuInfo.DefaultCores);
             Assert.Equal(1, instance.VCpuInfo.DefaultThreadsPerCore);
             Assert.Equal(1, instance.VCpuInfo.DefaultVCpus);
             Assert.Equal(new[] { 1 }, instance.VCpuInfo.ValidThreadsPerCore);
 
+            Assert.Null(instance.ProcessorInfo.SustainedClockSpeedInGhz);
+            Assert.Equal(new[] { "i386", "x86_64" }, instance.ProcessorInfo.SupportedArchitectures);
         }
     }
 }
