@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace Amazon.DynamoDb
     {
         private const string TargetPrefix = "DynamoDB_20120810";
 
-        private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
+        private static readonly JsonSerializerOptions serializerOptions = new () {
             IgnoreNullValues = true
         };
 
@@ -66,12 +67,12 @@ namespace Amazon.DynamoDb
 
             if (!response.IsSuccessStatusCode)
             {
-                throw await GetExceptionAsync(response).ConfigureAwait(false);
+                throw await DynamoDbException.FromResponseAsync(response).ConfigureAwait(false);
             }
 
-            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            using Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await JsonSerializer.DeserializeAsync<TResult>(stream, serializerOptions).ConfigureAwait(false);
+            return (await JsonSerializer.DeserializeAsync<TResult>(stream, serializerOptions).ConfigureAwait(false))!;
         }
 
         private HttpRequestMessage Setup(string action, byte[]? utf8Json)
@@ -91,17 +92,6 @@ namespace Amazon.DynamoDb
             }
 
             return request;
-        }
-
-        protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
-        {
-            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-            var ex = await DynamoDbException.FromResponseAsync(stream).ConfigureAwait(false);
-
-            ex.StatusCode = (int)response.StatusCode;
-
-            return ex;
         }
 
         #endregion
