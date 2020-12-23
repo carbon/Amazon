@@ -181,7 +181,7 @@ namespace Amazon.Sqs
         {
             parameters.Add(new ("Version", Version));
 
-            return new FormUrlEncodedContent(parameters);
+            return new FormUrlEncodedContent(parameters!);
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)

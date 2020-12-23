@@ -18,7 +18,7 @@ namespace Amazon.Sqs
         {
             this.model = model;
 
-            Body = JsonSerializer.Deserialize<T>(model.Body, jso);
+            Body = JsonSerializer.Deserialize<T>(model.Body, jso)!;
         }
 
         public static JsonEncodedMessage<T> Create(SqsMessage message)
