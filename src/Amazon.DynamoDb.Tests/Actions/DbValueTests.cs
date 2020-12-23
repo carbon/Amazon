@@ -4,7 +4,6 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 
-
 using Carbon.Data.Sequences;
 
 using Xunit;
@@ -73,24 +72,25 @@ namespace Amazon.DynamoDb.Models.Tests
 		[Fact]
 		public void SetConversions()
 		{
-			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int16>()));
-			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int32>()));
-			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int64>()));
-			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<float>()));
-			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<double>()));
-			Assert.Equal("a,b,c", string.Join(',', new DbValue(new[] { "a", "b", "c" }).ToStringSet()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int16>()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int32>()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int64>()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<float>()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<double>()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1m, 2m, 3m }).ToSet<decimal>()));
+            Assert.Equal("a,b,c", string.Join(',', new DbValue(new[] { "a", "b", "c" }).ToStringSet()));
 		}
 
 		[Fact]
 		public void ArrayConversions()
 		{
-			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int16>()));
-			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int32>()));
-			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int64>()));
-			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<float>()));
-			Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<double>()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int16>()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int32>()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int64>()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<float>()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1m, 2m, 3m }).ToArray<decimal>()));
+            Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<double>()));
 		}
-
    
 		[Fact]
 		public void DbList()
