@@ -15,7 +15,7 @@ namespace Amazon.Sqs
         private readonly Uri url;
 
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
-            initialDelay : TimeSpan.FromSeconds(1),
+            initialDelay : TimeSpan.FromMilliseconds(500),
             maxDelay     : TimeSpan.FromSeconds(5),
             maxRetries   : 3
         );
