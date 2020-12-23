@@ -19,7 +19,18 @@ namespace Amazon.Ses
 
         public static string Decode(string text)
         {
-            using var a = Attachment.CreateAttachmentFromString("", text);
+            if (text is null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            if (text.IndexOf(' ') > 0)
+            {
+                text = text.Replace(" ", string.Empty);
+            }
+         
+
+            using var a = Attachment.CreateAttachmentFromString(string.Empty, text);
 
             return a.Name;
         }
