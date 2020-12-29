@@ -12,7 +12,7 @@ namespace Amazon.S3.Actions.Tests
         {
             var batch = new DeleteBatch(new[] { "a", "b" });
 
-            var request = new DeleteObjectBatchRequest("s3.amazon.com", "bucket", batch);
+            var request = new DeleteObjectsRequest("s3.amazon.com", "bucket", batch);
 
             Assert.Equal("https://s3.amazon.com/bucket?delete", request.RequestUri.ToString());
             Assert.Equal(HttpMethod.Post, request.Method);
