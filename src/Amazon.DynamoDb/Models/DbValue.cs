@@ -18,8 +18,8 @@ namespace Amazon.DynamoDb
 		public static readonly DbValue True  = new (true);
 		public static readonly DbValue False = new (false);
 
-		private readonly DbValueType kind;
-		private readonly object value;
+		private readonly DbValueType _kind;
+		private readonly object _value;
 
 		public DbValue(string value)	 : this(value, DbValueType.S) { }
 	                                     
@@ -52,14 +52,14 @@ namespace Amazon.DynamoDb
 
         public DbValue(AttributeCollection map)
         {
-            this.kind = DbValueType.M;
-            this.value = map;
+            _kind = DbValueType.M;
+            _value = map;
         }
 
 		public DbValue(object value, DbValueType type)
 		{
-			this.value = value;
-			this.kind = type;
+			_value = value;
+			_kind = type;
 		}
 
 		public DbValue(object value)
@@ -68,8 +68,8 @@ namespace Amazon.DynamoDb
 
 			if (type.IsEnum)
 			{
-				this.kind = DbValueType.N;
-				this.value = EnumConverter.Default.FromObject(value, null!).Value;
+				_kind = DbValueType.N;
+				_value = EnumConverter.Default.FromObject(value, null!).Value;
  
 				return;
 			}
@@ -78,25 +78,22 @@ namespace Amazon.DynamoDb
 			{
 				var elementType = type.GetElementType();
 
-				switch (Type.GetTypeCode(elementType))
-				{
-					case TypeCode.Byte:			this.kind = DbValueType.B;		break;
-
-					case TypeCode.String:		this.kind = DbValueType.SS;		break;
-
-					case TypeCode.Decimal:
-					case TypeCode.Double:
-					case TypeCode.Int16:
-					case TypeCode.Int32:
-					case TypeCode.Int64:
-					case TypeCode.Single:
-					case TypeCode.UInt16:
-					case TypeCode.UInt32:
-					case TypeCode.UInt64:		this.kind = DbValueType.NS;		break;
-
-					default: throw new Exception("Invalid array element type:" + type.Name);
-				}
-			}
+                _kind = (Type.GetTypeCode(elementType)) switch
+                {
+                    TypeCode.Byte => DbValueType.B,
+                    TypeCode.String => DbValueType.SS, // StringSet
+                    TypeCode.Decimal or 
+					TypeCode.Double or 
+					TypeCode.Int16 or 
+					TypeCode.Int32 or 
+					TypeCode.Int64 or
+					TypeCode.Single or 
+					TypeCode.UInt16 or 
+					TypeCode.UInt32 or
+					TypeCode.UInt64 => DbValueType.NS,
+                    _ => throw new Exception("Invalid array element type:" + type.Name),
+                };
+            }
 			else
 			{
 				switch (Type.GetTypeCode(type))
@@ -108,7 +105,7 @@ namespace Amazon.DynamoDb
                             throw new ArgumentException(paramName: nameof(value), message: "Must not be empty");
                         }
 
-						this.kind = DbValueType.S;
+						_kind = DbValueType.S;
 
 						break;
 
@@ -121,20 +118,20 @@ namespace Amazon.DynamoDb
 					case TypeCode.Single:
 					case TypeCode.UInt16:
 					case TypeCode.UInt32:
-					case TypeCode.UInt64: this.kind = DbValueType.N; break;
+					case TypeCode.UInt64: _kind = DbValueType.N; break;
 
 					case TypeCode.DateTime:
                         // Convert dates to unixtime
 
-                        this.value = new DateTimeOffset((DateTime)value).ToUnixTimeSeconds();
-						this.kind = DbValueType.N;
+                        _value = new DateTimeOffset((DateTime)value).ToUnixTimeSeconds();
+						_kind = DbValueType.N;
 
 						return;
 
 					// Boolean
 					case TypeCode.Boolean:
-						this.value = (bool)value ? 1 : 0;
-						this.kind = DbValueType.N;
+						_value = (bool)value ? 1 : 0;
+						_kind = DbValueType.N;
 
 						return;
 
@@ -143,26 +140,26 @@ namespace Amazon.DynamoDb
 						{
 							var dbValue = (DbValue)value;
 
-							this.kind = dbValue.Kind;
-							this.value = dbValue.Value;
+							_kind = dbValue.Kind;
+							_value = dbValue.Value;
 
 						}
                         else if (type == typeof(AttributeCollection))
                         {
-                           this.value = value;
-                           this.kind = DbValueType.M;        
+                           _value = value;
+                           _kind = DbValueType.M;        
                         }
 						else
 						{
-                            if (!DbValueConverterFactory.TryGet(type, out IDbValueConverter converter))
+                            if (!DbValueConverterFactory.TryGet(type, out IDbValueConverter? converter))
                             {
                                 throw new Exception("Invalid value type. Was: " + type.Name);
                             }
 
                             var result = converter.FromObject(value, null!);
 
-                            this.value = result.Value;
-                            this.kind = result.Kind;                            
+                            _value = result.Value;
+                            _kind = result.Kind;                            
                         }
 
                         break;
@@ -171,23 +168,23 @@ namespace Amazon.DynamoDb
 			}
 			
 
-			this.value = value;
+			_value = value;
 		}
 
-		public readonly DbValueType Kind => kind;
+		public readonly DbValueType Kind => _kind;
 
 		/// <summary>
 		/// int, long, string, string [ ]
 		/// </summary>
-		public readonly object Value => value;
+		public readonly object Value => _value;
 
 		internal readonly object ToPrimitiveValue()
 		{
-			return kind switch {
+			return _kind switch {
 				DbValueType.B => ToBinary(),
 				DbValueType.N => ToInt64(),// TODO, return a double if there's a floating point
 				DbValueType.S => ToString(),
-				_			  => throw new Exception($"Cannot convert {kind} to native value."),
+				_			  => throw new Exception($"Cannot convert {_kind} to native value."),
 			};
 		}
 
@@ -195,19 +192,19 @@ namespace Amazon.DynamoDb
 
 		public readonly HashSet<string> ToStringSet()
 		{
-			if (!(kind is DbValueType.NS or DbValueType.SS or DbValueType.BS)) 
+			if (!(_kind is DbValueType.NS or DbValueType.SS or DbValueType.BS)) 
 			{
 				throw new Exception("Cannot be converted to a set.");
 			}
 
-			if (value is IEnumerable<string> enumerable)
+			if (_value is IEnumerable<string> enumerable)
 			{
 				return new HashSet<string>(enumerable);		
 			}
 
 			var set = new HashSet<string>();
 
-			foreach (var item in (IEnumerable)value)
+			foreach (var item in (IEnumerable)_value)
 			{
 				set.Add(item!.ToString()!);
 			}
@@ -217,20 +214,20 @@ namespace Amazon.DynamoDb
 
 		public readonly HashSet<T> ToSet<T>()
 		{
-			if (!(kind is DbValueType.NS or DbValueType.SS or DbValueType.BS))
+			if (!(_kind is DbValueType.NS or DbValueType.SS or DbValueType.BS))
 			{
-				throw new Exception($"The value type '{kind}' cannot be converted to a Int32 Set.");
+				throw new Exception($"The value type '{_kind}' cannot be converted to a Int32 Set.");
 			}
 
 			// Avoid additional allocations where possible
-			if (value is IEnumerable<T> enumerable)
+			if (_value is IEnumerable<T> enumerable)
 			{
 				return new HashSet<T>(enumerable);
 			}
 
 			var set = new HashSet<T>();
 
-			foreach (var item in (IEnumerable)value)
+			foreach (var item in (IEnumerable)_value)
 			{
 				set.Add((T)Convert.ChangeType(item, typeof(T))!);
 			}
@@ -240,14 +237,14 @@ namespace Amazon.DynamoDb
 
 		public readonly T[] ToArray<T>()
 		{
-			var type = value.GetType();
+			var type = _value.GetType();
 		
 			if (type.IsArray && type.GetElementType() == typeof(T))
 			{
-				return (T[])value;
+				return (T[])_value;
 			}
 
-            IList collection = (IList)value;
+            IList collection = (IList)_value;
             
 			T[] array = new T[collection.Count];
 			
@@ -261,39 +258,41 @@ namespace Amazon.DynamoDb
 
 		public readonly bool ToBoolean()
 		{
-            if (kind == DbValueType.N)
+            if (_kind == DbValueType.N)
             {
                 return ToInt() == 1;
             }
 
-            if (value is bool b)
+            if (_value is bool b)
             {
                 return b;
             }
 
-            throw new Exception($"Cannot convert '{value.GetType().Name}' to a Boolean");
+            throw new Exception($"Cannot convert '{_value.GetType().Name}' to a Boolean");
 		}
 
-		public readonly float ToSingle() => Convert.ToSingle(value);
+		public readonly float ToSingle() => Convert.ToSingle(_value);
 
-		public readonly short ToInt16() => Convert.ToInt16(value);
+		public readonly short ToInt16() => Convert.ToInt16(_value);
 
-		public readonly int ToInt() => Convert.ToInt32(value);
+		public readonly int ToInt() => Convert.ToInt32(_value);
 
-		public readonly long ToInt64() => Convert.ToInt64(value);
+		public readonly long ToInt64() => Convert.ToInt64(_value);
 
-		public readonly double ToDouble() => Convert.ToDouble(value);
+		public readonly double ToDouble() => Convert.ToDouble(_value);
 
-		public readonly decimal ToDecimal() => Convert.ToDecimal(value);
+		public readonly decimal ToDecimal() => Convert.ToDecimal(_value);
+
+		public readonly uint ToUInt32() => Convert.ToUInt32(_value);
 
 		public readonly byte[] ToBinary()
 		{
-            return value is byte[] data
+            return _value is byte[] data
                 ? data
-                : Convert.FromBase64String(value.ToString()!);
+                : Convert.FromBase64String(_value.ToString()!);
 		}
 
-		public override string ToString() => value.ToString()!;
+		public override string ToString() => _value.ToString()!;
 
 		#endregion
 
@@ -340,9 +339,9 @@ namespace Amazon.DynamoDb
 
 		#region Helpers
 
-		private static DbValue[] GetListValues(JsonElement array)
+		private static DbValue[] GetListValues(in JsonElement array)
 		{
-			DbValue[] items = new DbValue[array.GetArrayLength()];
+			var items = new DbValue[array.GetArrayLength()];
 
 			int i = 0;
 
