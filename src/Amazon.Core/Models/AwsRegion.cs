@@ -140,7 +140,7 @@ namespace Amazon
 
         public static AwsRegion FromAvailabilityZone(string availabilityZone)
         {
-            string regionName = availabilityZone.Substring(0, availabilityZone.Length - 1);
+            string regionName = availabilityZone[0..^1];
 
             return Get(regionName);
         }

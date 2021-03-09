@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable IDE0057 // Use range operator
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -117,11 +119,7 @@ namespace Amazon.Security
                 // Do not double escape
                 if (segment.IndexOf('%') > -1)
                 {
-#if NETSTANDARD2_0
-                    output.Write(segment.ToString());
-#else
                     output.Write(segment);
-#endif
                 }
                 else
                 {
@@ -406,7 +404,7 @@ namespace Amazon.Security
 
             if (query[0] == '?')
             {
-                query = query.Slice(1);
+                query = query[1..];
             }
 
             var splitter = new Splitter(query, '&');
@@ -506,7 +504,7 @@ namespace Amazon.Security
 #endif
         }
 
-        public static string ComputeSHA256(HttpContent content)
+        public static string ComputeSHA256(HttpContent? content)
         {
             return content?.ReadAsByteArrayAsync().Result is byte[] { Length: > 0 } data
                 ? HexString.FromBytes(ComputeSHA256(data))
