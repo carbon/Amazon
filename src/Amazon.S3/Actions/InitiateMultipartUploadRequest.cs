@@ -31,16 +31,16 @@ namespace Amazon.S3
 
         public string? ContentType
         {
-            get => Content.Headers.ContentType?.ToString();
+            get => Content!.Headers.ContentType?.ToString();
             set
             {
                 if (value is null)
                 {
-                    Content.Headers.ContentType = null;
+                    Content!.Headers.ContentType = null;
                 }
                 else
                 {
-                    Content.Headers.ContentType = MediaTypeHeaderValue.Parse(value);
+                    Content!.Headers.ContentType = MediaTypeHeaderValue.Parse(value);
                 }
             }
         }       

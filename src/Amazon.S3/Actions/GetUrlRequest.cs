@@ -13,7 +13,7 @@ namespace Amazon.S3
             string objectKey,
             TimeSpan expiresIn)
         {
-            Method = method ?? throw new ArgumentException(nameof(method));
+            Method = method ?? throw new ArgumentNullException(nameof(method));
             Host = host ?? throw new ArgumentNullException(nameof(host));
             Region = region;
             BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));

@@ -244,7 +244,7 @@ namespace Amazon.S3
             throw new S3Exception($"Error copying '{sourceLocation}' to '{destinationKey}'", lastException);
         }
 
-        private static readonly PutBlobOptions defaultPutOptions = new PutBlobOptions();
+        private static readonly PutBlobOptions defaultPutOptions = new ();
 
         public Task PutAsync(IBlob blob, CancellationToken cancelationToken = default)
         {
@@ -260,7 +260,7 @@ namespace Amazon.S3
                 throw new ArgumentNullException(nameof(blob));
 
             if (blob.Key is null)
-                throw new ArgumentNullException("blob.Key");
+                throw new ArgumentException("Missing key", nameof(blob));
 
             // TODO: Chunked upload
 
@@ -271,7 +271,7 @@ namespace Amazon.S3
 
             // Ensure we're at the start of the stream
             if (stream.CanSeek && stream.Position != 0)
-                throw new ArgumentException($"Must be 0. Was {stream.Position}.", paramName: "blob.Position");
+                throw new ArgumentException($"Invalid position. Expected 0. Was {stream.Position}.", nameof(blob));
 
 
             int retryCount = 0;

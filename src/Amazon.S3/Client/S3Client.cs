@@ -76,18 +76,18 @@ namespace Amazon.S3
             return new UploadPartResult(
                 uploadId   : request.UploadId,
                 partNumber : request.PartNumber,
-                eTag       : response.Headers.ETag.Tag
+                eTag       : response.Headers.ETag!.Tag
             );
         }
 
         public async Task<CompleteMultipartUploadResult> CompleteMultipartUploadAsync(CompleteMultipartUploadRequest request)
         {
-            var responseText = await SendAsync(request).ConfigureAwait(false);
+            string responseText = await SendAsync(request).ConfigureAwait(false);
 
             return ResponseHelper<CompleteMultipartUploadResult>.ParseXml(responseText);
         }
 
-#endregion
+        #endregion
 
         public async Task<PutObjectResult> PutObjectAsync(PutObjectRequest request, CancellationToken cancellationToken = default)
         {
@@ -101,7 +101,7 @@ namespace Amazon.S3
             }
 
             return new PutObjectResult(
-                eTag      : response.Headers.ETag.Tag, 
+                eTag      : response.Headers!.ETag!.Tag!, 
                 versionId : versionId
             );
         }
@@ -167,7 +167,7 @@ namespace Amazon.S3
 
             var response = await httpClient.SendAsync(request, completionOption, cancellationToken).ConfigureAwait(false);
             
-            if (response.StatusCode == HttpStatusCode.NotModified)
+            if (response.StatusCode is HttpStatusCode.NotModified)
             {
                 return response;
             }
@@ -194,13 +194,13 @@ namespace Amazon.S3
         {
             string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            if (response.StatusCode == HttpStatusCode.NotFound)
+            if (response.StatusCode is HttpStatusCode.NotFound)
             {
-                string key = response.RequestMessage.RequestUri.AbsolutePath;
+                string key = response.RequestMessage!.RequestUri!.AbsolutePath;
 
                 if (key.Length > 0 && key[0] == '/')
                 {
-                    key = key.Substring(1);
+                    key = key[1..];
                 }
 
                 throw StorageException.NotFound(key);
