@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using Carbon.Data;
 
@@ -41,17 +42,13 @@ namespace Amazon.DynamoDb
             Add<HashSet<double>>(new HashSetConverter<double>());
 
             // Add<UInt16>(new UInt16Converter());
-            // Add<UInt32>(new UInt32Converter());
+            Add<UInt32>(new UInt32Converter());
             // Add<UInt64>(new UInt64Converter());
 
             Add(new VersionConverter());
             Add(new UriConverter());
             Add(new IPAddressConverter());
             Add(new UidConverter());
-
-            // Custom
-            // Add<JsonObject>(new JsonObjectConverter());
-            // Add<JsonArray>(new JsonArrayConverter());
         }
 
         public static IDbValueConverter Get(Type type)
@@ -68,7 +65,7 @@ namespace Amazon.DynamoDb
             return converter;
         }
 
-        public static bool TryGet(Type type, out IDbValueConverter converter)
+        public static bool TryGet(Type type, [MaybeNullWhen(false)] out IDbValueConverter converter)
         {
             var details = TypeDetails.Get(type);
 
