@@ -79,7 +79,7 @@ namespace Amazon.DynamoDb
 
         internal void WriteChange(in Change change, StringBuilder sb)
         {
-            if (sb[sb.Length - 1] != ' ')
+            if (sb[^1] != ' ')
             {
                 sb.Append(", ");
             }
@@ -139,11 +139,7 @@ namespace Amazon.DynamoDb
                 sb.AppendLine(); // \n ?
             }
 
-#if NETSTANDARD2_0
-            sb.Append(segment.ToString());
-#else
             sb.Append(segment);
-#endif
         }
     }
 }

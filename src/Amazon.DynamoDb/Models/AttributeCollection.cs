@@ -158,7 +158,7 @@ namespace Amazon.DynamoDb
 
                 var typeInfo = TypeDetails.Get(member.Type);
 
-                if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter converter))
+                if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter? converter))
                 {
                     var dbValue = converter.FromObject(value, member);
 
@@ -185,7 +185,7 @@ namespace Amazon.DynamoDb
 
                     var list = new DbValue[a.Count];
 
-                    if (DbValueConverterFactory.TryGet(typeInfo.ElementType, out IDbValueConverter c))
+                    if (DbValueConverterFactory.TryGet(typeInfo.ElementType, out IDbValueConverter? c))
                     {
                         for (int i = 0; i < list.Length; i++)
                         {
@@ -246,7 +246,7 @@ namespace Amazon.DynamoDb
 
                 if (member is null) continue;
 
-                if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter converter))
+                if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter? converter))
                 {
                     var value = converter.ToObject(attribute.Value, member);
 
@@ -300,7 +300,7 @@ namespace Amazon.DynamoDb
 
                 if (member is null) continue;
 
-                if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter converter))
+                if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter? converter))
                 {
                     var value = converter.ToObject(attribute.Value, member);
 

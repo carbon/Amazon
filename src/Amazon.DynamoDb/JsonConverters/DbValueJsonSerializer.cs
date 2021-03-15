@@ -70,7 +70,7 @@ namespace Amazon.DynamoDb.JsonConverters
         {
             reader.Read();
 
-            return reader.GetString();
+            return reader.GetString()!;
         }
 
         private static string[] ReadStringArray(ref Utf8JsonReader reader)

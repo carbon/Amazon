@@ -21,13 +21,13 @@ namespace Amazon.DynamoDb
     {
         public TableKeys(string tableName, params Dictionary<string, DbValue>[] keys)
         {
-            TableName = tableName ?? throw new ArgumentNullException(nameof(TableName));
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             Keys = keys;
         }
 
         public TableKeys(string tableName, params IEnumerable<KeyValuePair<string, object>>[] keys)
         {
-            TableName = tableName ?? throw new ArgumentNullException(nameof(TableName));
+            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
             Keys = new Dictionary<string, DbValue>[keys.Length];
 
             for (int i = 0; i < Keys.Length; i++)

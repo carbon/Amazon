@@ -1,4 +1,6 @@
-﻿#nullable disable
+﻿#pragma warning disable CA1507 // Use nameof to express symbol names
+
+#nullable disable
 
 using System;
 using System.Collections.Generic;

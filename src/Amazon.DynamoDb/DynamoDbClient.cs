@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 using Amazon.DynamoDb.Transactions;
@@ -14,7 +15,7 @@ namespace Amazon.DynamoDb
         private const string TargetPrefix = "DynamoDB_20120810";
 
         private static readonly JsonSerializerOptions serializerOptions = new () {
-            IgnoreNullValues = true
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
         public DynamoDbClient(AwsRegion region, IAwsCredential credential)
@@ -49,7 +50,6 @@ namespace Amazon.DynamoDb
 
             return BatchGetItemResult.FromJsonElement(json);
         }
-
 
         public async Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
         {

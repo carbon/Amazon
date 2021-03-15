@@ -217,9 +217,7 @@ namespace Amazon.DynamoDb
         }
 
         public async IAsyncEnumerable<T> ScanAsync(params Expression[] conditions) // Scans the entire table
-        {
-            // Each scan may return upto 1MB of data
-            
+        {            
             DynamoExpression? filterExpression = null;
 
             if (conditions is { Length: > 0 })
@@ -232,7 +230,6 @@ namespace Amazon.DynamoDb
             do
             {
                 var request = new ScanRequest(tableName) {
-                    Limit = 1_000,
                     ExclusiveStartKey = result?.LastEvaluatedKey
                 };
 
@@ -355,21 +352,21 @@ namespace Amazon.DynamoDb
 
             var request = new DeleteItemRequest(tableName, Key<T>.FromObject(record));
 
-            return InternalDelete(request);
+            return InternalDeleteAsync(request);
         }
 
         public Task<DeleteItemResult> DeleteAsync(TKey key)
         {
             var request = new DeleteItemRequest(tableName, key: Key<T>.FromTuple(key));
 
-            return InternalDelete(request);
+            return InternalDeleteAsync(request);
         }
 
         public Task<DeleteItemResult> DeleteAsync(Key<T> key)
         {
             var request = new DeleteItemRequest(tableName, key);
 
-            return InternalDelete(request);
+            return InternalDeleteAsync(request);
         }
 
         public Task<DeleteItemResult> DeleteAsync(Key<T> key, ReturnValues returnValues)
@@ -378,11 +375,13 @@ namespace Amazon.DynamoDb
                 ReturnValues = returnValues
             };
        
-            return InternalDelete(request);
+            return InternalDeleteAsync(request);
         }
 
-        public Task<DeleteItemResult> DeleteAsync(Key<T> key, params Expression[] conditions) => 
-            DeleteAsync(key, conditions, ReturnValues.NONE);
+        public Task<DeleteItemResult> DeleteAsync(Key<T> key, params Expression[] conditions)
+        {
+            return DeleteAsync(key, conditions, ReturnValues.NONE);
+        }
 
         public Task<DeleteItemResult> DeleteAsync(Key<T> key, Expression[] conditions, ReturnValues returnValues)
         {
@@ -395,10 +394,10 @@ namespace Amazon.DynamoDb
                 request.SetConditions(conditions);
             }
         
-            return InternalDelete(request);
+            return InternalDeleteAsync(request);
         }
 
-        private async Task<DeleteItemResult> InternalDelete(DeleteItemRequest request)
+        private async Task<DeleteItemResult> InternalDeleteAsync(DeleteItemRequest request)
         {
             var retryCount = 0;
             Exception lastError;
@@ -450,9 +449,9 @@ namespace Amazon.DynamoDb
         private async Task<BatchWriteItemResult> BatchWriteItem(TableRequests batch, BatchResult info)
         {
             if (batch.Requests.Count > 25)
-                throw new ArgumentException("Must be 25 or less.", "batch.Items");
+                throw new ArgumentException($"Batch must not exceed 25 items. Contained {batch.Requests.Count} items.", nameof(batch));
 
-            var retryCount = 0;
+            int retryCount = 0;
 
             Exception? lastError;
 
