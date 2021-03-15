@@ -131,10 +131,10 @@ namespace Amazon.DynamoDb.Expressions.Tests
         {
             var de = new DynamoQueryExpression(
                 new[] { "name", "version" },
-                new[] {
-                Eq("name", "sortable"),
-                Between("version", "1.0", "2.0")
-            });
+                new Expression[] {
+                    Eq("name", "sortable"),
+                    Between("version", "1.0", "2.0")
+                });
 
             Assert.Equal("#name = :v0 and version between :v1 and :v2", de.KeyExpression.Text);
 
