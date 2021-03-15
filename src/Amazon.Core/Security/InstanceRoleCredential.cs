@@ -12,7 +12,7 @@ namespace Amazon
     {
         private int renewCount = 0;
 
-        private readonly SemaphoreSlim gate = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim gate = new (1, 1);
 
         public InstanceRoleCredential() { }
 

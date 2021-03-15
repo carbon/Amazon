@@ -169,7 +169,7 @@ namespace Amazon.Metadata
         {
             using HttpResponseMessage response = await GetAsync(url).ConfigureAwait(false);
 
-            if (response.StatusCode == HttpStatusCode.NotFound)
+            if (response.StatusCode is HttpStatusCode.NotFound)
             {
                 return null;
             }
