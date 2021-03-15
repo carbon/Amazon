@@ -3,8 +3,8 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Cloudfront</AssemblyName>
     <VersionPrefix>0.0.1</VersionPrefix>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
-    <LangVersion>8</LangVersion>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

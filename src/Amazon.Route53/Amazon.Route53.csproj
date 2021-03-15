@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Route53</AssemblyName>
-    <Version>0.7.1</Version>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0</TargetFrameworks>
+    <Version>0.7.2</Version>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
+    <TreatWarningAsErrors>true</TreatWarningAsErrors>
 
     <PackageId>Carbon.Amazon.Route53</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

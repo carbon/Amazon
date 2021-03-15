@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.DynamoDb</AssemblyName>
-    <VersionPrefix>0.19.2</VersionPrefix>
-    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0</TargetFrameworks>
+    <VersionPrefix>0.20.1</VersionPrefix>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
@@ -21,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Data" Version="1.0.2" />
+    <PackageReference Include="Carbon.Data" Version="1.1.1" />
   </ItemGroup>
 
 </Project>
