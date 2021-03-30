@@ -5,13 +5,13 @@ namespace Amazon.Sts
 {
     internal static class StsSerializer<T>
     {
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(T), StsClient.Namespace);
+        private static readonly XmlSerializer serializer = new (typeof(T), StsClient.Namespace);
 
-        public static T ParseXml(string xml)
+        public static T ParseXml(string xmlText)
         {
-            using var reader = new StringReader(xml);
+            using var reader = new StringReader(xmlText);
 
-            return (T)serializer.Deserialize(reader);
+            return (T)serializer.Deserialize(reader)!;
         }
     }
 }

@@ -65,7 +65,7 @@ namespace Amazon.Sts
             }
 
             return new CallerIdentityVerificationParameters(
-                url     : httpRequest.RequestUri.ToString(), 
+                url     : httpRequest.RequestUri!.ToString(),
                 headers : headers, 
                 body    : body
             );
