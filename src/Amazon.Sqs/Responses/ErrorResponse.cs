@@ -7,12 +7,12 @@ namespace Amazon.Sqs.Models
         public SqsError Parse(string xmlText)
         {
             var errorResponseEl = XElement.Parse(xmlText);
-            var errorEl = errorResponseEl.Element("Error");
+            var errorEl = errorResponseEl.Element("Error")!;
 
             return new SqsError {
-                Type = errorEl.Element("Type").Value,
-                Code = errorEl.Element("Code").Value,
-                Message = errorEl.Element("Message").Value
+                Type = errorEl.Element("Type")!.Value,
+                Code = errorEl.Element("Code")!.Value,
+                Message = errorEl.Element("Message")!.Value
             };
         }
     }

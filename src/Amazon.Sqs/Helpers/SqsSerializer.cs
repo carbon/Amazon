@@ -5,13 +5,13 @@ namespace Amazon.Sqs
 {
     internal static class SqsSerializer<T>
     {
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(T), SqsClient.NS);
+        private static readonly XmlSerializer serializer = new (typeof(T), SqsClient.NS);
 
-        public static T Deserialize(string xml)
+        public static T Deserialize(string xmlText)
         {
-            using var reader = new StringReader(xml);
+            using var reader = new StringReader(xmlText);
 
-            return (T)serializer.Deserialize(reader);
+            return (T)serializer.Deserialize(reader)!;
         }
     }
 }
