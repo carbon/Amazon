@@ -183,11 +183,11 @@ namespace Amazon.Ec2
             return Ec2Serializer<TResponse>.Deserialize(responseXml);
         }
 
-        private FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)
+        private static FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)
         {
             parameters.Add("Version", Version);
 
-            return new FormUrlEncodedContent(parameters);
+            return new FormUrlEncodedContent(parameters!);
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)

@@ -18,13 +18,13 @@ namespace Amazon.Ec2
 
             var ns = rootEl.Name.Namespace;
 
-            var reservationSet = rootEl.Element(ns + "reservationSet");
+            var reservationSet = rootEl.Element(ns + "reservationSet")!;
 
             var instances = new List<Instance>();
 
             foreach (var itemEl in reservationSet.Elements())
             {
-                var instanceSetEl = itemEl.Element(ns + "instancesSet");
+                var instanceSetEl = itemEl.Element(ns + "instancesSet")!;
 
                 foreach (var instanceItemEl in instanceSetEl.Elements())
                 {
