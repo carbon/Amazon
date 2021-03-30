@@ -25,15 +25,15 @@ namespace Amazon.Elb
                     {
                         string prefix = member.Name + ".member." + (i + 1).ToString(CultureInfo.InvariantCulture);
 
-                        var element = list[i];
+                        var element = list[i]!;
 
-                        if (Type.GetTypeCode(element.GetType()) == TypeCode.Object)
+                        if (Type.GetTypeCode(element.GetType()) is TypeCode.Object)
                         {
                             AddParameters(parameters, prefix, element);
                         }
                         else
                         {
-                            parameters.Add(prefix, element.ToString());
+                            parameters.Add(prefix, element.ToString()!);
                         }
                     }
                 }
@@ -70,7 +70,7 @@ namespace Amazon.Elb
                 }
                 else
                 {
-                    parameters.Add(key, value.ToString());
+                    parameters.Add(key, value.ToString()!);
                 }
             }
         }

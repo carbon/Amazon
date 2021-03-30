@@ -8,7 +8,7 @@ namespace Amazon.Elb
 {
     internal sealed class InstanceModel
     {
-        private static readonly ConcurrentDictionary<Type, InstanceModel> models = new ConcurrentDictionary<Type, InstanceModel>();
+        private static readonly ConcurrentDictionary<Type, InstanceModel> models = new ();
 
         private readonly IReadOnlyList<InstanceModelMember> members;
 
@@ -62,7 +62,7 @@ namespace Amazon.Elb
 
         public PropertyInfo Property { get; }
 
-        public object GetValue(object instance)
+        public object? GetValue(object instance)
         {
             return Property.GetValue(instance);
         }
