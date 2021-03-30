@@ -2,7 +2,7 @@
 
 namespace Amazon.Kinesis
 {
-    public class ErrorResult
+    public sealed class ErrorResult
 	{
 		public string Type { get; set; }
 

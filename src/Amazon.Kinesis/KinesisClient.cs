@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Amazon.Kinesis
@@ -68,16 +69,18 @@ namespace Amazon.Kinesis
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            string xmlText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            var error = JsonSerializer.Deserialize<ErrorResult>(responseText);
+            var error = JsonSerializer.Deserialize<ErrorResult>(xmlText)!;
 
-            error.Text = responseText;
+            error.Text = xmlText;
 
             return new KinesisException(error, response.StatusCode);
         }
 
-        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { IgnoreNullValues = true };
+        private static readonly JsonSerializerOptions jso = new () {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
 
         private HttpRequestMessage GetRequestMessage<T>(string action, T request)
             where T : KinesisRequest

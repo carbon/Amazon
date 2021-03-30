@@ -60,7 +60,7 @@ namespace Amazon.Kinesis.Firehose
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-            return JsonSerializer.Deserialize<TResult>(responseText);
+            return JsonSerializer.Deserialize<TResult>(responseText)!;
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
