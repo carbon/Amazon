@@ -32,7 +32,7 @@ namespace Amazon.Ses
 
             using var a = Attachment.CreateAttachmentFromString(string.Empty, text);
 
-            return a.Name;
+            return a.Name!;
         }
 
         // Based on https://stackoverflow.com/questions/11793734/code-for-encode-decode-quotedprintable
