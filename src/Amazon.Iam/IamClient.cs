@@ -52,7 +52,7 @@ namespace Amazon.Iam
             request.Add("Version", Version);
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
-                Content = new FormUrlEncodedContent(request.Parameters)
+                Content = new FormUrlEncodedContent(request.Parameters!)
             };
 
             return SendAsync(httpRequest);
