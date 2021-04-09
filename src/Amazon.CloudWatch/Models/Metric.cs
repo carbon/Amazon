@@ -20,19 +20,17 @@ namespace Amazon.CloudWatch
         internal static Metric FromXml(XNamespace ns, XElement el)
         {
             var metric = new Metric(
-                ns   : el.Element(ns + "Namespace").Value,
-                name : el.Element(ns + "MetricName").Value 
+                ns   : el.Element(ns + "Namespace")!.Value,
+                name : el.Element(ns + "MetricName")!.Value 
             );
 
-            var dimensionsEl = el.Element(ns + "Dimensions");
-
-            if (dimensionsEl != null)
+            if (el.Element(ns + "Dimensions") is XElement dimensionsEl)
             {
                 foreach (var dimensionEl in dimensionsEl.Elements())
                 {
                     metric.Dimensions.Add(new Dimension(
-                        name: dimensionEl.Element(ns + "Name").Value,
-                        value: dimensionEl.Element(ns + "Value").Value
+                        name: dimensionEl.Element(ns + "Name")!.Value,
+                        value: dimensionEl.Element(ns + "Value")!.Value
                     ));
                 }
             }

@@ -81,11 +81,11 @@ namespace Amazon.CloudWatch
 
         #region Helpers
 
-        private FormUrlEncodedContent GetPostContent(AwsRequest request)
+        private static FormUrlEncodedContent GetPostContent(AwsRequest request)
         {
             request.Add("Version", Version);
 
-            return new FormUrlEncodedContent(request.Parameters);
+            return new FormUrlEncodedContent(request.Parameters!);
         }
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
