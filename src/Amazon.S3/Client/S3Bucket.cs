@@ -266,7 +266,7 @@ namespace Amazon.S3
 
             Stream stream = await blob.OpenAsync().ConfigureAwait(false);
 
-            if (stream.Length == 0)
+            if (stream.Length is 0)
                 throw new ArgumentException("May not be empty", nameof(blob));
 
             // Ensure we're at the start of the stream
@@ -345,9 +345,9 @@ namespace Amazon.S3
 
             var result = await client.DeleteObjectsAsync(request).ConfigureAwait(false);
 
-            if (result.Errors is { Length: > 0 })
+            if (result.Errors is { Length: > 0 } errors)
             {
-                throw new Exception(result.Errors[0].Message);
+                throw new Exception(errors[0].Message);
             }
 
             return result;

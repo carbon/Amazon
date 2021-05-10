@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Carbon.Storage;
@@ -25,17 +26,17 @@ namespace Amazon.S3
 
             foreach (var header in response.Headers)
             {
-                properties.Add(header.Key, string.Join(";", header.Value));
+                properties.Add(header.Key, string.Join(';', header.Value));
             }
 
             foreach (var header in response.Content.Headers)
             {
-                properties.Add(header.Key, string.Join(";", header.Value));
+                properties.Add(header.Key, string.Join(';', header.Value));
             }
 
             StatusCode = response.StatusCode;
 
-            if (response.StatusCode == HttpStatusCode.NotModified)
+            if (response.StatusCode is HttpStatusCode.NotModified)
             {
                 response.Dispose();
 
@@ -70,10 +71,15 @@ namespace Amazon.S3
 
         public CacheControlHeaderValue? CacheControl
         {
-            get => properties.TryGetValue("Cache-Control", out var cacheControl) ? CacheControlHeaderValue.Parse(cacheControl) : null;
+            get
+            {
+                return properties.TryGetValue("Cache-Control", out var cacheControl) 
+                    ? CacheControlHeaderValue.Parse(cacheControl) 
+                    : null;
+            }
             set
             {
-                if (value != null)
+                if (value is not null)
                 {
                     properties["Cache-Control"] = value.ToString();
                 }
@@ -105,6 +111,17 @@ namespace Amazon.S3
 
             await response.Content.CopyToAsync(output).ConfigureAwait(false);
         }
+
+#if NET5_0_OR_GREATER
+
+        public async Task CopyToAsync(Stream output, CancellationToken cancellationToken)
+        {
+            if (response is null) throw new ObjectDisposedException(nameof(S3Object));
+
+            await response.Content.CopyToAsync(output, cancellationToken).ConfigureAwait(false);
+        }
+
+#endif
 
         #region IBlob
 

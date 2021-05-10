@@ -82,12 +82,12 @@ namespace Amazon.S3
 
             foreach (var header in response.Headers)
             {
-                properties.Add(header.Key, string.Join(";", header.Value));
+                properties.Add(header.Key, string.Join(';', header.Value));
             }
 
             foreach (var header in response.Content.Headers)
             {
-                properties.Add(header.Key, string.Join(";", header.Value));
+                properties.Add(header.Key, string.Join(';', header.Value));
             }
 
             return new S3ObjectInfo(

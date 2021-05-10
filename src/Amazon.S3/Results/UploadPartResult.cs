@@ -10,7 +10,7 @@ namespace Amazon.S3
         {
             UploadId = uploadId ?? throw new ArgumentNullException(nameof(uploadId));
             PartNumber = partNumber;
-            ETag       = eTag ?? throw new ArgumentNullException(nameof(ETag));
+            ETag = eTag ?? throw new ArgumentNullException(nameof(eTag));
         }
 
         public int PartNumber { get; }

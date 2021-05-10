@@ -30,7 +30,7 @@ namespace Amazon.Helpers
         // COPYRIGHT: https://stackoverflow.com/a/17923942
         public static byte[] ToBytes(ReadOnlySpan<char> hexString)
         {
-#if NET5_0
+#if NET5_0_OR_GREATER
             return Convert.FromHexString(hexString);
 #else
             byte[] bytes = new byte[hexString.Length / 2];

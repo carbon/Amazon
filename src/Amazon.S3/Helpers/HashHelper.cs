@@ -12,7 +12,7 @@ namespace Amazon.S3
 
         public static byte[] ComputeMD5Hash(byte[] data)
         {
-#if NET5_0
+#if NET5_0_OR_GREATER
             return MD5.HashData(data);
 #else
             using MD5 md5 = MD5.Create();
