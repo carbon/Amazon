@@ -117,7 +117,7 @@ namespace Amazon.S3
         {
             using HttpResponseMessage response = await SendAsync2(request, HttpCompletionOption.ResponseHeadersRead, cancelationToken).ConfigureAwait(false);
 
-            if (response.StatusCode != HttpStatusCode.NoContent)
+            if (response.StatusCode is not HttpStatusCode.NoContent)
             {
                 throw new S3Exception("Expected 204", response.StatusCode);
             }
@@ -192,13 +192,11 @@ namespace Amazon.S3
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
             if (response.StatusCode is HttpStatusCode.NotFound)
             {
                 string key = response.RequestMessage!.RequestUri!.AbsolutePath;
 
-                if (key.Length > 0 && key[0] == '/')
+                if (key.Length > 0 && key[0] is '/')
                 {
                     key = key[1..];
                 }
@@ -206,32 +204,31 @@ namespace Amazon.S3
                 throw StorageException.NotFound(key);
             }
 
-            try
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+          
+            // Wasabi returns a non-standard ErrorResponse
+            if (responseText.Contains("<ErrorResponse"))
             {
-                // Wasabi returns a non-standard ErrorResponse
-                if (responseText.Contains("<ErrorResponse"))
-                {
-                    var errorResponse = ResponseHelper<S3ErrorResponse>.ParseXml(responseText);
-
-                    throw new S3Exception(
-                       error      : errorResponse.Error,
-                       statusCode : response.StatusCode
-                   );
-
-                }
-                if (responseText.Contains("<Error>"))
+                if (ResponseHelper<S3ErrorResponse>.TryParseXml(responseText, out var wasabiError))
                 {
                     throw new S3Exception(
-                        error      : S3Error.ParseXml(responseText),
+                        error      : wasabiError.Error,
                         statusCode : response.StatusCode
                     );
                 }
             }
-            catch { }
+
+            else if (responseText.Contains("<Error>") && S3Error.TryParseXml(responseText, out var error))
+            {
+                throw new S3Exception(
+                    error      : error,
+                    statusCode : response.StatusCode
+                );
+            }            
 
             throw new S3Exception("Unexpected S3 error. " + response.StatusCode + ":" + responseText, response.StatusCode);
         }
 
-#endregion
+        #endregion
     }
 }

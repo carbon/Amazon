@@ -19,9 +19,17 @@ namespace Amazon.S3
         [XmlElement]
         public string RequestId { get; set; }
 
+        // RangeRequested
+        // ActualObjectSize
+
         public static S3Error ParseXml(string xmlText)
         {
             return ResponseHelper<S3Error>.ParseXml(xmlText);
+        }
+
+        internal static bool TryParseXml(string xmlText, out S3Error error)
+        {
+            return ResponseHelper<S3Error>.TryParseXml(xmlText, out error);
         }
     }
 
