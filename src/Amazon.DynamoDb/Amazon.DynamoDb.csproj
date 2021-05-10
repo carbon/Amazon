@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Data" Version="1.1.1" />
+    <PackageReference Include="Carbon.Data" Version="1.1.4" />
   </ItemGroup>
 
 </Project>

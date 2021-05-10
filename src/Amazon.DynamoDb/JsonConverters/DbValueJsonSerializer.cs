@@ -119,7 +119,6 @@ namespace Amazon.DynamoDb.JsonConverters
             return dbValueListHandle.Value.ToArray();
         }
 
-
         public static void Write(Utf8JsonWriter writer, DbValue dbValue)
         {
             writer.WriteStartObject();

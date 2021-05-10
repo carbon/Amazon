@@ -246,7 +246,7 @@ namespace Amazon.DynamoDb
 
             IList collection = (IList)_value;
             
-			T[] array = new T[collection.Count];
+			var array = new T[collection.Count];
 			
 			for (int i = 0; i < collection.Count; i++)
 			{
