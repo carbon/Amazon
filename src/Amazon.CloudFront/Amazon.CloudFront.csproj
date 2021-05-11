@@ -4,7 +4,7 @@
     <AssemblyName>Amazon.Cloudfront</AssemblyName>
     <VersionPrefix>0.0.1</VersionPrefix>
     <TargetFrameworks>net5.0</TargetFrameworks>
-    <LangVersion>9</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
