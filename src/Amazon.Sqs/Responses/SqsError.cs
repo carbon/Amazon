@@ -15,7 +15,9 @@ namespace Amazon.Sqs
         [XmlElement("Message")]
         public string Message { get; set; }
 
+#nullable enable
+
         [XmlElement("detail")]
-        public string Detail { get; set; }
+        public string? Detail { get; set; }
     }
 }

@@ -6,9 +6,9 @@ namespace Amazon.Sqs
 {
     public sealed class RecieveMessagesRequest
     {
-        private readonly int take;
-        private readonly TimeSpan? lockTime;
-        private readonly TimeSpan? waitTime;
+        private readonly int _take;
+        private readonly TimeSpan? _lockTime;
+        private readonly TimeSpan? _waitTime;
 
         /// <param name="lockTime">The time to hide the message from other workers.</param>
         /// <param name="waitTime">The maximium amount of time to wait for queue items.</param>
@@ -37,9 +37,9 @@ namespace Amazon.Sqs
                 throw new ArgumentException("Must be less than 20 seconds", nameof(waitTime));
             }
 
-            this.take = take;
-            this.lockTime = lockTime;
-            this.waitTime = waitTime;
+            _take = take;
+            _lockTime = lockTime;
+            _waitTime = waitTime;
         }
 
         public string[]? AttributeNames { get; set; }
@@ -48,16 +48,16 @@ namespace Amazon.Sqs
 
         internal List<KeyValuePair<string, string>> GetParameters()
         {
-            var parameters = new List<KeyValuePair<string, string>> {
+            var parameters = new List<KeyValuePair<string, string>>(4) {
                 new ("Action", "ReceiveMessage")
             };
 
-            if (take > 1) // default is 1
+            if (_take > 1) // default is 1
             {
-                parameters.Add(new ("MaxNumberOfMessages", take.ToString(CultureInfo.InvariantCulture)));
+                parameters.Add(new ("MaxNumberOfMessages", _take.ToString(CultureInfo.InvariantCulture)));
             }
 
-            if (AttributeNames != null)
+            if (AttributeNames is { Length: > 0 })
             {
                 for (int i = 0; i < AttributeNames.Length; i++)
                 {
@@ -65,7 +65,7 @@ namespace Amazon.Sqs
                 }
             }
 
-            if (MessageAttributeNames != null)
+            if (MessageAttributeNames is { Length: > 0 })
             {
                 for (int i = 0; i < MessageAttributeNames.Length; i++)
                 {
@@ -73,14 +73,18 @@ namespace Amazon.Sqs
                 }
             }
 
-            if (lockTime.HasValue) // Defaults to the queue visibility timeout
+            if (_lockTime.HasValue) // Defaults to the queue visibility timeout
             {
-                parameters.Add(new ("VisibilityTimeout", ((int)lockTime.Value.TotalSeconds).ToString(CultureInfo.InvariantCulture)));
+                int lockTimeSeconds = (int)_lockTime.Value.TotalSeconds;
+
+                parameters.Add(new ("VisibilityTimeout", lockTimeSeconds.ToString(CultureInfo.InvariantCulture)));
             }
 
-            if (waitTime.HasValue) // Defaults to queue default
+            if (_waitTime.HasValue) // Defaults to queue default
             {
-                parameters.Add(new ("WaitTimeSeconds", ((int)waitTime.Value.TotalSeconds).ToString(CultureInfo.InvariantCulture)));
+                int waitTimeSeconds = (int)_waitTime.Value.TotalSeconds;
+
+                parameters.Add(new ("WaitTimeSeconds", waitTimeSeconds.ToString(CultureInfo.InvariantCulture)));
             }
 
             return parameters;

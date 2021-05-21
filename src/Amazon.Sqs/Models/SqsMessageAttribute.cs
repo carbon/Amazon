@@ -12,7 +12,7 @@ namespace Amazon.Sqs
     //   </Value>
     // </MessageAttribute>
 
-    public class SqsMessageAttribute
+    public sealed class SqsMessageAttribute
     {
         [XmlElement("Name")]
         public string Name { get; set; }

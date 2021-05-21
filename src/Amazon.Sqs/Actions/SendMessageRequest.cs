@@ -37,7 +37,7 @@ namespace Amazon.Sqs
 
         internal List<KeyValuePair<string, string>> GetParameters()
         {
-            var parameters = new List<KeyValuePair<string, string>> {
+            var parameters = new List<KeyValuePair<string, string>>(4) {
                 new ("Action", "SendMessage"),
                 new ("MessageBody", MessageBody)
             };
@@ -45,20 +45,22 @@ namespace Amazon.Sqs
             // Defaults to the queue visibility timeout
             if (Delay.HasValue)
             {
-                parameters.Add(new ("DelaySeconds", ((int)Delay.Value.TotalSeconds).ToString(CultureInfo.InvariantCulture)));
+                int delaySeconds = (int)Delay.Value.TotalSeconds;
+
+                parameters.Add(new ("DelaySeconds", delaySeconds.ToString(CultureInfo.InvariantCulture)));
             }
 
-            if (MessageDeduplicationId != null)
+            if (MessageDeduplicationId is not null)
             {
                 parameters.Add(new ("MessageDeduplicationId", MessageDeduplicationId));
             }
 
-            if (MessageGroupId != null)
+            if (MessageGroupId is not null)
             {
                 parameters.Add(new ("MessageGroupId", MessageGroupId));
             }
 
-            if (MessageAttributes != null)
+            if (MessageAttributes is { Length: > 0 })
             {
                 for (int i = 0; i < MessageAttributes.Length; i++)
                 {

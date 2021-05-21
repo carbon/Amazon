@@ -4,7 +4,7 @@ namespace Amazon.Sqs.Models
 {
     public class ErrorResponse
     {
-        public SqsError Parse(string xmlText)
+        public static SqsError Parse(string xmlText)
         {
             var errorResponseEl = XElement.Parse(xmlText);
             var errorEl = errorResponseEl.Element("Error")!;

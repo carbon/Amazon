@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using Carbon.Messaging;
 
@@ -8,7 +9,7 @@ namespace Amazon.Sqs
         where T : notnull
     {
         private static readonly JsonSerializerOptions jso = new () {
-            IgnoreNullValues = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
@@ -28,7 +29,7 @@ namespace Amazon.Sqs
 
         public string Id => model.MessageId;
 
-        public MessageReceipt Receipt => new MessageReceipt(model.ReceiptHandle);
+        public MessageReceipt Receipt => new (model.ReceiptHandle);
 
         public T Body { get; }
     }
