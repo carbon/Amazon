@@ -104,7 +104,7 @@ namespace Amazon
             return true;
         }
 
-#if NET5_0
+#if NET5_0_OR_GREATER
         public static InstanceRoleCredential Get()
         {
             var ims = InstanceMetadataService.Instance;

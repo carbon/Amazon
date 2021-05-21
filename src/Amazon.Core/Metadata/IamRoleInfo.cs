@@ -1,4 +1,6 @@
-﻿#nullable disable
+﻿#pragma warning disable IDE0057 // Use range operator
+
+#nullable disable
 
 using System;
 

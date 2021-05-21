@@ -35,7 +35,7 @@ namespace Amazon
 
         public static Signature ComputeHmacSha256(byte[] key, byte[] data)
         {
-            using HMACSHA256 algorithm = new HMACSHA256(key);
+            using var algorithm = new HMACSHA256(key);
 
             byte[] hash = algorithm.ComputeHash(data);
 

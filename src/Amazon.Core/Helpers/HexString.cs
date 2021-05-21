@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Amazon.Helpers
 {
@@ -8,7 +9,9 @@ namespace Amazon.Helpers
 
         public static string FromBytes(byte[] bytes)
         {
-            var buffer = new char[bytes.Length * 2];
+            Span<char> buffer = bytes.Length < 100
+                ? stackalloc char[bytes.Length * 2]
+                : new char[bytes.Length * 2];
 
             byte b;
 

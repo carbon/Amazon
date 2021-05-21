@@ -495,7 +495,7 @@ namespace Amazon.Security
 
         public static byte[] ComputeSHA256(byte[] data)
         {
-#if NET5_0
+#if NET5_0_OR_GREATER
             return SHA256.HashData(data);
 #else
             using SHA256 algorithm = SHA256.Create();
