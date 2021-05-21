@@ -13,7 +13,7 @@ namespace Amazon.Kms
         {
             if (keyId is null)
             {
-                throw new ArgumentException(nameof(keyId));
+                throw new ArgumentNullException(nameof(keyId));
             }
 
             if (keyId.Length == 0)

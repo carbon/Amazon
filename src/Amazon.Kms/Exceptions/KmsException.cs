@@ -17,6 +17,6 @@ namespace Amazon.Kms
             Type = error.Type;
         }
 
-        public string Type { get; set; }
+        public string Type { get; }
     }
 }

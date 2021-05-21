@@ -6,25 +6,25 @@ namespace Amazon.Kms
 {
     public sealed class KmsProtector
     {
-        private readonly KmsClient client;
-        private readonly string keyId;
+        private readonly KmsClient _client;
+        private readonly string _keyId;
 
         public KmsProtector(AwsRegion region, string keyId, IAwsCredential credential)
             : this(new KmsClient(region, credential), keyId) { }
 
         public KmsProtector(KmsClient client, string keyId)
         {
-            this.client = client ?? throw new ArgumentNullException(nameof(client));
-            this.keyId  = keyId  ?? throw new ArgumentNullException(nameof(keyId));
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+            _keyId  = keyId  ?? throw new ArgumentNullException(nameof(keyId));
         }
 
         public async Task<byte[]> EncryptAsync(
             byte[] plaintext, 
             IEnumerable<KeyValuePair<string, string>>? aad = null)
         {             
-            var request = new EncryptRequest(keyId, plaintext, GetEncryptionContext(aad));
+            var request = new EncryptRequest(_keyId, plaintext, GetEncryptionContext(aad));
 
-            EncryptResponse result = await client.EncryptAsync(request).ConfigureAwait(false);
+            EncryptResponse result = await _client.EncryptAsync(request).ConfigureAwait(false);
 
             return result.CiphertextBlob;
         }
@@ -33,9 +33,9 @@ namespace Amazon.Kms
             byte[] ciphertext, 
             IEnumerable<KeyValuePair<string, string>>? aad = null)
         {
-            var request = new DecryptRequest(keyId, ciphertext, GetEncryptionContext(aad));
+            var request = new DecryptRequest(_keyId, ciphertext, GetEncryptionContext(aad));
 
-            var result = await client.DecryptAsync(request).ConfigureAwait(false);
+            var result = await _client.DecryptAsync(request).ConfigureAwait(false);
 
             return result.Plaintext;
         }
@@ -43,8 +43,8 @@ namespace Amazon.Kms
         public async Task<GenerateDataKeyResponse> GenerateKeyAsync(
             IEnumerable<KeyValuePair<string, string>>? context = null)
         {
-            var result = await client.GenerateDataKeyAsync(new GenerateDataKeyRequest(
-               keyId             : keyId,
+            var result = await _client.GenerateDataKeyAsync(new GenerateDataKeyRequest(
+               keyId             : _keyId,
                keySpec           : KeySpec.AES_256,
                encryptionContext : GetEncryptionContext(context)
            )).ConfigureAwait(false);
@@ -54,8 +54,8 @@ namespace Amazon.Kms
         
         public async Task RetireGrantAsync(string grantId)
         {
-            await client.RetireGrantAsync(new RetireGrantRequest(
-                keyId   : keyId,
+            await _client.RetireGrantAsync(new RetireGrantRequest(
+                keyId   : _keyId,
                 grantId : grantId
             )).ConfigureAwait(false);
         }
@@ -66,9 +66,9 @@ namespace Amazon.Kms
         {
             if (aad is null) return null;
 
-            if (aad is IReadOnlyDictionary<string, string> aadRod)
+            if (aad is IReadOnlyDictionary<string, string> aadReadOnlyDictionary)
             {
-                return aadRod;
+                return aadReadOnlyDictionary;
             }
 
             var json = new Dictionary<string, string>();
