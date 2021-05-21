@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Core</AssemblyName>
-    <Version>0.20.0</Version>
-    <TargetFrameworks>netstandard2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <Version>0.20.1</Version>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
