@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Amazon.Exceptions;
+using Amazon.Sqs.Exceptions;
 using Amazon.Sqs.Models;
 
 using Carbon.Messaging;
@@ -132,7 +133,10 @@ namespace Amazon.Sqs
 
         public async Task<string> ChangeMessageVisibilityAsync(Uri queueUrl, ChangeMessageVisibilityRequest request)
         {
-            if (request is null) throw new ArgumentNullException(nameof(request));
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(request.ToParams())
@@ -186,14 +190,23 @@ namespace Amazon.Sqs
 
         protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
         {
-            if (response.StatusCode == HttpStatusCode.ServiceUnavailable) // 503
+            if (response.StatusCode is HttpStatusCode.ServiceUnavailable) // 503
             {
                 return new ServiceUnavailableException();
             }
 
             string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            throw new QueueException(response.StatusCode + "/" + responseText);
+            try
+            {
+                var errorResponse = ErrorResponse.ParseXml(responseText);
+
+                return new SqsException(errorResponse.Error);
+            }
+            catch
+            { }
+
+            return new QueueException(response.StatusCode + "/" + responseText);
         }
 
         #endregion

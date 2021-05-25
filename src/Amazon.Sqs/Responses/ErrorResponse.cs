@@ -1,19 +1,20 @@
-﻿using System.Xml.Linq;
+﻿#nullable disable
+
+using System.Xml.Serialization;
 
 namespace Amazon.Sqs.Models
 {
-    public class ErrorResponse
+    public sealed class ErrorResponse
     {
-        public static SqsError Parse(string xmlText)
-        {
-            var errorResponseEl = XElement.Parse(xmlText);
-            var errorEl = errorResponseEl.Element("Error")!;
+        [XmlElement("Error")]
+        public SqsError Error { get; set; }
 
-            return new SqsError {
-                Type = errorEl.Element("Type")!.Value,
-                Code = errorEl.Element("Code")!.Value,
-                Message = errorEl.Element("Message")!.Value
-            };
+        [XmlElement("RequestId")]
+        public string RequestId { get; set; }
+
+        public static ErrorResponse ParseXml(string xmlText)
+        {
+            return SqsSerializer<ErrorResponse>.Deserialize(xmlText);
         }
     }
 }
