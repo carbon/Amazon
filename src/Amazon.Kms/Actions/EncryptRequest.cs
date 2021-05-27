@@ -18,7 +18,7 @@ namespace Amazon.Kms
 
             if (keyId.Length == 0)
             {
-                throw new ArgumentNullException("May not be empty", nameof(keyId));
+                throw new ArgumentNullException(nameof(keyId), "May not be empty");
             }
 
             if (plaintext is null)
