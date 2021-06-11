@@ -27,7 +27,7 @@ namespace Amazon.Sns
         {
             parameters.Add("Version", Version);
 
-            return new FormUrlEncodedContent(parameters);
+            return new FormUrlEncodedContent(parameters!);
         }
 
         #endregion
