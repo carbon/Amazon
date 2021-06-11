@@ -2,7 +2,6 @@ using Xunit;
 
 namespace Amazon.Route53.Tests
 {
-
     public class GetHostedZoneResponseTests
     {
         [Fact]

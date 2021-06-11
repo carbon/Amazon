@@ -7,7 +7,7 @@ namespace Amazon.Route53
     public static class Route53Serializer<T>
         where T: notnull
     {
-        private static readonly XmlSerializer serializer = new XmlSerializer(typeof(T), Route53Client.Namespace);
+        private static readonly XmlSerializer serializer = new (typeof(T), Route53Client.Namespace);
 
         public static byte[] SerializeToUtf8Bytes(T instance)
         {
@@ -19,11 +19,11 @@ namespace Amazon.Route53
             return stream.ToArray();
         }
 
-        public static T DeserializeXml(string xml)
+        public static T DeserializeXml(string xmlText)
         {
-            using var reader = new StringReader(xml);
+            using var reader = new StringReader(xmlText);
 
-            return (T)serializer.Deserialize(reader);
+            return (T)serializer.Deserialize(reader)!;
         }
     }
 }
