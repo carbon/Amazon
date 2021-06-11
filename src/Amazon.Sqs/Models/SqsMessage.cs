@@ -1,4 +1,6 @@
-﻿#nullable disable
+﻿#pragma warning disable IDE0090 // Use 'new(...)'
+
+#nullable disable
 
 using System;
 using System.Xml.Serialization;
