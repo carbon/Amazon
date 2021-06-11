@@ -11,16 +11,16 @@ namespace Amazon.DynamoDb.Transactions
             Item = item ?? throw new ArgumentNullException(nameof(item));
         }
 
-        public AttributeCollection Item { get; set; }
+        public AttributeCollection Item { get; init; }
 
-        public string TableName { get; set; }
+        public string TableName { get; init; }
 
-        public string? ConditionExpression { get; set; }
+        public string? ConditionExpression { get; init; }
 
-        public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
+        public Dictionary<string, string>? ExpressionAttributeNames { get; init; }
 
-        public AttributeCollection? ExpressionAttributeValues { get; set; }
+        public AttributeCollection? ExpressionAttributeValues { get; init; }
 
-        public ReturnValuesOnConditionCheckFailure? ReturnValuesOnConditionCheckFailure { get; set; }
+        public ReturnValuesOnConditionCheckFailure? ReturnValuesOnConditionCheckFailure { get; init; }
     }
 }

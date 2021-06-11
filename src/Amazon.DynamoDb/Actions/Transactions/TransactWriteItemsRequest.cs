@@ -9,12 +9,12 @@ namespace Amazon.DynamoDb.Transactions
             TransactItems = transactItems ?? throw new ArgumentNullException(nameof(transactItems));
         }
 
-        public TransactWriteItem[] TransactItems { get; set; }
+        public TransactWriteItem[] TransactItems { get; init; }
 
-        public string? ClientRequestToken { get; set; }
+        public string? ClientRequestToken { get; init; }
 
-        public ReturnConsumedCapacity? ReturnConsumedCapacity { get; set; }
+        public ReturnConsumedCapacity? ReturnConsumedCapacity { get; init; }
 
-        public ReturnItemCollectionMetrics? ReturnItemCollectionMetrics { get; set; }
+        public ReturnItemCollectionMetrics? ReturnItemCollectionMetrics { get; init; }
     }
 }

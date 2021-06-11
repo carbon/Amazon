@@ -40,8 +40,8 @@ namespace Amazon.DynamoDb
 
         public Dictionary<string, DbValue>[] Keys { get; }
 
-        public string[]? AttributesToGet { get; set; }
+        public string[]? AttributesToGet { get; init; }
 
-        public bool ConsistentRead { get; set; }
+        public bool ConsistentRead { get; init; }
     }
 }

@@ -14,7 +14,6 @@ namespace Amazon.DynamoDb
             }
 
             return collection;
-
         }
     }
 }

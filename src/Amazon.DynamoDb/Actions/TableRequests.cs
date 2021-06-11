@@ -64,7 +64,7 @@ namespace Amazon.DynamoDb
 
         public List<object> SerializeList()
         {
-            var requests = new List<object>();
+            var requests = new List<object>(Requests.Count);
 
             foreach (ItemRequest request in Requests)
             {

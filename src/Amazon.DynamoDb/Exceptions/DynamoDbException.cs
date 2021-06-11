@@ -45,9 +45,9 @@ namespace Amazon.DynamoDb
                 message = m.GetString()!;
             }
 
-            if (json.TryGetProperty("__type", out var typeNode) && typeNode.ValueKind == JsonValueKind.String)
+            if (json.TryGetProperty("__type", out var typeEl) && typeEl.ValueKind == JsonValueKind.String)
             {
-                type = typeNode.GetString()!;
+                type = typeEl.GetString()!;
 
                 int poundIndex = type.IndexOf('#');
 
@@ -57,7 +57,7 @@ namespace Amazon.DynamoDb
                 }
             }
 
-            if (string.Equals(type, "ConditionalCheckFailedException", StringComparison.Ordinal))
+            if (type is "ConditionalCheckFailedException")
             {
                 return new ConflictException(message, response.StatusCode);
             }

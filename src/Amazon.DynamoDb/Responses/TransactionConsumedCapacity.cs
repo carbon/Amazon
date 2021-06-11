@@ -6,27 +6,27 @@ namespace Amazon.DynamoDb
 {
     public sealed class TransactionConsumedCapacity
     {
-        public float CapacityUnits { get; set; }
+        public float CapacityUnits { get; init; }
 
-        public Dictionary<string, Capacity> GlobalSecondaryIndexes { get; set; }
+        public Dictionary<string, Capacity> GlobalSecondaryIndexes { get; init; }
 
-        public Dictionary<string, Capacity> LocalSecondaryIndexes { get; set; }
+        public Dictionary<string, Capacity> LocalSecondaryIndexes { get; init; }
 
-        public float ReadCapacityUnits { get; set; }
+        public float ReadCapacityUnits { get; init; }
 
-        public Capacity Table { get; set; }
+        public Capacity Table { get; init; }
 
-        public string TableName { get; set; }
+        public string TableName { get; init; }
 
-        public float WriteCapacityUnits { get; set; }
-    }
+        public float WriteCapacityUnits { get; init; }
 
-    public sealed class Capacity
-    {
-        public float CapacityUnits { get; set; }
+        public sealed class Capacity
+        {
+            public float CapacityUnits { get; init; }
 
-        public float ReadCapacityUnits { get; set; }
+            public float ReadCapacityUnits { get; init; }
 
-        public float WriteCapacityUnits { get; set; }
-    }
+            public float WriteCapacityUnits { get; init; }
+        }
+    }    
 }

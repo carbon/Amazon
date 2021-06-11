@@ -8,7 +8,7 @@ namespace Amazon.DynamoDb.Extensions
     {
         public static string[] GetStringArray(this JsonElement element)
         {
-            string[] items = new string[element.GetArrayLength()];
+            var items = new string[element.GetArrayLength()];
 
             int i = 0;
 
@@ -24,19 +24,12 @@ namespace Amazon.DynamoDb.Extensions
 
         public static T GetEnum<T>(this JsonElement element) where T : struct, Enum
         {
-            if (Enum.TryParse<T>(element.GetString(), out T enumValue))
+            if (Enum.TryParse(element.GetString(), out T enumValue))
             {
                 return enumValue;
             }
 
             throw new InvalidEnumArgumentException($"{element.GetString()} could not be parsed as enum {typeof(T)}");
-        }
-
-        public static DateTimeOffset GetDynamoDateTimeOffset(this JsonElement element)
-        {
-            double timestampSeconds = element.GetDouble();
-
-            return DateTimeOffset.FromUnixTimeMilliseconds((long)(timestampSeconds * 1000d));
-        }
+        }       
     }
 }

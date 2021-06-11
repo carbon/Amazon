@@ -1,4 +1,6 @@
-﻿using Carbon.Data;
+﻿#pragma warning disable IDE0090 // Use 'new(...)'
+
+using Carbon.Data;
 
 namespace Amazon.DynamoDb
 {

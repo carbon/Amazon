@@ -10,7 +10,7 @@ namespace Amazon.DynamoDb
 
     public sealed class DynamoExpression
     {
-        private readonly StringBuilder sb = new StringBuilder();
+        private readonly StringBuilder sb = new ();
 
         private int expressionCount = 0;
 

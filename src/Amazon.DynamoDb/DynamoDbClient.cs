@@ -203,7 +203,8 @@ namespace Amazon.DynamoDb
                 }
 
                 retryCount++;
-            } while (retryPolicy.ShouldRetry(retryCount));
+            } 
+            while (retryPolicy.ShouldRetry(retryCount));
 
             throw lastException;
         }

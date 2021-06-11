@@ -2,8 +2,8 @@
 {
     public sealed class ListTablesRequest
     {
-        public string? ExclusiveStartTableName { get; set; }
+        public string? ExclusiveStartTableName { get; init; }
 
-        public int? Limit { get; set; }
+        public int? Limit { get; init; }
     }
 }

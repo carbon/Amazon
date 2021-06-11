@@ -5,6 +5,5 @@
         public AttributeCollection? Attributes { get; }
 
         public ConsumedCapacity? ConsumedCapacity { get; }
-
     }
 }

@@ -2,13 +2,13 @@
 {
     public sealed class TransactGetItemsResult : IConsumedResources
     {
-        public ConsumedCapacity? ConsumedCapacity { get; set; }
+        public ConsumedCapacity? ConsumedCapacity { get; init; }
 
-        public ItemResult[]? Responses { get; set; }
+        public ItemResult[]? Responses { get; init; }
     }
 
     public sealed class ItemResult
     {
-        public AttributeCollection? Item { get; set; }
+        public AttributeCollection? Item { get; init; }
     }
 }

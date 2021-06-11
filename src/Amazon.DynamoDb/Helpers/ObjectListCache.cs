@@ -6,7 +6,7 @@ namespace System.Text
 {
     internal static class ObjectListCache<T>
     {
-        private static List<List<T>> pool = new List<List<T>>();
+        private static readonly List<List<T>> pool = new ();
         private static object lockObject = new object();
 
         internal struct Handle : IDisposable
@@ -34,7 +34,7 @@ namespace System.Text
                 }
                 else
                 {
-                    var handle = new Handle(pool[pool.Count - 1]);
+                    var handle = new Handle(pool[^1]);
                     pool.RemoveAt(pool.Count - 1);
                     return handle;
                 }

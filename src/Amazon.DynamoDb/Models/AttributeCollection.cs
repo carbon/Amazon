@@ -67,8 +67,10 @@ namespace Amazon.DynamoDb
 
         #endregion
 
-        public bool TryGet(string name, out DbValue value) => 
-            items.TryGetValue(name, out value);
+        public bool TryGet(string name, out DbValue value)
+        {
+            return items.TryGetValue(name, out value);
+        }
 
         public bool ContainsKey(string name) => items.ContainsKey(name);
 

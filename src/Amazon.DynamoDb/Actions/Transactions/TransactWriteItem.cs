@@ -2,12 +2,12 @@
 {
     public sealed class TransactWriteItem
     {
-        public ConditionCheck? ConditionCheck { get; set; }
+        public ConditionCheck? ConditionCheck { get; init; }
 
-        public DeleteItem? Delete { get; set; }
+        public DeleteItem? Delete { get; init; }
 
-        public PutItem? Put { get; set; }
+        public PutItem? Put { get; init; }
 
-        public UpdateItem? Update { get; set; }
+        public UpdateItem? Update { get; init; }
     }
 }

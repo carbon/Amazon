@@ -1,7 +1,5 @@
 ﻿#pragma warning disable CA1507 // Use nameof to express symbol names
 
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,36 +9,45 @@ namespace Amazon.DynamoDb
 {
     public sealed class BatchGetItemResult
     {
-        public BatchGetItemResult() { }
-
         public BatchGetItemResult(IReadOnlyList<TableItemCollection> responses)
         {
-            this.Responses = responses;
+            Responses = responses;
         }
 
-        // public ConsumedCapacity[] ConsumedCapacity { get; set; }
+        public ConsumedCapacity[]? ConsumedCapacity { get; init; }
 
-        public IReadOnlyList<TableItemCollection> Responses { get; set; }
+        public IReadOnlyList<TableItemCollection> Responses { get; }
 
-        public IReadOnlyList<TableKeys> UnprocessedKeys { get; set; }
+        public IReadOnlyList<TableKeys>? UnprocessedKeys { get; init; }
 
         public static BatchGetItemResult FromJsonElement(in JsonElement json)
         {
-            // TODO: ConsumedCapacity
-
             IReadOnlyList<TableItemCollection> responses;
+            ConsumedCapacity[]? consumedCapacity = null;
 
-            if (json.TryGetProperty("Responses", out JsonElement responsesNode))
+            if (json.TryGetProperty("ConsumedCapacity", out var consumedCapacityEl))
+            {
+                consumedCapacity = new ConsumedCapacity[consumedCapacityEl.GetArrayLength()];
+
+                var i = 0;
+
+                foreach (var el in consumedCapacityEl.EnumerateArray())
+                {
+                    consumedCapacity[i] = DynamoDb.ConsumedCapacity.FromJsonElement(el);
+                }
+            }
+
+            if (json.TryGetProperty("Responses", out JsonElement responsesEl))
             {
                 var collections = new List<TableItemCollection>();
 
-                foreach (var tableEl in responsesNode.EnumerateObject()) // table elements
+                foreach (var tableEl in responsesEl.EnumerateObject()) // table elements
                 {
                     var table = new TableItemCollection(tableEl.Name);
 
-                    foreach (JsonElement item in tableEl.Value.EnumerateArray())
+                    foreach (JsonElement itemEl in tableEl.Value.EnumerateArray())
                     {
-                        table.Add(AttributeCollection.FromJsonElement(item));
+                        table.Add(AttributeCollection.FromJsonElement(itemEl));
                     }
 
                     collections.Add(table);
@@ -55,7 +62,9 @@ namespace Amazon.DynamoDb
 
             // TODO: UnprocessedKeys
 
-            return new BatchGetItemResult(responses);
+            return new BatchGetItemResult(responses) {
+                ConsumedCapacity = consumedCapacity 
+            };
         }
     }
 

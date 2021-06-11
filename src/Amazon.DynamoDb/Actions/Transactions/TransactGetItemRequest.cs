@@ -5,9 +5,9 @@ namespace Amazon.DynamoDb.Transactions
 {
     public sealed class TransactGetItemRequest
     {
-        public TransactGetItem[] TransactItems { get; set; }
+        public TransactGetItem[] TransactItems { get; init; }
 
-        public ReturnConsumedCapacity? ReturnConsumedCapacity { get; set; }
+        public ReturnConsumedCapacity? ReturnConsumedCapacity { get; init; }
 
         public TransactGetItemRequest(TransactGetItem[] transactItems)
         {
@@ -17,12 +17,12 @@ namespace Amazon.DynamoDb.Transactions
 
     public sealed class TransactGetItem
     {
-        public Get Get { get; set; }
-
         public TransactGetItem(Get get)
         {
             Get = get ?? throw new ArgumentNullException(nameof(get));
         }
+
+        public Get Get { get; init; }
     }
 
     public sealed class Get
@@ -33,12 +33,12 @@ namespace Amazon.DynamoDb.Transactions
             Key = key ?? throw new ArgumentNullException(nameof(key));
         }
 
-        public string TableName { get; set; }
+        public string TableName { get; init; }
 
-        public IReadOnlyDictionary<string, DbValue> Key { get; set; }
+        public IReadOnlyDictionary<string, DbValue> Key { get; init; }
 
-        public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
+        public Dictionary<string, string>? ExpressionAttributeNames { get; init; }
 
-        public string? ProjectionExpression { get; set; }
+        public string? ProjectionExpression { get; init; }
     }
 }

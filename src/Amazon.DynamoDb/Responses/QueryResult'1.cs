@@ -6,18 +6,18 @@ namespace Amazon.DynamoDb
 	public sealed class QueryResult<T> : IReadOnlyList<T>, IConsumedResources
 		where T: notnull
 	{
-		private readonly T[] items;
+		private readonly T[] _items;
 
 		public QueryResult(QueryResult result)
 		{
             ConsumedCapacity = result.ConsumedCapacity;
             LastEvaluatedKey = result.LastEvaluatedKey;
             
-            this.items = new T[result.Items.Length];
+            _items = new T[result.Items.Length];
 
-            for (int i = 0; i < items.Length; i++)
+            for (int i = 0; i < _items.Length; i++)
 			{ 
-				items[i] = result.Items[i].As<T>();
+				_items[i] = result.Items[i].As<T>();
 			}
 		}
 
@@ -25,16 +25,14 @@ namespace Amazon.DynamoDb
 
         public ConsumedCapacity? ConsumedCapacity { get; }
 
-		// IReadOnlyList<T> ---
-
-		public T this[int index] => items[index];
+		public T this[int index] => _items[index];
 	
-        public int Count => items.Length;
+        public int Count => _items.Length;
 
 		// IEnumerable<T> ---
 
-		public IEnumerator<T> GetEnumerator() => ((IList<T>)items).GetEnumerator();
+		public IEnumerator<T> GetEnumerator() => ((IList<T>)_items).GetEnumerator();
 
-		IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
 	}
 }

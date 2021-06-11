@@ -37,17 +37,17 @@ namespace Amazon.DynamoDb.Transactions
             }
         }
 
-        public AttributeCollection Key { get; set; }
+        public AttributeCollection Key { get; init; }
 
-        public string TableName { get; set; }
+        public string TableName { get; init; }
 
-        public string UpdateExpression { get; set; }
+        public string UpdateExpression { get; init; }
 
-        public string? ConditionExpression { get; set; }
+        public string? ConditionExpression { get; init; }
 
-        public Dictionary<string, string>? ExpressionAttributeNames { get; set; }
+        public Dictionary<string, string>? ExpressionAttributeNames { get; init; }
 
-        public AttributeCollection ExpressionAttributeValues { get; set; } = new AttributeCollection();
+        public AttributeCollection ExpressionAttributeValues { get; set; } = new ();
 
         public ReturnValuesOnConditionCheckFailure? ReturnValuesOnConditionCheckFailure { get; set; }        
     }

@@ -2,8 +2,8 @@
 {
     public sealed class DeleteItemResult : IConsumedResources
     {
-        public AttributeCollection? Attributes { get; set; }
+        public AttributeCollection? Attributes { get; init; }
 
-        public ConsumedCapacity? ConsumedCapacity { get; set; }
+        public ConsumedCapacity? ConsumedCapacity { get; init; }
     }
 }
