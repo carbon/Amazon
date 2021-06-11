@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Amazon.DynamoDb
@@ -11,7 +12,7 @@ namespace Amazon.DynamoDb
         private const string TargetPrefix = "DynamoDB_20120810";
 
         private static readonly JsonSerializerOptions serializerOptions = new () {
-            IgnoreNullValues = true
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
         public DynamoDbManagementClient(AwsRegion region, IAwsCredential credential)
@@ -87,7 +88,9 @@ namespace Amazon.DynamoDb
             if (utf8Json != null)
             {
                 request.Content = new ByteArrayContent(utf8Json) {
-                    Headers = { { "Content-Type", "application/x-amz-json-1.0" } }
+                    Headers = { 
+                        { "Content-Type", "application/x-amz-json-1.0" } 
+                    }
                 };
             }
 

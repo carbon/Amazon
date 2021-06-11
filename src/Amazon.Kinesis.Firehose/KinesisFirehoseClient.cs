@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Amazon.Kinesis.Firehose
@@ -72,18 +73,22 @@ namespace Amazon.Kinesis.Firehose
             throw new Exception(responseText);
         }
 
-        private static readonly JsonSerializerOptions serializationOptions = new JsonSerializerOptions { IgnoreNullValues = true };
+        private static readonly JsonSerializerOptions serializationOptions = new () {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
 
-        private HttpRequestMessage GetRequestMessage<T>(string action, T request)
+        private HttpRequestMessage GetRequestMessage<T>(string action, T data)
+            where T: notnull
         {
-            var json = JsonSerializer.Serialize(request, serializationOptions);
+            byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(data, serializationOptions);
 
-            return new HttpRequestMessage(HttpMethod.Post, Endpoint)
-            {
+            return new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Headers = {
                     { "x-amz-target", TargetPrefix  + "." + action }
                 },
-                Content = new StringContent(json, Encoding.UTF8, "application/x-amz-json-1.1")
+                Content = new ByteArrayContent(jsonBytes) {
+                    Headers = { { "Content-Type", "application/x-amz-json-1.1" } }
+                }
             };
         }
 

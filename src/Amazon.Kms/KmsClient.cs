@@ -71,7 +71,7 @@ namespace Amazon.Kms
 
         #region Helpers
 
-        private static readonly JsonSerializerOptions jsoIgnoreNullValues = new () {
+        private static readonly JsonSerializerOptions jso = new () {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
@@ -79,7 +79,7 @@ namespace Amazon.Kms
             where TRequest  : KmsRequest
             where TResult : KmsResponse
         {
-            byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, jsoIgnoreNullValues);
+            byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, jso);
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Headers = {

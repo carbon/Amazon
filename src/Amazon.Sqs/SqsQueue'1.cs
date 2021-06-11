@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace Amazon.Sqs
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
             initialDelay : TimeSpan.FromSeconds(0.5),
             maxDelay     : TimeSpan.FromSeconds(3),
-            maxRetries   : 3
+            maxRetries   : 4
         );
 
         public SqsQueue(AwsRegion region, string accountId, string queueName, IAwsCredential credential)
@@ -100,8 +101,8 @@ namespace Amazon.Sqs
             return result.MessageId;
         }
 
-        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { 
-            IgnoreNullValues = true,
+        private static readonly JsonSerializerOptions jso = new () {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 

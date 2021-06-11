@@ -1,29 +1,28 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb
 {
     internal static class DynamoTestHelper
     {
-        public static readonly JsonSerializerOptions IndentedSerializerOptions = new JsonSerializerOptions()
-        {
+        public static readonly JsonSerializerOptions IndentedSerializerOptions = new () {
             WriteIndented = true,
-            IgnoreNullValues = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
-        public static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions()
-        {
+        public static readonly JsonSerializerOptions SerializerOptions = new () {
             WriteIndented = false,
-            IgnoreNullValues = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
-        public static string ToSystemTextJson(this object obj)
+        public static string ToSystemTextJson<T>(this T obj)
         {
-            return JsonSerializer.Serialize(obj, obj.GetType(), SerializerOptions);
+            return JsonSerializer.Serialize(obj, SerializerOptions);
         }
 
-        public static string ToSystemTextJsonIndented(this object obj)
+        public static string ToSystemTextJsonIndented<T>(this T obj)
         {
-            return JsonSerializer.Serialize(obj, obj.GetType(), IndentedSerializerOptions);
+            return JsonSerializer.Serialize(obj, IndentedSerializerOptions);
         }
     }
 }

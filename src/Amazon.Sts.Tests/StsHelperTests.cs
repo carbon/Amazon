@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using Xunit;
 
@@ -31,10 +32,12 @@ namespace Amazon.Sts.Tests
             Assert.Equal("30", dic["DurationSeconds"]);
         }
 
-        private static readonly JsonSerializerOptions jso = new () { IgnoreNullValues = true };
+        private static readonly JsonSerializerOptions jso = new () { 
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
 
         public static Dictionary<string, string> ToParams<T>(T instance)
-            where T: IStsRequest
+            where T: notnull, IStsRequest
         {
             using var doc = JsonDocument.Parse(JsonSerializer.SerializeToUtf8Bytes(instance, jso));
 
