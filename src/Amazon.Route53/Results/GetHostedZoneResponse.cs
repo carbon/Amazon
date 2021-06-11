@@ -4,24 +4,16 @@ using System.Xml.Serialization;
 
 namespace Amazon.Route53
 {
-    public class GetHostedZoneResponse
+    public sealed class GetHostedZoneResponse
     {
         [XmlElement]
-        public DelegationSet DelegationSet { get; set; }
+        public DelegationSet DelegationSet { get; init; }
 
         [XmlElement]
-        public HostedZone HostedZone { get; set; }
+        public HostedZone HostedZone { get; init; }
 
         [XmlArray]
         [XmlArrayItem("VPC")]
-        public VPC[] VPCs { get; set; }
+        public VPC[] VPCs { get; init; }
     }
-
-
-    public class GetChangeResponse
-    {
-        public ChangeInfo ChangeInfo { get; set; }
-    }
-
-
 }

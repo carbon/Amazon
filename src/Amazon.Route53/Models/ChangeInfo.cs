@@ -1,18 +1,17 @@
 ﻿#nullable disable
 
-
 using System;
 
 namespace Amazon.Route53
 {
-    public class ChangeInfo
+    public sealed class ChangeInfo
     {
-        public string Comment { get; set; }
+        public string Comment { get; init; }
 
-        public string Id { get; set; }
+        public string Id { get; init; }
 
-        public string Status { get; set; }
+        public string Status { get; init; }
 
-        public DateTime SubmittedAt { get; set; }
+        public DateTime SubmittedAt { get; init; }
     }
 }

@@ -1,25 +1,28 @@
 ﻿#nullable disable
 
-
 using System.Xml.Serialization;
 
 namespace Amazon.Route53
 {
-    public class ListResourceRecordSetsResponse
+    public sealed class ListResourceRecordSetsResponse
     {
-        public bool IsTruncated { get; set; }
-
-        public int MaxItems { get; set; }
-
-        public string NextRecordIdentifier { get; set; }
-
-        public string NextRecordName { get; set; }
+        [XmlElement]
+        public bool IsTruncated { get; init; }
 
         [XmlElement]
-        public string NextRecordType { get; set; }
+        public int MaxItems { get; init; }
+
+        [XmlElement]
+        public string NextRecordIdentifier { get; init; }
+
+        [XmlElement]
+        public string NextRecordName { get; init; }
+
+        [XmlElement]
+        public string NextRecordType { get; init; }
 
         [XmlArrayItem("ResourceRecordSet")]
-        public ResourceRecordSet[] ResourceRecordSets { get; set; }
+        public ResourceRecordSet[] ResourceRecordSets { get; init; }
     }
 
 

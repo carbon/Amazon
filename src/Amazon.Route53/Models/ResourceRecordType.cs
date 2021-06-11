@@ -1,8 +1,6 @@
-﻿#nullable disable
-
-namespace Amazon.Route53
+﻿namespace Amazon.Route53
 {
-    public enum ResourceRecordType : byte
+    public enum ResourceRecordType
     {
         SOA = 1,
         A = 2,

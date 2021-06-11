@@ -2,7 +2,7 @@
 
 namespace Amazon.Route53
 {
-    public class GeoLocation
+    public sealed class GeoLocation
     {
         public GeoLocation() { }
 
@@ -18,10 +18,10 @@ namespace Amazon.Route53
             SubdivisionCode = subdivisionCode;
         }
 
-        public string ContinentCode { get; set; }
+        public string ContinentCode { get; init; }
 
-        public string? CountryCode { get; set; }
+        public string? CountryCode { get; init; }
 
-        public string? SubdivisionCode { get; set; }
+        public string? SubdivisionCode { get; init; }
     }
 }

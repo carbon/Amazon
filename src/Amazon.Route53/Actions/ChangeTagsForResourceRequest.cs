@@ -1,4 +1,4 @@
 ﻿namespace Amazon.Route53
 {
-    public class ChangeTagsForResourceRequest { }
+    public sealed class ChangeTagsForResourceRequest { }
 }

@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace Amazon.Route53
 {
     [XmlRoot(Namespace = Route53Client.Namespace)]
-    public class ChangeResourceRecordSetsRequest
+    public sealed class ChangeResourceRecordSetsRequest
     {
         public ChangeResourceRecordSetsRequest() { }
 
@@ -15,10 +15,10 @@ namespace Amazon.Route53
         }
 
         [XmlElement]
-        public ChangeBatch ChangeBatch { get; set; }
+        public ChangeBatch ChangeBatch { get; init; }
     }
 
-    public class ChangeBatch
+    public sealed class ChangeBatch
     {
         public ChangeBatch() { }
 
@@ -28,10 +28,10 @@ namespace Amazon.Route53
         }
 
         [XmlArrayItem("Change")]
-        public ResourceRecordSetChange[] Changes { get; set; }
+        public ResourceRecordSetChange[] Changes { get; init; }
     }
 
-    public class ResourceRecordSetChange
+    public sealed class ResourceRecordSetChange
     {
         public ResourceRecordSetChange() { }
 
@@ -47,28 +47,24 @@ namespace Amazon.Route53
             ResourceRecordSet = new ResourceRecordSet(type, name, new ResourceRecord(value)) { TTL = ttl };
         }
 
-        public ChangeAction Action { get; set; }
+        public ChangeAction Action { get; init; }
 
-        public ResourceRecordSet ResourceRecordSet { get; set; }
-
+        public ResourceRecordSet ResourceRecordSet { get; init; }
     }
 
-    public enum ChangeAction : byte
+    public enum ChangeAction
     {
         CREATE = 1,
         DELETE = 2,
         UPSERT = 3
     }
 
-    public enum Failover : byte
+    public enum Failover
     {
         None = 0,
         PRIMARY = 1,
         SECONDARY = 2
     }
-
-   
-
 }
 
 

@@ -2,7 +2,7 @@
 
 namespace Amazon.Route53
 {
-    public sealed class ChangeResourceRecordSetsResponse
+    public sealed class GetChangeResponse
     {
         public ChangeInfo ChangeInfo { get; init; }
     }

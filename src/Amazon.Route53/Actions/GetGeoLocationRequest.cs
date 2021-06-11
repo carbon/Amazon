@@ -1,23 +1,29 @@
 ﻿#nullable disable
 
+using System.ComponentModel.DataAnnotations;
+
 namespace Amazon.Route53
 {
     public sealed class GetGeoLocationRequest
     {
         public GetGeoLocationRequest() { }
 
-        public GetGeoLocationRequest(string continentCode, string countryCode, string subdivisionCode)
+        public GetGeoLocationRequest(
+            string continentCode, 
+            string countryCode, 
+            string subdivisionCode)
         {
             ContinentCode = continentCode;
             CountryCode = countryCode;
             SubdivisionCode = subdivisionCode;
         }
 
-        public string ContinentCode { get; set; }
+        public string ContinentCode { get; init; }
 
-        public string CountryCode { get; set; }
+        [MaxLength(2)]
+        public string CountryCode { get; init; }
 
-        public string SubdivisionCode { get; set; }
+        public string SubdivisionCode { get; init; }
 
     }
 

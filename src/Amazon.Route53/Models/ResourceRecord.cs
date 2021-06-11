@@ -12,6 +12,6 @@ namespace Amazon.Route53
             Value = value;
         }
 
-        public string Value { get; set; }
+        public string Value { get; init; }
     }
 }

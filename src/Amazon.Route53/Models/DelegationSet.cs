@@ -4,16 +4,14 @@ using System.Xml.Serialization;
 
 namespace Amazon.Route53
 {
-    public class DelegationSet
+    public sealed class DelegationSet
     {
-        public string CallerReference { get; set; }
+        public string CallerReference { get; init; }
 
-        public string Id { get; set; }
+        public string Id { get; init; }
 
         [XmlArray]
         [XmlArrayItem("NameServer")]
-        public string[] NameServers { get; set; }
-
-
+        public string[] NameServers { get; init; }
     }
 }

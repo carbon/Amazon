@@ -1,50 +1,18 @@
 ﻿#nullable disable
 
-
-using System.Xml.Serialization;
-
 namespace Amazon.Route53
 {
-    public class HealthCheck
+    public sealed class HealthCheck
     {
-        public string Id { get; set; }
+        public string Id { get; init; }
 
-        public string CallerReference { get; set; }
+        public string CallerReference { get; init; }
 
-        public HealthCheckConfig HealthCheckConfig { get; set; }
+        public HealthCheckConfig HealthCheckConfig { get; init; }
 
-        public int HealthCheckVersion { get; set; }
+        public int HealthCheckVersion { get; init; }
     }
-
-    public class HealthCheckConfig
-    {
-        public string IPAddress { get; set; }
-
-        public int Port { get; set; }
-
-        public string Http { get; set; }
-
-        public string ResourcePath { get; set; }
-
-        public string FullyQualifiedDomainName { get; set; }
-
-        public int RequestInterval { get; set; }
-
-        public int FailureThreshold { get; set; }
-
-        public bool MeasureLatency { get; set; }
-
-        public bool EnableSNI { get; set; }
-
-        [XmlArray]
-        [XmlArrayItem("Region")]
-        public string[] Regions { get; set; }
-
-        public bool Inverted { get; set; }
-    }
-
 }
-
 
 /*
 <HealthCheck>
