@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.S3</AssemblyName>
-    <Version>0.20.3</Version>
-    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
-    <LangVersion>9</LangVersion>
+    <Version>0.20.6</Version>
+    <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
 
     <!-- Package Details-->
@@ -21,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Storage" Version="3.2.2" />
+    <PackageReference Include="Carbon.Storage" Version="3.3.1" />
   </ItemGroup>
   
 </Project>

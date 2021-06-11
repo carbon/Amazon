@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Linq;
 
@@ -19,7 +20,7 @@ namespace Amazon.S3
                 Headers = { { "Content-Type", "text/xml" } }
             };
 
-            Content.Headers.ContentMD5 = HashHelper.ComputeMD5Hash(data);
+            Content.Headers.ContentMD5 = MD5.HashData(data);
 
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }

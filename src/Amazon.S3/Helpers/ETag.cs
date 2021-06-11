@@ -15,7 +15,7 @@ namespace Amazon.S3
 
         public readonly byte[]? AsMD5()
         {
-            if (Value is null || Value.IndexOf('-') > -1)
+            if (Value is null || Value.Contains('-'))
             {
                 return null;
             }
@@ -27,7 +27,7 @@ namespace Amazon.S3
 
             // 1f8ada2ce841b291cfcd6b9b4b645044-2
 
-            return HexString.ToBytes(Value.AsSpan().Trim('"'));
+            return Convert.FromHexString(Value.AsSpan().Trim('"'));
         }
 
         public static implicit operator string(ETag tag) => tag.Value;

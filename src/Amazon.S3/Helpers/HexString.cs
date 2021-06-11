@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace Amazon.Helpers
 {
@@ -9,7 +8,9 @@ namespace Amazon.Helpers
 
         public static string FromBytes(this byte[] bytes)
         {
-            var buffer = new char[bytes.Length * 2];
+            Span<char> buffer = bytes.Length < 128
+                ? stackalloc char[bytes.Length * 2]
+                : new char[bytes.Length * 2];
 
             byte b;
 
@@ -26,40 +27,5 @@ namespace Amazon.Helpers
 
             return new string(buffer);
         }
-
-        // COPYRIGHT: https://stackoverflow.com/a/17923942
-        public static byte[] ToBytes(ReadOnlySpan<char> hexString)
-        {
-#if NET5_0_OR_GREATER
-            return Convert.FromHexString(hexString);
-#else
-            byte[] bytes = new byte[hexString.Length / 2];
-
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                bytes[i] = ToByte(hexString[i * 2], hexString[i * 2 + 1]);
-            }
-
-            return bytes;
-#endif
-        }
-
-#if !NET5_0
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static byte ToByte(char a, char b)
-        {
-            int hi = a - 65;
-
-            hi = hi + 10 + ((hi >> 31) & 7);
-
-            int lo = b - 65;
-
-            lo = lo + 10 + ((lo >> 31) & 7) & 0x0f;
-
-            return (byte)(lo | hi << 4);
-        }
-
-#endif
     }
 }

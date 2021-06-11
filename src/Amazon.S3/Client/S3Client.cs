@@ -13,7 +13,7 @@ namespace Amazon.S3
         public const string Namespace = "http://s3.amazonaws.com/doc/2006-03-01/";
 
         public S3Client(AwsRegion region, IAwsCredential credential)
-            : this(region, host: $"s3.dualstack.{region.Name}.amazonaws.com", credential: credential) { }
+            : this(region, host: "s3.dualstack." + region.Name + ".amazonaws.com", credential: credential) { }
         
         public S3Client(AwsRegion region, string host, IAwsCredential credential)
             : base(AwsService.S3, region, credential)
@@ -27,9 +27,11 @@ namespace Amazon.S3
             Host = host ?? throw new ArgumentNullException(nameof(host));
         }
 
-        public void SetTimeout(TimeSpan timeout)
+        public S3Client WithTimeout(TimeSpan timeout)
         {
             httpClient.Timeout = timeout;
+
+            return this;
         }
 
         public string Host { get; }
@@ -123,10 +125,9 @@ namespace Amazon.S3
             }
 
             return new DeleteObjectResult(
-                deleteMarker   : response.Headers.GetValueOrDefault("x-amz-delete-marker"),
+                deleteMarker   : response.Headers.GetValueOrDefault(S3HeaderNames.DeleteMarker),
                 requestCharged : response.Headers.GetValueOrDefault("x-amz-request-charged"),
-                versionId      : response.Headers.GetValueOrDefault("x-amz-version-id"),
-                isDeleteMarker : response.Headers.GetValueOrDefault("x-amz-delete-marker") is "true"
+                versionId      : response.Headers.GetValueOrDefault(S3HeaderNames.VersionId)
             );
         }
 

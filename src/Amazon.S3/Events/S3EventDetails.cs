@@ -7,15 +7,15 @@ namespace Amazon.S3.Events
     public sealed class S3EventDetails
     {
         [JsonPropertyName("s3SchemaVersion")]
-        public string S3SchemaVersion { get; set; }
+        public string S3SchemaVersion { get; init; }
 
         [JsonPropertyName("configurationId")]
-        public string ConfigurationId { get; set; }
+        public string ConfigurationId { get; init; }
 
         [JsonPropertyName("bucket")]
-        public S3EventBucketInfo Bucket { get; set; }
+        public S3EventBucketInfo Bucket { get; init; }
 
         [JsonPropertyName("object")]
-        public S3EventObjectInfo Object { get; set; } 
+        public S3EventObjectInfo Object { get; init; } 
     }
 }

@@ -14,8 +14,8 @@ namespace Amazon.S3
 {
     public sealed class S3Bucket : IBucket, IReadOnlyBucket
     {
-        private readonly S3Client client;
-        private readonly string bucketName;
+        private readonly S3Client _client;
+        private readonly string _bucketName;
 
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
              initialDelay : TimeSpan.FromMilliseconds(50),
@@ -28,15 +28,15 @@ namespace Amazon.S3
 
         public S3Bucket(string bucketName, S3Client client)
         {
-            this.bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
-            this.client = client ?? throw new ArgumentNullException(nameof(client));
+            _bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
+            _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public string Name => bucketName;
+        public string Name => _bucketName;
 
         public S3Bucket WithTimeout(TimeSpan timeout)
         {
-            client.SetTimeout(timeout);
+            _client.WithTimeout(timeout);
 
             return this;
         }
@@ -54,7 +54,7 @@ namespace Amazon.S3
                 MaxKeys = take
             };
 
-            var result = await client.ListBucketAsync(bucketName, request).ConfigureAwait(false);
+            var result = await _client.ListBucketAsync(_bucketName, request).ConfigureAwait(false);
 
             return result.Items;
         }
@@ -76,12 +76,12 @@ namespace Amazon.S3
                 try
                 {
                     var request = new GetObjectRequest(
-                        host       : client.Host,
-                        bucketName : bucketName,
+                        host       : _client.Host,
+                        bucketName : _bucketName,
                         key        : key
                     );
 
-                    return await client.GetObjectAsync(request, cancellationToken).ConfigureAwait(false);
+                    return await _client.GetObjectAsync(request, cancellationToken).ConfigureAwait(false);
                 }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {
@@ -98,9 +98,9 @@ namespace Amazon.S3
 
         public string GetPresignedUrl(string key, TimeSpan expiresIn, string method = "GET")
         {
-            var request = new GetPresignedUrlRequest(method, client.Host, client.Region, bucketName, key, expiresIn);
+            var request = new GetPresignedUrlRequest(method, _client.Host, _client.Region, _bucketName, key, expiresIn);
 
-            return client.GetPresignedUrl(request);
+            return _client.GetPresignedUrl(request);
         }
 
         // If-Modified-Since                    OR 304
@@ -131,7 +131,7 @@ namespace Amazon.S3
                 {
                     var request = ConstructGetRequest(key, options);
 
-                    return await client.GetObjectAsync(request, cancellationToken).ConfigureAwait(false);
+                    return await _client.GetObjectAsync(request, cancellationToken).ConfigureAwait(false);
                 }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {
@@ -167,9 +167,9 @@ namespace Amazon.S3
 
                 try
                 {
-                    var request = new ObjectHeadRequest(client.Host, bucketName, key);
+                    var request = new ObjectHeadRequest(_client.Host, _bucketName, key);
 
-                    using var result = await client.GetObjectHeadAsync(request, cancellationToken).ConfigureAwait(false);
+                    using var result = await _client.GetObjectHeadAsync(request, cancellationToken).ConfigureAwait(false);
 
                     return result.Properties;
                 }
@@ -188,11 +188,11 @@ namespace Amazon.S3
 
         public Task<RestoreObjectResult> InitiateRestoreAsync(string key, int days)
         {
-            var request = new RestoreObjectRequest(client.Host, bucketName, key) {
+            var request = new RestoreObjectRequest(_client.Host, _bucketName, key) {
                 Days = days
             };
 
-            return client.RestoreObjectAsync(request);
+            return _client.RestoreObjectAsync(request);
         }
 
         public async Task<CopyObjectResult> PutAsync(
@@ -216,9 +216,9 @@ namespace Amazon.S3
                 }
 
                 var request = new CopyObjectRequest(
-                    host   : client.Host,
+                    host   : _client.Host,
                     source : sourceLocation,
-                    target : new S3ObjectLocation(bucketName, destinationKey)
+                    target : new S3ObjectLocation(_bucketName, destinationKey)
                 );
 
                 if (metadata != null)
@@ -230,7 +230,7 @@ namespace Amazon.S3
 
                 try
                 {
-                    return await client.CopyObjectAsync(request).ConfigureAwait(false);
+                    return await _client.CopyObjectAsync(request).ConfigureAwait(false);
                 }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {
@@ -286,7 +286,7 @@ namespace Amazon.S3
                     await Task.Delay(retryPolicy.GetDelay(retryCount), cancellationToken).ConfigureAwait(false);
                 }
 
-                var request = new PutObjectRequest(client.Host, bucketName, blob.Key);
+                var request = new PutObjectRequest(_client.Host, _bucketName, blob.Key);
 
                 request.SetStream(stream);
 
@@ -305,7 +305,7 @@ namespace Amazon.S3
 
                 try
                 {
-                    await client.PutObjectAsync(request, cancellationToken).ConfigureAwait(false);
+                    await _client.PutObjectAsync(request, cancellationToken).ConfigureAwait(false);
 
                     return;
                 }
@@ -325,25 +325,25 @@ namespace Amazon.S3
 
         public async Task DeleteAsync(string name)
         {
-            await client.DeleteObjectAsync(
-                new DeleteObjectRequest(client.Host, bucketName, name)
+            await _client.DeleteObjectAsync(
+                new DeleteObjectRequest(_client.Host, _bucketName, name)
             ).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(string key, string version)
         {
-            var request = new DeleteObjectRequest(client.Host, bucketName, key, version);
+            var request = new DeleteObjectRequest(_client.Host, _bucketName, key, version);
 
-            await client.DeleteObjectAsync(request).ConfigureAwait(false);
+            await _client.DeleteObjectAsync(request).ConfigureAwait(false);
         }
 
         public async Task<DeleteResult> DeleteAsync(IReadOnlyList<string> keys)
         {
             var batch = new DeleteBatch(keys, quite: true);
 
-            var request = new DeleteObjectsRequest(client.Host, bucketName, batch);
+            var request = new DeleteObjectsRequest(_client.Host, _bucketName, batch);
 
-            var result = await client.DeleteObjectsAsync(request).ConfigureAwait(false);
+            var result = await _client.DeleteObjectsAsync(request).ConfigureAwait(false);
 
             if (result.Errors is { Length: > 0 } errors)
             {
@@ -367,11 +367,11 @@ namespace Amazon.S3
                     await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
                 }
 
-                var request = new InitiateMultipartUploadRequest(client.Host, bucketName, key, properties);
+                var request = new InitiateMultipartUploadRequest(_client.Host, _bucketName, key, properties);
 
                 try
                 {
-                    return await client.InitiateMultipartUploadAsync(request).ConfigureAwait(false);
+                    return await _client.InitiateMultipartUploadAsync(request).ConfigureAwait(false);
                 }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {
@@ -404,7 +404,7 @@ namespace Amazon.S3
                 }
 
                 var request = new UploadPartRequest(
-                    host       : client.Host,
+                    host       : _client.Host,
                     bucketName : upload.BucketName,
                     key        : upload.ObjectName,
                     uploadId   : upload.UploadId,
@@ -415,7 +415,7 @@ namespace Amazon.S3
 
                 try
                 {
-                    return await client.UploadPartAsync(request).ConfigureAwait(false);
+                    return await _client.UploadPartAsync(request).ConfigureAwait(false);
                 }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {
@@ -445,9 +445,9 @@ namespace Amazon.S3
 
                 try
                 {
-                    var request = new CompleteMultipartUploadRequest(client.Host, upload, blocks);
+                    var request = new CompleteMultipartUploadRequest(_client.Host, upload, blocks);
 
-                    await client.CompleteMultipartUploadAsync(request).ConfigureAwait(false);
+                    await _client.CompleteMultipartUploadAsync(request).ConfigureAwait(false);
 
                     return;
                 }
@@ -468,13 +468,13 @@ namespace Amazon.S3
             if (upload is null) throw new ArgumentNullException(nameof(upload));
 
             var request = new AbortMultipartUploadRequest(
-                host       : client.Host, 
+                host       : _client.Host, 
                 bucketName : upload.BucketName, 
                 key        : upload.ObjectName,
                 uploadId   : upload.UploadId
             );
 
-            await client.AbortMultipartUploadAsync(request).ConfigureAwait(false);
+            await _client.AbortMultipartUploadAsync(request).ConfigureAwait(false);
         }
 
         #endregion
@@ -484,8 +484,8 @@ namespace Amazon.S3
         private GetObjectRequest ConstructGetRequest(string key, GetBlobOptions options)
         {
             var request = new GetObjectRequest(
-                host        : client.Host,
-                bucketName  : bucketName,
+                host        : _client.Host,
+                bucketName  : _bucketName,
                 key         : key
             );
 

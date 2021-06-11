@@ -2,11 +2,12 @@
 {
     internal static class S3HeaderNames
     {
-        public const string StorageClass                          = "x-amz-storage-class";
-        public const string VersionId                             = "x-amz-version-id"; 
-        public const string ContentSha256                         = "x-amz-content-sha256";
-        public const string MetadataDirective                     = "x-amz-metadata-directive";
-        public const string Tagging                               = "x-amz-tagging";
+        public static readonly string StorageClass                = "x-amz-storage-class";
+        public static readonly string VersionId                   = "x-amz-version-id"; 
+        public static readonly string ContentSha256               = "x-amz-content-sha256";
+        public static readonly string MetadataDirective           = "x-amz-metadata-directive";
+        public static readonly string Tagging                     = "x-amz-tagging";
+        public static readonly string DeleteMarker                = "x-amz-delete-marker";
 
         public const string CopySourceIfMatch                     = "x-amz-copy-source-if-match";
         public const string CopySourceIfNoneMatch                 = "x-amz-copy-source-if-none-match";

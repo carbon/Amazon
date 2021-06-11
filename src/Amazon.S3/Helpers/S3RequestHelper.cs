@@ -16,7 +16,7 @@ namespace Amazon.S3.Helpers
                 switch (item.Key)
                 {
                     case "Content-Encoding":
-                        request.Content.Headers.ContentEncoding.Add(item.Value);
+                        request.Content!.Headers.ContentEncoding.Add(item.Value);
                         break;
                     case "Content-Type":
                         request.Content ??= new ByteArrayContent(Array.Empty<byte>());

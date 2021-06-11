@@ -5,13 +5,11 @@
         public DeleteObjectResult(
             string? deleteMarker, 
             string? requestCharged, 
-            string? versionId,
-            bool isDeleteMarker = false)
+            string? versionId)
         {
             DeleteMarker = deleteMarker;
             RequestCharged = requestCharged;
             VersionId = versionId;
-            IsDeleteMarker = isDeleteMarker;
         }
 
         public string? DeleteMarker { get; }
@@ -20,7 +18,7 @@
 
         public string? RequestCharged { get; }
 
-        public bool IsDeleteMarker { get; }   
+        public bool IsDeleteMarker => DeleteMarker is "true";
     }
 }
 

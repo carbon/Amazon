@@ -24,14 +24,14 @@ namespace Amazon.S3
             if (stream is null)
                 throw new ArgumentNullException(nameof(stream));
 
-            if (stream.Length == 0)
+            if (stream.Length is 0)
                 throw new ArgumentException("Must not be empty", nameof(stream));
 
             if (mediaType is null)
                 throw new ArgumentNullException(nameof(mediaType));
 
-            if (mediaType.Length == 0)
-                throw new ArgumentException(nameof(mediaType), "Required");
+            if (mediaType.Length is 0)
+                throw new ArgumentException("Required", nameof(mediaType));
 
             Content = new StreamContent(stream);
 
@@ -54,7 +54,7 @@ namespace Amazon.S3
 
         internal void SetTagSet(IReadOnlyList<KeyValuePair<string, string>> tags)
         {
-            if (tags is null || tags.Count == 0) return;
+            if (tags is null || tags.Count is 0) return;
 
             if (tags.Count > 10)
             {

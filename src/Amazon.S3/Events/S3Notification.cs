@@ -7,7 +7,7 @@ namespace Amazon.S3.Events
     public sealed class S3Notification
     {
         [JsonPropertyName("Records")]
-        public S3Event[] Records { get; set; }
+        public S3Event[] Records { get; init; }
     }
 
     // https://docs.aws.amazon.com/AmazonS3/latest/dev/notification-content-structure.html

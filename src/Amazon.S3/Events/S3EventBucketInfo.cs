@@ -7,12 +7,12 @@ namespace Amazon.S3.Events
     public sealed class S3EventBucketInfo
     {
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string Name { get; init; }
 
         [JsonPropertyName("ownerIdentity")]
-        public S3UserIdentity OwnerIdentity { get; set; }
+        public S3UserIdentity OwnerIdentity { get; init; }
 
         [JsonPropertyName("arn")]
-        public string Arn { get; set; }
+        public string Arn { get; init; }
     }
 }

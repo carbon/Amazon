@@ -95,7 +95,6 @@ namespace Amazon.S3
             get => properties.TryGetValue("Content-Range", out var contentRange) ? ContentRangeHeaderValue.Parse(contentRange) : null;
         }
 
-
         #endregion
 
         public async ValueTask<Stream> OpenAsync()
@@ -112,16 +111,12 @@ namespace Amazon.S3
             await response.Content.CopyToAsync(output).ConfigureAwait(false);
         }
 
-#if NET5_0_OR_GREATER
-
         public async Task CopyToAsync(Stream output, CancellationToken cancellationToken)
         {
             if (response is null) throw new ObjectDisposedException(nameof(S3Object));
 
             await response.Content.CopyToAsync(output, cancellationToken).ConfigureAwait(false);
         }
-
-#endif
 
         #region IBlob
 
