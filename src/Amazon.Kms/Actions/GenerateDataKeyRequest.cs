@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Amazon.Kms
 {
@@ -17,16 +16,15 @@ namespace Amazon.Kms
             EncryptionContext = encryptionContext;
         }
 
-        public IReadOnlyDictionary<string, string>? EncryptionContext { get; set; }
+        public IReadOnlyDictionary<string, string>? EncryptionContext { get; init; }
 
-        public string[]? GrantTokens { get; set; }
+        public string[]? GrantTokens { get; init; }
 
-        public string KeyId { get; set; }
+        public string KeyId { get; init; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public KeySpec KeySpec { get; set; }
+        public KeySpec KeySpec { get; init; }
 
-        public int? NumberOfBytes { get; set; }
+        public int? NumberOfBytes { get; init; }
     }
 }
 

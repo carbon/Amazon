@@ -1,5 +1,8 @@
-﻿namespace Amazon.Kms
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Kms
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum KeySpec
     {
         AES_256 = 1,

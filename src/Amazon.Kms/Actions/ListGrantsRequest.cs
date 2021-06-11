@@ -13,12 +13,12 @@ namespace Amazon.Kms
             KeyId = keyId ?? throw new ArgumentNullException(nameof(keyId));
         }
 
-        public string KeyId { get; set; }
+        public string KeyId { get; init; }
 
-        public int Limit { get; set; }
+        public int Limit { get; init; }
 
 #nullable enable
 
-        public string? Marker { get; set; }
+        public string? Marker { get; init; }
     }
 }

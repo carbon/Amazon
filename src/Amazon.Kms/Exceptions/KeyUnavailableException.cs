@@ -4,9 +4,8 @@ namespace Amazon.Kms
 {
     public sealed class KeyUnavailableException : KmsException, IException
     {
-        public KeyUnavailableException(string message)
-            : base("KeyUnavailableException", message) { }
-
+        public KeyUnavailableException(KmsError error)
+            : base(error) { }
 
         public bool IsTransient => true;
     }

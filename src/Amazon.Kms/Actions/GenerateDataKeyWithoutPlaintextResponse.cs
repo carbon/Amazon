@@ -4,8 +4,8 @@ namespace Amazon.Kms
 {
     public sealed class GenerateDataKeyWithoutPlaintextResponse : KmsResponse
     {
-        public string KeyId { get; set; }
+        public string KeyId { get; init; }
 
-        public byte[] CiphertextBlob { get; set; }
+        public byte[] CiphertextBlob { get; init; }
     }
 }

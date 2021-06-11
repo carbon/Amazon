@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 using Amazon.Exceptions;
@@ -71,7 +72,7 @@ namespace Amazon.Kms
         #region Helpers
 
         private static readonly JsonSerializerOptions jsoIgnoreNullValues = new () {
-            IgnoreNullValues = true
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
         private async Task<TResult> SendAsync<TRequest, TResult>(string action, TRequest request)
@@ -100,7 +101,7 @@ namespace Amazon.Kms
                 throw await GetExceptionFromResponseAsync(response).ConfigureAwait(false);
             }
 
-            if (response.StatusCode == HttpStatusCode.NoContent || response.Content.Headers.ContentLength is 0)
+            if (response.StatusCode is HttpStatusCode.NoContent || response.Content.Headers.ContentLength is 0)
             {
                 return null!;
             }
@@ -122,9 +123,9 @@ namespace Amazon.Kms
 
                 return error.Type switch 
                 {
-                    "AccessDeniedException"       => new AccessDeniedException(error.Message),
-                    "ServiceUnavailableException" => new ServiceUnavailableException(error.Message),
-                    "KeyUnavailableException"     => new KeyUnavailableException(error.Message),
+                    "AccessDeniedException"       => new AccessDeniedException(error, response.StatusCode),
+                    "ServiceUnavailableException" => new ServiceUnavailableException(error),
+                    "KeyUnavailableException"     => new KeyUnavailableException(error),
                     _                             => new KmsException(error, response.StatusCode)
                 };
             }

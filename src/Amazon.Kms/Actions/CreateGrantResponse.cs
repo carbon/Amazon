@@ -4,9 +4,9 @@ namespace Amazon.Kms
 {
     public sealed class CreateGrantResponse : KmsResponse
     {
-        public string GrantId { get; set; }
+        public string GrantId { get; init; }
 
-        public string GrantToken { get; set; }
+        public string GrantToken { get; init; }
     }
 }
 

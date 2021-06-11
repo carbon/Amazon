@@ -4,26 +4,26 @@ namespace Amazon.Kms
 {
     public sealed class Grant
     {
-        public string GrantId { get; set; }
+        public string GrantId { get; init; }
 
 #nullable enable
-        public string? KeyId { get; set; }
+        public string? KeyId { get; init; }
 #nullable disable
 
-        public GrantConstraints Constraints { get; set; }
+        public GrantConstraints Constraints { get; init; }
 
-        public string GranteePrincipal { get; set; }
+        public string GranteePrincipal { get; init; }
 
-        public string IssuingAccount { get; set; }
+        public string IssuingAccount { get; init; }
 
-        public string Name { get; set; }
+        public string Name { get; init; }
 
-        public string[] Operations { get; set; }
+        public string[] Operations { get; init; }
 
-        public string RetiringPrincipal { get; set; }
+        public string RetiringPrincipal { get; init; }
 
         // UnixTime seconds
-        public double CreationDate { get; set; }
+        public double CreationDate { get; init; }
     }
 }
 

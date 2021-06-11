@@ -4,9 +4,9 @@ namespace Amazon.Kms
 {
     public sealed class DecryptResponse : KmsResponse
     {
-        public string KeyId { get; set; }
+        public string KeyId { get; init; }
 
-        public byte[] Plaintext { get; set; }
+        public byte[] Plaintext { get; init; }
     }
 }
 
