@@ -8,9 +8,9 @@ namespace Amazon.Metadata
     public sealed class InstanceAction
     {
         [JsonPropertyName("action")]
-        public string Action { get; set; }
+        public string Action { get; init; }
 
         [JsonPropertyName("time")]
-        public DateTime Time { get; set; }
+        public DateTime Time { get; init; }
     }
 }

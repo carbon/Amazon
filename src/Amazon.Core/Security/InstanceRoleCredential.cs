@@ -104,7 +104,6 @@ namespace Amazon
             return true;
         }
 
-#if NET5_0_OR_GREATER
         public static InstanceRoleCredential Get()
         {
             var ims = InstanceMetadataService.Instance;
@@ -115,7 +114,6 @@ namespace Amazon
 
             return new InstanceRoleCredential(roleName, iamCredential);
         }
-#endif
 
         public static async Task<InstanceRoleCredential> GetAsync()
         {

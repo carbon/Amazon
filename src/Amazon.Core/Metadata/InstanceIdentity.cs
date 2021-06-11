@@ -1,35 +1,35 @@
-﻿using System.Text.Json.Serialization;
+﻿#nullable disable
+
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Amazon.Metadata
 {
     public sealed class InstanceIdentity
     {
-#nullable disable
-
         [JsonPropertyName("instanceId")]
-        public string InstanceId { get; set; }
+        public string InstanceId { get; init; }
 
         [JsonPropertyName("accountId")]
-        public string AccountId { get; set; }
+        public string AccountId { get; init; }
         
         [JsonPropertyName("imageId")]
-        public string ImageId { get; set; }
+        public string ImageId { get; init; }
 
         [JsonPropertyName("instanceType")]
-        public string InstanceType { get; set; }
+        public string InstanceType { get; init; }
 
         [JsonPropertyName("architecture")]
-        public string Architecture { get; set; }
+        public string Architecture { get; init; }
 
         [JsonPropertyName("region")]
-        public string Region { get; set; }
+        public string Region { get; init; }
 
         [JsonPropertyName("availabilityZone")]
-        public string AvailabilityZone { get; set; }
+        public string AvailabilityZone { get; init; }
 
         [JsonPropertyName("privateIp")]
-        public string PrivateIp { get; set; }
+        public string PrivateIp { get; init; }
 
 #nullable enable
 

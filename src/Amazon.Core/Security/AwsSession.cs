@@ -1,21 +1,33 @@
-﻿#nullable disable
-
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace Amazon
 {
     public sealed class AwsSession : IAwsCredential
     {
-        public string SessionToken { get; set; }
+        public AwsSession(
+            string sessionToken, 
+            string secretAccessKey, 
+            DateTime expiration, 
+            string accessKeyId,
+            string? securityToken = null)
+        {
+            SessionToken = sessionToken;
+            SecretAccessKey = secretAccessKey;
+            Expiration = expiration;
+            AccessKeyId = accessKeyId;
+            SecurityToken = securityToken;
+        }
 
-        public string SecretAccessKey { get; set; }
+        public string SessionToken { get; }
 
-        public DateTime Expiration { get; set; }
+        public string SecretAccessKey { get; }
 
-        public string AccessKeyId { get; set; }
+        public string? SecurityToken { get; }
 
-        public string SecurityToken { get; }
+        public string AccessKeyId { get; }
+
+        public DateTime Expiration { get;  }
 
         public bool ShouldRenew => false;
 

@@ -29,8 +29,7 @@ namespace Amazon
 
         public static bool operator ==(AwsRegion lhs, AwsRegion rhs) => lhs.Equals(rhs);
 
-        public static bool operator !=(AwsRegion lhs, AwsRegion rhs) =>
-            lhs?.Name != rhs?.Name;
+        public static bool operator !=(AwsRegion lhs, AwsRegion rhs) =>lhs?.Name != rhs?.Name;
         
         public override int GetHashCode() => Name.GetHashCode();
 
@@ -110,8 +109,6 @@ namespace Amazon
 
         private static AwsRegion? current;
 
-#if NET5_0_OR_GREATER
-
         public static AwsRegion Get()
         {
             if (current is null)
@@ -123,8 +120,6 @@ namespace Amazon
 
             return current;
         }
-
-#endif
 
         public static async ValueTask<AwsRegion> GetAsync()
         {

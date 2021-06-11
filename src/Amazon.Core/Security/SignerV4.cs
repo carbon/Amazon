@@ -117,7 +117,7 @@ namespace Amazon.Security
                 output.Write('/');
 
                 // Do not double escape
-                if (segment.IndexOf('%') > -1)
+                if (segment.Contains('%'))
                 {
                     output.Write(segment);
                 }
@@ -490,24 +490,13 @@ namespace Amazon.Security
 
         public static byte[] ComputeSHA256(string text)
         {
-            return ComputeSHA256(Encoding.UTF8.GetBytes(text));
-        }
-
-        public static byte[] ComputeSHA256(byte[] data)
-        {
-#if NET5_0_OR_GREATER
-            return SHA256.HashData(data);
-#else
-            using SHA256 algorithm = SHA256.Create();
-
-            return algorithm.ComputeHash(data);
-#endif
+            return SHA256.HashData(Encoding.UTF8.GetBytes(text));
         }
 
         public static string ComputeSHA256(HttpContent? content)
         {
             return content?.ReadAsByteArrayAsync().Result is byte[] { Length: > 0 } data
-                ? HexString.FromBytes(ComputeSHA256(data))
+                ? HexString.FromBytes(SHA256.HashData(data))
                 : emptySha256;
         }
 
