@@ -130,13 +130,16 @@ namespace Amazon.Ses
             Bcc     = 4
         }
 
-        public void SetContent(string prefix, SesContent content, Dictionary<string, string> dic)
+        private static void SetContent(string prefix, SesContent content, Dictionary<string, string> dic)
         {
             if (content is null) return;
 
             dic.Add(prefix + ".Data", content.Data);
 
-            if (content.Charset != null) dic.Add(prefix + ".Charset", content.Charset);
+            if (content.Charset != null)
+            {
+                dic.Add(prefix + ".Charset", content.Charset);
+            }
         }
 
         private void AddList(RecipientType type, string[] list, Dictionary<string, string> dic)

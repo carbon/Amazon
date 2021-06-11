@@ -64,7 +64,7 @@ namespace Amazon.Ses
                 }
             }
 
-            char lastChar = sb[sb.Length - 1];
+            char lastChar = sb[^1];
 
             if (char.IsWhiteSpace(lastChar))
             {
