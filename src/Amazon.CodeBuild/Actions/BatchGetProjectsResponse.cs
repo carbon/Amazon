@@ -4,6 +4,6 @@ namespace Amazon.CodeBuild
 {
     public sealed class BatchGetProjectsResponse
     {
-        public Project[] Projects { get; set; }
+        public Project[] Projects { get; init; }
     }
 }

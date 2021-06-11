@@ -4,26 +4,26 @@ namespace Amazon.CodeBuild
 {
     public class Project
     {
-        public string Name { get; set; }
+        public string Name { get; init; }
 
-        public string Arn { get; set; }
+        public string Arn { get; init; }
 
-        public ProjectArtifacts[] Artifacts { get; set; }
+        public ProjectArtifacts[] Artifacts { get; init; }
 
-        public string Description { get; set; }
+        public string Description { get; init; }
 
-        public string EncryptionKey { get; set; }
+        public string EncryptionKey { get; init; }
 
-        public ProjectEnvironment Environment { get; set; }
+        public ProjectEnvironment Environment { get; init; }
 
-        public Timestamp Created { get; set; }
+        public Timestamp Created { get; init; }
 
-        public Timestamp LastModified { get; set; }
+        public Timestamp LastModified { get; init; }
 
-        public string ServiceRole { get; set; }
+        public string ServiceRole { get; init; }
         
-        public Tag[] Tags { get; set; }
+        public Tag[] Tags { get; init; }
 
-        public int TimeoutInMinutes { get; set; }
+        public int TimeoutInMinutes { get; init; }
     }
 }

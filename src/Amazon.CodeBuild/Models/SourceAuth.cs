@@ -2,7 +2,7 @@
 
 namespace Amazon.CodeBuild
 {
-    public class SourceAuth
+    public sealed class SourceAuth
     {
         public string Type { get; set; }
 

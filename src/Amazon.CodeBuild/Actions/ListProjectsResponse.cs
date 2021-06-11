@@ -2,10 +2,10 @@
 
 namespace Amazon.CodeBuild
 {
-    public class ListProjectsResponse
+    public sealed class ListProjectsResponse
     {
-        public string NextToken { get; set; }
+        public string NextToken { get; init; }
 
-        public string[] Projects { get; set; }
+        public string[] Projects { get; init; }
     }
 }

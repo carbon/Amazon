@@ -2,11 +2,11 @@
 
 namespace Amazon.CodeBuild
 {
-    public class ProjectCache
+    public sealed class ProjectCache
     {
         // NO_CACHE | S3
-        public string Type { get; set; }
+        public string Type { get; init; }
 
-        public string Location { get; set; }
+        public string Location { get; init; }
     }
 }

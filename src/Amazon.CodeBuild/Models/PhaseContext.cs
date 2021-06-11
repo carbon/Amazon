@@ -2,10 +2,10 @@
 
 namespace Amazon.CodeBuild
 {
-    public class PhaseContext
+    public sealed class PhaseContext
     {
-        public string Message { get; set; }
+        public string Message { get; init; }
 
-        public string StatusCode { get; set; }
+        public string StatusCode { get; init; }
     }
 }

@@ -7,9 +7,9 @@ namespace Amazon.CodeBuild
         /// <summary>
         /// The list of programming languages that are available for the specified platform.
         /// </summary>
-        public EnvironmentLanguage[] Languages { get; set; }
+        public EnvironmentLanguage[] Languages { get; init; }
 
         // DEBIAN | AMAZON_LINUX | UBUNTU
-        public string Platform { get; set; }
+        public string Platform { get; init; }
     }
 }

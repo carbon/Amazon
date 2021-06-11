@@ -2,14 +2,14 @@
 
 namespace Amazon.CodeBuild
 {
-    public class ProjectEnvironment
+    public sealed class ProjectEnvironment
     {
-        public string ComputeType { get; set; }
+        public string ComputeType { get; init; }
 
-        public string Image { get; set; }
+        public string Image { get; init; }
 
-        public string Type { get; set; }
+        public string Type { get; init; }
 
-        public EnvironmentVariable[] EnvironmentVariables { get; set; }
+        public EnvironmentVariable[] EnvironmentVariables { get; init; }
     }
 }

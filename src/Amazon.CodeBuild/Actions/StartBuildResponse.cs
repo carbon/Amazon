@@ -2,8 +2,8 @@
 
 namespace Amazon.CodeBuild
 {
-    public class StartBuildResponse
+    public sealed class StartBuildResponse
     {
-        public Build Build { get; set; }
+        public Build Build { get; init; }
     }
 }

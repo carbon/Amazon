@@ -4,12 +4,12 @@ namespace Amazon.CodeBuild
 {
     public class ProjectSource
     {
-        public string Type { get; set; }
+        public string Type { get; init; }
 
-        public SourceAuth Auth { get; set; }
+        public SourceAuth Auth { get; init; }
 
-        public string Buildspec { get; set; }
+        public string Buildspec { get; init; }
 
-        public string Location { get; set; }
+        public string Location { get; init; }
     }
 }

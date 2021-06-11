@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 using Amazon.Exceptions;
@@ -85,12 +86,12 @@ namespace Amazon.CodeBuild
         #region Helpers
 
         private static readonly JsonSerializerOptions jso = new() {
-            IgnoreNullValues = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
         private async Task<T> SendAsync<T>(ICodeBuildRequest request)
-            where T : new()
+            where T : notnull, new()
         {
             var httpRequest = GetRequestMessage(Endpoint, request);
 
@@ -105,7 +106,7 @@ namespace Amazon.CodeBuild
                 throw new AwsException(response.StatusCode + "/" + responseText, response.StatusCode);         
             }
 
-            if (response.StatusCode == HttpStatusCode.NoContent || response.Content.Headers.ContentLength is 0)
+            if (response.StatusCode is HttpStatusCode.NoContent || response.Content.Headers.ContentLength is 0)
             {
                 return new T();
             }

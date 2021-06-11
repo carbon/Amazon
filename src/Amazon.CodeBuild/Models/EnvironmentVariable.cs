@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.CodeBuild
 {
-    public class EnvironmentVariable
+    public sealed class EnvironmentVariable
     {
         public EnvironmentVariable() { }
 
@@ -16,9 +16,9 @@ namespace Amazon.CodeBuild
         }
 
         [Required]
-        public string Name { get; set; }
+        public string Name { get; init; }
 
         [Required]
-        public string Value { get; set; }
+        public string Value { get; init; }
     }
 }

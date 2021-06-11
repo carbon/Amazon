@@ -2,12 +2,12 @@
 
 namespace Amazon.CodeBuild
 {
-    public class BuildArtifacts
+    public sealed class BuildArtifacts
     {
-        public string Location { get; set; }
+        public string Location { get; init; }
 
-        public string Md5Sum { get; set; }
+        public string Md5Sum { get; init; }
 
-        public string Sha256Sum { get; set; }
+        public string Sha256Sum { get; init; }
     }
 }

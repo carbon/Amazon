@@ -2,12 +2,12 @@
 
 namespace Amazon.CodeBuild
 {
-    public class LogsLocation
+    public sealed class LogsLocation
     {
-        public string DeepLink { get; set; }
+        public string DeepLink { get; init; }
 
-        public string GroupName { get; set; }
+        public string GroupName { get; init; }
 
-        public string StreamName { get; set; }
+        public string StreamName { get; init; }
     }
 }

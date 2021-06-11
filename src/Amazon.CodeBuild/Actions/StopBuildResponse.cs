@@ -2,8 +2,8 @@
 
 namespace Amazon.CodeBuild
 {
-    public class StopBuildResponse
+    public sealed class StopBuildResponse
     {
-        public Build Build { get; set; }
+        public Build Build { get; init; }
     }
 }
