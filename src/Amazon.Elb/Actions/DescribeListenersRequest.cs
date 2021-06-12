@@ -6,12 +6,12 @@ namespace Amazon.Elb
     {
         public string Action => "DescribeListeners";
         
-        public string[] ListenerArns { get; set; }
+        public string[] ListenerArns { get; init; }
 
-        public string LoadBalancerArn { get; set; }
+        public string LoadBalancerArn { get; init; }
 
-        public string Marker { get; set; }
+        public string Marker { get; init; }
 
-        public int? PageSize { get; set; }
+        public int? PageSize { get; init; }
     }
 }

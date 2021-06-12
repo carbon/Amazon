@@ -4,16 +4,16 @@ using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class ModifyTargetGroupAttributesResponse : IElbResponse
+    public sealed class ModifyTargetGroupAttributesResponse : IElbResponse
     {
         [XmlElement]
-        public ModifyTargetGroupAttributesResult ModifyTargetGroupAttributesResult { get; set; }
+        public ModifyTargetGroupAttributesResult ModifyTargetGroupAttributesResult { get; init; }
     }
 
-    public class ModifyTargetGroupAttributesResult
+    public sealed class ModifyTargetGroupAttributesResult
     {
         [XmlArray]
         [XmlArrayItem("member")]
-        public TargetGroupAttribute[] Attributes { get; set; }
+        public TargetGroupAttribute[] Attributes { get; init; }
     }
 }

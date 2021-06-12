@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
 namespace Amazon.Elb
@@ -7,63 +8,60 @@ namespace Amazon.Elb
     public sealed class TargetGroup
     {
         [XmlElement]
-        public string TargetGroupArn { get; set; }
+        public string TargetGroupArn { get; init; }
 
         [XmlElement]
-        public int HealthCheckIntervalSeconds { get; set; }
+        public bool HealthCheckEnabled { get; init; }
 
         [XmlElement]
-        public string HealthCheckPath { get; set; }
+        public int HealthCheckIntervalSeconds { get; init; }
+
+        [StringLength(1_024)]
+        [XmlElement]
+        public string HealthCheckPath { get; init; }
 
         // default = traffic-port
         [XmlElement]
-        public string HealthCheckPort { get; set; }
+        public string HealthCheckPort { get; init; }
+
+        // HTTP | HTTPS | TCP | TLS | UDP | TCP_UDP | GENEVE
+        [XmlElement]
+        public string HealthCheckProtocol { get; init; }
+        
+        [Range(2, 120)]
+        [XmlElement]
+        public int HealthCheckTimeoutSeconds { get; init; }
+
+        [Range(2, 10)]
+        [XmlElement]
+        public int HealthyThresholdCount { get; init; }
 
         [XmlElement]
-        public string HealthCheckProtocal { get; set; }
+        public Matcher Matcher { get; init; }
 
         [XmlElement]
-        public int HealthCheckTimeoutSeconds { get; set; }
+        public string Name { get; init; }
 
         [XmlElement]
-        public int HealthyThresholdCount { get; set; }
+        public int Port { get; init; }
 
         [XmlElement]
-        public Matcher Matcher { get; set; }
+        public string Protocol { get; init; }
+
+        // GRPC | HTTP1 | HTTP2
+        [XmlElement]
+        public string ProtocolVersion { get; init; }
 
         [XmlElement]
-        public string Name { get; set; }
+        public string TargetGroupName { get; init; }
 
         [XmlElement]
-        public int Port { get; set; }
+        public string TargetType { get; init; }
 
         [XmlElement]
-        public string Protocal { get; set; }
+        public int UnhealthyThresholdCount { get; init; }
 
         [XmlElement]
-        public int UnhealthyThresholdCount { get; set; }
-
-        [XmlElement]
-        public string VpcId { get; set; }
+        public string VpcId { get; init; }
     }
 }
-
-/*
-<member> 
-    <TargetGroupArn>arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067</TargetGroupArn> 
-    <HealthCheckTimeoutSeconds>5</HealthCheckTimeoutSeconds> 
-    <HealthCheckPort>traffic-port</HealthCheckPort> 
-    <Matcher>
-        <HttpCode>200</HttpCode> 
-    </Matcher> 
-    <TargetGroupName>my-targets</TargetGroupName> 
-    <HealthCheckProtocol>HTTP</HealthCheckProtocol> 
-    <HealthCheckPath>/</HealthCheckPath> 
-    <Protocol>HTTP</Protocol> 
-    <Port>80</Port> 
-    <VpcId>vpc-3ac0fb5f</VpcId> 
-    <HealthyThresholdCount>5</HealthyThresholdCount> 
-    <HealthCheckIntervalSeconds>30</HealthCheckIntervalSeconds> 
-    <UnhealthyThresholdCount>2</UnhealthyThresholdCount> 
-</member> 
-*/

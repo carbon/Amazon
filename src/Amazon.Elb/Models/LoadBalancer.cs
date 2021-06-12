@@ -8,48 +8,48 @@ namespace Amazon.Elb
     public class LoadBalancer
     {
         [XmlElement]
-        public string LoadBalancerArn { get; set; }
+        public string LoadBalancerArn { get; init; }
 
         [XmlElement]
-        public string Scheme { get; set; }
+        public string Scheme { get; init; }
 
         [XmlElement]
-        public string LoadBalancerName { get; set; }
+        public string LoadBalancerName { get; init; }
 
         [XmlElement]
-        public string VpcId { get; set; }
+        public string VpcId { get; init; }
 
         [XmlElement]
-        public string CanonicalHostedZoneId { get; set; }
+        public string CanonicalHostedZoneId { get; init; }
 
         [XmlElement]
-        public DateTime CreateTime { get; set; }
+        public DateTime CreateTime { get; init; }
 
         [XmlArray]
         [XmlArrayItem("member")]
-        public AvailabilityZone[] AvailabilityZones { get; set; }
+        public AvailabilityZone[] AvailabilityZones { get; init; }
 
         [XmlArray]
         [XmlArrayItem("member")]
-        public string[] SecurityGroups { get; set; }
+        public string[] SecurityGroups { get; init; }
 
         [XmlElement]
-        public string DNSName { get; set; }
+        public string DNSName { get; init; }
 
         [XmlElement]
-        public LoadBalancerState State { get; set; }
+        public LoadBalancerState State { get; init; }
 
         [XmlElement]
-        public string Type { get; set; }
+        public string Type { get; init; }
     }
 
-    public class LoadBalancerState
+    public sealed class LoadBalancerState
     {
         //  active | provisioning | failed
         [XmlElement]
-        public string Code { get; set; }
+        public string Code { get; init; }
 
         [XmlElement]
-        public string Reason { get; set; }
+        public string Reason { get; init; }
     }
 }

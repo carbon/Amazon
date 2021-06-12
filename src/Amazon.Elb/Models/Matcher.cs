@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class Matcher
+    public sealed class Matcher
     {
         public Matcher() { }
 
@@ -14,7 +14,7 @@ namespace Amazon.Elb
         }
 
         [XmlElement]
-        public string HttpCode { get; set; }
+        public string HttpCode { get; init; }
     }
 }
 

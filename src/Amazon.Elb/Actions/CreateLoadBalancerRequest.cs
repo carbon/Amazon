@@ -16,19 +16,19 @@ namespace Amazon.Elb
 
         public string Action => "CreateLoadBalancer";
 
-        public string IpAddressType { get; set; }
+        public string IpAddressType { get; init; }
 
         [Required, MaxLength(32)]
-        public string Name { get; set; }
+        public string Name { get; init; }
 
-        public string Scheme { get; set; }
+        public string Scheme { get; init; }
 
-        public string[] SecurityGroups { get; set; }
+        public string[] SecurityGroups { get; init; }
 
         // Must specifiy at least 2 subnets
         [Required]
-        public string[] Subnets { get; set; }
+        public string[] Subnets { get; init; }
 
-        public Tag[] Tags { get; set; }
+        public Tag[] Tags { get; init; }
     }
 }

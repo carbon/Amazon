@@ -16,9 +16,9 @@ namespace Amazon.Elb
 
         public string Action => "AddTags";
 
-        public string[] ResourceArns { get; set; }
+        public string[] ResourceArns { get; init; }
 
-        public Tag[] Tags { get; set; }
+        public Tag[] Tags { get; init; }
     }
 
 }

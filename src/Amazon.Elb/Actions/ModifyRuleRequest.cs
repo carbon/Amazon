@@ -8,11 +8,11 @@ namespace Amazon.Elb
     {
         public string Action => "ModifyRule";
 
-        public Action[] Actions { get; set; }
+        public Action[] Actions { get; init; }
 
-        public RuleCondition[] Conditions { get; set; }
+        public RuleCondition[] Conditions { get; init; }
 
         [Required]
-        public string RuleArn { get; set; }
+        public string RuleArn { get; init; }
     }
 }

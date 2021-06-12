@@ -4,12 +4,12 @@ using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class AvailabilityZone
+    public sealed class AvailabilityZone
     {
         [XmlElement]
-        public string SubnetId { get; set; }
+        public string SubnetId { get; init; }
 
         [XmlElement]
-        public string ZoneName { get; set; }
+        public string ZoneName { get; init; }
     }
 }

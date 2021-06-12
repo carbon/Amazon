@@ -58,7 +58,7 @@ namespace Amazon.Elb
             Property = property;
         }
 
-        public string Name { get; set; }
+        public string Name { get; init; }
 
         public PropertyInfo Property { get; }
 

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Elb</AssemblyName>
-    <VersionPrefix>0.21.0</VersionPrefix>
     <TargetFramework>net5.0</TargetFramework>
+    <Version>0.21.1</Version>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 

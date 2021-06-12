@@ -8,14 +8,14 @@ namespace Amazon.Elb
     {
         public string Action => "CreateRule";
 
-        public Action[] Actions { get; set; }
+        public Action[] Actions { get; init; }
 
-        public RuleCondition[] Conditions { get; set; }
+        public RuleCondition[] Conditions { get; init; }
 
         [Required]
-        public string ListenerArn { get; set; }
+        public string ListenerArn { get; init; }
 
-        [Range(1, 99999)]
-        public int Priority { get; set; }
+        [Range(1, 99_999)]
+        public int Priority { get; init; }
     }
 }

@@ -8,17 +8,17 @@ namespace Amazon.Elb
     {
         public string Action => "ModifyListener";
 
-        public Certificate[] Certificates { get; set; }
+        public Certificate[] Certificates { get; init; }
 
-        public Action[] DefaultActions { get; set; }
+        public Action[] DefaultActions { get; init; }
         
         [Required]
-        public string ListenerArn { get; set; }
+        public string ListenerArn { get; init; }
 
-        public int? Port { get; set; }
+        public int? Port { get; init; }
 
-        public string Protocol { get; set; }
+        public string Protocol { get; init; }
 
-        public string SslPolicy { get; set; }
+        public string SslPolicy { get; init; }
     }
 }

@@ -13,6 +13,6 @@ namespace Amazon.Elb
             CertificateArn = arn ?? throw new ArgumentNullException(nameof(arn));
         }
 
-        public string CertificateArn { get; set; }
+        public string CertificateArn { get; init; }
     }
 }

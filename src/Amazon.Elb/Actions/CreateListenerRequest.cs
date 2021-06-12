@@ -9,19 +9,19 @@ namespace Amazon.Elb
     {
         public string Action => "CreateListener";
 
-        public string LoadBalancerArn { get; set; }
+        public string LoadBalancerArn { get; init; }
 
-        public Certificate[] Certificates { get; set; }
+        public Certificate[] Certificates { get; init; }
 
         public List<Action> Actions { get; } = new List<Action>();
 
         [Range(1, 65535)]
-        public ushort Port { get; set; }
+        public ushort Port { get; init; }
 
         [Required]
-        public string Protocal { get; set; }
+        public string Protocal { get; init; }
 
-        public string SslPolicy { get; set; }
+        public string SslPolicy { get; init; }
 
         // Certificates
         // Default actions

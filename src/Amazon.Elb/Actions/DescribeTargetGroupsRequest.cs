@@ -6,14 +6,14 @@ namespace Amazon.Elb
     {
         public string Action => "DescribeTargetGroups";
 
-        public string LoadBalancerArn { get; set; }
+        public string LoadBalancerArn { get; init; }
 
-        public string Marker { get; set; }
+        public string Marker { get; init; }
 
-        public string[] Names { get; set; }
+        public string[] Names { get; init; }
 
-        public int? PageSize { get; set; }
+        public int? PageSize { get; init; }
 
-        public string[] TargetGroupArns { get; set; }
+        public string[] TargetGroupArns { get; init; }
     }
 }

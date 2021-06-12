@@ -2,10 +2,10 @@
 
 namespace Amazon.Elb
 {
-    public class RulePriorityPair
+    public sealed class RulePriorityPair
     {
-        public int? Priority { get; set; }
+        public int? Priority { get; init; }
 
-        public string RuleArn { get; set; }
+        public string RuleArn { get; init; }
     }
 }

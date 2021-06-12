@@ -6,11 +6,11 @@ namespace Amazon.Elb
     {
         public string Action => "DescribeSSLPolicies";
 
-        public string Marker { get; set; }
+        public string Marker { get; init; }
 
-        public string[] Names { get; set; }
+        public string[] Names { get; init; }
 
-        public int? PageSize { get; set; }
+        public int? PageSize { get; init; }
     }
 }
 

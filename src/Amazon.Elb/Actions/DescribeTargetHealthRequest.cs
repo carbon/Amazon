@@ -6,8 +6,8 @@ namespace Amazon.Elb
     {
         public string Action => "DescribeTargetHealth";
         
-        public string TargetGroupArn { get; set; }
+        public string TargetGroupArn { get; init; }
 
-        public TargetDescription[] Targets { get; set; }
+        public TargetDescription[] Targets { get; init; }
     }
 }

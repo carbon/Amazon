@@ -6,14 +6,14 @@ namespace Amazon.Elb
 {
     public class CreateTargetGroupResponse : IElbResponse
     {
-        public CreateTargetGroupResult CreateTargetGroupResult { get; set; }
+        public CreateTargetGroupResult CreateTargetGroupResult { get; init; }
     }
 
     public class CreateTargetGroupResult
     {
         [XmlArray]
         [XmlArrayItem("member")]
-        public TargetGroup[] TargetGroups { get; set; }
+        public TargetGroup[] TargetGroups { get; init; }
     }
 }
 

@@ -7,13 +7,13 @@ namespace Amazon.Elb
     public sealed class SetSecurityGroupsResponse : IElbResponse
     {
         [XmlElement]
-        public SetSecurityGroupsResult SetSecurityGroupsResult { get; set; }
+        public SetSecurityGroupsResult SetSecurityGroupsResult { get; init; }
     }
 
     public sealed class SetSecurityGroupsResult
     {
         [XmlArray]
         [XmlArrayItem("member")]
-        public string[] SecurityGroupIds { get; set; }
+        public string[] SecurityGroupIds { get; init; }
     }
 }

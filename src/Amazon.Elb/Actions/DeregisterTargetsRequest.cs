@@ -20,9 +20,9 @@ namespace Amazon.Elb
         public string Action => "DeregisterTargets";
 
         [Required]
-        public string TargetGroupArn { get; set; }
+        public string TargetGroupArn { get; init; }
 
         [Required]
-        public TargetDescription[] Targets { get; set; }
+        public TargetDescription[] Targets { get; init; }
     }
 }

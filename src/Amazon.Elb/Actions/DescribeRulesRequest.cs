@@ -8,8 +8,8 @@ namespace Amazon.Elb
     {
         public string Action => "DescribeRules";
 
-        public string ListenerArn { get; set; }
+        public string ListenerArn { get; init; }
         
-        public string[] RuleArns { get; set; }
+        public string[] RuleArns { get; init; }
     }
 }

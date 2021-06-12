@@ -6,29 +6,29 @@ namespace Amazon.Elb
     {
         public string Action => "CreateTargetGroup";
 
-        public int HealthCheckIntervalSeconds { get; set; }
+        public int HealthCheckIntervalSeconds { get; init; }
 
-        public string HealthCheckPath { get; set; }
+        public string HealthCheckPath { get; init; }
 
         // default = traffic-port
-        public string HealthCheckPort { get; set; }
+        public string HealthCheckPort { get; init; }
 
-        public string HealthCheckProtocal { get; set; }
+        public string HealthCheckProtocol { get; init; }
 
-        public int HealthCheckTimeoutSeconds { get; set; }
+        public int HealthCheckTimeoutSeconds { get; init; }
 
-        public int HealthyThresholdCount { get; set; }
+        public int HealthyThresholdCount { get; init; }
         
-        public Matcher Matcher { get; set; }
+        public Matcher Matcher { get; init; }
 
-        public string Name { get; set; }
+        public string Name { get; init; }
 
-        public int Port { get; set; }
+        public int Port { get; init; }
 
-        public string Protocal { get; set; }
+        public string Protocol { get; init; }
 
-        public int UnhealthyThresholdCount { get; set; }
+        public int UnhealthyThresholdCount { get; init; }
         
-        public string VpcId { get; set; }
+        public string VpcId { get; init; }
     }
 }

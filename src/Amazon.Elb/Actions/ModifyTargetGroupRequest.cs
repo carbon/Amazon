@@ -8,23 +8,23 @@ namespace Amazon.Elb
     {
         public string Action => "ModifyTargetGroup";
 
-        public int? HealthCheckIntervalSeconds { get; set; }
+        public int? HealthCheckIntervalSeconds { get; init; }
 
-        public string HealthCheckPath { get; set; }
+        public string HealthCheckPath { get; init; }
 
-        public int? HealthCheckPort { get; set; }
+        public int? HealthCheckPort { get; init; }
 
-        public string HealthCheckProtocol { get; set; }
+        public string HealthCheckProtocol { get; init; }
 
-        public int? HealthCheckTimeoutSeconds { get; set; }
+        public int? HealthCheckTimeoutSeconds { get; init; }
 
-        public int? HealthyThresholdCount { get; set; }
+        public int? HealthyThresholdCount { get; init; }
 
-        public Matcher Matcher { get; set; }
+        public Matcher Matcher { get; init; }
 
         [Required]
-        public string TargetGroupArn { get; set; }
+        public string TargetGroupArn { get; init; }
 
-        public int? UnhealthyThresholdCount { get; set; }
+        public int? UnhealthyThresholdCount { get; init; }
     }
 }
