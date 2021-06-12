@@ -4,12 +4,12 @@ namespace Amazon.Translate
 {
     public sealed class TranslateTextRequest
     {
-        public string SourceLanguageCode { get; set; }
+        public string SourceLanguageCode { get; init; }
 
-        public string TargetLanguageCode { get; set; }
+        public string TargetLanguageCode { get; init; }
 
-        public string[] TerminologyNames { get; set; }
+        public string[] TerminologyNames { get; init; }
 
-        public string Text { get; set; }
+        public string Text { get; init; }
     }
 }

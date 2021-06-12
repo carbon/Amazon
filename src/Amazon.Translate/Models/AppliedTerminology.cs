@@ -2,10 +2,10 @@
 
 namespace Amazon.Translate
 {
-    public class AppliedTerminology
+    public sealed class AppliedTerminology
     {
-        public string Name { get; set; }
+        public string Name { get; init; }
 
-        public Term[] Terms { get; set; }
+        public Term[] Terms { get; init; }
     }
 }

@@ -4,8 +4,8 @@ namespace Amazon.Translate
 {
     public class Term
     {
-        public string SourceText { get; set; }
+        public string SourceText { get; init; }
 
-        public string TargetText { get; set; }
+        public string TargetText { get; init; }
     }
 }

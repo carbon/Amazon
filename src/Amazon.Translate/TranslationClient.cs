@@ -6,12 +6,6 @@
 
         public TranslationClient(IAwsCredential credential)
             : base(AwsService.Translate, AwsRegion.USEast1, credential) { }
-       
-
-
-
-
-        
 
 
         // + Operation

@@ -4,12 +4,12 @@ namespace Amazon.Translate
 {
     public class TranslateTextResult
     {
-        public AppliedTerminology[] AppliedTerminologies { get; set; }
+        public AppliedTerminology[] AppliedTerminologies { get; init; }
 
-        public string SourceLanguageCode { get; set; }
+        public string SourceLanguageCode { get; init; }
 
-        public string TargetLanguageCode { get; set; }
+        public string TargetLanguageCode { get; init; }
 
-        public string TranslatedText { get; set; }
+        public string TranslatedText { get; init; }
     }
 }
