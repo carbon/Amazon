@@ -4,17 +4,17 @@ using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class ModifyTargetGroupResponse : IElbResponse
+    public sealed class ModifyTargetGroupResponse : IElbResponse
     {
         [XmlElement]
-        public ModifyTargetGroupResult ModifyTargetGroupResult { get; set; }
+        public ModifyTargetGroupResult ModifyTargetGroupResult { get; init; }
     }
 
-    public class ModifyTargetGroupResult
+    public sealed class ModifyTargetGroupResult
     {
         [XmlArray]
         [XmlArrayItem("member")]
-        public TargetGroup[] TargetGroups { get; set; }
+        public TargetGroup[] TargetGroups { get; init; }
     }
 
 }

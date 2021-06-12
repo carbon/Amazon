@@ -1,27 +1,26 @@
 ﻿#nullable disable
 
-using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class Listener
+    public sealed class Listener
     {
         [XmlElement]
-        public string LoadBalancerArn { get; set; }
+        public string LoadBalancerArn { get; init; }
 
         [XmlElement]
-        public string Protocol { get; set; }
+        public string Protocol { get; init; }
 
         [XmlElement]
-        public int Port { get; set; }
+        public int Port { get; init; }
 
         [XmlElement]
-        public string ListenerArn { get; set; }
+        public string ListenerArn { get; init; }
 
         [XmlArray]
         [XmlArrayItem("member")]
-        public ListenerAction[] DefaultActions { get; set; }
+        public ListenerAction[] DefaultActions { get; init; }
     }
 }
 

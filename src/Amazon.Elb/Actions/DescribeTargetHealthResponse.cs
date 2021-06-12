@@ -7,25 +7,25 @@ namespace Amazon.Elb
     public sealed class DescribeTargetHealthResponse : IElbResponse
     {
         [XmlElement]
-        public DescribeTargetHealthResult DescribeTargetHealthResult { get; set; }
+        public DescribeTargetHealthResult DescribeTargetHealthResult { get; init; }
     }
 
     public sealed class DescribeTargetHealthResult
     {
         [XmlArray]
         [XmlArrayItem("member")]
-        public TargetHealthDescription[] TargetHealthDescriptions { get; set; }
+        public TargetHealthDescription[] TargetHealthDescriptions { get; init; }
     }
 
     public sealed class TargetHealthDescription
     {
         [XmlElement]
-        public string HealthCheckPort { get; set; }
+        public string HealthCheckPort { get; init; }
 
         [XmlElement]
-        public TargetHealth TargetHealth  { get; set; }
+        public TargetHealth TargetHealth  { get; init; }
 
         [XmlElement]
-        public TargetDescription Target { get; set; }
+        public TargetDescription Target { get; init; }
     }
 }

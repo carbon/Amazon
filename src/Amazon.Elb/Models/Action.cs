@@ -12,9 +12,9 @@ namespace Amazon.Elb
             Type = type;
         }
 
-        public string TargetGroupArn { get; set; }
+        public string TargetGroupArn { get; init; }
 
         // forward
-        public string Type { get; set; }
+        public string Type { get; init; }
     }
 }

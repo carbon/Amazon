@@ -16,9 +16,9 @@ namespace Amazon.Elb
         }
 
         [Required]
-        public string Id { get; set; }
+        public string Id { get; init; }
 
         [Range(1, 65535)]
-        public int? Port { get; set; }
+        public int? Port { get; init; }
     }
 }

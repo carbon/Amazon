@@ -9,9 +9,9 @@ namespace Amazon.Elb
         public string Action => "SetSecurityGroups";
 
         [Required]
-        public string LoadBalancerArn { get; set; }
+        public string LoadBalancerArn { get; init; }
 
         [Required]
-        public string[] SecurityGroups { get; set; }
+        public string[] SecurityGroups { get; init; }
     }
 }

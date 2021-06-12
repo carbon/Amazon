@@ -4,7 +4,7 @@ using System;
 
 namespace Amazon.Elb
 {
-    public class Certificate
+    public sealed class Certificate
     {
         public Certificate() { }
 

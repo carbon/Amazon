@@ -9,9 +9,9 @@ namespace Amazon.Elb
         public string Action => "ModifyLoadBalancerAttributes";
 
         [Required]
-        public LoadBalancerAttribute[] Attributes { get; set; }
+        public LoadBalancerAttribute[] Attributes { get; init; }
         
         [Required]
-        public string LoadBalancerArn { get; set; }
+        public string LoadBalancerArn { get; init; }
     }
 }

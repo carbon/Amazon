@@ -10,14 +10,14 @@ namespace Amazon.Elb
     {
         private static readonly ConcurrentDictionary<Type, InstanceModel> models = new ();
 
-        private readonly IReadOnlyList<InstanceModelMember> members;
+        private readonly List<InstanceModelMember> _members;
 
-        public InstanceModel(IReadOnlyList<InstanceModelMember> members)
+        public InstanceModel(List<InstanceModelMember> members)
         {
-            this.members = members;
+            _members = members;
         }
 
-        public IReadOnlyList<InstanceModelMember> Members => members;
+        public IReadOnlyList<InstanceModelMember> Members => _members;
 
         public static InstanceModel Get(Type type)
         {

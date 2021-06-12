@@ -4,12 +4,20 @@ using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class LoadBalancerAttribute
+    public sealed class LoadBalancerAttribute
     {
-        [XmlElement]
-        public string Key { get; set; }
+        public LoadBalancerAttribute() { }
+
+        public LoadBalancerAttribute(string key, string value)
+        {
+            Key = key;
+            Value = value;
+        }
 
         [XmlElement]
-        public string Value { get; set; }
+        public string Key { get; init; }
+
+        [XmlElement]
+        public string Value { get; init; }
     }
 }

@@ -4,16 +4,16 @@ using System.Xml.Serialization;
 
 namespace Amazon.Elb
 {
-    public class DescribeSSLPoliciesResponse : IElbResponse
+    public sealed class DescribeSSLPoliciesResponse : IElbResponse
     {
         [XmlElement]
-        public DescribeSSLPoliciesResult DescribeSSLPoliciesResult { get; set; }
+        public DescribeSSLPoliciesResult DescribeSSLPoliciesResult { get; init; }
     }
 
-    public class DescribeSSLPoliciesResult
+    public sealed class DescribeSSLPoliciesResult
     {
         [XmlArray]
         [XmlArrayItem("member")]
-        public SslPolicy[] SslPolicies { get; set; }
+        public SslPolicy[] SslPolicies { get; init; }
     }
 }

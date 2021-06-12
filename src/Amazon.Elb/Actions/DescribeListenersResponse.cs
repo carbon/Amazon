@@ -7,14 +7,14 @@ namespace Amazon.Elb
     public sealed class DescribeListenersResponse : IElbResponse
     {
        [XmlElement]
-       public DescribeListenersResult DescribeListenersResult { get; set; }
+       public DescribeListenersResult DescribeListenersResult { get; init; }
     }
 
     public sealed class DescribeListenersResult
     {
         [XmlArray]
         [XmlArrayItem("member")]
-        public Listener[] Listeners { get; set; }
+        public Listener[] Listeners { get; init; }
     }
 }
 

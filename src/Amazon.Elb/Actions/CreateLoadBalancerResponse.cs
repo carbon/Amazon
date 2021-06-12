@@ -7,14 +7,14 @@ namespace Amazon.Elb
     public sealed class CreateLoadBalancerResponse : IElbResponse
     {
         [XmlElement]
-        public CreateLoadBalancerResult CreateLoadBalancerResult { get; set; }
+        public CreateLoadBalancerResult CreateLoadBalancerResult { get; init; }
     }
 
     public sealed class CreateLoadBalancerResult
     {
         [XmlArray]
         [XmlArrayItem("member")]
-        public LoadBalancer[] LoadBalancers { get; set; }
+        public LoadBalancer[] LoadBalancers { get; init; }
     }
 }
 
