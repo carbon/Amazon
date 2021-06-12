@@ -29,10 +29,9 @@ namespace Amazon.Rds
 
             var scope = new CredentialScope(date, region, AwsService.RdsDb);
 
+            var requestUri = new Uri($"https://{request.HostName}:{request.Port}?Action=connect&DBUser={request.UserName}"); 
 
-            Uri requestUri = new Uri($"https://{request.HostName}:{request.Port}?Action=connect&DBUser={request.UserName}"); 
-
-            Uri url = new Uri(SignerV4.GetPresignedUrl(credential, scope, date, request.Expires, HttpMethod.Get, requestUri));
+            var url = new Uri(SignerV4.GetPresignedUrl(credential, scope, date, request.Expires, HttpMethod.Get, requestUri));
 
             return new AuthenticationToken(
                 value   : url.Host + ":" + url.Port.ToString() + "/" + url.Query,

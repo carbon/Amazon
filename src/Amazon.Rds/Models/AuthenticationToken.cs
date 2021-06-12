@@ -2,7 +2,7 @@
 
 namespace Amazon.Rds
 {
-    public class AuthenticationToken
+    public sealed class AuthenticationToken
     {
         public AuthenticationToken(
             string value, 
