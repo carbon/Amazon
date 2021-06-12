@@ -2,12 +2,12 @@
 
 namespace Amazon.Kinesis.Firehose
 {
-    public class RequestResponse
+    public sealed class RequestResponse
     {
-        public string ErrorCode { get; set; }
+        public string ErrorCode { get; init; }
 
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; init; }
 
-        public string RecordId { get; set; }
+        public string RecordId { get; init; }
     }
 }

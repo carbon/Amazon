@@ -1,16 +1,16 @@
 ﻿#nullable disable
 
-using System.Text.Json.Serialization;
 
 namespace Amazon.Kinesis.Firehose
 {
     public sealed class CreateDeliveryStreamRequest
     {
-        public string DeliveryStreamName { get; set; }
+        public string DeliveryStreamName { get; init; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public DeliveryStreamType DeliveryStreamType { get; set; }
+        public DeliveryStreamType DeliveryStreamType { get; init; }
 
-        public ExtendedS3DestinationConfiguration ExtendedS3DestinationConfiguration { get; set; }
+#nullable enable
+
+        public ExtendedS3DestinationConfiguration? ExtendedS3DestinationConfiguration { get; init; }
     }
 }

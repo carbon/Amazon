@@ -6,15 +6,15 @@ namespace Amazon.Kinesis
 {
     public sealed class StreamDescription
     {
-        public bool HasMoreShards { get; set; }
+        public bool HasMoreShards { get; init; }
 
-        public List<Shard> Shards { get; set; }
+        public List<Shard> Shards { get; init; }
 
-        public string StreamARN { get; set; }
+        public string StreamARN { get; init; }
 
-        public string StreamName { get; set; }
+        public string StreamName { get; init; }
 
-        public string StreamStatus { get; set; }
+        public string StreamStatus { get; init; }
     }
 }
 

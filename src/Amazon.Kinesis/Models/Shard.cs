@@ -15,20 +15,18 @@ namespace Amazon.Kinesis
             ShardId = id ?? throw new ArgumentNullException(nameof(id));
         }
 
-        public string AdjacentParentShardId { get; set; }
+        public string AdjacentParentShardId { get; init; }
 
-        public string ParentShardId { get; set; }
+        public string ParentShardId { get; init; }
 
-        public HashKeyRange HashKeyRange { get; set; }
+        public HashKeyRange HashKeyRange { get; init; }
 
-        public SequenceNumberRange SequenceNumberRange { get; set; }
+        public SequenceNumberRange SequenceNumberRange { get; init; }
 
-        public string ShardId { get; set; }
+        public string ShardId { get; init; }
 
-        #region IShard
+        // IShard
 
         string IShard.Id => ShardId;
-
-        #endregion
     }
 }

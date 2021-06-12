@@ -2,5 +2,5 @@
 {
 	public abstract class KinesisRequest { }
 
-	public class KinesisResponse { }
+	public abstract class KinesisResponse { }
 }

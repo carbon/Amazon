@@ -83,7 +83,7 @@ namespace Amazon.Kinesis
         };
 
         private HttpRequestMessage GetRequestMessage<T>(string action, T request)
-            where T : KinesisRequest
+            where T : notnull, KinesisRequest
         {
             byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, jso);
 
@@ -91,8 +91,7 @@ namespace Amazon.Kinesis
                 Headers = {
                     { "x-amz-target", TargetPrefix  + "." + action }
                 },
-                Content = new ByteArrayContent(jsonBytes)
-                {
+                Content = new ByteArrayContent(jsonBytes) {
                     Headers = {
                         { "Content-Type", "application/x-amz-json-1.1" }
                     }

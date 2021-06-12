@@ -22,7 +22,7 @@ namespace Amazon.Kinesis
 
         public string SequenceNumberForOrdering { get; set; }
 
-        public string StreamName { get; set; }
+        public string StreamName { get; init; }
     }
 }
 

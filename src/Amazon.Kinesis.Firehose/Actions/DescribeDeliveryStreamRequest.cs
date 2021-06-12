@@ -4,10 +4,12 @@ namespace Amazon.Kinesis.Firehose
 {
     public sealed class DescribeDeliveryStreamRequest
     {
-        public string DeliveryStreamName { get; set; }
+        public string DeliveryStreamName { get; init; }
 
-        public string ExclusiveStartDestinationId { get; set; }
+#nullable enable
 
-        public int? Limit { get; set; }
+        public string? ExclusiveStartDestinationId { get; init; }
+
+        public int? Limit { get; init; }
     }
 }

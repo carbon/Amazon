@@ -2,10 +2,10 @@
 
 namespace Amazon.Kinesis
 {
-    public class SequenceNumberRange
+    public sealed class SequenceNumberRange
     {
-        public string StartingSequenceNumber { get; set; }
+        public string StartingSequenceNumber { get; init; }
 
-        public string EndingSequenceNumber { get; set; }
+        public string EndingSequenceNumber { get; init; }
     }
 }

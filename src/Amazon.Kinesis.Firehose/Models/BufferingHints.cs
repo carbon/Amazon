@@ -1,9 +1,9 @@
 ﻿namespace Amazon.Kinesis.Firehose
 {
-    public class BufferingHints
+    public sealed class BufferingHints
     {
-        public int IntervalInSeconds { get; set; }
+        public int IntervalInSeconds { get; init; }
 
-        public int SizeInMBs { get; set; }
+        public int SizeInMBs { get; init; }
     }
 }

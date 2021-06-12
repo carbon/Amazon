@@ -2,8 +2,10 @@
 
 namespace Amazon.Kinesis.Firehose
 {
-    public class PutRecordResult
+    public sealed class PutRecordResult
     {
-        public string RecordId { get; set; }
+        public bool Encrypted { get; init; }
+
+        public string RecordId { get; init; }
     }
 }

@@ -13,11 +13,11 @@ namespace Amazon.Kinesis
             StreamName = streamName ?? throw new ArgumentNullException(nameof(streamName));
         }
 
-        public string ExclusiveStartShardId { get; set; }
+        public string ExclusiveStartShardId { get; init; }
 
-        public int? Limit { get; set; }
+        public int? Limit { get; init; }
 
-        public string StreamName { get; set; }
+        public string StreamName { get; init; }
     }
 }
 

@@ -1,14 +1,15 @@
-﻿#nullable disable
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Kinesis.Firehose
 {
-    public class ListDeliveryStreamsRequest
+    public sealed class ListDeliveryStreamsRequest
     {
-        public string DeliveryStreamType { get; set; }
+        [StringLength(64)]
+        public string? DeliveryStreamType { get; init; }
 
-        public string ExclusiveStartDeliveryStreamName { get; set; }
+        public string? ExclusiveStartDeliveryStreamName { get; init; }
 
-        public int? Limit { get; set; }
+        public int? Limit { get; init; }
     }
 
 

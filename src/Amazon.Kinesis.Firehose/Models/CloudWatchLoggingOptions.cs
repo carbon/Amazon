@@ -2,12 +2,12 @@
 
 namespace Amazon.Kinesis.Firehose
 {
-    public class CloudWatchLoggingOptions
+    public sealed class CloudWatchLoggingOptions
     {
-        public bool Enabled { get; set; }
+        public bool Enabled { get; init; }
         
-        public string LogGroupName { get; set; }
+        public string LogGroupName { get; init; }
 
-        public string LogStreamName { get; set; }
+        public string LogStreamName { get; init; }
     }
 }

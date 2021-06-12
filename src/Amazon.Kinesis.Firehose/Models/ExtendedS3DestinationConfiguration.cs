@@ -1,26 +1,41 @@
 ﻿#nullable disable
 
-using System.Runtime.Serialization;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Amazon.Kinesis.Firehose
 {
-    public class ExtendedS3DestinationConfiguration
+    public sealed class ExtendedS3DestinationConfiguration
     {
-        [DataMember(Name = "BucketARN")]
-        public string BucketARN { get; set; }
-        
-        public BufferingHints BufferingHints { get; set; }
+        [JsonPropertyName("BucketARN")]
+        public string BucketARN { get; init; }
 
-        public CloudWatchLoggingOptions CloudWatchLoggingOptions { get; set; }
+#nullable enable
 
-        // UNCOMPRESSED | GZIP | ZIP | Snappy
-        public string CompressionFormat { get; set; }
-        
-        public EncryptionConfiguration EncryptionConfiguration { get; set; }
+        public BufferingHints? BufferingHints { get; init; }
 
-        public string Prefix { get; set; }
+        public CloudWatchLoggingOptions? CloudWatchLoggingOptions { get; init; }
 
-        [DataMember(Name = "RoleARN")]
-        public string RoleARN { get; set; }
+        // UNCOMPRESSED | GZIP | ZIP | Snappy | HADOOP_SNAPPY
+        public string? CompressionFormat { get; init; }
+
+        // DataFormatConversionConfiguration
+
+        public EncryptionConfiguration? EncryptionConfiguration { get; init; }
+
+        [StringLength(1024)]
+        public string? ErrorOutputPrefix { get; init; }
+
+        [StringLength(1024)]
+        public string? Prefix { get; init; }
+
+#nullable disable
+
+        [JsonPropertyName("RoleARN")]
+        public string RoleARN { get; init; }
+
+#nullable enable
+
+        public string? S3BackupMode { get; init; }
     }
 }

@@ -2,10 +2,10 @@
 
 namespace Amazon.Kinesis
 {
-    public class HashKeyRange
+    public sealed class HashKeyRange
     {
-        public string StartingHashKey { get; set; }
+        public string StartingHashKey { get; init; }
 
-        public string EndingHashKey { get; set; }
+        public string EndingHashKey { get; init; }
     }
 }

@@ -1,6 +1,9 @@
-﻿namespace Amazon.Kinesis.Firehose
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Kinesis.Firehose
 {
-    public enum DeliveryStreamType : byte
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum DeliveryStreamType
     {
         DirectPut             = 1,
         KinesisStreamAsSource = 2

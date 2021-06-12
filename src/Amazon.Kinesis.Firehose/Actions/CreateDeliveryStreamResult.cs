@@ -4,6 +4,6 @@ namespace Amazon.Kinesis.Firehose
 {
     public class CreateDeliveryStreamResult
     {
-        public string DeliveryStreamARN { get; set; }
+        public string DeliveryStreamARN { get; init; }
     }
 }

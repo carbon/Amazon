@@ -73,21 +73,23 @@ namespace Amazon.Kinesis.Firehose
             throw new Exception(responseText);
         }
 
-        private static readonly JsonSerializerOptions serializationOptions = new () {
+        private static readonly JsonSerializerOptions jso = new () {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
         private HttpRequestMessage GetRequestMessage<T>(string action, T data)
             where T: notnull
         {
-            byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(data, serializationOptions);
+            byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(data, jso);
 
             return new HttpRequestMessage(HttpMethod.Post, Endpoint) {
                 Headers = {
                     { "x-amz-target", TargetPrefix  + "." + action }
                 },
                 Content = new ByteArrayContent(jsonBytes) {
-                    Headers = { { "Content-Type", "application/x-amz-json-1.1" } }
+                    Headers = { 
+                        { "Content-Type", "application/x-amz-json-1.1" } 
+                    }
                 }
             };
         }

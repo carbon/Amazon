@@ -4,11 +4,11 @@ namespace Amazon.Kinesis
 {
     public sealed class MergeShardsRequest : KinesisRequest
     {
-        public string AdjacentShardToMerge { get; set; }
+        public string AdjacentShardToMerge { get; init; }
 
-        public string ShardToMerge { get; set; }
+        public string ShardToMerge { get; init; }
 
-        public string StreamName { get; set; }
+        public string StreamName { get; init; }
     }
 
     public class MergeShardResult
