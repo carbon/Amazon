@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Amazon.Ssm
@@ -478,23 +479,27 @@ namespace Amazon.Ssm
             string responseText = await SendAsync(GetRequestMessage(Endpoint, request)).ConfigureAwait(false);
 
             return responseText.Length > 0
-                ? JsonSerializer.Deserialize<T>(responseText)
+                ? JsonSerializer.Deserialize<T>(responseText)!
                 : new T();
         }
 
-        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { IgnoreNullValues = true };
+        private static readonly JsonSerializerOptions jso = new () { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
 
         private static HttpRequestMessage GetRequestMessage(string endpoint, object request)
         {
             string actionName = request.GetType().Name.Replace("Request", "");
 
-            string json = JsonSerializer.Serialize(request, jso);
+            byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, jso);
 
             return new HttpRequestMessage(HttpMethod.Post, endpoint) {
                 Headers = {
                     { "x-amz-target", "AmazonSSM." + actionName },
                 },
-                Content = new StringContent(json, Encoding.UTF8, "application/x-amz-json-1.1")
+                Content = new ByteArrayContent(jsonBytes) {
+                    Headers = {
+                        { "Content-Type", "application/x-amz-json-1.1" } 
+                    }
+                }
             };
         }
 
