@@ -7,28 +7,28 @@ namespace Amazon.Ec2
     public sealed class Vpc
     {
         [XmlElement("vpcId")]
-        public string VpcId { get; set; }
+        public string VpcId { get; init; }
 
         [XmlElement("cidrBlock")]
-        public string CidrBlock { get; set; }
+        public string CidrBlock { get; init; }
 
         [XmlArray("ipv6CidrBlockAssociationSet")]
         [XmlArrayItem("item")]
-        public Ipv6CidrBlockAssociation[] Ipv6CidrBlockAssociations { get; set; }
+        public Ipv6CidrBlockAssociation[] Ipv6CidrBlockAssociations { get; init; }
 
         // default | dedicated | host
         [XmlElement("instanceTenancy")]
-        public string InstanceTenancy { get; set; }
+        public string InstanceTenancy { get; init; }
 
         [XmlElement("isDefault")]
-        public bool IsDefault { get; set; }
+        public bool IsDefault { get; init; }
 
         [XmlElement("dhcpOptionsId")]
-        public string DhcpOptionsId { get; set; }
+        public string DhcpOptionsId { get; init; }
 
         // pending | available
         [XmlElement("state")]
-        public string State { get; set; }
+        public string State { get; init; }
     }
 
     /*

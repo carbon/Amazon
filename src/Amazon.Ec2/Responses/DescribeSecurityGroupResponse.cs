@@ -8,7 +8,7 @@ namespace Amazon.Ec2
     {
         [XmlArray("securityGroupInfo")]
         [XmlArrayItem("item")]
-        public SecurityGroup[] SecurityGroups { get; set; }
+        public SecurityGroup[] SecurityGroups { get; init; }
     }
 }
 

@@ -8,60 +8,63 @@ namespace Amazon.Ec2
     {
         // i386 | x86_64
         [XmlElement("architecture")]
-        public string Architecture { get; set; }
+        public string Architecture { get; init; }
 
         [XmlElement("description")]
-        public string Description { get; set; }
+        public string Description { get; init; }
 
         [XmlElement("enaSupport")]
-        public bool EnaSupport { get; set; }
+        public bool EnaSupport { get; init; }
 
         [XmlElement("imageId")]
-        public string ImageId { get; set; }
+        public string ImageId { get; init; }
 
         [XmlElement("imageLocation")]
-        public string ImageLocation { get; set; }
+        public string ImageLocation { get; init; }
 
         [XmlElement("imageOwnerAlias")]
-        public string ImageOwnerAlias { get; set; }
+        public string ImageOwnerAlias { get; init; }
 
         [XmlElement("imageOwnerId")]
-        public long ImageOwnerId { get; set; }
+        public long ImageOwnerId { get; init; }
 
         // pending | available | invalid | deregistered | transient | failed | error
         [XmlElement("imageState")]
-        public string ImageState { get; set; }
+        public string ImageState { get; init; }
 
         // machine | kernel | ramdisk
         [XmlElement("imageType")]
-        public string ImageType { get; set; }
+        public string ImageType { get; init; }
 
         [XmlElement("isPublic")]
-        public bool IsPublic { get; set; }
+        public bool IsPublic { get; init; }
 
         [XmlElement("kernelId")]
-        public string KernelId { get; set; }
+        public string KernelId { get; init; }
 
         [XmlElement("name")]
-        public string Name { get; set; }
+        public string Name { get; init; }
 
         // Windows | blank
         [XmlElement("platform")]
-        public string Platform { get; set; }
+        public string Platform { get; init; }
 
         // ovm | xen
         [XmlElement("hypervisor")]
-        public string Hypervisor { get; set; }
+        public string Hypervisor { get; init; }
 
         [XmlElement("ramDiskId")]
-        public string RamDiskId { get; set; }
+        public string RamDiskId { get; init; }
 
         // ebs | instance-store
         [XmlElement("rootDeviceType")]
-        public string RootDeviceType { get; set; }
+        public string RootDeviceType { get; init; }
+
+        [XmlElement("rootDeviceName")]
+        public string RootDeviceName { get; init; }
 
         // hvm | paravirtual
         [XmlElement("virtualizationType")]
-        public string VirtualizationType { get; set; }
+        public string VirtualizationType { get; init; }
     }
 }

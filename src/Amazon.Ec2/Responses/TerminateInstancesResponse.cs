@@ -8,7 +8,7 @@ namespace Amazon.Ec2
     {
         [XmlArray("instancesSet")]
         [XmlArrayItem("item")]
-        public InstanceStateChange[] Instances { get; set; }
+        public InstanceStateChange[] Instances { get; init; }
     }
 }
 

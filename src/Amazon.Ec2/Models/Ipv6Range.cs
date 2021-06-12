@@ -7,6 +7,6 @@ namespace Amazon.Ec2
     public sealed class Ipv6Range
     {
         [XmlElement("cidrIpv6")]
-        public string CidrIpv6 { get; set; }
+        public string CidrIpv6 { get; init; }
     }
 }

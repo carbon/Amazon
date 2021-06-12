@@ -22,8 +22,8 @@ namespace Amazon.Ec2
             }
         }
 
-        public string Arn { get; set; }
+        public string Arn { get; init; }
 
-        public string Name { get; set; }
+        public string Name { get; init; }
     }
 }

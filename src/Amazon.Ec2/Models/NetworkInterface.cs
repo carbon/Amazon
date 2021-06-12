@@ -7,40 +7,39 @@ namespace Amazon.Ec2
     public sealed class NetworkInterface
     {
         [XmlElement("networkInterfaceId")]
-        public string NetworkInterfaceId { get; set; }
+        public string NetworkInterfaceId { get; init; }
 
         [XmlElement("subnetId")]
-        public string SubnetId { get; set; }
+        public string SubnetId { get; init; }
 
         [XmlElement("vpcId")]
-        public string VpcId { get; set; }
+        public string VpcId { get; init; }
 
         [XmlElement("description")]
-        public string Description { get; set; }
+        public string Description { get; init; }
 
         [XmlElement("ownerId")]
-        public string OwnerId { get; set; }
+        public string OwnerId { get; init; }
 
         [XmlElement("status")]
-        public string Status { get; set; }
+        public string Status { get; init; }
 
         [XmlElement("macAddress")]
-        public string MacAddress { get; set; }
+        public string MacAddress { get; init; }
 
         [XmlElement("privateIpAddress")]
-        public string PrivateDnsName { get; set; }
+        public string PrivateDnsName { get; init; }
 
         [XmlElement("sourceDestCheck")]
-        public string SourceDestCheck { get; set; }
+        public string SourceDestCheck { get; init; }
 
         [XmlArray("groupSet")]
         [XmlArrayItem("item")]
-        public NetworkInterfaceSecurityGroup[] Groups { get; set; }
+        public NetworkInterfaceSecurityGroup[] Groups { get; init; }
 
         [XmlElement("attachment")]
-        public NetworkInterfaceAttachment Attachment { get; set; }
-    }
-}
+        public NetworkInterfaceAttachment Attachment { get; init; }
+    }}
 
 /*
 <item>

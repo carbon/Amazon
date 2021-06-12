@@ -21,15 +21,15 @@ namespace Amazon.Ec2
         }
 
         [XmlElement("availabilityZone")]
-        public string AvailabilityZone { get; set; }
+        public string AvailabilityZone { get; init; }
 
         [XmlElement("groupName")]
-        public string GroupName { get; set; }
+        public string GroupName { get; init; }
 
         [XmlElement("hostId")]
-        public string HostId { get; set; }
+        public string HostId { get; init; }
 
         [XmlElement("tenancy")]
-        public string Tenancy { get; set; }
+        public string Tenancy { get; init; }
     }
 }

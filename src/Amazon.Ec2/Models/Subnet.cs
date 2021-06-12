@@ -7,35 +7,35 @@ namespace Amazon.Ec2
     public sealed class Subnet
     {
         [XmlElement("subnetId")]
-        public string SubnetId { get; set; }
+        public string SubnetId { get; init; }
 
         [XmlElement("state")]
-        public string State { get; set; }
+        public string State { get; init; }
 
         [XmlElement("vpcId")]
-        public string VpcId { get; set; }
+        public string VpcId { get; init; }
 
         [XmlElement("cidrBlock")]
-        public string CidrBlock { get; set; }
+        public string CidrBlock { get; init; }
 
         [XmlArray("ipv6CidrBlockAssociationSet")]
         [XmlArrayItem("item")]
-        public Ipv6CidrBlockAssociation[] Ipv6CidrBlockAssociations { get; set; }
+        public Ipv6CidrBlockAssociation[] Ipv6CidrBlockAssociations { get; init; }
 
         [XmlElement("availableIpAddressCount")]
-        public int AvailableIpAddressCount { get; set; }
+        public int AvailableIpAddressCount { get; init; }
         
         [XmlElement("availabilityZone")]
-        public string AvailabilityZone { get; set; }
+        public string AvailabilityZone { get; init; }
 
         [XmlElement("defaultForAz")]
-        public bool DefaultForAz { get; set; }
+        public bool DefaultForAz { get; init; }
 
         [XmlElement("mapPublicIpOnLaunch")]
-        public bool MapPublicIpOnLaunch { get; set; }
+        public bool MapPublicIpOnLaunch { get; init; }
 
         [XmlElement("assignIpv6AddressOnCreation")]
-        public bool AssignIpv6AddressOnCreation { get; set; }
+        public bool AssignIpv6AddressOnCreation { get; init; }
     }
 }
 

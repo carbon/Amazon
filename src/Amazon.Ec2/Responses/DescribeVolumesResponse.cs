@@ -8,7 +8,7 @@ namespace Amazon.Ec2
     {
         [XmlArray("volumeSet")]
         [XmlArrayItem("item")]
-        public Volume[] Volumes { get; set; }
+        public Volume[] Volumes { get; init; }
     }
 }
 

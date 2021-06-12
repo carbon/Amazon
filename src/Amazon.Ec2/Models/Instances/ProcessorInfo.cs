@@ -5,10 +5,10 @@ namespace Amazon.Ec2
     public sealed class ProcessorInfo
     {
         [XmlElement("sustainedClockSpeedInGhz")]
-        public double? SustainedClockSpeedInGhz { get; set; }
+        public double? SustainedClockSpeedInGhz { get; init; }
 
         [XmlArray("supportedArchitectures")]
         [XmlArrayItem("item")]
-        public string[]? SupportedArchitectures { get; set; }
+        public string[]? SupportedArchitectures { get; init; }
     }
 }

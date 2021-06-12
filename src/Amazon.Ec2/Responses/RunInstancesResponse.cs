@@ -8,15 +8,15 @@ namespace Amazon.Ec2
     {
         [XmlArray("instancesSet")]
         [XmlArrayItem("item")]
-        public Instance[] Instances { get; set; }
+        public Instance[] Instances { get; init; }
 
         [XmlElement("ownerId")]
-        public string OwnerId { get; set; }
+        public string OwnerId { get; init; }
         
         [XmlElement("requesterId")]
-        public string RequesterId { get; set; }
+        public string RequesterId { get; init; }
 
         [XmlElement("reservationId")]
-        public string ReservationId { get; set; }
+        public string ReservationId { get; init; }
     }
 }

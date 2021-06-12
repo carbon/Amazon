@@ -8,6 +8,6 @@ namespace Amazon.Ec2
     {
         [XmlArray("vpcSet")]
         [XmlArrayItem("item")]
-        public Vpc[] Vpcs { get; set; }
+        public Vpc[] Vpcs { get; init; }
     }
 }

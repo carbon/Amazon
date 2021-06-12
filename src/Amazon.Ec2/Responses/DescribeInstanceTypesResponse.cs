@@ -8,14 +8,14 @@ namespace Amazon.Ec2
     public sealed class DescribeInstanceTypesResponse
     {
         [XmlElement("requestId")]
-        public string RequestId { get; set; }
+        public string RequestId { get; init; }
 
         [XmlElement("nextToken")]
-        public string NextToken { get; set; }
+        public string NextToken { get; init; }
 
         [XmlArray("instanceTypeSet")]
         [XmlArrayItem("item")]
-        public InstanceTypeInfo[] InstanceTypes { get; set; }
+        public InstanceTypeInfo[] InstanceTypes { get; init; }
 
         public static DescribeInstanceTypesResponse Deserialize(string text)
         {

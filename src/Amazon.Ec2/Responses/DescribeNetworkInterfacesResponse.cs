@@ -8,6 +8,6 @@ namespace Amazon.Ec2
     {
         [XmlArray("networkInterfaceSet")]
         [XmlArrayItem("item")]
-        public NetworkInterface[] NetworkInterfaces { get; set; }
+        public NetworkInterface[] NetworkInterfaces { get; init; }
     }
 }

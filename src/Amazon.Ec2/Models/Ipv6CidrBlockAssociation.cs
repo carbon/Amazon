@@ -7,13 +7,13 @@ namespace Amazon.Ec2
     public class Ipv6CidrBlockAssociation
     {
         [XmlElement("associationId")]
-        public string AssociationId { get; set; }
+        public string AssociationId { get; init; }
 
         [XmlElement("ipv6CidrBlock")]
-        public string Ipv6CidrBlock { get; set; }
+        public string Ipv6CidrBlock { get; init; }
 
         [XmlElement("ipv6CidrBlockState")]
-        public Ipv6CidrBlockState Ipv6CidrBlockState { get; set; }
+        public Ipv6CidrBlockState Ipv6CidrBlockState { get; init; }
     }
 }
 

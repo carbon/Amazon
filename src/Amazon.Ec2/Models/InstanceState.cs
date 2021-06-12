@@ -15,11 +15,11 @@ namespace Amazon.Ec2
         80 : stopped
         */
         [XmlElement("code")]
-        public int Code { get; set; }
+        public int Code { get; init; }
 
         // Valid Values: pending | running | shutting-down | terminated | stopping | stopped
 
         [XmlElement("name")]
-        public string Name { get; set; }
+        public string Name { get; init; }
     }
 }

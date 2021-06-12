@@ -7,6 +7,6 @@ namespace Amazon.Ec2
     public sealed class IpRange
     {
         [XmlElement("cidrIp")]
-        public string CidrIp { get; set; }
+        public string CidrIp { get; init; }
     }
 }

@@ -7,19 +7,19 @@ namespace Amazon.Ec2
     public sealed class IpPermissionGroup
     {
         [XmlElement("userId")]
-        public string UserId { get; set; }
+        public string UserId { get; init; }
 
         [XmlElement("groupId")]
-        public string GroupId { get; set; }
+        public string GroupId { get; init; }
 
         [XmlElement("vpcId")]
-        public string VpcId { get; set; }
+        public string VpcId { get; init; }
 
         [XmlElement("vpcPeeringConnectionId")]
-        public string VpcPeeringConnectionId { get; set; }
+        public string VpcPeeringConnectionId { get; init; }
 
         [XmlElement("peeringStatus")]
-        public string PeeringStatus { get; set; }
+        public string PeeringStatus { get; init; }
     }
 }
 

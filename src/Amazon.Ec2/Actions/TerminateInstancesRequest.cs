@@ -12,7 +12,7 @@ namespace Amazon.Ec2
         }
 
         [DataMember]
-        public bool? DryRun { get; set; }
+        public bool? DryRun { get; init; }
 
         [DataMember(Name = "InstanceId")]
         public string[] InstanceIds { get; }

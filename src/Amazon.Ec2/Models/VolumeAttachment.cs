@@ -8,21 +8,21 @@ namespace Amazon.Ec2
     public sealed class VolumeAttachment
     {
         [XmlElement("volumeId")]
-        public string VolumeId { get; set; }
+        public string VolumeId { get; init; }
 
         [XmlElement("instanceId")]
-        public string InstanceId { get; set; }
+        public string InstanceId { get; init; }
 
         [XmlElement("device")]
-        public string Device { get; set; }
+        public string Device { get; init; }
 
         [XmlElement("status")]
-        public string Status { get; set; }
+        public string Status { get; init; }
 
         [XmlElement("attachTime")]
-        public DateTime AttachTime { get; set; }
+        public DateTime AttachTime { get; init; }
         
         [XmlElement("deleteOnTermination")]
-        public bool DeleteOnTermination { get; set; }
+        public bool DeleteOnTermination { get; init; }
     }
 }

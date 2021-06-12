@@ -15,9 +15,9 @@ namespace Amazon.Ec2
         }
 
         [DataMember(Name = "Tag")]
-        public Tag[] Tags { get; set; }
+        public Tag[] Tags { get; init; }
 
         // instance and volume.
-        public string ResourceType { get; set; }
+        public string ResourceType { get; init; }
     }
 }

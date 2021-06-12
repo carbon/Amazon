@@ -8,7 +8,7 @@ namespace Amazon.Ec2
     {
         [XmlArray("imagesSet")]
         [XmlArrayItem("item")]
-        public Image[] Images { get; set; }
+        public Image[] Images { get; init; }
     }
 }
 

@@ -8,7 +8,7 @@ namespace Amazon.Ec2
     {
         [XmlArray("subnetSet")]
         [XmlArrayItem("item")]
-        public Subnet[] Subnets { get; set; }
+        public Subnet[] Subnets { get; init; }
     }
 }
 

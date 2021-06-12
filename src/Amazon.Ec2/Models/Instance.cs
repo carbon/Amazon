@@ -9,61 +9,67 @@ namespace Amazon.Ec2
     public sealed class Instance
     {
         [XmlElement("architechure")]
-        public string Architecture { get; set; } // i386 | x86_64
+        public string Architecture { get; init; } // i386 | x86_64
 
         [XmlElement("hypervisor")]
-        public string Hypervisor { get; set; } // ovm | xen
+        public string Hypervisor { get; init; } // ovm | xen
 
         [XmlElement("imageId")]
-        public string ImageId { get; set; }
+        public string ImageId { get; init; }
 
         [XmlElement("instanceId")]
-        public string InstanceId { get; set; }
+        public string InstanceId { get; init; }
 
         // [XmlElement("instanceLifecycle")]
         // public string InstanceLifecycle { get; set; }
 
         [XmlElement("instanceState")]
-        public InstanceState InstanceState { get; set; }
+        public InstanceState InstanceState { get; init; }
 
         [XmlElement("instanceType")]
-        public string InstanceType { get; set; }
+        public string InstanceType { get; init; }
 
         [XmlElement("placement")]
-        public Placement Placement { get; set; }
+        public Placement Placement { get; init; }
        
         [XmlArray("networkInterfaceSet")]
         [XmlArrayItem("item")]
-        public NetworkInterface[] NetworkInterfaces { get; set; }
+        public NetworkInterface[] NetworkInterfaces { get; init; }
 
         [XmlArray("blockDeviceMapping")]
         [XmlArrayItem("item")]
-        public BlockDeviceMapping[] BlockDeviceMappings { get; set; }
+        public BlockDeviceMapping[] BlockDeviceMappings { get; init; }
 
-        // The public IP address assigned to the instance, if applicable.
 
+#nullable enable
+
+        /// <summary>
+        /// The public IP address assigned to the instance, if applicable.
+        /// </summary>
         [XmlElement("ipAddress")]
-        public string IpAddress { get; set; }
+        public string? IpAddress { get; init; }
+
+#nullable disable
 
         [XmlElement("kernelId")]
-        public string KernelId { get; set; }
+        public string KernelId { get; init; }
 
         [XmlElement("launchTime")]
-        public DateTime LaunchTime { get; set; }
+        public DateTime LaunchTime { get; init; }
 
         [XmlElement("platform")]
-        public string Platform { get; set; }
+        public string Platform { get; init; }
 
         [XmlElement("privateIpAddress")]
-        public string PrivateIpAddress { get; set; }
+        public string PrivateIpAddress { get; init; }
 
         [XmlElement("rootDeviceName")]
-        public string RootDeviceName { get; set; }
+        public string RootDeviceName { get; init; }
 
         [XmlElement("vpcId")]
-        public string VpcId { get; set; }
+        public string VpcId { get; init; }
 
-        private static readonly XmlSerializer serializer = new XmlSerializer(
+        private static readonly XmlSerializer serializer = new (
             typeof(Instance),
             new XmlRootAttribute {
                 ElementName = "item",
