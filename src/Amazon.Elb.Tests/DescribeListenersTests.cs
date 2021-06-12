@@ -1,12 +1,11 @@
-﻿
-using Xunit;
+﻿using Xunit;
 
 namespace Amazon.Elb.Tests
 {
     public class DescribeListenersTests
     {
         [Fact]
-        public void A()
+        public void Deserialize()
         {
             var text = $@"<DescribeListenersResponse xmlns=""{ElbClient.Namespace}"">
   <DescribeListenersResult> 
@@ -46,11 +45,6 @@ namespace Amazon.Elb.Tests
             Assert.Single(listeners[0].DefaultActions);
             Assert.Equal("forward", listeners[0].DefaultActions[0].Type);
             Assert.Equal(arnPrefix + ":targetgroup/my-targets/73e2d6bc24d8a067", listeners[0].DefaultActions[0].TargetGroupArn);
-
         }
-
-
-
-
     }
 }

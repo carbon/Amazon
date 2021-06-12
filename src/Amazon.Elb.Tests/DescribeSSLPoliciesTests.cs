@@ -5,7 +5,7 @@ namespace Amazon.Elb.Tests
     public class DescribeSSLPoliciesTests
     {
         [Fact]
-        public void A()
+        public void Deserialize()
         {
             var text = $@"<DescribeSSLPoliciesResponse xmlns=""{ElbClient.Namespace}"">
   <DescribeSSLPoliciesResult> 
@@ -16,7 +16,7 @@ namespace Amazon.Elb.Tests
             <Name>ECDHE-ECDSA-AES128-GCM-SHA256</Name> 
             <Priority>1</Priority> 
           </member> 
-          <member> 
+          <member> s
             <Name>ECDHE-RSA-AES128-GCM-SHA256</Name> 
             <Priority>2</Priority> 
           </member> 
