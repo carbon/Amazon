@@ -131,16 +131,16 @@ namespace Amazon.Ec2.Tests
 
             var instance = response.Instances[0];
 
-            Assert.Equal("eu-west-1c", instance.Placement.AvailabilityZone);
+            Assert.Equal("eu-west-1c",          instance.Placement.AvailabilityZone);
             Assert.Equal("i-1234567890abcdef0", instance.InstanceId);
-            Assert.Equal("t2.micro", instance.InstanceType);
-            Assert.Equal("xen", instance.Hypervisor);
+            Assert.Equal("t2.micro",            instance.InstanceType);
+            Assert.Equal("xen",                 instance.Hypervisor);
 
+            Assert.Equal("192.168.1.88", instance.PrivateIpAddress);
 
             Assert.Single(instance.NetworkInterfaces);
             Assert.Equal("eni-551ba033", instance.NetworkInterfaces[0].NetworkInterfaceId);
             Assert.Equal("vpc-11112222", instance.NetworkInterfaces[0].VpcId);
-
         }
     }
 }

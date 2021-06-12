@@ -69,8 +69,14 @@ namespace Amazon.Ec2.Tests
             Assert.Equal("SSHAccess", group.GroupName);
             Assert.Equal("Security group for SSH access", group.GroupDescription);
 
-            Assert.Single(group.IpPermissions);
+            Assert.Single(group.IpPermissions); 
             Assert.Single(group.IpPermissionsEgress);
+
+            Assert.Equal("tcp", group.IpPermissions[0].IpProtocol);
+            Assert.Equal(22,    group.IpPermissions[0].FromPort);
+            Assert.Equal("22",  group.IpPermissions[0].ToPort);
+
+
         }
     }
 }

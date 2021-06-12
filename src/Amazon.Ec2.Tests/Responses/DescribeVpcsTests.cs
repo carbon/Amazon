@@ -48,6 +48,8 @@ namespace Amazon.Ec2.Tests
             Assert.False(vpc.IsDefault);
 
             Assert.Equal("2001:db8:1234:1a00::/56", vpc.Ipv6CidrBlockAssociations[0].Ipv6CidrBlock);
+            Assert.Equal("vpc-cidr-assoc-abababab", vpc.Ipv6CidrBlockAssociations[0].AssociationId);
+
         }
     }
 }

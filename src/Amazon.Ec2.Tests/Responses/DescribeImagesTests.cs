@@ -54,13 +54,22 @@ namespace Amazon.Ec2.Tests
             var image = response.Images[0];
 
             Assert.Equal(123456789012, image.ImageOwnerId);
+            Assert.Equal("amazon", image.ImageOwnerAlias);
             Assert.Equal("ami-1a2b3c4d", image.ImageId);
             Assert.Equal("i386", image.Architecture);
             Assert.Equal("aki-1a2b3c4d", image.KernelId);
             Assert.Equal("Image Description", image.Description);
             Assert.Equal("paravirtual", image.VirtualizationType);
+            Assert.Equal("ebs", image.RootDeviceType);
+            Assert.Equal("/dev/sda", image.RootDeviceName);
+
             Assert.Equal("xen", image.Hypervisor);
+
             Assert.True(image.IsPublic);
+
+
+
+            // Assert.True("/dev/sda1", image.blockDeviceMappings[0]);
         }
     }
 }

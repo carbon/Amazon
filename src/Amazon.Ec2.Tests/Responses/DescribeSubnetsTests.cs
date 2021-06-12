@@ -24,7 +24,7 @@ namespace Amazon.Ec2.Tests
              <state>ASSOCIATED</state>
           </ipv6CidrBlockState>
          </item>
-     </ipv6CidrBlockAssociationSet>
+      </ipv6CidrBlockAssociationSet>
       <availableIpAddressCount>251</availableIpAddressCount>
       <availabilityZone>us-east-1a</availabilityZone>
       <defaultForAz>false</defaultForAz>
@@ -54,7 +54,10 @@ namespace Amazon.Ec2.Tests
             var subnet = response.Subnets[0];
 
             Assert.Equal("subnet-9d4a7b6c", subnet.SubnetId);
-            Assert.Equal("vpc-1a2b3c4d", subnet.VpcId);
+            Assert.Equal("vpc-1a2b3c4d",    subnet.VpcId);
+            Assert.Equal("us-east-1a",      subnet.AvailabilityZone);
+
+            Assert.Equal(251, subnet.AvailableIpAddressCount);
         }
     }
 }
