@@ -33,6 +33,9 @@ namespace Amazon.Route53.Tests
             Assert.Equal("example.com.", recordSet.Name);
             Assert.Equal(ResourceRecordType.SOA, recordSet.Type);
             Assert.Equal(900, recordSet.TTL);
+
+            Assert.Single(recordSet.ResourceRecords);
+
             Assert.Equal("ns-2048.awsdns-64.net. hostmaster.awsdns.com. 1 7200 900 1209600 86400", recordSet.ResourceRecords[0].Value);
 
             Assert.True(result.IsTruncated);

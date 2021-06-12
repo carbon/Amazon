@@ -11,14 +11,11 @@ namespace Amazon.Route53.Tests
         public void Serialize()
         {
             var request = new ChangeResourceRecordSetsRequest(new[] {
-                new ResourceRecordSetChange
-                {
+                new ResourceRecordSetChange {
                     Action = ChangeAction.CREATE,
-                    ResourceRecordSet = new ResourceRecordSet
-                    {
+                    ResourceRecordSet = new ResourceRecordSet {
                         Type = ResourceRecordType.CNAME,
-                        AliasTarget = new AliasTarget
-                        {
+                        AliasTarget = new AliasTarget {
                             DNSName = "bananas"
                         },
                         GeoLocation = new GeoLocation("NA"),
@@ -62,21 +59,16 @@ namespace Amazon.Route53.Tests
         [Fact]
         public void Serialize2()
         {
-            var request = new ChangeResourceRecordSetsRequest(new[]
-                {
-                    new ResourceRecordSetChange
-                    {
-                        Action = ChangeAction.CREATE,
-
-                        ResourceRecordSet = new ResourceRecordSet
-                        {
-                            Failover = Failover.SECONDARY,
-                            TTL = 600,
-                            Type = ResourceRecordType.NS
-                        }
+            var request = new ChangeResourceRecordSetsRequest(new[] {
+                new ResourceRecordSetChange {
+                    Action = ChangeAction.CREATE,
+                    ResourceRecordSet = new ResourceRecordSet {
+                        Failover = Failover.SECONDARY,
+                        TTL = 600,
+                        Type = ResourceRecordType.NS
                     }
                 }
-            );
+            });
 
             byte[] bytes = Route53Serializer<ChangeResourceRecordSetsRequest>.SerializeToUtf8Bytes(request);
 
@@ -104,12 +96,9 @@ namespace Amazon.Route53.Tests
         public void Serialize3()
         {
             var request = new ChangeResourceRecordSetsRequest(new[] {
-                new ResourceRecordSetChange
-                {
+                new ResourceRecordSetChange {
                     Action = ChangeAction.CREATE,
-
-                    ResourceRecordSet = new ResourceRecordSet
-                    {
+                    ResourceRecordSet = new ResourceRecordSet {
                         Failover = Failover.SECONDARY,
                         TTL = 600,
                         Type = ResourceRecordType.NS

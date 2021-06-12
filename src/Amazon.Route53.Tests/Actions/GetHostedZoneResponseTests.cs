@@ -31,12 +31,14 @@ namespace Amazon.Route53.Tests
 
             var result = Route53Serializer<GetHostedZoneResponse>.DeserializeXml(text);
 
-            Assert.Equal("/hostedzone/Z1PA6795UKMFR9", result.HostedZone.Id);
-            Assert.Equal("example.com.", result.HostedZone.Name);
-            Assert.Equal("2017-03-01T11:22:14Z", result.HostedZone.CallerReference);
-            Assert.Equal(17, result.HostedZone.ResourceRecordSetCount);
-            Assert.Equal("This is my first hosted zone.", result.HostedZone.Config.Comment);
-            Assert.False(result.HostedZone.Config.PrivateZone);
+            var hostedZone = result.HostedZone;
+
+            Assert.Equal("/hostedzone/Z1PA6795UKMFR9",    hostedZone.Id);
+            Assert.Equal("example.com.",                  hostedZone.Name);
+            Assert.Equal("2017-03-01T11:22:14Z",          hostedZone.CallerReference);
+            Assert.Equal(17,                              hostedZone.ResourceRecordSetCount);
+            Assert.Equal("This is my first hosted zone.", hostedZone.Config.Comment);
+            Assert.False(hostedZone.Config.PrivateZone);
 
             Assert.Equal(4, result.DelegationSet.NameServers.Length);
             Assert.Equal("ns-2048.awsdns-64.com", result.DelegationSet.NameServers[0]);
