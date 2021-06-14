@@ -7,7 +7,7 @@ namespace Amazon.Helpers
     {
         // Based on: http://stackoverflow.com/questions/623104/byte-to-hex-string/3974535#3974535
 
-        public static string FromBytes(byte[] bytes)
+        public static string FromBytes(ReadOnlySpan<byte> bytes)
         {
             Span<char> buffer = bytes.Length < 100
                 ? stackalloc char[bytes.Length * 2]

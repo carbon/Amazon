@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 
 using Amazon.Metadata;
@@ -15,6 +16,10 @@ namespace Amazon
         public string Name { get; }
 
         public override string ToString() => Name;
+
+        private byte[]? utf8Bytes;
+
+        internal byte[] Utf8Name => utf8Bytes ??= Encoding.ASCII.GetBytes(Name); 
 
         #region Equality
 

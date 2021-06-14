@@ -20,12 +20,12 @@ namespace Amazon.Security
         private const string algorithmName = "AWS4-HMAC-SHA256";
         private const string isoDateTimeFormat = "yyyyMMddTHHmmssZ";  // ISO8601
 
-        public static string GetStringToSign(CredentialScope scope, HttpRequestMessage request)
+        public static string GetStringToSign(in CredentialScope scope, HttpRequestMessage request)
         {
             return GetStringToSign(scope, request, out _);
         }
 
-        public static string GetStringToSign(CredentialScope scope, HttpRequestMessage request, out List<string> signedHeaders)
+        public static string GetStringToSign(in CredentialScope scope, HttpRequestMessage request, out List<string> signedHeaders)
         {
             string timestamp = request.Headers.TryGetValues("x-amz-date", out IEnumerable<string>? dateHeaderValues)
                 ? dateHeaderValues.First()
@@ -40,7 +40,11 @@ namespace Amazon.Security
 
         public static string GetStringToSign(in CredentialScope scope, string timestamp, string canonicalRequest)
         {
-            string hashedCanonicalRequest = HexString.FromBytes(ComputeSHA256(canonicalRequest));
+            Span<byte> sha256 = stackalloc byte[32];
+
+            ComputeSHA256(canonicalRequest, sha256);
+
+            string hashedCanonicalRequest = HexString.FromBytes(sha256);
 
             using var output = new StringWriter();
 
@@ -165,17 +169,19 @@ namespace Amazon.Security
         }
 
         private static readonly byte[] aws4_request_bytes = Encoding.ASCII.GetBytes("aws4_request");
-
+    
         public static byte[] GetSigningKey(string secretAccessKey, in CredentialScope scope)
         {
             static byte[] GetBytes(string text) => Encoding.ASCII.GetBytes(text);
-           
-            byte[] kSecret    = GetBytes("AWS4" + secretAccessKey);
 
-            byte[] kDate      = HMACSHA256(kSecret,  GetBytes(scope.Date.ToString("yyyyMMdd", CultureInfo.InvariantCulture)));
-            byte[] kRegion    = HMACSHA256(kDate,    GetBytes(scope.Region.Name));
-            byte[] kService   = HMACSHA256(kRegion,  GetBytes(scope.Service.Name));
-            byte[] signingKey = HMACSHA256(kService, aws4_request_bytes);
+            byte[] kSecret = GetBytes("AWS4" + secretAccessKey);
+
+            byte[] signingKey = new byte[32];
+
+            TryHMACSHA256(kSecret,     GetBytes(scope.Date.ToString("yyyyMMdd", CultureInfo.InvariantCulture)), signingKey);
+            TryHMACSHA256(signingKey,  scope.Region.Utf8Name, signingKey);
+            TryHMACSHA256(signingKey,  scope.Service.Utf8Name, signingKey);
+            TryHMACSHA256(signingKey,  aws4_request_bytes, signingKey);
 
             return signingKey;
         }
@@ -299,7 +305,7 @@ namespace Amazon.Security
             return newUrlOuput.ToString();
         }
 
-        public static void Sign(IAwsCredential credential, CredentialScope scope, HttpRequestMessage request)
+        public static void Sign(IAwsCredential credential, in CredentialScope scope, HttpRequestMessage request)
         {
             if (credential is null)
             {
@@ -409,14 +415,14 @@ namespace Amazon.Security
 
             var splitter = new Splitter(query, '&');
 
-            while (splitter.TryGetNext(out ReadOnlySpan<char> part))
+            while (splitter.TryGetNext(out ReadOnlySpan<char> segment))
             {
-                if (part.Length == 0) continue;
+                if (segment.Length == 0) continue;
 
-                int equalIndex = part.IndexOf('=');
+                int equalIndex = segment.IndexOf('=');
 
-                string lhs  = equalIndex > -1 ? part.Slice(0, equalIndex).ToString() : part.ToString();
-                string? rhs = equalIndex > -1 ? part.Slice(equalIndex + 1).ToString() : null;
+                string lhs  = equalIndex > -1 ? segment.Slice(0, equalIndex).ToString() : segment.ToString();
+                string? rhs = equalIndex > -1 ? segment.Slice(equalIndex + 1).ToString() : null;
 
                 dictionary[WebUtility.UrlDecode(lhs)] = rhs != null
                     ? WebUtility.UrlDecode(rhs)
@@ -488,26 +494,35 @@ namespace Amazon.Security
 
         private const string emptySha256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
 
-        public static byte[] ComputeSHA256(string text)
+        public static void ComputeSHA256(string source, Span<byte> destination)
         {
-            return SHA256.HashData(Encoding.UTF8.GetBytes(text));
+            SHA256.HashData(Encoding.UTF8.GetBytes(source), destination);
         }
 
         public static string ComputeSHA256(HttpContent? content)
         {
-            return content?.ReadAsByteArrayAsync().Result is byte[] { Length: > 0 } data
-                ? HexString.FromBytes(SHA256.HashData(data))
-                : emptySha256;
+            if (content?.ReadAsByteArrayAsync().Result is byte[] { Length: > 0 } source)
+            {
+                Span<byte> sha256 = stackalloc byte[32];
+
+                SHA256.HashData(source, sha256);
+
+                return HexString.FromBytes(sha256);
+            }
+            else
+            {
+                return emptySha256;
+            }
         }
 
-        private static byte[] HMACSHA256(byte[] key, byte[] data)
+        private static bool TryHMACSHA256(byte[] key, ReadOnlySpan<byte> source, Span<byte> destination)
         {
-            using var hmac = new HMACSHA256(key);
+            using var hmac = new HMACSHA256(key); // 32 bytes
 
-            return hmac.ComputeHash(data);
+            return hmac.TryComputeHash(source, destination, out _);
         }
 
-#endregion
+        #endregion
     }
 }
 

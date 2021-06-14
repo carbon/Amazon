@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Amazon
 {
@@ -10,6 +11,10 @@ namespace Amazon
         }
 
         public string Name { get; }
+
+        private byte[]? utf8Bytes;
+
+        internal byte[] Utf8Name => utf8Bytes ??= Encoding.ASCII.GetBytes(Name);
 
         public override string ToString() => Name;
 
