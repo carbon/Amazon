@@ -47,7 +47,6 @@ namespace Amazon.S3
             return ListBucketResult.ParseXml(responseText);
         }
 
-
         public async Task<ListVersionsResult> ListObjectVersionsAsync(string bucketName, ListVersionsOptions options)
         {
             var request = new ListVersionsRequest(Host, bucketName, options);
@@ -103,7 +102,7 @@ namespace Amazon.S3
             }
 
             return new PutObjectResult(
-                eTag      : response.Headers!.ETag!.Tag!, 
+                eTag      : response.Headers.ETag!.Tag!, 
                 versionId : versionId
             );
         }
@@ -126,7 +125,7 @@ namespace Amazon.S3
 
             return new DeleteObjectResult(
                 deleteMarker   : response.Headers.GetValueOrDefault(S3HeaderNames.DeleteMarker),
-                requestCharged : response.Headers.GetValueOrDefault("x-amz-request-charged"),
+                requestCharged : response.Headers.GetValueOrDefault(S3HeaderNames.RequestCharged),
                 versionId      : response.Headers.GetValueOrDefault(S3HeaderNames.VersionId)
             );
         }
