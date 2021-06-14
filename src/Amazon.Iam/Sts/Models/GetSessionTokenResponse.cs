@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Xml.Linq;
 
 namespace Amazon.Sts.Models
@@ -9,19 +7,19 @@ namespace Amazon.Sts.Models
     {
         public static AwsSession Parse(string text)
         {
-            var rootEl = XElement.Parse(text);                              // GetSessionTokenResponse
+            XElement rootEl = XElement.Parse(text);                              // GetSessionTokenResponse
 
             var ns = rootEl.Name.Namespace;
 
-            var resultEl = rootEl.Element(ns + "GetSessionTokenResult");    // GetSessionTokenResult
-            var credentialsEl = resultEl.Element(ns + "Credentials");
+            XElement resultEl      = rootEl.Element(ns + "GetSessionTokenResult")!;    // GetSessionTokenResult
+            XElement credentialsEl = resultEl.Element(ns + "Credentials")!;
 
-            return new AwsSession {
-                SessionToken    = credentialsEl.Element(ns + "SessionToken").Value,
-                SecretAccessKey = credentialsEl.Element(ns + "SecretAccessKey").Value,
-                Expiration      = DateTime.Parse(credentialsEl.Element(ns + "Expiration").Value).ToUniversalTime(),
-                AccessKeyId     = credentialsEl.Element(ns + "AccessKeyId").Value,
-            };
+            return new AwsSession(
+                sessionToken    : credentialsEl.Element(ns + "SessionToken")!.Value,
+                secretAccessKey : credentialsEl.Element(ns + "SecretAccessKey")!.Value,
+                expiration      : DateTime.Parse(credentialsEl.Element(ns + "Expiration")!.Value).ToUniversalTime(),
+                accessKeyId     : credentialsEl.Element(ns + "AccessKeyId")!.Value
+            );
         }
     }
 }

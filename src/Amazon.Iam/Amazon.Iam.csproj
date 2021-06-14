@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Iam</AssemblyName>
-    <VersionPrefix>0.10.0</VersionPrefix>
-    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
-    <LangVersion>9</LangVersion>
+    <VersionPrefix>0.11.0</VersionPrefix>
+    <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     
@@ -13,7 +12,7 @@
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern .NET Standard library for the IAM service.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>aws;iam;netstandard</PackageTags>
+    <PackageTags>aws;iam</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 
