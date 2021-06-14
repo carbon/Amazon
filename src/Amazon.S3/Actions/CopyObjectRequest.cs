@@ -8,7 +8,7 @@ namespace Amazon.S3
         public CopyObjectRequest(string host, S3ObjectLocation source, S3ObjectLocation target)
             : base(HttpMethod.Put, host, target.BucketName, target.Key)
         {
-            Headers.Add("x-amz-copy-source", $"/{source.BucketName}/{source.Key}");
+            Headers.Add(S3HeaderNames.CopySource, $"/{source.BucketName}/{source.Key}");
 
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }
@@ -23,8 +23,8 @@ namespace Amazon.S3
                 {
                     switch (values.FirstOrDefault())
                     {
-                        case "COPY": return MetadataDirectiveValue.Copy;
-                        case "REPLACE": return MetadataDirectiveValue.Replace;
+                        case "COPY"    : return MetadataDirectiveValue.Copy;
+                        case "REPLACE" : return MetadataDirectiveValue.Replace;
                     }
                 }
 

@@ -12,25 +12,25 @@ namespace Amazon.S3
         public string? Delimiter
         {
             get => Get("delimiter"); 
-            set => Set("delimiter", value);
+            init => Set("delimiter", value);
         }
 
         public string? Prefix
         {
             get => Get("prefix");
-            set => Set("prefix", value);
+            init => Set("prefix", value);
         }
 
         public string? ContinuationToken
         {
             get => Get("continuation-token");
-            set => Set("continuation-token", value);
+            init => Set("continuation-token", value);
         }
 
         public string? StartAfter
         {
             get => Get("start-after");
-            set => Set("start-after", value);
+            init => Set("start-after", value);
         }
 
         /*
@@ -52,7 +52,7 @@ namespace Amazon.S3
 
                 return null;
             }
-            set
+            init
             {
                 Set("max-keys", value is int maxKeys ? maxKeys.ToString(CultureInfo.InvariantCulture) : null);
             }

@@ -12,5 +12,11 @@ namespace Amazon.S3
 
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }
+
+        // TODO
+        // x-amz-bypass-governance-retention
+        // x-amz-expected-bucket-owner
+        // x-amz-mfa
+        // x-amz-request-payer
     }
 }
