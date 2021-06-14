@@ -13,30 +13,31 @@ namespace Amazon
     {
         protected readonly HttpClient httpClient;
         
-        private readonly AwsService service;
+        private readonly AwsService _service;
         protected readonly IAwsCredential credential;
 
         public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential)
         {
-            this.service    = service    ?? throw new ArgumentNullException(nameof(service));
+            _service        = service    ?? throw new ArgumentNullException(nameof(service));
             Region          = region     ?? throw new ArgumentNullException(nameof(region));
             this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
 
             Endpoint = $"https://{service.Name}.{region.Name}.amazonaws.com/";
 
-            this.httpClient = new HttpClient(new HttpClientHandler {
-                AutomaticDecompression = DecompressionMethods.GZip
+            this.httpClient = new HttpClient(new SocketsHttpHandler {
+                AutomaticDecompression = DecompressionMethods.All,                
+                PooledConnectionIdleTimeout = TimeSpan.FromMinutes(1) // Default is 2 minutes
             })
             {
                 DefaultRequestHeaders = {
-                    { "User-Agent", "Carbon/2.6" }
+                    { "User-Agent", "Carbon/3.0" }
                 }
             };
         }
 
         public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient)
         {
-            this.service    = service    ?? throw new ArgumentNullException(nameof(service));
+            _service    = service        ?? throw new ArgumentNullException(nameof(service));
             Region          = region     ?? throw new ArgumentNullException(nameof(region));
             this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
@@ -59,7 +60,7 @@ namespace Amazon
                 throw await GetExceptionAsync(response).ConfigureAwait(false);
             }
 
-            return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         }
 
         protected async ValueTask SignAsync(HttpRequestMessage request)
@@ -98,7 +99,7 @@ namespace Amazon
                 throw new Exception("Headers.Date must be set");
             }
 
-            return new CredentialScope(httpRequest.Headers.Date.Value.UtcDateTime, Region, service);
+            return new CredentialScope(httpRequest.Headers.Date.Value.UtcDateTime, Region, _service);
         }
     }
 }
