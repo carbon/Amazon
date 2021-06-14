@@ -5,22 +5,22 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb
 {
-    public class BatchWriteItemResult // : IConsumedResources
+    public sealed class BatchWriteItemResult // : IConsumedResources
     {
-        // public ConsumedCapacity[] ConsumedCapacity { get; set; }
+        // public ConsumedCapacity[] ConsumedCapacity { get; init; }
 
-        public List<TableRequests> UnprocessedItems { get; set; }
+        public List<TableRequests> UnprocessedItems { get; init; }
 
         public static BatchWriteItemResult FromJsonElement(in JsonElement json)
         {
             var unprocessed = new List<TableRequests>();
 
             /*
-            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityNode)) // Array
+            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityEl)) // Array
             {
-                foreach (var item in (JsonArray)consumedCapacityNode)
+                foreach (var el in consumedCapacityNode.EnumerateArray())
                 {
-                    var unit = item.As<ConsumedCapacity>();
+                    var unit = ConsumedCapacity.FromJsonElement(el);
 
                     // TODO
                 }

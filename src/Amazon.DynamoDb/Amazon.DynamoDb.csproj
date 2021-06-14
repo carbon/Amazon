@@ -2,17 +2,17 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.DynamoDb</AssemblyName>
-    <VersionPrefix>0.20.2</VersionPrefix>
     <TargetFramework>net5.0</TargetFramework>
+    <Version>0.21.1</Version>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern asynchronous, high performance .NET Core library for Amazon DynamoDB.</Description>
+    <Description>A modern asynchronous, high performance .NET Core library for Amazon DynamoDB2.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>aws;dynamodb;netstandard</PackageTags>
+    <PackageTags>aws;dynamodb</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
 

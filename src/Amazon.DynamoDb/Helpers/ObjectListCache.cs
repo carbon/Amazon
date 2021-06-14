@@ -7,7 +7,7 @@ namespace System.Text
     internal static class ObjectListCache<T>
     {
         private static readonly List<List<T>> pool = new ();
-        private static object lockObject = new object();
+        private static object lockObject = new ();
 
         internal struct Handle : IDisposable
         {

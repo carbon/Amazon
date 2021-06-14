@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable IDE0090 // Use 'new(...)'
+
+using System;
 
 namespace Amazon.DynamoDb
 {
