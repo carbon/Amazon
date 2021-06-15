@@ -6,7 +6,7 @@ namespace Amazon.S3.Tests
 {
     public class GetPresignedUrlTests
     {
-        private static readonly AwsCredential credential = new AwsCredential("test", "test");
+        private static readonly AwsCredential credential = new ("test", "test");
 
         [Fact]
         public void Get()
@@ -35,7 +35,6 @@ namespace Amazon.S3.Tests
             );
 
             Assert.Equal("https://us-east-1.s3.aws.com/test/hi.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=test%2F20000101%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20000101T000000Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Signature=e0fa58692735cb96ec84db30112ea47b3f798955bc9803f461698ef670b69c3a", url);
-
         }
     }
 }
