@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace Amazon.Helpers
 {
@@ -29,7 +30,7 @@ namespace Amazon.Helpers
             return new string(buffer);
         }
 
-        public static void WriteHexStringTo(TextWriter writer, byte[] bytes)
+        public static void WriteHexStringTo(ref ValueStringBuilder output, byte[] bytes)
         {
             byte b;
 
@@ -37,11 +38,11 @@ namespace Amazon.Helpers
             {
                 b = ((byte)(bytes[bx] >> 4));
 
-                writer.Write((char)(b > 9 ? b + 0x37 + 0x20 : b + 0x30));
+                output.Append((char)(b > 9 ? b + 0x37 + 0x20 : b + 0x30));
 
                 b = ((byte)(bytes[bx] & 0x0F));
 
-                writer.Write((char)(b > 9 ? b + 0x37 + 0x20 : b + 0x30));
+                output.Append((char)(b > 9 ? b + 0x37 + 0x20 : b + 0x30));
             }
         }
     }
