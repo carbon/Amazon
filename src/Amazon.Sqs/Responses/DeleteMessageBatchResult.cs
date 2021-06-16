@@ -7,7 +7,7 @@ namespace Amazon.Sqs
     public sealed class DeleteMessageBatchResponse
     {
         [XmlElement("DeleteMessageBatchResult")]
-        public DeleteMessageBatchResult DeleteMessageBatchResult { get; set; }
+        public DeleteMessageBatchResult DeleteMessageBatchResult { get; init; }
 
         public static DeleteMessageBatchResponse Parse(string xmlText)
         {
@@ -18,28 +18,12 @@ namespace Amazon.Sqs
     public sealed class DeleteMessageBatchResult
     {
         [XmlElement("DeleteMessageBatchResultEntry")]
-        public DeleteMessageBatchResultEntry[] Items { get; set; }
+        public DeleteMessageBatchResultEntry[] Items { get; init; }
     }
 
-    public struct DeleteMessageBatchResultEntry
+    public readonly struct DeleteMessageBatchResultEntry
     {
         [XmlElement("Id")]
-        public string Id { get; set; }
+        public string Id { get; init; }
     }
 }
-
-/*
-<DeleteMessageBatchResponse>
-    <DeleteMessageBatchResult>
-        <DeleteMessageBatchResultEntry>
-            <Id>msg1</Id>
-        </DeleteMessageBatchResultEntry>
-        <DeleteMessageBatchResultEntry>
-            <Id>msg2</Id>
-        </DeleteMessageBatchResultEntry>
-    </DeleteMessageBatchResult>
-    <ResponseMetadata>
-        <RequestId>d6f86b7a-74d1-4439-b43f-196a1e29cd85</RequestId>
-    </ResponseMetadata>
-</DeleteMessageBatchResponse>
-*/

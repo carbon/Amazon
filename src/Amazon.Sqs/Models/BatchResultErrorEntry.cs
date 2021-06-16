@@ -4,12 +4,12 @@ namespace Amazon.Sqs.Models
 {
     public sealed class BatchResultErrorEntry
     {
-        public string Code { get; set; }
+        public string Code { get; init; }
 
-        public string Id { get; set; }
+        public string Id { get; init; }
 
-        public string Message { get; set; }
+        public string Message { get; init; }
 
-        public bool SenderFault { get; set; }
+        public bool SenderFault { get; init; }
     }
 }

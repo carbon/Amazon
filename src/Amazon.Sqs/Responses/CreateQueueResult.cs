@@ -7,7 +7,7 @@ namespace Amazon.Sqs.Models
     public sealed class CreateQueueResponse
     {
         [XmlElement("CreateQueueResult")]
-        public CreateQueueResult CreateQueueResult { get; set; }
+        public CreateQueueResult CreateQueueResult { get; init; }
 
         public static CreateQueueResponse Parse(string xmlText)
         {
@@ -18,7 +18,7 @@ namespace Amazon.Sqs.Models
     public sealed class CreateQueueResult
     {
         [XmlElement("QueueUrl")]
-        public string QueueUrl { get; set; }
+        public string QueueUrl { get; init; }
     }
 }
 

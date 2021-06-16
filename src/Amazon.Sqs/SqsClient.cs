@@ -110,7 +110,7 @@ namespace Amazon.Sqs
 
             string responseText = await SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 
-            var response = ReceiveMessageResponse.Parse(responseText);
+            var response = ReceiveMessageResponse.ParseXml(responseText);
 
             return response.ReceiveMessageResult.Items ?? Array.Empty<SqsMessage>();
         }

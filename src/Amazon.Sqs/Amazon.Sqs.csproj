@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sqs</AssemblyName>
-    <Version>0.20.4</Version>
+    <Version>0.21.0</Version>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -10,7 +10,7 @@
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple library for Amazon's Simple Queue Service.</Description>
+    <Description>A modern library for Amazon's Simple Queue Service.</Description>
     
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;sqs</PackageTags>

@@ -15,9 +15,9 @@ namespace Amazon.Sqs
     public sealed class SqsMessageAttribute
     {
         [XmlElement("Name")]
-        public string Name { get; set; }
+        public string Name { get; init; }
 
         [XmlElement("Value")]
-        public SqsMessageAttributeValue Value { get; set; }
+        public SqsMessageAttributeValue Value { get; init; }
     }
 }

@@ -4,12 +4,12 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sqs
 {
-    public class SqsSystemMessageAttribute
+    public readonly struct SqsSystemMessageAttribute
     {
         [XmlElement("Name")]
-        public string Name { get; set; }
+        public string Name { get; init; }
 
         [XmlElement("Value")]
-        public string Value { get; set; }
+        public string Value { get; init; }
     }
 }

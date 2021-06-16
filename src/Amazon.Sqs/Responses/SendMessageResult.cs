@@ -7,7 +7,7 @@ namespace Amazon.Sqs.Models
     public sealed class SendMessageResponse
     {
         [XmlElement("SendMessageResult")]
-        public SendMessageResult SendMessageResult { get; set; }
+        public SendMessageResult SendMessageResult { get; init; }
 
         public static SendMessageResponse Parse(string xmlText)
         {
@@ -18,13 +18,13 @@ namespace Amazon.Sqs.Models
     public sealed class SendMessageResult
     {
         [XmlElement("MD5OfMessageBody")]
-        public string MD5OfMessageBody { get; set; }
+        public string MD5OfMessageBody { get; init; }
 
         [XmlElement("MD5OfMessageAttributes")]
-        public string MD5OfMessageAttributes { get; set; }
+        public string MD5OfMessageAttributes { get; init; }
 
         [XmlElement("MessageId")]
-        public string MessageId { get; set; }
+        public string MessageId { get; init; }
     }
 }
 

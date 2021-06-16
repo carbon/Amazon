@@ -4,10 +4,10 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sqs
 {
-    public class SendMessageBatchResponse
+    public sealed class SendMessageBatchResponse
     {
         [XmlElement("SendMessageBatchResult")]
-        public SendMessageBatchResult SendMessageBatchResult { get; set; }
+        public SendMessageBatchResult SendMessageBatchResult { get; init; }
 
         public static SendMessageBatchResponse Parse(string xmlText)
         {

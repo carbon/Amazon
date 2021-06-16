@@ -7,7 +7,7 @@ namespace Amazon.Sqs.Models
     public sealed class ChangeMessageVisibilityResponse
     {
         [XmlElement("ResponseMetadata")]
-        public ResponseMetadata ResponseMetadata { get; set; }
+        public ResponseMetadata ResponseMetadata { get; init; }
     }
 }
 
