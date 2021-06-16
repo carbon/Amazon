@@ -25,11 +25,12 @@ namespace Amazon.S3
 
             // https://{bucket}.s3.amazonaws.com/{key}
 
-            var urlBuilder = new StringBuilder()
-                .Append("https://")
-                .Append(host)
-                .Append('/')
-                .Append(bucketName);
+            var urlBuilder = new ValueStringBuilder(120);
+
+            urlBuilder.Append("https://");
+            urlBuilder.Append(host);
+            urlBuilder.Append('/');
+            urlBuilder.Append(bucketName);
 
             // s3.dualstack.{region.Name}.amazonaws.com
 
@@ -66,31 +67,31 @@ namespace Amazon.S3
 
             BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
 
-            using var urlBuilder = new StringWriter();
+            var urlBuilder = new ValueStringBuilder(120);
 
-            urlBuilder.Write("https://");
-            urlBuilder.Write(host);
-            urlBuilder.Write('/');
-            urlBuilder.Write(bucketName);
+            urlBuilder.Append("https://");
+            urlBuilder.Append(host);
+            urlBuilder.Append('/');
+            urlBuilder.Append(bucketName);
 
             int i = 0;
 
             if (actionName != default)
             {
-                urlBuilder.Write(GetSegment(actionName));
+                urlBuilder.Append(GetSegment(actionName));
 
                 i++;
             }
 
             if (parameters.Count > 0)
             {
-                foreach (KeyValuePair<string, string> pair in parameters)
+                foreach (var (k, v) in parameters)
                 {
-                    urlBuilder.Write(i == 0 ? '?' : '&');
-                    urlBuilder.Write(pair.Key);
+                    urlBuilder.Append(i == 0 ? '?' : '&');
+                    urlBuilder.Append(k);
 
-                    urlBuilder.Write('=');
-                    UrlEncoder.Default.Encode(urlBuilder, pair.Value);
+                    urlBuilder.Append('=');
+                    urlBuilder.Append(UrlEncoder.Default.Encode(v));
 
                     i++;
                 }
@@ -99,7 +100,6 @@ namespace Amazon.S3
             RequestUri = new Uri(urlBuilder.ToString());
             Method = method;
         }
-
 
         private static string GetSegment(S3ActionName action)
         {

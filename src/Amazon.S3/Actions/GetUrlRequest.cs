@@ -37,7 +37,7 @@ namespace Amazon.S3
         {
             int length = 10 + Host.Length + BucketName.Length + Key.Length;
 
-            var sb = new StringBuilder(length);
+            var sb = new ValueStringBuilder(length);
 
             sb.Append("https://");
             sb.Append(Host);
