@@ -18,15 +18,20 @@ namespace Amazon.Ses
 
         public string[] To { get; set; }
 
-        public string[] BCC { get; set; }
+#nullable enable
+        public string[]? BCC { get; set; }
 
-        public string[] CC { get; set; }
+        public string[]? CC { get; set; }
+
+#nullable disable
 
         public SesContent Subject { get; set; }
 
-        public SesContent Html { get; set; }
+#nullable enable
 
-        public SesContent Text { get; set; }
+        public SesContent? Html { get; set; }
+
+        public SesContent? Text { get; set; }
 
         public Dictionary<string, string> ToParams()
         {
@@ -35,13 +40,29 @@ namespace Amazon.Ses
             };
 
             SetContent("Message.Subject",   Subject, dic);
-            SetContent("Message.Body.Html", Html, dic);
-            SetContent("Message.Body.Text", Text, dic);
+
+            if (Html is not null)
+            {
+                SetContent("Message.Body.Html", Html, dic);
+            }
+
+            if (Text is not null)
+            {
+                SetContent("Message.Body.Text", Text, dic);
+            }
 
             AddList(RecipientType.ReplyTo,  ReplyTo, dic);
             AddList(RecipientType.To,       To, dic);
-            AddList(RecipientType.Cc,       CC, dic);
-            AddList(RecipientType.Bcc,      BCC, dic);
+
+            if (CC is not null)
+            {
+                AddList(RecipientType.Cc, CC, dic);
+            }
+
+            if (BCC is not null)
+            {
+                AddList(RecipientType.Bcc, BCC, dic);
+            }
 
             return dic;
         }
@@ -51,9 +72,8 @@ namespace Amazon.Ses
             if (message is null) 
                 throw new ArgumentNullException(nameof(message));
 
-            var doc = new SesEmail
-            {
-                Source = SesHelper.EncodeMailAddress(message.From),
+            var doc = new SesEmail {
+                Source = SesHelper.EncodeMailAddress(message.From!),
                 To = message.To.Select(r => SesHelper.EncodeMailAddress(r)).ToArray(),
                 Subject = new SesContent(message.Subject, CharsetType.UTF8)
             };
@@ -122,7 +142,7 @@ namespace Amazon.Ses
             return addresses;
         }
 
-        private enum RecipientType : byte
+        private enum RecipientType
         {
             ReplyTo = 1,
             To      = 2,
@@ -136,7 +156,7 @@ namespace Amazon.Ses
 
             dic.Add(prefix + ".Data", content.Data);
 
-            if (content.Charset != null)
+            if (content.Charset is not null)
             {
                 dic.Add(prefix + ".Charset", content.Charset);
             }

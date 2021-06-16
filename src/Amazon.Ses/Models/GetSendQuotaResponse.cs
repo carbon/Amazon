@@ -8,7 +8,7 @@ namespace Amazon.Ses
     public sealed class GetSendQuotaResponse
     {
         [XmlElement]
-        public GetSendQuotaResult GetSendQuotaResult { get; set; }
+        public GetSendQuotaResult GetSendQuotaResult { get; init; }
 
         public static GetSendQuotaResponse Parse(string text)
         {
@@ -19,13 +19,13 @@ namespace Amazon.Ses
     public sealed class GetSendQuotaResult
     {
         [XmlElement]
-        public float SentLast24Hours { get; set; }
+        public float SentLast24Hours { get; init; }
 
         [XmlElement]
-        public float Max24HourSend { get; set; }
+        public float Max24HourSend { get; init; }
 
         [XmlElement]
-        public float MaxSendRate { get; set; }
+        public float MaxSendRate { get; init; }
     }
 }
 

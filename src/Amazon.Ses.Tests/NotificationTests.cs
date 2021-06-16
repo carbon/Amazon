@@ -6,7 +6,9 @@ namespace Amazon.Ses.Tests
 {
     public class NotificationTests
     {
-        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+        private static readonly JsonSerializerOptions jso = new () {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase 
+        };
 
         [Fact]
         public void ParseComplaint()

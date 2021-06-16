@@ -2,8 +2,8 @@
 
 namespace Amazon.Ses
 {
-    public struct SesRecipient
+    public readonly struct SesRecipient
     {
-        public string EmailAddress { get; set; }
+        public string EmailAddress { get; init; }
     }
 }

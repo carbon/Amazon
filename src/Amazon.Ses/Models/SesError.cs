@@ -4,15 +4,15 @@ using System.Xml.Serialization;
 
 namespace Amazon.Ses
 {
-    public class SesError
+    public sealed class SesError
     {
         [XmlElement]
-        public string Type { get; set; }
+        public string Type { get; init; }
 
         [XmlElement]
-        public string Code { get; set; }
+        public string Code { get; init; }
 
         [XmlElement]
-        public string Message { get; set; }
+        public string Message { get; init; }
     }
 }

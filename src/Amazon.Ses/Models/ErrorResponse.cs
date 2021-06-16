@@ -8,7 +8,7 @@ namespace Amazon.Ses
     public sealed class ErrorResponse
     {
         [XmlElement]
-        public SesError Error { get; set; }
+        public SesError Error { get; init; }
 
         public static ErrorResponse Parse(string text)
         {

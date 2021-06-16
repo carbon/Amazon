@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Amazon.Ses
 {
@@ -16,7 +15,7 @@ namespace Amazon.Ses
         public string Data { get; }
     }
 
-    public enum CharsetType : byte
+    public enum CharsetType
     {
         SevenBitASCII = 1,
         UTF8 = 2

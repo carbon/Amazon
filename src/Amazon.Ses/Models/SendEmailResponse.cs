@@ -8,7 +8,7 @@ namespace Amazon.Ses
     public sealed class SendEmailResponse
     {
         [XmlElement]
-        public SendEmailResult SendEmailResult { get; set; }
+        public SendEmailResult SendEmailResult { get; init; }
 
         public static SendEmailResponse Parse(string text)
         {
@@ -19,17 +19,6 @@ namespace Amazon.Ses
     public class SendEmailResult
     {
         [XmlElement]
-        public string MessageId { get; set; }
+        public string MessageId { get; init; }
     }
 }
-
-/*
-<SendEmailResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/">
-  <SendEmailResult>
-    <MessageId>00000131d51d2292-159ad6eb-077c-46e6-ad09-ae7c05925ed4-000000</MessageId>
-  </SendEmailResult>
-  <ResponseMetadata>
-    <RequestId>d5964849-c866-11e0-9beb-01a62d68c57f</RequestId>
-  </ResponseMetadata>
-</SendEmailResponse>
-*/

@@ -1,16 +1,15 @@
 ﻿#nullable disable
 
-
 namespace Amazon.Ses
 {
     public sealed class BouncedRecipient
     {
-        public string Status { get; set; }
+        public string Status { get; init; }
 
-        public string Action { get; set; }
+        public string Action { get; init; }
 
-        public string DiagnosticCode { get; set; }
+        public string DiagnosticCode { get; init; }
 
-        public string EmailAddress { get; set; }
+        public string EmailAddress { get; init; }
     }
 }
