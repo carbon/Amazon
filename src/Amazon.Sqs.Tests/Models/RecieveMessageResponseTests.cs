@@ -22,7 +22,7 @@ namespace Amazon.Sqs.Models.Tests
 				</ResponseMetadata>
 			</ReceiveMessageResponse>";
 
-			var result = ReceiveMessageResponse.Parse(xmlText);
+			var result = ReceiveMessageResponse.ParseXml(xmlText);
 
             var messages = result.ReceiveMessageResult.Items;
 
@@ -61,7 +61,7 @@ namespace Amazon.Sqs.Models.Tests
 				</ReceiveMessageResult>
 			</ReceiveMessageResponse>";
 
-            var messages = ReceiveMessageResponse.Parse(xmlText).ReceiveMessageResult.Items;
+            var messages = ReceiveMessageResponse.ParseXml(xmlText).ReceiveMessageResult.Items;
 
             Assert.Equal(2, messages.Length);
             Assert.Equal("a", messages[0].Body);
@@ -109,12 +109,18 @@ namespace Amazon.Sqs.Models.Tests
   </ResponseMetadata>
 </ReceiveMessageResponse>";
 
-            var messages = ReceiveMessageResponse.Parse(xmlText).ReceiveMessageResult.Items;
+            var messages = ReceiveMessageResponse.ParseXml(xmlText).ReceiveMessageResult.Items;
 
             var message = messages[0];
 
-            Assert.Equal("SenderId", message.Attributes[0].Name);
-            Assert.Equal("195004372649", message.Attributes[0].Value);
+            var a_0 = message.Attributes[0];
+            var a_1 = message.Attributes[1];
+
+            Assert.Equal("SenderId",     a_0.Name);
+            Assert.Equal("195004372649", a_0.Value);
+
+            Assert.Equal("SentTimestamp", a_1.Name);
+            Assert.Equal("1238099229000", a_1.Value);
 
             Assert.Equal(4, message.Attributes.Length);
         }
