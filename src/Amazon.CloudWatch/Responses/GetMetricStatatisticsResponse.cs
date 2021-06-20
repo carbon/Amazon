@@ -7,11 +7,11 @@ using static Amazon.CloudWatch.CloudWatchClient;
 
 namespace Amazon.CloudWatch
 {
-    public class GetMetricStatatisticsResponse
+    public sealed class GetMetricStatatisticsResponse
     {
         public string Label { get; set; }
 
-        public List<DataPoint> Datapoints = new List<DataPoint>();
+        public List<DataPoint> Datapoints { get; } = new ();
 
         public static GetMetricStatatisticsResponse Parse(string xmlText)
         {
