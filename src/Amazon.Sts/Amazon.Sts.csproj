@@ -2,18 +2,17 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sts</AssemblyName>
-    <Version>0.12.1</Version>
-    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
-    <LangVersion>9</LangVersion>
+    <Version>0.13.0</Version>
+    <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A .NET Standard library for Amazon's Security Token Service.</Description>
+    <Description>A modern library for Amazon's Security Token Service.</Description>
 
-    <PackageTags>aws sts async netstandard</PackageTags>
+    <PackageTags>aws;sts;async</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
   </PropertyGroup>
