@@ -23,16 +23,16 @@ namespace Amazon.Helpers
                 return string.Empty;
             }
 
-            return nvc.ToPostData(prefix: "?");
+            return nvc.ToPostData(prefix: '?');
         }
 
-        private static string ToPostData(this Dictionary<string, string> nvc, string? prefix)
+        private static string ToPostData(this Dictionary<string, string> nvc, char? prefix)
         {
-            var sb = new StringBuilder();
+            var sb = new ValueStringBuilder(nvc.Count * 24);
 
-            if (prefix != null)
+            if (prefix is not null)
             {
-                sb.Append(prefix);
+                sb.Append(prefix.Value);
             }
 
             foreach (string key in nvc.Keys)
