@@ -46,9 +46,12 @@ namespace Amazon.Security.Tests
         [Fact]
         public void CanonicizeQueryStrings()
         {
+            string a1000 = "".PadLeft(1000, 'a');
+
             Assert.Equal("a=",          SignerV4.CanonicalizeQueryString(new Uri("http://a.com/?a")));
             Assert.Equal("a=1",         SignerV4.CanonicalizeQueryString(new Uri("http://a.com/?a=1")));
             Assert.Equal("a=1&b=2&c=3", SignerV4.CanonicalizeQueryString(new Uri("http://a.com/?c=3&b=2&a=1")));
+            Assert.Equal("a=" + a1000,  SignerV4.CanonicalizeQueryString(new Uri("http://a.com/?a=" + a1000)));
         }
 
         [Fact]
@@ -129,6 +132,42 @@ x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
 x-amz-date:2012-02-17
 
 host;x-amz-content-sha256;x-amz-date
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), SignerV4.GetCanonicalRequest(request));
+        }
+
+
+        [Fact]
+        public void CanonlizeRequest_MixedCase_OutOfOrder()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://dynamodb.us-east-1.amazonaws.com/")
+            {
+                Headers = {
+                     { "x-amz-date", "2012-02-17" },
+                     { "X-AMZ-A", "out-of-order"},
+                     { "x-amz-content-sha256", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785" }
+                 }
+            };
+
+            request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
+            request.Headers.Host = "s3.us-east-1.amazonaws.com";
+
+            Assert.Equal(@"host:s3.us-east-1.amazonaws.com
+x-amz-a:out-of-order
+x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+x-amz-date:2012-02-17".Replace("\r", ""), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
+
+            Assert.Equal("host;x-amz-a;x-amz-content-sha256;x-amz-date", string.Join(';', signedHeaderNames));
+
+
+            Assert.Equal(@"POST
+/
+
+host:s3.us-east-1.amazonaws.com
+x-amz-a:out-of-order
+x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+x-amz-date:2012-02-17
+
+host;x-amz-a;x-amz-content-sha256;x-amz-date
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), SignerV4.GetCanonicalRequest(request));
         }
 
@@ -258,21 +297,18 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
         [Fact]
         public void CanonlizeRequestWithContentMD5()
         {
-            using var md5 = MD5.Create();
-
             string textContent = "hello";
 
             var request = new HttpRequestMessage(HttpMethod.Post, "http://s3.amazonaws.com/") {
                 Content = new StringContent(textContent, Encoding.UTF8) {
                     Headers = {
-                        ContentMD5 = md5.ComputeHash(Encoding.UTF8.GetBytes(textContent))
+                        ContentMD5 = MD5.HashData(Encoding.UTF8.GetBytes(textContent))
                     }
                 }
             };
 
             request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
             request.Headers.Host = "s3.amazonaws.com";
-
 
             Assert.Equal(@"content-md5:XUFAKrxLKna5cZ2REBfFkg==
 date:Fri, 17 Feb 2012 18:31:22 GMT
@@ -408,7 +444,7 @@ host:s3.amazonaws.com".Replace("\r", ""), SignerV4.CanonicalizeHeaders(request, 
             Assert.Equal("AWS4-HMAC-SHA256 Credential=/20120215/us-east-1/dynamodb/aws4_request,SignedHeaders=host;x-amz-date;x-amz-security-token;x-amz-target,Signature=d3b5f4611dbfe8ba5577df24f9f39ffe25a4133ec12cf088391747119ee4c30a", auth);
         }
 
-        private static readonly CredentialScope dynamoScope = new CredentialScope(
+        private static readonly CredentialScope dynamoScope = new (
             date      : new DateTime(2012, 02, 15),
             region    : AwsRegion.USEast1,
             service   : AwsService.DynamoDb
