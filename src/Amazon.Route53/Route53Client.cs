@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 using Amazon.Route53.Exceptions;
@@ -21,20 +21,20 @@ namespace Amazon.Route53
         {
              return await PostXmlAsync<ChangeResourceRecordSetsRequest, ChangeResourceRecordSetsResponse>(
                  path     : $"/hostedzone/{hostedZoneId}/rrset",
-                 instance : request
-            );
+                 data : request
+            ).ConfigureAwait(false);
         }
 
         public async Task<ListResourceRecordSetsResponse> ListResourceRecordSetsAsync(ListResourceRecordSetsRequest request)
         {
-            return await GetAsync<ListResourceRecordSetsResponse>($"/hostedzone/{request.Id}/rrset" + request.ToQueryString());
+            return await GetAsync<ListResourceRecordSetsResponse>($"/hostedzone/{request.Id}/rrset" + request.ToQueryString()).ConfigureAwait(false);
         }
 
         #region Geolocations
 
         public async Task<ListGeoLocationsResponse> ListGeoLocationsAsync(ListGeoLocationsRequest request)
         {
-            return await GetAsync<ListGeoLocationsResponse>($"/geolocations" + request.ToQueryString());
+            return await GetAsync<ListGeoLocationsResponse>($"/geolocations" + request.ToQueryString()).ConfigureAwait(false);
         }
 
         #endregion
@@ -46,24 +46,26 @@ namespace Amazon.Route53
         {
             string url = baseUrl + Version + path;
 
-            var responseText = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
+            var responseText = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url)).ConfigureAwait(false);
 
             return Route53Serializer<TResult>.DeserializeXml(responseText);
         }
 
-        private async Task<TResult> PostXmlAsync<T, TResult>(string path, T instance)
+        private async Task<TResult> PostXmlAsync<T, TResult>(string path, T data)
             where T: notnull
             where TResult: notnull
         {
             string url = baseUrl + Version + path;
 
-            var content = new ByteArrayContent(Route53Serializer<T>.SerializeToUtf8Bytes(instance));
+            var request = new HttpRequestMessage(HttpMethod.Post, url) {
+                Content = new ByteArrayContent(Route53Serializer<T>.SerializeToUtf8Bytes(data)) {
+                    Headers = {
+                        { "Content-Type", MediaTypeNames.Application.Xml }
+                    }
+                }
+            };
 
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/xml");
-          
-            string responseText = await SendAsync(new HttpRequestMessage(HttpMethod.Post, url) {
-                Content = content
-            });
+            string responseText = await SendAsync(request).ConfigureAwait(false);
 
             return Route53Serializer<TResult>.DeserializeXml(responseText);
         }
