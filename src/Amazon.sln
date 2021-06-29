@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Core", "Amazon.Core\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ses.Tests", "Amazon.Ses.Tests\Amazon.Ses.Tests.csproj", "{702D1DF5-F605-4117-8F2E-D1C979660172}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Kinisis.Tests", "Amazon.Kinisis.Tests\Amazon.Kinisis.Tests.csproj", "{19535B26-2740-4986-A194-CB52A428FFCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Kinesis.Tests", "Amazon.Kinisis.Tests\Amazon.Kinesis.Tests.csproj", "{19535B26-2740-4986-A194-CB52A428FFCF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Cloudwatch.Tests", "Amazon.Cloudwatch.Tests\Amazon.Cloudwatch.Tests.csproj", "{FBCD6BE3-74B4-46B8-A382-80532FB55427}"
 EndProject
@@ -79,7 +79,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Translate", "Amazon.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudFront", "Amazon.Cloudfront\Amazon.CloudFront.csproj", "{2680CCF6-497D-4AA5-B488-C13A2E06B43F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.DynamoDb.Management", "Amazon.DynamoDb.Management\Amazon.DynamoDb.Management.csproj", "{619C51F9-0853-4CFB-8C80-3E70819C8766}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.DynamoDb.Management", "Amazon.DynamoDb.Management\Amazon.DynamoDb.Management.csproj", "{619C51F9-0853-4CFB-8C80-3E70819C8766}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
