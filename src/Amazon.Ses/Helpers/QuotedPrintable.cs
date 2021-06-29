@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Net.Mail;
 using System.Text;
 
@@ -12,8 +13,8 @@ namespace Amazon.Ses
 
             string encoded = EncodeContent(text);
 
-            return (encoded != text)
-                ? $"=?utf-8?Q?{encoded}?="
+            return !encoded.Equals(text, StringComparison.Ordinal)
+                ? "=?utf-8?Q?" + encoded + "?="
                 : text;
         }
 
@@ -43,9 +44,11 @@ namespace Amazon.Ses
 
             var sb = new StringBuilder();
 
-            byte[] bytes = Encoding.UTF8.GetBytes(value);
+            byte[] buffer = ArrayPool<byte>.Shared.Rent(value.Length * 4);
 
-            foreach (byte v in bytes)
+            int byteCount = Encoding.UTF8.GetBytes(value, buffer);
+
+            foreach (byte v in buffer.AsSpan(0, byteCount))
             {
                 // The following are not required to be encoded:
                 // - Tab (ASCII 9)
@@ -59,10 +62,11 @@ namespace Amazon.Ses
                 else
                 {
                     sb.Append('=');
-
                     sb.Append(v.ToString("X2"));
                 }
             }
+
+            ArrayPool<byte>.Shared.Return(buffer);
 
             char lastChar = sb[^1];
 
