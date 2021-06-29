@@ -7,7 +7,7 @@ namespace Amazon.DynamoDb.Results.Tests
     public class BatchGetItemResultTests
     {
         [Fact]
-        public void BatchGetItemsResult1()
+        public void CanParse()
         {
             var text =
 @"{
@@ -100,6 +100,10 @@ namespace Amazon.DynamoDb.Results.Tests
             Assert.Equal("How many users can read a single data item at a time? Are there any limits?", thread_0.GetString("Message"));
 
             Assert.Equal(new[] { "Reads", "MultipleUsers" }, thread_0.Get("Tags").ToArray<string>());
+
+
+            Assert.Equal(2, result.ConsumedCapacity.Length);
+
         }
     }
 }

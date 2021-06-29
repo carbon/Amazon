@@ -96,8 +96,8 @@ namespace Amazon.DynamoDb.Expressions.Tests
             Assert.Equal("category = :v0 and price between :v1 and :v2", de.Text);
 
             Assert.Equal("shoes", de.AttributeValues[":v0"].Value);
-            Assert.Equal(5L, de.AttributeValues[":v1"].Value);
-            Assert.Equal(10L, de.AttributeValues[":v2"].Value);
+            Assert.Equal(5,       de.AttributeValues[":v1"].Value);
+            Assert.Equal(10,      de.AttributeValues[":v2"].Value);
         }
 
         [Fact]
