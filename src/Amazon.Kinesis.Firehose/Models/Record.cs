@@ -15,7 +15,7 @@ namespace Amazon.Kinesis.Firehose
 
             if (data.Length > MaxSize)
             {
-                throw new ArgumentException(nameof(data), "Must be less than 1MB");
+                throw new ArgumentException("Must be less than 1MB", nameof(data));
             }
 
             Data = data;

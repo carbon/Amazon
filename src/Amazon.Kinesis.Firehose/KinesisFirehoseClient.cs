@@ -55,9 +55,10 @@ namespace Amazon.Kinesis.Firehose
         #region Helpers
 
         private async Task<TResult> SendAsync<TRequest, TResult>(string action, TRequest request)
+            where TRequest : notnull
             where TResult : notnull, new()
         {
-            var httpRequest = GetRequestMessage<TRequest>(action, request);
+            var httpRequest = GetRequestMessage(action, request);
 
             var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
