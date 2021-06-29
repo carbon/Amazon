@@ -10,31 +10,31 @@ namespace Amazon.S3
         public string? Delimiter
         {
             get => Get("delimiter");
-            set => Set("delimiter", value);
+            init => Set("delimiter", value);
         }
 
         public string? Prefix
         {
             get => Get("prefix");
-            set => Set("prefix", value);
+            init => Set("prefix", value);
         }
 
         public string? VersionIdMarker
         {
             get => Get("version-id-marker");
-            set => Set("version-id-marker", value);
+            init => Set("version-id-marker", value);
         }
 
         public string? KeyMarker
         {
             get => Get("key-marker");
-            set => Set("key-marker", value);
+            init => Set("key-marker", value);
         }
         
         public string? EncodingType
         {
             get => Get("encoding-type");
-            set => Set("encoding-type", value);
+            init => Set("encoding-type", value);
         }
       
         public int? MaxKeys
@@ -48,12 +48,11 @@ namespace Amazon.S3
 
                 return null;
             }
-            set
+            init
             {
                 Set("max-keys", value is int maxKeys ? maxKeys.ToString(CultureInfo.InvariantCulture) : null);
             }
         }
-
 
         private string? Get(string name)
         {
