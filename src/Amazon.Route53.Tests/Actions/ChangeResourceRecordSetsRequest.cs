@@ -127,8 +127,6 @@ namespace Amazon.Route53.Tests
 
             byte[] bytes = Route53Serializer<ChangeResourceRecordSetsRequest>.SerializeToUtf8Bytes(request);
 
-            var text = Encoding.UTF8.GetString(bytes);
-
             Assert.Equal(@"﻿<?xml version=""1.0"" encoding=""utf-8""?>
 <ChangeResourceRecordSetsRequest xmlns=""https://route53.amazonaws.com/doc/2013-04-01/"">
   <ChangeBatch>
