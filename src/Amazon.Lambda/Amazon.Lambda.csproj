@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Lambda</AssemblyName>
-    <VersionPrefix>0.17.1</VersionPrefix>
-    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
-    <LangVersion>9</LangVersion>
+    <TargetFramework>net5.0</TargetFramework>
+    <Version>0.17.1</Version>
     <Nullable>enable</Nullable>
     
     <!-- Package Details-->
@@ -12,7 +11,7 @@
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern .NET Standard library for Amazon's Lambda service.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>aws;lambda;netstandard</PackageTags>
+    <PackageTags>aws;lambda</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

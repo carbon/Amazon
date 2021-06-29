@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Cloudfront</AssemblyName>
+    <TargetFramework>net5.0</TargetFramework>s
     <VersionPrefix>0.0.1</VersionPrefix>
-    <TargetFrameworks>net5.0</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
