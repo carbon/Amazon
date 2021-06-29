@@ -6,6 +6,7 @@
     <Version>0.21.3</Version>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>

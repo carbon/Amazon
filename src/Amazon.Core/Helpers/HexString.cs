@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace Amazon.Helpers
 {
@@ -7,6 +7,7 @@ namespace Amazon.Helpers
     {
         // Based on: http://stackoverflow.com/questions/623104/byte-to-hex-string/3974535#3974535
 
+        [SkipLocalsInit]
         public static string FromBytes(ReadOnlySpan<byte> bytes)
         {
             Span<char> buffer = bytes.Length < 100
@@ -27,22 +28,6 @@ namespace Amazon.Helpers
             }
 
             return new string(buffer);
-        }
-
-        public static void WriteHexStringTo(ref ValueStringBuilder output, byte[] bytes)
-        {
-            byte b;
-
-            for (int bx = 0, cx = 0; bx < bytes.Length; ++bx, ++cx)
-            {
-                b = ((byte)(bytes[bx] >> 4));
-
-                output.Append((char)(b > 9 ? b + 0x37 + 0x20 : b + 0x30));
-
-                b = ((byte)(bytes[bx] & 0x0F));
-
-                output.Append((char)(b > 9 ? b + 0x37 + 0x20 : b + 0x30));
-            }
         }
     }
 }

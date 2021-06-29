@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
 using System.Text;
 
 namespace Amazon.Security
@@ -22,17 +21,6 @@ namespace Amazon.Security
 
         // 20120228/us-east-1/iam/aws4_request
         public readonly override string ToString() => $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request";
-
-        internal readonly void AppendTo(StringBuilder output)
-        {
-            output.Append(Date.ToString("yyyyMMdd", CultureInfo.InvariantCulture));
-            output.Append('/');
-            output.Append(Region.Name);
-            output.Append('/');
-            output.Append(Service.Name);
-            output.Append('/');
-            output.Append("aws4_request");
-        }
 
         internal readonly void AppendTo(ref ValueStringBuilder output)
         {

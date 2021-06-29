@@ -1,11 +1,13 @@
 ﻿#pragma warning disable IDE0057 // Use range operator
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -37,8 +39,14 @@ namespace Amazon.Security
             );
         }
 
+        [SkipLocalsInit]
         public static string GetStringToSign(in CredentialScope scope, string timestamp, string canonicalRequest)
         {
+            if (canonicalRequest is null)
+            {
+                throw new ArgumentNullException(nameof(canonicalRequest));
+            }
+
             Span<byte> sha256 = stackalloc byte[32];
 
             SHA256.HashData(Encoding.UTF8.GetBytes(canonicalRequest), destination: sha256);
@@ -161,7 +169,7 @@ namespace Amazon.Security
 
         private static readonly byte[] aws4_request_bytes = Encoding.ASCII.GetBytes("aws4_request");
     
-        public static byte[] GetSigningKey(string secretAccessKey, in CredentialScope scope)
+        public static byte[] ComputeSigningKey(string secretAccessKey, in CredentialScope scope)
         {
             static byte[] GetBytes(string text) => Encoding.ASCII.GetBytes(text);
 
@@ -214,7 +222,7 @@ namespace Amazon.Security
         {
             const string signedHeaders = "host";
 
-            byte[] signingKey = GetSigningKey(credential.SecretAccessKey, scope);
+            byte[] signingKey = ComputeSigningKey(credential.SecretAccessKey, scope);
 
             SortedDictionary<string, string> queryParameters = !string.IsNullOrEmpty(requestUri.Query)
                 ? ParseQueryString(requestUri.Query)
@@ -227,7 +235,7 @@ namespace Amazon.Security
             queryParameters[SigningParameterNames.Date]       = timestamp;
             queryParameters[SigningParameterNames.Expires]    = expires.TotalSeconds.ToString(CultureInfo.InvariantCulture); // in seconds
 
-            if (credential.SecurityToken != null)
+            if (credential.SecurityToken is not null)
             {
                 queryParameters[SigningParameterNames.SecurityToken] = credential.SecurityToken;
             }
@@ -253,11 +261,8 @@ namespace Amazon.Security
                 canonicalRequest
             );
 
-            Signature signature = Signature.ComputeHmacSha256(
-                key  : signingKey,
-                data : Encoding.UTF8.GetBytes(stringToSign)
-            );
-
+            string signature = HMACSHA256_Hex(signingKey, stringToSign);
+                        
             /*
             queryString = Action=action
             queryString += &X-Amz-Algorithm=algorithm
@@ -291,7 +296,7 @@ namespace Amazon.Security
 
             urlBuilder.Append(SigningParameterNames.Signature);
             urlBuilder.Append('=');
-            HexString.WriteHexStringTo(ref urlBuilder, signature.Data);
+            urlBuilder.Append(signature);
 
             return urlBuilder.ToString();
         }
@@ -309,11 +314,11 @@ namespace Amazon.Security
                 request.Headers.Add("x-amz-content-sha256", ComputeSHA256(request.Content!));
             }
 
-            byte[] signingKey = GetSigningKey(credential.SecretAccessKey, scope);
+            byte[] signingKey = ComputeSigningKey(credential.SecretAccessKey, scope);
 
             string stringToSign = GetStringToSign(scope, request, out var signedHeaderNames);
 
-            Signature signature = Signature.ComputeHmacSha256(signingKey, Encoding.UTF8.GetBytes(stringToSign));
+            string signature = HMACSHA256_Hex(signingKey, stringToSign);
 
             var authWriter = new ValueStringBuilder(300);
 
@@ -327,8 +332,7 @@ namespace Amazon.Security
             authWriter.Append(",SignedHeaders=");
             authWriter.AppendJoin(';', signedHeaderNames);
             authWriter.Append(",Signature=");
-
-            HexString.WriteHexStringTo(ref authWriter, signature.Data);
+            authWriter.Append(signature);
 
             request.Headers.TryAddWithoutValidation("Authorization", authWriter.ToString());
         }
@@ -359,7 +363,7 @@ namespace Amazon.Security
 
         private static void WriteCanonicalizedQueryString(ref ValueStringBuilder output, Uri uri)
         {
-            if (string.IsNullOrEmpty(uri.Query) || uri.Query.Length == 1 && uri.Query[0] == '?')
+            if (string.IsNullOrEmpty(uri.Query) || uri.Query is "?")
             {
                 return;
             }
@@ -416,7 +420,7 @@ namespace Amazon.Security
                 string lhs  = equalIndex > -1 ? segment.Slice(0, equalIndex).ToString() : segment.ToString();
                 string? rhs = equalIndex > -1 ? segment.Slice(equalIndex + 1).ToString() : null;
 
-                dictionary[WebUtility.UrlDecode(lhs)] = rhs != null
+                dictionary[WebUtility.UrlDecode(lhs)] = rhs is not null
                     ? WebUtility.UrlDecode(rhs)
                     : string.Empty;
             }
@@ -426,7 +430,7 @@ namespace Amazon.Security
 
         public static string CanonicalizeHeaders(HttpRequestMessage request, out List<string> signedHeaderNames)
         {
-            var output = new ValueStringBuilder(200);
+            var output = new ValueStringBuilder(220);
 
             WriteCanonicalizedHeaders(ref output, request, out signedHeaderNames);
 
@@ -486,6 +490,7 @@ namespace Amazon.Security
 
         private const string emptySha256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
 
+        [SkipLocalsInit]
         public static string ComputeSHA256(HttpContent? content)
         {
             if (content?.ReadAsByteArrayAsync().Result is byte[] { Length: > 0 } source)
@@ -507,6 +512,33 @@ namespace Amazon.Security
             using var hmac = new HMACSHA256(key); // 32 bytes
 
             return hmac.TryComputeHash(source, destination, out _);
+        }
+
+        public static byte[] HMACSHA256(byte[] key, ReadOnlySpan<byte> data)
+        {
+            using var hmac = new HMACSHA256(key);
+
+            var hash = new byte[32];
+
+            hmac.TryComputeHash(data, hash, out _);
+
+            return hash;
+        }
+
+        [SkipLocalsInit]
+        private static string HMACSHA256_Hex(byte[] key, string data)
+        {
+            var dataBuffer = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetByteCount(data));
+
+            int encodedByteCount = Encoding.UTF8.GetBytes(data, dataBuffer);
+
+            Span<byte> hash = stackalloc byte[32];
+
+            TryHMACSHA256(key, dataBuffer.AsSpan(0, encodedByteCount), hash);
+
+            ArrayPool<byte>.Shared.Return(dataBuffer);
+
+            return HexString.FromBytes(hash);
         }
 
         #endregion
