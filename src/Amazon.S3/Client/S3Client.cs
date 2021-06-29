@@ -134,7 +134,7 @@ namespace Amazon.S3
         {
             var responseText = await SendAsync(request).ConfigureAwait(false);
             
-            return DeleteResult.Parse(responseText);
+            return DeleteResult.ParseXml(responseText);
         }
 
         public async Task<RestoreObjectResult> RestoreObjectAsync(RestoreObjectRequest request, CancellationToken cancelationToken = default)

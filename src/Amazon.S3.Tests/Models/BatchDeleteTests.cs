@@ -55,7 +55,7 @@ namespace Amazon.S3.Models.Tests
 	</Error>
 </DeleteResult>";
 
-            var result = DeleteResult.Parse(xml);
+            var result = DeleteResult.ParseXml(xml);
 
             Assert.Single(result.Deleted);
             Assert.Single(result.Errors);
@@ -77,7 +77,7 @@ namespace Amazon.S3.Models.Tests
 	</Deleted>
 </DeleteResult>";
 
-            var result = DeleteResult.Parse(xml);
+            var result = DeleteResult.ParseXml(xml);
 
             Assert.Equal(2, result.Deleted.Length);
             

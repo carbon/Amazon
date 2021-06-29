@@ -13,7 +13,7 @@ namespace Amazon.S3
 
         public bool HasErrors => Errors is { Length: > 0 };
 
-        public static DeleteResult Parse(string xmlText)
+        public static DeleteResult ParseXml(string xmlText)
         {
             return ResponseHelper<DeleteResult>.ParseXml(xmlText);
         }
