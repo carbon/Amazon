@@ -8,15 +8,15 @@ namespace Amazon.S3
     public sealed class DeleteMarkerEntry
     {
         [XmlElement("Key")]
-        public string Key { get; set; }
+        public string Key { get; init; }
 
         [XmlElement("IsLatest")]
-        public bool IsLatest { get; set; }
+        public bool IsLatest { get; init; }
 
         [XmlElement("LastModified", DataType = "dateTime")]
-        public DateTime LastModified { get; set; }
+        public DateTime LastModified { get; init; }
 
         [XmlElement("VersionId")]
-        public string VersionId { get; set; }
+        public string VersionId { get; init; }
     }
 }

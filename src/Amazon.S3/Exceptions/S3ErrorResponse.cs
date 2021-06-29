@@ -7,7 +7,7 @@ namespace Amazon.S3
     [XmlRoot("ErrorResponse", Namespace = "https://iam.amazonaws.com/doc/2010-05-08/")]
     public sealed class S3ErrorResponse
     {
-        public S3Error Error { get; set; }
+        public S3Error Error { get; init; }
     }
 }
 

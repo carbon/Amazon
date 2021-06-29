@@ -8,16 +8,19 @@ namespace Amazon.S3
     public sealed class S3Error
     {
         [XmlElement]
-        public string Code { get; set; }
+        public string Code { get; init; }
 
         [XmlElement]
-        public string Message { get; set; }
+        public string Message { get; init; }
 
         [XmlElement]
-        public string Resource { get; set; }
+        public string Resource { get; init; }
 
         [XmlElement]
-        public string RequestId { get; set; }
+        public string RequestId { get; init; }
+
+        [XmlElement]
+        public string HostId { get; init; }
 
         // RangeRequested
         // ActualObjectSize

@@ -10,13 +10,13 @@ namespace Amazon.S3
     public sealed class InitiateMultipartUploadResult : IUpload
     {
         [XmlElement]
-        public string Bucket { get; set; }
+        public string Bucket { get; init; }
 
         [XmlElement]
-        public string Key { get; set; }
+        public string Key { get; init; }
 
         [XmlElement]
-        public string UploadId { get; set; }
+        public string UploadId { get; init; }
 
         #region IUpload
 

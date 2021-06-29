@@ -9,10 +9,10 @@ namespace Amazon.S3
     public sealed class CopyObjectResult
     {
         [XmlElement(DataType = "dateTime")]
-        public DateTime LastModified { get; set; }
+        public DateTime LastModified { get; init; }
 
         [XmlElement]
-        public string ETag { get; set; }
+        public string ETag { get; init; }
 
         public static CopyObjectResult ParseXml(string xmlText)
         {

@@ -8,31 +8,31 @@ namespace Amazon.S3
     public sealed class ListVersionsResult
     {
         [XmlElement("Name")]
-        public string Name { get; set; }
+        public string Name { get; init; }
 
         [XmlElement("KeyMarker")]
-        public string KeyMarker { get; set; }
+        public string KeyMarker { get; init; }
 
         [XmlElement("MaxKeys")]
-        public int MaxKeys { get; set; }
+        public int MaxKeys { get; init; }
 
         [XmlElement("Prefix")]
-        public string Prefix { get; set; }
+        public string Prefix { get; init; }
 
         [XmlElement("VersionIdMarker")]
-        public string VersionIdMarker { get; set; }
+        public string VersionIdMarker { get; init; }
 
         [XmlElement("IsTruncated")]
-        public bool IsTruncated { get; set; }
+        public bool IsTruncated { get; init; }
 
 #nullable enable
         [XmlElement("DeleteMarker")]
-        public DeleteMarkerEntry[]? DeleteMarkers { get; set; }
+        public DeleteMarkerEntry[]? DeleteMarkers { get; init; }
 
 #nullable disable
 
         [XmlElement("Version")]
-        public ObjectVersion[] Versions { get; set; }
+        public ObjectVersion[] Versions { get; init; }
 
 		public static ListVersionsResult ParseXml(string xmlText)
         {

@@ -20,9 +20,9 @@ namespace Amazon.S3
             CompletionOption = HttpCompletionOption.ResponseContentRead;
         }
 
-        public GlacierJobTier Tier { get; set; } = GlacierJobTier.Standard;
+        public GlacierJobTier Tier { get; init; } = GlacierJobTier.Standard;
 
-        public int Days { get; set; } = 7; // Default to 7
+        public int Days { get; init; } = 7; // Default to 7
 
         public string GetXmlString() =>
 FormattableString.Invariant($@"<RestoreRequest>

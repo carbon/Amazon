@@ -8,16 +8,16 @@ namespace Amazon.S3
     public sealed class CompleteMultipartUploadResult
     {
         [XmlElement]
-        public string Location { get; set; }
+        public string Location { get; init; }
 
         [XmlElement]
-        public string Bucket { get; set; }
+        public string Bucket { get; init; }
 
         [XmlElement]
-        public string Key { get; set; }
+        public string Key { get; init; }
 
         [XmlElement]
-        public string ETag { get; set; }
+        public string ETag { get; init; }
 
         public static CompleteMultipartUploadResult ParseXml(string xmlText)
         {

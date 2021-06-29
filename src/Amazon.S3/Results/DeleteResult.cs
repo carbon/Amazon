@@ -6,10 +6,10 @@ namespace Amazon.S3
     public sealed class DeleteResult
     {        
         [XmlElement("Deleted")]
-        public BatchItem[]? Deleted { get; set; }
+        public BatchItem[]? Deleted { get; init; }
 
         [XmlElement("Error")]
-        public DeleteResultError[]? Errors { get; set; }
+        public DeleteResultError[]? Errors { get; init; }
 
         public bool HasErrors => Errors is { Length: > 0 };
 
@@ -31,19 +31,19 @@ namespace Amazon.S3
         }
 
         [XmlElement]
-        public string Key { get; set; }
+        public string Key { get; init; }
     }
 
     public sealed class DeleteResultError
     {
         [XmlElement]
-        public string Key { get; set; }
+        public string Key { get; init; }
 
         [XmlElement]
-        public string Code { get; set; }
+        public string Code { get; init; }
 
         [XmlElement]
-        public string Message { get; set; }
+        public string Message { get; init; }
     }
 }
 

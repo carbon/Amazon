@@ -8,25 +8,25 @@ namespace Amazon.S3
     public sealed class ListBucketResult
     {
         [XmlElement("Name")]
-        public string Name { get; set; }
+        public string Name { get; init; }
 
         [XmlElement("Marker")]
-        public string Marker { get; set; }
+        public string Marker { get; init; }
 
         [XmlElement("MaxKeys")]
-        public int MaxKeys { get; set; }
+        public int MaxKeys { get; init; }
 
         [XmlElement("Prefix")]
-        public string Prefix { get; set; }
+        public string Prefix { get; init; }
 
         [XmlElement("NextContinuationToken")]
-        public string NextContinuationToken { get; set; }
+        public string NextContinuationToken { get; init; }
 
         [XmlElement("IsTruncated")]
-        public bool IsTruncated { get; set; }
+        public bool IsTruncated { get; init; }
 
         [XmlElement("Contents")]
-        public ListBucketObject[] Items { get; set; }
+        public ListBucketObject[] Items { get; init; }
 
 		public static ListBucketResult ParseXml(string xmlText)
         {

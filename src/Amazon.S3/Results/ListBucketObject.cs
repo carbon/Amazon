@@ -14,22 +14,22 @@ namespace Amazon.S3
     public sealed class ListBucketObject : IBlob
     {
         [XmlElement("Key")]
-        public string Key { get; set; }
+        public string Key { get; init; }
 
         [XmlElement("LastModified", DataType = "dateTime")]
-        public DateTime LastModified { get; set; }
+        public DateTime LastModified { get; init; }
 
         [XmlElement("ETag")]
-        public string ETag { get; set; }
+        public string ETag { get; init; }
 
         [XmlElement("Size")]
-        public long Size { get; set; }
+        public long Size { get; init; }
 
         [XmlElement("StorageClass")]
-        public string StorageClass { get; set; }
+        public string StorageClass { get; init; }
 
         [XmlElement("Owner")]
-        public Owner Owner { get; set; }
+        public Owner Owner { get; init; }
 
         #region IBlob
 
