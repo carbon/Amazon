@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb.JsonConverters
 {
-    public static class AttributeCollectionJsonSerializer
+    internal static class AttributeCollectionJsonSerializer
     {
         public static AttributeCollection Read(ref Utf8JsonReader reader)
         {
