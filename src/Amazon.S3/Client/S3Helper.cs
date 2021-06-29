@@ -16,9 +16,12 @@ namespace Amazon.S3
 
         public static string GetPresignedUrl(GetPresignedUrlRequest request, IAwsCredential credential, DateTime now)
         {
-            HttpMethod method = request.Method is "GET"
-                ? HttpMethod.Get 
-                : new HttpMethod(request.Method);
+            HttpMethod method = request.Method switch
+            {
+                "GET"  => HttpMethod.Get,
+                "POST" => HttpMethod.Post,
+                _      => new HttpMethod(request.Method)
+            };
 
             // TODO: support version querystring
 

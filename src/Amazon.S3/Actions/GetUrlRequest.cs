@@ -35,9 +35,7 @@ namespace Amazon.S3
 
         internal string GetUrl()
         {
-            int length = 10 + Host.Length + BucketName.Length + Key.Length;
-
-            var sb = new ValueStringBuilder(length);
+            var sb = new ValueStringBuilder(240);
 
             sb.Append("https://");
             sb.Append(Host);
