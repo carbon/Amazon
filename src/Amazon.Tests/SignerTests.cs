@@ -63,7 +63,7 @@ namespace Amazon.Security.Tests
                 service : AwsService.Iam
             );
 
-            byte[] key = SignerV4.GetSigningKey("wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY", scope);
+            byte[] key = SignerV4.ComputeSigningKey("wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY", scope);
 
             Assert.Equal("f4780e2d9f65fa895f9c67b32ce1baf0b0d8a43505a000a1a9e090d414db404d", HexString.FromBytes(key));
         }
@@ -77,7 +77,7 @@ namespace Amazon.Security.Tests
                 service : AwsService.Iam
             );
 
-            byte[] key = SignerV4.GetSigningKey("wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLE123", scope);
+            byte[] key = SignerV4.ComputeSigningKey("wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLE123", scope);
             
             Assert.Equal("06e1b996efb4c3080f04cfd3fb6e8151b1b89ec05a3d0dc7886ecd08f7b2d240", HexString.FromBytes(key));
         }
