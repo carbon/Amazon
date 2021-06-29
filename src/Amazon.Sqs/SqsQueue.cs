@@ -93,7 +93,7 @@ namespace Amazon.Sqs
             // Max payload = 256KB (262,144 bytes)
             // Max batch size = 10
 
-            foreach (List<IMessage<string>> batch in messages.Batch(10))
+            foreach (List<IMessage<string>> batch in messages.Chunk(10))
             {
                 var bodyValues = new string[batch.Count];
 

@@ -114,7 +114,7 @@ namespace Amazon.Sqs
 
             // Convert the message payload to JSON
 
-            foreach (var batch in messages.Batch(10))
+            foreach (var batch in messages.Chunk(10))
             {
                 string[] messageBatch = new string[batch.Count];
 
