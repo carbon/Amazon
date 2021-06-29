@@ -12,6 +12,7 @@ namespace Amazon.S3.Actions.Tests
                 MaxKeys = 1000
             });
 
+            Assert.Equal("s3.amazon.com", request.RequestUri.Host);
             Assert.Equal("/bucket?versions&prefix=apples&max-keys=1000", request.RequestUri.PathAndQuery);
         }
     }

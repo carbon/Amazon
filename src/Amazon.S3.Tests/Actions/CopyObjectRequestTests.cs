@@ -26,9 +26,9 @@ namespace Amazon.S3.Actions.Tests
         public void CanSetMetdataDirective()
         {
             var request = new CopyObjectRequest(
-                host: "s3.amazon.com",
-                source: new S3ObjectLocation("sourceBucket", "video.mp4"),
-                target: new S3ObjectLocation("targetBucket", "video.mp4")
+                host   : "s3.amazon.com",
+                source : new S3ObjectLocation("sourceBucket", "video.mp4"),
+                target : new S3ObjectLocation("targetBucket", "video.mp4")
             );
 
             request.MetadataDirective = MetadataDirectiveValue.Replace;

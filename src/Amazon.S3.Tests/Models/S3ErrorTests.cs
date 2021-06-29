@@ -5,16 +5,18 @@ namespace Amazon.S3.Models.Tests
 	public class S3ErrorTests
 	{
 		[Fact]
-		public void ParseS3ErrorXml()
+		public void Deserialize_NoSuchKey()
 		{
 			string xmlText =
-@"<?xml version=""1.0"" encoding=""UTF-8""?>
+@"
+<?xml version=""1.0"" encoding=""UTF-8""?>
 <Error>
   <Code>NoSuchKey</Code>
   <Message>The resource you requested does not exist</Message>
   <Resource>/mybucket/myfoto.jpg</Resource> 
   <RequestId>4442587FB7D0A2F9</RequestId>
-</Error>";
+</Error>".Trim();
+
 			var error = S3Error.ParseXml(xmlText);
 
 			Assert.Equal("NoSuchKey", error.Code);
@@ -24,7 +26,7 @@ namespace Amazon.S3.Models.Tests
 		}
 
 		[Fact]
-		public void ParseS3Error2()
+		public void Deserialize_BadDigest()
 		{
 			string xmlText = 
 @"<Error>
@@ -44,15 +46,38 @@ namespace Amazon.S3.Models.Tests
 		}
 
 		[Fact]
-		public void ParseNonStandardWasabiError()
+		public void Deserialize_InvalidRange()
 		{
-			string xmlText = @"<ErrorResponse xmlns=""https://iam.amazonaws.com/doc/2010-05-08/"">
+			string xmlText =
+@"<?xml version=""1.0"" encoding=""UTF-8"" ?> 
 <Error>
-<Type>Sender</Type>
-<Code>TemporarilyUnavailable</Code>
-<Message>Maximum number of server active requests exceeded</Message>
-</Error>
-</ErrorResponse>";
+  <Code>InvalidRange</Code>
+  <Message>The requested range is not satisfiable</Message>
+  <RangeRequested>bytes=5242880-10485759</RangeRequested>
+  <ActualObjectSize>39240</ActualObjectSize>
+  <RequestId>QQRDR31F3YKX4763</RequestId>
+  <HostId>udJqRzAlgPy4n2ia+yPm3OmLVEeV8bLq4HK2ExFSRp2F34G0mZ+SuG6FoG9d53XSpPrIWbCxaQ8=</HostId>
+</Error>";
+			var error = S3Error.ParseXml(xmlText);
+
+			Assert.Equal("InvalidRange", error.Code);
+			Assert.Equal("The requested range is not satisfiable", error.Message);
+			Assert.Null(error.Resource);
+			Assert.Equal("QQRDR31F3YKX4763", error.RequestId);
+			Assert.Equal("udJqRzAlgPy4n2ia+yPm3OmLVEeV8bLq4HK2ExFSRp2F34G0mZ+SuG6FoG9d53XSpPrIWbCxaQ8=", error.HostId);
+		}
+
+		[Fact]
+		public void Deserialize_WasabiErrorResponse()
+		{
+			string xmlText = @"
+<ErrorResponse xmlns=""https://iam.amazonaws.com/doc/2010-05-08/"">
+  <Error>
+    <Type>Sender</Type>
+    <Code>TemporarilyUnavailable</Code>
+    <Message>Maximum number of server active requests exceeded</Message>
+  </Error>
+</ErrorResponse>".Trim();
 
 			var a = S3ResponseHelper<S3ErrorResponse>.ParseXml(xmlText);
 

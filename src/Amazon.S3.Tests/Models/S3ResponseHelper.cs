@@ -5,7 +5,7 @@ namespace Amazon.S3.Models.Tests
 {
     internal static class S3ResponseHelper<T>
 	{
-		private static readonly XmlSerializer serializer = new XmlSerializer(typeof(T));
+		private static readonly XmlSerializer serializer = new (typeof(T));
 
 		public static T ParseXml(string xml)
 		{
@@ -13,6 +13,5 @@ namespace Amazon.S3.Models.Tests
 
 			return (T)serializer.Deserialize(reader);
 		}
-
 	}
 }
