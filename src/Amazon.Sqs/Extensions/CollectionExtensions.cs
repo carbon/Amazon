@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// source: https://github.com/dotnet/runtime/blob/6fdb82aea93465ee046c7f903a96d5c2027a3ecd/src/libraries/System.Linq/src/System/Linq/Chunk.cs
+
+using System;
+using System.Collections.Generic;
 
 namespace Amazon
 {
@@ -6,23 +11,31 @@ namespace Amazon
 
     internal static class CollectionExtensions
     {
-        public static IEnumerable<List<T>> Chunk<T>(this IEnumerable<T> items, int size)
+        public static IEnumerable<TSource[]> Chunk<TSource>(this IEnumerable<TSource> source, int size)
         {
-            var batch = new List<T>(size);
-
-            foreach (T item in items)
+            using IEnumerator<TSource> e = source.GetEnumerator();
+            while (e.MoveNext())
             {
-                batch.Add(item);
+                TSource[] chunk = new TSource[size];
+                chunk[0] = e.Current;
 
-                if (batch.Count == size)
+                int i = 1;
+                for (; i < chunk.Length && e.MoveNext(); i++)
                 {
-                    yield return batch;
+                    chunk[i] = e.Current;
+                }
 
-                    batch = new List<T>(size);
+                if (i == chunk.Length)
+                {
+                    yield return chunk;
+                }
+                else
+                {
+                    Array.Resize(ref chunk, i);
+                    yield return chunk;
+                    yield break;
                 }
             }
-
-            if (batch.Count > 0) yield return batch;
         }
     }
 }

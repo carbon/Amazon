@@ -108,7 +108,10 @@ namespace Amazon.Sqs
 
         public async Task PutAsync(params IMessage<T>[] messages)
         {
-            if (messages is null) throw new ArgumentNullException(nameof(messages));
+            if (messages is null) 
+                throw new ArgumentNullException(nameof(messages));
+
+            if (messages.Length == 0) return;
 
             // Max payload = 256KB (262,144 bytes)
 
@@ -116,9 +119,9 @@ namespace Amazon.Sqs
 
             foreach (var batch in messages.Chunk(10))
             {
-                string[] messageBatch = new string[batch.Count];
+                var messageBatch = new string[batch.Length];
 
-                for (int i = 0; i < batch.Count; i++)
+                for (int i = 0; i < batch.Length; i++)
                 {
                     messageBatch[i] = JsonSerializer.Serialize(batch[i].Body, jso);
                 }
