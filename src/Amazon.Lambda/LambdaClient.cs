@@ -27,7 +27,7 @@ namespace Amazon.Lambda
             var url = $"{Endpoint}{Version}/functions/{message.FunctionName}/invocations";
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, url) {
-                Content = new StringContent(message.Payload, Encoding.UTF8)
+                Content = new StringContent(message.Payload!, Encoding.UTF8)
             };
 
             if (message.InvocationType != null)
