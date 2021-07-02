@@ -1,4 +1,6 @@
 ﻿
+using System.Net.Mail;
+
 using Xunit;
 
 namespace Amazon.Ses.Tests
@@ -15,8 +17,10 @@ namespace Amazon.Ses.Tests
 
         [Fact]
         public void Encode()
-        {   
-            Assert.Equal("=?utf-8?Q?=E2=98=BB?=", QuotedPrintable.Encode("☻"));
+        {
+            // 309ms per 1M
+
+            Assert.Equal("=?utf-8?Q?=E2=98=BB?=", QuotedPrintable.Encode("☻"));            
         }
 
         [Fact]
@@ -27,6 +31,17 @@ namespace Amazon.Ses.Tests
             var r = QuotedPrintable.Decode(q);
 
             Assert.Equal("นภัสสร", r);
+        }
+
+        [Fact]
+        public void DeodeUtf8Code_WithSpace()
+        {
+            var q = "=?utf-8?Q?\"Jo=C3=A3o\" <x@x>?=";
+
+            MailAddress.TryCreate(QuotedPrintable.Decode(q), out var r);
+
+            Assert.Equal("João", r.DisplayName);
+            Assert.Equal("x@x", r.Address);    
         }
     }
 }
