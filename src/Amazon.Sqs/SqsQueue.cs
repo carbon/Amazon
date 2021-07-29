@@ -11,8 +11,8 @@ namespace Amazon.Sqs
 {
     public sealed class SqsQueue : IMessageQueue<string>
     {
-        private readonly SqsClient client;
-        private readonly Uri url;
+        private readonly SqsClient _client;
+        private readonly Uri _url;
 
         private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
             initialDelay : TimeSpan.FromMilliseconds(500),
@@ -30,10 +30,9 @@ namespace Amazon.Sqs
 
             if (queueName is null)
                 throw new ArgumentNullException(nameof(queueName));
-            
-            this.url = new Uri($"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}");
 
-            this.client = new SqsClient(region, credential);
+            _client = new SqsClient(region, credential);
+            _url = new Uri($"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}");
         }
 
         public async Task<IReadOnlyList<IQueueMessage<string>>> PollAsync(
@@ -47,7 +46,7 @@ namespace Amazon.Sqs
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                SqsMessage[] result = await client.ReceiveMessagesAsync(url, request, cancellationToken).ConfigureAwait(false);
+                SqsMessage[] result = await _client.ReceiveMessagesAsync(_url, request, cancellationToken).ConfigureAwait(false);
 
                 if (result.Length > 0)
                 {
@@ -72,7 +71,7 @@ namespace Amazon.Sqs
             {
                 try
                 {
-                    return await client.ReceiveMessagesAsync(url, request, cancellationToken).ConfigureAwait(false);
+                    return await _client.ReceiveMessagesAsync(_url, request, cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception ex) when (retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
                 {
@@ -93,16 +92,16 @@ namespace Amazon.Sqs
             // Max payload = 256KB (262,144 bytes)
             // Max batch size = 10
 
-            foreach (List<IMessage<string>> batch in messages.Chunk(10))
+            foreach (IMessage<string>[] batch in messages.Chunk(10))
             {
-                var bodyValues = new string[batch.Count];
+                var bodyValues = new string[batch.Length];
 
-                for (int i = 0; i < batch.Count; i++)
+                for (int i = 0; i < batch.Length; i++)
                 {
                     bodyValues[i] = batch[i].Body;
                 }
 
-                await client.SendMessageBatchAsync(url, bodyValues).ConfigureAwait(false);
+                await _client.SendMessageBatchAsync(_url, bodyValues).ConfigureAwait(false);
             }
         }
 
@@ -110,7 +109,7 @@ namespace Amazon.Sqs
         {
             var request = new ChangeMessageVisibilityRequest(receiptHandle, visibilityTimeout);
 
-            await client.ChangeMessageVisibilityAsync(url, request).ConfigureAwait(false);
+            await _client.ChangeMessageVisibilityAsync(_url, request).ConfigureAwait(false);
         }
         
         public async Task DeleteAsync(params IQueueMessage<string>[] messages)
@@ -129,7 +128,7 @@ namespace Amazon.Sqs
             {
                 try
                 {
-                    await client.DeleteMessageBatchAsync(url, receiptHandles).ConfigureAwait(false);
+                    await _client.DeleteMessageBatchAsync(_url, receiptHandles).ConfigureAwait(false);
 
                     return;
                 }
