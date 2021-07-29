@@ -53,7 +53,7 @@ namespace Amazon.Security
 
             string hashedCanonicalRequest = HexString.FromBytes(sha256);
 
-            var output = new ValueStringBuilder(200);  // avg ~138
+            var output = new ValueStringBuilder(256);  // avg ~138
 
             output.Append(algorithmName)         ;  output.Append('\n'); // Algorithm + \n
             output.Append(timestamp)             ;  output.Append('\n'); // Timestamp + \n
@@ -92,12 +92,12 @@ namespace Amazon.Security
 
         public static string CanonicalizeUri(string path)
         {
-            if (path.Length == 1 && path[0] == '/')
+            if (path is "/")
             {
-                return "/";
+                return path;
             }
 
-            var output = new ValueStringBuilder(200);
+            var output = new ValueStringBuilder(256);
 
             WriteCanonicalizedUri(ref output, path);
 
@@ -106,7 +106,7 @@ namespace Amazon.Security
 
         private static void WriteCanonicalizedUri(ref ValueStringBuilder output, string path)
         {
-            if (path.Length == 1 && path[0] == '/')
+            if (path is "/")
             {
                 output.Append('/');
             }
@@ -139,7 +139,7 @@ namespace Amazon.Security
             string signedHeaders,
             string payloadHash)
         {
-            var sb = new ValueStringBuilder(300);
+            var sb = new ValueStringBuilder(512);
 
             sb.Append(method.Method);        sb.Append('\n'); // HTTPRequestMethod           + \n
             sb.Append(canonicalURI);         sb.Append('\n'); // CanonicalURI                + \n
@@ -272,7 +272,7 @@ namespace Amazon.Security
             queryString += &X-Amz-SignedHeaders=signed_headers
             */
 
-            var urlBuilder = new ValueStringBuilder(300);
+            var urlBuilder = new ValueStringBuilder(512);
 
             urlBuilder.Append("https://");
             urlBuilder.Append(requestUri.Host);
@@ -320,7 +320,7 @@ namespace Amazon.Security
 
             string signature = HMACSHA256_Hex(signingKey, stringToSign);
 
-            var authWriter = new ValueStringBuilder(300);
+            var authWriter = new ValueStringBuilder(512);
 
             // AWS4-HMAC-SHA256 Credential={0},SignedHeaders={0},Signature={0}
             // var auth = $"AWS4-HMAC-SHA256 Credential={credential.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
@@ -339,7 +339,7 @@ namespace Amazon.Security
 
         public static string CanonicalizeQueryString(Uri uri)
         {
-            if (string.IsNullOrEmpty(uri.Query) || uri.Query.Length == 1 && uri.Query[0] == '?')
+            if (string.IsNullOrEmpty(uri.Query) || uri.Query.Length == 1 && uri.Query[0] is '?')
             {
                 return string.Empty;
             }
@@ -349,12 +349,12 @@ namespace Amazon.Security
 
         private static string CanonicalizeQueryString(SortedDictionary<string, string> sortedValues)
         {
-            if (sortedValues.Count == 0)
+            if (sortedValues.Count is 0)
             {
                 return string.Empty;
             }
 
-            var output = new ValueStringBuilder(230);
+            var output = new ValueStringBuilder(256);
 
             WriteCanonicalQueryString(ref output, sortedValues);
 
@@ -397,14 +397,14 @@ namespace Amazon.Security
 
         private static SortedDictionary<string, string> ParseQueryString(ReadOnlySpan<char> query)
         {
-            if (query.Length == 0)
+            if (query.Length is 0)
             {
                 return new SortedDictionary<string, string>();
             }
 
             var dictionary = new SortedDictionary<string, string>();
 
-            if (query[0] == '?')
+            if (query[0] is '?')
             {
                 query = query[1..];
             }
@@ -430,7 +430,7 @@ namespace Amazon.Security
 
         public static string CanonicalizeHeaders(HttpRequestMessage request, out List<string> signedHeaderNames)
         {
-            var output = new ValueStringBuilder(220);
+            var output = new ValueStringBuilder(256);
 
             WriteCanonicalizedHeaders(ref output, request, out signedHeaderNames);
 
