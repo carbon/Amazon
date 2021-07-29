@@ -4,18 +4,18 @@ namespace Amazon.Scheduling
 {
     public sealed class ExponentialBackoffRetryPolicy : RetryPolicy
     {
-        private readonly TimeSpan initialDelay;
-        private readonly TimeSpan maxDelay;
-        private readonly int maxRetries;
+        private readonly TimeSpan _initialDelay;
+        private readonly TimeSpan _maxDelay;
+        private readonly int _maxRetries;
 
         public ExponentialBackoffRetryPolicy(TimeSpan initialDelay, TimeSpan maxDelay, int maxRetries = 3)
         {
-            this.initialDelay = initialDelay;
-            this.maxDelay   = maxDelay;
-            this.maxRetries = maxRetries;
+            _initialDelay = initialDelay;
+            _maxDelay   = maxDelay;
+            _maxRetries = maxRetries;
         }
 
-        public override bool ShouldRetry(int retryCount) => maxRetries == -1 || maxRetries > retryCount;
+        public override bool ShouldRetry(int retryCount) => _maxRetries == -1 || _maxRetries > retryCount;
 
         public override TimeSpan GetDelay(int retryCount)
         {
@@ -26,9 +26,9 @@ namespace Amazon.Scheduling
             // M = Max Delay
             // delay = MIN( R * T * F ^ N , M )
 
-            long exponentialDelay = (long)(initialDelay.Ticks * Math.Pow(retryCount, 2));
+            long exponentialDelay = (long)(_initialDelay.Ticks * Math.Pow(retryCount, 2));
 
-            long ticks = Math.Min(maxDelay.Ticks, exponentialDelay);
+            long ticks = Math.Min(_maxDelay.Ticks, exponentialDelay);
 
             return TimeSpan.FromTicks(ticks);
         }
