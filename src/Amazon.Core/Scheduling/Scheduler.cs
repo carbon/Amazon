@@ -41,3 +41,6 @@ namespace Amazon.Scheduling
         }
     }
 }
+
+// NOTES:
+// Used by Kinesis
