@@ -25,7 +25,7 @@ namespace Amazon.S3
 
             // https://{bucket}.s3.amazonaws.com/{key}
 
-            var urlBuilder = new ValueStringBuilder(120);
+            var urlBuilder = new ValueStringBuilder(128);
 
             urlBuilder.Append("https://");
             urlBuilder.Append(host);
@@ -67,7 +67,7 @@ namespace Amazon.S3
 
             BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
 
-            var urlBuilder = new ValueStringBuilder(120);
+            var urlBuilder = new ValueStringBuilder(128);
 
             urlBuilder.Append("https://");
             urlBuilder.Append(host);
@@ -87,7 +87,7 @@ namespace Amazon.S3
             {
                 foreach (var (k, v) in parameters)
                 {
-                    urlBuilder.Append(i == 0 ? '?' : '&');
+                    urlBuilder.Append(i is 0 ? '?' : '&');
                     urlBuilder.Append(k);
 
                     urlBuilder.Append('=');
