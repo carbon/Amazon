@@ -221,7 +221,7 @@ namespace Amazon.S3
                     target : new S3ObjectLocation(_bucketName, destinationKey)
                 );
 
-                if (metadata != null)
+                if (metadata is not null)
                 {
                     request.MetadataDirective = MetadataDirectiveValue.Replace;
 
@@ -267,7 +267,7 @@ namespace Amazon.S3
             Stream stream = await blob.OpenAsync().ConfigureAwait(false);
 
             if (stream.Length is 0)
-                throw new ArgumentException("May not be empty", nameof(blob));
+                throw new ArgumentException("Must be > 0 bytes", nameof(blob));
 
             // Ensure we're at the start of the stream
             if (stream.CanSeek && stream.Position != 0)
@@ -277,6 +277,10 @@ namespace Amazon.S3
             int retryCount = 0;
             Exception lastException;
 
+            byte[]? sha256Hash = stream.CanSeek
+                ? StreamHelper.ComputeSHA256(stream)
+                : null;
+            
             do
             {
                 if (retryCount > 0)
@@ -288,10 +292,10 @@ namespace Amazon.S3
 
                 var request = new PutObjectRequest(_client.Host, _bucketName, blob.Key);
 
-                request.SetStream(stream);
+                request.SetStream(stream, sha256Hash);
 
                 // Server side encrpytion
-                if (options.EncryptionKey != null)
+                if (options.EncryptionKey is not null)
                 {
                     request.SetCustomerEncryptionKey(new ServerSideEncryptionKey(options.EncryptionKey));
                 }
@@ -396,6 +400,10 @@ namespace Amazon.S3
             int retryCount = 0;
             Exception lastException;
 
+            byte[]? sha256Hash = stream.CanSeek
+                ? StreamHelper.ComputeSHA256(stream)
+                : null;
+
             do
             {
                 if (retryCount > 0)
@@ -411,7 +419,7 @@ namespace Amazon.S3
                     partNumber : number
                 );
 
-                request.SetStream(stream);
+                request.SetStream(stream, sha256Hash);
 
                 try
                 {

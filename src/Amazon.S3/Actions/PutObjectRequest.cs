@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text.Encodings.Web;
 
 using Amazon.Helpers;
@@ -17,33 +16,7 @@ namespace Amazon.S3
             if (key is null) throw new ArgumentNullException(nameof(key));
 
             CompletionOption = HttpCompletionOption.ResponseContentRead;
-        }
-
-        public void SetStream(Stream stream, string mediaType = "application/octet-stream")
-        {
-            if (stream is null)
-                throw new ArgumentNullException(nameof(stream));
-
-            if (stream.Length is 0)
-                throw new ArgumentException("Must not be empty", nameof(stream));
-
-            if (mediaType is null)
-                throw new ArgumentNullException(nameof(mediaType));
-
-            if (mediaType.Length is 0)
-                throw new ArgumentException("Required", nameof(mediaType));
-
-            Content = new StreamContent(stream);
-
-            Content.Headers.ContentLength = stream.Length;
-
-            Content.Headers.Add("Content-Type", mediaType);
-
-            Headers.Add("x-amz-content-sha256", stream.CanSeek 
-                ? HexString.FromBytes(ComputeSHA256(stream))
-                : "UNSIGNED-PAYLOAD"
-            );
-        }
+        }        
 
         internal void SetCustomerEncryptionKey(in ServerSideEncryptionKey key)
         {
@@ -92,6 +65,42 @@ namespace Amazon.S3
             Headers.Add(S3HeaderNames.Tagging, writer.ToString());
         }
 
+        public void SetStream(Stream stream, string mediaType = "application/octet-stream")
+        {
+            if (stream is null)
+                throw new ArgumentNullException(nameof(stream));
+
+            SetStream(stream, sha256Hash: stream.CanSeek ? StreamHelper.ComputeSHA256(stream) : null, mediaType);
+        }
+
+        public void SetStream(Stream stream, byte[]? sha256Hash, string mediaType = "application/octet-stream")
+        {
+            if (stream is null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (stream.Length is 0)
+                throw new ArgumentException("Must not be empty", nameof(stream));
+
+            if (mediaType is null)
+                throw new ArgumentNullException(nameof(mediaType));
+
+            if (mediaType.Length is 0)
+                throw new ArgumentException("Required", nameof(mediaType));
+
+            Content = new StreamContent(stream) {
+                Headers = {
+                    { "Content-Type", mediaType }
+                }
+            };
+
+            Content.Headers.ContentLength = stream.Length;
+
+            Headers.Add(S3HeaderNames.ContentSha256, sha256Hash is not null
+                ? HexString.FromBytes(sha256Hash)
+                : "UNSIGNED-PAYLOAD"
+            );
+        }
+
         public void SetStream(Stream stream, long length, string mediaType = "application/octet-stream")
         {
             if (stream is null)
@@ -104,14 +113,18 @@ namespace Amazon.S3
                 throw new ArgumentException("Must be greater than 0.", nameof(length));
             }
 
-            Content = new StreamContent(stream);
+            Content = new StreamContent(stream) {
+                Headers = {
+                    { "Content-Type", mediaType }
+                }
+            };
+
             Content.Headers.ContentLength = length;
-            Content.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
 
             // TODO: Support chunked streaming...
 
-            Headers.Add("x-amz-content-sha256", stream.CanSeek
-                ? HexString.FromBytes(ComputeSHA256(stream))
+            Headers.Add(S3HeaderNames.ContentSha256, stream.CanSeek
+                ? HexString.FromBytes(StreamHelper.ComputeSHA256(stream))
                 : "UNSIGNED-PAYLOAD");
         }
     }

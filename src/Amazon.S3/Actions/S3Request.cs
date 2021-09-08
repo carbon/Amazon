@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 
@@ -124,20 +122,5 @@ namespace Amazon.S3
         public string? ObjectName { get; }
 
         public HttpCompletionOption CompletionOption { get; set; } = HttpCompletionOption.ResponseHeadersRead;
-
-        #region Helpers
-
-        protected static byte[] ComputeSHA256(Stream stream)
-        {
-            using SHA256 sha = SHA256.Create();
-
-            byte[] data = sha.ComputeHash(stream);
-
-            stream.Position = 0;
-
-            return data;
-        }
-
-        #endregion
     }
 }
