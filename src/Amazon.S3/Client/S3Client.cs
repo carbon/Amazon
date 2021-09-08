@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -98,7 +99,7 @@ namespace Amazon.S3
 
             if (response.Headers.TryGetValues(S3HeaderNames.VersionId, out var xVersionId))
             {
-                versionId = xVersionId.ToString();
+                versionId = xVersionId.FirstOrDefault();
             }
 
             return new PutObjectResult(
