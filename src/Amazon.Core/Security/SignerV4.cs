@@ -175,12 +175,12 @@ namespace Amazon.Security
 
             byte[] kSecret = GetBytes("AWS4" + secretAccessKey);
 
-            byte[] signingKey = new byte[32];
+            var signingKey = new byte[32];
 
-            TryHMACSHA256(kSecret,     GetBytes(scope.Date.ToString("yyyyMMdd", CultureInfo.InvariantCulture)), signingKey);
-            TryHMACSHA256(signingKey,  scope.Region.Utf8Name, signingKey);
-            TryHMACSHA256(signingKey,  scope.Service.Utf8Name, signingKey);
-            TryHMACSHA256(signingKey,  aws4_request_bytes, signingKey);
+            HMACSHA256_HashData(kSecret,     GetBytes(scope.Date.ToString("yyyyMMdd", CultureInfo.InvariantCulture)), signingKey);
+            HMACSHA256_HashData(signingKey,  scope.Region.Utf8Name, signingKey);
+            HMACSHA256_HashData(signingKey,  scope.Service.Utf8Name, signingKey);
+            HMACSHA256_HashData(signingKey,  aws4_request_bytes, signingKey);
 
             return signingKey;
         }
@@ -507,22 +507,17 @@ namespace Amazon.Security
             }
         }
 
-        private static bool TryHMACSHA256(byte[] key, ReadOnlySpan<byte> source, Span<byte> destination)
+        private static int HMACSHA256_HashData(byte[] key, ReadOnlySpan<byte> source, Span<byte> destination)
         {
+#if NET5_0
             using var hmac = new HMACSHA256(key); // 32 bytes
 
-            return hmac.TryComputeHash(source, destination, out _);
-        }
+            hmac.TryComputeHash(source, destination, out _);
 
-        public static byte[] HMACSHA256(byte[] key, ReadOnlySpan<byte> data)
-        {
-            using var hmac = new HMACSHA256(key);
-
-            var hash = new byte[32];
-
-            hmac.TryComputeHash(data, hash, out _);
-
-            return hash;
+            return 32;
+#else
+            return HMACSHA256.HashData(key, source, destination);
+#endif
         }
 
         [SkipLocalsInit]
@@ -534,14 +529,14 @@ namespace Amazon.Security
 
             Span<byte> hash = stackalloc byte[32];
 
-            TryHMACSHA256(key, dataBuffer.AsSpan(0, encodedByteCount), hash);
+            HMACSHA256_HashData(key, dataBuffer.AsSpan(0, encodedByteCount), hash);
 
             ArrayPool<byte>.Shared.Return(dataBuffer);
 
             return HexString.FromBytes(hash);
         }
 
-        #endregion
+#endregion
     }
 }
 
