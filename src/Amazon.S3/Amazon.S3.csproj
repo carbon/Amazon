@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.S3</AssemblyName>
     <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
-    <Version>0.22.0</Version>
+    <Version>0.22.1</Version>
     <Nullable>enable</Nullable>
 
     <!-- Package Details-->
