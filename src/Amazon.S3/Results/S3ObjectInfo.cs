@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -30,7 +31,7 @@ namespace Amazon.S3
             long contentLength, 
             DateTime modified, 
             ETag eTag, 
-            IReadOnlyDictionary<string, string> properties)
+            Dictionary<string, string> properties)
         {
             BucketName    = bucketName;
             Key           = key;
@@ -78,22 +79,14 @@ namespace Amazon.S3
                 eTag = new ETag(et.Tag);
             }
 
-            var properties = new Dictionary<string, string>(14);
+            var properties = response.GetProperties();
 
-            foreach (var header in response.Headers)
-            {
-                properties.Add(header.Key, string.Join(';', header.Value));
-            }
-
-            foreach (var header in response.Content.Headers)
-            {
-                properties.Add(header.Key, string.Join(';', header.Value));
-            }
+            var contentLength = long.Parse(properties["Content-Length"], NumberStyles.None, CultureInfo.InvariantCulture);
 
             return new S3ObjectInfo(
                 bucketName    : bucketName,
                 key           : key,
-                contentLength : response.Content.Headers.ContentLength!.Value,            // Content-Length
+                contentLength : contentLength,
                 modified      : response.Content.Headers.LastModified!.Value.UtcDateTime, // Last-Modified
                 eTag          : eTag,
                 properties    : properties
