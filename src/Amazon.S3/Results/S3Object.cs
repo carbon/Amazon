@@ -14,9 +14,10 @@ namespace Amazon.S3
 {
     public sealed class S3Object : IBlobResult, IDisposable
     {
-        private Stream? stream;
-        private readonly Dictionary<string, string> properties = new();
-        private HttpResponseMessage? response;
+        private Stream? _stream;
+        private readonly Dictionary<string, string> _properties;
+        private HttpResponseMessage? _response;
+        private long? contentLength;
 
         public S3Object(string name, HttpResponseMessage response)
         {
@@ -24,15 +25,7 @@ namespace Amazon.S3
 
             Key = name ?? throw new ArgumentNullException(nameof(name));
 
-            foreach (var header in response.Headers)
-            {
-                properties.Add(header.Key, string.Join(';', header.Value));
-            }
-
-            foreach (var header in response.Content.Headers)
-            {
-                properties.Add(header.Key, string.Join(';', header.Value));
-            }
+            _properties = response.GetProperties();
 
             StatusCode = response.StatusCode;
 
@@ -43,7 +36,7 @@ namespace Amazon.S3
                 return;
             }
 
-            this.response = response;
+            _response = response;
         }
 
         #region Header Aliases
@@ -52,88 +45,71 @@ namespace Amazon.S3
 
         public HttpStatusCode StatusCode { get; }
 
-        public string ContentType
-        {
-            get => properties["Content-Type"];
-            set => properties["Content-Type"] = value;
-        }
+        public string ContentType => _properties["Content-Type"];
 
         public long ContentLength
         {
-            get => long.Parse(properties["Content-Length"], CultureInfo.InvariantCulture);
-            set => properties["Content-Length"] = value.ToString();
+            get => contentLength ??= long.Parse(_properties["Content-Length"], NumberStyles.None, CultureInfo.InvariantCulture);
         }
 
-        public DateTimeOffset? LastModified
+        public DateTimeOffset LastModified
         {
-           get => DateTime.ParseExact(properties["Last-Modified"], "r", CultureInfo.InvariantCulture).ToUniversalTime();
+           get => DateTimeOffset.ParseExact(_properties["Last-Modified"], "r", CultureInfo.InvariantCulture);
         }
 
         public CacheControlHeaderValue? CacheControl
         {
-            get
-            {
-                return properties.TryGetValue("Cache-Control", out var cacheControl) 
-                    ? CacheControlHeaderValue.Parse(cacheControl) 
-                    : null;
-            }
-            set
-            {
-                if (value is not null)
-                {
-                    properties["Cache-Control"] = value.ToString();
-                }
-                else
-                {
-                    properties.Remove("Cache-Control");
-                }
-            }
+            get => _properties.TryGetValue("Cache-Control", out var cacheControl) 
+                ? CacheControlHeaderValue.Parse(cacheControl) 
+                : null;            
         }
 
         public ContentRangeHeaderValue? ContentRange
         {
-            get => properties.TryGetValue("Content-Range", out var contentRange) ? ContentRangeHeaderValue.Parse(contentRange) : null;
+            get => _properties.TryGetValue("Content-Range", out var contentRange) 
+                ? ContentRangeHeaderValue.Parse(contentRange) 
+                : null;
         }
 
         #endregion
 
         public async ValueTask<Stream> OpenAsync()
         {
-            if (response is null) throw new ObjectDisposedException(nameof(S3Object));
+            if (_response is null) throw new ObjectDisposedException(nameof(S3Object));
 
-            return stream ??= await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return _stream ??= await _response.Content.ReadAsStreamAsync().ConfigureAwait(false);
         }
 
         public async Task CopyToAsync(Stream output)
         {
-            if (response is null) throw new ObjectDisposedException(nameof(S3Object));
+            if (_response is null) throw new ObjectDisposedException(nameof(S3Object));
 
-            await response.Content.CopyToAsync(output).ConfigureAwait(false);
+            await _response.Content.CopyToAsync(output).ConfigureAwait(false);
         }
 
         public async Task CopyToAsync(Stream output, CancellationToken cancellationToken)
         {
-            if (response is null) throw new ObjectDisposedException(nameof(S3Object));
+            if (_response is null) throw new ObjectDisposedException(nameof(S3Object));
 
-            await response.Content.CopyToAsync(output, cancellationToken).ConfigureAwait(false);
+            await _response.Content.CopyToAsync(output, cancellationToken).ConfigureAwait(false);
         }
 
         #region IBlob
 
         long IBlob.Size => ContentLength;
 
-        DateTime IBlob.Modified => (LastModified ?? DateTimeOffset.MinValue).UtcDateTime;
+        DateTime IBlob.Modified => LastModified.UtcDateTime;
 
-        public IReadOnlyDictionary<string, string> Properties => properties;
+        public IReadOnlyDictionary<string, string> Properties => _properties;
 
         #endregion
 
         public void Dispose()
         {
-            stream?.Dispose();
-            response?.Dispose();
+            _stream?.Dispose();
+            _response?.Dispose();
 
-            response = null;
+            _response = null;
         }
     }
 }
