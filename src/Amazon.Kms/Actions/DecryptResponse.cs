@@ -1,13 +1,12 @@
 ﻿#nullable disable
 
-namespace Amazon.Kms
-{
-    public sealed class DecryptResponse : KmsResponse
-    {
-        public string KeyId { get; init; }
+namespace Amazon.Kms;
 
-        public byte[] Plaintext { get; init; }
-    }
+public sealed class DecryptResponse : KmsResponse
+{
+    public string KeyId { get; init; }
+
+    public byte[] Plaintext { get; init; }
 }
 
 /*

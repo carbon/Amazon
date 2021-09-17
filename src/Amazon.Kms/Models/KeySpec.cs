@@ -1,11 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Amazon.Kms
+namespace Amazon.Kms;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum KeySpec
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum KeySpec
-    {
-        AES_256 = 1,
-        AES_128 = 2
-    }
+    AES_256 = 1,
+    AES_128 = 2
 }

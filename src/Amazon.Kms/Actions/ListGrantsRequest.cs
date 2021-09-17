@@ -2,23 +2,22 @@
 
 using System;
 
-namespace Amazon.Kms
+namespace Amazon.Kms;
+
+public sealed class ListGrantsRequest : KmsRequest
 {
-    public sealed class ListGrantsRequest : KmsRequest
+    public ListGrantsRequest() { }
+
+    public ListGrantsRequest(string keyId)
     {
-        public ListGrantsRequest() { }
+        KeyId = keyId ?? throw new ArgumentNullException(nameof(keyId));
+    }
 
-        public ListGrantsRequest(string keyId)
-        {
-            KeyId = keyId ?? throw new ArgumentNullException(nameof(keyId));
-        }
+    public string KeyId { get; init; }
 
-        public string KeyId { get; init; }
-
-        public int Limit { get; init; }
+    public int Limit { get; init; }
 
 #nullable enable
 
-        public string? Marker { get; init; }
-    }
+    public string? Marker { get; init; }
 }

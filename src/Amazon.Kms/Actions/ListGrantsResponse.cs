@@ -2,14 +2,13 @@
 
 using System.Collections.Generic;
 
-namespace Amazon.Kms
+namespace Amazon.Kms;
+
+public sealed class ListGrantsResponse : KmsResponse
 {
-    public sealed class ListGrantsResponse : KmsResponse
-    {
-        public string NextMarker { get; init; }
+    public string NextMarker { get; init; }
 
-        public bool Truncated { get; init; }
+    public bool Truncated { get; init; }
 
-        public List<Grant> Grants { get; init; }
-    }
+    public List<Grant> Grants { get; init; }
 }

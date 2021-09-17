@@ -1,63 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Amazon.Kms
+namespace Amazon.Kms;
+
+public sealed class EncryptRequest : KmsRequest
 {
-    public sealed class EncryptRequest : KmsRequest
+    public EncryptRequest(
+        string keyId,
+        byte[] plaintext,
+        IReadOnlyDictionary<string, string>? context = null,
+        string[]? grantTokens = null)
     {
-        public EncryptRequest(
-            string keyId,
-            byte[] plaintext, 
-            IReadOnlyDictionary<string, string>? context = null, 
-            string[]? grantTokens = null)
+        if (keyId is null)
         {
-            if (keyId is null)
-            {
-                throw new ArgumentNullException(nameof(plaintext));
-            }
-
-            if (keyId.Length == 0)
-            {
-                throw new ArgumentNullException(nameof(keyId), "May not be empty");
-            }
-
-            if (plaintext is null)
-            {
-                throw new ArgumentNullException(nameof(plaintext));
-            }
-
-            if (plaintext.Length > 1024 * 4)
-            {
-                throw new ArgumentException("Must be less than 4KB", nameof(plaintext));
-            }
-
-            KeyId = keyId;
-            Plaintext = plaintext;
-            EncryptionContext = context;
-            GrantTokens = grantTokens;
+            throw new ArgumentNullException(nameof(plaintext));
         }
 
-        /// <summary>
-        /// An encryption context is a key/value pair that you can pass to 
-        /// AWS KMS when you call the Encrypt function.
-        /// It is integrity checked but not stored as part of the ciphertext 
-        /// that is returned. Although the encryption context is not literally 
-        /// included in the ciphertext, it is cryptographically bound to the 
-        /// ciphertext during encryption and must be passed again when you 
-        /// call the Decrypt function. 
-        /// Decryption will only succeed if the value you pass for decryption
-        /// is exactly the same as the value you passed during encryption
-        /// and the ciphertext has not been tampered with. 
-        /// The encryption context is logged by using CloudTrail.
-        /// </summary>
-        public IReadOnlyDictionary<string, string>? EncryptionContext { get; }
+        if (keyId.Length == 0)
+        {
+            throw new ArgumentNullException(nameof(keyId), "May not be empty");
+        }
 
-        public string[]? GrantTokens { get; }
+        if (plaintext is null)
+        {
+            throw new ArgumentNullException(nameof(plaintext));
+        }
 
-        public string KeyId { get; }
+        if (plaintext.Length > 1024 * 4)
+        {
+            throw new ArgumentException("Must be less than 4KB", nameof(plaintext));
+        }
 
-        public byte[] Plaintext { get; }
+        KeyId = keyId;
+        Plaintext = plaintext;
+        EncryptionContext = context;
+        GrantTokens = grantTokens;
     }
+
+    /// <summary>
+    /// An encryption context is a key/value pair that you can pass to 
+    /// AWS KMS when you call the Encrypt function.
+    /// It is integrity checked but not stored as part of the ciphertext 
+    /// that is returned. Although the encryption context is not literally 
+    /// included in the ciphertext, it is cryptographically bound to the 
+    /// ciphertext during encryption and must be passed again when you 
+    /// call the Decrypt function. 
+    /// Decryption will only succeed if the value you pass for decryption
+    /// is exactly the same as the value you passed during encryption
+    /// and the ciphertext has not been tampered with. 
+    /// The encryption context is logged by using CloudTrail.
+    /// </summary>
+    public IReadOnlyDictionary<string, string>? EncryptionContext { get; }
+
+    public string[]? GrantTokens { get; }
+
+    public string KeyId { get; }
+
+    public byte[] Plaintext { get; }
 }
 
 /*

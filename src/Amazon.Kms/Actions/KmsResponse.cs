@@ -1,4 +1,3 @@
-﻿namespace Amazon.Kms
-{
-    public abstract class KmsResponse { }
-}
+﻿namespace Amazon.Kms;
+
+public abstract class KmsResponse { }

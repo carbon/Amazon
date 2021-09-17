@@ -1,7 +1,6 @@
-﻿namespace Amazon.Kms
+﻿namespace Amazon.Kms;
+
+public sealed class RetireGrantResponse : KmsResponse
 {
-    public sealed class RetireGrantResponse : KmsResponse
-    {
-        // 200
-    }
+    // 200
 }

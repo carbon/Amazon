@@ -1,31 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Amazon.Kms
+namespace Amazon.Kms;
+
+public sealed class GenerateDataKeyRequest : KmsRequest
 {
-    public sealed class GenerateDataKeyRequest : KmsRequest
-    {
 #nullable disable
-        public GenerateDataKeyRequest() { }
+    public GenerateDataKeyRequest() { }
 #nullable enable
 
-        public GenerateDataKeyRequest(string keyId, KeySpec keySpec, IReadOnlyDictionary<string, string>? encryptionContext)
-        {
-            KeyId             = keyId ?? throw new ArgumentNullException(nameof(keyId));
-            KeySpec           = keySpec;
-            EncryptionContext = encryptionContext;
-        }
-
-        public IReadOnlyDictionary<string, string>? EncryptionContext { get; init; }
-
-        public string[]? GrantTokens { get; init; }
-
-        public string KeyId { get; init; }
-
-        public KeySpec KeySpec { get; init; }
-
-        public int? NumberOfBytes { get; init; }
+    public GenerateDataKeyRequest(string keyId, KeySpec keySpec, IReadOnlyDictionary<string, string>? encryptionContext)
+    {
+        KeyId = keyId ?? throw new ArgumentNullException(nameof(keyId));
+        KeySpec = keySpec;
+        EncryptionContext = encryptionContext;
     }
+
+    public IReadOnlyDictionary<string, string>? EncryptionContext { get; init; }
+
+    public string[]? GrantTokens { get; init; }
+
+    public string KeyId { get; init; }
+
+    public KeySpec KeySpec { get; init; }
+
+    public int? NumberOfBytes { get; init; }
 }
 
 /*
