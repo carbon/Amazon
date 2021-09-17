@@ -1,12 +1,13 @@
-﻿using Amazon.Scheduling;
+﻿using System.Net;
 
-namespace Amazon.Kms
+using Amazon.Scheduling;
+
+namespace Amazon.Kms.Exceptions;
+
+public sealed class KeyUnavailableException : KmsException, IException
 {
-    public sealed class KeyUnavailableException : KmsException, IException
-    {
-        public KeyUnavailableException(KmsError error)
-            : base(error) { }
+    public KeyUnavailableException(KmsError error, HttpStatusCode statusCode)
+        : base(error, statusCode) { }
 
-        public bool IsTransient => true;
-    }
+    public bool IsTransient => true;
 }

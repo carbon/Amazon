@@ -1,28 +1,18 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 
-namespace Amazon.Kms
+using Amazon.Exceptions;
+
+namespace Amazon.Kms.Exceptions;
+
+public class KmsException : AwsException
 {
-    public class KmsException : Exception
+    internal KmsException(KmsError error, HttpStatusCode httpStatusCode)
+        : base(error.Message ?? $"KMS exception - {error.Type} / {httpStatusCode}", httpStatusCode)
     {
-        public KmsException(KmsError error)
-           : base(error.Message)
-        {
-            Type = error.Type;
-        }
-
-        public KmsException(string message, string type)
-           : base(message)
-        {
-            Type = type;
-        }
-
-        internal KmsException(KmsError error, HttpStatusCode statusCode)
-            : base(error.Message ?? "KMS error - " + error.Type + "/" + statusCode.ToString())
-        {
-            Type = error.Type;
-        }
-
-        public string Type { get; }
+        Error = error;
     }
+
+    public string Type => Error.Type;
+
+    public KmsError Error { get; }
 }

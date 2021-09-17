@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 using Amazon.Exceptions;
+using Amazon.Kms.Exceptions;
 
 namespace Amazon.Kms
 {
@@ -124,8 +125,8 @@ namespace Amazon.Kms
                 return error.Type switch 
                 {
                     "AccessDeniedException"       => new AccessDeniedException(error, response.StatusCode),
-                    "ServiceUnavailableException" => new ServiceUnavailableException(error),
-                    "KeyUnavailableException"     => new KeyUnavailableException(error),
+                    "ServiceUnavailableException" => new ServiceUnavailableException(), // TODO: Provide the message
+                    "KeyUnavailableException"     => new KeyUnavailableException(error, response.StatusCode),
                     _                             => new KmsException(error, response.StatusCode)
                 };
             }
