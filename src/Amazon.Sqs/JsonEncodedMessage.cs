@@ -13,11 +13,11 @@ namespace Amazon.Sqs
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
-        private readonly SqsMessage model;
+        private readonly SqsMessage _model;
 
         internal JsonEncodedMessage(SqsMessage model)
         {
-            this.model = model;
+            _model = model;
 
             Body = JsonSerializer.Deserialize<T>(model.Body, jso)!;
         }
@@ -27,9 +27,9 @@ namespace Amazon.Sqs
             return new JsonEncodedMessage<T>(message);
         }
 
-        public string Id => model.MessageId;
+        public string Id => _model.MessageId;
 
-        public MessageReceipt Receipt => new (model.ReceiptHandle);
+        public MessageReceipt Receipt => new (_model.ReceiptHandle);
 
         public T Body { get; }
     }
