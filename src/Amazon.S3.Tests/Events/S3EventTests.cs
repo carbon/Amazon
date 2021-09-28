@@ -1,17 +1,16 @@
-﻿using Xunit;
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace Amazon.S3.Events.Tests
+namespace Amazon.S3.Events.Tests;
+
+public class S3EventTests
 {
-    public class S3EventTests
+    private static readonly JsonSerializerOptions jso = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
+    [Fact]
+    public void A()
     {
-        private static readonly JsonSerializerOptions jso = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
-        [Fact]
-        public void A()
-        {
-
-            string text = @"
+        string text = @"
 {  
     ""eventVersion"":""2.0"",
     ""eventSource"":""aws:s3"",
@@ -48,19 +47,18 @@ namespace Amazon.S3.Events.Tests
     }
 }";
 
-            var model = JsonSerializer.Deserialize<S3Event>(text, jso);
+        var model = JsonSerializer.Deserialize<S3Event>(text, jso);
 
-            Assert.Equal("2.0",                             model.EventVersion);
-            Assert.Equal("aws:s3",                          model.EventSource);
-            Assert.Equal("us-east-1",                       model.AwsRegion);
-            Assert.Equal("ObjectCreated:Put",               model.EventName);
-            Assert.Equal("1",                               model.UserIdentity.PrincipalId);
-            Assert.Equal("bucket-name",                     model.S3.Bucket.Name);
-            Assert.Equal("A3NL1KOZZKExample",               model.S3.Bucket.OwnerIdentity.PrincipalId);
-            Assert.Equal("arn:aws:s3:::bucket-name",        model.S3.Bucket.Arn);
-            Assert.Equal("object-key",                      model.S3.Object.Key);
-            Assert.Equal(1,                                 model.S3.Object.Size);
-            Assert.Equal("1",                               model.S3.Object.VersionId);
-        }
+        Assert.Equal("2.0",                      model.EventVersion);
+        Assert.Equal("aws:s3",                   model.EventSource);
+        Assert.Equal("us-east-1",                model.AwsRegion);
+        Assert.Equal("ObjectCreated:Put",        model.EventName);
+        Assert.Equal("1",                        model.UserIdentity.PrincipalId);
+        Assert.Equal("bucket-name",              model.S3.Bucket.Name);
+        Assert.Equal("A3NL1KOZZKExample",        model.S3.Bucket.OwnerIdentity.PrincipalId);
+        Assert.Equal("arn:aws:s3:::bucket-name", model.S3.Bucket.Arn);
+        Assert.Equal("object-key",               model.S3.Object.Key);
+        Assert.Equal(1,                          model.S3.Object.Size);
+        Assert.Equal("1",                        model.S3.Object.VersionId);
     }
 }

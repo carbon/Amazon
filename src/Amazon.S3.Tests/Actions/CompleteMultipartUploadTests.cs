@@ -1,20 +1,17 @@
-﻿
-using Xunit;
+﻿namespace Amazon.S3.Actions.Tests;
 
-namespace Amazon.S3.Actions.Tests
+public class CompleteMultipartUploadTests
 {
-    public class CompleteMultipartUploadTests
+    [Fact]
+    public void Serialize()
     {
-        [Fact]
-        public void Serialize()
-        {
-            var g = new CompleteMultipartUpload(new[] {
+        var g = new CompleteMultipartUpload(new[] {
                 new UploadPartResult("uploadId", 1, "eTag1"),
                 new UploadPartResult("uploadId", 2, "eTag2"),
                 new UploadPartResult("uploadId", 3, "eTag3")}
-            );
+        );
 
-            Assert.Equal(@"<CompleteMultipartUpload>
+        Assert.Equal(@"<CompleteMultipartUpload>
   <Part>
     <PartNumber>1</PartNumber>
     <ETag>eTag1</ETag>
@@ -29,6 +26,5 @@ namespace Amazon.S3.Actions.Tests
   </Part>
 </CompleteMultipartUpload>", g.ToXmlString());
 
-        }
     }
 }
