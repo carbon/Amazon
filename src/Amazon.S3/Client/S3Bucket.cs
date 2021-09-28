@@ -113,7 +113,8 @@ namespace Amazon.S3
 
         public async Task<IBlobResult> GetAsync(string key, GetBlobOptions options, CancellationToken cancellationToken)
         {
-            if (options is null) throw new ArgumentNullException(nameof(options));
+            if (options is null) 
+                throw new ArgumentNullException(nameof(options));
 
             int retryCount = 0;
             Exception lastException;
@@ -313,6 +314,11 @@ namespace Amazon.S3
 
                     return;
                 }
+                catch (HttpRequestException httpException) when (httpException.InnerException is IOException) // Broken pipe
+                {
+                    // Amazon may force close the connection before recieving the entire response.
+                    lastException = httpException;
+                }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {
                     lastException = ex;
@@ -424,6 +430,13 @@ namespace Amazon.S3
                 try
                 {
                     return await _client.UploadPartAsync(request).ConfigureAwait(false);
+                }
+                catch (HttpRequestException httpException) // Broken pipe
+                {
+                    // Amazon may force close the connection before recieving the entire response.
+                    // See: https://github.com/dotnet/runtime/issues/57186
+
+                    lastException = httpException;
                 }
                 catch (S3Exception ex) when (ex.IsTransient)
                 {

@@ -1,9 +1,13 @@
 using System;
 using System.Net;
 
+using Amazon.Scheduling;
+
 namespace Amazon.S3
 {
-    public sealed class S3Exception : Exception
+    // TODO: Inhert from AwsException
+
+    public sealed class S3Exception : Exception, IException
     {
         public S3Exception(string message, HttpStatusCode statusCode)
             : base(message)
@@ -30,11 +34,6 @@ namespace Amazon.S3
             RequestId      = error.RequestId;
         }
 
-        /// <summary>
-        /// Gets status code returned by the service if available. If status
-        /// code is set to -1, it means that status code was unavailable at the
-        /// time exception was thrown
-        /// </summary>
         public HttpStatusCode HttpStatusCode { get; }
 
         public string? ErrorCode { get; }

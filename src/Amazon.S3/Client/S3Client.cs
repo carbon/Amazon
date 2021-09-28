@@ -227,7 +227,7 @@ namespace Amazon.S3
                 );
             }            
 
-            throw new S3Exception("Unexpected S3 error. " + response.StatusCode + ":" + responseText, response.StatusCode);
+            throw new S3Exception($"Unexpected S3 error. {response.StatusCode}:{responseText}", response.StatusCode);
         }
 
         #endregion
