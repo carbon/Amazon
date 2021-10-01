@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Amazon.Elb.Tests
+﻿namespace Amazon.Elb.Tests
 {
     public class ModifyTargetGroupResponseTests
     {

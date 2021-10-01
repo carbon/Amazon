@@ -1,6 +1,3 @@
-
-using Xunit;
-
 namespace Amazon.Elb.Tests
 {
     public class RegisterTargetTests
