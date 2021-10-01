@@ -1,27 +1,26 @@
-﻿namespace Amazon.Security.Tests
+﻿namespace Amazon.Security.Tests;
+
+public class InstanceRoleCredentialTests
 {
-    public class InstanceRoleCredentialTests
+    [Fact]
+    public void EmptyRoleNeedsRenewed()
     {
-        [Fact]
-        public void EmptyRoleNeedsRenewed()
-        {
-            var credential = new InstanceRoleCredential();
+        var credential = new InstanceRoleCredential();
 
-            Assert.Equal(0, credential.RenewCount);
+        Assert.Equal(0, credential.RenewCount);
 
-            Assert.True(credential.ShouldRenew);
-        }
+        Assert.True(credential.ShouldRenew);
+    }
 
-        [Fact]
-        public void EmptyExpiresNeedsRenewed()
-        {
-            var credential = new InstanceRoleCredential("roleName");
+    [Fact]
+    public void EmptyExpiresNeedsRenewed()
+    {
+        var credential = new InstanceRoleCredential("roleName");
 
-            Assert.Equal("roleName", credential.RoleName);
-            Assert.Equal(0, credential.RenewCount);
-            Assert.True(credential.Expires == default);
+        Assert.Equal("roleName", credential.RoleName);
+        Assert.Equal(0, credential.RenewCount);
+        Assert.True(credential.Expires == default);
 
-            Assert.True(credential.ShouldRenew);
-        }
+        Assert.True(credential.ShouldRenew);
     }
 }

@@ -1,14 +1,13 @@
-﻿namespace Amazon.Security.Tests
-{
-    public class AwsCredentialTests
-    {
-        [Fact]
-        public void Parse()
-        {
-            var accessKey = AwsCredential.Parse("a:b");
+﻿namespace Amazon.Security.Tests;
 
-            Assert.Equal("a", accessKey.AccessKeyId);
-            Assert.Equal("b", accessKey.SecretAccessKey);
-        }
+public class AwsCredentialTests
+{
+    [Fact]
+    public void Parse()
+    {
+        var accessKey = AwsCredential.Parse("a:b");
+
+        Assert.Equal("a", accessKey.AccessKeyId);
+        Assert.Equal("b", accessKey.SecretAccessKey);
     }
 }
