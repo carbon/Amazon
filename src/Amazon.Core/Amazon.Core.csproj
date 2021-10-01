@@ -4,6 +4,7 @@
     <AssemblyName>Amazon.Core</AssemblyName>
     <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <Version>0.22.0</Version>
+    <LangVersion>10</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

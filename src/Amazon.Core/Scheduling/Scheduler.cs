@@ -1,44 +1,43 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Amazon.Scheduling
+namespace Amazon.Scheduling;
+
+public static class Scheduler
 {
-    public static class Scheduler
+    public static async Task<T> ExecuteAsync<T>(this RetryPolicy policy, Func<Task<T>> action)
     {
-        public static async Task<T> ExecuteAsync<T>(this RetryPolicy policy, Func<Task<T>> action)
-        {
-            Exception lastError;
-            int retryCount = 0;
+        Exception lastError;
+        int retryCount = 0;
 
-            do
+        do
+        {
+            if (retryCount > 0)
             {
-                if (retryCount > 0)
-                {
-                    await Task.Delay(policy.GetDelay(retryCount)).ConfigureAwait(false);
-                }
-
-                try
-                {
-                    return await action().ConfigureAwait(false);
-                }
-                catch (Exception ex) when (ex.IsTransient())
-                {
-                    lastError = ex;
-                }
-
-                retryCount++;
+                await Task.Delay(policy.GetDelay(retryCount)).ConfigureAwait(false);
             }
-            while (policy.ShouldRetry(retryCount));
 
-            // TODO: Throw aggregate exception
+            try
+            {
+                return await action().ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex.IsTransient())
+            {
+                lastError = ex;
+            }
 
-            throw lastError;
+            retryCount++;
         }
+        while (policy.ShouldRetry(retryCount));
 
-        private static bool IsTransient(this Exception ex)
-        {
-            return ex is IException { IsTransient: true };
-        }
+        // TODO: Throw aggregate exception
+
+        throw lastError;
+    }
+
+    private static bool IsTransient(this Exception ex)
+    {
+        return ex is IException { IsTransient: true };
     }
 }
 

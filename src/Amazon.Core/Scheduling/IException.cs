@@ -1,7 +1,6 @@
-﻿namespace Amazon.Scheduling
+﻿namespace Amazon.Scheduling;
+
+public interface IException
 {
-    public interface IException
-    {
-        bool IsTransient { get; }
-    }
+    bool IsTransient { get; }
 }

@@ -1,17 +1,16 @@
 ﻿using System.Threading.Tasks;
 
-namespace Amazon
+namespace Amazon;
+
+public interface IAwsCredential
 {
-    public interface IAwsCredential
-    {
-        string AccessKeyId { get; }
+    string AccessKeyId { get; }
 
-        string SecretAccessKey { get; }
+    string SecretAccessKey { get; }
 
-        string? SecurityToken { get; }
+    string? SecurityToken { get; }
 
-        bool ShouldRenew { get; }
+    bool ShouldRenew { get; }
 
-        Task<bool> RenewAsync();
-    }
+    Task<bool> RenewAsync();
 }

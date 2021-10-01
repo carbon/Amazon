@@ -6,132 +6,132 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 
-namespace Amazon.Metadata
+namespace Amazon.Metadata;
+
+public sealed partial class InstanceMetadataService
 {
-    public sealed partial class InstanceMetadataService
+    public string? GetIamRoleName()
     {
-        public string? GetIamRoleName()
+        return GetStringOrDefault(baseMetadataUri + "/iam/security-credentials/");
+    }
+
+    public string GetAvailabilityZone()
+    {
+        return GetStringOrDefault(baseMetadataUri + "/placement/availability-zone")!;
+    }
+
+    internal IamSecurityCredentials GetIamSecurityCredentials(string roleName)
+    {
+        string requestUri = baseMetadataUri + "/iam/security-credentials/" + roleName;
+
+        Exception? lastException = null;
+
+        for (int i = 0; i < 3; i++)
         {
-            return GetStringOrDefault(baseMetadataUri + "/iam/security-credentials/");
-        }
-
-        public string GetAvailabilityZone()
-        {
-            return GetStringOrDefault(baseMetadataUri + "/placement/availability-zone")!;
-        }
-
-        internal IamSecurityCredentials GetIamSecurityCredentials(string roleName)
-        {
-            string requestUri = baseMetadataUri + "/iam/security-credentials/" + roleName;
-
-            Exception? lastException = null;
-
-            for (int i = 0; i < 3; i++)
+            try
             {
-                try
+                using HttpResponseMessage response = Get(requestUri);
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    using HttpResponseMessage response = Get(requestUri);
-
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw new Exception("Invalid response getting /iam/security-credentials. " + response.StatusCode);
-                    }
-
-                    using var responseStream = response.Content.ReadAsStream();
-
-                    var result = JsonSerializer.Deserialize<IamSecurityCredentials>(GetString(responseStream));
-
-                    return result!;
+                    throw new Exception($"Invalid response getting /iam/security-credentials. {response.StatusCode}");
                 }
-                catch (Exception ex)
-                {
-                    token = null;
 
-                    lastException = ex;
-                }
+                using var responseStream = response.Content.ReadAsStream();
+
+                var result = JsonSerializer.Deserialize<IamSecurityCredentials>(GetString(responseStream));
+
+                return result!;
             }
+            catch (Exception ex)
+            {
+                token = null;
 
-            throw new Exception("error getting security credentials", lastException);
+                lastException = ex;
+            }
         }
 
+        throw new Exception("error getting security credentials", lastException);
+    }
 
-        private MetadataToken GetToken()
+
+    private MetadataToken GetToken()
+    {
+        // does not expire within 5 minutes
+        if (token is not null && token.Expires > DateTime.UtcNow.AddMinutes(5))
         {
-            // does not expire within 5 minutes
-            if (token is not null && token.Expires > DateTime.UtcNow.AddMinutes(5))
-            {
-                return token;
-            }
-
-            token = GetToken(TimeSpan.FromHours(1));
-
             return token;
         }
 
-        private HttpResponseMessage Get(string requestUri)
+        token = GetToken(TimeSpan.FromHours(1));
+
+        return token;
+    }
+
+    private HttpResponseMessage Get(string requestUri)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+
+        MetadataToken token = GetToken();
+
+        request.Headers.Add("X-aws-ec2-metadata-token", token.Value);
+
+        return httpClient.Send(request);
+
+    }
+
+    private MetadataToken GetToken(TimeSpan lifetime)
+    {
+        if (lifetime < TimeSpan.Zero || lifetime > TimeSpan.FromHours(6))
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-
-            MetadataToken token = GetToken();
-
-            request.Headers.Add("X-aws-ec2-metadata-token", token.Value);
-
-            return httpClient.Send(request);
-
+            throw new ArgumentException("Must be > 0 & less than 6 hours", nameof(lifetime));
         }
 
-        private MetadataToken GetToken(TimeSpan lifetime)
+        int lifetimeInSeconds = (int)lifetime.TotalSeconds;
+
+        var request = new HttpRequestMessage(HttpMethod.Put, "http://169.254.169.254/latest/api/token")
         {
-            if (lifetime < TimeSpan.Zero || lifetime > TimeSpan.FromHours(6))
-            {
-                throw new ArgumentException("Must be > 0 & less than 6 hours", nameof(lifetime));
+            Headers = {
+                { "X-aws-ec2-metadata-token-ttl-seconds", lifetimeInSeconds.ToString(CultureInfo.InvariantCulture) }
             }
+        };
 
-            int lifetimeInSeconds = (int)lifetime.TotalSeconds;
+        string responseText = SendAndReadString(request);
 
-            var request = new HttpRequestMessage(HttpMethod.Put, "http://169.254.169.254/latest/api/token") {
-                Headers = {
-                    { "X-aws-ec2-metadata-token-ttl-seconds", lifetimeInSeconds.ToString(CultureInfo.InvariantCulture) }
-                }
-            };
+        return new MetadataToken(responseText, DateTime.UtcNow + lifetime);
+    }
 
-            string responseText = SendAndReadString(request);
+    private string? GetStringOrDefault(string url)
+    {
+        using HttpResponseMessage response = Get(url);
 
-            return new MetadataToken(responseText, DateTime.UtcNow + lifetime);
-        }
-
-        private string? GetStringOrDefault(string url)
+        if (response.StatusCode == HttpStatusCode.NotFound)
         {
-            using HttpResponseMessage response = Get(url);
-
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                return null;
-            }
-
-            using var responseStream = response.Content.ReadAsStream();
-
-            string responseText = GetString(responseStream);
-
-            return responseText;
+            return null;
         }
 
-        private string SendAndReadString(HttpRequestMessage request)
-        {
-            using HttpResponseMessage response = httpClient.Send(request, HttpCompletionOption.ResponseContentRead);
+        using var responseStream = response.Content.ReadAsStream();
 
-            using var responseStream = response.Content.ReadAsStream();
+        string responseText = GetString(responseStream);
 
-            string responseText = GetString(responseStream);
+        return responseText;
+    }
 
-            return responseText;
-        }
+    private string SendAndReadString(HttpRequestMessage request)
+    {
+        using HttpResponseMessage response = httpClient.Send(request, HttpCompletionOption.ResponseContentRead);
 
-        private static string GetString(Stream stream)
-        {
-            using var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: false);
+        using var responseStream = response.Content.ReadAsStream();
 
-            return reader.ReadToEnd();
-        }
+        string responseText = GetString(responseStream);
+
+        return responseText;
+    }
+
+    private static string GetString(Stream stream)
+    {
+        using var reader = new StreamReader(stream, Encoding.UTF8, leaveOpen: false);
+
+        return reader.ReadToEnd();
     }
 }

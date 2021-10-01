@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Net;
 
-namespace Amazon.Exceptions
+namespace Amazon.Exceptions;
+
+public class AwsException : Exception
 {
-    public class AwsException : Exception
+    public AwsException(string message, HttpStatusCode httpStatusCode)
+        : base(message)
     {
-        public AwsException(string message, HttpStatusCode httpStatusCode)
-            : base(message) 
-        {
-            this.HttpStatusCode = httpStatusCode;
-        }
-
-        public AwsException(string message, Exception innerException, HttpStatusCode httpStatusCode)
-          : base(message, innerException)
-        {
-            this.HttpStatusCode = httpStatusCode;
-        }
-
-        public HttpStatusCode HttpStatusCode { get; }
+        HttpStatusCode = httpStatusCode;
     }
+
+    public AwsException(string message, Exception innerException, HttpStatusCode httpStatusCode)
+      : base(message, innerException)
+    {
+        HttpStatusCode = httpStatusCode;
+    }
+
+    public HttpStatusCode HttpStatusCode { get; }
 }
