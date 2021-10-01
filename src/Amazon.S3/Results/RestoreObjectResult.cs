@@ -1,16 +1,15 @@
 ﻿using System.Net;
 
-namespace Amazon.S3
-{
-    public sealed class RestoreObjectResult
-    {
-        public RestoreObjectResult(HttpStatusCode statusCode)
-        {
-            StatusCode = statusCode;
-        }
+namespace Amazon.S3;
 
-        public HttpStatusCode StatusCode { get; }
+public sealed class RestoreObjectResult
+{
+    public RestoreObjectResult(HttpStatusCode statusCode)
+    {
+        StatusCode = statusCode;
     }
+
+    public HttpStatusCode StatusCode { get; }
 }
 
 /*

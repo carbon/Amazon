@@ -2,14 +2,13 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.S3
-{
-    public sealed class Owner
-    {
-        [XmlElement("ID")]
-        public string ID { get; init; }
+namespace Amazon.S3;
 
-        [XmlElement("DisplayName")]
-        public string DisplayName { get; init; }
-    }
+public sealed class Owner
+{
+    [XmlElement("ID")]
+    public string ID { get; init; }
+
+    [XmlElement("DisplayName")]
+    public string DisplayName { get; init; }
 }

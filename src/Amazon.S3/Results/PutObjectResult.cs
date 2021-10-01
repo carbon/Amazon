@@ -1,17 +1,16 @@
-﻿namespace Amazon.S3
+﻿namespace Amazon.S3;
+
+public sealed class PutObjectResult
 {
-    public sealed class PutObjectResult
+    public PutObjectResult(string eTag, string? versionId)
     {
-        public PutObjectResult(string eTag, string? versionId)
-        {
-            ETag = eTag;
-            VersionId = versionId;
-        }
-
-        public string ETag { get; }
-
-        public string? VersionId { get; }
+        ETag = eTag;
+        VersionId = versionId;
     }
+
+    public string ETag { get; }
+
+    public string? VersionId { get; }
 }
 
 // NOTES: 
