@@ -1,14 +1,11 @@
 ﻿using System.Linq;
 
-using Xunit;
-
 namespace Amazon.Ec2.Tests
 {
-
     public class TerminateInstancesRequestTests
     {
         [Fact]
-        public void SerializeRequest3()
+        public void Serialize()
         {
             var request = new TerminateInstancesRequest(new[] { "a", "b", "c" });
             

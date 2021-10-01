@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 
-using Xunit;
-
 namespace Amazon.Ec2.Tests
 {
     public class RunInstanceRequestTests

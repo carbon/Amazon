@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Amazon.Ec2.Models.Tests
+﻿namespace Amazon.Ec2.Models.Tests
 {
     public class InstanceTypeTests
     {

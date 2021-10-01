@@ -1,13 +1,9 @@
-﻿using System.Threading.Tasks;
-
-using Xunit;
-
-namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests
 {
     public class DescribeImagesResponseTests
     {
         [Fact]
-        public void X()
+        public void Deserialize()
         {
             var text =
 @"<DescribeImagesResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
@@ -66,8 +62,6 @@ namespace Amazon.Ec2.Tests
             Assert.Equal("xen", image.Hypervisor);
 
             Assert.True(image.IsPublic);
-
-
 
             // Assert.True("/dev/sda1", image.blockDeviceMappings[0]);
         }

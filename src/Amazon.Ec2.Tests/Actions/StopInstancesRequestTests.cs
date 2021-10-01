@@ -1,6 +1,4 @@
-﻿
-using System.Linq;
-using Xunit;
+﻿using System.Linq;
 
 namespace Amazon.Ec2.Tests
 {

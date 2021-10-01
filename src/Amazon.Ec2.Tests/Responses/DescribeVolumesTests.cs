@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Threading.Tasks;
-
-using Xunit;
 
 namespace Amazon.Ec2.Tests
 {

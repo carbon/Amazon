@@ -1,13 +1,11 @@
-﻿
-using System.Linq;
-using Xunit;
+﻿using System.Linq;
 
 namespace Amazon.Ec2.Tests
 {
     public class RebootInstancesRequestTests
     {
         [Fact]
-        public void Serialize1()
+        public void Serialize()
         {
             var a = new RebootInstancesRequest(new[] { "i-1234567890abcdef0" })
             {

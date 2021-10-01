@@ -1,7 +1,4 @@
-﻿
-using Xunit;
-
-namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests
 {
     public class DescribeVpcsResponseTests
     {
