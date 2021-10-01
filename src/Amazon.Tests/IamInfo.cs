@@ -1,7 +1,4 @@
-﻿
-using Xunit;
-
-namespace Amazon.Metadata.Tests
+﻿namespace Amazon.Metadata.Tests
 {
     public class IamInfoTests
     {

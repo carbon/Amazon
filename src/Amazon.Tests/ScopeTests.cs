@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Xunit;
-
 namespace Amazon.Security.Tests
 {
     public class ScopeTests

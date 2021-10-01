@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Text.Json;
 
-using Xunit;
-
 namespace Amazon.Metadata.Tests
 {
     public sealed class InstanceActionTests

@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 
-using Xunit;
-
 namespace Amazon.Tests
 {
     public class AwsRegionTests

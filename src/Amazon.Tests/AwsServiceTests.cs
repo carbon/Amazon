@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Amazon.Tests
+﻿namespace Amazon.Tests
 {
     public class AwsServiceTests
     {

@@ -7,8 +7,6 @@ using System.Text.Encodings.Web;
 
 using Carbon.Data.Encodings;
 
-using Xunit;
-
 namespace Amazon.Security.Tests
 {
     public class SignerTests
