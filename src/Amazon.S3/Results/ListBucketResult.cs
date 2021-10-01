@@ -2,36 +2,35 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+[XmlRoot("ListBucketResult", Namespace = S3Client.Namespace)]
+public sealed class ListBucketResult
 {
-    [XmlRoot("ListBucketResult", Namespace = S3Client.Namespace)]
-    public sealed class ListBucketResult
+    [XmlElement("Name")]
+    public string Name { get; init; }
+
+    [XmlElement("Marker")]
+    public string Marker { get; init; }
+
+    [XmlElement("MaxKeys")]
+    public int MaxKeys { get; init; }
+
+    [XmlElement("Prefix")]
+    public string Prefix { get; init; }
+
+    [XmlElement("NextContinuationToken")]
+    public string NextContinuationToken { get; init; }
+
+    [XmlElement("IsTruncated")]
+    public bool IsTruncated { get; init; }
+
+    [XmlElement("Contents")]
+    public ListBucketObject[] Items { get; init; }
+
+    public static ListBucketResult ParseXml(string xmlText)
     {
-        [XmlElement("Name")]
-        public string Name { get; init; }
-
-        [XmlElement("Marker")]
-        public string Marker { get; init; }
-
-        [XmlElement("MaxKeys")]
-        public int MaxKeys { get; init; }
-
-        [XmlElement("Prefix")]
-        public string Prefix { get; init; }
-
-        [XmlElement("NextContinuationToken")]
-        public string NextContinuationToken { get; init; }
-
-        [XmlElement("IsTruncated")]
-        public bool IsTruncated { get; init; }
-
-        [XmlElement("Contents")]
-        public ListBucketObject[] Items { get; init; }
-
-		public static ListBucketResult ParseXml(string xmlText)
-        {
-            return ResponseHelper<ListBucketResult>.ParseXml(xmlText);
-        }
+        return ResponseHelper<ListBucketResult>.ParseXml(xmlText);
     }
 }
 

@@ -2,13 +2,12 @@
 
 using System.Text.Json.Serialization;
 
-namespace Amazon.S3.Events
-{
-    public sealed class S3Notification
-    {
-        [JsonPropertyName("Records")]
-        public S3Event[] Records { get; init; }
-    }
+namespace Amazon.S3.Events;
 
-    // https://docs.aws.amazon.com/AmazonS3/latest/dev/notification-content-structure.html
+public sealed class S3Notification
+{
+    [JsonPropertyName("Records")]
+    public S3Event[] Records { get; init; }
 }
+
+// https://docs.aws.amazon.com/AmazonS3/latest/dev/notification-content-structure.html

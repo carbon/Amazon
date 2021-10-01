@@ -1,8 +1,7 @@
-﻿namespace Amazon.S3
+﻿namespace Amazon.S3;
+
+public enum RetentionMode
 {
-    public enum RetentionMode
-    {
-        Compliance = 1,
-        Goverance = 2
-    }
+    Compliance = 1,
+    Goverance = 2
 }

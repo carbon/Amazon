@@ -2,27 +2,26 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+[XmlRoot(Namespace = S3Client.Namespace)]
+public sealed class CompleteMultipartUploadResult
 {
-    [XmlRoot(Namespace = S3Client.Namespace)]
-    public sealed class CompleteMultipartUploadResult
+    [XmlElement]
+    public string Location { get; init; }
+
+    [XmlElement]
+    public string Bucket { get; init; }
+
+    [XmlElement]
+    public string Key { get; init; }
+
+    [XmlElement]
+    public string ETag { get; init; }
+
+    public static CompleteMultipartUploadResult ParseXml(string xmlText)
     {
-        [XmlElement]
-        public string Location { get; init; }
-
-        [XmlElement]
-        public string Bucket { get; init; }
-
-        [XmlElement]
-        public string Key { get; init; }
-
-        [XmlElement]
-        public string ETag { get; init; }
-
-        public static CompleteMultipartUploadResult ParseXml(string xmlText)
-        {
-            return ResponseHelper<CompleteMultipartUploadResult>.ParseXml(xmlText);
-        }
+        return ResponseHelper<CompleteMultipartUploadResult>.ParseXml(xmlText);
     }
 }
 

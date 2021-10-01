@@ -1,50 +1,49 @@
 ﻿using System.Xml.Serialization;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+[XmlRoot("DeleteResult", Namespace = S3Client.Namespace)]
+public sealed class DeleteResult
 {
-    [XmlRoot("DeleteResult", Namespace = S3Client.Namespace)]
-    public sealed class DeleteResult
-    {        
-        [XmlElement("Deleted")]
-        public BatchItem[]? Deleted { get; init; }
+    [XmlElement("Deleted")]
+    public BatchItem[]? Deleted { get; init; }
 
-        [XmlElement("Error")]
-        public DeleteResultError[]? Errors { get; init; }
+    [XmlElement("Error")]
+    public DeleteResultError[]? Errors { get; init; }
 
-        public bool HasErrors => Errors is { Length: > 0 };
+    public bool HasErrors => Errors is { Length: > 0 };
 
-        public static DeleteResult ParseXml(string xmlText)
-        {
-            return ResponseHelper<DeleteResult>.ParseXml(xmlText);
-        }
+    public static DeleteResult ParseXml(string xmlText)
+    {
+        return ResponseHelper<DeleteResult>.ParseXml(xmlText);
     }
+}
 
 #nullable disable
 
-    public sealed class BatchItem
+public sealed class BatchItem
+{
+    public BatchItem() { }
+
+    public BatchItem(string key)
     {
-        public BatchItem() { }
-
-        public BatchItem(string key)
-        {
-            Key = key;
-        }
-
-        [XmlElement]
-        public string Key { get; init; }
+        Key = key;
     }
 
-    public sealed class DeleteResultError
-    {
-        [XmlElement]
-        public string Key { get; init; }
+    [XmlElement]
+    public string Key { get; init; }
+}
 
-        [XmlElement]
-        public string Code { get; init; }
+public sealed class DeleteResultError
+{
+    [XmlElement]
+    public string Key { get; init; }
 
-        [XmlElement]
-        public string Message { get; init; }
-    }
+    [XmlElement]
+    public string Code { get; init; }
+
+    [XmlElement]
+    public string Message { get; init; }
 }
 
 /*

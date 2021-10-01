@@ -19,7 +19,7 @@ namespace Amazon.S3
         {
             get
             {
-                if (this.Headers.TryGetValues(S3HeaderNames.MetadataDirective, out var values))
+                if (Headers.TryGetValues(S3HeaderNames.MetadataDirective, out var values))
                 {
                     switch (values.FirstOrDefault())
                     {
@@ -48,10 +48,10 @@ namespace Amazon.S3
         {
             if (value is null)
             {
-                this.Headers.Remove(name);
+                Headers.Remove(name);
             }
 
-            this.Headers.TryAddWithoutValidation(name, value);
+            Headers.TryAddWithoutValidation(name, value);
         }
     }
 }

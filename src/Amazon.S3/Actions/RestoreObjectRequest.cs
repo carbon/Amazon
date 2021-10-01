@@ -2,36 +2,35 @@
 using System.Net.Http;
 using System.Text;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+public sealed class RestoreObjectRequest : S3Request
 {
-    public sealed class RestoreObjectRequest : S3Request
+    public RestoreObjectRequest(string host, string bucketName, string key, string? version = null)
+        : base(HttpMethod.Post, host, bucketName, key, version, S3ActionName.Restore)
     {
-        public RestoreObjectRequest(string host, string bucketName, string key, string? version = null)
-            : base(HttpMethod.Post, host, bucketName, key, version, S3ActionName.Restore)
-        {
-            if (key is null) throw new ArgumentNullException(nameof(key));
+        if (key is null) throw new ArgumentNullException(nameof(key));
 
-            string xmlText = GetXmlString();
+        string xmlText = GetXmlString();
 
-            Content = new StringContent(xmlText, Encoding.UTF8, "text/xml");
+        Content = new StringContent(xmlText, Encoding.UTF8, "text/xml");
 
-            Content.Headers.ContentMD5 = HashHelper.ComputeMD5Hash(xmlText);
+        Content.Headers.ContentMD5 = HashHelper.ComputeMD5Hash(xmlText);
 
-            CompletionOption = HttpCompletionOption.ResponseContentRead;
-        }
+        CompletionOption = HttpCompletionOption.ResponseContentRead;
+    }
 
-        public GlacierJobTier Tier { get; init; } = GlacierJobTier.Standard;
+    public GlacierJobTier Tier { get; init; } = GlacierJobTier.Standard;
 
-        public int Days { get; init; } = 7; // Default to 7
+    public int Days { get; init; } = 7; // Default to 7
 
-        public string GetXmlString() =>
+    public string GetXmlString() =>
 FormattableString.Invariant($@"<RestoreRequest>
   <Days>{Days}</Days>
   <GlacierJobParameters>
     <Tier>{Tier}</Tier>
   </GlacierJobParameters>
 </RestoreRequest>");
-    }
 }
 
 /*

@@ -1,25 +1,24 @@
-﻿namespace Amazon.S3
+﻿namespace Amazon.S3;
+
+public sealed class DeleteObjectResult
 {
-    public sealed class DeleteObjectResult
+    public DeleteObjectResult(
+        string? deleteMarker,
+        string? requestCharged,
+        string? versionId)
     {
-        public DeleteObjectResult(
-            string? deleteMarker, 
-            string? requestCharged, 
-            string? versionId)
-        {
-            DeleteMarker = deleteMarker;
-            RequestCharged = requestCharged;
-            VersionId = versionId;
-        }
-
-        public string? DeleteMarker { get; }
-
-        public string? VersionId { get; }
-
-        public string? RequestCharged { get; }
-
-        public bool IsDeleteMarker => DeleteMarker is "true";
+        DeleteMarker = deleteMarker;
+        RequestCharged = requestCharged;
+        VersionId = versionId;
     }
+
+    public string? DeleteMarker { get; }
+
+    public string? VersionId { get; }
+
+    public string? RequestCharged { get; }
+
+    public bool IsDeleteMarker => DeleteMarker is "true";
 }
 
 /*

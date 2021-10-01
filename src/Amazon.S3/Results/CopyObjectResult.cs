@@ -3,21 +3,20 @@
 using System;
 using System.Xml.Serialization;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+[XmlRoot(Namespace = S3Client.Namespace)]
+public sealed class CopyObjectResult
 {
-    [XmlRoot(Namespace = S3Client.Namespace)]
-    public sealed class CopyObjectResult
+    [XmlElement(DataType = "dateTime")]
+    public DateTime LastModified { get; init; }
+
+    [XmlElement]
+    public string ETag { get; init; }
+
+    public static CopyObjectResult ParseXml(string xmlText)
     {
-        [XmlElement(DataType = "dateTime")]
-        public DateTime LastModified { get; init; }
-
-        [XmlElement]
-        public string ETag { get; init; }
-
-        public static CopyObjectResult ParseXml(string xmlText)
-        {
-            return ResponseHelper<CopyObjectResult>.ParseXml(xmlText);
-        }
+        return ResponseHelper<CopyObjectResult>.ParseXml(xmlText);
     }
 }
 

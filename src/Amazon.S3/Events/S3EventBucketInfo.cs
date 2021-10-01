@@ -2,17 +2,16 @@
 
 using System.Text.Json.Serialization;
 
-namespace Amazon.S3.Events
+namespace Amazon.S3.Events;
+
+public sealed class S3EventBucketInfo
 {
-    public sealed class S3EventBucketInfo
-    {
-        [JsonPropertyName("name")]
-        public string Name { get; init; }
+    [JsonPropertyName("name")]
+    public string Name { get; init; }
 
-        [JsonPropertyName("ownerIdentity")]
-        public S3UserIdentity OwnerIdentity { get; init; }
+    [JsonPropertyName("ownerIdentity")]
+    public S3UserIdentity OwnerIdentity { get; init; }
 
-        [JsonPropertyName("arn")]
-        public string Arn { get; init; }
-    }
+    [JsonPropertyName("arn")]
+    public string Arn { get; init; }
 }

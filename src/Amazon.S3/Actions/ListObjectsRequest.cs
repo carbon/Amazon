@@ -1,14 +1,13 @@
 ﻿using System.Net.Http;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+public sealed class ListBucketRequest : S3Request
 {
-    public sealed class ListBucketRequest : S3Request
+    public ListBucketRequest(string host, string bucketName, ListBucketOptions options)
+        : base(HttpMethod.Get, host, bucketName, parameters: options.Items)
     {
-        public ListBucketRequest(string host, string bucketName, ListBucketOptions options)
-            : base(HttpMethod.Get, host, bucketName, parameters: options.Items)
-        {
-            CompletionOption = HttpCompletionOption.ResponseContentRead;
-        }
+        CompletionOption = HttpCompletionOption.ResponseContentRead;
     }
 }
 

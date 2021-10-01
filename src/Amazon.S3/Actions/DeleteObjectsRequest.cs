@@ -5,67 +5,67 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+public sealed class DeleteObjectsRequest : S3Request
 {
-    public sealed class DeleteObjectsRequest : S3Request
+    public DeleteObjectsRequest(string host, string bucketName, DeleteBatch batch)
+        : base(HttpMethod.Post, host, bucketName, objectName: null, actionName: S3ActionName.Delete)
     {
-        public DeleteObjectsRequest(string host, string bucketName, DeleteBatch batch)
-            : base(HttpMethod.Post, host, bucketName, objectName: null, actionName: S3ActionName.Delete)
+        string xmlText = batch.ToXmlString();
+
+        byte[] data = Encoding.UTF8.GetBytes(xmlText);
+
+        Content = new ByteArrayContent(data)
         {
-            string xmlText = batch.ToXmlString();
+            Headers = { { "Content-Type", "text/xml" } }
+        };
 
-            byte[] data = Encoding.UTF8.GetBytes(xmlText);
+        Content.Headers.ContentMD5 = MD5.HashData(data);
 
-            Content = new ByteArrayContent(data) {
-                Headers = { { "Content-Type", "text/xml" } }
-            };
+        CompletionOption = HttpCompletionOption.ResponseContentRead;
+    }
+}
 
-            Content.Headers.ContentMD5 = MD5.HashData(data);
+public sealed class DeleteBatch
+{
+    private readonly IReadOnlyList<string> _keys;
 
-            CompletionOption = HttpCompletionOption.ResponseContentRead;
+    public DeleteBatch(IReadOnlyList<string> keys, bool quite = false)
+    {
+        if (keys is null)
+        {
+            throw new ArgumentNullException(nameof(keys));
         }
+
+        if (keys.Count > 1_000)
+        {
+            throw new ArgumentException($"May not exceed 1,000 items. Was {keys.Count} items.", nameof(keys));
+        }
+
+        _keys = keys;
+        Quite = quite;
     }
 
-    public sealed class DeleteBatch
+    public bool Quite { get; }
+
+    public string ToXmlString(SaveOptions options = SaveOptions.DisableFormatting)
     {
-        private readonly IReadOnlyList<string> keys;
+        var root = new XElement("Delete");
 
-        public DeleteBatch(IReadOnlyList<string> keys, bool quite = false)
+        if (Quite)
         {
-            if (keys is null)
-            {
-                throw new ArgumentNullException(nameof(keys));
-            }
-
-            if (keys.Count > 1_000)
-            {
-                throw new ArgumentException($"May not exceed 1,000 items. Was {keys.Count} items.", nameof(keys));
-            }
-
-            this.keys = keys;
-            Quite = quite;
+            root.Add(new XElement("Quiet", true));
         }
 
-        public bool Quite { get; }
-
-        public string ToXmlString(SaveOptions options = SaveOptions.DisableFormatting)
+        foreach (string key in _keys)
         {
-            var root = new XElement("Delete");
-
-            if (Quite)
-            {
-                root.Add(new XElement("Quiet", true));
-            }
-
-            foreach (string key in keys)
-            {
-                root.Add(new XElement("Object",
-                    new XElement("Key", key)
-                ));
-            }
-
-            return root.ToString(options);
+            root.Add(new XElement("Object",
+                new XElement("Key", key)
+            ));
         }
+
+        return root.ToString(options);
     }
 }
 

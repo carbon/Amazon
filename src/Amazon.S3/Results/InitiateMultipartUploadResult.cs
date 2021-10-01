@@ -4,32 +4,31 @@ using System.Xml.Serialization;
 
 using Carbon.Storage;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+[XmlRoot(Namespace = S3Client.Namespace)]
+public sealed class InitiateMultipartUploadResult : IUpload
 {
-    [XmlRoot(Namespace = S3Client.Namespace)]
-    public sealed class InitiateMultipartUploadResult : IUpload
+    [XmlElement]
+    public string Bucket { get; init; }
+
+    [XmlElement]
+    public string Key { get; init; }
+
+    [XmlElement]
+    public string UploadId { get; init; }
+
+    #region IUpload
+
+    string IUpload.BucketName => Bucket;
+
+    string IUpload.ObjectName => Key;
+
+    #endregion
+
+    public static InitiateMultipartUploadResult ParseXml(string xmlText)
     {
-        [XmlElement]
-        public string Bucket { get; init; }
-
-        [XmlElement]
-        public string Key { get; init; }
-
-        [XmlElement]
-        public string UploadId { get; init; }
-
-        #region IUpload
-
-        string IUpload.BucketName => Bucket;
-
-        string IUpload.ObjectName => Key;
-
-        #endregion
-
-        public static InitiateMultipartUploadResult ParseXml(string xmlText)
-        {
-            return ResponseHelper<InitiateMultipartUploadResult>.ParseXml(xmlText);
-        }
+        return ResponseHelper<InitiateMultipartUploadResult>.ParseXml(xmlText);
     }
 }
 

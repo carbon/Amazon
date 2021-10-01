@@ -3,20 +3,19 @@
 using System;
 using System.Xml.Serialization;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+public sealed class DeleteMarkerEntry
 {
-    public sealed class DeleteMarkerEntry
-    {
-        [XmlElement("Key")]
-        public string Key { get; init; }
+    [XmlElement("Key")]
+    public string Key { get; init; }
 
-        [XmlElement("IsLatest")]
-        public bool IsLatest { get; init; }
+    [XmlElement("IsLatest")]
+    public bool IsLatest { get; init; }
 
-        [XmlElement("LastModified", DataType = "dateTime")]
-        public DateTime LastModified { get; init; }
+    [XmlElement("LastModified", DataType = "dateTime")]
+    public DateTime LastModified { get; init; }
 
-        [XmlElement("VersionId")]
-        public string VersionId { get; init; }
-    }
+    [XmlElement("VersionId")]
+    public string VersionId { get; init; }
 }

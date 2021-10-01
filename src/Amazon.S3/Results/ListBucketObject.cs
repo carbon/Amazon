@@ -8,46 +8,45 @@ using System.Xml.Serialization;
 
 using Carbon.Storage;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+[XmlRoot("Contents", Namespace = S3Client.Namespace)]
+public sealed class ListBucketObject : IBlob
 {
-    [XmlRoot("Contents", Namespace = S3Client.Namespace)]
-    public sealed class ListBucketObject : IBlob
+    [XmlElement("Key")]
+    public string Key { get; init; }
+
+    [XmlElement("LastModified", DataType = "dateTime")]
+    public DateTime LastModified { get; init; }
+
+    [XmlElement("ETag")]
+    public string ETag { get; init; }
+
+    [XmlElement("Size")]
+    public long Size { get; init; }
+
+    [XmlElement("StorageClass")]
+    public string StorageClass { get; init; }
+
+    [XmlElement("Owner")]
+    public Owner Owner { get; init; }
+
+    #region IBlob
+
+    DateTime IBlob.Modified => LastModified;
+
+    IReadOnlyDictionary<string, string> IBlob.Properties => BlobProperties.Empty;
+
+    ValueTask<Stream> IBlob.OpenAsync()
     {
-        [XmlElement("Key")]
-        public string Key { get; init; }
-
-        [XmlElement("LastModified", DataType = "dateTime")]
-        public DateTime LastModified { get; init; }
-
-        [XmlElement("ETag")]
-        public string ETag { get; init; }
-
-        [XmlElement("Size")]
-        public long Size { get; init; }
-
-        [XmlElement("StorageClass")]
-        public string StorageClass { get; init; }
-
-        [XmlElement("Owner")]
-        public Owner Owner { get; init; }
-
-        #region IBlob
-
-        DateTime IBlob.Modified => LastModified;
-
-        IReadOnlyDictionary<string, string> IBlob.Properties => BlobProperties.Empty;
-
-        ValueTask<Stream> IBlob.OpenAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IDisposable.Dispose()
-        {
-        }
-
-        #endregion
+        throw new NotImplementedException();
     }
+
+    void IDisposable.Dispose()
+    {
+    }
+
+    #endregion
 }
 
 /*

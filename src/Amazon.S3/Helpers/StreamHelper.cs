@@ -1,19 +1,18 @@
 ﻿using System.IO;
 using System.Security.Cryptography;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+internal static class StreamHelper
 {
-    internal static class StreamHelper
+    public static byte[] ComputeSHA256(Stream stream)
     {
-        public static byte[] ComputeSHA256(Stream stream)
-        {
-            using SHA256 sha = SHA256.Create();
+        using SHA256 sha = SHA256.Create();
 
-            byte[] data = sha.ComputeHash(stream);
+        byte[] data = sha.ComputeHash(stream);
 
-            stream.Position = 0;
+        stream.Position = 0;
 
-            return data;
-        }
+        return data;
     }
 }

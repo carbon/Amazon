@@ -5,49 +5,48 @@ using System.Xml.Linq;
 
 using Carbon.Storage;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+public sealed class CompleteMultipartUploadRequest : S3Request
 {
-    public sealed class CompleteMultipartUploadRequest : S3Request
+    public CompleteMultipartUploadRequest(string host, IUpload upload, IUploadBlock[] parts)
+        : this(host, upload.BucketName, upload.ObjectName, upload.UploadId, parts) { }
+
+    public CompleteMultipartUploadRequest(string host, string bucketName, string key, string uploadId, IUploadBlock[] parts)
+        : base(HttpMethod.Post, host, bucketName, objectName: key + "?uploadId=" + uploadId)
     {
-        public CompleteMultipartUploadRequest(string host, IUpload upload, IUploadBlock[] parts)
-            : this(host, upload.BucketName, upload.ObjectName, upload.UploadId, parts) { }
+        CompletionOption = HttpCompletionOption.ResponseContentRead;
 
-        public CompleteMultipartUploadRequest(string host, string bucketName, string key, string uploadId, IUploadBlock[] parts)
-            : base(HttpMethod.Post, host, bucketName, objectName: key + "?uploadId=" + uploadId)
-        {
-            CompletionOption = HttpCompletionOption.ResponseContentRead;
+        Content = new StringContent(
+            new CompleteMultipartUpload(parts).ToXmlString(),
+            Encoding.UTF8,
+            "text/xml"
+        );
+    }
+}
 
-            Content = new StringContent(
-                new CompleteMultipartUpload(parts).ToXmlString(),
-                Encoding.UTF8,
-                "text/xml"
-            );
-        }
+public sealed class CompleteMultipartUpload
+{
+    public CompleteMultipartUpload(IUploadBlock[] parts)
+    {
+        Parts = parts ?? throw new ArgumentNullException(nameof(parts));
     }
 
-    public sealed class CompleteMultipartUpload
+    public IUploadBlock[] Parts { get; }
+
+    public string ToXmlString()
     {
-        public CompleteMultipartUpload(IUploadBlock[] parts)
+        var root = new XElement("CompleteMultipartUpload");
+
+        foreach (var part in Parts)
         {
-            Parts = parts ?? throw new ArgumentNullException(nameof(parts));
+            root.Add(new XElement("Part",
+                new XElement("PartNumber", part.Number),
+                new XElement("ETag", part.BlockId)
+            ));
         }
 
-        public IUploadBlock[] Parts { get; }
-
-        public string ToXmlString()
-        {
-            var root = new XElement("CompleteMultipartUpload");
-
-            foreach (var part in Parts)
-            {
-                root.Add(new XElement("Part",
-                    new XElement("PartNumber", part.Number),
-                    new XElement("ETag",       part.BlockId)
-                ));
-            }
-
-            return root.ToString();
-        }
+        return root.ToString();
     }
 }
 

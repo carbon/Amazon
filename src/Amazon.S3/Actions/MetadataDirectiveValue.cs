@@ -1,8 +1,7 @@
-﻿namespace Amazon.S3
+﻿namespace Amazon.S3;
+
+public enum MetadataDirectiveValue
 {
-    public enum MetadataDirectiveValue
-    {
-        Copy = 1,
-        Replace = 2
-    }
+    Copy = 1,
+    Replace = 2
 }

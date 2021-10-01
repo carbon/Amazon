@@ -2,41 +2,38 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+[XmlRoot("Error")]
+public sealed class S3Error
 {
-    [XmlRoot("Error")]
-    public sealed class S3Error
+    [XmlElement]
+    public string Code { get; init; }
+
+    [XmlElement]
+    public string Message { get; init; }
+
+    [XmlElement]
+    public string Resource { get; init; }
+
+    [XmlElement]
+    public string RequestId { get; init; }
+
+    [XmlElement]
+    public string HostId { get; init; }
+
+    // RangeRequested
+    // ActualObjectSize
+
+    public static S3Error ParseXml(string xmlText)
     {
-        [XmlElement]
-        public string Code { get; init; }
-
-        [XmlElement]
-        public string Message { get; init; }
-
-        [XmlElement]
-        public string Resource { get; init; }
-
-        [XmlElement]
-        public string RequestId { get; init; }
-
-        [XmlElement]
-        public string HostId { get; init; }
-
-        // RangeRequested
-        // ActualObjectSize
-
-        public static S3Error ParseXml(string xmlText)
-        {
-            return ResponseHelper<S3Error>.ParseXml(xmlText);
-        }
-
-        internal static bool TryParseXml(string xmlText, out S3Error error)
-        {
-            return ResponseHelper<S3Error>.TryParseXml(xmlText, out error);
-        }
+        return ResponseHelper<S3Error>.ParseXml(xmlText);
     }
 
-
+    internal static bool TryParseXml(string xmlText, out S3Error error)
+    {
+        return ResponseHelper<S3Error>.TryParseXml(xmlText, out error);
+    }
 }
 
 // https://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html

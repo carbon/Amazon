@@ -2,11 +2,10 @@
 
 using System.Text.Json.Serialization;
 
-namespace Amazon.S3.Events
+namespace Amazon.S3.Events;
+
+public sealed class S3UserIdentity
 {
-    public sealed class S3UserIdentity
-    {
-        [JsonPropertyName("principalId")]
-        public string PrincipalId { get; init; }
-    }
+    [JsonPropertyName("principalId")]
+    public string PrincipalId { get; init; }
 }
