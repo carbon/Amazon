@@ -1,7 +1,5 @@
 ﻿using Carbon.Data.Expressions;
 
-using Xunit;
-
 namespace Amazon.DynamoDb.Tests
 {
     public class ScanRequestTests

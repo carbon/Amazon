@@ -3,8 +3,6 @@ using System.Text.Json;
 
 using Amazon.DynamoDb.Models;
 
-using Xunit;
-
 namespace Amazon.DynamoDb.Tests
 {
     public class DescribeTableResultTests

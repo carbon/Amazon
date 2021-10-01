@@ -1,7 +1,5 @@
 ﻿using System.IO;
 
-using Xunit;
-
 namespace Amazon.DynamoDb.Models.Tests
 {
     public class AttributeWriterTests

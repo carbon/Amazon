@@ -1,7 +1,5 @@
 ﻿using Carbon.Data.Expressions;
 
-using Xunit;
-
 namespace Amazon.DynamoDb.Expressions.Tests
 {
     using static Expression;

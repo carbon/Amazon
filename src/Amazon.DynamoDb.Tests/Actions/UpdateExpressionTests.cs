@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 using Carbon.Data;
 
-using Xunit;
-
 namespace Amazon.DynamoDb.Tests
 {
     public class UpdateExpressionTests

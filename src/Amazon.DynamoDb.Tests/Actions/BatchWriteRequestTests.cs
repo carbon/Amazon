@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using Xunit;
-
 namespace Amazon.DynamoDb
 {
     public class BatchWriteRequestTests

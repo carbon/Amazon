@@ -4,8 +4,6 @@ using System.Linq;
 
 using Carbon.Data;
 
-using Xunit;
-
 namespace Amazon.DynamoDb.Tests
 {
     public class UpdateItemRequestTests

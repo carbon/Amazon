@@ -1,7 +1,5 @@
 ﻿using System.Text.Json;
 
-using Xunit;
-
 namespace Amazon.DynamoDb.Models.Tests
 {
     public class UpdateItemResultTests

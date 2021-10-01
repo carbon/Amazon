@@ -1,10 +1,4 @@
-﻿using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-
-using Xunit;
-
-namespace Amazon.DynamoDb.Tests
+﻿namespace Amazon.DynamoDb.Tests
 {
     public class DbExceptionTests
 	{

@@ -1,7 +1,4 @@
-﻿
-using Xunit;
-
-namespace Amazon.DynamoDb.Tests
+﻿namespace Amazon.DynamoDb.Tests
 {
     public class PutItemRequestTests
     {

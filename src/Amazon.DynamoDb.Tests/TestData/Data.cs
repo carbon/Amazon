@@ -1,9 +1,10 @@
-﻿using Carbon.Data.Annotations;
-using Carbon.Data.Sequences;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
+
+using Carbon.Data.Annotations;
+using Carbon.Data.Sequences;
 
 namespace Amazon.DynamoDb.Models.Tests
 {

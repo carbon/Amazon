@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
     public sealed class DbKeyTests
 	{

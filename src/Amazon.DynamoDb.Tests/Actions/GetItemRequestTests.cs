@@ -4,8 +4,6 @@ using Amazon.DynamoDb.Models.Tests;
 
 using Carbon.Data;
 
-using Xunit;
-
 namespace Amazon.DynamoDb.Tests
 {
     public class GetItemRequestTests

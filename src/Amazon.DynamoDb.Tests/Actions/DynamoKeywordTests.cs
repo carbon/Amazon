@@ -1,7 +1,5 @@
 ﻿namespace Amazon.DynamoDb
 {
-    using Xunit;
-
     public class DynamoKeywordTests
 	{
 		[Fact]

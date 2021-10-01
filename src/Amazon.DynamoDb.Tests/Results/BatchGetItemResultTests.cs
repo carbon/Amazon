@@ -1,7 +1,5 @@
 ﻿using System.Text.Json;
 
-using Xunit;
-
 namespace Amazon.DynamoDb.Results.Tests
 {
     public class BatchGetItemResultTests

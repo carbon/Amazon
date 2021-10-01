@@ -6,8 +6,6 @@ using System.Text.Json;
 
 using Carbon.Data.Sequences;
 
-using Xunit;
-
 namespace Amazon.DynamoDb.Models.Tests
 {
     public class DbValueTests
