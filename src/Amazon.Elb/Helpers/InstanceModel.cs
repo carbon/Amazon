@@ -4,67 +4,48 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace Amazon.Elb
+namespace Amazon.Elb;
+
+internal sealed class InstanceModel
 {
-    internal sealed class InstanceModel
+    private static readonly ConcurrentDictionary<Type, InstanceModel> models = new();
+
+    private readonly List<InstanceModelMember> _members;
+
+    public InstanceModel(List<InstanceModelMember> members)
     {
-        private static readonly ConcurrentDictionary<Type, InstanceModel> models = new ();
-
-        private readonly List<InstanceModelMember> _members;
-
-        public InstanceModel(List<InstanceModelMember> members)
-        {
-            _members = members;
-        }
-
-        public IReadOnlyList<InstanceModelMember> Members => _members;
-
-        public static InstanceModel Get(Type type)
-        {
-            if (models.TryGetValue(type, out var result))
-            {
-                return result;
-            }
-
-            var properties = type.GetProperties();
-
-            var members = new List<InstanceModelMember>(properties.Length);
-
-            foreach (var property in properties)
-            {
-                if (property.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
-                {
-                    continue;
-                }
-
-                var dataMember = property.GetCustomAttribute<DataMemberAttribute>();
-
-                members.Add(new InstanceModelMember(dataMember?.Name ?? property.Name, property));
-            }
-
-            result = new InstanceModel(members);
-
-            models.TryAdd(type, result);
-
-            return result;
-        }
+        _members = members;
     }
 
-    public sealed class InstanceModelMember
+    public IReadOnlyList<InstanceModelMember> Members => _members;
+
+    public static InstanceModel Get(Type type)
     {
-        public InstanceModelMember(string name, PropertyInfo property)
+        if (models.TryGetValue(type, out var result))
         {
-            Name = name;
-            Property = property;
+            return result;
         }
 
-        public string Name { get; init; }
+        var properties = type.GetProperties();
 
-        public PropertyInfo Property { get; }
+        var members = new List<InstanceModelMember>(properties.Length);
 
-        public object? GetValue(object instance)
+        foreach (var property in properties)
         {
-            return Property.GetValue(instance);
+            if (property.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
+            {
+                continue;
+            }
+
+            var dataMember = property.GetCustomAttribute<DataMemberAttribute>();
+
+            members.Add(new InstanceModelMember(dataMember?.Name ?? property.Name, property));
         }
+
+        result = new InstanceModel(members);
+
+        models.TryAdd(type, result);
+
+        return result;
     }
 }

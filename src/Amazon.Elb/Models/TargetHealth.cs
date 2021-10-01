@@ -1,6 +1,5 @@
-﻿namespace Amazon.Elb
+﻿namespace Amazon.Elb;
+
+public class TargetHealth
 {
-    public class TargetHealth
-    {
-    }
 }

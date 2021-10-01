@@ -2,14 +2,13 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Elb
-{
-    public sealed class TargetGroupAttribute
-    {
-        [XmlElement]
-        public string Key { get; init; }
+namespace Amazon.Elb;
 
-        [XmlElement]
-        public string Value { get; init; }
-    }
+public sealed class TargetGroupAttribute
+{
+    [XmlElement]
+    public string Key { get; init; }
+
+    [XmlElement]
+    public string Value { get; init; }
 }

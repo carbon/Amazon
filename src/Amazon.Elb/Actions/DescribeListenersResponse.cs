@@ -2,22 +2,20 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Elb
-{
-    public sealed class DescribeListenersResponse : IElbResponse
-    {
-       [XmlElement]
-       public DescribeListenersResult DescribeListenersResult { get; init; }
-    }
+namespace Amazon.Elb;
 
-    public sealed class DescribeListenersResult
-    {
-        [XmlArray]
-        [XmlArrayItem("member")]
-        public Listener[] Listeners { get; init; }
-    }
+public sealed class DescribeListenersResponse : IElbResponse
+{
+    [XmlElement]
+    public DescribeListenersResult DescribeListenersResult { get; init; }
 }
 
+public sealed class DescribeListenersResult
+{
+    [XmlArray]
+    [XmlArrayItem("member")]
+    public Listener[] Listeners { get; init; }
+}
 
 /*
 <DescribeListenersResponse xmlns="http://elasticloadbalancing.amazonaws.com/doc/2015-12-01/">

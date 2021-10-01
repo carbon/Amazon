@@ -1,7 +1,6 @@
-﻿namespace Amazon.Elb
-{
-    public class ModifyRuleResponse : IElbResponse
-    {
+﻿namespace Amazon.Elb;
 
-    }
+public class ModifyRuleResponse : IElbResponse
+{
+
 }

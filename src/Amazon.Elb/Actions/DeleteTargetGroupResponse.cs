@@ -1,6 +1,5 @@
-﻿namespace Amazon.Elb
+﻿namespace Amazon.Elb;
+
+public sealed class DeleteTargetGroupResponse : IElbResponse
 {
-    public sealed class DeleteTargetGroupResponse : IElbResponse
-    {
-    }
 }

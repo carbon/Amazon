@@ -1,6 +1,5 @@
-﻿namespace Amazon.Elb
+﻿namespace Amazon.Elb;
+
+public interface IElbResponse
 {
-    public interface IElbResponse
-    {
-    }
 }

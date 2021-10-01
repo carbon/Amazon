@@ -1,7 +1,6 @@
-﻿namespace Amazon.Elb
+﻿namespace Amazon.Elb;
+
+public sealed class ModifyTargetGroupAttributesRequest : IElbRequest
 {
-    public sealed class ModifyTargetGroupAttributesRequest : IElbRequest
-    {
-        public string Action => "ModifyTargetGroupAttributes";
-    }
+    public string Action => "ModifyTargetGroupAttributes";
 }

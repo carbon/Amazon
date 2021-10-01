@@ -1,6 +1,5 @@
-﻿namespace Amazon.Elb
+﻿namespace Amazon.Elb;
+
+public sealed class DeleteRuleResponse : IElbResponse
 {
-    public sealed class DeleteRuleResponse : IElbResponse
-    {
-    }
 }

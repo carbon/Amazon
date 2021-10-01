@@ -2,19 +2,17 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Elb
+namespace Amazon.Elb;
+
+public sealed class ModifyTargetGroupResponse : IElbResponse
 {
-    public sealed class ModifyTargetGroupResponse : IElbResponse
-    {
-        [XmlElement]
-        public ModifyTargetGroupResult ModifyTargetGroupResult { get; init; }
-    }
+    [XmlElement]
+    public ModifyTargetGroupResult ModifyTargetGroupResult { get; init; }
+}
 
-    public sealed class ModifyTargetGroupResult
-    {
-        [XmlArray]
-        [XmlArrayItem("member")]
-        public TargetGroup[] TargetGroups { get; init; }
-    }
-
+public sealed class ModifyTargetGroupResult
+{
+    [XmlArray]
+    [XmlArrayItem("member")]
+    public TargetGroup[] TargetGroups { get; init; }
 }

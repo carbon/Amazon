@@ -2,20 +2,19 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Elb
-{
-    public sealed class DescribeTargetGroupAttributesResponse : IElbResponse
-    {
-        [XmlElement]
-        public DescribeTargetGroupAttributesResult DescribeTargetGroupAttributesResult { get; init; }
-    }
+namespace Amazon.Elb;
 
-    public sealed class DescribeTargetGroupAttributesResult
-    {
-        [XmlArray]
-        [XmlArrayItem("member")]
-        public TargetGroupAttribute[] Attributes { get; init; }
-    }
+public sealed class DescribeTargetGroupAttributesResponse : IElbResponse
+{
+    [XmlElement]
+    public DescribeTargetGroupAttributesResult DescribeTargetGroupAttributesResult { get; init; }
+}
+
+public sealed class DescribeTargetGroupAttributesResult
+{
+    [XmlArray]
+    [XmlArrayItem("member")]
+    public TargetGroupAttribute[] Attributes { get; init; }
 }
 
 /*

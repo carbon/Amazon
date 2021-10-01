@@ -1,17 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Elb
+namespace Amazon.Elb;
+
+public sealed class DescribeTargetGroupAttributesRequest : IElbRequest
 {
-    public sealed class DescribeTargetGroupAttributesRequest : IElbRequest
+    public string Action => "DescribeTargetGroupAttributes";
+
+    public DescribeTargetGroupAttributesRequest(string targetGroupArn)
     {
-        public string Action => "DescribeTargetGroupAttributes";
-
-        public DescribeTargetGroupAttributesRequest(string targetGroupArn)
-        {
-            TargetGroupArn = targetGroupArn;
-        }
-
-        [Required]
-        public string TargetGroupArn { get; }
+        TargetGroupArn = targetGroupArn;
     }
+
+    [Required]
+    public string TargetGroupArn { get; }
 }

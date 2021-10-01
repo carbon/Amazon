@@ -3,29 +3,28 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Elb
+namespace Amazon.Elb;
+
+public sealed class CreateListenerRequest : IElbRequest
 {
-    public sealed class CreateListenerRequest : IElbRequest
-    {
-        public string Action => "CreateListener";
+    public string Action => "CreateListener";
 
-        public string LoadBalancerArn { get; init; }
+    public string LoadBalancerArn { get; init; }
 
-        public Certificate[] Certificates { get; init; }
+    public Certificate[] Certificates { get; init; }
 
-        public List<Action> Actions { get; } = new List<Action>();
+    public List<Action> Actions { get; } = new List<Action>();
 
-        [Range(1, 65535)]
-        public ushort Port { get; init; }
+    [Range(1, 65535)]
+    public ushort Port { get; init; }
 
-        [Required]
-        public string Protocal { get; init; }
+    [Required]
+    public string Protocal { get; init; }
 
-        public string SslPolicy { get; init; }
+    public string SslPolicy { get; init; }
 
-        // Certificates
-        // Default actions
-    }
+    // Certificates
+    // Default actions
 }
 
 /*

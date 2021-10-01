@@ -2,20 +2,19 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Elb
-{
-    public sealed class CreateLoadBalancerResponse : IElbResponse
-    {
-        [XmlElement]
-        public CreateLoadBalancerResult CreateLoadBalancerResult { get; init; }
-    }
+namespace Amazon.Elb;
 
-    public sealed class CreateLoadBalancerResult
-    {
-        [XmlArray]
-        [XmlArrayItem("member")]
-        public LoadBalancer[] LoadBalancers { get; init; }
-    }
+public sealed class CreateLoadBalancerResponse : IElbResponse
+{
+    [XmlElement]
+    public CreateLoadBalancerResult CreateLoadBalancerResult { get; init; }
+}
+
+public sealed class CreateLoadBalancerResult
+{
+    [XmlArray]
+    [XmlArrayItem("member")]
+    public LoadBalancer[] LoadBalancers { get; init; }
 }
 
 /*

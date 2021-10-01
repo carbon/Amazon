@@ -1,7 +1,6 @@
-﻿namespace Amazon.Elb
+﻿namespace Amazon.Elb;
+
+public interface IElbRequest
 {
-    public interface IElbRequest
-    {
-        string Action { get; }
-    }
+    string Action { get; }
 }

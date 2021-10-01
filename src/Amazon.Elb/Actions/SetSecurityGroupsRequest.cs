@@ -2,16 +2,15 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Elb
+namespace Amazon.Elb;
+
+public sealed class SetSecurityGroupsRequest : IElbRequest
 {
-    public sealed class SetSecurityGroupsRequest : IElbRequest
-    {
-        public string Action => "SetSecurityGroups";
+    public string Action => "SetSecurityGroups";
 
-        [Required]
-        public string LoadBalancerArn { get; init; }
+    [Required]
+    public string LoadBalancerArn { get; init; }
 
-        [Required]
-        public string[] SecurityGroups { get; init; }
-    }
+    [Required]
+    public string[] SecurityGroups { get; init; }
 }

@@ -1,19 +1,17 @@
 ﻿#nullable disable
 
-namespace Amazon.Elb
+namespace Amazon.Elb;
+
+public sealed class DescribeSSLPoliciesRequest : IElbRequest
 {
-    public sealed class DescribeSSLPoliciesRequest : IElbRequest
-    {
-        public string Action => "DescribeSSLPolicies";
+    public string Action => "DescribeSSLPolicies";
 
-        public string Marker { get; init; }
+    public string Marker { get; init; }
 
-        public string[] Names { get; init; }
+    public string[] Names { get; init; }
 
-        public int? PageSize { get; init; }
-    }
+    public int? PageSize { get; init; }
 }
-
 
 /*
 https://elasticloadbalancing.amazonaws.com/?Action=DescribeSSLPolicies
