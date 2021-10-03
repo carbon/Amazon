@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Amazon.DynamoDb.Models.Tests
+﻿namespace Amazon.DynamoDb.Models.Tests
 {
     public class AttributeWriterTests
     {

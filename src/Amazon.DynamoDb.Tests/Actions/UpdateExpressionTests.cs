@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Carbon.Data;
+﻿using Carbon.Data;
 
 namespace Amazon.DynamoDb.Tests
 {

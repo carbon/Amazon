@@ -1,6 +1,4 @@
-﻿using System;
-
-using Carbon.Data.Annotations;
+﻿using Carbon.Data.Annotations;
 
 namespace Amazon.DynamoDb
 {

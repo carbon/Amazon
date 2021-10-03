@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Amazon.DynamoDb.Models.Tests;
+﻿using Amazon.DynamoDb.Models.Tests;
 
 using Carbon.Data;
 
