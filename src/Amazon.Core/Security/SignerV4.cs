@@ -109,13 +109,14 @@ public static class SignerV4
         if (path is "/")
         {
             output.Append('/');
+            return;
         }
 
         var splitter = new Splitter(path.AsSpan(), '/');
 
         while (splitter.TryGetNext(out var segment))
         {
-            if (segment.Length == 0) continue;
+            if (segment.Length is 0) continue;
 
             output.Append('/');
 
@@ -168,19 +169,24 @@ public static class SignerV4
     }
 
     private static readonly byte[] aws4_request_bytes = Encoding.ASCII.GetBytes("aws4_request");
-    
+
+    [SkipLocalsInit]
     public static byte[] ComputeSigningKey(string secretAccessKey, in CredentialScope scope)
     {
         static byte[] GetBytes(string text) => Encoding.ASCII.GetBytes(text);
 
         byte[] kSecret = GetBytes("AWS4" + secretAccessKey);
 
-        var signingKey = new byte[32];
+        Span<byte> formattedDateBytes = stackalloc byte[8];
 
-        HMACSHA256_HashData(kSecret,     GetBytes(scope.Date.ToString("yyyyMMdd", CultureInfo.InvariantCulture)), signingKey);
-        HMACSHA256_HashData(signingKey,  scope.Region.Utf8Name, signingKey);
+        scope.FormatDateTo(formattedDateBytes);
+
+        var signingKey = GC.AllocateUninitializedArray<byte>(32);
+
+        HMACSHA256_HashData(kSecret,     formattedDateBytes,     signingKey);
+        HMACSHA256_HashData(signingKey,  scope.Region.Utf8Name,  signingKey);
         HMACSHA256_HashData(signingKey,  scope.Service.Utf8Name, signingKey);
-        HMACSHA256_HashData(signingKey,  aws4_request_bytes, signingKey);
+        HMACSHA256_HashData(signingKey,  aws4_request_bytes,     signingKey);
 
         return signingKey;
     }
@@ -224,14 +230,15 @@ public static class SignerV4
 
         byte[] signingKey = ComputeSigningKey(credential.SecretAccessKey, scope);
 
-        SortedDictionary<string, string> queryParameters = !string.IsNullOrEmpty(requestUri.Query)
-            ? ParseQueryString(requestUri.Query)
+        SortedDictionary<string, string> queryParameters = requestUri.Query is { Length: > 0 } queryString
+            ? ParseQueryString(queryString)
             : new SortedDictionary<string, string>();
       
+        // 16 chars
         string timestamp = date.ToString(format: isoDateTimeFormat, CultureInfo.InvariantCulture);
-            
+
         queryParameters[SigningParameterNames.Algorithm]  = algorithmName;
-        queryParameters[SigningParameterNames.Credential] = credential.AccessKeyId + "/" + scope;
+        queryParameters[SigningParameterNames.Credential] = $"{credential.AccessKeyId}/{scope}";
         queryParameters[SigningParameterNames.Date]       = timestamp;
         queryParameters[SigningParameterNames.Expires]    = expires.TotalSeconds.ToString(CultureInfo.InvariantCulture); // in seconds
 

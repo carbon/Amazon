@@ -5,6 +5,9 @@ using System.Text;
 namespace Amazon.Security;
 
 public readonly struct CredentialScope
+#if NET6_0_OR_GREATER
+    : ISpanFormattable
+#endif
 {
     public CredentialScope(DateTime date, AwsRegion region, AwsService service)
     {
@@ -22,9 +25,39 @@ public readonly struct CredentialScope
     // 20120228/us-east-1/iam/aws4_request
     public readonly override string ToString() => $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request";
 
+    private const string dateFormat = "yyyyMMdd";
+
+    internal void FormatDateTo(Span<byte> utf8Destination)
+    {
+        Span<char> formattedDateChars = stackalloc char[8];
+
+        Date.TryFormat(formattedDateChars, out _, dateFormat, CultureInfo.InvariantCulture);
+
+        Encoding.ASCII.GetBytes(formattedDateChars, utf8Destination);
+    }
+
+    internal void FormatDateTo(Span<char> utf16Destination)
+    {
+        Date.TryFormat(utf16Destination, out _, dateFormat, CultureInfo.InvariantCulture);
+    }
+
+#if NET6_0_OR_GREATER
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        return string.Create(CultureInfo.InvariantCulture, $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request");
+    }
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        return destination.TryWrite(CultureInfo.InvariantCulture, $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request", out charsWritten);
+    }
+
+#endif
+
     internal readonly void AppendTo(ref ValueStringBuilder output)
     {
-        output.Append(Date.ToString("yyyyMMdd", CultureInfo.InvariantCulture));
+        FormatDateTo(output.AppendSpan(8));
         output.Append('/');
         output.Append(Region.Name);
         output.Append('/');
