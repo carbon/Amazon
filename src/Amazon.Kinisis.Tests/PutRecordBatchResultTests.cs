@@ -1,7 +1,5 @@
 ﻿using System.Text.Json;
 
-using Xunit;
-
 namespace Amazon.Kinesis.Firehose
 {
     public class PutRecordBatchResultTests
