@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.452
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31710.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D94F35A3-A44D-4AC4-BBED-C578D86572CE}"
 EndProject
@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Kms.Tests", "Amazon.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ses", "Amazon.Ses\Amazon.Ses.csproj", "{72B9D1E3-E8A2-46DA-A2B6-E5F4D86B4E8D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Tests", "Amazon.Tests\Amazon.Tests.csproj", "{9390E070-4155-40D5-9694-C76EF3263AC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Core.Tests", "Amazon.Tests\Amazon.Core.Tests.csproj", "{9390E070-4155-40D5-9694-C76EF3263AC8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Core", "Amazon.Core\Amazon.Core.csproj", "{F4BEFD10-C46E-4896-8AF6-2455C01E49D6}"
 EndProject
