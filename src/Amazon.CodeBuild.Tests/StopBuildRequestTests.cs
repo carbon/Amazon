@@ -1,9 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-
-using Xunit;
-
-namespace Amazon.CodeBuild.Tests
+﻿namespace Amazon.CodeBuild.Tests
 {
     public class StopBuildRequestTests
     {
