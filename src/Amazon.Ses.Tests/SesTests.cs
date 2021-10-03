@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Amazon.Ses.Tests
+﻿namespace Amazon.Ses.Tests
 {
     public class SendEmailResponseTests
     {

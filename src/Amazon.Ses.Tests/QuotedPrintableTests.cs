@@ -1,7 +1,4 @@
-﻿
-using System.Net.Mail;
-
-using Xunit;
+﻿using System.Net.Mail;
 
 namespace Amazon.Ses.Tests
 {

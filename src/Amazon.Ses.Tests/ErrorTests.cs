@@ -1,11 +1,7 @@
-﻿
-using Xunit;
-
-namespace Amazon.Ses.Tests
+﻿namespace Amazon.Ses.Tests
 {
     public class ErrorTests
     {
-
         [Fact]
         public void ParseError()
         {
@@ -23,7 +19,6 @@ namespace Amazon.Ses.Tests
             Assert.Equal("Sender", response.Error.Type);
             Assert.Equal("InvalidParameterValue", response.Error.Code);
             Assert.Equal("Local address contains control or whitespace", response.Error.Message);
-
         }
     }
 }

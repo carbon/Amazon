@@ -1,7 +1,4 @@
-﻿
-using Xunit;
-
-namespace Amazon.Ses.Tests
+﻿namespace Amazon.Ses.Tests
 {
     public class QuotaTests
     {
@@ -18,7 +15,6 @@ namespace Amazon.Ses.Tests
     <RequestId>273021c6-c866-11e0-b926-699e21c3af9e</RequestId>
   </ResponseMetadata>
 </GetSendQuotaResponse>";
-
 
             var getQuotaResponse = GetSendQuotaResponse.Parse(text);
 

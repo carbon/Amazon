@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace Amazon.Ses.Tests
 {
