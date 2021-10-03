@@ -1,7 +1,5 @@
 ﻿using System.Text.Json;
 
-using Xunit;
-
 namespace Amazon.Kms.Exceptions.Tests
 {
     public class KmsErrorTests

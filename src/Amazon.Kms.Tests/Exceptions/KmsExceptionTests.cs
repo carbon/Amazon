@@ -4,8 +4,6 @@ using System.Net;
 
 using Amazon.Exceptions;
 
-using Xunit;
-
 namespace Amazon.Kms.Exceptions.Tests
 {
     public class KmsExceptionTests

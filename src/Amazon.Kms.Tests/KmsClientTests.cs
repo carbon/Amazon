@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Amazon.Kms.Tests
+﻿namespace Amazon.Kms.Tests
 {
     public class KmsClientTests
     {
