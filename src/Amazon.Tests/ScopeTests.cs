@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Security.Tests;
+﻿namespace Amazon.Security.Tests;
 
 public class ScopeTests
 {

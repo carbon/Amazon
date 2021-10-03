@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 
@@ -233,9 +230,9 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), 
         var request = new HttpRequestMessage(HttpMethod.Post, "http://s3.us-east-1.amazonaws.com/frame%3A1")
         {
             Headers = {
-                     { "x-amz-date", "2012-02-17" },
-                     { "x-amz-content-sha256", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785" }
-                 }
+                { "x-amz-date", "2012-02-17" },
+                { "x-amz-content-sha256", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785" }
+            }
         };
 
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);

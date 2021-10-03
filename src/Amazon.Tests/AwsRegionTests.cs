@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Amazon.Tests;
+﻿namespace Amazon.Tests;
 
 public class AwsRegionTests
 {
@@ -14,7 +12,7 @@ public class AwsRegionTests
             Assert.Same(region, AwsRegion.Get(region.Name));
         }
 
-        // Ensure there are not any dublicates
+        // Ensure all the regions are unique
         var names = AwsRegion.All.Select(a => a.Name).Distinct().ToArray();
 
         Assert.Equal(AwsRegion.All.Length, names.Length);
@@ -45,12 +43,12 @@ public class AwsRegionTests
     [Fact]
     public void B()
     {
-        Assert.Same(AwsRegion.USEast1, AwsRegion.Get("us-east-1"));
-        Assert.Same(AwsRegion.USEast2, AwsRegion.Get("us-east-2"));
-        Assert.Same(AwsRegion.USWest1, AwsRegion.Get("us-west-1"));
-        Assert.Same(AwsRegion.USWest2, AwsRegion.Get("us-west-2"));
-        Assert.Same(AwsRegion.CACentral1, AwsRegion.Get("ca-central-1"));
-        Assert.Same(AwsRegion.APSouth1, AwsRegion.Get("ap-south-1"));
+        Assert.Same(AwsRegion.USEast1,      AwsRegion.Get("us-east-1"));
+        Assert.Same(AwsRegion.USEast2,      AwsRegion.Get("us-east-2"));
+        Assert.Same(AwsRegion.USWest1,      AwsRegion.Get("us-west-1"));
+        Assert.Same(AwsRegion.USWest2,      AwsRegion.Get("us-west-2"));
+        Assert.Same(AwsRegion.CACentral1,   AwsRegion.Get("ca-central-1"));
+        Assert.Same(AwsRegion.APSouth1,     AwsRegion.Get("ap-south-1"));
         Assert.Same(AwsRegion.APSouthEast1, AwsRegion.Get("ap-southeast-1"));
     }
 }
