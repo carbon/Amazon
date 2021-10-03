@@ -1,8 +1,5 @@
-﻿using Xunit;
-
-namespace Amazon.Route53.Tests
+﻿namespace Amazon.Route53.Tests
 {
-
     public class GetHealthCheckResponseTests
     {
         [Fact]
@@ -32,8 +29,6 @@ namespace Amazon.Route53.Tests
       <HealthCheckVersion>2</HealthCheckVersion>
    </HealthCheck>
 </GetHealthCheckResponse>";
-
-
 
             var result = Route53Serializer<GetHealthCheckResponse>.DeserializeXml(text);
 

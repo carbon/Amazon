@@ -1,7 +1,6 @@
-﻿using System.Net.Http;
-using System.Text;
+﻿using System.Text;
+
 using Amazon.Security;
-using Xunit;
 
 namespace Amazon.Route53.Tests
 {

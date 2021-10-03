@@ -1,8 +1,5 @@
-﻿using Xunit;
-
-namespace Amazon.Route53.Tests
+﻿namespace Amazon.Route53.Tests
 {
-
     public class TestDnsAnswerResponseTests
     {
         [Fact]
@@ -25,6 +22,5 @@ namespace Amazon.Route53.Tests
             Assert.Equal("A", result.RecordType);
             Assert.Equal("UDP", result.Protocol);
         }
-
     }
 }

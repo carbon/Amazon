@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Amazon.Route53.Tests
+﻿namespace Amazon.Route53.Tests
 {
     public class GetChangeResponseTests
     {
