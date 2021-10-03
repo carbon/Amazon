@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Amazon.CloudWatch.Tests
+﻿namespace Amazon.CloudWatch.Tests
 {
     public class ListMetricsResponseTests
     {
