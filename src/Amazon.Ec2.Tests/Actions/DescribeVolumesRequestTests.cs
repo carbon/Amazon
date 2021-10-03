@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests
 {
     public class DescribeVolumesRequestTests
     {
