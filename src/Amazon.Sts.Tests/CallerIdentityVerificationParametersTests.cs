@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json;
-using Xunit;
+﻿using System.Text.Json;
 
 namespace Amazon.Sts.Tests
 {

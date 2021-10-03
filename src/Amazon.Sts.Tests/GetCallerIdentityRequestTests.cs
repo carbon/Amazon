@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using Xunit;
-
-namespace Amazon.Sts.Tests
+﻿namespace Amazon.Sts.Tests
 {
     public class GetCallerIdentityRequestTests
     {
