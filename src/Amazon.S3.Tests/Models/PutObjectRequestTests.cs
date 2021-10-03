@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-
-namespace Amazon.S3.Tests;
+﻿namespace Amazon.S3.Tests;
 
 public class PutObjectRequestTests
 {

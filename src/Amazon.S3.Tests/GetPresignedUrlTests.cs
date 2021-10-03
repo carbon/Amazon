@@ -1,8 +1,4 @@
-﻿using System;
-
-using Xunit;
-
-namespace Amazon.S3.Tests
+﻿namespace Amazon.S3.Tests
 {
     public class GetPresignedUrlTests
     {

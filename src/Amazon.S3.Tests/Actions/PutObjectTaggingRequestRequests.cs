@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
-
-namespace Amazon.S3.Actions.Tests;
+﻿namespace Amazon.S3.Actions.Tests;
 
 public class PutObjectTaggingRequestRequests
 {

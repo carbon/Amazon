@@ -1,8 +1,4 @@
-﻿using System;
-
-using Xunit;
-
-namespace Amazon.S3.Models.Tests
+﻿namespace Amazon.S3.Models.Tests
 {
     public class CopyObjectResultTests
     {

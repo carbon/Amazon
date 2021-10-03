@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Amazon.S3.Actions.Tests;
+﻿namespace Amazon.S3.Actions.Tests;
 
 public class InitiateMultipartUploadRequestTests
 {

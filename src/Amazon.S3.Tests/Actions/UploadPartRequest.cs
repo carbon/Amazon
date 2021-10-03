@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.S3.Models.Tests;
+﻿namespace Amazon.S3.Models.Tests;
 
 public class UploadPartRequestTests
 {
