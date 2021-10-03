@@ -1,8 +1,4 @@
-﻿using System;
-
-using Xunit;
-
-namespace Amazon.Sqs.Tests
+﻿namespace Amazon.Sqs.Tests
 {
     public class RecieveMessagesRequestTests
     {

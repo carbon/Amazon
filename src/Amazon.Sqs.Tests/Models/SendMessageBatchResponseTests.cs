@@ -1,8 +1,6 @@
-﻿using Xunit;
-
-namespace Amazon.Sqs.Models.Tests
-{	
-	public class SendMessageBatchResponseTests
+﻿namespace Amazon.Sqs.Models.Tests
+{
+    public class SendMessageBatchResponseTests
 	{
 		[Fact]
 		public void SendMessageBatchResponseParse()

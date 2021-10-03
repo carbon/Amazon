@@ -1,8 +1,6 @@
 ﻿namespace Amazon.Sqs.Models.Tests
 {
-	using Xunit;
-	
-	public class SendMessageResultTests
+    public class SendMessageResultTests
 	{
 		[Fact]
 		public void Parse()

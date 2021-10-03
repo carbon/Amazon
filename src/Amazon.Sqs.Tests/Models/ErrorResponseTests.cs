@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Amazon.Sqs.Models.Tests
+﻿namespace Amazon.Sqs.Models.Tests
 {
     public class ErrorResponseTests
     {

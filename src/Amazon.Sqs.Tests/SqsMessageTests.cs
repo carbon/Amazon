@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace Amazon.Sqs.Tests
+﻿namespace Amazon.Sqs.Tests
 {
     public class SqsMessageTests
     {
@@ -18,7 +16,6 @@ namespace Amazon.Sqs.Tests
             Assert.Equal("hello", b.Body.Text);
         }
     }
-
 
     public class SampleMessage
     {
