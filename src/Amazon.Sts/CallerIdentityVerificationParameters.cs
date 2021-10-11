@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace Amazon.Sts
@@ -28,5 +29,19 @@ namespace Amazon.Sts
         // Always POST
         [JsonPropertyName("body")]
         public string Body { get; set; }
+
+        public TimeSpan GetAge()
+        {
+            DateTime date = DateTime.ParseExact(
+                s        : Headers["x-amz-date"],
+                format   : "yyyyMMddTHHmmssZ",
+                provider : CultureInfo.InvariantCulture,
+                style    : DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal
+            );
+
+            TimeSpan age = DateTime.UtcNow - date;
+
+            return (age < TimeSpan.Zero) ? TimeSpan.Zero : age;
+        }
     }
 }

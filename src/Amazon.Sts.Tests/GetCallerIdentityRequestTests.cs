@@ -9,18 +9,16 @@
         {
             var client = new StsClient(AwsRegion.USEast1, awsCredential);
 
-            var q = await client.GetCallerIdentityVerificationParametersAsync();
+            var parameters = await client.GetCallerIdentityVerificationParametersAsync();
 
-            Assert.Equal("Action=GetCallerIdentity&Version=2011-06-15", q.Body);
+            Assert.Equal("Action=GetCallerIdentity&Version=2011-06-15", parameters.Body);
 
-            Assert.Equal(2, q.Headers.Count);
+            Assert.Equal(2, parameters.Headers.Count);
 
-            Assert.NotNull(q.Headers["x-amz-date"]);
-            Assert.NotNull(q.Headers["Authorization"]);
+            Assert.NotNull(parameters.Headers["x-amz-date"]);
+            Assert.NotNull(parameters.Headers["Authorization"]);
 
-            var verifier = new CallerIdentityVerifier();
-
-            var age = verifier.GetAge(q);
+            var age = parameters.GetAge();
 
             Assert.True(age > TimeSpan.Zero);
         }
