@@ -2,18 +2,17 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ses
-{
-    [XmlRoot(Namespace = SesClient.Namespace)]
-    public sealed class ErrorResponse
-    {
-        [XmlElement]
-        public SesError Error { get; init; }
+namespace Amazon.Ses;
 
-        public static ErrorResponse Parse(string text)
-        {
-            return XmlHelper<ErrorResponse>.Deserialize(text);
-        }
+[XmlRoot(Namespace = SesClient.Namespace)]
+public sealed class ErrorResponse
+{
+    [XmlElement]
+    public SesError Error { get; init; }
+
+    public static ErrorResponse Parse(string text)
+    {
+        return XmlHelper<ErrorResponse>.Deserialize(text);
     }
 }
 

@@ -2,31 +2,30 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ses
+namespace Amazon.Ses;
+
+[XmlRoot(Namespace = SesClient.Namespace)]
+public sealed class GetSendQuotaResponse
 {
-    [XmlRoot(Namespace = SesClient.Namespace)]
-    public sealed class GetSendQuotaResponse
+    [XmlElement]
+    public GetSendQuotaResult GetSendQuotaResult { get; init; }
+
+    public static GetSendQuotaResponse Parse(string text)
     {
-        [XmlElement]
-        public GetSendQuotaResult GetSendQuotaResult { get; init; }
-
-        public static GetSendQuotaResponse Parse(string text)
-        {
-            return XmlHelper<GetSendQuotaResponse>.Deserialize(text);
-        }
+        return XmlHelper<GetSendQuotaResponse>.Deserialize(text);
     }
+}
 
-    public sealed class GetSendQuotaResult
-    {
-        [XmlElement]
-        public float SentLast24Hours { get; init; }
+public sealed class GetSendQuotaResult
+{
+    [XmlElement]
+    public float SentLast24Hours { get; init; }
 
-        [XmlElement]
-        public float Max24HourSend { get; init; }
+    [XmlElement]
+    public float Max24HourSend { get; init; }
 
-        [XmlElement]
-        public float MaxSendRate { get; init; }
-    }
+    [XmlElement]
+    public float MaxSendRate { get; init; }
 }
 
 /*

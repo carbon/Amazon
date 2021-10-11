@@ -2,22 +2,21 @@
 
 using Amazon.Exceptions;
 
-namespace Amazon.Ses
+namespace Amazon.Ses;
+
+public sealed class SesException : AwsException
 {
-    public sealed class SesException : AwsException
+    private readonly SesError _error;
+
+    public SesException(SesError error, HttpStatusCode statusCode)
+        : base(error.Message, statusCode)
     {
-        private readonly SesError error;
-
-        public SesException(SesError error, HttpStatusCode statusCode)
-            : base(error.Message, statusCode)
-        {
-            this.error = error;
-        }
-
-        public string Type => error.Type;
-
-        public string Code => error.Code;
-
-        public bool IsTransient => HttpStatusCode is HttpStatusCode.InternalServerError or HttpStatusCode.ServiceUnavailable || Code is "Throttling";
+        _error = error;
     }
+
+    public string Type => _error.Type;
+
+    public string Code => _error.Code;
+
+    public bool IsTransient => HttpStatusCode is HttpStatusCode.InternalServerError or HttpStatusCode.ServiceUnavailable || Code is "Throttling";
 }

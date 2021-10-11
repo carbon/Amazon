@@ -1,17 +1,16 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
 
-namespace Amazon.Ses
+namespace Amazon.Ses;
+
+internal static class XmlHelper<T>
 {
-    internal static class XmlHelper<T>
+    private static readonly XmlSerializer serializer = new(typeof(T));
+
+    public static T Deserialize(string xmlText)
     {
-        private static readonly XmlSerializer serializer = new (typeof(T));
+        using var reader = new StringReader(xmlText);
 
-        public static T Deserialize(string xmlText)
-        {
-            using var reader = new StringReader(xmlText);
-
-            return (T)serializer.Deserialize(reader)!;
-        }
+        return (T)serializer.Deserialize(reader)!;
     }
 }

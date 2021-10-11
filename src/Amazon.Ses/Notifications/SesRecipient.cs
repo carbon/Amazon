@@ -2,11 +2,10 @@
 
 using System.Text.Json.Serialization;
 
-namespace Amazon.Ses
+namespace Amazon.Ses;
+
+public readonly struct SesRecipient
 {
-    public readonly struct SesRecipient
-    {
-        [JsonPropertyName("emailAddress")]
-        public string EmailAddress { get; init; }
-    }
+    [JsonPropertyName("emailAddress")]
+    public string EmailAddress { get; init; }
 }

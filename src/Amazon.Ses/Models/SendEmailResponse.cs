@@ -2,23 +2,22 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ses
+namespace Amazon.Ses;
+
+[XmlRoot(Namespace = SesClient.Namespace)]
+public sealed class SendEmailResponse
 {
-    [XmlRoot(Namespace = SesClient.Namespace)]
-    public sealed class SendEmailResponse
-    {
-        [XmlElement]
-        public SendEmailResult SendEmailResult { get; init; }
+    [XmlElement]
+    public SendEmailResult SendEmailResult { get; init; }
 
-        public static SendEmailResponse Parse(string text)
-        {
-            return XmlHelper<SendEmailResponse>.Deserialize(text);
-        }
-    }
-
-    public class SendEmailResult
+    public static SendEmailResponse Parse(string text)
     {
-        [XmlElement]
-        public string MessageId { get; init; }
+        return XmlHelper<SendEmailResponse>.Deserialize(text);
     }
+}
+
+public sealed class SendEmailResult
+{
+    [XmlElement]
+    public string MessageId { get; init; }
 }

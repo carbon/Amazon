@@ -1,11 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Amazon.Ses
+namespace Amazon.Ses;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum SesNotificationType
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum SesNotificationType
-    {
-        Bounce    = 1,
-        Complaint = 2
-    }
+    Bounce    = 1,
+    Complaint = 2
 }

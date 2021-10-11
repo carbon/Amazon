@@ -1,12 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Amazon.Ses
+namespace Amazon.Ses;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum SesBounceType
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum SesBounceType
-    {
-        Undetermined = 1,
-        Permanent = 2,
-        Transient = 3,
-    }
+    Undetermined = 1,
+    Permanent    = 2,
+    Transient    = 3,
 }

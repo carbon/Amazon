@@ -1,14 +1,13 @@
 ﻿using System.Net.Mail;
 
-namespace Amazon.Ses
-{
-    public static class SesHelper
-    {
-        // TODO: Avoid these allocations
+namespace Amazon.Ses;
 
-        public static string EncodeMailAddress(MailAddress email)
-        {
-            return QuotedPrintable.Encode(email.ToString());
-        }
+public static class SesHelper
+{
+    // TODO: Avoid these allocations
+
+    public static string EncodeMailAddress(MailAddress email)
+    {
+        return QuotedPrintable.Encode(email.ToString());
     }
 }
