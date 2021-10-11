@@ -1,8 +1,7 @@
 ﻿#nullable disable
 
-namespace Amazon.CloudWatch
+namespace Amazon.CloudWatch;
+
+public class PutMetricDataResult
 {
-    public class PutMetricDataResult
-    {
-    }
 }

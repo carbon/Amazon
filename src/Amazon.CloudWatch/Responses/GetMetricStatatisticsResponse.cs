@@ -5,33 +5,32 @@ using System.Xml.Linq;
 
 using static Amazon.CloudWatch.CloudWatchClient;
 
-namespace Amazon.CloudWatch
+namespace Amazon.CloudWatch;
+
+public sealed class GetMetricStatatisticsResponse
 {
-    public sealed class GetMetricStatatisticsResponse
+    public string Label { get; set; }
+
+    public List<DataPoint> Datapoints { get; } = new();
+
+    public static GetMetricStatatisticsResponse Parse(string xmlText)
     {
-        public string Label { get; set; }
+        var result = new GetMetricStatatisticsResponse();
 
-        public List<DataPoint> Datapoints { get; } = new ();
+        var rootEl = XElement.Parse(xmlText); // ListMetricsResponse
 
-        public static GetMetricStatatisticsResponse Parse(string xmlText)
+        var resultEl = rootEl.Element(NS + "GetMetricStatisticsResult");
+
+        var datapointsEl = resultEl.Element(NS + "Datapoints");
+
+        result.Label = resultEl.Element(NS + "Label").Value;
+
+        foreach (var datapoint in datapointsEl.Elements())
         {
-            var result = new GetMetricStatatisticsResponse();
-
-            var rootEl = XElement.Parse(xmlText); // ListMetricsResponse
-
-            var resultEl = rootEl.Element(NS + "GetMetricStatisticsResult");
-
-            var datapointsEl = resultEl.Element(NS + "Datapoints");
-            
-            result.Label = resultEl.Element(NS + "Label").Value;
-
-            foreach (var datapoint in datapointsEl.Elements())
-            {
-                result.Datapoints.Add(DataPoint.FromXml(NS, datapoint));
-            }
-
-            return result;
+            result.Datapoints.Add(DataPoint.FromXml(NS, datapoint));
         }
+
+        return result;
     }
 }
 

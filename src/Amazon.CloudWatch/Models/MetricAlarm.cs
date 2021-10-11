@@ -1,6 +1,5 @@
-﻿namespace Amazon.CloudWatch
+﻿namespace Amazon.CloudWatch;
+
+public class MetricAlarm
 {
-    public class MetricAlarm
-    {
-    }
 }

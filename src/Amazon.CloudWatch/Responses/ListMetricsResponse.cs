@@ -5,28 +5,27 @@ using System.Xml.Linq;
 
 using static Amazon.CloudWatch.CloudWatchClient;
 
-namespace Amazon.CloudWatch
+namespace Amazon.CloudWatch;
+
+public static class ListMetricsResponse
 {
-    public static class ListMetricsResponse
+    public static List<Metric> Parse(string xmlText)
     {
-        public static List<Metric> Parse(string xmlText)
+        var metrics = new List<Metric>();
+
+        var rooteEl = XElement.Parse(xmlText); // ListMetricsResponse
+
+        var listMetricsResultEl = rooteEl.Element(NS + "ListMetricsResult");
+        var metricsEl = listMetricsResultEl.Element(NS + "Metrics");
+
+        foreach (var metricEl in metricsEl.Elements()) // member...
         {
-            var metrics = new List<Metric>();
+            var metric = Metric.FromXml(NS, metricEl);
 
-            var rooteEl = XElement.Parse(xmlText); // ListMetricsResponse
-
-            var listMetricsResultEl = rooteEl.Element(NS + "ListMetricsResult");
-            var metricsEl = listMetricsResultEl.Element(NS + "Metrics");
-
-            foreach (var metricEl in metricsEl.Elements()) // member...
-            {
-                var metric = Metric.FromXml(NS, metricEl);
-
-                metrics.Add(metric);
-            }
-
-            return metrics;
+            metrics.Add(metric);
         }
+
+        return metrics;
     }
 }
 

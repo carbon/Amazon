@@ -3,83 +3,87 @@
 using System;
 using System.Globalization;
 
-namespace Amazon.CloudWatch
+namespace Amazon.CloudWatch;
+
+public sealed class GetMetricStatisticsRequest
 {
-    public sealed class GetMetricStatisticsRequest
+    public GetMetricStatisticsRequest(string nameSpace, string metricName)
     {
-        public GetMetricStatisticsRequest(string nameSpace, string metricName)
+        ArgumentNullException.ThrowIfNull(nameSpace);
+        ArgumentNullException.ThrowIfNull(metricName);
+
+        Namespace = nameSpace;
+        MetricName = metricName;
+    }
+
+    // Required
+    public string MetricName { get; }
+
+    // Required
+    public string Namespace { get; }
+
+    public Dimension[] Dimensions { get; set; }
+
+    public Statistic[] Statistics { get; set; }
+
+    public DateTime StartTime { get; set; }
+
+    public DateTime EndTime { get; set; }
+
+    public string Unit { get; set; }
+
+    /// <summary>
+    /// The granularity, in seconds, of the returned data points. 
+    /// A period can be as short as one minute (60 seconds) and must be a multiple of 60.
+    /// The default value is 60.
+    /// </summary>
+    public TimeSpan Period { get; set; } = TimeSpan.FromSeconds(60);
+
+    public AwsRequest ToParams()
+    {
+        var parameters = new AwsRequest {
+            { "Action"     , "GetMetricStatistics" },
+
+            // Required paramaeters
+            { "Namespace"  , Namespace },
+            { "MetricName" , MetricName },
+            { "StartTime"  , StartTime.ToString("yyyy-MM-ddTHH:mm:ssZ") },
+            { "EndTime"    , EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ") },
+            { "Period"     , (int)Period.TotalSeconds }
+        };
+
+        if (Unit != null)
         {
-            Namespace = nameSpace ?? throw new ArgumentNullException(nameof(nameSpace));
-            MetricName = metricName ?? throw new ArgumentNullException(nameof(metricName));
+            parameters.Add("Unit", Unit);
         }
-        
-        // Required
-        public string MetricName { get; }
 
-        // Required
-        public string Namespace { get; }
-
-        public Dimension[] Dimensions { get; set; }
-
-        public Statistic[] Statistics { get; set; }
-
-        public DateTime StartTime { get; set; }
-
-        public DateTime EndTime { get; set; }
-
-        public string Unit { get; set; }
-
-        /// <summary>
-        /// The granularity, in seconds, of the returned data points. 
-        /// A period can be as short as one minute (60 seconds) and must be a multiple of 60.
-        /// The default value is 60.
-        /// </summary>
-        public TimeSpan Period { get; set; } = TimeSpan.FromSeconds(60);
-
-        public AwsRequest ToParams()
+        if (Dimensions != null)
         {
-            var parameters = new AwsRequest {
-                { "Action"     , "GetMetricStatistics" },
-
-                // Required paramaeters
-                { "Namespace"  , Namespace },
-                { "MetricName" , MetricName },
-                { "StartTime"  , StartTime.ToString("yyyy-MM-ddTHH:mm:ssZ") },
-                { "EndTime"    , EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ") },
-                { "Period"     , (int)Period.TotalSeconds }
-            }; 
-        
-            if (Unit != null)
+            for (int i = 0; i < Dimensions.Length; i++)
             {
-                parameters.Add("Unit", Unit);
+                var dimension = Dimensions[i];
+                int number = (i + 1);
+
+                string prefix = string.Create(CultureInfo.InvariantCulture, $"Dimensions.member.{number}.");
+
+                parameters.Add(prefix + "Name", dimension.Name);
+                parameters.Add(prefix + "Value", dimension.Value);
             }
-
-            if (Dimensions != null)
-            {
-                for (int i = 0; i < Dimensions.Length; i++)
-                {
-                    var dimension = Dimensions[i];
-
-                    string prefix = "Dimensions.member." + (i + 1).ToString(CultureInfo.InvariantCulture) + ".";
-
-                    parameters.Add(prefix + "Name", dimension.Name);
-                    parameters.Add(prefix + "Value", dimension.Value);
-                }
-            }
-
-            if (Statistics != null)
-            {
-                for (int i = 0; i < Statistics.Length; i++)
-                {
-                    var stat = Statistics[i];
-
-                    var prefix = "Statistics.member." + (i + 1);
-
-                    parameters.Add(prefix, stat.Name);
-                }
-            }
-
-            return parameters;
         }
+
+        if (Statistics != null)
+        {
+            for (int i = 0; i < Statistics.Length; i++)
+            {
+                var stat = Statistics[i];
+                int number = (i + 1);
+
+                var prefix = string.Create(CultureInfo.InvariantCulture, $"Statistics.member.{number}");
+
+                parameters.Add(prefix, stat.Name);
+            }
+        }
+
+        return parameters;
     }
 }
