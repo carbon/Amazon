@@ -2,15 +2,16 @@
 
 using Carbon.Data.Streams;
 
-namespace Amazon.Kinesis
-{
-    public sealed class KinesisIterator : IIterator
-    {
-        public KinesisIterator(string value)
-        {
-            Value = value ?? throw new ArgumentNullException(nameof(value));
-        }
+namespace Amazon.Kinesis;
 
-        public string Value { get; }
+public readonly struct KinesisIterator : IIterator
+{
+    public KinesisIterator(string value)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        Value = value;
     }
+
+    public string Value { get; }
 }

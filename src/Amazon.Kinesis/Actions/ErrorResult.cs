@@ -1,15 +1,14 @@
 ﻿#nullable disable
 
-namespace Amazon.Kinesis
+namespace Amazon.Kinesis;
+
+public sealed class ErrorResult
 {
-    public sealed class ErrorResult
-	{
-		public string Type { get; set; }
+    public string Type { get; set; }
 
-		public string Message { get; set; }
+    public string Message { get; set; }
 
-        public string Text { get; set; }
-    }
+    public string Text { get; set; }
 }
 
 /*

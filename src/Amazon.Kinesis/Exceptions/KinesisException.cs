@@ -3,22 +3,21 @@
 using Amazon.Exceptions;
 using Amazon.Scheduling;
 
-namespace Amazon.Kinesis
+namespace Amazon.Kinesis;
+
+public sealed class KinesisException : AwsException, IException
 {
-    public sealed class KinesisException : AwsException, IException
-	{
-		private readonly ErrorResult error;
+    private readonly ErrorResult error;
 
-		public KinesisException(ErrorResult error, HttpStatusCode statusCode)
-			: base(error.Type ?? error.Text, statusCode)
-		{
-			this.error = error;
-		}
+    public KinesisException(ErrorResult error, HttpStatusCode statusCode)
+        : base(error.Type ?? error.Text, statusCode)
+    {
+        this.error = error;
+    }
 
-        public string Type => error.Type;
+    public string Type => error.Type;
 
-		public bool IsTransient => error.Type is "ProvisionedThroughputExceededException" or "InternalFailure";
-	}
+    public bool IsTransient => error.Type is "ProvisionedThroughputExceededException" or "InternalFailure";
 }
 
 /*

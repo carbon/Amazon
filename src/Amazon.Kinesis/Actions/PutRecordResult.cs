@@ -1,13 +1,12 @@
 ﻿#nullable disable
 
-namespace Amazon.Kinesis
-{
-    public sealed class PutRecordResult : KinesisResponse
-    {
-        public string SequenceNumber { get; init; }
+namespace Amazon.Kinesis;
 
-        public string ShardId { get; init; }
-    }
+public sealed class PutRecordResult : KinesisResponse
+{
+    public string SequenceNumber { get; init; }
+
+    public string ShardId { get; init; }
 }
 
 /*

@@ -1,12 +1,12 @@
 ﻿#nullable disable
 
-namespace Amazon.Kinesis
+namespace Amazon.Kinesis;
+
+public sealed class DescribeStreamResult : KinesisResponse
 {
-    public sealed class DescribeStreamResult : KinesisResponse
-    {
-        public StreamDescription StreamDescription { get; init; }
-    }
+    public StreamDescription StreamDescription { get; init; }
 }
+
 /*
 {
     "StreamDescription": {

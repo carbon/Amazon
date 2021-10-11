@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-namespace Amazon.Kinesis
-{
-    public sealed class SequenceNumberRange
-    {
-        public string StartingSequenceNumber { get; init; }
+namespace Amazon.Kinesis;
 
-        public string EndingSequenceNumber { get; init; }
-    }
+public sealed class SequenceNumberRange
+{
+    public string StartingSequenceNumber { get; init; }
+
+    public string EndingSequenceNumber { get; init; }
 }

@@ -4,52 +4,51 @@ using System.Threading.Tasks;
 
 using Carbon.Data.Streams;
 
-namespace Amazon.Kinesis
+namespace Amazon.Kinesis;
+
+public sealed class KinesisStreamSubscription : IDisposable
 {
-    public sealed class KinesisStreamSubscription : IDisposable
+    private readonly CancellationTokenSource cts = new ();
+
+    private readonly KinesisStream _stream;
+    private readonly IShard _shard;
+    private readonly IObserver<IRecord> _observer;
+
+    public KinesisStreamSubscription(KinesisStream stream, IShard shard, IObserver<IRecord> observer)
     {
-        private readonly CancellationTokenSource cancellationToken = new CancellationTokenSource();
+        _stream = stream;
+        _shard = shard;
+        _observer = observer;
 
-        private readonly KinesisStream stream;
-        private readonly IShard shard;
-        private readonly IObserver<IRecord> observer;
+        Task.Factory.StartNew(StartAsync);
+    }
 
-        public KinesisStreamSubscription(KinesisStream stream, IShard shard, IObserver<IRecord> observer)
+    private async Task StartAsync()
+    {
+        var iterator = await _stream.GetIteratorAsync(_shard, IteratorPosition.End).ConfigureAwait(false);
+
+        while (!cts.IsCancellationRequested)
         {
-            this.stream = stream;
-            this.shard = shard;
-            this.observer = observer;
-
-            Task.Factory.StartNew(async () => await StartAsync().ConfigureAwait(false));
-        }
-
-        private async Task StartAsync()
-        {
-            var iterator = await stream.GetIteratorAsync(shard, IteratorPosition.End).ConfigureAwait(false);
-
-            while (!cancellationToken.IsCancellationRequested)
+            try
             {
-                try
+                var result = await _stream.GetAsync(iterator).ConfigureAwait(false);
+
+                foreach (var record in result)
                 {
-                    var result = await stream.GetAsync(iterator).ConfigureAwait(false);
-
-                    foreach (var record in result)
-                    {
-                        observer.OnNext(record);
-                    }
-
-                    iterator = result.NextIterator;
-
+                    _observer.OnNext(record);
                 }
-                catch { }
 
-                await Task.Delay(250, cancellationToken.Token).ConfigureAwait(false);
+                iterator = result.NextIterator;
+
             }
-        }
+            catch { }
 
-        public void Dispose()
-        {
-            cancellationToken.Cancel();
+            await Task.Delay(250, cts.Token).ConfigureAwait(false);
         }
+    }
+
+    public void Dispose()
+    {
+        cts.Cancel();
     }
 }

@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-namespace Amazon.Kinesis
-{
-    public sealed class HashKeyRange
-    {
-        public string StartingHashKey { get; init; }
+namespace Amazon.Kinesis;
 
-        public string EndingHashKey { get; init; }
-    }
+public sealed class HashKeyRange
+{
+    public string StartingHashKey { get; init; }
+
+    public string EndingHashKey { get; init; }
 }

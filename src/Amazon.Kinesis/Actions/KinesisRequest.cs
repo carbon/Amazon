@@ -1,6 +1,5 @@
-﻿namespace Amazon.Kinesis
-{
-	public abstract class KinesisRequest { }
+﻿namespace Amazon.Kinesis;
 
-	public abstract class KinesisResponse { }
-}
+public abstract class KinesisRequest { }
+
+public abstract class KinesisResponse { }

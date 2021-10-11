@@ -2,13 +2,12 @@
 
 using Carbon.Data.Streams;
 
-namespace Amazon.Kinesis
-{
-	public sealed class GetShardIteratorResponse : KinesisResponse, IIterator
-	{
-		public string ShardIterator { get; init; }
+namespace Amazon.Kinesis;
 
-		// IIterator
-		string IIterator.Value => ShardIterator;
-	}
+public sealed class GetShardIteratorResponse : KinesisResponse, IIterator
+{
+    public string ShardIterator { get; init; }
+
+    // IIterator
+    string IIterator.Value => ShardIterator;
 }
