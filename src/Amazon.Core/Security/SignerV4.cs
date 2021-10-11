@@ -530,7 +530,7 @@ public static class SignerV4
     [SkipLocalsInit]
     private static string HMACSHA256_Hex(byte[] key, string data)
     {
-        var dataBuffer = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetByteCount(data));
+        var dataBuffer = ArrayPool<byte>.Shared.Rent(data.Length * 4);
 
         int encodedByteCount = Encoding.UTF8.GetBytes(data, dataBuffer);
 
