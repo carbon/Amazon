@@ -4,6 +4,7 @@
     <AssemblyName>Amazon.Sts</AssemblyName>
     <Version>0.13.0</Version>
     <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>10</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     

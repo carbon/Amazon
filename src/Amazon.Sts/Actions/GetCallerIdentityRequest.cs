@@ -1,11 +1,10 @@
-﻿namespace Amazon.Sts
+﻿namespace Amazon.Sts;
+
+public sealed class GetCallerIdentityRequest : IStsRequest
 {
-    public sealed class GetCallerIdentityRequest : IStsRequest
-    {
-        public static readonly GetCallerIdentityRequest Default = new GetCallerIdentityRequest();
+    public static readonly GetCallerIdentityRequest Default = new ();
 
-        public string Action => "GetCallerIdentity";
+    public string Action => "GetCallerIdentity";
 
-        public GetCallerIdentityRequest() { }
-    }
+    public GetCallerIdentityRequest() { }
 }

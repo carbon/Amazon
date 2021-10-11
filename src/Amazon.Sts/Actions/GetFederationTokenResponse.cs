@@ -2,23 +2,22 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sts
+namespace Amazon.Sts;
+
+public sealed class GetFederationTokenResponse : IStsResponse
 {
-    public class GetFederationTokenResponse : IStsResponse
-    {
-        [XmlElement]
-        public GetFederationTokenResult GetFederationTokenResult { get; set; }
-    }
+    [XmlElement]
+    public GetFederationTokenResult GetFederationTokenResult { get; init; }
+}
 
-    public class GetFederationTokenResult
-    {
-        [XmlElement]
-        public Credentials Credentials { get; set; }
+public sealed class GetFederationTokenResult
+{
+    [XmlElement]
+    public Credentials Credentials { get; init; }
 
-        [XmlElement]
-        public FederatedUser FederatedUser { get; set; }
+    [XmlElement]
+    public FederatedUser FederatedUser { get; init; }
 
-        [XmlElement]
-        public int PackedPolicySize { get; set; }
-    }
+    [XmlElement]
+    public int PackedPolicySize { get; init; }
 }

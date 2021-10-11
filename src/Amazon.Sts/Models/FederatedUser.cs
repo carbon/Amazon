@@ -2,14 +2,13 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sts
-{
-    public class FederatedUser
-    {
-        [XmlElement]
-        public string Arn { get; set; }
+namespace Amazon.Sts;
 
-        [XmlElement]
-        public string FederatedUserId { get; set; }
-    }
+public sealed class FederatedUser
+{
+    [XmlElement]
+    public string Arn { get; init; }
+
+    [XmlElement]
+    public string FederatedUserId { get; init; }
 }

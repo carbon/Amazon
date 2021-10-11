@@ -1,14 +1,13 @@
-﻿namespace Amazon.Sts
+﻿namespace Amazon.Sts;
+
+public sealed class DecodeAuthorizationMessageRequest : IStsRequest
 {
-    public sealed class DecodeAuthorizationMessageRequest : IStsRequest
+    public string Action => "DecodeAuthorizationMessage";
+
+    public DecodeAuthorizationMessageRequest(string encodedMessage)
     {
-        public string Action => "DecodeAuthorizationMessage";
-
-        public DecodeAuthorizationMessageRequest(string encodedMessage)
-        {
-            EncodedMessage = encodedMessage;
-        }
-
-        public string EncodedMessage { get; }
+        EncodedMessage = encodedMessage;
     }
+
+    public string EncodedMessage { get; }
 }

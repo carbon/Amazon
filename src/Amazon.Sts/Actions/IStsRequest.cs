@@ -1,7 +1,6 @@
-﻿namespace Amazon.Sts
+﻿namespace Amazon.Sts;
+
+public interface IStsRequest
 {
-    public interface IStsRequest
-    {
-        string Action { get; }
-    }
+    string Action { get; }
 }

@@ -1,15 +1,14 @@
 ﻿#nullable disable
 
-namespace Amazon.Sts
+namespace Amazon.Sts;
+
+public sealed class GetSessionTokenRequest : IStsRequest
 {
-    public sealed class GetSessionTokenRequest : IStsRequest
-    {
-        public string Action => "GetSessionToken";
+    public string Action => "GetSessionToken";
 
-        public int DurationInSeconds { get; set; }
+    public int DurationInSeconds { get; set; }
 
-        public string SerialNumber { get; set; }
+    public string SerialNumber { get; set; }
 
-        public string TokenCode { get; set; }
-    }
+    public string TokenCode { get; set; }
 }

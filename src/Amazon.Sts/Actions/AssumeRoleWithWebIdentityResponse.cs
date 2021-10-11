@@ -2,27 +2,25 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sts
+namespace Amazon.Sts;
+
+public sealed class AssumeRoleWithWebIdentityResponse : IStsResponse
 {
-    public sealed class AssumeRoleWithWebIdentityResponse : IStsResponse
-    {
-        [XmlElement]
-        public AssumeRoleWithWebIdentityResult AssumeRoleWithWebIdentityResult { get; set; }
-    }
+    [XmlElement]
+    public AssumeRoleWithWebIdentityResult AssumeRoleWithWebIdentityResult { get; init; }
+}
 
+public class AssumeRoleWithWebIdentityResult
+{
+    [XmlElement]
+    public string SubjectFromWebIdentityToken { get; init; }
 
-    public class AssumeRoleWithWebIdentityResult
-    {
-        [XmlElement]
-        public string SubjectFromWebIdentityToken { get; set; }
+    [XmlElement]
+    public string Audience { get; init; }
 
-        [XmlElement]
-        public string Audience { get; set; }
+    [XmlElement]
+    public Credentials Credentials { get; init; }
 
-        [XmlElement]
-        public Credentials Credentials { get; set; }
-
-        [XmlElement]
-        public string Provider { get; set; }
-    }
+    [XmlElement]
+    public string Provider { get; init; }
 }

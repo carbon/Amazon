@@ -2,20 +2,19 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sts
+namespace Amazon.Sts;
+
+public sealed class AssumeRoleResponse : IStsResponse
 {
-    public class AssumeRoleResponse : IStsResponse
-    {
-        [XmlElement]
-        public AssumeRoleResult AssumeRoleResult { get; set; }
-    }
+    [XmlElement]
+    public AssumeRoleResult AssumeRoleResult { get; init; }
+}
 
-    public class AssumeRoleResult
-    {
-        [XmlElement]
-        public Credentials Credentials { get; set; }
+public sealed class AssumeRoleResult
+{
+    [XmlElement]
+    public Credentials Credentials { get; init; }
 
-        [XmlElement]
-        public AssumedRoleUser AssumedRoleUser { get; set; }
-    }
+    [XmlElement]
+    public AssumedRoleUser AssumedRoleUser { get; init; }
 }

@@ -2,14 +2,13 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sts
-{
-    public class AssumedRoleUser
-    {
-        [XmlElement]
-        public string Arn { get; set; }
+namespace Amazon.Sts;
 
-        [XmlElement]
-        public string AssumedRoleId { get; set; }
-    }
+public class AssumedRoleUser
+{
+    [XmlElement]
+    public string Arn { get; init; }
+
+    [XmlElement]
+    public string AssumedRoleId { get; init; }
 }

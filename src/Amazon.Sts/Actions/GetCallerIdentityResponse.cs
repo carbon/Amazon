@@ -2,25 +2,24 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sts
+namespace Amazon.Sts;
+
+public sealed class GetCallerIdentityResponse : IStsResponse
 {
-    public sealed class GetCallerIdentityResponse : IStsResponse
-    {
-        [XmlElement]
-        public GetCallerIdentityResult GetCallerIdentityResult { get; set; }
-    }
+    [XmlElement]
+    public GetCallerIdentityResult GetCallerIdentityResult { get; init; }
+}
 
-    public sealed class GetCallerIdentityResult
-    {
-        [XmlElement]
-        public string Arn { get; set; }
+public sealed class GetCallerIdentityResult
+{
+    [XmlElement]
+    public string Arn { get; init; }
 
-        [XmlElement]
-        public string UserId { get; set; }
+    [XmlElement]
+    public string UserId { get; init; }
 
-        [XmlElement]
-        public string Account { get; set; }
-    }
+    [XmlElement]
+    public string Account { get; init; }
 }
 
 

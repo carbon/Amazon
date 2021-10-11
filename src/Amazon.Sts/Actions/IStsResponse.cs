@@ -1,6 +1,5 @@
-﻿namespace Amazon.Sts
+﻿namespace Amazon.Sts;
+
+internal interface IStsResponse
 {
-    internal interface IStsResponse
-    {
-    }
 }

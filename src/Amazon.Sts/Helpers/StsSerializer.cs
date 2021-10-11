@@ -1,17 +1,16 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
 
-namespace Amazon.Sts
+namespace Amazon.Sts;
+
+internal static class StsSerializer<T>
 {
-    internal static class StsSerializer<T>
+    private static readonly XmlSerializer serializer = new(typeof(T), StsClient.Namespace);
+
+    public static T ParseXml(string xmlText)
     {
-        private static readonly XmlSerializer serializer = new (typeof(T), StsClient.Namespace);
+        using var reader = new StringReader(xmlText);
 
-        public static T ParseXml(string xmlText)
-        {
-            using var reader = new StringReader(xmlText);
-
-            return (T)serializer.Deserialize(reader)!;
-        }
+        return (T)serializer.Deserialize(reader)!;
     }
 }

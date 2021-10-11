@@ -2,11 +2,10 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sts
+namespace Amazon.Sts;
+
+public class DecodeAuthorizationMessageResponse : IStsResponse
 {
-    public class DecodeAuthorizationMessageResponse : IStsResponse
-    {
-        [XmlElement]
-        public string DecodedMessage { get; set; }
-    }
+    [XmlElement]
+    public string DecodedMessage { get; init; }
 }
