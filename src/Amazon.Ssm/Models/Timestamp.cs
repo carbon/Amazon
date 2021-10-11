@@ -3,33 +3,32 @@ using System.Text.Json.Serialization;
 
 using Amazon.Ssm.Converters;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+[JsonConverter(typeof(TimestampConverter))]
+public readonly struct Timestamp
 {
-    [JsonConverter(typeof(TimestampConverter))]
-    public readonly struct Timestamp
+    private readonly double _value;
+
+    public Timestamp(double value)
     {
-        private readonly double value;
+        _value = value;
+    }
 
-        public Timestamp(double value)
-        {
-            this.value = value;
-        }
+    public double Value => _value;
 
-        public double Value => value;
-        
-        public static implicit operator DateTime(Timestamp timestamp)
-        {
-            long unixTimeMillseconds = (long)(timestamp.Value * 1000d);
+    public static implicit operator DateTime(Timestamp timestamp)
+    {
+        long unixTimeMillseconds = (long)(timestamp.Value * 1000d);
 
-            return DateTimeOffset.FromUnixTimeMilliseconds(unixTimeMillseconds).UtcDateTime;
-        }
+        return DateTimeOffset.FromUnixTimeMilliseconds(unixTimeMillseconds).UtcDateTime;
+    }
 
-        public static implicit operator DateTimeOffset(Timestamp timestamp)
-        {
-            long unixTimeMillseconds = (long)(timestamp.Value * 1000d);
+    public static implicit operator DateTimeOffset(Timestamp timestamp)
+    {
+        long unixTimeMillseconds = (long)(timestamp.Value * 1000d);
 
-            return DateTimeOffset.FromUnixTimeMilliseconds(unixTimeMillseconds);
-        }
+        return DateTimeOffset.FromUnixTimeMilliseconds(unixTimeMillseconds);
     }
 }
 
