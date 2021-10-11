@@ -2,18 +2,18 @@
 
 using Carbon.Data;
 
-namespace Amazon.DynamoDb.Tests
+namespace Amazon.DynamoDb.Tests;
+
+public class DeleteItemRequestTests
 {
-    public class DeleteItemRequestTests
+    [Fact]
+    public void A()
     {
-        [Fact]
-        public void A()
-        {
-            var key = RecordKey.Create<Fruit>("banana");
+        var key = RecordKey.Create<Fruit>("banana");
 
-            var x2 = new DeleteItemRequest("Fruits", key);
+        var x2 = new DeleteItemRequest("Fruits", key);
 
-            Assert.Equal(@"{
+        Assert.Equal(@"{
   ""TableName"": ""Fruits"",
   ""Key"": {
     ""name"": {
@@ -21,7 +21,5 @@ namespace Amazon.DynamoDb.Tests
     }
   }
 }", x2.ToSystemTextJsonIndented());
-        }
     }
-
 }

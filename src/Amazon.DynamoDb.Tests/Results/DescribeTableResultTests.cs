@@ -2,14 +2,14 @@
 
 using Amazon.DynamoDb.Models;
 
-namespace Amazon.DynamoDb.Tests
+namespace Amazon.DynamoDb.Tests;
+
+public class DescribeTableResultTests
 {
-    public class DescribeTableResultTests
+    [Fact]
+    public void Parse()
     {
-        [Fact]
-        public void Parse()
-        {
-            string text = @"
+        string text = @"
 {
     ""Table"": {
         ""TableArn"": ""arn:aws:dynamodb:us-west-2:123456789012:table/Thread"",
@@ -73,32 +73,31 @@ namespace Amazon.DynamoDb.Tests
 
 ";
 
-            var result = JsonSerializer.Deserialize<DescribeTableResult>(text);
+        var result = JsonSerializer.Deserialize<DescribeTableResult>(text);
 
-            var table = result.Table;
-            var keySchema = table.KeySchema;
+        var table = result.Table;
+        var keySchema = table.KeySchema;
 
-            Assert.Equal("arn:aws:dynamodb:us-west-2:123456789012:table/Thread", table.TableArn);
+        Assert.Equal("arn:aws:dynamodb:us-west-2:123456789012:table/Thread", table.TableArn);
 
-            Assert.Equal("ForumName", keySchema[0].AttributeName);
-            Assert.Equal(KeyType.HASH, keySchema[0].KeyType);
+        Assert.Equal("ForumName", keySchema[0].AttributeName);
+        Assert.Equal(KeyType.HASH, keySchema[0].KeyType);
 
-            Assert.Equal("Subject", keySchema[1].AttributeName);
-            Assert.Equal(KeyType.RANGE, keySchema[1].KeyType);
+        Assert.Equal("Subject", keySchema[1].AttributeName);
+        Assert.Equal(KeyType.RANGE, keySchema[1].KeyType);
 
-            Assert.Single(table.LocalSecondaryIndexes);
+        Assert.Single(table.LocalSecondaryIndexes);
 
-            Assert.Equal("LastPostIndex", table.LocalSecondaryIndexes![0].IndexName);
+        Assert.Equal("LastPostIndex", table.LocalSecondaryIndexes![0].IndexName);
 
-            Assert.Equal(0, table.ProvisionedThroughput.NumberOfDecreasesToday);
-            Assert.Equal(5, table.ProvisionedThroughput.ReadCapacityUnits);
-            Assert.Equal(5, table.ProvisionedThroughput.WriteCapacityUnits);
+        Assert.Equal(0, table.ProvisionedThroughput.NumberOfDecreasesToday);
+        Assert.Equal(5, table.ProvisionedThroughput.ReadCapacityUnits);
+        Assert.Equal(5, table.ProvisionedThroughput.WriteCapacityUnits);
 
-            Assert.Equal(TableStatus.ACTIVE, table.TableStatus);
-            Assert.Equal(0, table.TableSizeBytes);
-            Assert.Equal("Thread", table.TableName);
+        Assert.Equal(TableStatus.ACTIVE, table.TableStatus);
+        Assert.Equal(0, table.TableSizeBytes);
+        Assert.Equal("Thread", table.TableName);
 
-            Assert.Equal("2013-03-19T21:36:42.3580000Z", ((DateTimeOffset)table.CreationDateTime).UtcDateTime.ToString("o"));
-        }
+        Assert.Equal("2013-03-19T21:36:42.3580000Z", ((DateTimeOffset)table.CreationDateTime).UtcDateTime.ToString("o"));
     }
 }

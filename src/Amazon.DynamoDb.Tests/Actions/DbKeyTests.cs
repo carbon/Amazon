@@ -1,21 +1,20 @@
-﻿namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb.Tests;
+
+public sealed class DbKeyTests
 {
-    public sealed class DbKeyTests
+	[Fact]
+	public void KeyFromDbItem()
 	{
-		[Fact]
-		public void KeyFromDbItem()
-		{
-			var item = new AttributeCollection {
-				{ "a", new DbValue(123) },
-				{ "b", new DbValue("abc") }
-			};
+		var item = new AttributeCollection {
+			{ "a", new DbValue(123) },
+			{ "b", new DbValue("abc") }
+		};
 
-			var key = item.ToKey();
+		var key = item.ToKey();
 
-			Assert.Equal("a",   key[0].Key);
-			Assert.Equal("b",   key[1].Key);
-			Assert.Equal(123L,  key[0].Value);
-			Assert.Equal("abc", key[1].Value);
-		}
+		Assert.Equal("a",   key[0].Key);
+		Assert.Equal("b",   key[1].Key);
+		Assert.Equal(123L,  key[0].Value);
+		Assert.Equal("abc", key[1].Value);
 	}
 }

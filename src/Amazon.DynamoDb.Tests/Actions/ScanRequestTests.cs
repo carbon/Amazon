@@ -1,15 +1,15 @@
 ﻿using Carbon.Data.Expressions;
 
-namespace Amazon.DynamoDb.Tests
-{
-    public class ScanRequestTests
-    {
-        [Fact]
-        public void Test1()
-        {
-            var request = new ScanRequest("Libraries", new[] { Expression.Lt("id", 10) });
+namespace Amazon.DynamoDb.Tests;
 
-            Assert.Equal(@"{
+public class ScanRequestTests
+{
+    [Fact]
+    public void Test1()
+    {
+        var request = new ScanRequest("Libraries", new[] { Expression.Lt("id", 10) });
+
+        Assert.Equal(@"{
   ""TableName"": ""Libraries"",
   ""FilterExpression"": ""id \u003C :v0"",
   ""ExpressionAttributeValues"": {
@@ -18,8 +18,5 @@ namespace Amazon.DynamoDb.Tests
     }
   }
 }", request.ToSystemTextJsonIndented());
-
-
-        }
     }
 }

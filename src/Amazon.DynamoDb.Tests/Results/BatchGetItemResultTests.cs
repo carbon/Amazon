@@ -1,13 +1,13 @@
 ﻿using System.Text.Json;
 
-namespace Amazon.DynamoDb.Results.Tests
+namespace Amazon.DynamoDb.Results.Tests;
+
+public class BatchGetItemResultTests
 {
-    public class BatchGetItemResultTests
+    [Fact]
+    public void Deserialize()
     {
-        [Fact]
-        public void CanParse()
-        {
-            var text =
+        var text =
 @"{
     ""Responses"": {
         ""Forum"": [
@@ -79,29 +79,26 @@ namespace Amazon.DynamoDb.Results.Tests
     ]
 }";
 
-            using var doc = JsonDocument.Parse(text);
+        using var doc = JsonDocument.Parse(text);
 
-            var result = BatchGetItemResult.FromJsonElement(doc.RootElement);
+        var result = BatchGetItemResult.FromJsonElement(doc.RootElement);
 
-            Assert.Equal(2, result.Responses.Count);
-            Assert.Equal(3, result.Responses[0].Count);
+        Assert.Equal(2, result.Responses.Count);
+        Assert.Equal(3, result.Responses[0].Count);
 
-            Assert.Equal("Forum",           result.Responses[0].Name);
+        Assert.Equal("Forum", result.Responses[0].Name);
 
-            Assert.Equal("Amazon DynamoDB", result.Responses[0][0].GetString("Name"));
-            Assert.Equal("Amazon RDS",      result.Responses[0][1].GetString("Name"));
+        Assert.Equal("Amazon DynamoDB", result.Responses[0][0].GetString("Name"));
+        Assert.Equal("Amazon RDS", result.Responses[0][1].GetString("Name"));
 
-            Assert.Equal("Thread", result.Responses[1].Name);
+        Assert.Equal("Thread", result.Responses[1].Name);
 
-            var thread_0 = result.Responses[1][0];
+        var thread_0 = result.Responses[1][0];
 
-            Assert.Equal("How many users can read a single data item at a time? Are there any limits?", thread_0.GetString("Message"));
+        Assert.Equal("How many users can read a single data item at a time? Are there any limits?", thread_0.GetString("Message"));
 
-            Assert.Equal(new[] { "Reads", "MultipleUsers" }, thread_0.Get("Tags").ToArray<string>());
+        Assert.Equal(new[] { "Reads", "MultipleUsers" }, thread_0.Get("Tags").ToArray<string>());
 
-
-            Assert.Equal(2, result.ConsumedCapacity.Length);
-
-        }
+        Assert.Equal(2, result.ConsumedCapacity.Length);
     }
 }

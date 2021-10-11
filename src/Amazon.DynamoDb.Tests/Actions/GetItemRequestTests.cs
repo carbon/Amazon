@@ -2,18 +2,18 @@
 
 using Carbon.Data;
 
-namespace Amazon.DynamoDb.Tests
+namespace Amazon.DynamoDb.Tests;
+
+public class GetItemRequestTests
 {
-    public class GetItemRequestTests
+    [Fact]
+    public void A()
     {
-        [Fact]
-        public void A()
-        {
-            var key = RecordKey.Create<Fruit>("banana");
+        var key = RecordKey.Create<Fruit>("banana");
 
-            var x2 = new GetItemRequest("Fruits", key);
+        var x2 = new GetItemRequest("Fruits", key);
 
-            Assert.Equal(@"{
+        Assert.Equal(@"{
   ""TableName"": ""Fruits"",
   ""Key"": {
     ""name"": {
@@ -21,22 +21,22 @@ namespace Amazon.DynamoDb.Tests
     }
   }
 }", x2.ToSystemTextJsonIndented());
-        }
+    }
 
-        [Fact]
-        public void B()
-        {
-            var key = new RecordKey(new KeyValuePair<string, object>[] {
-                new ("primary", 1),
-                new ("secondary", "2")
-            });
+    [Fact]
+    public void B()
+    {
+        var key = new RecordKey(new KeyValuePair<string, object>[] {
+            new ("primary", 1),
+            new ("secondary", "2")
+        });
 
-            var x2 = new GetItemRequest("Products", key) {
-                ConsistentRead = true,
-                ReturnConsumedCapacity = ReturnConsumedCapacity.TOTAL
-            };
+        var x2 = new GetItemRequest("Products", key) {
+            ConsistentRead = true,
+            ReturnConsumedCapacity = ReturnConsumedCapacity.TOTAL
+        };
 
-            Assert.Equal(@"{
+        Assert.Equal(@"{
   ""TableName"": ""Products"",
   ""Key"": {
     ""primary"": {
@@ -49,7 +49,5 @@ namespace Amazon.DynamoDb.Tests
   ""ConsistentRead"": true,
   ""ReturnConsumedCapacity"": ""TOTAL""
 }", x2.ToSystemTextJsonIndented());
-        }
     }
-
 }

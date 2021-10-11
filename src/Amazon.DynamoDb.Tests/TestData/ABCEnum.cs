@@ -1,9 +1,8 @@
-﻿namespace Amazon.DynamoDb.Models.Tests
+﻿namespace Amazon.DynamoDb.Models.Tests;
+
+public enum ABCEnum
 {
-    public enum ABCEnum
-    {
-        A = 1,
-        B = 2,
-        C = 3
-    }
+    A = 1,
+    B = 2,
+    C = 3
 }

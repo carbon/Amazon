@@ -1,27 +1,27 @@
 ﻿using System.Text.Json;
 
-namespace Amazon.DynamoDb.Models.Tests
+namespace Amazon.DynamoDb.Models.Tests;
+
+public class DynamoBatchTests
 {
-    public class DynamoBatchTests
-	{
-		[Fact]
-		public void BatchRequestTest1()
-		{
-			var requests = new List<ItemRequest> {
-				new PutRequest(new AttributeCollection {
-					{ "title", "awesomeness" },
-					{ "ownerId", 1 }
-				}),
-				new DeleteRequest(new AttributeCollection {
-					{ "title", "notawesome" },
-					{ "ownerId", 2 }
-				})
-			};
+    [Fact]
+    public void BatchRequestTest1()
+    {
+        var requests = new List<ItemRequest> {
+            new PutRequest(new AttributeCollection {
+                { "title", "awesomeness" },
+                { "ownerId", 1 }
+            }),
+            new DeleteRequest(new AttributeCollection {
+                { "title", "notawesome" },
+                { "ownerId", 2 }
+            })
+        };
 
-            var tableBatch = new TableRequests("Posts", requests).SerializeList();
+        var tableBatch = new TableRequests("Posts", requests).SerializeList();
 
-			Assert.Equal(
-	@"[
+        Assert.Equal(
+@"[
   {
     ""PutRequest"": {
       ""Item"": {
@@ -47,12 +47,12 @@ namespace Amazon.DynamoDb.Models.Tests
     }
   }
 ]", tableBatch.ToSystemTextJsonIndented());
-		} 
+    }
 
-		[Fact]
-		public void BatchWriteRequest1()
-		{
-			var text = @"{ 
+    [Fact]
+    public void BatchWriteRequest1()
+    {
+        var text = @"{ 
  ""UnprocessedItems"":  { 
 	""Slugs"": [ 
 		{ 
@@ -68,27 +68,26 @@ namespace Amazon.DynamoDb.Models.Tests
   } 
 }";
 
-			using var doc = JsonDocument.Parse(text);
+        using var doc = JsonDocument.Parse(text);
 
-			var result = BatchWriteItemResult.FromJsonElement(doc.RootElement);
+        var result = BatchWriteItemResult.FromJsonElement(doc.RootElement);
 
-			Assert.Single(result.UnprocessedItems);
-			Assert.Equal(3, result.UnprocessedItems[0].Requests.Count);
+        Assert.Single(result.UnprocessedItems);
+        Assert.Equal(3, result.UnprocessedItems[0].Requests.Count);
 
-			Assert.Equal("Slugs", result.UnprocessedItems[0].TableName);
+        Assert.Equal("Slugs", result.UnprocessedItems[0].TableName);
 
-			var request0_0 = (PutRequest)result.UnprocessedItems[0].Requests[0];
-			var request0_1 = (PutRequest)result.UnprocessedItems[0].Requests[1];
-			var request0_2 = (DeleteRequest)result.UnprocessedItems[0].Requests[2];
+        var request0_0 = (PutRequest)result.UnprocessedItems[0].Requests[0];
+        var request0_1 = (PutRequest)result.UnprocessedItems[0].Requests[1];
+        var request0_2 = (DeleteRequest)result.UnprocessedItems[0].Requests[2];
 
-			Assert.Equal("apples",	request0_0.Item.GetString("name"));
-			Assert.Equal(1,			request0_0.Item.GetInt("ownerId"));
+        Assert.Equal("apples", request0_0.Item.GetString("name"));
+        Assert.Equal(1, request0_0.Item.GetInt("ownerId"));
 
-			Assert.Equal("bananas", request0_1.Item.GetString("name"));
-			Assert.Equal(2, request0_1.Item.GetInt("ownerId"));
+        Assert.Equal("bananas", request0_1.Item.GetString("name"));
+        Assert.Equal(2, request0_1.Item.GetInt("ownerId"));
 
-			Assert.Equal("oranges", request0_2.Key.GetString("name"));
-			Assert.Equal(3, request0_2.Key.GetInt("ownerId"));
-		}
-	}
+        Assert.Equal("oranges", request0_2.Key.GetString("name"));
+        Assert.Equal(3, request0_2.Key.GetInt("ownerId"));
+    }
 }
