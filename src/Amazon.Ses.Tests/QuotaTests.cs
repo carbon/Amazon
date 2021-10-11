@@ -1,11 +1,11 @@
-﻿namespace Amazon.Ses.Tests
+﻿namespace Amazon.Ses.Tests;
+
+public class QuotaTests
 {
-    public class QuotaTests
+    [Fact]
+    public void SesParseQuota()
     {
-        [Fact]
-        public void SesParseQuota()
-        {
-            var text = @"<GetSendQuotaResponse xmlns=""http://ses.amazonaws.com/doc/2010-12-01/"">
+        var text = @"<GetSendQuotaResponse xmlns=""http://ses.amazonaws.com/doc/2010-12-01/"">
   <GetSendQuotaResult>
     <SentLast24Hours>127.0</SentLast24Hours>
     <Max24HourSend>200.0</Max24HourSend>
@@ -16,11 +16,10 @@
   </ResponseMetadata>
 </GetSendQuotaResponse>";
 
-            var getQuotaResponse = GetSendQuotaResponse.Parse(text);
+        var getQuotaResponse = GetSendQuotaResponse.Parse(text);
 
-            Assert.Equal(127f, getQuotaResponse.GetSendQuotaResult.SentLast24Hours);
-            Assert.Equal(200f, getQuotaResponse.GetSendQuotaResult.Max24HourSend);
-            Assert.Equal(1f, getQuotaResponse.GetSendQuotaResult.MaxSendRate);
-        }
+        Assert.Equal(127f, getQuotaResponse.GetSendQuotaResult.SentLast24Hours);
+        Assert.Equal(200f, getQuotaResponse.GetSendQuotaResult.Max24HourSend);
+        Assert.Equal(1f, getQuotaResponse.GetSendQuotaResult.MaxSendRate);
     }
 }

@@ -1,12 +1,11 @@
-﻿namespace Amazon.Ses.Tests
+﻿namespace Amazon.Ses.Tests;
+
+public class SesContentTests
 {
-    public class SesContentTests
+    [Fact]
+    public void SesContentEncoding()
     {
-        [Fact]
-        public void SesContentEncoding()
-        {
-            Assert.Null(new SesContent("Hi").Charset);
-            Assert.Equal("UTF-8", new SesContent("Hi", CharsetType.UTF8).Charset);
-        }
+        Assert.Null(new SesContent("Hi").Charset);
+        Assert.Equal("UTF-8", new SesContent("Hi", CharsetType.UTF8).Charset);
     }
 }
