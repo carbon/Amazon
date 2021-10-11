@@ -4,41 +4,44 @@ using System.Text.Json.Serialization;
 
 using Amazon.DynamoDb.Models;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb;
+
+public sealed class CreateTableRequest
 {
-    public sealed class CreateTableRequest
+    public CreateTableRequest(
+        string tableName,
+        AttributeDefinition[] attributeDefinitions,
+        IEnumerable<KeySchemaElement> keySchema)
     {
-        public CreateTableRequest(
-            string tableName, 
-            AttributeDefinition[] attributeDefinitions,
-            IEnumerable<KeySchemaElement> keySchema)
-        {
-            TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-            AttributeDefinitions = attributeDefinitions ?? throw new ArgumentNullException(nameof(attributeDefinitions));
-            KeySchema = keySchema ?? throw new ArgumentNullException(nameof(keySchema));
-        }
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(attributeDefinitions);
+        ArgumentNullException.ThrowIfNull(keySchema);
 
-        public string TableName { get; }
-
-        public BillingMode BillingMode { get; set; }
-
-        public AttributeDefinition[] AttributeDefinitions { get; }
-
-        public IEnumerable<KeySchemaElement> KeySchema { get; }
-
-        public IEnumerable<LocalSecondaryIndex>? LocalSecondaryIndexes { get; set; }
-
-        public IEnumerable<GlobalSecondaryIndex>? GlobalSecondaryIndexes { get; set; }
-
-        public ProvisionedThroughput? ProvisionedThroughput { get; set; }
-
-        [JsonPropertyName("SSESpecification")]
-        public SseSpecification? SseSpecification { get; set; }
-
-        public StreamSpecification? StreamSpecification { get; set; }
-
-        public IList<Tag>? Tags { get; set; }
+        TableName = tableName;
+        AttributeDefinitions = attributeDefinitions;
+        KeySchema = keySchema;
     }
+
+    public string TableName { get; }
+
+    public BillingMode BillingMode { get; set; }
+
+    public AttributeDefinition[] AttributeDefinitions { get; }
+
+    public IEnumerable<KeySchemaElement> KeySchema { get; }
+
+    public IEnumerable<LocalSecondaryIndex>? LocalSecondaryIndexes { get; set; }
+
+    public IEnumerable<GlobalSecondaryIndex>? GlobalSecondaryIndexes { get; set; }
+
+    public ProvisionedThroughput? ProvisionedThroughput { get; set; }
+
+    [JsonPropertyName("SSESpecification")]
+    public SseSpecification? SseSpecification { get; set; }
+
+    public StreamSpecification? StreamSpecification { get; set; }
+
+    public IList<Tag>? Tags { get; set; }
 }
 
 /*

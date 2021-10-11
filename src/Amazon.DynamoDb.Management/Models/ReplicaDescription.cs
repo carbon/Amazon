@@ -1,22 +1,21 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb.Models;
+
+public sealed class ReplicaDescription
 {
-    public sealed class ReplicaDescription
-    {
-        public ReplicaGlobalSecondaryIndexDescription[]? GlobalSecondaryIndexes { get; set; }
+    public ReplicaGlobalSecondaryIndexDescription[]? GlobalSecondaryIndexes { get; init; }
 
-        [JsonPropertyName("KMSMasterKeyId")]
-        public string? KmsMasterKeyId { get; set; }
+    [JsonPropertyName("KMSMasterKeyId")]
+    public string? KmsMasterKeyId { get; init; }
 
-        public ProvisionedThroughputOverride? ProvisionedThroughputOverride { get; set; }
+    public ProvisionedThroughputOverride? ProvisionedThroughputOverride { get; init; }
 
-        public string? RegionName { get; set; }
+    public string? RegionName { get; init; }
 
-        public ReplicaStatus ReplicaStatus { get; set; }
+    public ReplicaStatus ReplicaStatus { get; init; }
 
-        public string? ReplicaStatusDescription { get; set; }
+    public string? ReplicaStatusDescription { get; init; }
 
-        public string? ReplicaStatusPercentProgress { get; set; }
-    }
+    public string? ReplicaStatusPercentProgress { get; init; }
 }

@@ -1,9 +1,8 @@
-﻿namespace Amazon.DynamoDb.Models
-{
-    public sealed class TimeToLiveDescription
-    {
-        public string? AttributeName { get; set; }
+﻿namespace Amazon.DynamoDb.Models;
 
-        public TimeToLiveStatus TimeToLiveStatus { get; set; }
-    }
+public sealed class TimeToLiveDescription
+{
+    public string? AttributeName { get; init; }
+
+    public TimeToLiveStatus TimeToLiveStatus { get; init; }
 }

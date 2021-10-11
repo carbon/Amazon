@@ -1,13 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb.Models;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum StreamViewType
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum StreamViewType
-    {
-        KEYS_ONLY = 1,
-        NEW_IMAGE = 2,
-        OLD_IMAGE = 3,
-        NEW_AND_OLD_IMAGES = 4
-    };
+    KEYS_ONLY = 1,
+    NEW_IMAGE = 2,
+    OLD_IMAGE = 3,
+    NEW_AND_OLD_IMAGES = 4
 }

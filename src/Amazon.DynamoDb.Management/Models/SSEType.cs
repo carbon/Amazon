@@ -1,11 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb.Models;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum SseType
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum SseType
-    {
-        AES256 = 1,
-        KMS = 2
-    };
+    AES256 = 1,
+    KMS = 2
 }

@@ -1,12 +1,11 @@
-﻿namespace Amazon.DynamoDb.Models
-{
-    public sealed class DeleteReplicationGroupMemberAction
-    {
-        public DeleteReplicationGroupMemberAction(string regionName)
-        {
-            RegionName = regionName;
-        }
+﻿namespace Amazon.DynamoDb.Models;
 
-        public string RegionName { get; }
+public sealed class DeleteReplicationGroupMemberAction
+{
+    public DeleteReplicationGroupMemberAction(string regionName)
+    {
+        RegionName = regionName;
     }
+
+    public string RegionName { get; }
 }

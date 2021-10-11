@@ -2,10 +2,9 @@
 
 using Amazon.DynamoDb.Models;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb;
+
+public sealed class UpdateTimeToLiveResult
 {
-    public class UpdateTimeToLiveResult
-    {
-        public TimeToLiveSpecification TimeToLiveSpecification { get; set; }
-    }
+    public TimeToLiveSpecification TimeToLiveSpecification { get; init; }
 }

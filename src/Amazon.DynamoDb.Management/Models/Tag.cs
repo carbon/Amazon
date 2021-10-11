@@ -1,21 +1,23 @@
 ﻿using System;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb.Models;
+
+public sealed class Tag
 {
-    public sealed class Tag
-    {
 #nullable disable
-        public Tag() { }
+    public Tag() { }
 #nullable enable
 
-        public Tag(string key, string value)
-        {
-            Key = key ?? throw new ArgumentNullException(nameof(key));
-            Value = value ?? throw new ArgumentNullException(nameof(value));
-        }
+    public Tag(string key, string value)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(value);
 
-        public string Key { get; set; }
-
-        public string Value { get; set; }
+        Key = key;
+        Value = value;
     }
+
+    public string Key { get; init; }
+
+    public string Value { get; init; }
 }

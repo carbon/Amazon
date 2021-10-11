@@ -1,11 +1,10 @@
-﻿namespace Amazon.DynamoDb.Models
+﻿namespace Amazon.DynamoDb.Models;
+
+public sealed class GlobalSecondaryIndexUpdate
 {
-    public sealed class GlobalSecondaryIndexUpdate
-    {
-        public CreateGlobalSecondaryIndexAction? Create { get; set; }
+    public CreateGlobalSecondaryIndexAction? Create { get; set; }
 
-        public DeleteGlobalSecondaryIndexAction? Delete { get; set; }
+    public DeleteGlobalSecondaryIndexAction? Delete { get; set; }
 
-        public UpdateGlobalSecondaryIndexAction? Update { get; set; }
-    }
+    public UpdateGlobalSecondaryIndexAction? Update { get; set; }
 }

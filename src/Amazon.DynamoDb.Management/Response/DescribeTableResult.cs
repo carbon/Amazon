@@ -2,10 +2,9 @@
 
 using Amazon.DynamoDb.Models;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb;
+
+public sealed class DescribeTableResult
 {
-    public sealed class DescribeTableResult
-    {
-        public TableDescription Table { get; set; }
-    }
+    public TableDescription Table { get; init; }
 }

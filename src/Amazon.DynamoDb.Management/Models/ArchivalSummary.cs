@@ -1,11 +1,10 @@
-﻿namespace Amazon.DynamoDb.Models
+﻿namespace Amazon.DynamoDb.Models;
+
+public sealed class ArchivalSummary
 {
-    public sealed class ArchivalSummary
-    {
-        public string? ArchivalBackupArn { get; set; }
+    public string? ArchivalBackupArn { get; init; }
 
-        public string? ArchivalDateTime { get; set; }
+    public string? ArchivalDateTime { get; init; }
 
-        public string? ArchivalReason { get; set; }
-    }
+    public string? ArchivalReason { get; init; }
 }

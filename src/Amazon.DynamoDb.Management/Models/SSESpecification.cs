@@ -1,15 +1,14 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb.Models;
+
+public sealed class SseSpecification
 {
-    public sealed class SseSpecification
-    {
-        public bool? Enabled { get; set; }
+    public bool? Enabled { get; init; }
 
-        [JsonPropertyName("KMSMasterKeyId")]
-        public string? KmsMasterKeyId { get; set; }
+    [JsonPropertyName("KMSMasterKeyId")]
+    public string? KmsMasterKeyId { get; init; }
 
-        [JsonPropertyName("SSEType")]
-        public SseType? SseType { get; set; }
-    }
+    [JsonPropertyName("SSEType")]
+    public SseType? SseType { get; init; }
 }

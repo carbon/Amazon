@@ -1,10 +1,9 @@
-﻿namespace Amazon.DynamoDb.Models
+﻿namespace Amazon.DynamoDb.Models;
+
+public sealed class UpdateReplicationGroupMemberAction : ReplicationGroupMemberAction
 {
-    public sealed class UpdateReplicationGroupMemberAction : ReplicationGroupMemberAction
+    public UpdateReplicationGroupMemberAction(string regionName)
+        : base(regionName)
     {
-        public UpdateReplicationGroupMemberAction(string regionName)
-            : base(regionName)
-        {
-        }
     }
 }

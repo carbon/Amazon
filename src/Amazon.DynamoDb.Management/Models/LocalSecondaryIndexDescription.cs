@@ -1,7 +1,6 @@
-﻿namespace Amazon.DynamoDb.Models
-{
-    public sealed class LocalSecondaryIndexDescription : IndexDescription
-    {
+﻿namespace Amazon.DynamoDb.Models;
 
-    }
+public sealed class LocalSecondaryIndexDescription : IndexDescription
+{
+
 }

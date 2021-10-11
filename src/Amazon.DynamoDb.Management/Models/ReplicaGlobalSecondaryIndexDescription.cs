@@ -1,9 +1,8 @@
-﻿namespace Amazon.DynamoDb.Models
-{
-    public sealed class ReplicaGlobalSecondaryIndexDescription
-    {
-        public string? IndexName { get; set; }
+﻿namespace Amazon.DynamoDb.Models;
 
-        public ProvisionedThroughputOverride? ProvisionedThroughputOverride { get; set; }
-    }
+public sealed class ReplicaGlobalSecondaryIndexDescription
+{
+    public string? IndexName { get; set; }
+
+    public ProvisionedThroughputOverride? ProvisionedThroughputOverride { get; set; }
 }

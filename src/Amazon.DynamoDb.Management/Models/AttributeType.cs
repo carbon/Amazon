@@ -1,25 +1,24 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb.Models;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum AttributeType
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum AttributeType
-    {
-        Unknown = 0,
+    Unknown = 0,
 
-        /// <summary>
-        /// Binary
-        /// </summary>
-        B,
+    /// <summary>
+    /// Binary
+    /// </summary>
+    B,
 
-        /// <summary>
-        /// Number
-        /// </summary>
-        N,
+    /// <summary>
+    /// Number
+    /// </summary>
+    N,
 
-        /// <summary>
-        /// String
-        /// </summary>
-        S,
-    }
+    /// <summary>
+    /// String
+    /// </summary>
+    S
 }

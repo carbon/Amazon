@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-namespace Amazon.DynamoDb.Models
-{
-    public sealed class AttributeDefinition
-    {
-        public string AttributeName { get; set; }
+namespace Amazon.DynamoDb.Models;
 
-        public AttributeType AttributeType { get; set; }
-    }
+public sealed class AttributeDefinition
+{
+    public string AttributeName { get; init; }
+
+    public AttributeType AttributeType { get; init; }
 }

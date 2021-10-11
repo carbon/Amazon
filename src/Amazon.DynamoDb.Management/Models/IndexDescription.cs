@@ -1,15 +1,14 @@
-﻿namespace Amazon.DynamoDb.Models
+﻿namespace Amazon.DynamoDb.Models;
+
+public abstract class IndexDescription
 {
-    public abstract class IndexDescription
-    {
-        public string? IndexName { get; set; }
+    public string? IndexName { get; init; }
 
-        public long IndexSizeBytes { get; set; }
+    public long IndexSizeBytes { get; init; }
 
-        public long ItemCount { get; set; }
+    public long ItemCount { get; init; }
 
-        public KeySchemaElement[]? KeySchema { get; set; }
+    public KeySchemaElement[]? KeySchema { get; init; }
 
-        public Projection? Projection { get; set; }
-    }
+    public Projection? Projection { get; init; }
 }

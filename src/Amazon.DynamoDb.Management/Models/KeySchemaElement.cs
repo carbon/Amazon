@@ -1,19 +1,20 @@
 ﻿using System;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb.Models;
+
+public sealed class KeySchemaElement
 {
-    public sealed class KeySchemaElement
+    public KeySchemaElement() { }
+
+    public KeySchemaElement(string attributeName, KeyType keyType)
     {
-        public KeySchemaElement() { }
+        ArgumentNullException.ThrowIfNull(attributeName);
 
-        public KeySchemaElement(string attributeName, KeyType keyType)
-        {
-            AttributeName = attributeName ?? throw new ArgumentNullException(nameof(attributeName));
-            KeyType = keyType;
-        }
-
-        public string? AttributeName { get; set; }
-
-        public KeyType KeyType { get; set; }
+        AttributeName = attributeName;
+        KeyType = keyType;
     }
+
+    public string? AttributeName { get; set; }
+
+    public KeyType KeyType { get; set; }
 }

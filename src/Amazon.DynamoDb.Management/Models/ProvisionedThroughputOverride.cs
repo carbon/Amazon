@@ -1,7 +1,6 @@
-﻿namespace Amazon.DynamoDb.Models
+﻿namespace Amazon.DynamoDb.Models;
+
+public sealed class ProvisionedThroughputOverride
 {
-    public sealed class ProvisionedThroughputOverride
-    {
-        public int ReadCapacityUnits { get; set; }
-    }
+    public int ReadCapacityUnits { get; set; }
 }

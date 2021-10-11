@@ -1,11 +1,8 @@
-﻿using System;
+﻿namespace Amazon.DynamoDb.Models;
 
-namespace Amazon.DynamoDb.Models
+public sealed class BillingModeSummary
 {
-    public sealed class BillingModeSummary
-    {
-        public BillingMode BillingMode { get; set; }
+    public BillingMode BillingMode { get; init; }
 
-        public Timestamp LastUpdateToPayPerRequestDateTime { get; set; }
-    }
+    public Timestamp LastUpdateToPayPerRequestDateTime { get; init; }
 }

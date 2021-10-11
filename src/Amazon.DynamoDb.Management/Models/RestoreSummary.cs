@@ -1,11 +1,10 @@
-﻿namespace Amazon.DynamoDb.Models
+﻿namespace Amazon.DynamoDb.Models;
+
+public sealed class RestoreSummary
 {
-    public sealed class RestoreSummary
-    {
-        public Timestamp RestoreDateTime { get; set; }
+    public Timestamp RestoreDateTime { get; init; }
 
-        public bool RestoreInProgress { get; set; }
+    public bool RestoreInProgress { get; init; }
 
-        public string? SourceBackupArn { get; set; }
-    }
+    public string? SourceBackupArn { get; init; }
 }
