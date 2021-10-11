@@ -1,41 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Amazon.Sns
+namespace Amazon.Sns;
+
+public sealed class PublishRequest
 {
-    public sealed class PublishRequest
+    public PublishRequest(
+        string topicArn,
+        string message,
+        string? subject = null)
     {
-        public PublishRequest(
-            string topicArn, 
-            string message,
-            string? subject = null)
+        ArgumentNullException.ThrowIfNull(topicArn);
+        ArgumentNullException.ThrowIfNull(message);
+
+        TopicArn = topicArn;
+        Message = message;
+        Subject = subject;
+    }
+
+    public string TopicArn { get; }
+
+    public string Message { get; }
+
+    public string? Subject { get; }
+
+    public Dictionary<string, string> ToParams()
+    {
+        var dic = new Dictionary<string, string>(4) {
+            { "Action", "Publish" },
+            { "TopicArn", TopicArn },
+            { "Message", Message }
+        };
+
+        if (Subject != null)
         {
-            TopicArn = topicArn ?? throw new ArgumentNullException(nameof(topicArn));
-            Message = message ?? throw new ArgumentNullException(nameof(message));
-            Subject = subject;
+            dic.Add("Subject", Subject);
         }
 
-        public string TopicArn { get; }
-
-        public string Message { get; }
-
-        public string? Subject { get; }
-
-        public Dictionary<string, string> ToParams()
-        {
-            var dic = new Dictionary<string, string>(4) {
-                { "Action", "Publish" },
-                { "TopicArn", TopicArn },
-                { "Message", Message }
-            };
-
-            if (Subject != null)
-            {
-                dic.Add("Subject", Subject);
-            }
-
-            return dic;
-        }
+        return dic;
     }
 }
 
