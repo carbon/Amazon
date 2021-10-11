@@ -1,11 +1,11 @@
-﻿namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests;
+
+public class DescribeNetworkInterfacesTests
 {
-    public class DescribeNetworkInterfacesTests
+    [Fact]
+    public void X()
     {
-        [Fact]
-        public void X()
-        {
-            var text =
+        var text =
 @"<DescribeNetworkInterfacesResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
     <requestId>fc45294c-006b-457b-bab9-012f5b3b0e40</requestId>
     <networkInterfaceSet>
@@ -103,20 +103,19 @@
      </networkInterfaceSet>
 </DescribeNetworkInterfacesResponse>";
 
-            var response = Ec2Serializer<DescribeNetworkInterfacesResponse>.Deserialize(text);
+        var response = Ec2Serializer<DescribeNetworkInterfacesResponse>.Deserialize(text);
 
-            Assert.Equal(2, response.NetworkInterfaces.Length);
+        Assert.Equal(2, response.NetworkInterfaces.Length);
 
-            var ni = response.NetworkInterfaces[0];
+        var ni = response.NetworkInterfaces[0];
 
-            Assert.Equal("eni-0f62d866", ni.NetworkInterfaceId);
-            Assert.Equal("vpc-cc3c87a5", ni.VpcId);
-            Assert.Equal("02:81:60:cb:27:37", ni.MacAddress);
+        Assert.Equal("eni-0f62d866", ni.NetworkInterfaceId);
+        Assert.Equal("vpc-cc3c87a5", ni.VpcId);
+        Assert.Equal("02:81:60:cb:27:37", ni.MacAddress);
 
-            Assert.Equal("eni-attach-6537fc0c", ni.Attachment.AttachmentId);
-            Assert.Equal("i-1234567890abcdef0", ni.Attachment.InstanceId);
-            Assert.Equal("attached", ni.Attachment.Status);
-            Assert.Equal(0, ni.Attachment.DeviceIndex);
-        }
+        Assert.Equal("eni-attach-6537fc0c", ni.Attachment.AttachmentId);
+        Assert.Equal("i-1234567890abcdef0", ni.Attachment.InstanceId);
+        Assert.Equal("attached", ni.Attachment.Status);
+        Assert.Equal(0, ni.Attachment.DeviceIndex);
     }
 }

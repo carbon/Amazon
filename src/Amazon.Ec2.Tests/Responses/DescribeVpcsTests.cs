@@ -1,11 +1,11 @@
-﻿namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests;
+
+public class DescribeVpcsResponseTests
 {
-    public class DescribeVpcsResponseTests
+    [Fact]
+    public void Deserialize()
     {
-        [Fact]
-        public void Deserialize()
-        {
-            var text =
+        var text =
 
 @"<DescribeVpcsResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
   <requestId>7a62c49f-347e-4fc4-9331-6e8eEXAMPLE</requestId>
@@ -31,22 +31,21 @@
   </vpcSet>
 </DescribeVpcsResponse>";
 
-            var response = Ec2Serializer<DescribeVpcsResponse>.Deserialize(text);
+        var response = Ec2Serializer<DescribeVpcsResponse>.Deserialize(text);
 
-            Assert.Single(response.Vpcs);
+        Assert.Single(response.Vpcs);
 
-            var vpc = response.Vpcs[0];
+        var vpc = response.Vpcs[0];
 
-            Assert.Equal("vpc-1a2b3c4d", vpc.VpcId);
-            Assert.Equal("available", vpc.State);
-            Assert.Equal("10.0.0.0/23", vpc.CidrBlock);
-            Assert.Equal("default", vpc.InstanceTenancy);
-            Assert.Equal("dopt-7a8b9c2d", vpc.DhcpOptionsId);
-            Assert.False(vpc.IsDefault);
+        Assert.Equal("vpc-1a2b3c4d", vpc.VpcId);
+        Assert.Equal("available", vpc.State);
+        Assert.Equal("10.0.0.0/23", vpc.CidrBlock);
+        Assert.Equal("default", vpc.InstanceTenancy);
+        Assert.Equal("dopt-7a8b9c2d", vpc.DhcpOptionsId);
+        Assert.False(vpc.IsDefault);
 
-            Assert.Equal("2001:db8:1234:1a00::/56", vpc.Ipv6CidrBlockAssociations[0].Ipv6CidrBlock);
-            Assert.Equal("vpc-cidr-assoc-abababab", vpc.Ipv6CidrBlockAssociations[0].AssociationId);
+        Assert.Equal("2001:db8:1234:1a00::/56", vpc.Ipv6CidrBlockAssociations[0].Ipv6CidrBlock);
+        Assert.Equal("vpc-cidr-assoc-abababab", vpc.Ipv6CidrBlockAssociations[0].AssociationId);
 
-        }
     }
 }

@@ -1,11 +1,11 @@
-﻿namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests;
+
+public class StopInstancesResponseTest
 {
-    public class StopInstancesResponseTest
+    [Fact]
+    public void Deserialize()
     {
-        [Fact]
-        public void Deserialize()
-        {
-            var xml = @"<StopInstancesResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
+        var xml = @"<StopInstancesResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
   <requestId>59dbff89-35bd-4eac-99ed-be587EXAMPLE</requestId>
   <instancesSet>
     <item>
@@ -22,15 +22,14 @@
   </instancesSet>
 </StopInstancesResponse>";
 
-            var response = Ec2Serializer<StopInstancesResponse>.Deserialize(xml);
+        var response = Ec2Serializer<StopInstancesResponse>.Deserialize(xml);
 
-            Assert.Equal("i-1234567890abcdef0", response.Instances[0].InstanceId);
+        Assert.Equal("i-1234567890abcdef0", response.Instances[0].InstanceId);
 
-            Assert.Equal(64, response.Instances[0].CurrentState.Code);
-            Assert.Equal("stopping", response.Instances[0].CurrentState.Name);
+        Assert.Equal(64, response.Instances[0].CurrentState.Code);
+        Assert.Equal("stopping", response.Instances[0].CurrentState.Name);
 
-            Assert.Equal(16, response.Instances[0].PreviousState.Code);
-            Assert.Equal("running", response.Instances[0].PreviousState.Name);
-        }
+        Assert.Equal(16, response.Instances[0].PreviousState.Code);
+        Assert.Equal("running", response.Instances[0].PreviousState.Name);
     }
 }

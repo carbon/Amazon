@@ -1,21 +1,20 @@
-﻿namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests;
+
+public class TerminateInstancesRequestTests
 {
-    public class TerminateInstancesRequestTests
+    [Fact]
+    public void Serialize()
     {
-        [Fact]
-        public void Serialize()
-        {
-            var request = new TerminateInstancesRequest(new[] { "a", "b", "c" });
-            
-            var data = string.Join('&', request.ToParams().Select(a => a.Key + "=" + a.Value));
+        var request = new TerminateInstancesRequest(new[] { "a", "b", "c" });
 
-            Assert.Equal("Action=TerminateInstances&InstanceId.1=a&InstanceId.2=b&InstanceId.3=c", data);
+        var data = string.Join('&', request.ToParams().Select(a => a.Key + "=" + a.Value));
 
-            request = new TerminateInstancesRequest("a", "b", "c");
+        Assert.Equal("Action=TerminateInstances&InstanceId.1=a&InstanceId.2=b&InstanceId.3=c", data);
 
-            data = string.Join('&', request.ToParams().Select(a => a.Key + "=" + a.Value));
+        request = new TerminateInstancesRequest("a", "b", "c");
 
-            Assert.Equal("Action=TerminateInstances&InstanceId.1=a&InstanceId.2=b&InstanceId.3=c", data);
-        }
+        data = string.Join('&', request.ToParams().Select(a => a.Key + "=" + a.Value));
+
+        Assert.Equal("Action=TerminateInstances&InstanceId.1=a&InstanceId.2=b&InstanceId.3=c", data);
     }
 }

@@ -1,18 +1,17 @@
-﻿namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests;
+
+public class RebootInstancesRequestTests
 {
-    public class RebootInstancesRequestTests
+    [Fact]
+    public void Serialize()
     {
-        [Fact]
-        public void Serialize()
+        var a = new RebootInstancesRequest(new[] { "i-1234567890abcdef0" })
         {
-            var a = new RebootInstancesRequest(new[] { "i-1234567890abcdef0" })
-            {
-                DryRun = true
-            };
+            DryRun = true
+        };
 
-            var result = string.Join('&', a.ToParams().Select(pair => pair.Key + "=" + pair.Value));
+        var result = string.Join('&', a.ToParams().Select(pair => $"{pair.Key}={pair.Value}"));
 
-            Assert.Equal("Action=RebootInstances&DryRun=True&InstanceId.1=i-1234567890abcdef0", result);
-        }
+        Assert.Equal("Action=RebootInstances&DryRun=True&InstanceId.1=i-1234567890abcdef0", result);
     }
 }

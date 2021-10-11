@@ -1,15 +1,14 @@
-﻿namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests;
+
+public class StopInstancesRequestTests
 {
-    public class StopInstancesRequestTests
+    [Fact]
+    public void Request()
     {
-        [Fact]
-        public void Request()
-        {
-            var a = new StopInstancesRequest(new[] { "i-1234567890abcdef0" });
+        var a = new StopInstancesRequest(new[] { "i-1234567890abcdef0" });
 
-            var result = string.Join('&', a.ToParams().Select(pair => pair.Key + "=" + pair.Value));
+        var result = string.Join('&', a.ToParams().Select(pair => pair.Key + "=" + pair.Value));
 
-            Assert.Equal("Action=StopInstances&InstanceId.1=i-1234567890abcdef0", result);
-        }
+        Assert.Equal("Action=StopInstances&InstanceId.1=i-1234567890abcdef0", result);
     }
 }

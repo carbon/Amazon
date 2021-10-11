@@ -1,25 +1,24 @@
-﻿namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests;
+
+public class DescribeVolumesRequestTests
 {
-    public class DescribeVolumesRequestTests
+    [Fact]
+    public void Serialize()
     {
-        [Fact]
-        public void Serialize()
-        {
-            var request = new DescribeVolumesRequest(new[] { "a", "b", "c" });
+        var request = new DescribeVolumesRequest(new[] { "a", "b", "c" });
 
-            string data = string.Join('&', request.ToParams().Select(a => a.Key + "=" + a.Value));
+        string data = string.Join('&', request.ToParams().Select(a => a.Key + "=" + a.Value));
 
-            Assert.Equal("Action=DescribeVolumes&VolumeId.1=a&VolumeId.2=b&VolumeId.3=c", data);
-        }
+        Assert.Equal("Action=DescribeVolumes&VolumeId.1=a&VolumeId.2=b&VolumeId.3=c", data);
+    }
 
-        [Fact]
-        public void SerializeEmpty()
-        {
-            var request = new DescribeVolumesRequest();
+    [Fact]
+    public void SerializeEmpty()
+    {
+        var request = new DescribeVolumesRequest();
 
-            string data = string.Join('&', request.ToParams().Select(a => a.Key + "=" + a.Value));
+        string data = string.Join('&', request.ToParams().Select(a => a.Key + "=" + a.Value));
 
-            Assert.Equal("Action=DescribeVolumes", data);
-        }
+        Assert.Equal("Action=DescribeVolumes", data);
     }
 }

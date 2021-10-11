@@ -1,11 +1,11 @@
-﻿namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests;
+
+public class DescribeInstancesTypesResponseTests
 {
-    public class DescribeInstancesTypesResponseTests
+    [Fact]
+    public void Deserialize()
     {
-        [Fact]
-        public void Deserialize()
-        {
-            string xml = @"<DescribeInstanceTypesResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
+        string xml = @"<DescribeInstanceTypesResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
         <requestId>a</requestId>
         <instanceTypeSet>
             <item>
@@ -68,45 +68,44 @@
     </DescribeInstanceTypesResponse>";
 
 
-            var response = DescribeInstanceTypesResponse.Deserialize(xml);
+        var response = DescribeInstanceTypesResponse.Deserialize(xml);
 
-            Assert.Equal("a", response.RequestId);
+        Assert.Equal("a", response.RequestId);
 
-            Assert.Single(response.InstanceTypes);
+        Assert.Single(response.InstanceTypes);
 
-            var instance = response.InstanceTypes[0];
+        var instance = response.InstanceTypes[0];
 
-            Assert.Equal("t1.micro", instance.InstanceType);
-            Assert.Equal("xen", instance.Hypervisor);
+        Assert.Equal("t1.micro", instance.InstanceType);
+        Assert.Equal("xen", instance.Hypervisor);
 
-            Assert.True(instance.FreeTierEligible);
+        Assert.True(instance.FreeTierEligible);
 
-            Assert.Equal(new[] { "i386", "x86_64" }, instance.ProcessorInfo.SupportedArchitectures);
-            Assert.Equal(new[] { "ebs" }, instance.SupportedRootDeviceTypes);
-            Assert.Equal(new[] { "on-demand" }, instance.SupportedUsageClasses);
+        Assert.Equal(new[] { "i386", "x86_64" }, instance.ProcessorInfo.SupportedArchitectures);
+        Assert.Equal(new[] { "ebs" }, instance.SupportedRootDeviceTypes);
+        Assert.Equal(new[] { "on-demand" }, instance.SupportedUsageClasses);
 
-            // Memory
-            Assert.Equal(627, instance.MemoryInfo.SizeInMiB);
+        // Memory
+        Assert.Equal(627, instance.MemoryInfo.SizeInMiB);
 
-            // Network
-            Assert.Equal("unsupported", instance.NetworkInfo.EnaSupport);
-            Assert.Equal(2, instance.NetworkInfo.Ipv4AddressesPerInterface);
-            Assert.Equal(0, instance.NetworkInfo.Ipv6AddressesPerInterface);
-            Assert.False(instance.NetworkInfo.Ipv6Supported);
-            Assert.Equal(2, instance.NetworkInfo.MaximumNetworkInterfaces);
-            Assert.Equal("Very Low", instance.NetworkInfo.NetworkPerformance);
+        // Network
+        Assert.Equal("unsupported", instance.NetworkInfo.EnaSupport);
+        Assert.Equal(2, instance.NetworkInfo.Ipv4AddressesPerInterface);
+        Assert.Equal(0, instance.NetworkInfo.Ipv6AddressesPerInterface);
+        Assert.False(instance.NetworkInfo.Ipv6Supported);
+        Assert.Equal(2, instance.NetworkInfo.MaximumNetworkInterfaces);
+        Assert.Equal("Very Low", instance.NetworkInfo.NetworkPerformance);
 
 
-            Assert.Null(instance.GpuInfo);
+        Assert.Null(instance.GpuInfo);
 
-            // vCPU
-            Assert.Equal(1, instance.VCpuInfo.DefaultCores);
-            Assert.Equal(1, instance.VCpuInfo.DefaultThreadsPerCore);
-            Assert.Equal(1, instance.VCpuInfo.DefaultVCpus);
-            Assert.Equal(new[] { 1 }, instance.VCpuInfo.ValidThreadsPerCore);
+        // vCPU
+        Assert.Equal(1, instance.VCpuInfo.DefaultCores);
+        Assert.Equal(1, instance.VCpuInfo.DefaultThreadsPerCore);
+        Assert.Equal(1, instance.VCpuInfo.DefaultVCpus);
+        Assert.Equal(new[] { 1 }, instance.VCpuInfo.ValidThreadsPerCore);
 
-            Assert.Null(instance.ProcessorInfo.SustainedClockSpeedInGhz);
-            Assert.Equal(new[] { "i386", "x86_64" }, instance.ProcessorInfo.SupportedArchitectures);
-        }
+        Assert.Null(instance.ProcessorInfo.SustainedClockSpeedInGhz);
+        Assert.Equal(new[] { "i386", "x86_64" }, instance.ProcessorInfo.SupportedArchitectures);
     }
 }

@@ -1,11 +1,11 @@
-﻿namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests;
+
+public class DescribeSecurityGroupsTest
 {
-    public class DescribeSecurityGroupsTest
+    [Fact]
+    public void CanParse()
     {
-        [Fact]
-        public void CanParse()
-        {
-            var text =
+        var text =
 @"<DescribeSecurityGroupsResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
     <requestId>1d62eae0-acdd-481d-88c9-example</requestId>
     <securityGroupInfo>
@@ -55,26 +55,25 @@
     </securityGroupInfo>
 </DescribeSecurityGroupsResponse>";
 
-            var response = Ec2Serializer<DescribeSecurityGroupsResponse>.Deserialize(text);
+        var response = Ec2Serializer<DescribeSecurityGroupsResponse>.Deserialize(text);
 
 
-            Assert.Single(response.SecurityGroups);
+        Assert.Single(response.SecurityGroups);
 
-            var group = response.SecurityGroups[0];
+        var group = response.SecurityGroups[0];
 
-            Assert.Equal(123456789012L, group.OwnerId);
-            Assert.Equal("sg-9bf6ceff", group.GroupId);
-            Assert.Equal("SSHAccess", group.GroupName);
-            Assert.Equal("Security group for SSH access", group.GroupDescription);
+        Assert.Equal(123456789012L, group.OwnerId);
+        Assert.Equal("sg-9bf6ceff", group.GroupId);
+        Assert.Equal("SSHAccess", group.GroupName);
+        Assert.Equal("Security group for SSH access", group.GroupDescription);
 
-            Assert.Single(group.IpPermissions); 
-            Assert.Single(group.IpPermissionsEgress);
+        Assert.Single(group.IpPermissions);
+        Assert.Single(group.IpPermissionsEgress);
 
-            Assert.Equal("tcp", group.IpPermissions[0].IpProtocol);
-            Assert.Equal(22,    group.IpPermissions[0].FromPort);
-            Assert.Equal("22",  group.IpPermissions[0].ToPort);
+        Assert.Equal("tcp", group.IpPermissions[0].IpProtocol);
+        Assert.Equal(22, group.IpPermissions[0].FromPort);
+        Assert.Equal("22", group.IpPermissions[0].ToPort);
 
 
-        }
     }
 }

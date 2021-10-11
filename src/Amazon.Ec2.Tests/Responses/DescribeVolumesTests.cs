@@ -1,13 +1,13 @@
 ﻿using System.Globalization;
 
-namespace Amazon.Ec2.Tests
+namespace Amazon.Ec2.Tests;
+
+public class DescribeVolumesResponseTests
 {
-    public class DescribeVolumesResponseTests
+    [Fact]
+    public void X()
     {
-        [Fact]
-        public void X()
-        {
-            var text =
+        var text =
 @"<DescribeVolumesResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
    <requestId>59dbff89-35bd-4eac-99ed-be587EXAMPLE</requestId> 
    <volumeSet>
@@ -34,29 +34,28 @@ namespace Amazon.Ec2.Tests
    </volumeSet>
 </DescribeVolumesResponse>";
 
-            var response = Ec2Serializer<DescribeVolumesResponse>.Deserialize(text);
+        var response = Ec2Serializer<DescribeVolumesResponse>.Deserialize(text);
 
-            Assert.Single(response.Volumes);
+        Assert.Single(response.Volumes);
 
-            var volume = response.Volumes[0];
-            var date = DateTime.Parse("2016-01-05T03:15:30Z", null, DateTimeStyles.AdjustToUniversal);
+        var volume = response.Volumes[0];
+        var date = DateTime.Parse("2016-01-05T03:15:30Z", null, DateTimeStyles.AdjustToUniversal);
 
-            Assert.Equal(date,                    volume.CreateTime);
-            Assert.Equal("vol-1234567890abcdef0", volume.VolumeId);
-            Assert.Equal("us-east-1a",            volume.AvailabilityZone);
-            Assert.Equal("in-use",                volume.Status);
-            Assert.Equal(80,                      volume.Size);
-            Assert.Equal("standard",              volume.VolumeType);
+        Assert.Equal(date, volume.CreateTime);
+        Assert.Equal("vol-1234567890abcdef0", volume.VolumeId);
+        Assert.Equal("us-east-1a", volume.AvailabilityZone);
+        Assert.Equal("in-use", volume.Status);
+        Assert.Equal(80, volume.Size);
+        Assert.Equal("standard", volume.VolumeType);
 
-            var attachment_0 = volume.Attachments[0];
+        var attachment_0 = volume.Attachments[0];
 
-            Assert.Equal("vol-1234567890abcdef0", attachment_0.VolumeId);
-            Assert.Equal("i-1234567890abcdef0",   attachment_0.InstanceId);
-            Assert.Equal("/dev/sdh",              attachment_0.Device);
+        Assert.Equal("vol-1234567890abcdef0", attachment_0.VolumeId);
+        Assert.Equal("i-1234567890abcdef0", attachment_0.InstanceId);
+        Assert.Equal("/dev/sdh", attachment_0.Device);
 
-            Assert.Equal(date, attachment_0.AttachTime);
+        Assert.Equal(date, attachment_0.AttachTime);
 
-            Assert.Single(volume.Attachments);
-        }
+        Assert.Single(volume.Attachments);
     }
 }

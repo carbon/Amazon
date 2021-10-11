@@ -1,11 +1,10 @@
-﻿namespace Amazon.Ec2.Models.Tests
+﻿namespace Amazon.Ec2.Models.Tests;
+
+public class InstanceTypeTests
 {
-    public class InstanceTypeTests
+    [Fact]
+    public void A()
     {
-        [Fact]
-        public void A()
-        {
-            Assert.Equal(70, InstanceTypeMap.All.Length);
-        }
+        Assert.Equal(70, InstanceTypeMap.All.Length);
     }
 }

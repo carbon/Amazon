@@ -1,11 +1,11 @@
-﻿namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests;
+
+public class DescribeSubnetsTests
 {
-    public class DescribeSubnetsTests
+    [Fact]
+    public void Deserialize()
     {
-        [Fact]
-        public void Deserialize()
-        {
-            var text =
+        var text =
 @"<DescribeSubnetsResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
   <requestId>7a62c49f-347e-4fc4-9331-6e8eEXAMPLE</requestId>
   <subnetSet>
@@ -45,17 +45,16 @@
   </subnetSet>
 </DescribeSubnetsResponse>";
 
-            var response = Ec2Serializer<DescribeSubnetsResponse>.Deserialize(text);
+        var response = Ec2Serializer<DescribeSubnetsResponse>.Deserialize(text);
 
-            Assert.Equal(2, response.Subnets.Length);
+        Assert.Equal(2, response.Subnets.Length);
 
-            var subnet = response.Subnets[0];
+        var subnet = response.Subnets[0];
 
-            Assert.Equal("subnet-9d4a7b6c", subnet.SubnetId);
-            Assert.Equal("vpc-1a2b3c4d",    subnet.VpcId);
-            Assert.Equal("us-east-1a",      subnet.AvailabilityZone);
+        Assert.Equal("subnet-9d4a7b6c", subnet.SubnetId);
+        Assert.Equal("vpc-1a2b3c4d", subnet.VpcId);
+        Assert.Equal("us-east-1a", subnet.AvailabilityZone);
 
-            Assert.Equal(251, subnet.AvailableIpAddressCount);
-        }
+        Assert.Equal(251, subnet.AvailableIpAddressCount);
     }
 }

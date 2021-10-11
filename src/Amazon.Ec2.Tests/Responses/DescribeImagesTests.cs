@@ -1,11 +1,11 @@
-﻿namespace Amazon.Ec2.Tests
+﻿namespace Amazon.Ec2.Tests;
+
+public class DescribeImagesResponseTests
 {
-    public class DescribeImagesResponseTests
+    [Fact]
+    public void Deserialize()
     {
-        [Fact]
-        public void Deserialize()
-        {
-            var text =
+        var text =
 @"<DescribeImagesResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
   <requestId>59dbff89-35bd-4eac-99ed-be587EXAMPLE</requestId> 
   <imagesSet>
@@ -43,27 +43,26 @@
   </imagesSet>
 </DescribeImagesResponse>";
 
-            var response = Ec2Serializer<DescribeImagesResponse>.Deserialize(text);
+        var response = Ec2Serializer<DescribeImagesResponse>.Deserialize(text);
 
-            Assert.Single(response.Images);
+        Assert.Single(response.Images);
 
-            var image = response.Images[0];
+        var image = response.Images[0];
 
-            Assert.Equal(123456789012, image.ImageOwnerId);
-            Assert.Equal("amazon", image.ImageOwnerAlias);
-            Assert.Equal("ami-1a2b3c4d", image.ImageId);
-            Assert.Equal("i386", image.Architecture);
-            Assert.Equal("aki-1a2b3c4d", image.KernelId);
-            Assert.Equal("Image Description", image.Description);
-            Assert.Equal("paravirtual", image.VirtualizationType);
-            Assert.Equal("ebs", image.RootDeviceType);
-            Assert.Equal("/dev/sda", image.RootDeviceName);
+        Assert.Equal(123456789012, image.ImageOwnerId);
+        Assert.Equal("amazon", image.ImageOwnerAlias);
+        Assert.Equal("ami-1a2b3c4d", image.ImageId);
+        Assert.Equal("i386", image.Architecture);
+        Assert.Equal("aki-1a2b3c4d", image.KernelId);
+        Assert.Equal("Image Description", image.Description);
+        Assert.Equal("paravirtual", image.VirtualizationType);
+        Assert.Equal("ebs", image.RootDeviceType);
+        Assert.Equal("/dev/sda", image.RootDeviceName);
 
-            Assert.Equal("xen", image.Hypervisor);
+        Assert.Equal("xen", image.Hypervisor);
 
-            Assert.True(image.IsPublic);
+        Assert.True(image.IsPublic);
 
-            // Assert.True("/dev/sda1", image.blockDeviceMappings[0]);
-        }
+        // Assert.True("/dev/sda1", image.blockDeviceMappings[0]);
     }
 }
