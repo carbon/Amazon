@@ -4,56 +4,55 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class Command
 {
-    public sealed class Command
-    {
-        [StringLength(36)]
-        public string CommandId { get; set; }
+    [StringLength(36)]
+    public string CommandId { get; set; }
 
-        [MaxLength(100)]
-        public string Comment { get; set; }
+    [MaxLength(100)]
+    public string Comment { get; set; }
 
-        public int CompletedCount { get; set; }
+    public int CompletedCount { get; set; }
 
-        public int DeliveryTimedOutCount { get; set; }
+    public int DeliveryTimedOutCount { get; set; }
 
-        public int ErrorCount { get; set; }
+    public int ErrorCount { get; set; }
 
-        public string DocumentName { get; set; }
+    public string DocumentName { get; set; }
 
-        public string DocumentVersion { get; set; }
+    public string DocumentVersion { get; set; }
 
-        public Timestamp ExpiresAfter { get; set; }
+    public Timestamp ExpiresAfter { get; set; }
 
-        public string[] InstanceIds { get; set; }
+    public string[] InstanceIds { get; set; }
 
-        // Can be a number or %
-        public string MaxConcurrency { get; set; }
+    // Can be a number or %
+    public string MaxConcurrency { get; set; }
 
-        public string MaxErrors { get; set; }
+    public string MaxErrors { get; set; }
 
-        public NotificationConfig NotificationConfig { get; set; }
+    public NotificationConfig NotificationConfig { get; set; }
 
-        public string OutputS3BucketName { get; set; }
+    public string OutputS3BucketName { get; set; }
 
-        public string OutputS3BucketKeyPrefix { get; set; }
+    public string OutputS3BucketKeyPrefix { get; set; }
 
-        public Dictionary<string, string[]> Parameters { get; set; }
+    public Dictionary<string, string[]> Parameters { get; set; }
 
-        public Timestamp? RequestedDateTime { get; set; }
+    public Timestamp? RequestedDateTime { get; set; }
 
-        public string ServiceRole { get; set; }
+    public string ServiceRole { get; set; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public CommandStatus Status { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public CommandStatus Status { get; set; }
 
-        public string StatusDetails { get; set; }
+    public string StatusDetails { get; set; }
 
-        public int TargetCount { get; set; }
+    public int TargetCount { get; set; }
 
-        public Target[] Targets { get; set; }
-    }
+    public Target[] Targets { get; set; }
 }
 
 /*

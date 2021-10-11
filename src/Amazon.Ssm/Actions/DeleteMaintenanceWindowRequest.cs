@@ -1,14 +1,15 @@
 ﻿using System;
 
-namespace Amazon.Ssm
-{
-    public sealed class DeleteMaintenanceWindowRequest : ISsmRequest
-    {
-        public DeleteMaintenanceWindowRequest(string windowId)
-        {
-            this.WindowId = windowId ?? throw new ArgumentNullException(nameof(windowId));
-        }
+namespace Amazon.Ssm;
 
-        public string WindowId { get; }
+public sealed class DeleteMaintenanceWindowRequest : ISsmRequest
+{
+    public DeleteMaintenanceWindowRequest(string windowId)
+    {
+        ArgumentNullException.ThrowIfNull(windowId);
+
+        WindowId = windowId;
     }
+
+    public string WindowId { get; }
 }

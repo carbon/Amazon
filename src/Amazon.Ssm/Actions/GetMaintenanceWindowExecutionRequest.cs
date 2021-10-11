@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class GetMaintenanceWindowExecutionRequest : ISsmRequest
 {
-    public sealed class GetMaintenanceWindowExecutionRequest : ISsmRequest
-    {
-        public string WindowExecutionId { get; set; }
-    }
+    public string WindowExecutionId { get; set; }
 }

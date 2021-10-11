@@ -1,6 +1,5 @@
-﻿namespace Amazon.Ssm
+﻿namespace Amazon.Ssm;
+
+public sealed class DescribeEffectivePatchesForPatchBaselineResponse
 {
-    public class DescribeEffectivePatchesForPatchBaselineResponse
-    {
-    }
 }

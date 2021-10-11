@@ -2,16 +2,19 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class UpdateDocumentRequest : ISsmRequest
 {
-    public sealed class UpdateDocumentRequest : ISsmRequest
-    {
-        [Required]
-        public string Content { get; set; }
+    [Required]
+    public string Content { get; set; }
 
-        public string DocumentVersion { get; set; }
+#nullable enable
 
-        [Required]
-        public string Name { get; set; }
-    }
+    public string? DocumentVersion { get; set; }
+
+#nullable disable
+
+    [Required]
+    public string Name { get; set; }
 }

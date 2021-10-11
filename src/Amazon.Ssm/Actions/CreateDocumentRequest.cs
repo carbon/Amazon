@@ -2,16 +2,15 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class CreateDocumentRequest : ISsmRequest
 {
-    public sealed class CreateDocumentRequest : ISsmRequest
-    {
-        public string Content { get; set; }
+    public string Content { get; set; }
 
-        // Command | Policy | Automation
-        public string DocumentType { get; set; }
+    // Command | Policy | Automation
+    public string DocumentType { get; set; }
 
-        [Required]
-        public string Name { get; set; }
-    }
+    [Required]
+    public string Name { get; set; }
 }

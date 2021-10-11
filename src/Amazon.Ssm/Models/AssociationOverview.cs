@@ -2,14 +2,13 @@
 
 using System.Collections.Generic;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class AssociationOverview
 {
-    public class AssociationOverview
-    {
-        public Dictionary<string, int> AssociationStatusAggregatedCount { get; set; }
+    public Dictionary<string, int> AssociationStatusAggregatedCount { get; set; }
 
-        public string DetailedStatus { get; set; }
+    public string DetailedStatus { get; set; }
 
-        public string Status { get; set; }
-    }
+    public string Status { get; set; }
 }

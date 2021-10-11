@@ -1,23 +1,25 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class Target
 {
-    public sealed class Target
-    {
 #nullable disable
-        public Target() { }
+    public Target() { }
 #nullable enable
 
-        public Target(string key, string[] values)
-        {
-            Key    = key    ?? throw new ArgumentNullException(nameof(key));
-            Values = values ?? throw new ArgumentNullException(nameof(values));
-        }
+    public Target(string key, string[] values)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(values);
 
-        [StringLength(128)]
-        public string Key { get; set; }
-
-        public string[] Values { get; set; }
+        Key = key;
+        Values = values;
     }
+
+    [StringLength(128)]
+    public string Key { get; set; }
+
+    public string[] Values { get; set; }
 }

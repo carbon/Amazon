@@ -1,47 +1,41 @@
 ﻿#nullable disable
 
-using System.Text.Json.Serialization;
+namespace Amazon.Ssm;
 
-namespace Amazon.Ssm
+public sealed class InstanceInformation
 {
-    public sealed class InstanceInformation
-    {
-        public string ActivationId { get; set; }
+    public string ActivationId { get; init; }
 
-        public string AgentVersion { get; set; }
+    public string AgentVersion { get; init; }
 
-        public string AssociationStatus { get; set; }
+    public string AssociationStatus { get; init; }
 
-        public string ComputerName { get; set; }
+    public string ComputerName { get; init; }
 
-        public string InstanceId { get; set; }
+    public string InstanceId { get; init; }
 
-        public string IamRole { get; set; }
+    public string IamRole { get; init; }
 
-        public bool IsLatestVersion { get; set; }
+    public bool IsLatestVersion { get; init; }
 
-        public Timestamp? LastAssociationExecutionDate { get; set; }
+    public Timestamp? LastAssociationExecutionDate { get; init; }
 
-        public Timestamp? LastPingDateTime { get; set; }
+    public Timestamp? LastPingDateTime { get; init; }
 
-        public Timestamp? LastSuccessfulAssociationExecutionDate { get; set; }
+    public Timestamp? LastSuccessfulAssociationExecutionDate { get; init; }
 
-        public string Name { get; set; }
+    public string Name { get; init; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public PingStatus PingStatus { get; set; }
+    public PingStatus PingStatus { get; init; }
 
-        public string PlatformName { get; set; }
+    public string PlatformName { get; init; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public PlatformType PlatformType { get; set; }
+    public PlatformType PlatformType { get; init; }
 
-        public string PlatformVersion { get; set; }
+    public string PlatformVersion { get; init; }
 
-        public Timestamp? RegistrationDate { get; set; }
+    public Timestamp? RegistrationDate { get; init; }
 
-        // ManagedInstance | Document | EC2Instance
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public ResourceType ResourceType { get; set; }
-    }
+    // ManagedInstance | Document | EC2Instance
+    public ResourceType ResourceType { get; set; }
 }

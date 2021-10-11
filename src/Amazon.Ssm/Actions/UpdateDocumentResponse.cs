@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class UpdateDocumentResponse
 {
-    public sealed class UpdateDocumentResponse
-    {
-        public DocumentDescription DocumentDescription { get; set; }
-    }
+    public DocumentDescription DocumentDescription { get; init; }
 }

@@ -1,17 +1,19 @@
 ﻿using System;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class DeregisterTaskFromMaintenanceWindowRequest
 {
-    public sealed class DeregisterTaskFromMaintenanceWindowRequest
+    public DeregisterTaskFromMaintenanceWindowRequest(string windowId, string windowTaskId)
     {
-        public DeregisterTaskFromMaintenanceWindowRequest(string windowId, string windowTaskId)
-        {
-            WindowId = windowId ?? throw new ArgumentNullException(nameof(windowId));
-            WindowTaskId = windowTaskId ?? throw new ArgumentNullException(nameof(windowTaskId));
-        }
+        ArgumentNullException.ThrowIfNull(windowId);
+        ArgumentNullException.ThrowIfNull(windowTaskId);
 
-        public string WindowId { get; }
-
-        public string WindowTaskId { get;  }
+        WindowId = windowId;
+        WindowTaskId = windowTaskId;
     }
+
+    public string WindowId { get; }
+
+    public string WindowTaskId { get; }
 }

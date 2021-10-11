@@ -1,21 +1,23 @@
 ﻿using System;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class CommandTarget
 {
-    public class CommandTarget
-    {
 #nullable disable
-        public CommandTarget() { }
+    public CommandTarget() { }
 #nullable enable
 
-        public CommandTarget(string key, params string[] values)
-        {
-            Key    = key    ?? throw new ArgumentNullException(nameof(key));
-            Values = values ?? throw new ArgumentNullException(nameof(values));
-        }
+    public CommandTarget(string key, params string[] values)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(values);
 
-        public string Key { get; set; }
+        Key = key;
+        Values = values;
+    }
 
-        public string[] Values { get; set; }
-    } 
-}
+    public string Key { get; set; }
+
+    public string[] Values { get; set; }
+} 

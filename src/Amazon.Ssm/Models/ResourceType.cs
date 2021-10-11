@@ -1,9 +1,11 @@
-﻿namespace Amazon.Ssm
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Ssm;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum ResourceType
 {
-    public enum ResourceType
-    {
-        ManagedInstance,
-        Document,
-        EC2Instance
-    }
+    ManagedInstance,
+    Document,
+    EC2Instance
 }

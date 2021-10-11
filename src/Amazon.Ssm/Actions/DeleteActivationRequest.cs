@@ -2,18 +2,17 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class DeleteActivationRequest : ISsmRequest
 {
-    public sealed class DeleteActivationRequest : ISsmRequest
+    public DeleteActivationRequest() { }
+
+    public DeleteActivationRequest(string activationId)
     {
-        public DeleteActivationRequest() { }
-
-        public DeleteActivationRequest(string activationId)
-        {
-            ActivationId = activationId;
-        }
-
-        [Required]
-        public string ActivationId { get; set; }
+        ActivationId = activationId;
     }
+
+    [Required]
+    public string ActivationId { get; init; }
 }

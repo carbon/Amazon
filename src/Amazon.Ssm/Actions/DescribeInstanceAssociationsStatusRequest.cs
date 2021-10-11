@@ -1,13 +1,12 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class DescribeInstanceAssociationsStatusRequest : ISsmRequest
 {
-    public class DescribeInstanceAssociationsStatusRequest : ISsmRequest
-    {
-        public string InstanceId { get; set; }
+    public string InstanceId { get; set; }
 
-        public int? MaxResults { get; set; }
+    public int? MaxResults { get; set; }
 
-        public string NextToken { get; set; }
-    }
+    public string NextToken { get; set; }
 }

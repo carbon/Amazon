@@ -1,19 +1,21 @@
 ﻿#nullable disable
 
+using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class DeregisterManagedInstanceRequest : ISsmRequest
 {
-    public sealed class DeregisterManagedInstanceRequest : ISsmRequest
+    public DeregisterManagedInstanceRequest() { }
+
+    public DeregisterManagedInstanceRequest(string instanceId)
     {
-        public DeregisterManagedInstanceRequest() { }
+        ArgumentNullException.ThrowIfNull(instanceId);
 
-        public DeregisterManagedInstanceRequest(string instanceId)
-        {
-            InstanceId = instanceId;
-        }
-
-        [Required]
-        public string InstanceId { get; set; }
+        InstanceId = instanceId;
     }
+
+    [Required]
+    public string InstanceId { get; init; }
 }

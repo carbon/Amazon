@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class SendCommandResponse
 {
-    public class SendCommandResponse
-    {
-       public Command Command { get; set;  }
-    }
+    public Command Command { get; init; }
 }

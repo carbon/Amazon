@@ -1,15 +1,14 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class DocumentVersionInfo
 {
-    public sealed class DocumentVersionInfo
-    {
-        public string Name { get; set; }
+    public string Name { get; init; }
 
-        public Timestamp CreatedDate { get; set; }
+    public Timestamp CreatedDate { get; init; }
 
-        public string DocumentVersion { get; set; }
+    public string DocumentVersion { get; init; }
 
-        public bool IsDefaultVersion { get; set; }
-    }
+    public bool IsDefaultVersion { get; init; }
 }

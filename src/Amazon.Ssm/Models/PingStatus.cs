@@ -1,9 +1,11 @@
-﻿namespace Amazon.Ssm
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Ssm;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum PingStatus
 {
-    public enum PingStatus
-    {
-        Online,
-        ConnectionLost,
-        Inactive
-    }
+    Online,
+    ConnectionLost,
+    Inactive
 }

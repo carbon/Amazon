@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class CreateMaintenanceWindowResponse
 {
-    public class CreateMaintenanceWindowResponse
-    {
-        public string WindowId { get; set; }
-    }
+    public string WindowId { get; init; }
 }

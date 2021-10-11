@@ -1,6 +1,5 @@
-﻿namespace Amazon.Ssm
+﻿namespace Amazon.Ssm;
+
+public sealed class DeregisterTaskFromMaintenanceWindowResponse
 {
-    public class DeregisterTaskFromMaintenanceWindowResponse
-    {
-    }
 }

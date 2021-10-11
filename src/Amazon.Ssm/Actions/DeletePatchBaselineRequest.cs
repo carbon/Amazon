@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class DeletePatchBaselineRequest
 {
-    public class DeletePatchBaselineRequest
-    {
-        public string BaselineId { get; set; }
-    }
+    public string BaselineId { get; set; }
 }

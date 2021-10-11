@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class StartAutomationExecutionResponse
 {
-    public class StartAutomationExecutionResponse
-    {
-        public string AutomationExecutionId { get; set; }
-    }
+    public string AutomationExecutionId { get; init; }
 }

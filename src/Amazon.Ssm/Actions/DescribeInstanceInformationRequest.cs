@@ -1,18 +1,17 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class DescribeInstanceInformationRequest : ISsmRequest
 {
-    public sealed class DescribeInstanceInformationRequest : ISsmRequest
-    {
         
-        // Filters
+    // Filters
 
-        // InstanceInformationFilterList
+    // InstanceInformationFilterList
 
-        public int? MaxResults { get; set; }
+    public int? MaxResults { get; set; }
 
-        public string NextToken { get; set; }
-    }
-
-    // ref: http://docs.aws.amazon.com/systems-manager/latest/APIReference/API_DescribeInstanceInformation.html
+    public string NextToken { get; set; }
 }
+
+// ref: http://docs.aws.amazon.com/systems-manager/latest/APIReference/API_DescribeInstanceInformation.html

@@ -1,25 +1,24 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class GetMaintenanceWindowResponse
 {
-    public class GetMaintenanceWindowResponse
-    {
-        public bool AllowUnassociatedTargets { get; set; }
+    public bool AllowUnassociatedTargets { get; init; }
 
-        public long CreatedDate { get; set; }
+    public long CreatedDate { get; init; }
 
-        public int Cutoff { get; set; }
+    public int Cutoff { get; init; }
 
-        public int Duration { get; set; }
+    public int Duration { get; init; }
 
-        public bool Enabled { get; set; }
+    public bool Enabled { get; init; }
 
-        public long ModifiedDate { get; set; }
+    public long ModifiedDate { get; init; }
 
-        public string Name { get; set; }
+    public string Name { get; init; }
 
-        public string Schedule { get; set; }
+    public string Schedule { get; init; }
 
-        public string WindowId { get; set; }
-    }
+    public string WindowId { get; init; }
 }

@@ -1,7 +1,6 @@
-﻿namespace Amazon.Ssm
+﻿namespace Amazon.Ssm;
+
+public sealed class DeletePatchBaselineResponse
 {
-    public class DeletePatchBaselineResponse
-    {
-        // Empty
-    }
+    // Empty
 }

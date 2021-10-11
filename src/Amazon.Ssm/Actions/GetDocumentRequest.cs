@@ -1,14 +1,13 @@
-﻿#nullable disable
+﻿using System.ComponentModel.DataAnnotations;
 
-using System.ComponentModel.DataAnnotations;
+namespace Amazon.Ssm;
 
-namespace Amazon.Ssm
+public sealed class GetDocumentRequest : ISsmRequest
 {
-    public sealed class GetDocumentRequest : ISsmRequest
-    {
-        public string DocumentVersion { get; set; }
+    public string? DocumentVersion { get; init; }
 
-        [Required]
-        public string Name { get; set; }
-    }
+#nullable disable
+
+    [Required]
+    public string Name { get; init; }
 }

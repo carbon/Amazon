@@ -2,18 +2,17 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class DeleteParameterRequest : ISsmRequest
 {
-    public sealed class DeleteParameterRequest : ISsmRequest
+    public DeleteParameterRequest() { }
+
+    public DeleteParameterRequest(string name)
     {
-        public DeleteParameterRequest() { }
-
-        public DeleteParameterRequest(string name)
-        {
-            Name = name;
-        }
-
-        [Required]
-        public string Name { get; set; }
+        Name = name;
     }
+
+    [Required]
+    public string Name { get; set; }
 }

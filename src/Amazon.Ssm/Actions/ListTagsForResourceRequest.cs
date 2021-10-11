@@ -2,15 +2,14 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Ssm
-{
-    public class ListTagsForResourceRequest : ISsmRequest
-    {
-        [Required]
-        public string ResourceId { get; set; }
+namespace Amazon.Ssm;
 
-        // ManagedInstance | MaintenanceWindow | Parameter
-        [Required]
-        public string ResourceType { get; set; }
-    }
+public sealed class ListTagsForResourceRequest : ISsmRequest
+{
+    [Required]
+    public string ResourceId { get; set; }
+
+    // ManagedInstance | MaintenanceWindow | Parameter
+    [Required]
+    public string ResourceType { get; set; }
 }

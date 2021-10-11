@@ -2,14 +2,13 @@
 
 using System.Collections.Generic;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class FailureDetails
 {
-    public sealed class FailureDetails
-    {
-        public Dictionary<string, object> Details { get; set; }
+    public Dictionary<string, object> Details { get; init; }
 
-        public string FailureStage { get; set; }
+    public string FailureStage { get; init; }
 
-        public string FailureType { get; set; }
-    }
+    public string FailureType { get; init; }
 }

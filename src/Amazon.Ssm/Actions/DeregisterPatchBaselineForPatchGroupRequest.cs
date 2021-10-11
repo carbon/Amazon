@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
-{
-    public class DeregisterPatchBaselineForPatchGroupRequest
-    {
-        public string BaselineId { get; set; }
+namespace Amazon.Ssm;
 
-        public string PatchGroup { get; set; }
-    }
+public sealed class DeregisterPatchBaselineForPatchGroupRequest
+{
+    public string BaselineId { get; init; }
+
+    public string PatchGroup { get; init; }
 }

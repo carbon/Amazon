@@ -1,8 +1,10 @@
-﻿namespace Amazon.Ssm
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Ssm;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum PlatformType
 {
-    public enum PlatformType
-    {
-        Windows,
-        Linux
-    }
+    Windows,
+    Linux
 }

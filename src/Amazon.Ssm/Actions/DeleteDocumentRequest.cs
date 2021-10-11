@@ -1,15 +1,15 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class DeleteDocumentRequest : ISsmRequest
 {
-    public sealed class DeleteDocumentRequest : ISsmRequest
+    public DeleteDocumentRequest(string name)
     {
-        public DeleteDocumentRequest(string name)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentNullException.ThrowIfNull(name);
 
-        public string Name { get; }
+        Name = name;
     }
+
+    public string Name { get; }
 }

@@ -2,13 +2,12 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Ssm
-{
-    public sealed class DescribeDocumentRequest : ISsmRequest
-    {
-        public string DocumentVersion { get; set; }
+namespace Amazon.Ssm;
 
-        [Required]
-        public string Name { get; set; }
-    }
+public sealed class DescribeDocumentRequest : ISsmRequest
+{
+    public string DocumentVersion { get; init; }
+
+    [Required]
+    public string Name { get; init; }
 }

@@ -1,13 +1,12 @@
-﻿namespace Amazon.Ssm
+﻿namespace Amazon.Ssm;
+
+public enum CommandStatus
 {
-    public enum CommandStatus
-    {
-        Pending,
-        InProgress,
-        Success,
-        Cancelled,
-        Failed,
-        TimedOut,
-        Cancelling
-    }
+    Pending,
+    InProgress,
+    Success,
+    Cancelled,
+    Failed,
+    TimedOut,
+    Cancelling
 }

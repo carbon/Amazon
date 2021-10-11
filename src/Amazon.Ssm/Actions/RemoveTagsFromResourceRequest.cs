@@ -2,17 +2,16 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Ssm
+namespace Amazon.Ssm;
+
+public sealed class RemoveTagsFromResourceRequest : ISsmRequest
 {
-    public sealed class RemoveTagsFromResourceRequest : ISsmRequest
-    {
-        [Required]
-        public string ResourceId { get; set; }
+    [Required]
+    public string ResourceId { get; init; }
 
-        [Required]
-        public string ResourceType { get; set; }
+    [Required]
+    public string ResourceType { get; init; }
 
-        [Required]
-        public string[] TagKeys { get; set; }
-    }
+    [Required]
+    public string[] TagKeys { get; init; }
 }

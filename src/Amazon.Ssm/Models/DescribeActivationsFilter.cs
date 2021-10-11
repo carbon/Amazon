@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-namespace Amazon.Ssm
-{
-    public class DescribeActivationsFilter
-    {
-        public string FilterKey { get; set; }
+namespace Amazon.Ssm;
 
-        public string[] FilterValues { get; set; }
-    }
+public sealed class DescribeActivationsFilter
+{
+    public string FilterKey { get; set; }
+
+    public string[] FilterValues { get; set; }
 }
