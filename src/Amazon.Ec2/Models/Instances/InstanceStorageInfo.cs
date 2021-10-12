@@ -1,6 +1,5 @@
-﻿namespace Amazon.Ec2
+﻿namespace Amazon.Ec2;
+
+public sealed class InstanceStorageInfo
 {
-    public sealed class InstanceStorageInfo
-    {
-    }
 }

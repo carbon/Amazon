@@ -2,12 +2,11 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class StopInstancesResponse : IEc2Response
 {
-    public sealed class StopInstancesResponse : IEc2Response
-    {
-        [XmlArray("instancesSet")]
-        [XmlArrayItem("item")]
-        public InstanceStateChange[] Instances { get; init; }
-    }
+    [XmlArray("instancesSet")]
+    [XmlArrayItem("item")]
+    public InstanceStateChange[] Instances { get; init; }
 }

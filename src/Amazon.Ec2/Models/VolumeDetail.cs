@@ -1,8 +1,7 @@
-﻿namespace Amazon.Ec2
+﻿namespace Amazon.Ec2;
+
+public sealed class VolumeDetail
 {
-    public class VolumeDetail
-    {
-        // in GiB
-        public long Size { get; set; }
-    }
+    // in GiB
+    public long Size { get; set; }
 }

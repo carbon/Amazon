@@ -2,14 +2,13 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class DescribeSecurityGroupsResponse : IEc2Response
 {
-    public sealed class DescribeSecurityGroupsResponse : IEc2Response
-    {
-        [XmlArray("securityGroupInfo")]
-        [XmlArrayItem("item")]
-        public SecurityGroup[] SecurityGroups { get; init; }
-    }
+    [XmlArray("securityGroupInfo")]
+    [XmlArrayItem("item")]
+    public SecurityGroup[] SecurityGroups { get; init; }
 }
 
 /*

@@ -2,14 +2,13 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class DescribeVolumesResponse : IEc2Response
 {
-    public sealed class DescribeVolumesResponse : IEc2Response
-    {
-        [XmlArray("volumeSet")]
-        [XmlArrayItem("item")]
-        public Volume[] Volumes { get; init; }
-    }
+    [XmlArray("volumeSet")]
+    [XmlArrayItem("item")]
+    public Volume[] Volumes { get; init; }
 }
 
 /*

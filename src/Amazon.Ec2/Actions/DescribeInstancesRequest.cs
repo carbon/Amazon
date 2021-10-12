@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class DescribeInstancesRequest : DescribeRequest, IEc2Request
 {
-    public sealed class DescribeInstancesRequest : DescribeRequest, IEc2Request
+    public DescribeInstancesRequest(params string[] instanceIds)
     {
-        public DescribeInstancesRequest(params string[] instanceIds)
-        {
-            InstanceIds = instanceIds;
-        }
+        InstanceIds = instanceIds;
+    }
 
-        public string[] InstanceIds { get; }
+    public string[] InstanceIds { get; }
 
-        public Dictionary<string, string> ToParams()
-        {
-            var parameters = GetParameters("DescribeInstances");
+    public Dictionary<string, string> ToParams()
+    {
+        var parameters = GetParameters("DescribeInstances");
 
-            AddIds(parameters, "InstanceId", InstanceIds);
+        AddIds(parameters, "InstanceId", InstanceIds);
 
-            return parameters;
-        }
+        return parameters;
     }
 }

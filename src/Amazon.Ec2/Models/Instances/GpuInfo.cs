@@ -1,6 +1,5 @@
-﻿namespace Amazon.Ec2
+﻿namespace Amazon.Ec2;
+
+public sealed class GpuInfo
 {
-    public sealed class GpuInfo
-    {
-    }
 }

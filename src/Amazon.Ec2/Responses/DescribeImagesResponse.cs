@@ -2,14 +2,13 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class DescribeImagesResponse : IEc2Response
 {
-    public sealed class DescribeImagesResponse : IEc2Response
-    {
-        [XmlArray("imagesSet")]
-        [XmlArrayItem("item")]
-        public Image[] Images { get; init; }
-    }
+    [XmlArray("imagesSet")]
+    [XmlArrayItem("item")]
+    public Image[] Images { get; init; }
 }
 
 /*

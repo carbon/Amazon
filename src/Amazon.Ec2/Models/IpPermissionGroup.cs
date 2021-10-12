@@ -2,25 +2,24 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class IpPermissionGroup
 {
-    public sealed class IpPermissionGroup
-    {
-        [XmlElement("userId")]
-        public string UserId { get; init; }
+    [XmlElement("userId")]
+    public string UserId { get; init; }
 
-        [XmlElement("groupId")]
-        public string GroupId { get; init; }
+    [XmlElement("groupId")]
+    public string GroupId { get; init; }
 
-        [XmlElement("vpcId")]
-        public string VpcId { get; init; }
+    [XmlElement("vpcId")]
+    public string VpcId { get; init; }
 
-        [XmlElement("vpcPeeringConnectionId")]
-        public string VpcPeeringConnectionId { get; init; }
+    [XmlElement("vpcPeeringConnectionId")]
+    public string VpcPeeringConnectionId { get; init; }
 
-        [XmlElement("peeringStatus")]
-        public string PeeringStatus { get; init; }
-    }
+    [XmlElement("peeringStatus")]
+    public string PeeringStatus { get; init; }
 }
 
 /*

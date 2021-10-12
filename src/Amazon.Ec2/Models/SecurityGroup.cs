@@ -2,33 +2,32 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class SecurityGroup
 {
-    public sealed class SecurityGroup
-    {
-        [XmlElement("ownerId")]
-        public long OwnerId { get; init; }
-        
-        [XmlElement("groupId")]
-        public string GroupId { get; init; }
+    [XmlElement("ownerId")]
+    public long OwnerId { get; init; }
 
-        [XmlElement("groupName")]
-        public string GroupName { get; init; }
+    [XmlElement("groupId")]
+    public string GroupId { get; init; }
 
-        [XmlElement("groupDescription")]
-        public string GroupDescription { get; init; }
+    [XmlElement("groupName")]
+    public string GroupName { get; init; }
 
-        [XmlElement("vpcId")]
-        public string VpcId { get; init; }
+    [XmlElement("groupDescription")]
+    public string GroupDescription { get; init; }
 
-        [XmlArray("ipPermissions")]
-        [XmlArrayItem("item")]
-        public IpPermission[] IpPermissions { get; init; }
+    [XmlElement("vpcId")]
+    public string VpcId { get; init; }
 
-        [XmlArray("ipPermissionsEgress")]
-        [XmlArrayItem("item")]
-        public IpPermission[] IpPermissionsEgress { get; init; }
-    }
+    [XmlArray("ipPermissions")]
+    [XmlArrayItem("item")]
+    public IpPermission[] IpPermissions { get; init; }
+
+    [XmlArray("ipPermissionsEgress")]
+    [XmlArrayItem("item")]
+    public IpPermission[] IpPermissionsEgress { get; init; }
 }
 
 /*

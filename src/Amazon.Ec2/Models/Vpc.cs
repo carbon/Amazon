@@ -2,51 +2,33 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class Vpc
 {
-    public sealed class Vpc
-    {
-        [XmlElement("vpcId")]
-        public string VpcId { get; init; }
+    [XmlElement("vpcId")]
+    public string VpcId { get; init; }
 
-        [XmlElement("cidrBlock")]
-        public string CidrBlock { get; init; }
+    [XmlElement("cidrBlock")]
+    public string CidrBlock { get; init; }
 
-        [XmlArray("ipv6CidrBlockAssociationSet")]
-        [XmlArrayItem("item")]
-        public Ipv6CidrBlockAssociation[] Ipv6CidrBlockAssociations { get; init; }
+    [XmlArray("ipv6CidrBlockAssociationSet")]
+    [XmlArrayItem("item")]
+    public Ipv6CidrBlockAssociation[] Ipv6CidrBlockAssociations { get; init; }
 
-        // default | dedicated | host
-        [XmlElement("instanceTenancy")]
-        public string InstanceTenancy { get; init; }
+    // default | dedicated | host
+    [XmlElement("instanceTenancy")]
+    public string InstanceTenancy { get; init; }
 
-        [XmlElement("isDefault")]
-        public bool IsDefault { get; init; }
+    [XmlElement("isDefault")]
+    public bool IsDefault { get; init; }
 
-        [XmlElement("dhcpOptionsId")]
-        public string DhcpOptionsId { get; init; }
+    [XmlElement("dhcpOptionsId")]
+    public string DhcpOptionsId { get; init; }
 
-        // pending | available
-        [XmlElement("state")]
-        public string State { get; init; }
-    }
-
-    /*
-    // We can't use these yet -- since XML deserialization is case sensitive
-
-    public enum VpcState
-    {
-        Pending = 1,
-        Available = 2
-    }
-
-    public enum InstanceTenancy
-    {
-        Default = 1,
-        Dedicated = 2,
-        Host = 3
-    }
-    */
+    // pending | available
+    [XmlElement("state")]
+    public string State { get; init; }
 }
 
 /*

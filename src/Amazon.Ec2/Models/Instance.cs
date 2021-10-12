@@ -4,83 +4,83 @@ using System;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class Instance
 {
-    public sealed class Instance
-    {
-        [XmlElement("architechure")]
-        public string Architecture { get; init; } // i386 | x86_64
+    [XmlElement("architechure")]
+    public string Architecture { get; init; } // i386 | x86_64
 
-        [XmlElement("hypervisor")]
-        public string Hypervisor { get; init; } // ovm | xen
+    [XmlElement("hypervisor")]
+    public string Hypervisor { get; init; } // ovm | xen
 
-        [XmlElement("imageId")]
-        public string ImageId { get; init; }
+    [XmlElement("imageId")]
+    public string ImageId { get; init; }
 
-        [XmlElement("instanceId")]
-        public string InstanceId { get; init; }
+    [XmlElement("instanceId")]
+    public string InstanceId { get; init; }
 
-        // [XmlElement("instanceLifecycle")]
-        // public string InstanceLifecycle { get; set; }
+    // [XmlElement("instanceLifecycle")]
+    // public string InstanceLifecycle { get; set; }
 
-        [XmlElement("instanceState")]
-        public InstanceState InstanceState { get; init; }
+    [XmlElement("instanceState")]
+    public InstanceState InstanceState { get; init; }
 
-        [XmlElement("instanceType")]
-        public string InstanceType { get; init; }
+    [XmlElement("instanceType")]
+    public string InstanceType { get; init; }
 
-        [XmlElement("placement")]
-        public Placement Placement { get; init; }
-       
-        [XmlArray("networkInterfaceSet")]
-        [XmlArrayItem("item")]
-        public NetworkInterface[] NetworkInterfaces { get; init; }
+    [XmlElement("placement")]
+    public Placement Placement { get; init; }
 
-        [XmlArray("blockDeviceMapping")]
-        [XmlArrayItem("item")]
-        public BlockDeviceMapping[] BlockDeviceMappings { get; init; }
+    [XmlArray("networkInterfaceSet")]
+    [XmlArrayItem("item")]
+    public NetworkInterface[] NetworkInterfaces { get; init; }
+
+    [XmlArray("blockDeviceMapping")]
+    [XmlArrayItem("item")]
+    public BlockDeviceMapping[] BlockDeviceMappings { get; init; }
 
 
 #nullable enable
 
-        /// <summary>
-        /// The public IP address assigned to the instance, if applicable.
-        /// </summary>
-        [XmlElement("ipAddress")]
-        public string? IpAddress { get; init; }
+    /// <summary>
+    /// The public IP address assigned to the instance, if applicable.
+    /// </summary>
+    [XmlElement("ipAddress")]
+    public string? IpAddress { get; init; }
 
 #nullable disable
 
-        [XmlElement("kernelId")]
-        public string KernelId { get; init; }
+    [XmlElement("kernelId")]
+    public string KernelId { get; init; }
 
-        [XmlElement("launchTime")]
-        public DateTime LaunchTime { get; init; }
+    [XmlElement("launchTime")]
+    public DateTime LaunchTime { get; init; }
 
-        [XmlElement("platform")]
-        public string Platform { get; init; }
+    [XmlElement("platform")]
+    public string Platform { get; init; }
 
-        [XmlElement("privateIpAddress")]
-        public string PrivateIpAddress { get; init; }
+    [XmlElement("privateIpAddress")]
+    public string PrivateIpAddress { get; init; }
 
-        [XmlElement("rootDeviceName")]
-        public string RootDeviceName { get; init; }
+    [XmlElement("rootDeviceName")]
+    public string RootDeviceName { get; init; }
 
-        [XmlElement("vpcId")]
-        public string VpcId { get; init; }
+    [XmlElement("vpcId")]
+    public string VpcId { get; init; }
 
-        private static readonly XmlSerializer serializer = new (
-            typeof(Instance),
-            new XmlRootAttribute {
-                ElementName = "item",
-                Namespace   = Ec2Client.Namespace
-            }
-        );
-
-        public static Instance Deserialize(XElement element)
+    private static readonly XmlSerializer serializer = new(
+        typeof(Instance),
+        new XmlRootAttribute
         {
-            return (Instance)serializer.Deserialize(element.CreateReader());
+            ElementName = "item",
+            Namespace = Ec2Client.Namespace
         }
+    );
+
+    public static Instance Deserialize(XElement element)
+    {
+        return (Instance)serializer.Deserialize(element.CreateReader());
     }
 }
 

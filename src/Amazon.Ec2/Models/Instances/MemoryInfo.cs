@@ -1,10 +1,9 @@
 ﻿using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class MemoryInfo
 {
-    public sealed class MemoryInfo
-    {
-        [XmlElement("sizeInMiB")]
-        public int SizeInMiB { get; init; }
-    }
+    [XmlElement("sizeInMiB")]
+    public int SizeInMiB { get; init; }
 }

@@ -2,45 +2,44 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class NetworkInterface
 {
-    public sealed class NetworkInterface
-    {
-        [XmlElement("networkInterfaceId")]
-        public string NetworkInterfaceId { get; init; }
+    [XmlElement("networkInterfaceId")]
+    public string NetworkInterfaceId { get; init; }
 
-        [XmlElement("subnetId")]
-        public string SubnetId { get; init; }
+    [XmlElement("subnetId")]
+    public string SubnetId { get; init; }
 
-        [XmlElement("vpcId")]
-        public string VpcId { get; init; }
+    [XmlElement("vpcId")]
+    public string VpcId { get; init; }
 
-        [XmlElement("description")]
-        public string Description { get; init; }
+    [XmlElement("description")]
+    public string Description { get; init; }
 
-        [XmlElement("ownerId")]
-        public string OwnerId { get; init; }
+    [XmlElement("ownerId")]
+    public string OwnerId { get; init; }
 
-        [XmlElement("status")]
-        public string Status { get; init; }
+    [XmlElement("status")]
+    public string Status { get; init; }
 
-        [XmlElement("macAddress")]
-        public string MacAddress { get; init; }
+    [XmlElement("macAddress")]
+    public string MacAddress { get; init; }
 
-        [XmlElement("privateIpAddress")]
-        public string PrivateDnsName { get; init; }
+    [XmlElement("privateIpAddress")]
+    public string PrivateDnsName { get; init; }
 
-        [XmlElement("sourceDestCheck")]
-        public string SourceDestCheck { get; init; }
+    [XmlElement("sourceDestCheck")]
+    public string SourceDestCheck { get; init; }
 
-        [XmlArray("groupSet")]
-        [XmlArrayItem("item")]
-        public NetworkInterfaceSecurityGroup[] Groups { get; init; }
+    [XmlArray("groupSet")]
+    [XmlArrayItem("item")]
+    public NetworkInterfaceSecurityGroup[] Groups { get; init; }
 
-        [XmlElement("attachment")]
-        public NetworkInterfaceAttachment Attachment { get; init; }
-    }}
-
+    [XmlElement("attachment")]
+    public NetworkInterfaceAttachment Attachment { get; init; }
+}
 /*
 <item>
     <networkInterfaceId>eni-551ba033</networkInterfaceId>

@@ -2,11 +2,10 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public class NetworkInterfaceSet
 {
-    public class NetworkInterfaceSet
-    {
-        [XmlElement("item")]
-        public NetworkInterface[] Items { get; set; }
-    }
+    [XmlElement("item")]
+    public NetworkInterface[] Items { get; set; }
 }

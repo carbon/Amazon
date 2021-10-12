@@ -3,31 +3,30 @@
 using System;
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class NetworkInterfaceAttachment
 {
-    public sealed class NetworkInterfaceAttachment
-    {
-        [XmlElement("attachmentId")]
-        public string AttachmentId  { get; set; }
+    [XmlElement("attachmentId")]
+    public string AttachmentId { get; set; }
 
-        [XmlElement("instanceId")]
-        public string InstanceId { get; set; }
-      
-        [XmlElement("instanceOwnerId")]
-        public string InstanceOwnerId  { get; set; }
+    [XmlElement("instanceId")]
+    public string InstanceId { get; set; }
 
-        [XmlElement("deviceIndex")]
-        public int DeviceIndex { get; set; }
+    [XmlElement("instanceOwnerId")]
+    public string InstanceOwnerId { get; set; }
 
-        [XmlElement("status")]
-        public string Status  { get; set; }
+    [XmlElement("deviceIndex")]
+    public int DeviceIndex { get; set; }
 
-        [XmlElement("attachTime")]
-        public DateTime AttachTime { get; set; }
+    [XmlElement("status")]
+    public string Status { get; set; }
 
-        [XmlElement("deleteOnTermination")]
-        public bool DeleteOnTermination { get; set; }
-    }
+    [XmlElement("attachTime")]
+    public DateTime AttachTime { get; set; }
+
+    [XmlElement("deleteOnTermination")]
+    public bool DeleteOnTermination { get; set; }
 }
 
 /*

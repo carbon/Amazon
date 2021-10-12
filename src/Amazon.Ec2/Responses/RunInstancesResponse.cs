@@ -2,21 +2,20 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class RunInstancesResponse : IEc2Response
 {
-    public sealed class RunInstancesResponse : IEc2Response
-    {
-        [XmlArray("instancesSet")]
-        [XmlArrayItem("item")]
-        public Instance[] Instances { get; init; }
+    [XmlArray("instancesSet")]
+    [XmlArrayItem("item")]
+    public Instance[] Instances { get; init; }
 
-        [XmlElement("ownerId")]
-        public string OwnerId { get; init; }
-        
-        [XmlElement("requesterId")]
-        public string RequesterId { get; init; }
+    [XmlElement("ownerId")]
+    public string OwnerId { get; init; }
 
-        [XmlElement("reservationId")]
-        public string ReservationId { get; init; }
-    }
+    [XmlElement("requesterId")]
+    public string RequesterId { get; init; }
+
+    [XmlElement("reservationId")]
+    public string ReservationId { get; init; }
 }

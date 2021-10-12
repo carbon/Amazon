@@ -1,17 +1,16 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public static class Ec2Serializer<T>
 {
-    public static class Ec2Serializer<T>
+    private static readonly XmlSerializer serializer = new(typeof(T), Ec2Client.Namespace);
+
+    public static T Deserialize(string xmlText)
     {
-        private static readonly XmlSerializer serializer = new (typeof(T), Ec2Client.Namespace);
+        using var reader = new StringReader(xmlText);
 
-        public static T Deserialize(string xmlText)
-        {
-            using var reader = new StringReader(xmlText);
-
-            return (T)serializer.Deserialize(reader)!;
-        }
+        return (T)serializer.Deserialize(reader)!;
     }
 }

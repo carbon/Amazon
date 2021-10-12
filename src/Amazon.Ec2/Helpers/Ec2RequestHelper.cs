@@ -2,89 +2,88 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+internal static class Ec2RequestHelper
 {
-    internal static class Ec2RequestHelper
+    public static Dictionary<string, string> ToParams(string actionName, object instance)
     {
-        public static Dictionary<string, string> ToParams(string actionName, object instance)
+        var parameters = new Dictionary<string, string> {
+            { "Action", actionName }
+        };
+
+        var model = InstanceModel.Get(instance.GetType());
+
+        foreach (var member in model.Members)
         {
-            var parameters = new Dictionary<string, string> {
-                { "Action", actionName }
-            };
+            var value = member.GetValue(instance);
 
-            var model = InstanceModel.Get(instance.GetType());
+            if (value is null) continue;
 
-            foreach (var member in model.Members)
+            if (value is IList list)
             {
-                var value = member.GetValue(instance);
-
-                if (value is null) continue;
-
-                if (value is IList list)
-                {
-                    AddArray(parameters, member.Name, list);
-                }
-                else if (Type.GetTypeCode(value.GetType()) == TypeCode.Object)
-                {
-                    AddObject(parameters, member.Name, value);
-                }
-                else
-                {
-                    parameters.Add(member.Name, value.ToString()!);
-                }
+                AddArray(parameters, member.Name, list);
             }
-
-            return parameters;
-        }
-
-        private static void AddArray(Dictionary<string, string> parameters, string prefix, IList array)
-        {
-            for (int i = 0; i < array.Count; i++)
+            else if (Type.GetTypeCode(value.GetType()) == TypeCode.Object)
             {
-                string key = prefix + "." + (i + 1);
-
-                object element = array[i]!;
-
-                if (Type.GetTypeCode(element.GetType()) == TypeCode.Object)
-                {
-                    AddObject(parameters, key, element);
-                }
-                else
-                {
-                    parameters.Add(key, element.ToString()!);
-                }
+                AddObject(parameters, member.Name, value);
+            }
+            else
+            {
+                parameters.Add(member.Name, value.ToString()!);
             }
         }
 
-        private static void AddObject(Dictionary<string, string> parameters, string prefix, object instance)
+        return parameters;
+    }
+
+    private static void AddArray(Dictionary<string, string> parameters, string prefix, IList array)
+    {
+        for (int i = 0; i < array.Count; i++)
         {
-            if (parameters.Count > 100)
+            string key = prefix + "." + (i + 1);
+
+            object element = array[i]!;
+
+            if (Type.GetTypeCode(element.GetType()) == TypeCode.Object)
             {
-                throw new ArgumentException("Exceeded 100 arg limit", nameof(parameters));
+                AddObject(parameters, key, element);
             }
-
-            var model = InstanceModel.Get(instance.GetType());
-
-            foreach (var member in model.Members)
+            else
             {
-                object value = member.GetValue(instance);
+                parameters.Add(key, element.ToString()!);
+            }
+        }
+    }
 
-                if (value is null) continue;
+    private static void AddObject(Dictionary<string, string> parameters, string prefix, object instance)
+    {
+        if (parameters.Count > 100)
+        {
+            throw new ArgumentException("Exceeded 100 arg limit", nameof(parameters));
+        }
 
-                var key = prefix + "." + member.Name;
+        var model = InstanceModel.Get(instance.GetType());
 
-                if (value is IList list)
-                {
-                    AddArray(parameters, key, list);
-                }
-                else if (Type.GetTypeCode(value.GetType()) == TypeCode.Object)
-                {
-                    AddObject(parameters, key, value);
-                }
-                else
-                {
-                    parameters.Add(key, value.ToString()!);
-                }
+        foreach (var member in model.Members)
+        {
+            object value = member.GetValue(instance);
+
+            if (value is null) continue;
+
+            var key = prefix + "." + member.Name;
+
+            if (value is IList list)
+            {
+                AddArray(parameters, key, list);
+            }
+            else if (Type.GetTypeCode(value.GetType()) == TypeCode.Object)
+            {
+                AddObject(parameters, key, value);
+            }
+            else
+            {
+                parameters.Add(key, value.ToString()!);
             }
         }
     }

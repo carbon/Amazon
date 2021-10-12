@@ -2,41 +2,40 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class Subnet
 {
-    public sealed class Subnet
-    {
-        [XmlElement("subnetId")]
-        public string SubnetId { get; init; }
+    [XmlElement("subnetId")]
+    public string SubnetId { get; init; }
 
-        [XmlElement("state")]
-        public string State { get; init; }
+    [XmlElement("state")]
+    public string State { get; init; }
 
-        [XmlElement("vpcId")]
-        public string VpcId { get; init; }
+    [XmlElement("vpcId")]
+    public string VpcId { get; init; }
 
-        [XmlElement("cidrBlock")]
-        public string CidrBlock { get; init; }
+    [XmlElement("cidrBlock")]
+    public string CidrBlock { get; init; }
 
-        [XmlArray("ipv6CidrBlockAssociationSet")]
-        [XmlArrayItem("item")]
-        public Ipv6CidrBlockAssociation[] Ipv6CidrBlockAssociations { get; init; }
+    [XmlArray("ipv6CidrBlockAssociationSet")]
+    [XmlArrayItem("item")]
+    public Ipv6CidrBlockAssociation[] Ipv6CidrBlockAssociations { get; init; }
 
-        [XmlElement("availableIpAddressCount")]
-        public int AvailableIpAddressCount { get; init; }
-        
-        [XmlElement("availabilityZone")]
-        public string AvailabilityZone { get; init; }
+    [XmlElement("availableIpAddressCount")]
+    public int AvailableIpAddressCount { get; init; }
 
-        [XmlElement("defaultForAz")]
-        public bool DefaultForAz { get; init; }
+    [XmlElement("availabilityZone")]
+    public string AvailabilityZone { get; init; }
 
-        [XmlElement("mapPublicIpOnLaunch")]
-        public bool MapPublicIpOnLaunch { get; init; }
+    [XmlElement("defaultForAz")]
+    public bool DefaultForAz { get; init; }
 
-        [XmlElement("assignIpv6AddressOnCreation")]
-        public bool AssignIpv6AddressOnCreation { get; init; }
-    }
+    [XmlElement("mapPublicIpOnLaunch")]
+    public bool MapPublicIpOnLaunch { get; init; }
+
+    [XmlElement("assignIpv6AddressOnCreation")]
+    public bool AssignIpv6AddressOnCreation { get; init; }
 }
 
 /*
