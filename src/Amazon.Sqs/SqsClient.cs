@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
 
 using Amazon.Exceptions;
 using Amazon.Sqs.Exceptions;

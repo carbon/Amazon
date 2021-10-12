@@ -2,9 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // source: https://github.com/dotnet/runtime/blob/6fdb82aea93465ee046c7f903a96d5c2027a3ecd/src/libraries/System.Linq/src/System/Linq/Chunk.cs
 
-using System;
-using System.Collections.Generic;
-
 namespace Amazon
 {
     // TODO: Remove w/ .NET 6.0

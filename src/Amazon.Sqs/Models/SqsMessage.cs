@@ -2,7 +2,6 @@
 
 #nullable disable
 
-using System;
 using System.Xml.Serialization;
 
 using Carbon.Messaging;

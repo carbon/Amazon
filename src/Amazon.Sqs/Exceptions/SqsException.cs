@@ -1,5 +1,4 @@
-﻿
-using Amazon.Scheduling;
+﻿using Amazon.Scheduling;
 
 using Carbon.Messaging;
 
