@@ -1,8 +1,9 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+﻿#if NET5_0
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // source: https://github.com/dotnet/runtime/blob/6fdb82aea93465ee046c7f903a96d5c2027a3ecd/src/libraries/System.Linq/src/System/Linq/Chunk.cs
 
-namespace Amazon;
+namespace System.Linq;
 
 // TODO: Remove w/ .NET 6.0
 
@@ -35,3 +36,4 @@ internal static class CollectionExtensions
         }
     }
 }
+#endif
