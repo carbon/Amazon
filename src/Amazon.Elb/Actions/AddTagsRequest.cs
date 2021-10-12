@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using System;
-
 namespace Amazon.Elb;
 
 public sealed class AddTagsRequest : IElbRequest

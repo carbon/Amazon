@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Elb;
+﻿namespace Amazon.Elb;
 
 public sealed class SetIpAddressTypeRequest : IElbRequest
 {
