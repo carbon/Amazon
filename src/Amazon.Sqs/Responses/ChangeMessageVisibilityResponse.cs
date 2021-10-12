@@ -2,13 +2,12 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sqs.Models
+namespace Amazon.Sqs.Models;
+
+public sealed class ChangeMessageVisibilityResponse
 {
-    public sealed class ChangeMessageVisibilityResponse
-    {
-        [XmlElement("ResponseMetadata")]
-        public ResponseMetadata ResponseMetadata { get; init; }
-    }
+    [XmlElement("ResponseMetadata")]
+    public ResponseMetadata ResponseMetadata { get; init; }
 }
 
 /*

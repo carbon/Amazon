@@ -2,22 +2,21 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sqs.Models
+namespace Amazon.Sqs.Models;
+
+public sealed class ReceiveMessageResponse
 {
-    public sealed class ReceiveMessageResponse
-    {
-        [XmlElement("ReceiveMessageResult")]
-        public ReceiveMessageResult ReceiveMessageResult { get; init; }
+    [XmlElement("ReceiveMessageResult")]
+    public ReceiveMessageResult ReceiveMessageResult { get; init; }
 
-        public static ReceiveMessageResponse ParseXml(string xmlText)
-        {
-            return SqsSerializer<ReceiveMessageResponse>.Deserialize(xmlText);
-        }
-    }
-
-    public sealed class ReceiveMessageResult
+    public static ReceiveMessageResponse ParseXml(string xmlText)
     {
-        [XmlElement("Message")]
-        public SqsMessage[] Items { get; init; }
+        return SqsSerializer<ReceiveMessageResponse>.Deserialize(xmlText);
     }
+}
+
+public sealed class ReceiveMessageResult
+{
+    [XmlElement("Message")]
+    public SqsMessage[] Items { get; init; }
 }

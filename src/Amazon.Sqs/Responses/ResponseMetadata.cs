@@ -2,11 +2,10 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sqs.Models
+namespace Amazon.Sqs.Models;
+
+public sealed class ResponseMetadata
 {
-    public sealed class ResponseMetadata
-    {
-        [XmlElement("RequestId")]
-        public string RequestId { get; init; }
-    }
+    [XmlElement("RequestId")]
+    public string RequestId { get; init; }
 }

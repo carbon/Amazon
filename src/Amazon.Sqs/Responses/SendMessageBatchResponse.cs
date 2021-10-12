@@ -2,17 +2,16 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sqs
-{
-    public sealed class SendMessageBatchResponse
-    {
-        [XmlElement("SendMessageBatchResult")]
-        public SendMessageBatchResult SendMessageBatchResult { get; init; }
+namespace Amazon.Sqs;
 
-        public static SendMessageBatchResponse Parse(string xmlText)
-        {
-            return SqsSerializer<SendMessageBatchResponse>.Deserialize(xmlText);
-        }
+public sealed class SendMessageBatchResponse
+{
+    [XmlElement("SendMessageBatchResult")]
+    public SendMessageBatchResult SendMessageBatchResult { get; init; }
+
+    public static SendMessageBatchResponse Parse(string xmlText)
+    {
+        return SqsSerializer<SendMessageBatchResponse>.Deserialize(xmlText);
     }
 }
 

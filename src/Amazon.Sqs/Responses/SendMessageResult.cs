@@ -2,30 +2,29 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sqs.Models
+namespace Amazon.Sqs.Models;
+
+public sealed class SendMessageResponse
 {
-    public sealed class SendMessageResponse
+    [XmlElement("SendMessageResult")]
+    public SendMessageResult SendMessageResult { get; init; }
+
+    public static SendMessageResponse Parse(string xmlText)
     {
-        [XmlElement("SendMessageResult")]
-        public SendMessageResult SendMessageResult { get; init; }
-
-        public static SendMessageResponse Parse(string xmlText)
-        {
-            return SqsSerializer<SendMessageResponse>.Deserialize(xmlText);
-        }
+        return SqsSerializer<SendMessageResponse>.Deserialize(xmlText);
     }
+}
 
-    public sealed class SendMessageResult
-    {
-        [XmlElement("MD5OfMessageBody")]
-        public string MD5OfMessageBody { get; init; }
+public sealed class SendMessageResult
+{
+    [XmlElement("MD5OfMessageBody")]
+    public string MD5OfMessageBody { get; init; }
 
-        [XmlElement("MD5OfMessageAttributes")]
-        public string MD5OfMessageAttributes { get; init; }
+    [XmlElement("MD5OfMessageAttributes")]
+    public string MD5OfMessageAttributes { get; init; }
 
-        [XmlElement("MessageId")]
-        public string MessageId { get; init; }
-    }
+    [XmlElement("MessageId")]
+    public string MessageId { get; init; }
 }
 
 /* 

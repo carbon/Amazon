@@ -2,14 +2,13 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Sqs
-{
-    public readonly struct SqsSystemMessageAttribute
-    {
-        [XmlElement("Name")]
-        public string Name { get; init; }
+namespace Amazon.Sqs;
 
-        [XmlElement("Value")]
-        public string Value { get; init; }
-    }
+public readonly struct SqsSystemMessageAttribute
+{
+    [XmlElement("Name")]
+    public string Name { get; init; }
+
+    [XmlElement("Value")]
+    public string Value { get; init; }
 }

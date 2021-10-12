@@ -1,39 +1,38 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace Amazon.Sqs
+namespace Amazon.Sqs;
+
+public sealed class ChangeMessageVisibilityRequest
 {
-    public sealed class ChangeMessageVisibilityRequest
+    public ChangeMessageVisibilityRequest(string receiptHandle, TimeSpan visibilityTimeout)
     {
-        public ChangeMessageVisibilityRequest(string receiptHandle, TimeSpan visibilityTimeout)
+        if (visibilityTimeout < TimeSpan.Zero)
         {
-            if (visibilityTimeout < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(nameof(visibilityTimeout), visibilityTimeout, "Must be greater than 0");
-            }
-
-            if (visibilityTimeout > TimeSpan.FromHours(12))
-            {
-                throw new ArgumentOutOfRangeException(nameof(visibilityTimeout), visibilityTimeout, "Must be less than 12 hours");
-            }
-
-            ReceiptHandle = receiptHandle ?? throw new ArgumentNullException(nameof(receiptHandle));
-
-            VisibilityTimeout = (int)visibilityTimeout.TotalSeconds;
+            throw new ArgumentOutOfRangeException(nameof(visibilityTimeout), visibilityTimeout, "Must be greater than 0");
         }
 
-        public string ReceiptHandle { get; }
+        if (visibilityTimeout > TimeSpan.FromHours(12))
+        {
+            throw new ArgumentOutOfRangeException(nameof(visibilityTimeout), visibilityTimeout, "Must be less than 12 hours");
+        }
+
+        ReceiptHandle = receiptHandle ?? throw new ArgumentNullException(nameof(receiptHandle));
+
+        VisibilityTimeout = (int)visibilityTimeout.TotalSeconds;
+    }
+
+    public string ReceiptHandle { get; }
         
-        [Range(0, 43_200)]
-        public int VisibilityTimeout { get; }
+    [Range(0, 43_200)]
+    public int VisibilityTimeout { get; }
 
-        internal List<KeyValuePair<string, string>> ToParams()
-        {
-            return new(4) {
-               new ("Action",            "ChangeMessageVisibility"),
-               new ("ReceiptHandle",     ReceiptHandle),
-               new ("VisibilityTimeout", VisibilityTimeout.ToString(CultureInfo.InvariantCulture))
-            };
-        }
+    internal List<KeyValuePair<string, string>> ToParams()
+    {
+        return new(4) {
+            new ("Action",            "ChangeMessageVisibility"),
+            new ("ReceiptHandle",     ReceiptHandle),
+            new ("VisibilityTimeout", VisibilityTimeout.ToString(CultureInfo.InvariantCulture))
+        };
     }
 }
