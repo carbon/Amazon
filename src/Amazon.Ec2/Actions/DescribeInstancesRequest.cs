@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Amazon.Ec2;
+﻿namespace Amazon.Ec2;
 
 public sealed class DescribeInstancesRequest : DescribeRequest, IEc2Request
 {

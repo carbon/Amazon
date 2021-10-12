@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Ec2;
+﻿namespace Amazon.Ec2;
 
 public readonly struct Filter
 {

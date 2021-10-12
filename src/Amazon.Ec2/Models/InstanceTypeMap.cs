@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Amazon.Ec2.Models
 {
-    public class InstanceTypeMap
+    public sealed class InstanceTypeMap
     {
         public static InstanceType[] All => map.Select(m => m.Value).ToArray();
 
-        private static readonly Dictionary<string, InstanceType> map = new Dictionary<string, InstanceType> {
+        private static readonly Dictionary<string, InstanceType> map = new () {
             { "c1.medium"          , new InstanceType("c1.medium") },
             { "c1.xlarge"          , new InstanceType("c1.xlarge") },
             { "c3.2xlarge"         , new InstanceType("c3.2xlarge") },

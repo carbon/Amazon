@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using System.Collections.Generic;
 using System.Globalization;
 
 namespace Amazon.Ec2;

@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using System;
 
 namespace Amazon.Ec2;
 
