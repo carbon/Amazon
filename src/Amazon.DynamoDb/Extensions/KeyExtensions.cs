@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
     internal static class KeyExtensions
     {

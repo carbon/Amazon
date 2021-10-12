@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Amazon
+﻿namespace Amazon
 {
     internal static class CollectionExtensions
     {

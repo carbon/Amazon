@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
     internal sealed class GuidConverter : DbTypeConverter<Guid>
     {

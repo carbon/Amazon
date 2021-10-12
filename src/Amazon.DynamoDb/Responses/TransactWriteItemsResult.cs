@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
     public sealed class TransactWriteItemsResult
     {

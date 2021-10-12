@@ -1,7 +1,5 @@
 ﻿#pragma warning disable CA1507 // Use nameof to express symbol names
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.Json;
 

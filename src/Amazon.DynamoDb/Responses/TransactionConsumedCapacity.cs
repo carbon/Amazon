@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using System.Collections.Generic;
 
 namespace Amazon.DynamoDb
 {

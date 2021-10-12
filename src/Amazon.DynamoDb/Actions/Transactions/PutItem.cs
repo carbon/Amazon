@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Amazon.DynamoDb.Transactions
+﻿namespace Amazon.DynamoDb.Transactions
 {
     public sealed class PutItem
     {

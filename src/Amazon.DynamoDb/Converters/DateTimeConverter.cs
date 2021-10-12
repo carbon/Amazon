@@ -1,6 +1,4 @@
-﻿using System;
-
-using Carbon.Data;
+﻿using Carbon.Data;
 
 namespace Amazon.DynamoDb
 {

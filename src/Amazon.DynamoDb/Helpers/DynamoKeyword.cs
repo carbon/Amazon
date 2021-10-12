@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb
 {
     public static class DynamoKeyword
     {

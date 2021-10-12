@@ -1,9 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 
 namespace Amazon.DynamoDb
 {
-	public sealed class QueryResult<T> : IReadOnlyList<T>, IConsumedResources
+    public sealed class QueryResult<T> : IReadOnlyList<T>, IConsumedResources
 		where T: notnull
 	{
 		private readonly T[] _items;

@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using System.Collections.Generic;
-
 namespace Amazon.DynamoDb
 {
     public sealed class ItemCollectionMetrics

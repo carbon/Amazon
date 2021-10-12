@@ -1,7 +1,4 @@
 ﻿#pragma warning disable IDE0090 // Use 'new(...)'
-
-using System;
-
 namespace Amazon.DynamoDb
 {
     internal sealed class UriConverter : DbTypeConverter<Uri>
