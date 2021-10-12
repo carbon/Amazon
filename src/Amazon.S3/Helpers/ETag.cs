@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.S3;
+﻿namespace Amazon.S3;
 
 public readonly struct ETag
 {

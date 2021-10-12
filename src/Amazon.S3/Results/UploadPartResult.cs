@@ -1,6 +1,4 @@
-﻿using System;
-
-using Carbon.Storage;
+﻿using Carbon.Storage;
 
 namespace Amazon.S3;
 

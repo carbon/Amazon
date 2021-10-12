@@ -1,5 +1,3 @@
-using System;
-
 namespace Amazon.S3;
 
 // PUT /ObjectName?partNumber=PartNumber&uploadId=UploadId

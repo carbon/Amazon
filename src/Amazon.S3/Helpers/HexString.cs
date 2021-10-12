@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Helpers;
+﻿namespace Amazon.Helpers;
 
 internal static class HexString
 {

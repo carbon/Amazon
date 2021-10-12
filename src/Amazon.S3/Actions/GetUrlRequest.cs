@@ -1,6 +1,3 @@
-using System;
-using System.Text;
-
 namespace Amazon.S3;
 
 public sealed class GetPresignedUrlRequest
@@ -33,17 +30,5 @@ public sealed class GetPresignedUrlRequest
 
     public TimeSpan ExpiresIn { get; }
 
-    internal string GetUrl()
-    {
-        var sb = new ValueStringBuilder(256);
-
-        sb.Append("https://");
-        sb.Append(Host);
-        sb.Append('/');
-        sb.Append(BucketName);
-        sb.Append('/');
-        sb.Append(Key);
-
-        return sb.ToString();
-    }
+    internal string GetUrl() => $"https://{Host}/{BucketName}/{Key}";
 }

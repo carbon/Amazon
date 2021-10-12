@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using System;
 using System.Xml.Serialization;
 
 namespace Amazon.S3;
