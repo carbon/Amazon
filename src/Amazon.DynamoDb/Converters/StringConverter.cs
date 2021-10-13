@@ -1,21 +1,20 @@
 ﻿using Carbon.Data;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb;
+
+internal sealed class StringConverter : IDbValueConverter
 {
-    internal sealed class StringConverter : IDbValueConverter
+    public DbValue FromObject(object value, IMember member)
     {
-        public DbValue FromObject(object value, IMember member)
-        {
-            string text = (string)value;
+        string text = (string)value;
 
-            if (text.Length == 0) return DbValue.Empty;
+        if (text.Length == 0) return DbValue.Empty;
 
-            return new DbValue(text);
-        }
+        return new DbValue(text);
+    }
 
-        public object ToObject(DbValue item, IMember member)
-        {
-            return item.ToString();
-        }
+    public object ToObject(DbValue item, IMember member)
+    {
+        return item.ToString();
     }
 }

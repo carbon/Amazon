@@ -1,11 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum ReturnItemCollectionMetrics
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum ReturnItemCollectionMetrics
-    {
-        SIZE = 1,
-        NONE = 2
-    }
+    SIZE = 1,
+    NONE = 2
 }

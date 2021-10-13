@@ -1,9 +1,8 @@
-﻿namespace Amazon.DynamoDb
-{
-    public sealed class ListTablesRequest
-    {
-        public string? ExclusiveStartTableName { get; init; }
+﻿namespace Amazon.DynamoDb;
 
-        public int? Limit { get; init; }
-    }
+public sealed class ListTablesRequest
+{
+    public string? ExclusiveStartTableName { get; init; }
+
+    public int? Limit { get; init; }
 }

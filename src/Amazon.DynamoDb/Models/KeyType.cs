@@ -1,11 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Amazon.DynamoDb.Models
+namespace Amazon.DynamoDb.Models;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum KeyType
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum KeyType
-    {
-        HASH = 1,
-        RANGE = 2
-    };
-}
+    HASH = 1,
+    RANGE = 2
+};

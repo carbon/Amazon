@@ -1,29 +1,28 @@
 ﻿using Carbon.Data;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb;
+
+internal sealed class DateTimeConverter : IDbValueConverter
 {
-    internal sealed class DateTimeConverter : IDbValueConverter
+    public DbValue FromObject(object value, IMember member)
     {
-        public DbValue FromObject(object value, IMember member)
-        {
-            var date = new DateTimeOffset((DateTime)value);
+        var date = new DateTimeOffset((DateTime)value);
 
-            if (member?.Precision == 4)
-            {
-                return new DbValue(date.ToUnixTimeMilliseconds());
-            }
-            
-            return new DbValue(date.ToUnixTimeSeconds());
+        if (member?.Precision == 4)
+        {
+            return new DbValue(date.ToUnixTimeMilliseconds());
         }
 
-        public object ToObject(DbValue item, IMember member)
-        {
-            if (member?.Precision == 4)
-            {
-                return DateTimeOffset.FromUnixTimeMilliseconds(item.ToInt64()).UtcDateTime;
-            }
+        return new DbValue(date.ToUnixTimeSeconds());
+    }
 
-            return DateTimeOffset.FromUnixTimeSeconds(item.ToInt64()).UtcDateTime;
+    public object ToObject(DbValue item, IMember member)
+    {
+        if (member?.Precision == 4)
+        {
+            return DateTimeOffset.FromUnixTimeMilliseconds(item.ToInt64()).UtcDateTime;
         }
+
+        return DateTimeOffset.FromUnixTimeSeconds(item.ToInt64()).UtcDateTime;
     }
 }

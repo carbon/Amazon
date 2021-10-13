@@ -1,9 +1,8 @@
-﻿namespace Amazon.DynamoDb
-{
-    public sealed class DeleteItemResult : IConsumedResources
-    {
-        public AttributeCollection? Attributes { get; init; }
+﻿namespace Amazon.DynamoDb;
 
-        public ConsumedCapacity? ConsumedCapacity { get; init; }
-    }
+public sealed class DeleteItemResult : IConsumedResources
+{
+    public AttributeCollection? Attributes { get; init; }
+
+    public ConsumedCapacity? ConsumedCapacity { get; init; }
 }

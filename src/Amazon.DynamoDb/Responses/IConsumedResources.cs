@@ -1,7 +1,6 @@
-﻿namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb;
+
+public interface IConsumedResources
 {
-	public interface IConsumedResources
-	{
-		ConsumedCapacity? ConsumedCapacity { get; }
-	}
+    ConsumedCapacity? ConsumedCapacity { get; }
 }

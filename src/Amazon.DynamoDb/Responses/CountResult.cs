@@ -1,16 +1,15 @@
-﻿namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb;
+
+public sealed class CountResult
 {
-    public sealed class CountResult
+    public CountResult() { }
+
+    public CountResult(int count)
     {
-        public CountResult() { }
-
-        public CountResult(int count)
-        {
-            Count = count;
-        }
-
-        public int Count { get; init; }
+        Count = count;
     }
+
+    public int Count { get; init; }
 }
 
 /*

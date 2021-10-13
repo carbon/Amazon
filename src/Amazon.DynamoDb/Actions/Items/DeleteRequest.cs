@@ -1,12 +1,11 @@
-﻿namespace Amazon.DynamoDb
-{
-    public sealed class DeleteRequest : ItemRequest
-    {
-        public DeleteRequest(AttributeCollection key)
-        {
-            Key = key;
-        }
+﻿namespace Amazon.DynamoDb;
 
-        public AttributeCollection Key { get; }
+public sealed class DeleteRequest : ItemRequest
+{
+    public DeleteRequest(AttributeCollection key)
+    {
+        Key = key;
     }
+
+    public AttributeCollection Key { get; }
 }

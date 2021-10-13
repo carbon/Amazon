@@ -1,9 +1,8 @@
-﻿namespace Amazon.DynamoDb
-{
-    public sealed class TransactWriteItemsResult
-    {
-        public TransactionConsumedCapacity[]? ConsumedCapacity { get; init; }
+﻿namespace Amazon.DynamoDb;
 
-        public Dictionary<string, ReturnItemCollectionMetrics>? ItemCollectionMetrics { get; init; }
-    }
+public sealed class TransactWriteItemsResult
+{
+    public TransactionConsumedCapacity[]? ConsumedCapacity { get; init; }
+
+    public Dictionary<string, ReturnItemCollectionMetrics>? ItemCollectionMetrics { get; init; }
 }

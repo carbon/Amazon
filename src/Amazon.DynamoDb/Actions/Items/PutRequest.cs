@@ -1,12 +1,11 @@
-﻿namespace Amazon.DynamoDb
-{
-    public sealed class PutRequest : ItemRequest
-    {
-        public PutRequest(AttributeCollection item)
-        {
-            Item = item;
-        }
+﻿namespace Amazon.DynamoDb;
 
-        public AttributeCollection Item { get; }
+public sealed class PutRequest : ItemRequest
+{
+    public PutRequest(AttributeCollection item)
+    {
+        Item = item;
     }
+
+    public AttributeCollection Item { get; }
 }

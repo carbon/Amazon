@@ -1,19 +1,17 @@
-﻿
-using Carbon.Data;
+﻿using Carbon.Data;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb;
+
+internal sealed class BinaryConverter : IDbValueConverter
 {
-    internal sealed class BinaryConverter : IDbValueConverter
+    public DbValue FromObject(object value, IMember member)
     {
-        public DbValue FromObject(object value, IMember member)
-        {
-            byte[] data = (byte[])value;
-            
-            return data.Length > 0
-                ? new DbValue(data, DbValueType.B)
-                : DbValue.Empty;
-        }
+        byte[] data = (byte[])value;
 
-        public object ToObject(DbValue item, IMember member) => item.ToBinary();
+        return data.Length > 0
+            ? new DbValue(data, DbValueType.B)
+            : DbValue.Empty;
     }
+
+    public object ToObject(DbValue item, IMember member) => item.ToBinary();
 }

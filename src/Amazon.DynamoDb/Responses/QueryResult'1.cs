@@ -1,37 +1,36 @@
 ﻿using System.Collections;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb;
+
+public sealed class QueryResult<T> : IReadOnlyList<T>, IConsumedResources
+    where T : notnull
 {
-    public sealed class QueryResult<T> : IReadOnlyList<T>, IConsumedResources
-		where T: notnull
-	{
-		private readonly T[] _items;
+    private readonly T[] _items;
 
-		public QueryResult(QueryResult result)
-		{
-            ConsumedCapacity = result.ConsumedCapacity;
-            LastEvaluatedKey = result.LastEvaluatedKey;
-            
-            _items = new T[result.Items.Length];
+    public QueryResult(QueryResult result)
+    {
+        ConsumedCapacity = result.ConsumedCapacity;
+        LastEvaluatedKey = result.LastEvaluatedKey;
 
-            for (int i = 0; i < _items.Length; i++)
-			{ 
-				_items[i] = result.Items[i].As<T>();
-			}
-		}
+        _items = new T[result.Items.Length];
 
-        public Dictionary<string, DbValue>? LastEvaluatedKey { get; }
+        for (int i = 0; i < _items.Length; i++)
+        {
+            _items[i] = result.Items[i].As<T>();
+        }
+    }
 
-        public ConsumedCapacity? ConsumedCapacity { get; }
+    public Dictionary<string, DbValue>? LastEvaluatedKey { get; }
 
-		public T this[int index] => _items[index];
-	
-        public int Count => _items.Length;
+    public ConsumedCapacity? ConsumedCapacity { get; }
 
-		// IEnumerable<T> ---
+    public T this[int index] => _items[index];
 
-		public IEnumerator<T> GetEnumerator() => ((IList<T>)_items).GetEnumerator();
+    public int Count => _items.Length;
 
-		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
-	}
+    // IEnumerable<T> ---
+
+    public IEnumerator<T> GetEnumerator() => ((IList<T>)_items).GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
 }

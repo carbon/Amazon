@@ -1,8 +1,7 @@
-﻿namespace Amazon.DynamoDb
+﻿namespace Amazon.DynamoDb;
+
+public abstract class ItemRequest
 {
-    public abstract class ItemRequest
-    {
-        //  "DeleteRequest"		| Key
-        //  "PutRequest"		| Item
-    }
+    //  "DeleteRequest"		| Key
+    //  "PutRequest"		| Item
 }

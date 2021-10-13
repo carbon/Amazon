@@ -1,35 +1,34 @@
 ﻿// Based on .NET Source code
 
-namespace System.Text
+namespace System.Text;
+
+internal static class StringBuilderCache
 {
-    internal static class StringBuilderCache
+    [ThreadStatic]
+    static StringBuilder? cachedInstance;
+
+    public static StringBuilder Aquire()
     {
-        [ThreadStatic]
-        static StringBuilder? cachedInstance;
+        var sb = cachedInstance;
 
-        public static StringBuilder Aquire()
+        if (sb is null)
         {
-            var sb = cachedInstance;
-
-            if (sb is null)
-            {
-                return new StringBuilder(100);
-            }
-
-            sb.Length = 0;
-
-            cachedInstance = null;
-
-            return sb;
+            return new StringBuilder(100);
         }
 
-        public static string ExtractAndRelease(StringBuilder sb)
-        {
-            var text = sb.ToString();
+        sb.Length = 0;
 
-            cachedInstance = sb;
+        cachedInstance = null;
 
-            return text;
-        }
+        return sb;
+    }
+
+    public static string ExtractAndRelease(StringBuilder sb)
+    {
+        var text = sb.ToString();
+
+        cachedInstance = sb;
+
+        return text;
     }
 }

@@ -2,41 +2,41 @@
 
 using System.Text.Json;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb;
+
+public sealed class BatchWriteItemResult // : IConsumedResources
 {
-    public sealed class BatchWriteItemResult // : IConsumedResources
+    // public ConsumedCapacity[] ConsumedCapacity { get; init; }
+
+    public List<TableRequests> UnprocessedItems { get; init; }
+
+    public static BatchWriteItemResult FromJsonElement(in JsonElement json)
     {
-        // public ConsumedCapacity[] ConsumedCapacity { get; init; }
+        var unprocessed = new List<TableRequests>();
 
-        public List<TableRequests> UnprocessedItems { get; init; }
-
-        public static BatchWriteItemResult FromJsonElement(in JsonElement json)
+        /*
+        if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityEl)) // Array
         {
-            var unprocessed = new List<TableRequests>();
-
-            /*
-            if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityEl)) // Array
+            foreach (var el in consumedCapacityNode.EnumerateArray())
             {
-                foreach (var el in consumedCapacityNode.EnumerateArray())
-                {
-                    var unit = ConsumedCapacity.FromJsonElement(el);
+                var unit = ConsumedCapacity.FromJsonElement(el);
 
-                    // TODO
-                }
+                // TODO
             }
-            */
-
-            if (json.TryGetProperty("UnprocessedItems", out var unprocessedItemsEl))
-            {
-                foreach (JsonProperty batch in unprocessedItemsEl.EnumerateObject())
-                {
-                    unprocessed.Add(TableRequests.FromJsonElement(batch.Name, batch.Value));
-                }
-            }
-
-            return new BatchWriteItemResult {
-                UnprocessedItems = unprocessed
-            };
         }
+        */
+
+        if (json.TryGetProperty("UnprocessedItems", out var unprocessedItemsEl))
+        {
+            foreach (JsonProperty batch in unprocessedItemsEl.EnumerateObject())
+            {
+                unprocessed.Add(TableRequests.FromJsonElement(batch.Name, batch.Value));
+            }
+        }
+
+        return new BatchWriteItemResult
+        {
+            UnprocessedItems = unprocessed
+        };
     }
 }

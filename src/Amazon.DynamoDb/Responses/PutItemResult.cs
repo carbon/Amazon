@@ -1,9 +1,8 @@
-﻿namespace Amazon.DynamoDb
-{
-    public sealed class PutItemResult : IConsumedResources
-    {
-        public AttributeCollection? Attributes { get; }
+﻿namespace Amazon.DynamoDb;
 
-        public ConsumedCapacity? ConsumedCapacity { get; }
-    }
+public sealed class PutItemResult : IConsumedResources
+{
+    public AttributeCollection? Attributes { get; }
+
+    public ConsumedCapacity? ConsumedCapacity { get; }
 }

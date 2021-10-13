@@ -1,34 +1,33 @@
 ﻿using System.ComponentModel;
 using System.Text.Json;
 
-namespace Amazon.DynamoDb.Extensions
+namespace Amazon.DynamoDb.Extensions;
+
+internal static class JsonElementExtensions
 {
-    internal static class JsonElementExtensions
+    public static string[] GetStringArray(this JsonElement element)
     {
-        public static string[] GetStringArray(this JsonElement element)
+        var items = new string[element.GetArrayLength()];
+
+        int i = 0;
+
+        foreach (var el in element.EnumerateArray())
         {
-            var items = new string[element.GetArrayLength()];
+            items[i] = el.GetString()!;
 
-            int i = 0;
-
-            foreach (var el in element.EnumerateArray())
-            {
-                items[i] = el.GetString()!;
-
-                i++;
-            }
-
-            return items;
+            i++;
         }
 
-        public static T GetEnum<T>(this JsonElement element) where T : struct, Enum
-        {
-            if (Enum.TryParse(element.GetString(), out T enumValue))
-            {
-                return enumValue;
-            }
+        return items;
+    }
 
-            throw new InvalidEnumArgumentException($"{element.GetString()} could not be parsed as enum {typeof(T)}");
-        }       
+    public static T GetEnum<T>(this JsonElement element) where T : struct, Enum
+    {
+        if (Enum.TryParse(element.GetString(), out T enumValue))
+        {
+            return enumValue;
+        }
+
+        throw new InvalidEnumArgumentException($"{element.GetString()} could not be parsed as enum {typeof(T)}");
     }
 }
