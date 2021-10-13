@@ -1,11 +1,11 @@
-﻿namespace Amazon.Ses.Tests
+﻿namespace Amazon.Ses.Tests;
+
+public class SendEmailResponseTests
 {
-    public class SendEmailResponseTests
+    [Fact]
+    public void CanParse()
     {
-        [Fact]
-        public void CanParse()
-        {
-            var text = @"<SendEmailResponse xmlns=""http://ses.amazonaws.com/doc/2010-12-01/"">
+        var text = @"<SendEmailResponse xmlns=""http://ses.amazonaws.com/doc/2010-12-01/"">
   <SendEmailResult>
     <MessageId>000001438f3bba7a-a9f60f43-8bb0-417e-91a0-3aedeb0bd995-000000</MessageId>
   </SendEmailResult>
@@ -14,9 +14,8 @@
   </ResponseMetadata>
 </SendEmailResponse>";
 
-            var response = SendEmailResponse.Parse(text);
+        var response = SendEmailResponse.Parse(text);
 
-            Assert.Equal("000001438f3bba7a-a9f60f43-8bb0-417e-91a0-3aedeb0bd995-000000", response.SendEmailResult.MessageId);
-        }
+        Assert.Equal("000001438f3bba7a-a9f60f43-8bb0-417e-91a0-3aedeb0bd995-000000", response.SendEmailResult.MessageId);
     }
 }
