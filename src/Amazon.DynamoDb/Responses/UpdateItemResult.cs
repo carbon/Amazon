@@ -6,5 +6,5 @@ public sealed class UpdateItemResult : IConsumedResources
 {
     public AttributeCollection Attributes { get; init; }
 
-    public ConsumedCapacity ConsumedCapacity { get; init; }
+    public ConsumedCapacity? ConsumedCapacity { get; init; }
 }
