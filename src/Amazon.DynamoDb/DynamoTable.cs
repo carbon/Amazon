@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 using Amazon.Scheduling;
@@ -15,17 +14,17 @@ public class DynamoTable<T, TKey>
     where T : class
     where TKey : notnull
 {
-    private readonly string tableName;
-    private readonly DynamoDbClient client;
+    private readonly string _tableName;
+    private readonly DynamoDbClient _client;
 
     private static readonly DatasetInfo metadata = DatasetInfo.Get<T>();
 
     // TODO: Historgram of consumed capacity
 
     private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
-        initialDelay: TimeSpan.FromMilliseconds(100),
-        maxDelay: TimeSpan.FromSeconds(3),
-        maxRetries: 5);
+        initialDelay : TimeSpan.FromMilliseconds(100),
+        maxDelay     : TimeSpan.FromSeconds(3),
+        maxRetries   : 5);
 
     public DynamoTable(string tableName, IAwsCredential credential)
         : this(tableName, new DynamoDbClient(AwsRegion.USEast1, credential))
@@ -41,8 +40,11 @@ public class DynamoTable<T, TKey>
 
     public DynamoTable(string tableName, DynamoDbClient client)
     {
-        this.tableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-        this.client = client ?? throw new ArgumentNullException(nameof(client));
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(client);
+
+        _tableName = tableName;
+        _client = client;
 
         // TODO: Validate the key properties
     }
@@ -60,7 +62,7 @@ public class DynamoTable<T, TKey>
             keyNames[i] = key[i].Key;
         }
 
-        var result = await FindAsync(new GetItemRequest(tableName, key)
+        var result = await FindAsync(new GetItemRequest(_tableName, key)
         {
             ConsistentRead = false,
             AttributesToGet = keyNames
@@ -81,7 +83,7 @@ public class DynamoTable<T, TKey>
 
     public Task<T?> FindAsync(Key<T> key, bool isConsistent)
     {
-        return FindAsync(new GetItemRequest(tableName, key)
+        return FindAsync(new GetItemRequest(_tableName, key)
         {
             ConsistentRead = isConsistent
         });
@@ -101,7 +103,7 @@ public class DynamoTable<T, TKey>
 
             try
             {
-                var result = await client.GetItemAsync(request).ConfigureAwait(false);
+                var result = await _client.GetItemAsync(request).ConfigureAwait(false);
 
                 // TODO: NotFound Handling
 
@@ -120,7 +122,7 @@ public class DynamoTable<T, TKey>
 
         var key = string.Join(",", request.Key.Select(k => k.Value));
 
-        var errorMessage = $"Unrecoverable exception getting '{key}' from '{tableName}'";
+        var errorMessage = $"Unrecoverable exception getting '{key}' from '{_tableName}'";
 
         throw new Exception(errorMessage, lastException);
     }
@@ -132,9 +134,9 @@ public class DynamoTable<T, TKey>
             return Array.Empty<T>();
         }
 
-        var request = new BatchGetItemRequest(new TableKeys(tableName, keys));
+        var request = new BatchGetItemRequest(new TableKeys(_tableName, keys));
 
-        var result = await client.BatchGetItemAsync(request).ConfigureAwait(false);
+        var result = await _client.BatchGetItemAsync(request).ConfigureAwait(false);
 
         TableItemCollection r0 = result.Responses[0];
 
@@ -165,16 +167,16 @@ public class DynamoTable<T, TKey>
 
     public async Task<IReadOnlyList<T>> QueryAsync(DynamoQuery query)
     {
-        query.TableName = tableName;
+        query.TableName = _tableName;
 
-        var result = await client.QueryAsync(query, retryPolicy).ConfigureAwait(false);
+        var result = await _client.QueryAsync(query, retryPolicy).ConfigureAwait(false);
 
         return new QueryResult<T>(result);
     }
 
     public async Task<IReadOnlyList<T>> QueryAllAsync(DynamoQuery query)
     {
-        query.TableName = tableName;
+        query.TableName = _tableName;
 
         var remaining = query.Limit;
 
@@ -184,7 +186,7 @@ public class DynamoTable<T, TKey>
 
         do
         {
-            a = await client.QueryAsync(query, retryPolicy).ConfigureAwait(false);
+            a = await _client.QueryAsync(query, retryPolicy).ConfigureAwait(false);
 
             foreach (AttributeCollection item in a.Items)
             {
@@ -209,10 +211,10 @@ public class DynamoTable<T, TKey>
 
     public async Task<int> CountAsync(DynamoQuery query)
     {
-        query.TableName = tableName;
+        query.TableName = _tableName;
         query.Select = SelectEnum.COUNT;
 
-        var result = await client.QueryCountAsync(query).ConfigureAwait(false);
+        var result = await _client.QueryCountAsync(query).ConfigureAwait(false);
 
         return result.Count;
     }
@@ -230,7 +232,7 @@ public class DynamoTable<T, TKey>
 
         do
         {
-            var request = new ScanRequest(tableName)
+            var request = new ScanRequest(_tableName)
             {
                 ExclusiveStartKey = result?.LastEvaluatedKey
             };
@@ -240,7 +242,7 @@ public class DynamoTable<T, TKey>
                 request.SetFilterExpression(filterExpression);
             }
 
-            result = await client.ScanAsync(request).ConfigureAwait(false);
+            result = await _client.ScanAsync(request).ConfigureAwait(false);
 
             // If LastEvaluatedKey is null, then the "last page" of results has been processed and there is no more data to be retrieved.
             // If LastEvaluatedKey is anything other than null, this does not necessarily mean that there is more data in the result set. 
@@ -259,7 +261,7 @@ public class DynamoTable<T, TKey>
         Expression[]? conditions = null,
         int take = 1000)
     {
-        var request = new ScanRequest(tableName)
+        var request = new ScanRequest(_tableName)
         {
             Limit = take
         };
@@ -274,7 +276,7 @@ public class DynamoTable<T, TKey>
             request.ExclusiveStartKey = startKey.ToDictionary();
         }
 
-        var result = await client.ScanAsync(request).ConfigureAwait(false);
+        var result = await _client.ScanAsync(request).ConfigureAwait(false);
 
         return new QueryResult<T>(result);
     }
@@ -287,46 +289,43 @@ public class DynamoTable<T, TKey>
 
     public Task<PutItemResult> PutAsync(T entity)
     {
-        var request = new PutItemRequest(tableName, AttributeCollection.FromObject(entity, metadata));
+        var request = new PutItemRequest(_tableName, AttributeCollection.FromObject(entity, metadata));
 
-        return client.PutItemUsingRetryPolicyAsync(request, retryPolicy);
+        return _client.PutItemUsingRetryPolicyAsync(request, retryPolicy);
     }
 
     // Conditional put
     public Task<PutItemResult> PutAsync(T entity, params Expression[] conditions)
     {
-        var request = new PutItemRequest(tableName, AttributeCollection.FromObject(entity, metadata));
+        var request = new PutItemRequest(_tableName, AttributeCollection.FromObject(entity, metadata));
 
         if (conditions is not null)
         {
             request.SetConditions(conditions);
         }
 
-        return client.PutItemUsingRetryPolicyAsync(request, retryPolicy);
+        return _client.PutItemUsingRetryPolicyAsync(request, retryPolicy);
     }
+
+    const int maxBatchSize = 25;
 
     public async Task<BatchResult> PutAsync(IEnumerable<T> entities)
     {
-        var sw = Stopwatch.StartNew();
-
         var result = new BatchResult();
 
-        // Batch in groups of 25
-        foreach (IEnumerable<T> batch in entities.Batch(25))
+        foreach (T[] batch in entities.Chunk(maxBatchSize))
         {
             await PutBatch(batch, result).ConfigureAwait(false);
         }
-
-        result.ResponseTime = sw.Elapsed;
 
         return result;
     }
 
     public async Task<UpdateItemResult> PatchAsync(Key<T> key, params Change[] changes)
     {
-        var request = new UpdateItemRequest(tableName, key.ToDictionary(), changes);
+        var request = new UpdateItemRequest(_tableName, key.ToDictionary(), changes);
 
-        return await client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy).ConfigureAwait(false);
+        return await _client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy).ConfigureAwait(false);
     }
 
     // Conditional patch
@@ -336,45 +335,44 @@ public class DynamoTable<T, TKey>
         Expression[] conditions,
         ReturnValues? returnValues = null)
     {
-        var request = new UpdateItemRequest(tableName, key.ToDictionary(), changes, conditions, returnValues);
+        var request = new UpdateItemRequest(_tableName, key.ToDictionary(), changes, conditions, returnValues);
 
-        return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
+        return _client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
     }
 
     public Task<UpdateItemResult> PatchAsync(Key<T> key, Change[] changes, ReturnValues returnValues)
     {
-        var request = new UpdateItemRequest(tableName, key.ToDictionary(), changes, returnValues: returnValues);
+        var request = new UpdateItemRequest(_tableName, key.ToDictionary(), changes, returnValues: returnValues);
 
-        return client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
+        return _client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
     }
 
     public Task<DeleteItemResult> DeleteAsync(T record)
     {
-        if (record is null)
-            throw new ArgumentNullException(nameof(record));
+        ArgumentNullException.ThrowIfNull(record);
 
-        var request = new DeleteItemRequest(tableName, Key<T>.FromObject(record));
+        var request = new DeleteItemRequest(_tableName, Key<T>.FromObject(record));
 
         return InternalDeleteAsync(request);
     }
 
     public Task<DeleteItemResult> DeleteAsync(TKey key)
     {
-        var request = new DeleteItemRequest(tableName, key: Key<T>.FromTuple(key));
+        var request = new DeleteItemRequest(_tableName, key: Key<T>.FromTuple(key));
 
         return InternalDeleteAsync(request);
     }
 
     public Task<DeleteItemResult> DeleteAsync(Key<T> key)
     {
-        var request = new DeleteItemRequest(tableName, key);
+        var request = new DeleteItemRequest(_tableName, key);
 
         return InternalDeleteAsync(request);
     }
 
     public Task<DeleteItemResult> DeleteAsync(Key<T> key, ReturnValues returnValues)
     {
-        var request = new DeleteItemRequest(tableName, key)
+        var request = new DeleteItemRequest(_tableName, key)
         {
             ReturnValues = returnValues
         };
@@ -389,7 +387,7 @@ public class DynamoTable<T, TKey>
 
     public Task<DeleteItemResult> DeleteAsync(Key<T> key, Expression[] conditions, ReturnValues returnValues)
     {
-        var request = new DeleteItemRequest(tableName, key)
+        var request = new DeleteItemRequest(_tableName, key)
         {
             ReturnValues = returnValues
         };
@@ -418,7 +416,7 @@ public class DynamoTable<T, TKey>
 
             try
             {
-                return await client.DeleteItemAsync(request).ConfigureAwait(false);
+                return await _client.DeleteItemAsync(request).ConfigureAwait(false);
             }
             catch (DynamoDbException ex) when (ex.IsTransient)
             {
@@ -442,7 +440,7 @@ public class DynamoTable<T, TKey>
             .Select(e => (ItemRequest)new PutRequest(AttributeCollection.FromObject(e, metadata)))
             .ToList();
 
-        var tableBatch = new TableRequests(tableName, putRequests);
+        var tableBatch = new TableRequests(_tableName, putRequests);
 
         await BatchWriteItem(tableBatch, result).ConfigureAwait(false);
 
@@ -469,7 +467,7 @@ public class DynamoTable<T, TKey>
 
             try
             {
-                var result = await client.BatchWriteItemAsync(batch).ConfigureAwait(false);
+                var result = await _client.BatchWriteItemAsync(batch).ConfigureAwait(false);
 
                 info.ItemCount += batch.Requests.Count;
                 info.RequestCount++;
@@ -477,7 +475,7 @@ public class DynamoTable<T, TKey>
                 // Recursively process any item
                 foreach (var unprocessedBatch in result.UnprocessedItems)
                 {
-                    await Task.Delay(100).ConfigureAwait(false); // Slow down
+                    await Task.Delay(Random.Shared.Next(250, 500)).ConfigureAwait(false); // Slow down
 
                     info.ItemCount -= unprocessedBatch.Requests.Count;
 
