@@ -8,7 +8,9 @@ public sealed class TransactGetItemRequest
 
     public TransactGetItemRequest(TransactGetItem[] transactItems)
     {
-        TransactItems = transactItems ?? throw new ArgumentNullException(nameof(transactItems));
+        ArgumentNullException.ThrowIfNull(transactItems);
+
+        TransactItems = transactItems;
     }
 }
 
@@ -16,7 +18,9 @@ public sealed class TransactGetItem
 {
     public TransactGetItem(Get get)
     {
-        Get = get ?? throw new ArgumentNullException(nameof(get));
+        ArgumentNullException.ThrowIfNull(get);
+
+        Get = get;
     }
 
     public Get Get { get; init; }
@@ -26,8 +30,11 @@ public sealed class Get
 {
     public Get(string tableName, IReadOnlyDictionary<string, DbValue> key)
     {
-        TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-        Key = key ?? throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(key);
+
+        TableName = tableName;
+        Key = key;
     }
 
     public string TableName { get; init; }

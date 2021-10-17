@@ -9,7 +9,9 @@ public sealed class BatchGetItemRequest
 {
     public BatchGetItemRequest(params TableKeys[] sets)
     {
-        Sets = sets ?? throw new ArgumentNullException(nameof(sets));
+        ArgumentNullException.ThrowIfNull(sets);
+
+        Sets = sets;
     }
 
     public TableKeys[] Sets { get; }
@@ -19,13 +21,17 @@ public sealed class TableKeys
 {
     public TableKeys(string tableName, params Dictionary<string, DbValue>[] keys)
     {
-        TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+        ArgumentNullException.ThrowIfNull(tableName);
+
+        TableName = tableName;
         Keys = keys;
     }
 
     public TableKeys(string tableName, params IEnumerable<KeyValuePair<string, object>>[] keys)
     {
-        TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+        ArgumentNullException.ThrowIfNull(tableName);
+
+        TableName = tableName;
         Keys = new Dictionary<string, DbValue>[keys.Length];
 
         for (int i = 0; i < Keys.Length; i++)

@@ -10,9 +10,13 @@ public sealed class ConditionCheck
         IReadOnlyDictionary<string, DbValue> key,
         string conditionExpression)
     {
-        TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-        Key = key ?? throw new ArgumentNullException(nameof(key));
-        ConditionExpression = conditionExpression ?? throw new ArgumentNullException(nameof(conditionExpression));
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(conditionExpression);
+
+        TableName = tableName;
+        Key = key;
+        ConditionExpression = conditionExpression;
     }
 
     public string ConditionExpression { get; set; }

@@ -4,7 +4,9 @@ public sealed class TransactWriteItemsRequest
 {
     public TransactWriteItemsRequest(params TransactWriteItem[] transactItems)
     {
-        TransactItems = transactItems ?? throw new ArgumentNullException(nameof(transactItems));
+        ArgumentNullException.ThrowIfNull(transactItems);
+
+        TransactItems = transactItems;
     }
 
     public TransactWriteItem[] TransactItems { get; init; }

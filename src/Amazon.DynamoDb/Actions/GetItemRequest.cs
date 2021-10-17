@@ -7,8 +7,11 @@ public sealed class GetItemRequest
 
     public GetItemRequest(string tableName, IReadOnlyDictionary<string, DbValue> key)
     {
-        TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-        Key = key ?? throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(key);
+
+        TableName = tableName;
+        Key = key;
     }
 
     public string TableName { get; }

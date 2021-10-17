@@ -4,8 +4,11 @@ public sealed class DeleteItem
 {
     public DeleteItem(string tableName, AttributeCollection key)
     {
-        TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-        Key = key ?? throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(key);
+
+        TableName = tableName;
+        Key = key;
     }
 
     public AttributeCollection Key { get; init; }

@@ -9,7 +9,9 @@ public sealed class DeleteItemRequest
 
     public DeleteItemRequest(string tableName, Dictionary<string, DbValue> key)
     {
-        TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+        ArgumentNullException.ThrowIfNull(tableName);
+
+        TableName = tableName;
         Key = key;
     }
 

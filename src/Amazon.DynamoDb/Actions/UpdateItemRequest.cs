@@ -12,8 +12,11 @@ public sealed class UpdateItemRequest
         Expression[]? conditions = null,
         ReturnValues? returnValues = null)
     {
-        TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-        Key = key ?? throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(key);
+
+        TableName = tableName;
+        Key = key;
         ReturnValues = returnValues;
 
         var attributeNames = new Dictionary<string, string>();

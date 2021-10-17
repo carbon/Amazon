@@ -11,8 +11,11 @@ public sealed class UpdateItem
         Change[] changes,
         Expression[]? conditions = null)
     {
-        TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-        Key = key ?? throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(key);
+
+        TableName = tableName;
+        Key = key;
 
         var attributeNames = new Dictionary<string, string>();
         var updateExpression = new UpdateExpression(changes, attributeNames, ExpressionAttributeValues);

@@ -7,8 +7,11 @@ public sealed class PutItemRequest
 {
     public PutItemRequest(string tableName, AttributeCollection item)
     {
-        TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-        Item = item ?? throw new ArgumentNullException(nameof(item));
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(item);
+
+        TableName = tableName;
+        Item = item;
     }
 
     public string TableName { get; }
