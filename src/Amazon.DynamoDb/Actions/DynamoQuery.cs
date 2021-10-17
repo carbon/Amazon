@@ -112,7 +112,7 @@ public sealed class DynamoQuery
 
     public DynamoQuery Take(int take)
     {
-        this.Limit = take;
+        Limit = take;
 
         return this;
     }
@@ -134,7 +134,7 @@ public sealed class DynamoQuery
             i++;
         }
 
-        this.ProjectionExpression = StringBuilderCache.ExtractAndRelease(sb);
+        ProjectionExpression = StringBuilderCache.ExtractAndRelease(sb);
 
         return this;
     }
