@@ -2,30 +2,29 @@
 
 using Amazon.DynamoDb.JsonConverters;
 
-namespace Amazon.DynamoDb
+namespace Amazon.DynamoDb;
+
+[JsonConverter(typeof(TimestampConverter))]
+public readonly struct Timestamp
 {
-    [JsonConverter(typeof(TimestampConverter))]
-    public readonly struct Timestamp
+    public Timestamp(double value)
     {
-        public Timestamp(double value)
-        {
-            Value = value;
-        }
+        Value = value;
+    }
 
-        public double Value { get; }
-        
-        public static implicit operator DateTime(Timestamp timestamp)
-        {
-            long unixTimeMillseconds = (long)(timestamp.Value * 1000d);
+    public double Value { get; }
 
-            return DateTimeOffset.FromUnixTimeMilliseconds(unixTimeMillseconds).UtcDateTime;
-        }
+    public static implicit operator DateTime(Timestamp timestamp)
+    {
+        long unixTimeMillseconds = (long)(timestamp.Value * 1000d);
 
-        public static implicit operator DateTimeOffset(Timestamp timestamp)
-        {
-            long unixTimeMillseconds = (long)(timestamp.Value * 1000d);
+        return DateTimeOffset.FromUnixTimeMilliseconds(unixTimeMillseconds).UtcDateTime;
+    }
 
-            return DateTimeOffset.FromUnixTimeMilliseconds(unixTimeMillseconds);
-        }
+    public static implicit operator DateTimeOffset(Timestamp timestamp)
+    {
+        long unixTimeMillseconds = (long)(timestamp.Value * 1000d);
+
+        return DateTimeOffset.FromUnixTimeMilliseconds(unixTimeMillseconds);
     }
 }
