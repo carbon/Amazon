@@ -37,24 +37,27 @@ namespace Amazon.DynamoDb
             string type = string.Empty;
             string message = string.Empty;
 
-            if (json.TryGetProperty("message", out JsonElement m))
+            foreach (var property in json.EnumerateObject())
             {
-                message = m.GetString()!;
-            }
-            else if (json.TryGetProperty("Message", out m))
-            {
-                message = m.GetString()!;
-            }
-
-            if (json.TryGetProperty("__type", out var typeEl) && typeEl.ValueKind == JsonValueKind.String)
-            {
-                type = typeEl.GetString()!;
-
-                int poundIndex = type.IndexOf('#');
-
-                if (poundIndex > -1)
+                if (property.NameEquals("message"))
                 {
-                    type = type.Substring(poundIndex + 1);
+                    message = property.Value.GetString()!;
+                }
+                else if (property.NameEquals("Message"))
+                {
+                    message = property.Value.GetString()!;
+                }
+
+                else if (property.NameEquals("__type") && property.Value.ValueKind == JsonValueKind.String)
+                {
+                    type = property.Value.GetString()!;
+
+                    int poundIndex = type.IndexOf('#');
+
+                    if (poundIndex > -1)
+                    {
+                        type = type.Substring(poundIndex + 1);
+                    }
                 }
             }
 

@@ -6,12 +6,15 @@ public sealed class TableRequests
 {
     public TableRequests(string tableName, IReadOnlyList<ItemRequest> requests)
     {
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(requests);
+
         if (requests.Count > 25)
         {
             throw new ArgumentException($"May not exceed 25 items. Was {requests.Count} items.", nameof(requests));
         }
 
-        TableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+        TableName = tableName;
         Requests = requests;
     }
 
@@ -43,17 +46,20 @@ public sealed class TableRequests
             }
             */
 
-            if (request.TryGetProperty("PutRequest", out var putRequestNode))
+            foreach (var property in request.EnumerateObject())
             {
-                var itemAttributes = AttributeCollection.FromJsonElement(putRequestNode.GetProperty("Item"));
+                if (property.NameEquals("PutRequest"))
+                {
+                    var putRequest = JsonSerializer.Deserialize<PutRequest>(property.Value)!;
 
-                requests.Add(new PutRequest(itemAttributes));
-            }
-            else if (request.TryGetProperty("DeleteRequest", out var deleteRequestNode))
-            {
-                var keyAttributes = AttributeCollection.FromJsonElement(deleteRequestNode.GetProperty("Key"));
+                    requests.Add(putRequest);
+                }
+                else if (property.NameEquals("DeleteRequest"))
+                {
+                    var deleteRequest = JsonSerializer.Deserialize<DeleteRequest>(property.Value)!;
 
-                requests.Add(new DeleteRequest(keyAttributes));
+                    requests.Add(deleteRequest);
+                }
             }
         }
 

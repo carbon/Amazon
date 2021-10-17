@@ -7,12 +7,13 @@ namespace Amazon.DynamoDb;
 
 public sealed class BatchGetItemResult
 {
-    public BatchGetItemResult(IReadOnlyList<TableItemCollection> responses)
+    public BatchGetItemResult(IReadOnlyList<TableItemCollection> responses, ConsumedCapacity[]? consumedCapacity = null)
     {
         Responses = responses;
+        ConsumedCapacity = consumedCapacity;
     }
 
-    public ConsumedCapacity[]? ConsumedCapacity { get; init; }
+    public ConsumedCapacity[]? ConsumedCapacity { get; }
 
     public IReadOnlyList<TableItemCollection> Responses { get; }
 
@@ -20,50 +21,39 @@ public sealed class BatchGetItemResult
 
     public static BatchGetItemResult FromJsonElement(in JsonElement json)
     {
-        IReadOnlyList<TableItemCollection> responses;
+        IReadOnlyList<TableItemCollection> responses = Array.Empty<TableItemCollection>();
         ConsumedCapacity[]? consumedCapacity = null;
 
-        if (json.TryGetProperty("ConsumedCapacity", out var consumedCapacityEl))
+        foreach (var property in json.EnumerateObject())
         {
-            consumedCapacity = new ConsumedCapacity[consumedCapacityEl.GetArrayLength()];
-
-            var i = 0;
-
-            foreach (var el in consumedCapacityEl.EnumerateArray())
+            if (property.NameEquals("ConsumedCapacity"))
             {
-                consumedCapacity[i] = DynamoDb.ConsumedCapacity.FromJsonElement(el);
+                consumedCapacity = JsonSerializer.Deserialize<ConsumedCapacity[]>(property.Value);
             }
-        }
 
-        if (json.TryGetProperty("Responses", out JsonElement responsesEl))
-        {
-            var collections = new List<TableItemCollection>();
-
-            foreach (var tableEl in responsesEl.EnumerateObject()) // table elements
+            else if (property.NameEquals("Responses"))
             {
-                var table = new TableItemCollection(tableEl.Name);
+                var collections = new List<TableItemCollection>();
 
-                foreach (JsonElement itemEl in tableEl.Value.EnumerateArray())
+                foreach (var tableEl in property.Value.EnumerateObject()) // table elements
                 {
-                    table.Add(AttributeCollection.FromJsonElement(itemEl));
+                    var table = new TableItemCollection(tableEl.Name);
+
+                    foreach (JsonElement itemEl in tableEl.Value.EnumerateArray())
+                    {
+                        table.Add(AttributeCollection.FromJsonElement(itemEl));
+                    }
+
+                    collections.Add(table);
                 }
 
-                collections.Add(table);
+                responses = collections;
             }
-
-            responses = collections;
-        }
-        else
-        {
-            responses = Array.Empty<TableItemCollection>();
         }
 
         // TODO: UnprocessedKeys
 
-        return new BatchGetItemResult(responses)
-        {
-            ConsumedCapacity = consumedCapacity
-        };
+        return new BatchGetItemResult(responses, consumedCapacity);
     }
 }
 
