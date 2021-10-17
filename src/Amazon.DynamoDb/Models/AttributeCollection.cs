@@ -114,14 +114,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
 
     public static AttributeCollection FromJsonElement(in JsonElement json)
     {
-        var item = new AttributeCollection();
-
-        foreach (var property in json.EnumerateObject())
-        {
-            item.Add(property.Name, DbValue.FromJsonElement(property.Value));
-        }
-
-        return item;
+        return JsonSerializer.Deserialize<AttributeCollection>(json)!;
     }
 
     public DbValue this[string key]

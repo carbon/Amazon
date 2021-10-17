@@ -323,8 +323,6 @@ public class DbValueTests
 
     private static DbValue Parse(string text)
     {
-        var el = JsonSerializer.Deserialize<JsonElement>(text);
-
-        return DbValue.FromJsonElement(el);
+        return JsonSerializer.Deserialize<DbValue>(text);
     }
 }

@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using Amazon.DynamoDb.Extensions;
 using Amazon.DynamoDb.JsonConverters;
 
 namespace Amazon.DynamoDb;
@@ -258,7 +257,7 @@ public readonly struct DbValue : IConvertible
 	{
         if (_kind == DbValueType.N)
         {
-            return ToInt() == 1;
+            return ToInt() is 1;
         }
 
         if (_value is bool b)
@@ -294,29 +293,6 @@ public readonly struct DbValue : IConvertible
 
 	#endregion
 
-	public static DbValue FromJsonElement(in JsonElement json)
-	{
-		var enumerator = json.EnumerateObject();
-
-		enumerator.MoveNext();
-
-		JsonProperty property = enumerator.Current;
-
-		return property.Name switch
-		{
-			"B"    => new DbValue(property.Value.GetString()!,     DbValueType.B),
-			"N"    => new DbValue(property.Value.GetString()!,     DbValueType.N),
-			"S"    => new DbValue(property.Value.GetString()!,     DbValueType.S),
-			"BOOL" => new DbValue(property.Value.GetBoolean(),     DbValueType.BOOL),
-			"BS"   => new DbValue(property.Value.GetStringArray(), DbValueType.BS),
-			"NS"   => new DbValue(property.Value.GetStringArray(), DbValueType.NS),
-			"SS"   => new DbValue(property.Value.GetStringArray(), DbValueType.SS),
-			"L"    => new DbValue(GetListValues(property.Value)),
-			"M"    => new DbValue(AttributeCollection.FromJsonElement(property.Value)),
-			_      => throw new Exception("Invalid value type:" + property.Name),
-		};
-	}
-
 	#region Casting
 
 	public static explicit operator string(DbValue value) => value.ToString();
@@ -332,26 +308,6 @@ public readonly struct DbValue : IConvertible
 	public static explicit operator Double(DbValue value) => value.ToDouble();
 
 	public static explicit operator byte[](DbValue value) => value.ToBinary();
-
-	#endregion
-
-	#region Helpers
-
-	private static DbValue[] GetListValues(in JsonElement array)
-	{
-		var items = new DbValue[array.GetArrayLength()];
-
-		int i = 0;
-
-		foreach (var item in array.EnumerateArray())
-		{
-			items[i] = FromJsonElement(item);
-
-			i++;
-		}
-
-		return items;
-	}
 
 	#endregion
 

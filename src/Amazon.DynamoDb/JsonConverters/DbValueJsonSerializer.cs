@@ -3,6 +3,8 @@ using System.Text.Json;
 
 namespace Amazon.DynamoDb.JsonConverters;
 
+using static DbValueTypeNames.Utf8;
+
 internal static class DbValueJsonSerializer
 {
     public static DbValue Read(ref Utf8JsonReader reader)
@@ -17,40 +19,40 @@ internal static class DbValueJsonSerializer
         // get the name of the first property
         reader.Read();
 
-        if (reader.ValueTextEquals("B"))
+        if (reader.ValueTextEquals(B))
         {
             value = new DbValue(ReadString(ref reader), DbValueType.B);
         }
-        else if (reader.ValueTextEquals("BS"))
+        else if (reader.ValueTextEquals(BS))
         {
             value = new DbValue(ReadStringArray(ref reader), DbValueType.BS);
         }
-        else if (reader.ValueTextEquals("N"))
+        else if (reader.ValueTextEquals(N))
         {
             value = new DbValue(ReadString(ref reader), DbValueType.N);
         }
-        else if (reader.ValueTextEquals("S"))
+        else if (reader.ValueTextEquals(S))
         {
             value = new DbValue(ReadString(ref reader), DbValueType.S);
         }
-        else if (reader.ValueTextEquals("SS"))
+        else if (reader.ValueTextEquals(SS))
         {
             value = new DbValue(ReadStringArray(ref reader), DbValueType.SS);
         }
-        else if (reader.ValueTextEquals("NS"))
+        else if (reader.ValueTextEquals(NS))
         {
             value = new DbValue(ReadStringArray(ref reader), DbValueType.NS);
         }
-        else if (reader.ValueTextEquals("BOOL"))
+        else if (reader.ValueTextEquals(BOOL))
         {
             reader.Read();
             value = new DbValue(reader.GetBoolean());
         }
-        else if (reader.ValueTextEquals("L"))
+        else if (reader.ValueTextEquals(L))
         {
             value = new DbValue(ReadDbValueArray(ref reader));
         }
-        else if (reader.ValueTextEquals("M"))
+        else if (reader.ValueTextEquals(M))
         {
             reader.Read();
             value = new DbValue(AttributeCollectionJsonSerializer.Read(ref reader));
@@ -125,15 +127,15 @@ internal static class DbValueJsonSerializer
         switch (dbValue.Kind)
         {
             case DbValueType.B:
-                writer.WriteBase64String("B", dbValue.ToBinary());
+                writer.WriteBase64String(B, dbValue.ToBinary());
                 break;
 
             case DbValueType.BOOL:
-                writer.WriteBoolean("BOOL", dbValue.ToBoolean());
+                writer.WriteBoolean(BOOL, dbValue.ToBoolean());
                 break;
 
             case DbValueType.BS:
-                writer.WriteStartArray("BS");
+                writer.WriteStartArray(BS);
                 foreach (var bytes in (IEnumerable<byte[]>)dbValue.Value)
                 {
                     writer.WriteBase64StringValue(bytes);
@@ -142,7 +144,7 @@ internal static class DbValueJsonSerializer
                 break;
 
             case DbValueType.L:
-                writer.WriteStartArray("L");
+                writer.WriteStartArray(L);
                 foreach (var listDbValue in (IEnumerable<DbValue>)dbValue.Value)
                 {
                     Write(writer, listDbValue);
@@ -151,16 +153,16 @@ internal static class DbValueJsonSerializer
                 break;
 
             case DbValueType.M:
-                writer.WritePropertyName("M");
+                writer.WritePropertyName(M);
                 AttributeCollectionJsonSerializer.Write(writer, (AttributeCollection)dbValue.Value);
                 break;
 
             case DbValueType.N:
-                writer.WriteString("N", dbValue.ToString());
+                writer.WriteString(N, dbValue.ToString());
                 break;
 
             case DbValueType.NS:
-                writer.WriteStartArray("NS");
+                writer.WriteStartArray(NS);
                 foreach (string s in dbValue.ToArray<string>())
                 {
                     writer.WriteStringValue(s);
@@ -169,11 +171,11 @@ internal static class DbValueJsonSerializer
                 break;
 
             case DbValueType.S:
-                writer.WriteString("S", dbValue.ToString());
+                writer.WriteString(S, dbValue.ToString());
                 break;
 
             case DbValueType.SS:
-                writer.WriteStartArray("SS");
+                writer.WriteStartArray(SS);
                 foreach (string s in dbValue.ToArray<string>())
                 {
                     writer.WriteStringValue(s);
