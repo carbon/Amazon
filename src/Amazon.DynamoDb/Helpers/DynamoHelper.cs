@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 namespace Amazon.DynamoDb;
 
@@ -25,7 +26,7 @@ internal static class DynamoExtensions
 
     public static void WriteValue(this StringBuilder sb, object value, AttributeCollection attributes)
     {
-        string varName = $":v{attributes.Count}";
+        string varName = string.Create(CultureInfo.InvariantCulture, $":v{attributes.Count}");
 
         var convertor = DbValueConverterFactory.Get(value.GetType());
 

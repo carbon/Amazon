@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 using Carbon.Data.Expressions;
 
@@ -146,7 +147,7 @@ public sealed class DynamoExpression
 
     private void WriteValue(Constant constant)
     {
-        var variableName = ":v" + AttributeValues.Count.ToString();
+        var variableName = string.Create(CultureInfo.InvariantCulture, $":v{AttributeValues.Count}");
 
         var convertor = DbValueConverterFactory.Get(constant.Value.GetType());
 
