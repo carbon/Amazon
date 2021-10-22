@@ -23,8 +23,7 @@ namespace Amazon.Sqs
 
         public async Task<CreateQueueResult> CreateQueueAsync(string queueName, int defaultVisibilityTimeout = 30)
         {
-            if (queueName is null)
-                throw new ArgumentNullException(nameof(queueName));
+            ArgumentNullException.ThrowIfNull(queueName);
 
             var parameters = new List<KeyValuePair<string, string>>(4) {
                 new ("Action", "CreateQueue"),
@@ -50,8 +49,7 @@ namespace Amazon.Sqs
 
         public async Task<SendMessageBatchResultEntry[]> SendMessageBatchAsync(Uri queueUrl, string[] messages)
         {
-            if (messages is null)
-                throw new ArgumentNullException(nameof(messages));
+            ArgumentNullException.ThrowIfNull(messages);
 
             if (messages.Length > 10)
                 throw new ArgumentException("Must be 10 or fewer", nameof(messages));
@@ -83,7 +81,7 @@ namespace Amazon.Sqs
 
         public async Task<SendMessageResult> SendMessageAsync(Uri queueUrl, SendMessageRequest request)
         {
-            if (request is null) throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(request.GetParameters())
@@ -99,7 +97,7 @@ namespace Amazon.Sqs
             RecieveMessagesRequest request, 
             CancellationToken cancellationToken = default)
         {
-            if (request is null) throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(request.GetParameters())
@@ -114,7 +112,7 @@ namespace Amazon.Sqs
 
         public async Task<string> DeleteMessageAsync(Uri queueUrl, string recieptHandle)
         {
-            if (recieptHandle is null) throw new ArgumentNullException(nameof(recieptHandle));
+            ArgumentNullException.ThrowIfNull(recieptHandle);
 
             var parameters = new List<KeyValuePair<string, string>>(3) {
                 new ("Action", "DeleteMessage"),
@@ -130,10 +128,7 @@ namespace Amazon.Sqs
 
         public async Task<string> ChangeMessageVisibilityAsync(Uri queueUrl, ChangeMessageVisibilityRequest request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
                 Content = GetPostContent(request.ToParams())
@@ -144,8 +139,7 @@ namespace Amazon.Sqs
 
         public async Task<DeleteMessageBatchResultEntry[]> DeleteMessageBatchAsync(Uri queueUrl, string[] recieptHandles)
         {
-            if (recieptHandles is null)
-                throw new ArgumentNullException(nameof(recieptHandles));
+            ArgumentNullException.ThrowIfNull(recieptHandles);
 
             if (recieptHandles.Length > 10)
                 throw new ArgumentException("Must contain 10 or fewer items.", nameof(recieptHandles));

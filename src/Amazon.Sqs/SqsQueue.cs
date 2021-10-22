@@ -20,14 +20,9 @@ public sealed class SqsQueue : IMessageQueue<string>
 
     public SqsQueue(AwsRegion region, string accountId, string queueName, IAwsCredential credential)
     {
-        if (region is null)
-            throw new ArgumentNullException(nameof(region));
-
-        if (accountId is null)
-            throw new ArgumentNullException(nameof(accountId));
-
-        if (queueName is null)
-            throw new ArgumentNullException(nameof(queueName));
+        ArgumentNullException.ThrowIfNull(region);
+        ArgumentNullException.ThrowIfNull(accountId);
+        ArgumentNullException.ThrowIfNull(queueName);
 
         _client = new SqsClient(region, credential);
         _url = new Uri($"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}");

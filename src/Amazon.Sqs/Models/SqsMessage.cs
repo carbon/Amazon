@@ -14,7 +14,9 @@ public sealed class SqsMessage : IQueueMessage<string>
 
     public SqsMessage(string body)
     {
-        Body = body ?? throw new ArgumentNullException(nameof(body));
+        ArgumentNullException.ThrowIfNull(body);
+
+        Body = body;
     }
 
     [XmlElement("MessageId")]

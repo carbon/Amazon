@@ -23,11 +23,8 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
 
     public SqsQueue(AwsRegion region, string accountId, string queueName, IAwsCredential credential)
     {
-        if (accountId is null)
-            throw new ArgumentNullException(nameof(accountId));
-
-        if (queueName is null)
-            throw new ArgumentNullException(nameof(queueName));
+        ArgumentNullException.ThrowIfNull(accountId);
+        ArgumentNullException.ThrowIfNull(queueName);
 
         _client = new SqsClient(region, credential);
         _url = new Uri($"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}");
@@ -105,8 +102,7 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
 
     public async Task PutAsync(params IMessage<T>[] messages)
     {
-        if (messages is null) 
-            throw new ArgumentNullException(nameof(messages));
+        ArgumentNullException.ThrowIfNull(messages);
 
         if (messages.Length == 0) return;
 
@@ -136,10 +132,7 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
 
     public async Task DeleteAsync(params IQueueMessage<T>[] messages)
     {
-        if (messages is null)
-        {
-            throw new ArgumentNullException(nameof(messages));
-        }
+        ArgumentNullException.ThrowIfNull(messages);
 
         if (messages.Length == 0) return;
 
