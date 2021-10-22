@@ -42,10 +42,7 @@ public static class SignerV4
     [SkipLocalsInit]
     public static string GetStringToSign(in CredentialScope scope, string timestamp, string canonicalRequest)
     {
-        if (canonicalRequest is null)
-        {
-            throw new ArgumentNullException(nameof(canonicalRequest));
-        }
+        ArgumentNullException.ThrowIfNull(canonicalRequest);
 
         Span<byte> sha256 = stackalloc byte[32];
 
@@ -72,10 +69,7 @@ public static class SignerV4
         
     public static string GetCanonicalRequest(HttpRequestMessage request, out List<string> signedHeaderNames)
     {
-        if (request is null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
+        ArgumentNullException.ThrowIfNull(request);
 
         var output = new ValueStringBuilder(512);
 
@@ -201,8 +195,7 @@ public static class SignerV4
         HttpRequestMessage request,
         string payloadHash = emptySha256)
     {
-        if (request is null)
-            throw new ArgumentNullException(nameof(request));
+        ArgumentNullException.ThrowIfNull(request);
 
         string presignedUrl = GetPresignedUrl(
             credential  : credential,
@@ -310,10 +303,7 @@ public static class SignerV4
 
     public static void Sign(IAwsCredential credential, in CredentialScope scope, HttpRequestMessage request)
     {
-        if (credential is null)
-        {
-            throw new ArgumentNullException(nameof(credential));
-        }
+        ArgumentNullException.ThrowIfNull(credential);
 
         // If we're using S3, ensure the request content has been signed
         if (scope.Service.Equals(AwsService.S3) && !request.Headers.Contains("x-amz-content-sha256"))

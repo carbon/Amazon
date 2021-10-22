@@ -18,12 +18,16 @@ public sealed class InstanceRoleCredential : IAwsCredential
 
     public InstanceRoleCredential(string roleName)
     {
-        RoleName = roleName ?? throw new ArgumentNullException(nameof(roleName));
+        ArgumentNullException.ThrowIfNull(roleName);
+
+        RoleName = roleName;
     }
 
     internal InstanceRoleCredential(string roleName, IamSecurityCredentials credential)
     {
-        RoleName = roleName ?? throw new ArgumentNullException(nameof(roleName));
+        ArgumentNullException.ThrowIfNull(roleName);
+
+        RoleName = roleName;
 
         Set(credential);
     }
@@ -53,11 +57,6 @@ public sealed class InstanceRoleCredential : IAwsCredential
 
     private void Set(IamSecurityCredentials credential)
     {
-        if (credential is null)
-        {
-            throw new ArgumentNullException(nameof(credential));
-        }
-
         AccessKeyId = credential.AccessKeyId;
         SecretAccessKey = credential.SecretAccessKey;
         SecurityToken = credential.Token;

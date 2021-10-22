@@ -110,11 +110,7 @@ namespace System.Text
 
             int remaining = _pos - index;
             _chars.Slice(index, remaining).CopyTo(_chars.Slice(index + count));
-            s
-#if !NET6_0_OR_GREATER
-                .AsSpan()
-#endif
-                .CopyTo(_chars.Slice(index));
+            s.CopyTo(_chars.Slice(index));
             _pos += count;
         }
 
@@ -174,11 +170,7 @@ namespace System.Text
                 Grow(s.Length);
             }
 
-            s
-#if !NET6_0_OR_GREATER
-                .AsSpan()
-#endif
-                .CopyTo(_chars.Slice(pos));
+            s.CopyTo(_chars.Slice(pos));
             _pos += s.Length;
         }
 

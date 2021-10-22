@@ -9,11 +9,8 @@ public sealed class AwsCredential : IAwsCredential
 {
     public AwsCredential(string accessKeyId, string secretAccessKey)
     {
-        if (accessKeyId is null)
-            throw new ArgumentNullException(accessKeyId);
-
-        if (secretAccessKey is null)
-            throw new ArgumentNullException(secretAccessKey);
+        ArgumentNullException.ThrowIfNull(accessKeyId);
+        ArgumentNullException.ThrowIfNull(secretAccessKey);
 
         AccessKeyId = accessKeyId;
         SecretAccessKey = secretAccessKey;
@@ -30,8 +27,7 @@ public sealed class AwsCredential : IAwsCredential
 
     public static AwsCredential Parse(string text)
     {
-        if (text is null)
-            throw new ArgumentNullException(nameof(text));
+        ArgumentNullException.ThrowIfNull(text);
 
         int colonIndex = text.IndexOf(':');
 

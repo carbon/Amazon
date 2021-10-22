@@ -11,20 +11,23 @@ namespace Amazon;
 
 public abstract class AwsClient
 {
-    protected readonly HttpClient httpClient;
-        
     private readonly AwsService _service;
-    protected readonly IAwsCredential credential;
+    protected readonly IAwsCredential _credential;
+    protected readonly HttpClient _httpClient;
 
     public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential)
     {
-        _service        = service    ?? throw new ArgumentNullException(nameof(service));
-        Region          = region     ?? throw new ArgumentNullException(nameof(region));
-        this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
+        ArgumentNullException.ThrowIfNull(service);
+        ArgumentNullException.ThrowIfNull(region);
+        ArgumentNullException.ThrowIfNull(credential);
+
+        _service = service;
+        Region = region;
+        _credential = credential;
 
         Endpoint = $"https://{service.Name}.{region.Name}.amazonaws.com/";
 
-        this.httpClient = new HttpClient(new SocketsHttpHandler {
+        _httpClient = new HttpClient(new SocketsHttpHandler {
             AutomaticDecompression = DecompressionMethods.All,                
             PooledConnectionIdleTimeout = TimeSpan.FromMinutes(1) // Default is 2 minutes
         })
@@ -37,10 +40,15 @@ public abstract class AwsClient
 
     public AwsClient(AwsService service, AwsRegion region, IAwsCredential credential, HttpClient httpClient)
     {
-        _service    = service        ?? throw new ArgumentNullException(nameof(service));
-        Region          = region     ?? throw new ArgumentNullException(nameof(region));
-        this.credential = credential ?? throw new ArgumentNullException(nameof(credential));
-        this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        ArgumentNullException.ThrowIfNull(service);
+        ArgumentNullException.ThrowIfNull(region);
+        ArgumentNullException.ThrowIfNull(credential);
+        ArgumentNullException.ThrowIfNull(httpClient);
+
+        _service = service;
+        Region = region;
+        _credential = credential;
+        _httpClient = httpClient;
 
         Endpoint = $"https://{service.Name}.{region.Name}.amazonaws.com/";
     }
@@ -53,7 +61,7 @@ public abstract class AwsClient
     {
         await SignAsync(request).ConfigureAwait(false);
 
-        using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -65,9 +73,9 @@ public abstract class AwsClient
 
     protected async ValueTask SignAsync(HttpRequestMessage request)
     {
-        if (credential.ShouldRenew)
+        if (_credential.ShouldRenew)
         {
-            await credential.RenewAsync().ConfigureAwait(false);   
+            await _credential.RenewAsync().ConfigureAwait(false);   
         }
 
         DateTimeOffset date = DateTimeOffset.UtcNow;
@@ -75,14 +83,14 @@ public abstract class AwsClient
         request.Headers.Host = request.RequestUri!.Host;
         request.Headers.Date = date;
 
-        if (credential.SecurityToken is not null)
+        if (_credential.SecurityToken is not null)
         {
-            request.Headers.Add("x-amz-security-token", credential.SecurityToken);
+            request.Headers.Add("x-amz-security-token", _credential.SecurityToken);
         }
 
         request.Headers.Add("x-amz-date", date.UtcDateTime.ToString("yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture));
 
-        SignerV4.Sign(credential, scope: GetCredentialScope(request), request: request);
+        SignerV4.Sign(_credential, scope: GetCredentialScope(request), request: request);
     }
 
     protected virtual async Task<Exception> GetExceptionAsync(HttpResponseMessage response)

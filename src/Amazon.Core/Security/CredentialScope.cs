@@ -8,9 +8,12 @@ public readonly struct CredentialScope : ISpanFormattable
 {
     public CredentialScope(DateTime date, AwsRegion region, AwsService service)
     {
+        ArgumentNullException.ThrowIfNull(region);
+        ArgumentNullException.ThrowIfNull(service);
+
         Date = date;
-        Region = region ?? throw new ArgumentNullException(nameof(region));
-        Service = service ?? throw new ArgumentNullException(nameof(service));
+        Region = region;
+        Service = service;
     }
 
     public DateTime Date { get; }

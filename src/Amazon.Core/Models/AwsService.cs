@@ -60,10 +60,7 @@ public sealed class AwsService : IEquatable<AwsService>
 
     public static implicit operator AwsService(string name)
     {
-        if (name is null)
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentNullException.ThrowIfNull(name);
 
         return new AwsService(name);
     }
