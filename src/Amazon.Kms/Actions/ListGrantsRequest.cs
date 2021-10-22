@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using System;
-
 namespace Amazon.Kms;
 
 public sealed class ListGrantsRequest : KmsRequest
@@ -10,7 +8,9 @@ public sealed class ListGrantsRequest : KmsRequest
 
     public ListGrantsRequest(string keyId)
     {
-        KeyId = keyId ?? throw new ArgumentNullException(nameof(keyId));
+        ArgumentNullException.ThrowIfNull(keyId);
+
+        KeyId = keyId;
     }
 
     public string KeyId { get; init; }

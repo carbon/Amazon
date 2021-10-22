@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Amazon.Kms;
+﻿namespace Amazon.Kms;
 
 public sealed class DecryptRequest : KmsRequest
 {
@@ -11,22 +8,15 @@ public sealed class DecryptRequest : KmsRequest
         IReadOnlyDictionary<string, string>? context,
         string[]? grantTokens = null)
     {
-        if (keyId is null)
-        {
-            throw new ArgumentNullException(nameof(keyId));
-        }
+        ArgumentNullException.ThrowIfNull(keyId);
+        ArgumentNullException.ThrowIfNull(ciphertext);
 
-        if (keyId.Length == 0)
+        if (keyId.Length is 0)
         {
             throw new ArgumentException("May not be empty", nameof(keyId));
         }
 
-        if (ciphertext is null)
-        {
-            throw new ArgumentNullException(nameof(ciphertext));
-        }
-
-        if (ciphertext.Length == 0)
+        if (ciphertext.Length is 0)
         {
             throw new ArgumentException("May not be empty", nameof(ciphertext));
         }

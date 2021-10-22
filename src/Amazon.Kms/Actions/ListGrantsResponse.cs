@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using System.Collections.Generic;
-
 namespace Amazon.Kms;
 
 public sealed class ListGrantsResponse : KmsResponse

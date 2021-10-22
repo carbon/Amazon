@@ -1,13 +1,14 @@
-﻿using System;
-
-namespace Amazon.Kms;
+﻿namespace Amazon.Kms;
 
 public sealed class CreateAliasRequest : KmsRequest
 {
     public CreateAliasRequest(string targetKeyId, string aliasName)
     {
-        TargetKeyId = targetKeyId ?? throw new ArgumentNullException(nameof(targetKeyId));
-        AliasName = aliasName ?? throw new ArgumentNullException(nameof(aliasName));
+        ArgumentNullException.ThrowIfNull(targetKeyId);
+        ArgumentNullException.ThrowIfNull(aliasName);
+
+        TargetKeyId = targetKeyId;
+        AliasName = aliasName;
     }
 
     public string TargetKeyId { get; }
