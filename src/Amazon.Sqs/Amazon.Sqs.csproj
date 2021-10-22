@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sqs</AssemblyName>
-    <Version>0.22.0</Version>
-    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
-    <LangVersion>10</LangVersion>
+    <Version>0.23.0</Version>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     
