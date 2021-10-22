@@ -183,10 +183,10 @@ public static class SignerV4
 
         var signingKey = GC.AllocateUninitializedArray<byte>(32);
 
-        HMACSHA256_HashData(kSecret,     formattedDateBytes,     signingKey);
-        HMACSHA256_HashData(signingKey,  scope.Region.Utf8Name,  signingKey);
-        HMACSHA256_HashData(signingKey,  scope.Service.Utf8Name, signingKey);
-        HMACSHA256_HashData(signingKey,  aws4_request_bytes,     signingKey);
+        HMACSHA256.HashData(kSecret,     formattedDateBytes,     signingKey);
+        HMACSHA256.HashData(signingKey,  scope.Region.Utf8Name,  signingKey);
+        HMACSHA256.HashData(signingKey,  scope.Service.Utf8Name, signingKey);
+        HMACSHA256.HashData(signingKey,  aws4_request_bytes,     signingKey);
 
         return signingKey;
     }
@@ -514,19 +514,6 @@ public static class SignerV4
         }
     }
 
-    private static int HMACSHA256_HashData(byte[] key, ReadOnlySpan<byte> source, Span<byte> destination)
-    {
-#if NET5_0
-        using var hmac = new HMACSHA256(key); // 32 bytes
-
-        hmac.TryComputeHash(source, destination, out _);
-
-        return 32;
-#else
-        return HMACSHA256.HashData(key, source, destination);
-#endif
-    }
-
     [SkipLocalsInit]
     private static string HMACSHA256_Hex(byte[] key, string data)
     {
@@ -536,14 +523,14 @@ public static class SignerV4
 
         Span<byte> hash = stackalloc byte[32];
 
-        HMACSHA256_HashData(key, dataBuffer.AsSpan(0, encodedByteCount), hash);
+        HMACSHA256.HashData(key, dataBuffer.AsSpan(0, encodedByteCount), hash);
 
         ArrayPool<byte>.Shared.Return(dataBuffer);
 
         return HexString.FromBytes(hash);
     }
 
-#endregion
+    #endregion
 }
 
 // Signed Header Notes ---

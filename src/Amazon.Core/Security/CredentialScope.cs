@@ -4,10 +4,7 @@ using System.Text;
 
 namespace Amazon.Security;
 
-public readonly struct CredentialScope
-#if NET6_0_OR_GREATER
-    : ISpanFormattable
-#endif
+public readonly struct CredentialScope : ISpanFormattable
 {
     public CredentialScope(DateTime date, AwsRegion region, AwsService service)
     {
@@ -41,8 +38,6 @@ public readonly struct CredentialScope
         Date.TryFormat(utf16Destination, out _, dateFormat, CultureInfo.InvariantCulture);
     }
 
-#if NET6_0_OR_GREATER
-
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
         return string.Create(CultureInfo.InvariantCulture, $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request");
@@ -52,8 +47,6 @@ public readonly struct CredentialScope
     {
         return destination.TryWrite(CultureInfo.InvariantCulture, $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request", out charsWritten);
     }
-
-#endif
 
     internal readonly void AppendTo(ref ValueStringBuilder output)
     {
