@@ -1,9 +1,8 @@
-﻿namespace Amazon.Lambda
+﻿namespace Amazon.Lambda;
+
+public enum InvocationType
 {
-    public enum InvocationType
-    {
-        Event = 1,
-        RequestResponse = 2,
-        DryRun = 3
-    }
+    Event = 1,
+    RequestResponse = 2,
+    DryRun = 3
 }

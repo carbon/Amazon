@@ -1,35 +1,26 @@
-﻿using System;
+﻿namespace Amazon.Lambda;
 
-namespace Amazon.Lambda
+public sealed class InvokeRequest
 {
-    public sealed class InvokeRequest
+    public InvokeRequest(string functionName)
     {
-        public InvokeRequest(string functionName)
-        {
-            FunctionName = functionName ?? throw new ArgumentNullException(nameof(functionName));
-        }
+        ArgumentNullException.ThrowIfNull(functionName);
 
-        /*
-        public InvokeRequest(string functionName, JsonNode payload)
-        {
-            FunctionName = functionName ?? throw new ArgumentNullException(nameof(functionName));
-            Payload = payload?.ToString(pretty: false) ?? throw new ArgumentNullException(nameof(payload));
-        }
-        */
-
-        public InvokeRequest(string functionName, string payload)
-        {
-            FunctionName = functionName;
-            Payload = payload;
-        }
-
-        public string FunctionName { get; }
-
-        public InvocationType? InvocationType { get; set; }
-
-        public LogType? LogType { get; set; }
-
-        // JSON that you want to provide to your Lambda function as input.
-        public string? Payload { get; }
+        FunctionName = functionName;
     }
+
+    public InvokeRequest(string functionName, string payload)
+    {
+        FunctionName = functionName;
+        Payload = payload;
+    }
+
+    public string FunctionName { get; }
+
+    public InvocationType? InvocationType { get; init; }
+
+    public LogType? LogType { get; init; }
+
+    // JSON that you want to provide to your Lambda function as input.
+    public string? Payload { get; }
 }

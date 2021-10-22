@@ -1,8 +1,7 @@
-﻿namespace Amazon.Lambda
+﻿namespace Amazon.Lambda;
+
+public enum LogType
 {
-    public enum LogType
-    {
-        None = 0,
-        Tail = 1
-    }
+    None = 0,
+    Tail = 1
 }
