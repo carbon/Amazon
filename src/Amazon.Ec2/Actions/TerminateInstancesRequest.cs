@@ -6,7 +6,9 @@ public sealed class TerminateInstancesRequest : IEc2Request
 {
     public TerminateInstancesRequest(params string[] instanceIds)
     {
-        InstanceIds = instanceIds ?? throw new ArgumentNullException(nameof(instanceIds));
+        ArgumentNullException.ThrowIfNull(instanceIds);
+
+        InstanceIds = instanceIds;
     }
 
     [DataMember]

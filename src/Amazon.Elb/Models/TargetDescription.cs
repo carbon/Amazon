@@ -10,7 +10,9 @@ public sealed class TargetDescription
 
     public TargetDescription(string id, int? port = null)
     {
-        Id = id ?? throw new ArgumentNullException(nameof(id));
+        ArgumentNullException.ThrowIfNull(id);
+
+        Id = id;
         Port = port;
     }
 

@@ -6,7 +6,9 @@ namespace Amazon.CodeBuild
     {
         public StopBuildRequest(string id)
         {
-            Id = id ?? throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
+
+            Id = id;
         }
 
         public string Id { get; }

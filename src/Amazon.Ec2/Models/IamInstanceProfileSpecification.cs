@@ -9,7 +9,7 @@ public sealed class IamInstanceProfileSpecification
 
     public IamInstanceProfileSpecification(string nameOrArn)
     {
-        if (nameOrArn is null) throw new ArgumentNullException(nameof(nameOrArn));
+        ArgumentNullException.ThrowIfNull(nameOrArn);
 
         if (nameOrArn.StartsWith("arn:", StringComparison.Ordinal))
         {

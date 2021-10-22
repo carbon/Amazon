@@ -7,7 +7,9 @@ namespace Amazon.CodeBuild
     {
         public DeleteProjectRequest(string name)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            ArgumentNullException.ThrowIfNull(name);
+
+            Name = name;
         }
 
         [Required]

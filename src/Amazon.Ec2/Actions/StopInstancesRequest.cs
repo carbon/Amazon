@@ -6,7 +6,9 @@ public sealed class StopInstancesRequest : IEc2Request
 {
     public StopInstancesRequest(params string[] instanceIds)
     {
-        InstanceIds = instanceIds ?? throw new ArgumentNullException(nameof(instanceIds));
+        ArgumentNullException.ThrowIfNull(instanceIds);
+
+        InstanceIds = instanceIds;
     }
 
     public bool? DryRun { get; init; }

@@ -120,8 +120,7 @@ namespace Amazon.CodeBuild
 
         public static HttpRequestMessage GetRequestMessage(string endpoint, object request)
         {
-            if (request is null)
-                throw new ArgumentNullException(nameof(request));
+            ArgumentNullException.ThrowIfNull(request);
 
             var actionName = request.GetType().Name.Replace("Request", string.Empty);
 

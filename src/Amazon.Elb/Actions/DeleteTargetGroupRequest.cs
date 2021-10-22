@@ -6,7 +6,9 @@ public sealed class DeleteTargetGroupRequest : IElbRequest
 
     public DeleteTargetGroupRequest(string targetGroupArn)
     {
-        TargetGroupArn = targetGroupArn ?? throw new ArgumentNullException(nameof(targetGroupArn));
+        ArgumentNullException.ThrowIfNull(targetGroupArn);
+
+        TargetGroupArn = targetGroupArn;
     }
 
     public string TargetGroupArn { get; }

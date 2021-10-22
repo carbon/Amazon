@@ -11,7 +11,9 @@ namespace Amazon.CodeBuild
 
         public StartBuildRequest(string projectName)
         {
-            ProjectName = projectName ?? throw new ArgumentNullException(nameof(projectName));
+            ArgumentNullException.ThrowIfNull(projectName);
+
+            ProjectName = projectName;
         }
         
         [Required]

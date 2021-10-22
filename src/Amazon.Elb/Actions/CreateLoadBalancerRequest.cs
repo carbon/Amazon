@@ -10,7 +10,9 @@ public sealed class CreateLoadBalancerRequest : IElbRequest
 
     public CreateLoadBalancerRequest(string name)
     {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
+
+        Name = name;
     }
 
     public string Action => "CreateLoadBalancer";

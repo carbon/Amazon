@@ -7,7 +7,9 @@ namespace Amazon.CodeBuild
     {
         public BatchGetBuildsRequest(params string[] ids)
         {
-            Ids = ids ?? throw new ArgumentNullException(nameof(ids));
+            ArgumentNullException.ThrowIfNull(ids);
+
+            Ids = ids;
         }
 
         [Required]

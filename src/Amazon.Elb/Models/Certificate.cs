@@ -8,7 +8,9 @@ public sealed class Certificate
 
     public Certificate(string arn)
     {
-        CertificateArn = arn ?? throw new ArgumentNullException(nameof(arn));
+        ArgumentNullException.ThrowIfNull(arn);
+
+        CertificateArn = arn;
     }
 
     public string CertificateArn { get; init; }

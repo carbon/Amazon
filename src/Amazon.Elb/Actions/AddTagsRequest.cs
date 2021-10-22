@@ -8,8 +8,11 @@ public sealed class AddTagsRequest : IElbRequest
 
     public AddTagsRequest(string[] resourceArns, Tag[] tags)
     {
-        ResourceArns = resourceArns ?? throw new ArgumentNullException(nameof(resourceArns));
-        Tags = tags ?? throw new ArgumentNullException(nameof(tags));
+        ArgumentNullException.ThrowIfNull(resourceArns);
+        ArgumentNullException.ThrowIfNull(tags);
+
+        ResourceArns = resourceArns;
+        Tags = tags;
     }
 
     public string Action => "AddTags";

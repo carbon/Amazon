@@ -12,8 +12,11 @@ public sealed class DeregisterTargetsRequest : IElbRequest
         string targetGroupArn,
         params TargetDescription[] targets)
     {
-        TargetGroupArn = targetGroupArn ?? throw new ArgumentNullException(nameof(targetGroupArn));
-        Targets = targets ?? throw new ArgumentNullException(nameof(targets));
+        ArgumentNullException.ThrowIfNull(targetGroupArn);
+        ArgumentNullException.ThrowIfNull(targets);
+
+        TargetGroupArn = targetGroupArn;
+        Targets = targets;
     }
 
     public string Action => "DeregisterTargets";

@@ -11,8 +11,11 @@ namespace Amazon.CodeBuild
 
         public EnvironmentVariable(string name, string value)
         {
-            Name  = name  ?? throw new ArgumentNullException(nameof(name));
-            Value = value ?? throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(value);
+
+            Name = name;
+            Value = value;
         }
 
         [Required]
