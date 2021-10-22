@@ -18,13 +18,17 @@ public sealed class S3Client : AwsClient
     public S3Client(AwsRegion region, string host, IAwsCredential credential)
         : base(AwsService.S3, region, credential)
     {
-        Host = host ?? throw new ArgumentNullException(nameof(host));
+        ArgumentNullException.ThrowIfNull(host);
+
+        Host = host;
     }
 
     public S3Client(AwsRegion region, string host, IAwsCredential credential, HttpClient httpClient)
       : base(AwsService.S3, region, credential, httpClient)
     {
-        Host = host ?? throw new ArgumentNullException(nameof(host));
+        ArgumentNullException.ThrowIfNull(host);
+
+        Host = host;
     }
 
     public S3Client WithTimeout(TimeSpan timeout)

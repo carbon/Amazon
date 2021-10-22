@@ -4,11 +4,8 @@ public readonly struct S3ObjectLocation
 {
     public S3ObjectLocation(string bucketName, string key)
     {
-        if (bucketName is null)
-            throw new ArgumentNullException(nameof(bucketName));
-
-        if (key is null)
-            throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(bucketName);
+        ArgumentNullException.ThrowIfNull(key);
 
         BucketName = bucketName;
         Key = key;

@@ -7,7 +7,7 @@ public sealed class ObjectHeadRequest : S3Request
     public ObjectHeadRequest(string host, string bucketName, string key)
         : base(HttpMethod.Head, host, bucketName, key)
     {
-        if (key is null) throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
     }
 
     internal void SetCustomerEncryptionKey(in ServerSideEncryptionKey key)

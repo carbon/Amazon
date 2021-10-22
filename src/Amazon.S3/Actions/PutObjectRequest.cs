@@ -11,7 +11,7 @@ public class PutObjectRequest : S3Request
     public PutObjectRequest(string host, string bucketName, string key)
         : base(HttpMethod.Put, host, bucketName, key)
     {
-        if (key is null) throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         CompletionOption = HttpCompletionOption.ResponseContentRead;
     }
@@ -65,22 +65,18 @@ public class PutObjectRequest : S3Request
 
     public void SetStream(Stream stream, string mediaType = "application/octet-stream")
     {
-        if (stream is null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         SetStream(stream, sha256Hash: stream.CanSeek ? StreamHelper.ComputeSHA256(stream) : null, mediaType);
     }
 
     public void SetStream(Stream stream, byte[]? sha256Hash, string mediaType = "application/octet-stream")
     {
-        if (stream is null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
+        ArgumentNullException.ThrowIfNull(mediaType);
 
         if (stream.Length is 0)
             throw new ArgumentException("Must not be empty", nameof(stream));
-
-        if (mediaType is null)
-            throw new ArgumentNullException(nameof(mediaType));
 
         if (mediaType.Length is 0)
             throw new ArgumentException("Required", nameof(mediaType));
@@ -102,10 +98,7 @@ public class PutObjectRequest : S3Request
 
     public void SetStream(Stream stream, long length, string mediaType = "application/octet-stream")
     {
-        if (stream is null)
-        {
-            throw new ArgumentNullException(nameof(stream));
-        }
+        ArgumentNullException.ThrowIfNull(stream);
 
         if (length <= 0)
         {
@@ -115,8 +108,8 @@ public class PutObjectRequest : S3Request
         Content = new StreamContent(stream)
         {
             Headers = {
-                    { "Content-Type", mediaType }
-                }
+                { "Content-Type", mediaType }
+            }
         };
 
         Content.Headers.ContentLength = length;

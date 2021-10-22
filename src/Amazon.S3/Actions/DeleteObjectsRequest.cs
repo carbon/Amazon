@@ -31,10 +31,7 @@ public sealed class DeleteBatch
 
     public DeleteBatch(IReadOnlyList<string> keys, bool quite = false)
     {
-        if (keys is null)
-        {
-            throw new ArgumentNullException(nameof(keys));
-        }
+        ArgumentNullException.ThrowIfNull(keys);
 
         if (keys.Count > 1_000)
         {

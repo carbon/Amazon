@@ -12,13 +12,17 @@ public sealed class S3ObjectInfo : IBlob
 {
     public S3ObjectInfo(string key, long size)
     {
-        Key = key ?? throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
+
+        Key = key;
         ContentLength = size;
     }
 
     public S3ObjectInfo(string key, long size, DateTime modified)
     {
-        Key = key ?? throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
+
+        Key = key;
         ContentLength = size;
         Modified = modified;
     }

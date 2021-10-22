@@ -10,7 +10,7 @@ public sealed class InitiateMultipartUploadRequest : S3Request
     public InitiateMultipartUploadRequest(string host, string bucketName, string key)
         : base(HttpMethod.Post, host, bucketName, objectName: key, actionName: S3ActionName.Uploads)
     {
-        if (key is null) throw new ArgumentNullException(nameof(key));
+        ArgumentNullException.ThrowIfNull(key);
 
         CompletionOption = HttpCompletionOption.ResponseContentRead;
 

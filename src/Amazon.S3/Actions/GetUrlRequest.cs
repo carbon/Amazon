@@ -10,10 +10,14 @@ public sealed class GetPresignedUrlRequest
         string objectKey,
         TimeSpan expiresIn)
     {
-        Method = method ?? throw new ArgumentNullException(nameof(method));
-        Host = host ?? throw new ArgumentNullException(nameof(host));
+        ArgumentNullException.ThrowIfNull(method);
+        ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(bucketName);
+
+        Method = method;
+        Host = host;
         Region = region;
-        BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
+        BucketName = bucketName;
         Key = objectKey;
         ExpiresIn = expiresIn;
     }

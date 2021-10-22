@@ -28,7 +28,9 @@ public sealed class CompleteMultipartUpload
 {
     public CompleteMultipartUpload(IUploadBlock[] parts)
     {
-        Parts = parts ?? throw new ArgumentNullException(nameof(parts));
+        ArgumentNullException.ThrowIfNull(parts);
+
+        Parts = parts;
     }
 
     public IUploadBlock[] Parts { get; }

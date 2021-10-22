@@ -14,11 +14,8 @@ public abstract class S3Request : HttpRequestMessage
         string? versionId = null,
         S3ActionName actionName = default)
     {
-        if (host is null)
-            throw new ArgumentNullException(nameof(host));
-
-        if (bucketName is null)
-            throw new ArgumentNullException(nameof(bucketName));
+        ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(bucketName);
 
         BucketName = bucketName;
         ObjectName = objectName;
@@ -63,9 +60,10 @@ public abstract class S3Request : HttpRequestMessage
        Dictionary<string, string> parameters,
        S3ActionName actionName = default)
     {
-        if (host is null) throw new ArgumentNullException(nameof(host));
+        ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(bucketName);
 
-        BucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
+        BucketName = bucketName;
 
         var urlBuilder = new ValueStringBuilder(128);
 

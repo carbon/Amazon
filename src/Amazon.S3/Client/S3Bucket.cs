@@ -26,8 +26,11 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
     public S3Bucket(string bucketName, S3Client client)
     {
-        _bucketName = bucketName ?? throw new ArgumentNullException(nameof(bucketName));
-        _client = client ?? throw new ArgumentNullException(nameof(client));
+        ArgumentNullException.ThrowIfNull(bucketName);
+        ArgumentNullException.ThrowIfNull(client);
+
+        _bucketName = bucketName;
+        _client = client;
     }
 
     public string Name => _bucketName;
@@ -115,8 +118,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
     public async Task<IBlobResult> GetAsync(string key, GetBlobOptions options, CancellationToken cancellationToken)
     {
-        if (options is null) 
-            throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
 
         int retryCount = 0;
         Exception lastException;
@@ -208,11 +210,8 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         string destinationKey,
         S3ObjectLocation sourceLocation,
         IReadOnlyDictionary<string, string>? metadata = null)
-    { 
-        if (destinationKey is null)
-        {
-            throw new ArgumentNullException(nameof(destinationKey));
-        }
+    {
+        ArgumentNullException.ThrowIfNull(destinationKey);
          
         int retryCount = 0;
         Exception lastException;
@@ -265,8 +264,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         PutBlobOptions options, 
         CancellationToken cancellationToken = default)
     {
-        if (blob is null)
-            throw new ArgumentNullException(nameof(blob));
+        ArgumentNullException.ThrowIfNull(blob);
 
         if (blob.Key is null)
             throw new ArgumentException("Missing key", nameof(blob));
@@ -406,11 +404,8 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
     public async Task<IUploadBlock> UploadPartAsync(IUpload upload, int number, Stream stream)
     {
-        if (upload is null) 
-            throw new ArgumentNullException(nameof(upload));
-
-        if (stream is null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(upload);
+        ArgumentNullException.ThrowIfNull(stream);
 
         int retryCount = 0;
         Exception lastException;
@@ -495,7 +490,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
     public async Task CancelUploadAsync(IUpload upload)
     {
-        if (upload is null) throw new ArgumentNullException(nameof(upload));
+        ArgumentNullException.ThrowIfNull(upload);
 
         var request = new AbortMultipartUploadRequest(
             host       : _client.Host, 
