@@ -6,8 +6,10 @@ public sealed class SesContent
 {
     public SesContent(string data, CharsetType charset = CharsetType.SevenBitASCII)
     {
-        Charset = charset == CharsetType.UTF8 ? "UTF-8" : null;
-        Data = data ?? throw new ArgumentNullException(nameof(data));
+        ArgumentNullException.ThrowIfNull(data);
+
+        Charset = charset is CharsetType.UTF8 ? "UTF-8" : null;
+        Data = data;
     }
 
     public string? Charset { get; }

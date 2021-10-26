@@ -69,11 +69,9 @@ public sealed class SesEmail
 
     public static SesEmail FromMailMessage(MailMessage message)
     {
-        if (message is null)
-            throw new ArgumentNullException(nameof(message));
+        ArgumentNullException.ThrowIfNull(message);
 
-        var doc = new SesEmail
-        {
+        var doc = new SesEmail {
             Source = SesHelper.EncodeMailAddress(message.From!),
             To = message.To.Select(r => SesHelper.EncodeMailAddress(r)).ToArray(),
             Subject = new SesContent(message.Subject, CharsetType.UTF8)

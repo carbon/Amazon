@@ -20,16 +20,12 @@ public static class QuotedPrintable
 
     public static string Decode(string text)
     {
-        if (text is null)
-        {
-            throw new ArgumentNullException(nameof(text));
-        }
+        ArgumentNullException.ThrowIfNull(text);
 
         if (text.IndexOf(' ') > 0)
         {
             text = text.Replace(" ", string.Empty);
         }
-
 
         using var a = Attachment.CreateAttachmentFromString(string.Empty, text);
 
