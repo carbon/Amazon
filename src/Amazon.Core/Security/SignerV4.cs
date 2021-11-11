@@ -28,8 +28,8 @@ public static class SignerV4
 
     public static string GetStringToSign(in CredentialScope scope, HttpRequestMessage request, out List<string> signedHeaders)
     {
-        string timestamp = request.Headers.TryGetValues("x-amz-date", out IEnumerable<string>? dateHeaderValues)
-            ? dateHeaderValues.First()
+        string timestamp = request.Headers.NonValidated.TryGetValues("x-amz-date", out var xAmzDateHeader)
+            ? xAmzDateHeader.ToString()
             : throw new Exception("Missing 'x-amz-date' header");
 
         return GetStringToSign(
@@ -157,8 +157,8 @@ public static class SignerV4
         // STREAMING-AWS4-HMAC-SHA256-PAYLOAD
         // UNSIGNED-PAYLOAD
 
-        return request.Headers.TryGetValues("x-amz-content-sha256", out var contentSha256Header)
-            ? contentSha256Header.First()
+        return request.Headers.NonValidated.TryGetValues("x-amz-content-sha256", out var contentSha256Header)
+            ? contentSha256Header.ToString()
             : ComputeSHA256(request.Content);
     }
 
@@ -244,7 +244,7 @@ public static class SignerV4
 
         string canonicalHeaders = requestUri.IsDefaultPort
             ? "host:" + requestUri.Host
-            : "host:" + requestUri.Host + ":" + requestUri.Port.ToString(CultureInfo.InvariantCulture);
+            : string.Create(CultureInfo.InvariantCulture, $"host:{requestUri.Host}:{requestUri.Port}");
 
         string canonicalRequest = GetCanonicalRequest(
             method               : method,
@@ -306,9 +306,9 @@ public static class SignerV4
         ArgumentNullException.ThrowIfNull(credential);
 
         // If we're using S3, ensure the request content has been signed
-        if (scope.Service.Equals(AwsService.S3) && !request.Headers.Contains("x-amz-content-sha256"))
+        if (scope.Service.Equals(AwsService.S3) && !request.Headers.NonValidated.Contains("x-amz-content-sha256"))
         {
-            request.Headers.Add("x-amz-content-sha256", ComputeSHA256(request.Content!));
+            request.Headers.TryAddWithoutValidation("x-amz-content-sha256", ComputeSHA256(request.Content!));
         }
 
         byte[] signingKey = ComputeSigningKey(credential.SecretAccessKey, scope);
@@ -438,16 +438,16 @@ public static class SignerV4
     {
         signedHeaderNames = new List<string>(8);
 
-        if (request.Content is not null && request.Content.Headers.TryGetValues("Content-MD5", out var md5Header))
+        if (request.Content is not null && request.Content.Headers.NonValidated.TryGetValues("Content-MD5", out var md5Header))
         {
             signedHeaderNames.Add("content-md5");
 
             output.Append("content-md5:");
-            output.Append(md5Header.First());
+            output.Append(md5Header.ToString());
             output.Append('\n');
         }
 
-        if (!request.Headers.Contains("x-amz-date") && request.Headers.TryGetValues("Date", out var dateHeader))
+        if (!request.Headers.NonValidated.Contains("x-amz-date") && request.Headers.NonValidated.TryGetValues("Date", out var dateHeader))
         {
             signedHeaderNames.Add("date");
 
@@ -461,7 +461,7 @@ public static class SignerV4
         output.Append("host:");
         output.Append(request.Headers.Host);
 
-        foreach (var header in request.Headers
+        foreach (var header in request.Headers.NonValidated
             .Where(item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
             .OrderBy(item => item.Key, StringComparer.OrdinalIgnoreCase))
         {
@@ -471,7 +471,7 @@ public static class SignerV4
 
             output.Append(headerName);
             output.Append(':');
-            output.Append(header.Value.First());
+            output.Append(header.Value.ToString());
 
             signedHeaderNames.Add(headerName);
         }
