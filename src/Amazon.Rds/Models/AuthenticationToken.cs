@@ -1,23 +1,24 @@
 ﻿using System;
 
-namespace Amazon.Rds
+namespace Amazon.Rds;
+
+public sealed class AuthenticationToken
 {
-    public sealed class AuthenticationToken
+    public AuthenticationToken(
+        string value,
+        DateTime issued,
+        DateTime expires)
     {
-        public AuthenticationToken(
-            string value, 
-            DateTime issued, 
-            DateTime expires)
-        {
-            Value   = value ?? throw new ArgumentNullException(nameof(value));
-            Issued  = issued;
-            Expires = expires;
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
-        public string Value { get; }
-
-        public DateTime Issued { get; }
-
-        public DateTime Expires { get; }
+        Value = value;
+        Issued = issued;
+        Expires = expires;
     }
+
+    public string Value { get; }
+
+    public DateTime Issued { get; }
+
+    public DateTime Expires { get; }
 }
