@@ -14,7 +14,7 @@ internal static class DbValueTypeExtensions
         DbValueType.NULL => "NULL",
         DbValueType.S    => "S",
         DbValueType.SS   => "SS",
-        _                => throw new Exception("Unexpected type:" + type.ToString()),
+        _                => throw new Exception($"Unexpected type. Was {type}"),
     };
     
 }

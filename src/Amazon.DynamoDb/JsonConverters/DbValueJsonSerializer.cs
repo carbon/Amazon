@@ -59,7 +59,7 @@ internal static class DbValueJsonSerializer
         }
         else
         {
-            throw new JsonException("Invalid DynamoDB value type: " + reader.GetString());
+            throw new JsonException("Invalid DynamoDB value type. Was " + reader.GetString());
         }
 
         reader.Read();

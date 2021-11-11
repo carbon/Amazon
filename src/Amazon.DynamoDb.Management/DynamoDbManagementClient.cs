@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ public sealed class DynamoDbManagementClient : AwsClient
     public DynamoDbManagementClient(AwsRegion region, IAwsCredential credential)
         : base(AwsService.DynamoDb, region, credential)
     {
-        httpClient.Timeout = TimeSpan.FromSeconds(10);
+        _httpClient.Timeout = TimeSpan.FromSeconds(10);
     }
 
     public async Task<CreateTableResult> CreateTableAsync(CreateTableRequest request)
@@ -59,13 +60,14 @@ public sealed class DynamoDbManagementClient : AwsClient
 
     #region Helpers
 
-    private async Task<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
+    [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
+    private async ValueTask<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
     {
         var httpRequest = Setup(action, JsonSerializer.SerializeToUtf8Bytes(request));
 
         await SignAsync(httpRequest).ConfigureAwait(false);
 
-        using HttpResponseMessage response = await httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -82,7 +84,7 @@ public sealed class DynamoDbManagementClient : AwsClient
         var request = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Headers = {
                 { "Accept-Encoding", "gzip" },
-                { "x-amz-target", TargetPrefix + "." + action }
+                { "x-amz-target", $"{TargetPrefix}.{action}" }
             }
         };
 

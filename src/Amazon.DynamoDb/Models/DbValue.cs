@@ -150,7 +150,7 @@ public readonly struct DbValue : IConvertible
 					{
                         if (!DbValueConverterFactory.TryGet(type, out IDbValueConverter? converter))
                         {
-                            throw new Exception("Invalid value type. Was: " + type.Name);
+                            throw new Exception($"Invalid value type. Was: {type.Name}");
                         }
 
                         var result = converter.FromObject(value, null!);

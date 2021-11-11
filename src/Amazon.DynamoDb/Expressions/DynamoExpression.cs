@@ -64,7 +64,7 @@ public sealed class DynamoExpression
             case BinaryExpression binary: WriteBinaryExpression(binary); break;
             case BetweenExpression between: WriteBetweenExpression(between); break;
             case FunctionExpression func: WriteFunctionExpression(func); break;
-            default: throw new Exception("Invalid primary expression: " + expression.Kind);
+            default: throw new Exception($"Invalid primary expression. Was {expression.Kind}");
         }
     }
 
@@ -100,7 +100,7 @@ public sealed class DynamoExpression
             case FunctionExpression func: WriteFunctionExpression(func); break;
             case BetweenExpression between: WriteBetweenExpression(between); break;
             default:
-                throw new Exception("Invalid expression:" + e.Kind);
+                throw new Exception($"Invalid expression. Was {e.Kind}");
         }
     }
 
@@ -189,7 +189,7 @@ public sealed class DynamoExpression
         Gte => ">=",
         Lt => "<",
         Lte => "<=",
-        _ => throw new Exception("Invalid expression:" + kind)
+        _ => throw new Exception($"Invalid expression. Was {kind}")
     };
 }
 

@@ -71,7 +71,7 @@ public sealed class UpdateExpression
             }
             else
             {
-                throw new Exception("Invalid change operation: " + change.Operation);
+                throw new Exception($"Invalid change operation. Was {change.Operation}");
             }
         }
     }

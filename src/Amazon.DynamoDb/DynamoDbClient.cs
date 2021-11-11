@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ public sealed class DynamoDbClient : AwsClient
     public DynamoDbClient(AwsRegion region, IAwsCredential credential)
         : base(AwsService.DynamoDb, region, credential)
     {
-        httpClient.Timeout = TimeSpan.FromSeconds(10);
+        _httpClient.Timeout = TimeSpan.FromSeconds(10);
     }
 
     #region Helpers
@@ -211,11 +212,12 @@ public sealed class DynamoDbClient : AwsClient
 
     #region Helpers
 
-    private async Task<JsonElement> SendAndReadJsonElementAsync(HttpRequestMessage request)
+    [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
+    private async ValueTask<JsonElement> SendAndReadJsonElementAsync(HttpRequestMessage request)
     {
         await SignAsync(request).ConfigureAwait(false);
 
-        using HttpResponseMessage response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+        using HttpResponseMessage response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -227,14 +229,15 @@ public sealed class DynamoDbClient : AwsClient
         return await JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
     }
 
-    private async Task<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
+    [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
+    private async ValueTask<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
         where TResult : notnull
     {
         var httpRequest = Setup(action, JsonSerializer.SerializeToUtf8Bytes(request));
 
         await SignAsync(httpRequest).ConfigureAwait(false);
 
-        using HttpResponseMessage response = await httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -253,14 +256,13 @@ public sealed class DynamoDbClient : AwsClient
         var request = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Headers = {
                 { "Accept-Encoding", "gzip" },
-                { "x-amz-target", TargetPrefix + "." + action }
+                { "x-amz-target", $"{TargetPrefix}.{action}" }
             }
         };
 
         if (utf8Json is not null)
         {
-            request.Content = new ByteArrayContent(utf8Json)
-            {
+            request.Content = new ByteArrayContent(utf8Json) {
                 Headers = { { "Content-Type", "application/x-amz-json-1.0" } }
             };
         }

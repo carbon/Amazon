@@ -4,13 +4,13 @@ namespace Amazon.DynamoDb;
 
 public sealed class DynamoQueryExpression
 {
-    public readonly string[] keyNames;
+    public readonly string[] _keyNames;
 
     // TODO: Expand BinaryExpression
 
     public DynamoQueryExpression(string[] keyNames, Expression[] expressions)
     {
-        this.keyNames = keyNames;
+        _keyNames = keyNames;
 
         KeyExpression = new DynamoExpression(AttributeNames, AttributeValues);
 
@@ -40,7 +40,7 @@ public sealed class DynamoQueryExpression
             }
             else
             {
-                throw new Exception("Unexpected expression type:" + expression);
+                throw new Exception($"Unexpected expression type. Was {expression.GetType().Name}");
             }
         }
     }
@@ -64,7 +64,7 @@ public sealed class DynamoQueryExpression
 
     private bool IsKey(string name)
     {
-        foreach (string key in keyNames)
+        foreach (string key in _keyNames)
         {
             if (name.Equals(key, StringComparison.Ordinal)) return true;
         }

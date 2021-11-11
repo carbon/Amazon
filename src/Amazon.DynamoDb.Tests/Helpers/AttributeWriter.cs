@@ -38,7 +38,7 @@ public readonly ref struct AttributeWriter
             case L    : WriteList((DbValue[])value.Value);          break;
             case N    : WriteValue("N", value.ToString());          break;
             case M    : WriteMap((AttributeCollection)value.Value); break;
-            default   : throw new Exception("Invalid type:" + value.Kind);
+            default   : throw new Exception($"Invalid type. Was {value.Kind}");
         }
     }
 
