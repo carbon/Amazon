@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Globalization;
 
 namespace Amazon.Ec2;
 
@@ -39,7 +40,7 @@ internal static class Ec2RequestHelper
     {
         for (int i = 0; i < array.Count; i++)
         {
-            string key = prefix + "." + (i + 1);
+            string key = string.Create(CultureInfo.InvariantCulture, $"{prefix}.{i + 1}");
 
             object element = array[i]!;
 
@@ -69,7 +70,7 @@ internal static class Ec2RequestHelper
 
             if (value is null) continue;
 
-            var key = prefix + "." + member.Name;
+            var key = $"{prefix}.{member.Name}";
 
             if (value is IList list)
             {

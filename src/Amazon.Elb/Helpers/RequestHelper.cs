@@ -21,7 +21,7 @@ public static class RequestHelper
             {
                 for (int i = 0; i < list.Count; i++)
                 {
-                    string prefix = member.Name + ".member." + (i + 1).ToString(CultureInfo.InvariantCulture);
+                    string prefix = string.Create(CultureInfo.InvariantCulture, $"{member.Name}.member.{i + 1}");
 
                     var element = list[i]!;
 
@@ -60,7 +60,7 @@ public static class RequestHelper
 
             if (value is null) continue;
 
-            string key = prefix + "." + m.Name;
+            string key = $"{prefix}.{m.Name}";
 
             if (Type.GetTypeCode(value.GetType()) == TypeCode.Object)
             {

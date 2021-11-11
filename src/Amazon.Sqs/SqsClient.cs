@@ -62,8 +62,10 @@ namespace Amazon.Sqs
 
             for (int i = 0; i < messages.Length; i++)
             {
+                int number = i + 1;
+
                 string message = messages[i];
-                string prefix = "SendMessageBatchRequestEntry." + (i + 1).ToString(CultureInfo.InvariantCulture) + ".";
+                string prefix = string.Create(CultureInfo.InvariantCulture, $"SendMessageBatchRequestEntry.{number}.");
 
                 parameters.Add(new (prefix + "Id", i.ToString(CultureInfo.InvariantCulture)));    // .Id				Required
                 parameters.Add(new (prefix + "MessageBody", message));                            // .MessageBody		Required
@@ -152,8 +154,9 @@ namespace Amazon.Sqs
 
             for (int i = 0; i < recieptHandles.Length; i++)
             {
+                int number = i + 1;
                 string handle = recieptHandles[i];
-                string prefix = "DeleteMessageBatchRequestEntry." + (i + 1).ToString(CultureInfo.InvariantCulture) + ".";
+                string prefix = string.Create(CultureInfo.InvariantCulture, $"DeleteMessageBatchRequestEntry.{number}.");
 
                 parameters.Add(new (prefix + "Id", i.ToString(CultureInfo.InvariantCulture))); // DeleteMessageBatchRequestEntry.n.Id
                 parameters.Add(new (prefix + "ReceiptHandle", handle));                        // DeleteMessageBatchRequestEntry.n.ReceiptHandle
@@ -197,7 +200,7 @@ namespace Amazon.Sqs
             catch
             { }
 
-            return new QueueException(response.StatusCode + "/" + responseText);
+            return new QueueException($"{response.StatusCode}/{responseText}");
         }
 
         #endregion

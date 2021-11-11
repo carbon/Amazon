@@ -66,13 +66,15 @@ public sealed class SendMessageRequest
         {
             for (int i = 0; i < MessageAttributes.Length; i++)
             {
+                int number = i + 1;
+
                 ref MessageAttribute attr = ref MessageAttributes[i];
 
-                string prefix = "MessageAttribute." + (i + 1).ToString(CultureInfo.InvariantCulture) + ".";
+                string prefix = string.Create(CultureInfo.InvariantCulture, $"MessageAttribute.{number}.");
 
                 parameters.Add(new(prefix + "Name", attr.Name));
 
-                if (attr.Value.DataType == MessageAttributeDataType.Binary)
+                if (attr.Value.DataType is MessageAttributeDataType.Binary)
                 {
                     parameters.Add(new(prefix + "Value.BinaryValue", attr.Value.Value));
                 }

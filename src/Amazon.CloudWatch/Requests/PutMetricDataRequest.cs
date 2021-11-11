@@ -37,7 +37,7 @@ public sealed class PutMetricDataRequest : Collection<MetricDatum>
                 {
                     var dimension = datum.Dimensions[i2];
 
-                    var prefix2 = prefix + "Dimensions.member." + (i2 + 1) + ".";
+                    var prefix2 = string.Create(CultureInfo.InvariantCulture, $"{prefix}Dimensions.member.{i2 + 1}.");
 
                     parameters.Add(prefix2 + "Name", dimension.Name);
                     parameters.Add(prefix2 + "Value", dimension.Name);

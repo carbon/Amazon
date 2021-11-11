@@ -59,7 +59,9 @@ public sealed class RecieveMessagesRequest
         {
             for (int i = 0; i < AttributeNames.Length; i++)
             {
-                parameters.Add(new("AttributeName." + (i + 1).ToString(CultureInfo.InvariantCulture), AttributeNames[i]));
+                string key = string.Create(CultureInfo.InvariantCulture, $"AttributeName.{i + 1}");
+
+                parameters.Add(new(key, AttributeNames[i]));
             }
         }
 
@@ -67,7 +69,9 @@ public sealed class RecieveMessagesRequest
         {
             for (int i = 0; i < MessageAttributeNames.Length; i++)
             {
-                parameters.Add(new("MessageAttributeName." + (i + 1), MessageAttributeNames[i]));
+                string key = string.Create(CultureInfo.InvariantCulture, $"MessageAttributeName.{i + 1}");
+
+                parameters.Add(new(key, MessageAttributeNames[i]));
             }
         }
 
