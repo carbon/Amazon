@@ -6,10 +6,12 @@ public sealed class GetRecordsRequest : KinesisRequest
 {
     public GetRecordsRequest(string shardIterator, int? limit = null)
     {
+        ArgumentNullException.ThrowIfNull(shardIterator);
+
         if (limit > 10_000)
             throw new ArgumentOutOfRangeException(nameof(limit), limit, "Must be 10,000 or fewer");
 
-        ShardIterator = shardIterator ?? throw new ArgumentNullException(nameof(shardIterator));
+        ShardIterator = shardIterator;
         Limit = limit;
     }
 

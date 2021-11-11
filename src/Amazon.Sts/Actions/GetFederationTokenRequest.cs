@@ -9,7 +9,9 @@ public sealed class GetFederationTokenRequest : IStsRequest
         string? policy = null, 
         int? durationSeconds = null)
     {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
+
+        Name = name;
         Policy = policy;
         DurationSeconds = durationSeconds;
     }

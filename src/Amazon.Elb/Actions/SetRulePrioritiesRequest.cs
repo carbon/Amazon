@@ -8,7 +8,9 @@ public sealed class SetRulePrioritiesRequest : IElbRequest
 
     public SetRulePrioritiesRequest(RulePriorityPair[] rulePriorities)
     {
-        RulePriorities = rulePriorities ?? throw new ArgumentNullException(nameof(rulePriorities));
+        ArgumentNullException.ThrowIfNull(rulePriorities);
+
+        RulePriorities = rulePriorities;
     }
 
     [Required]

@@ -12,7 +12,9 @@ public sealed class Shard : IShard
 
     public Shard(string id)
     {
-        ShardId = id ?? throw new ArgumentNullException(nameof(id));
+        ArgumentNullException.ThrowIfNull(id);
+
+        ShardId = id;
     }
 
     public string AdjacentParentShardId { get; init; }

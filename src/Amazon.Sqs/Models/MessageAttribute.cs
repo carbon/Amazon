@@ -31,8 +31,10 @@ public readonly struct MessageAttributeValue
 {
     public MessageAttributeValue(MessageAttributeDataType type, string value)
     {
+        ArgumentNullException.ThrowIfNull(value);
+
         DataType = type;
-        Value = value ?? throw new ArgumentNullException(nameof(value));
+        Value = value;
     }
 
     // Encoded as StringValue | BinaryValue

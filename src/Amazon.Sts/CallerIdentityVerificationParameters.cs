@@ -13,9 +13,13 @@ public sealed class CallerIdentityVerificationParameters
 
     public CallerIdentityVerificationParameters(string url, IReadOnlyDictionary<string, string> headers, string body)
     {
-        Url     = url     ?? throw new ArgumentNullException(nameof(url));
-        Headers = headers ?? throw new ArgumentNullException(nameof(headers));
-        Body    = body    ?? throw new ArgumentNullException(nameof(body));
+        ArgumentNullException.ThrowIfNull(url);
+        ArgumentNullException.ThrowIfNull(headers);
+        ArgumentNullException.ThrowIfNull(body);
+
+        Url = url;
+        Headers = headers;
+        Body = body;
     }
 
     [JsonPropertyName("url")]

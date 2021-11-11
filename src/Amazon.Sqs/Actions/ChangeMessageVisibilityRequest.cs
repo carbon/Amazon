@@ -7,6 +7,8 @@ public sealed class ChangeMessageVisibilityRequest
 {
     public ChangeMessageVisibilityRequest(string receiptHandle, TimeSpan visibilityTimeout)
     {
+        ArgumentNullException.ThrowIfNull(receiptHandle);
+
         if (visibilityTimeout < TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(visibilityTimeout), visibilityTimeout, "Must be greater than 0");
@@ -17,8 +19,7 @@ public sealed class ChangeMessageVisibilityRequest
             throw new ArgumentOutOfRangeException(nameof(visibilityTimeout), visibilityTimeout, "Must be less than 12 hours");
         }
 
-        ReceiptHandle = receiptHandle ?? throw new ArgumentNullException(nameof(receiptHandle));
-
+        ReceiptHandle = receiptHandle;
         VisibilityTimeout = (int)visibilityTimeout.TotalSeconds;
     }
 
