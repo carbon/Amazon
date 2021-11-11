@@ -1,28 +1,27 @@
 ﻿using System;
 
-namespace Amazon.Kinesis.Firehose
+namespace Amazon.Kinesis.Firehose;
+
+public readonly struct Record
 {
-    public readonly struct Record
+    public const int MaxSize = 1_000_000; // 1,000 KB
+
+    public Record(byte[] data)
     {
-        public const int MaxSize = 1_000_000; // 1,000 KB
-
-        public Record(byte[] data)
+        if (data.Length == 0)
         {
-            if (data.Length == 0)
-            {
-                throw new ArgumentException("Must not be empty", nameof(data));
-            }
-
-            if (data.Length > MaxSize)
-            {
-                throw new ArgumentException("Must be less than 1MB", nameof(data));
-            }
-
-            Data = data;
+            throw new ArgumentException("Must not be empty", nameof(data));
         }
 
-        public byte[] Data { get; }
+        if (data.Length > MaxSize)
+        {
+            throw new ArgumentException("Must be less than 1MB", nameof(data));
+        }
+
+        Data = data;
     }
+
+    public byte[] Data { get; }
 }
 
 // The data blob, which is base64-encoded when the blob is serialized. 

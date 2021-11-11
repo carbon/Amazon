@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-namespace Amazon.Kinesis.Firehose
-{
-    public sealed class PutRecordResult
-    {
-        public bool Encrypted { get; init; }
+namespace Amazon.Kinesis.Firehose;
 
-        public string RecordId { get; init; }
-    }
+public sealed class PutRecordResult
+{
+    public bool Encrypted { get; init; }
+
+    public string RecordId { get; init; }
 }

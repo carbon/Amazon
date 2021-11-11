@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Amazon.Kinesis.Firehose
+namespace Amazon.Kinesis.Firehose;
+
+public class DeliveryStream
 {
-    public class DeliveryStream
+    private readonly KinesisFirehoseClient _client;
+
+    public DeliveryStream(string name, KinesisFirehoseClient client)
     {
-        private readonly KinesisFirehoseClient client;
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(client);
 
-        public DeliveryStream(string name, KinesisFirehoseClient client)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+        Name = name;
+        _client = client;
+    }
 
-            this.client = client ?? throw new ArgumentNullException(nameof(client));
-        }
+    public string Name { get; }
 
-        public string Name { get; }
-
-        public Task PutAsync(byte[] data)
-        {
-            return client.PutRecordAsync(new PutRecordRequest(Name, new Record(data)));
-        }
+    public Task PutAsync(byte[] data)
+    {
+        return _client.PutRecordAsync(new PutRecordRequest(Name, new Record(data)));
     }
 }

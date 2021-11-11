@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-namespace Amazon.Kinesis.Firehose
-{
-    public class PutRecordBatchResult
-    {
-        public int FailedPutCount { get; init; }
+namespace Amazon.Kinesis.Firehose;
 
-        public RequestResponse[] RequestResponses { get; init; }
-    }
+public sealed class PutRecordBatchResult
+{
+    public int FailedPutCount { get; init; }
+
+    public RequestResponse[] RequestResponses { get; init; }
 }

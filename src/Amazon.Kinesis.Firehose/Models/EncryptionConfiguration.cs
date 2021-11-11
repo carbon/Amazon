@@ -1,8 +1,6 @@
-﻿namespace Amazon.Kinesis.Firehose
+﻿namespace Amazon.Kinesis.Firehose;
+
+public class EncryptionConfiguration
 {
-    public class EncryptionConfiguration
-    {
-        // TODO
-    }
-    
+    // TODO
 }

@@ -1,7 +1,6 @@
-﻿namespace Amazon.Kinesis.Firehose
+﻿namespace Amazon.Kinesis.Firehose;
+
+public class DeleteDeliveryStreamResult
 {
-    public class DeleteDeliveryStreamResult
-    {
-        // Empty
-    }
+    // Empty
 }

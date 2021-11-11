@@ -1,19 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.Kinesis.Firehose
+namespace Amazon.Kinesis.Firehose;
+
+public sealed class ListDeliveryStreamsRequest
 {
-    public sealed class ListDeliveryStreamsRequest
-    {
-        [StringLength(64)]
-        public string? DeliveryStreamType { get; init; }
+    [StringLength(64)]
+    public string? DeliveryStreamType { get; init; }
 
-        public string? ExclusiveStartDeliveryStreamName { get; init; }
+    public string? ExclusiveStartDeliveryStreamName { get; init; }
 
-        public int? Limit { get; init; }
-    }
+    public int? Limit { get; init; }
+}
 
 
-    public class ListDeliveryStreamsResult
-    {
-    }
+public class ListDeliveryStreamsResult
+{
 }

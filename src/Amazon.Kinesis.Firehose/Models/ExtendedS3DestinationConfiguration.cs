@@ -3,39 +3,38 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Amazon.Kinesis.Firehose
+namespace Amazon.Kinesis.Firehose;
+
+public sealed class ExtendedS3DestinationConfiguration
 {
-    public sealed class ExtendedS3DestinationConfiguration
-    {
-        [JsonPropertyName("BucketARN")]
-        public string BucketARN { get; init; }
+    [JsonPropertyName("BucketARN")]
+    public string BucketARN { get; init; }
 
 #nullable enable
 
-        public BufferingHints? BufferingHints { get; init; }
+    public BufferingHints? BufferingHints { get; init; }
 
-        public CloudWatchLoggingOptions? CloudWatchLoggingOptions { get; init; }
+    public CloudWatchLoggingOptions? CloudWatchLoggingOptions { get; init; }
 
-        // UNCOMPRESSED | GZIP | ZIP | Snappy | HADOOP_SNAPPY
-        public string? CompressionFormat { get; init; }
+    // UNCOMPRESSED | GZIP | ZIP | Snappy | HADOOP_SNAPPY
+    public string? CompressionFormat { get; init; }
 
-        // DataFormatConversionConfiguration
+    // DataFormatConversionConfiguration
 
-        public EncryptionConfiguration? EncryptionConfiguration { get; init; }
+    public EncryptionConfiguration? EncryptionConfiguration { get; init; }
 
-        [StringLength(1024)]
-        public string? ErrorOutputPrefix { get; init; }
+    [StringLength(1024)]
+    public string? ErrorOutputPrefix { get; init; }
 
-        [StringLength(1024)]
-        public string? Prefix { get; init; }
+    [StringLength(1024)]
+    public string? Prefix { get; init; }
 
 #nullable disable
 
-        [JsonPropertyName("RoleARN")]
-        public string RoleARN { get; init; }
+    [JsonPropertyName("RoleARN")]
+    public string RoleARN { get; init; }
 
 #nullable enable
 
-        public string? S3BackupMode { get; init; }
-    }
+    public string? S3BackupMode { get; init; }
 }

@@ -1,17 +1,19 @@
 ﻿using System;
 
-namespace Amazon.Kinesis.Firehose
+namespace Amazon.Kinesis.Firehose;
+
+public class PutRecordBatchRequest
 {
-    public class PutRecordBatchRequest
+    public PutRecordBatchRequest(string deliveryStreamName, params Record[] records)
     {
-        public PutRecordBatchRequest(string deliveryStreamName, params Record[] records)
-        {
-            DeliveryStreamName = deliveryStreamName ?? throw new ArgumentNullException(nameof(deliveryStreamName));
-            Records            = records            ?? throw new ArgumentNullException(nameof(records));
-        }
+        ArgumentNullException.ThrowIfNull(deliveryStreamName);
+        ArgumentNullException.ThrowIfNull(records);
 
-        public string DeliveryStreamName { get; }
-
-        public Record[] Records { get; }
+        DeliveryStreamName = deliveryStreamName;
+        Records = records;
     }
+
+    public string DeliveryStreamName { get; }
+
+    public Record[] Records { get; }
 }

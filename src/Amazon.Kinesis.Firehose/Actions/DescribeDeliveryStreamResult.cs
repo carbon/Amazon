@@ -1,6 +1,5 @@
-﻿namespace Amazon.Kinesis.Firehose
+﻿namespace Amazon.Kinesis.Firehose;
+
+public sealed class DescribeDeliveryStreamResult
 {
-    public sealed class DescribeDeliveryStreamResult
-    {
-    }
 }
