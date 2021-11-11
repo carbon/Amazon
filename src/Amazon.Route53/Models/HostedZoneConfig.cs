@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-namespace Amazon.Route53
-{
-    public sealed class HostedZoneConfig
-    {
-        public string Comment { get; init; }
+namespace Amazon.Route53;
 
-        public bool PrivateZone { get; init; }
-    }
+public sealed class HostedZoneConfig
+{
+    public string Comment { get; init; }
+
+    public bool PrivateZone { get; init; }
 }

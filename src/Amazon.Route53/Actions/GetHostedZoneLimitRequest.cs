@@ -1,4 +1,3 @@
-﻿namespace Amazon.Route53
-{
-    public class GetHostedZoneLimitRequest { }
-}
+﻿namespace Amazon.Route53;
+
+public sealed class GetHostedZoneLimitRequest { }

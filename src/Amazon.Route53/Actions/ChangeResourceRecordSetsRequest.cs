@@ -2,69 +2,68 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Route53
+namespace Amazon.Route53;
+
+[XmlRoot(Namespace = Route53Client.Namespace)]
+public sealed class ChangeResourceRecordSetsRequest
 {
-    [XmlRoot(Namespace = Route53Client.Namespace)]
-    public sealed class ChangeResourceRecordSetsRequest
+    public ChangeResourceRecordSetsRequest() { }
+
+    public ChangeResourceRecordSetsRequest(params ResourceRecordSetChange[] changes)
     {
-        public ChangeResourceRecordSetsRequest() { }
-
-        public ChangeResourceRecordSetsRequest(params ResourceRecordSetChange[] changes)
-        {
-            ChangeBatch = new ChangeBatch(changes);
-        }
-
-        [XmlElement]
-        public ChangeBatch ChangeBatch { get; init; }
+        ChangeBatch = new ChangeBatch(changes);
     }
 
-    public sealed class ChangeBatch
+    [XmlElement]
+    public ChangeBatch ChangeBatch { get; init; }
+}
+
+public sealed class ChangeBatch
+{
+    public ChangeBatch() { }
+
+    public ChangeBatch(params ResourceRecordSetChange[] changes)
     {
-        public ChangeBatch() { }
-
-        public ChangeBatch(params ResourceRecordSetChange[] changes)
-        {
-            Changes = changes;
-        }
-
-        [XmlArrayItem("Change")]
-        public ResourceRecordSetChange[] Changes { get; init; }
+        Changes = changes;
     }
 
-    public sealed class ResourceRecordSetChange
+    [XmlArrayItem("Change")]
+    public ResourceRecordSetChange[] Changes { get; init; }
+}
+
+public sealed class ResourceRecordSetChange
+{
+    public ResourceRecordSetChange() { }
+
+    public ResourceRecordSetChange(ChangeAction action, ResourceRecordSet resourceRecordSet)
     {
-        public ResourceRecordSetChange() { }
-
-        public ResourceRecordSetChange(ChangeAction action, ResourceRecordSet resourceRecordSet)
-        {
-            Action = action;
-            ResourceRecordSet = resourceRecordSet;
-        }
-
-        public ResourceRecordSetChange(ChangeAction action, ResourceRecordType type, string name, string value, int ttl)
-        {
-            Action = action;
-            ResourceRecordSet = new ResourceRecordSet(type, name, new ResourceRecord(value)) { TTL = ttl };
-        }
-
-        public ChangeAction Action { get; init; }
-
-        public ResourceRecordSet ResourceRecordSet { get; init; }
+        Action = action;
+        ResourceRecordSet = resourceRecordSet;
     }
 
-    public enum ChangeAction
+    public ResourceRecordSetChange(ChangeAction action, ResourceRecordType type, string name, string value, int ttl)
     {
-        CREATE = 1,
-        DELETE = 2,
-        UPSERT = 3
+        Action = action;
+        ResourceRecordSet = new ResourceRecordSet(type, name, new ResourceRecord(value)) { TTL = ttl };
     }
 
-    public enum Failover
-    {
-        None = 0,
-        PRIMARY = 1,
-        SECONDARY = 2
-    }
+    public ChangeAction Action { get; init; }
+
+    public ResourceRecordSet ResourceRecordSet { get; init; }
+}
+
+public enum ChangeAction
+{
+    CREATE = 1,
+    DELETE = 2,
+    UPSERT = 3
+}
+
+public enum Failover
+{
+    None      = 0,
+    PRIMARY   = 1,
+    SECONDARY = 2
 }
 
 

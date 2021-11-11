@@ -2,30 +2,27 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Route53
+namespace Amazon.Route53;
+
+public sealed class ListResourceRecordSetsResponse
 {
-    public sealed class ListResourceRecordSetsResponse
-    {
-        [XmlElement]
-        public bool IsTruncated { get; init; }
+    [XmlElement]
+    public bool IsTruncated { get; init; }
 
-        [XmlElement]
-        public int MaxItems { get; init; }
+    [XmlElement]
+    public int MaxItems { get; init; }
 
-        [XmlElement]
-        public string NextRecordIdentifier { get; init; }
+    [XmlElement]
+    public string NextRecordIdentifier { get; init; }
 
-        [XmlElement]
-        public string NextRecordName { get; init; }
+    [XmlElement]
+    public string NextRecordName { get; init; }
 
-        [XmlElement]
-        public string NextRecordType { get; init; }
+    [XmlElement]
+    public string NextRecordType { get; init; }
 
-        [XmlArrayItem("ResourceRecordSet")]
-        public ResourceRecordSet[] ResourceRecordSets { get; init; }
-    }
-
-
+    [XmlArrayItem("ResourceRecordSet")]
+    public ResourceRecordSet[] ResourceRecordSets { get; init; }
 }
 
 /*

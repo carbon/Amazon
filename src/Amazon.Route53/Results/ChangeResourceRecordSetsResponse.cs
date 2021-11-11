@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace Amazon.Route53
+namespace Amazon.Route53;
+
+public sealed class ChangeResourceRecordSetsResponse
 {
-    public sealed class ChangeResourceRecordSetsResponse
-    {
-        public ChangeInfo ChangeInfo { get; init; }
-    }
+    public ChangeInfo ChangeInfo { get; init; }
 }

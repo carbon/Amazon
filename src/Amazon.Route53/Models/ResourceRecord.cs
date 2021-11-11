@@ -1,17 +1,15 @@
-﻿
-namespace Amazon.Route53
+﻿namespace Amazon.Route53;
+
+public class ResourceRecord
 {
-    public class ResourceRecord
-    {
 #nullable disable
-        public ResourceRecord() { }
+    public ResourceRecord() { }
 #nullable enable
 
-        public ResourceRecord(string value)
-        {
-            Value = value;
-        }
-
-        public string Value { get; init; }
+    public ResourceRecord(string value)
+    {
+        Value = value;
     }
+
+    public string Value { get; init; }
 }

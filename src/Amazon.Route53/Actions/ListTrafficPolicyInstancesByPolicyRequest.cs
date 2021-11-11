@@ -1,4 +1,3 @@
-﻿namespace Amazon.Route53
-{
-    public sealed class ListTrafficPolicyInstancesByPolicyRequest { }
-}
+﻿namespace Amazon.Route53;
+
+public sealed class ListTrafficPolicyInstancesByPolicyRequest { }
