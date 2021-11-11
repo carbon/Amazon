@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Amazon.S3.Tests.Exceptions;
+namespace Amazon.S3.Exceptions.Tests;
 
 public class S3ExceptionTests
 {
