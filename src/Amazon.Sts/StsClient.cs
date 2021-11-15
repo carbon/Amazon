@@ -45,7 +45,7 @@ public sealed class StsClient : AwsClient
 
     public async ValueTask<CallerIdentityVerificationParameters> GetCallerIdentityVerificationParametersAsync()
     {
-        const string body = "Action=GetCallerIdentity&Version=" + Version;
+        const string body = $"Action=GetCallerIdentity&Version={Version}";
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
         {
@@ -59,7 +59,7 @@ public sealed class StsClient : AwsClient
         foreach (var header in httpRequest.Headers)
         {
             if (header.Key.StartsWith("x-amz-", StringComparison.Ordinal)
-             || header.Key.Equals("Authorization", StringComparison.Ordinal))
+             || header.Key is "Authorization")
             {
                 headers.Add(header.Key, string.Join(";", header.Value));
             }
@@ -107,7 +107,7 @@ public sealed class StsClient : AwsClient
     {
         string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        throw new StsException(response.StatusCode, responseText);
+        throw new StsException(responseText, response.StatusCode);
     }
 
     #endregion

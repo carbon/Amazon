@@ -11,7 +11,7 @@ public sealed class CallerIdentityVerifier
 {
     private readonly HttpClient httpClient = new () {
         DefaultRequestHeaders = {
-            { "User-Agent", "Carbon/2" }
+            { "User-Agent", "Carbon/3" }
         }
     };
                 
@@ -48,7 +48,7 @@ public sealed class CallerIdentityVerifier
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new StsException(response.StatusCode, responseText);
+            throw new StsException(responseText, response.StatusCode);
         }
 
         return StsSerializer<GetCallerIdentityResponse>.ParseXml(responseText).GetCallerIdentityResult;
