@@ -11,7 +11,7 @@ internal static class StsRequestHelper
     public static Dictionary<string, string> ToParams<T>(T instance)
        where T : IStsRequest
     {
-        using var doc = JsonDocument.Parse(JsonSerializer.SerializeToUtf8Bytes(instance, jso));
+        using var doc = JsonSerializer.SerializeToDocument(instance, jso);
 
         var parameters = new Dictionary<string, string>(2);
 
