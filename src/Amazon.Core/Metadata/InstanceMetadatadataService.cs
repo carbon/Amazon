@@ -35,7 +35,7 @@ public sealed partial class InstanceMetadataService
 
     internal async Task<IamSecurityCredentials> GetIamSecurityCredentialsAsync(string roleName)
     {
-        string requestUri = baseMetadataUri + "/iam/security-credentials/" + roleName;
+        string requestUri = $"{baseMetadataUri}/iam/security-credentials/{roleName}";
 
         Exception? lastException = null;
 
@@ -52,7 +52,7 @@ public sealed partial class InstanceMetadataService
 
                 using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-                var result = await JsonSerializer.DeserializeAsync<IamSecurityCredentials>(responseStream).ConfigureAwait(false);
+                var result = await JsonSerializer.DeserializeAsync(responseStream, IamJsonContext.Default.IamSecurityCredentials).ConfigureAwait(false);
 
                 return result!;
             }

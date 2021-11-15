@@ -6,19 +6,19 @@ namespace Amazon.Metadata;
 
 internal sealed class IamSecurityCredentials
 {
-    public string Code { get; init; }
+    public string Code { get; set; }
 
-    public string Type { get; init; }
+    public string Type { get; set; }
 
-    public string AccessKeyId { get; init; }
+    public string AccessKeyId { get; set; }
 
-    public string SecretAccessKey { get; init; }
+    public string SecretAccessKey { get; set; }
 
-    public string Token { get; init; }
+    public string Token { get; set; }
 
-    public DateTime LastUpdated { get; init; }
+    public DateTime LastUpdated { get; set; }
 
-    public DateTime Expiration { get; init; }
+    public DateTime Expiration { get; set; }
 }
 
 /*
