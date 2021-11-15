@@ -1,13 +1,12 @@
 ﻿#nullable disable
 
-namespace Amazon.Route53
+namespace Amazon.Route53;
+
+public sealed class AliasTarget
 {
-    public sealed class AliasTarget
-    {
-        public string DNSName { get; init; }
+    public string DNSName { get; init; }
 
-        public bool EvaluateTargetHealth { get; init; }
+    public bool EvaluateTargetHealth { get; init; }
 
-        public string HostedZoneId { get; init; }
-    }
+    public string HostedZoneId { get; init; }
 }

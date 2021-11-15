@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Route53;
 
-public class ResourceRecord
+public sealed class ResourceRecord
 {
 #nullable disable
     public ResourceRecord() { }

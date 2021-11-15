@@ -1,4 +1,3 @@
-﻿namespace Amazon.Route53
-{
-    public class GetAccountLimitRequest { }
-}
+﻿namespace Amazon.Route53;
+
+public sealed class GetAccountLimitRequest { }

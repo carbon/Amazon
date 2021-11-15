@@ -1,17 +1,16 @@
 ﻿#nullable disable
 
-namespace Amazon.Route53
+namespace Amazon.Route53;
+
+public sealed class HealthCheck
 {
-    public sealed class HealthCheck
-    {
-        public string Id { get; init; }
+    public string Id { get; init; }
 
-        public string CallerReference { get; init; }
+    public string CallerReference { get; init; }
 
-        public HealthCheckConfig HealthCheckConfig { get; init; }
+    public HealthCheckConfig HealthCheckConfig { get; init; }
 
-        public int HealthCheckVersion { get; init; }
-    }
+    public int HealthCheckVersion { get; init; }
 }
 
 /*

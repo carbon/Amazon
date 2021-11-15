@@ -1,12 +1,10 @@
 ﻿#nullable disable
 
+namespace Amazon.Route53;
 
-namespace Amazon.Route53
+public sealed class LinkedService
 {
-    public class LinkedService
-    {
-        public string Description { get; set; }
+    public string Description { get; init; }
 
-        public string ServicePrincipal { get; set; }
-    }
+    public string ServicePrincipal { get; init; }
 }

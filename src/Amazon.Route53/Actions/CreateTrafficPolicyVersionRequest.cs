@@ -1,4 +1,3 @@
-﻿namespace Amazon.Route53
-{
-    public sealed class CreateTrafficPolicyVersionRequest { }
-}
+﻿namespace Amazon.Route53;
+
+public sealed class CreateTrafficPolicyVersionRequest { }

@@ -1,11 +1,8 @@
 ﻿#nullable disable
 
+namespace Amazon.Route53;
 
-namespace Amazon.Route53
+public sealed class RecordData
 {
-
-    public class RecordData
-    {
-        public string RecordDataEntry { get; set; }
-    }
+    public string RecordDataEntry { get; init; }
 }

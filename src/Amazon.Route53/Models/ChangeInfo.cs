@@ -2,16 +2,15 @@
 
 using System;
 
-namespace Amazon.Route53
+namespace Amazon.Route53;
+
+public sealed class ChangeInfo
 {
-    public sealed class ChangeInfo
-    {
-        public string Comment { get; init; }
+    public string Comment { get; init; }
 
-        public string Id { get; init; }
+    public string Id { get; init; }
 
-        public string Status { get; init; }
+    public string Status { get; init; }
 
-        public DateTime SubmittedAt { get; init; }
-    }
+    public DateTime SubmittedAt { get; init; }
 }

@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace Amazon.Route53
+namespace Amazon.Route53;
+
+public sealed class GetHealthCheckResponse
 {
-    public sealed class GetHealthCheckResponse
-    {
-        public HealthCheck HealthCheck { get; init; }
-    }
+    public HealthCheck HealthCheck { get; init; }
 }
