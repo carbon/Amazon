@@ -2,22 +2,21 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.CodeBuild
+namespace Amazon.CodeBuild;
+
+public sealed class ProjectArtifacts
 {
-    public class ProjectArtifacts
-    {
-        public string Location { get; init; }
+    public string Location { get; init; }
 
-        public string Name { get; init; }
+    public string Name { get; init; }
 
-        // NONE | BUILD_ID
-        public string NamespaceType { get; init; }
+    // NONE | BUILD_ID
+    public string NamespaceType { get; init; }
 
-        public string Packaging { get; init; }
+    public string Packaging { get; init; }
 
-        public string Path { get; init; }
+    public string Path { get; init; }
 
-        [Required]
-        public string Type { get; init; }
-    }
+    [Required]
+    public string Type { get; init; }
 }

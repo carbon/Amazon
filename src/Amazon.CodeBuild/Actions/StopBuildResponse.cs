@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace Amazon.CodeBuild
+namespace Amazon.CodeBuild;
+
+public sealed class StopBuildResponse
 {
-    public sealed class StopBuildResponse
-    {
-        public Build Build { get; init; }
-    }
+    public Build Build { get; init; }
 }

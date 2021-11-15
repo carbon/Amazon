@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-namespace Amazon.CodeBuild
-{
-    public sealed class ListProjectsResponse
-    {
-        public string NextToken { get; init; }
+namespace Amazon.CodeBuild;
 
-        public string[] Projects { get; init; }
-    }
+public sealed class ListProjectsResponse
+{
+    public string NextToken { get; init; }
+
+    public string[] Projects { get; init; }
 }

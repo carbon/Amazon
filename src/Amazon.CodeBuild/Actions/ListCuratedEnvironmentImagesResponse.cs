@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace Amazon.CodeBuild
+namespace Amazon.CodeBuild;
+
+public sealed class ListCuratedEnvironmentImagesResponse
 {
-    public sealed class ListCuratedEnvironmentImagesResponse
-    {
-        public EnvironmentPlatform Platforms { get; set; }
-    }
+    public EnvironmentPlatform Platforms { get; init; }
 }

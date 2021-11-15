@@ -1,18 +1,17 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.CodeBuild
+namespace Amazon.CodeBuild;
+
+public sealed class BatchGetBuildsRequest : ICodeBuildRequest
 {
-    public sealed class BatchGetBuildsRequest : ICodeBuildRequest
+    public BatchGetBuildsRequest(params string[] ids)
     {
-        public BatchGetBuildsRequest(params string[] ids)
-        {
-            ArgumentNullException.ThrowIfNull(ids);
+        ArgumentNullException.ThrowIfNull(ids);
 
-            Ids = ids;
-        }
-
-        [Required]
-        public string[] Ids { get; }
+        Ids = ids;
     }
+
+    [Required]
+    public string[] Ids { get; }
 }

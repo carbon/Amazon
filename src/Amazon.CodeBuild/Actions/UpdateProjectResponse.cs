@@ -1,6 +1,5 @@
-﻿namespace Amazon.CodeBuild
+﻿namespace Amazon.CodeBuild;
+
+public sealed class UpdateProjectResponse
 {
-    public class UpdateProjectResponse
-    {
-    }
 }

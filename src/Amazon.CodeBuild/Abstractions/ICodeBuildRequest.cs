@@ -1,6 +1,5 @@
-﻿namespace Amazon.CodeBuild
+﻿namespace Amazon.CodeBuild;
+
+public interface ICodeBuildRequest
 {
-    public interface ICodeBuildRequest
-    {
-    }
 }

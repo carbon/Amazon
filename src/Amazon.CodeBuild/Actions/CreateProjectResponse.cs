@@ -1,9 +1,8 @@
 ﻿#nullable disable
 
-namespace Amazon.CodeBuild
+namespace Amazon.CodeBuild;
+
+public sealed class CreateProjectResponse
 {
-    public class CreateProjectResponse
-    {
-        public Project Project { get; init; }
-    }
+    public Project Project { get; init; }
 }

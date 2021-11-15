@@ -1,32 +1,31 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Amazon.CodeBuild
+namespace Amazon.CodeBuild;
+
+public sealed class StartBuildRequest : ICodeBuildRequest
 {
-    public sealed class StartBuildRequest : ICodeBuildRequest
-    {
 #nullable disable
-        public StartBuildRequest() { }
+    public StartBuildRequest() { }
 #nullable enable
 
-        public StartBuildRequest(string projectName)
-        {
-            ArgumentNullException.ThrowIfNull(projectName);
+    public StartBuildRequest(string projectName)
+    {
+        ArgumentNullException.ThrowIfNull(projectName);
 
-            ProjectName = projectName;
-        }
-        
-        [Required]
-        public string ProjectName { get; set; }
-
-        public ProjectArtifacts? ArtifactsOverride { get; set; }
-
-        public string? BuildspecOverride { get; set; }
-
-        public EnvironmentVariable[]? EnvironmentVariablesOverride { get; set; }
-
-        public string? SourceVersion { get; set; }
-
-        public int? TimeoutInMinutesOverride { get; set; }
+        ProjectName = projectName;
     }
+
+    [Required]
+    public string ProjectName { get; set; }
+
+    public ProjectArtifacts? ArtifactsOverride { get; set; }
+
+    public string? BuildspecOverride { get; set; }
+
+    public EnvironmentVariable[]? EnvironmentVariablesOverride { get; set; }
+
+    public string? SourceVersion { get; set; }
+
+    public int? TimeoutInMinutesOverride { get; set; }
 }

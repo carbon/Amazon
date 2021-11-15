@@ -1,7 +1,6 @@
-﻿namespace Amazon.CodeBuild
+﻿namespace Amazon.CodeBuild;
+
+public sealed class DeleteProjectResponse
 {
-    public class DeleteProjectResponse
-    {
-        // Empty
-    }
+    // Empty
 }
