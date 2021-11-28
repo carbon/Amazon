@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sts;
 
-public class AssumedRoleUser
+public sealed class AssumedRoleUser
 {
     [XmlElement]
     public string Arn { get; init; }

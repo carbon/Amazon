@@ -4,17 +4,17 @@ using System.Xml.Serialization;
 
 namespace Amazon.Sts;
 
-public class Credentials
+public sealed class Credentials
 {
     [XmlElement]
-    public string SessionToken { get; set; }
+    public string SessionToken { get; init; }
 
     [XmlElement]
-    public string SecretAccessKey { get; set; }
+    public string SecretAccessKey { get; init; }
 
     [XmlElement]
-    public string Expiration { get; set; }
+    public string Expiration { get; init; }
 
     [XmlElement]
-    public string AccessKeyId { get; set; }
+    public string AccessKeyId { get; init; }
 }

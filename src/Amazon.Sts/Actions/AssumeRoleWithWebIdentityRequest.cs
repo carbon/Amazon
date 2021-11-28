@@ -6,15 +6,15 @@ public sealed class AssumeRoleWithWebIdentityRequest : IStsRequest
 {
     public string Action => "AssumeRoleWithWebIdentity";
 
-    public int DurationSeconds { get; set; }
+    public int DurationSeconds { get; init; }
 
-    public string Policy { get; set; }
+    public string Policy { get; init; }
 
-    public string ProviderId { get; set; }
+    public string ProviderId { get; init; }
 
-    public string RoleArn { get; set; }
+    public string RoleArn { get; init; }
 
-    public string RoleSessionName { get; set; }
+    public string RoleSessionName { get; init; }
 
-    public string WebIdentityToken { get; set; }
+    public string WebIdentityToken { get; init; }
 }
