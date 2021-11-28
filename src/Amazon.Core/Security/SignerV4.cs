@@ -48,14 +48,12 @@ public static class SignerV4
 
         SHA256.HashData(Encoding.UTF8.GetBytes(canonicalRequest), destination: sha256);
 
-        string hashedCanonicalRequest = HexString.FromBytes(sha256);
-
         var output = new ValueStringBuilder(256);  // avg ~138
 
-        output.Append(algorithmName)         ;  output.Append('\n'); // Algorithm + \n
-        output.Append(timestamp)             ;  output.Append('\n'); // Timestamp + \n
-        scope.AppendTo(ref output)           ;  output.Append('\n'); // Scope     + \n
-        output.Append(hashedCanonicalRequest);                       // Hex(SHA256(CanonicalRequest))
+        output.Append(algorithmName)  ; output.Append('\n');    // Algorithm + \n
+        output.Append(timestamp)      ; output.Append('\n');    // Timestamp + \n
+        scope.AppendTo(ref output)    ; output.Append('\n');    // Scope     + \n
+        HexString.DecodeBytesTo(sha256, output.AppendSpan(64)); // Hex(SHA256(CanonicalRequest))
 
         return output.ToString();
     }
@@ -260,8 +258,6 @@ public static class SignerV4
             timestamp,
             canonicalRequest
         );
-
-        string signature = HMACSHA256_Hex(signingKey, stringToSign);
                         
         /*
         queryString = Action=action
@@ -291,12 +287,13 @@ public static class SignerV4
             urlBuilder.Append(UrlEncoder.Default.Encode(pair.Key));
             urlBuilder.Append('=');
             urlBuilder.Append(UrlEncoder.Default.Encode(pair.Value));
-            urlBuilder.Append('&');
+            urlBuilder.Append('&');         
         }
+
 
         urlBuilder.Append(SigningParameterNames.Signature);
         urlBuilder.Append('=');
-        urlBuilder.Append(signature);
+        HMACSHA256_Hex(signingKey, stringToSign, urlBuilder.AppendSpan(64)); //signature
 
         return urlBuilder.ToString();
     }
@@ -308,19 +305,17 @@ public static class SignerV4
         // If we're using S3, ensure the request content has been signed
         if (scope.Service.Equals(AwsService.S3) && !request.Headers.NonValidated.Contains("x-amz-content-sha256"))
         {
-            request.Headers.TryAddWithoutValidation("x-amz-content-sha256", ComputeSHA256(request.Content!));
+            request.Headers.TryAddWithoutValidation("x-amz-content-sha256", ComputeSHA256(request.Content));
         }
 
         byte[] signingKey = ComputeSigningKey(credential.SecretAccessKey, scope);
 
         string stringToSign = GetStringToSign(scope, request, out var signedHeaderNames);
 
-        string signature = HMACSHA256_Hex(signingKey, stringToSign);
-
         var authWriter = new ValueStringBuilder(512);
 
         // AWS4-HMAC-SHA256 Credential={0},SignedHeaders={0},Signature={0}
-        // var auth = $"AWS4-HMAC-SHA256 Credential={credential.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
+        // $"AWS4-HMAC-SHA256 Credential={credential.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
 
         authWriter.Append("AWS4-HMAC-SHA256 Credential=");
         authWriter.Append(credential.AccessKeyId);
@@ -329,14 +324,14 @@ public static class SignerV4
         authWriter.Append(",SignedHeaders=");
         authWriter.AppendJoin(';', signedHeaderNames);
         authWriter.Append(",Signature=");
-        authWriter.Append(signature);
+        HMACSHA256_Hex(signingKey, stringToSign, authWriter.AppendSpan(64)); // signature
 
         request.Headers.TryAddWithoutValidation("Authorization", authWriter.ToString());
     }
 
     public static string CanonicalizeQueryString(Uri uri)
     {
-        if (string.IsNullOrEmpty(uri.Query) || uri.Query.Length == 1 && uri.Query[0] is '?')
+        if (string.IsNullOrEmpty(uri.Query) || uri.Query is "?")
         {
             return string.Empty;
         }
@@ -452,7 +447,7 @@ public static class SignerV4
             signedHeaderNames.Add("date");
 
             output.Append("date:");
-            output.Append(dateHeader.First());
+            output.Append(dateHeader.ToString());
             output.Append('\n');
         }
 
@@ -505,7 +500,7 @@ public static class SignerV4
     }
 
     [SkipLocalsInit]
-    private static string HMACSHA256_Hex(byte[] key, string data)
+    private static void HMACSHA256_Hex(byte[] key, ReadOnlySpan<char> data, Span<char> destination)
     {
         var dataBuffer = ArrayPool<byte>.Shared.Rent(data.Length * 4);
 
@@ -517,7 +512,7 @@ public static class SignerV4
 
         ArrayPool<byte>.Shared.Return(dataBuffer);
 
-        return HexString.FromBytes(hash);
+        HexString.DecodeBytesTo(hash, destination);
     }
 
     #endregion

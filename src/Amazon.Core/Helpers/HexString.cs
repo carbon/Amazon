@@ -29,4 +29,22 @@ internal static class HexString
 
         return new string(buffer);
     }
+
+    [SkipLocalsInit]
+    public static void DecodeBytesTo(ReadOnlySpan<byte> bytes, Span<char> buffer)
+    {
+        byte b;
+
+        for (int bx = 0, cx = 0; bx < bytes.Length; ++bx, ++cx)
+        {
+            b = ((byte)(bytes[bx] >> 4));
+
+            buffer[cx] = (char)(b > 9 ? b + 0x37 + 0x20 : b + 0x30);
+
+            b = ((byte)(bytes[bx] & 0x0F));
+
+            buffer[++cx] = (char)(b > 9 ? b + 0x37 + 0x20 : b + 0x30);
+        }
+
+    }
 }
