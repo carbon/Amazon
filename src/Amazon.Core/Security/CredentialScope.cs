@@ -23,7 +23,10 @@ public readonly struct CredentialScope : ISpanFormattable
     public AwsService Service { get; }
 
     // 20120228/us-east-1/iam/aws4_request
-    public readonly override string ToString() => $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request";
+    public readonly override string ToString()
+    {
+        return string.Create(CultureInfo.InvariantCulture, $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request");
+    }
 
     private const string dateFormat = "yyyyMMdd";
 
@@ -41,9 +44,9 @@ public readonly struct CredentialScope : ISpanFormattable
         Date.TryFormat(utf16Destination, out _, dateFormat, CultureInfo.InvariantCulture);
     }
 
-    public string ToString(string? format, IFormatProvider? formatProvider)
+    string IFormattable.ToString(string? format, IFormatProvider? formatProvider)
     {
-        return string.Create(CultureInfo.InvariantCulture, $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request");
+        return ToString();
     }
 
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)

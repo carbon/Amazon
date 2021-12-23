@@ -12,17 +12,17 @@ public sealed partial class InstanceMetadataService
 {
     public string? GetIamRoleName()
     {
-        return GetStringOrDefault(baseMetadataUri + "/iam/security-credentials/");
+        return GetStringOrDefault($"{baseMetadataUri}/iam/security-credentials/");
     }
 
     public string GetAvailabilityZone()
     {
-        return GetStringOrDefault(baseMetadataUri + "/placement/availability-zone")!;
+        return GetStringOrDefault($"{baseMetadataUri}/placement/availability-zone")!;
     }
 
     internal IamSecurityCredentials GetIamSecurityCredentials(string roleName)
     {
-        string requestUri = baseMetadataUri + "/iam/security-credentials/" + roleName;
+        string requestUri = $"{baseMetadataUri}/iam/security-credentials/{roleName}";
 
         Exception? lastException = null;
 
@@ -39,9 +39,7 @@ public sealed partial class InstanceMetadataService
 
                 using var responseStream = response.Content.ReadAsStream();
 
-                var result = JsonSerializer.Deserialize<IamSecurityCredentials>(GetString(responseStream));
-
-                return result!;
+                return JsonSerializer.Deserialize(responseStream, IamJsonContext.Default.IamSecurityCredentials)!;
             }
             catch (Exception ex)
             {
@@ -53,7 +51,6 @@ public sealed partial class InstanceMetadataService
 
         throw new Exception("error getting security credentials", lastException);
     }
-
 
     private MetadataToken GetToken()
     {

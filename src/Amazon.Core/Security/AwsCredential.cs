@@ -33,7 +33,7 @@ public sealed class AwsCredential : IAwsCredential
 
         if (colonIndex == -1)
         {
-            throw new Exception("accessKeyId & secretAccessKey must be seperated by ':'");
+            throw new ArgumentException("accessKeyId & secretAccessKey must be seperated by ':'");
         }
 
         return new AwsCredential(
