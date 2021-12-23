@@ -23,10 +23,10 @@ public class NotificationTests
 				""messageId"":""0000013786031775-163e3910-53eb-4c8e-a04a-f29debf88a84-000000"",
 				""source"":""email_1337983178613@amazon.com"",
 				""destination"":[
-				""recipient1@example.com"",
-				""recipient2@example.com"",
-				""recipient3@example.com"",
-				""recipient4@example.com""
+				  ""recipient1@example.com"",
+				  ""recipient2@example.com"",
+				  ""recipient3@example.com"",
+				  ""recipient4@example.com""
 				]
 			}
 		}";
@@ -40,17 +40,16 @@ public class NotificationTests
         Assert.Equal(2012,                                                           complaint.Timestamp.Year);
         Assert.Equal(-7,                                                             complaint.Timestamp.Offset.Hours);
         Assert.Equal("0000013786031775-fea503bc-7497-49e1-881b-a0379bb037d3-000000", complaint.FeedbackId);
-
-
-        Assert.Equal("recipient1@example.com", complaint.ComplainedRecipients[0].EmailAddress);
+        Assert.Equal("recipient1@example.com",                                       complaint.ComplainedRecipients[0].EmailAddress);
 
         Assert.Equal(4, mail.Destination.Length);
 
         Assert.Equal("recipient1@example.com", mail.Destination[0]);
         Assert.Equal("recipient2@example.com", mail.Destination[1]);
 
-        Assert.Equal("email_1337983178613@amazon.com", mail.Source);
+        Assert.Equal("email_1337983178613@amazon.com",                               mail.Source);
         Assert.Equal("0000013786031775-163e3910-53eb-4c8e-a04a-f29debf88a84-000000", mail.MessageId);
+
     }
 
     [Fact]
