@@ -20,5 +20,5 @@ public sealed class SesContent
 public enum CharsetType
 {
     SevenBitASCII = 1,
-    UTF8 = 2
+    UTF8          = 2
 }

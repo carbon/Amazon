@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace Amazon.Ses;
 
@@ -19,9 +17,9 @@ public sealed class SesEmail
     public string[] To { get; set; }
 
 #nullable enable
-    public string[]? BCC { get; set; }
+    public string[]? Bcc { get; set; }
 
-    public string[]? CC { get; set; }
+    public string[]? Cc { get; set; }
 
 #nullable disable
 
@@ -33,38 +31,34 @@ public sealed class SesEmail
 
     public SesContent? Text { get; set; }
 
-    public Dictionary<string, string> ToParams()
+    public List<KeyValuePair<string, string>> ToParams()
     {
-        var dic = new Dictionary<string, string> {
-                { "Source", Source }
-            };
+        var result = new List<KeyValuePair<string, string>>(10);
 
-        SetContent("Message.Subject", Subject, dic);
+        result.Add(new ("Source", Source));        
+
+        SetContent("Message.Subject", Subject, result);
 
         if (Html is not null)
         {
-            SetContent("Message.Body.Html", Html, dic);
+            SetContent("Message.Body.Html", Html, result);
         }
 
         if (Text is not null)
         {
-            SetContent("Message.Body.Text", Text, dic);
+            SetContent("Message.Body.Text", Text, result);
         }
 
-        AddList(RecipientType.ReplyTo, ReplyTo, dic);
-        AddList(RecipientType.To, To, dic);
-
-        if (CC is not null)
+        foreach (var p in DestinationListHelper.GetReplyToAddresses(ReplyTo))
         {
-            AddList(RecipientType.Cc, CC, dic);
+            result.Add(p);
         }
 
-        if (BCC is not null)
-        {
-            AddList(RecipientType.Bcc, BCC, dic);
-        }
-
-        return dic;
+        DestinationListHelper.AddDestinationList(RecipientType.To,  To,  result);
+        DestinationListHelper.AddDestinationList(RecipientType.Cc,  Cc,  result);
+        DestinationListHelper.AddDestinationList(RecipientType.Bcc, Bcc, result);
+        
+        return result;
     }
 
     public static SesEmail FromMailMessage(MailMessage message)
@@ -79,10 +73,9 @@ public sealed class SesEmail
 
         // "Carbonmade" <hello@carbonmade.com>
 
-
         if (message.ReplyToList.Count > 0)
         {
-            doc.ReplyTo = EncodeMailAddressCollection(message.ReplyToList);
+            doc.ReplyTo = SesHelper.EncodeMailAddressCollection(message.ReplyToList);
         }
 #pragma warning disable CS0618 // Type or member is obsolete
         else if (message.ReplyTo != null)
@@ -101,10 +94,14 @@ public sealed class SesEmail
             doc.Text = new SesContent(message.Body, CharsetType.UTF8);
         }
 
-
         if (message.CC.Count > 0)
         {
-            doc.CC = EncodeMailAddressCollection(message.CC);
+            doc.Cc = SesHelper.EncodeMailAddressCollection(message.CC);
+        }
+
+        if (message.Bcc.Count > 0)
+        {
+            doc.Cc = SesHelper.EncodeMailAddressCollection(message.Bcc);
         }
 
         // Alternate view support
@@ -118,69 +115,24 @@ public sealed class SesEmail
 
                 switch (view.ContentType.MediaType)
                 {
-                    case "text/plain": doc.Text = new SesContent(text, CharsetType.UTF8); break;
-                    case "text/html": doc.Html = new SesContent(text, CharsetType.UTF8); break;
+                    case "text/plain" : doc.Text = new SesContent(text, CharsetType.UTF8); break;
+                    case "text/html"  : doc.Html = new SesContent(text, CharsetType.UTF8); break;
                 }
             }
         }
 
         return doc;
-    }
+    }   
 
-    private static string[] EncodeMailAddressCollection(MailAddressCollection collection)
-    {
-        if (collection.Count == 0) return Array.Empty<string>();
-
-        string[] addresses = new string[collection.Count];
-
-        for (int i = 0; i < collection.Count; i++)
-        {
-            addresses[i] = SesHelper.EncodeMailAddress(collection[i]);
-        }
-
-        return addresses;
-    }
-
-    private enum RecipientType
-    {
-        ReplyTo = 1,
-        To = 2,
-        Cc = 3,
-        Bcc = 4
-    }
-
-    private static void SetContent(string prefix, SesContent content, Dictionary<string, string> dic)
+    private static void SetContent(string prefix, SesContent content, List<KeyValuePair<string, string>> dic)
     {
         if (content is null) return;
 
-        dic.Add(prefix + ".Data", content.Data);
+        dic.Add(new (prefix + ".Data", content.Data));
 
         if (content.Charset is not null)
         {
-            dic.Add(prefix + ".Charset", content.Charset);
-        }
-    }
-
-    private void AddList(RecipientType type, string[] list, Dictionary<string, string> dic)
-    {
-        // http://www.ietf.org/rfc/rfc0822.txt
-
-        if (list is null || list.Length == 0) return;
-
-        int i = 1;
-
-        // By default, the string must be 7-bit ASCII.
-        // If the text must contain any other characters, then you must use MIME encoded-word syntax (RFC 2047) instead of a literal string. 
-        // MIME encoded-word syntax uses the following form: =?charset?encoding?encoded-text?=. For more information, see RFC 2047.
-
-
-        foreach (var address in To)
-        {
-            // &Destination.ToAddresses.member.1=allan%40example.com
-
-            dic.Add($"Destination.{type}Addresses.member.{i}", address);
-
-            i++;
+            dic.Add(new (prefix + ".Charset", content.Charset));
         }
     }
 
@@ -192,22 +144,4 @@ public sealed class SesEmail
     &Message.Subject.Data=Example&Source=user%40example.com
     &Timestamp=2011-08-18T22%3A25%3A27.000Z
     */
-
-    private static readonly XmlSerializer serializer = new XmlSerializer(typeof(SesEmail));
-
-    public XDocument ToXml()
-    {
-        var namespaces = new XmlSerializerNamespaces();
-
-        // Add lib namespace with empty prefix 
-        namespaces.Add(string.Empty, "http://cloudfront.amazonaws.com/doc/2010-11-01/");
-
-        var doc = new XDocument();
-
-        using var xw = doc.CreateWriter();
-
-        serializer.Serialize(xw, this, namespaces);
-
-        return doc;
-    }
 }
