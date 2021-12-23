@@ -15,6 +15,10 @@ public sealed class KinesisClient : AwsClient
         : base(AwsService.Kinesis, AwsRegion.USEast1, credential)
     { }
 
+    public KinesisClient(AwsRegion region, IAwsCredential credential)
+        : base(AwsService.Kinesis, region, credential)
+    { }
+
     public KinesisStream GetStream(string name)
     {
         return new KinesisStream(name, this);
