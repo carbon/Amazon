@@ -5,7 +5,7 @@ public class AwsRegionTests
     [Fact]
     public void Enum()
     {
-        Assert.Equal(20, AwsRegion.All.Length);
+        Assert.Equal(21, AwsRegion.All.Length);
 
         foreach (var region in AwsRegion.All)
         {
