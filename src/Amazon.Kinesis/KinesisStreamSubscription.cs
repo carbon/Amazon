@@ -20,7 +20,7 @@ public sealed class KinesisStreamSubscription : IDisposable
         _shard = shard;
         _observer = observer;
 
-        Task.Factory.StartNew(StartAsync);
+        Task.Factory.StartNew(StartAsync, TaskCreationOptions.LongRunning);
     }
 
     private async Task StartAsync()
