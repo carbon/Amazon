@@ -20,7 +20,7 @@ public sealed class SesClient : AwsClient
     );
 
     public SesClient(AwsRegion region, IAwsCredential credential)
-            : base(AwsService.Ses, region, credential)
+        : base(AwsService.Ses, region, credential)
     { }
 
     public Task<SendEmailResult> SendEmailAsync(MailMessage message)
@@ -42,11 +42,25 @@ public sealed class SesClient : AwsClient
         return SendEmailResponse.Parse(text).SendEmailResult;
     }
 
+    public async Task<SendEmailResult> SendRawEmailAsync(SendRawEmailRequest request)
+    {
+        var data = new SesRequest("SendRawEmail");
+
+        foreach (var pair in request.ToParams())
+        {
+            data.Add(pair.Key, pair.Value);
+        }
+
+        var text = await SendWithRetryPolicy(data, retryPolicy).ConfigureAwait(false);
+
+        return SendEmailResponse.Parse(text).SendEmailResult;
+    }
+
     public async Task<GetSendQuotaResult> GetSendQuotaAsync()
     {
         var request = new SesRequest("GetSendQuota");
 
-        var text = await Send(request).ConfigureAwait(false);
+        var text = await PostAsync(request).ConfigureAwait(false);
 
         return GetSendQuotaResponse.Parse(text).GetSendQuotaResult;
     }
@@ -67,7 +81,7 @@ public sealed class SesClient : AwsClient
 
             try
             {
-                return await Send(request).ConfigureAwait(false);
+                return await PostAsync(request).ConfigureAwait(false);
             }
             catch (SesException ex) when (ex.IsTransient)
             {
@@ -90,7 +104,7 @@ public sealed class SesClient : AwsClient
         return new SesException(errorResponse.Error, response.StatusCode);
     }
 
-    private Task<string> Send(SesRequest request)
+    private Task<string> PostAsync(SesRequest request)
     {
         request.Parameters.Add("Version", Version);
 
