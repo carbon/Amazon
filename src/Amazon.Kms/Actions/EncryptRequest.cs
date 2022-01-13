@@ -11,9 +11,9 @@ public sealed class EncryptRequest : KmsRequest
         ArgumentNullException.ThrowIfNull(keyId);
         ArgumentNullException.ThrowIfNull(plaintext);
 
-        if (keyId.Length == 0)
+        if (keyId.Length is 0)
         {
-            throw new ArgumentNullException(nameof(keyId), "May not be empty");
+            throw new ArgumentException("Must not be empty", nameof(keyId));
         }
 
         if (plaintext.Length > 1024 * 4)

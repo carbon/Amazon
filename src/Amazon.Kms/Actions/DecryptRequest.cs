@@ -13,12 +13,12 @@ public sealed class DecryptRequest : KmsRequest
 
         if (keyId.Length is 0)
         {
-            throw new ArgumentException("May not be empty", nameof(keyId));
+            throw new ArgumentException("Must not be empty", nameof(keyId));
         }
 
         if (ciphertext.Length is 0)
         {
-            throw new ArgumentException("May not be empty", nameof(ciphertext));
+            throw new ArgumentException("Must not be empty", nameof(ciphertext));
         }
 
         KeyId = keyId;
