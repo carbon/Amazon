@@ -11,7 +11,7 @@
 
             Assert.Equal(@"{""id"":""buildid""}", await result.Content.ReadAsStringAsync());
 
-            Assert.Equal("application/x-amz-json-1.1; charset=utf-8", result.Content.Headers.GetValues("Content-Type").First());
+            Assert.Equal("application/x-amz-json-1.1; charset=utf-8", result.Content.Headers.NonValidated["Content-Type"].ToString());
         }
     }
 }

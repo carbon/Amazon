@@ -93,7 +93,7 @@ public class SignerTests
 
         SignerV4.Sign(cred, dynamoScope, request);
 
-        var auth = request.Headers.GetValues("Authorization").First();
+        var auth = request.Headers.NonValidated["Authorization"].ToString();
 
         Assert.Equal("AWS4-HMAC-SHA256 Credential=/20120215/us-east-1/dynamodb/aws4_request,SignedHeaders=host;x-amz-date;x-amz-security-token;x-amz-target,Signature=204ce0e8f0d2aec6fb328b4b34df0a8bc5363c11f01df2a489e788b3703be4e5", auth);
     }
@@ -227,8 +227,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), 
     [Fact]
     public void DoubleEscape()
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, "http://s3.us-east-1.amazonaws.com/frame%3A1")
-        {
+        var request = new HttpRequestMessage(HttpMethod.Post, "http://s3.us-east-1.amazonaws.com/frame%3A1") {
             Headers = {
                 { "x-amz-date", "2012-02-17" },
                 { "x-amz-content-sha256", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785" }

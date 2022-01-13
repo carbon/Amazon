@@ -1,13 +1,11 @@
-﻿using System.Linq;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 
-namespace Amazon.S3
+namespace Amazon.S3;
+
+internal static class HttpResponseHeaderExtensions
 {
-    internal static class HttpResponseHeaderExtensions
+    public static string? GetValueOrDefault(this HttpResponseHeaders headers, string name)
     {
-        public static string? GetValueOrDefault(this HttpResponseHeaders headers, string name)
-        {
-            return headers.TryGetValues(name, out var values) ? values.FirstOrDefault() : null;
-        }
+        return headers.NonValidated.TryGetValues(name, out var values) ? values.ToString() : null;
     }
 }

@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Net.Http;
 
 namespace Amazon.S3;
@@ -19,9 +18,9 @@ public sealed class CopyObjectRequest : S3Request
     {
         get
         {
-            if (Headers.TryGetValues(S3HeaderNames.MetadataDirective, out var values))
+            if (Headers.NonValidated.TryGetValues(S3HeaderNames.MetadataDirective, out var value))
             {
-                switch (values.FirstOrDefault())
+                switch (value.ToString())
                 {
                     case "COPY"    : return MetadataDirectiveValue.Copy;
                     case "REPLACE" : return MetadataDirectiveValue.Replace;
@@ -50,7 +49,9 @@ public sealed class CopyObjectRequest : S3Request
         {
             Headers.Remove(name);
         }
-
-        Headers.TryAddWithoutValidation(name, value);
+        else
+        {
+            Headers.TryAddWithoutValidation(name, value);
+        }
     }
 }
