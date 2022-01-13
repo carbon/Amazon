@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sqs</AssemblyName>
-    <Version>0.23.0</Version>
+    <Version>0.23.1</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Messaging" Version="1.6.0" />
+    <PackageReference Include="Carbon.Messaging" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
