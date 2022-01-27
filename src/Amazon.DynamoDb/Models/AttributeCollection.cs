@@ -203,7 +203,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
                 }
                 catch
                 {
-                    throw new Exception(value.GetType().Name + "/" + typeInfo.IsList);
+                    throw new Exception($"{value.GetType().Name}/{typeInfo.IsList}");
                 }
             }
         }

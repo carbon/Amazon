@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Globalization;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Amazon.DynamoDb.JsonConverters;
@@ -75,7 +74,7 @@ public readonly struct DbValue : IConvertible
 		{
 			var elementType = type.GetElementType();
 
-            _kind = (Type.GetTypeCode(elementType)) switch
+            _kind = Type.GetTypeCode(elementType) switch
             {
                 TypeCode.Byte => DbValueType.B,
                 TypeCode.String => DbValueType.SS, // StringSet
@@ -88,7 +87,7 @@ public readonly struct DbValue : IConvertible
 				TypeCode.UInt16 or 
 				TypeCode.UInt32 or
 				TypeCode.UInt64 => DbValueType.NS,
-                _ => throw new Exception("Invalid array element type:" + type.Name),
+                _ => throw new Exception($"Invalid array element type. Was{type.Name}"),
             };
         }
 		else
@@ -353,7 +352,7 @@ public readonly struct DbValue : IConvertible
 		TypeCode.Int64  => ToInt64(),
 		TypeCode.Single => ToSingle(),
 		TypeCode.Double => ToDouble(),
-		_				=> throw new Exception("No converter for " + conversionType.GetType().Name),
+		_				=> throw new Exception($"No converter for {conversionType.GetType().Name}"),
 	};
 		
 	#endregion

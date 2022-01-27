@@ -1,5 +1,4 @@
 ﻿using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -51,14 +50,14 @@ public sealed class DynamoDbClient : AwsClient
         return BatchGetItemResult.FromJsonElement(json);
     }
 
-    public async Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
+    public Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
     {
-        return await HandleRequestAsync<DeleteItemRequest, DeleteItemResult>("DeleteItem", request).ConfigureAwait(false);
+        return HandleRequestAsync<DeleteItemRequest, DeleteItemResult>("DeleteItem", request);
     }
 
-    public async Task<GetItemResult> GetItemAsync(GetItemRequest request)
+    public Task<GetItemResult> GetItemAsync(GetItemRequest request)
     {
-        return await HandleRequestAsync<GetItemRequest, GetItemResult>("GetItem", request).ConfigureAwait(false);
+        return HandleRequestAsync<GetItemRequest, GetItemResult>("GetItem", request);
     }
 
     public async Task<BatchWriteItemResult> BatchWriteItemAsync(params TableRequests[] batches)
@@ -78,8 +77,7 @@ public sealed class DynamoDbClient : AwsClient
             tableBatches.Add(batch.TableName, batch.SerializeList());
         }
 
-        var httpRequest = Setup("BatchWriteItem", JsonSerializer.SerializeToUtf8Bytes(new
-        {
+        var httpRequest = Setup("BatchWriteItem", JsonSerializer.SerializeToUtf8Bytes(new {
             RequestItems = tableBatches
         }));
 
@@ -150,31 +148,31 @@ public sealed class DynamoDbClient : AwsClient
         throw new DynamoDbException($"Error querying '{query.TableName}': {lastException.Message}", lastException);
     }
 
-    public async Task<QueryResult> QueryAsync(DynamoQuery query)
+    public Task<QueryResult> QueryAsync(DynamoQuery query)
     {
-        return await HandleRequestAsync<DynamoQuery, QueryResult>("Query", query).ConfigureAwait(false);
+        return HandleRequestAsync<DynamoQuery, QueryResult>("Query", query);
     }
 
-    public async Task<CountResult> QueryCountAsync(DynamoQuery query)
+    public Task<CountResult> QueryCountAsync(DynamoQuery query)
     {
         query.Select = SelectEnum.COUNT;
 
-        return await HandleRequestAsync<DynamoQuery, CountResult>("Query", query).ConfigureAwait(false);
+        return HandleRequestAsync<DynamoQuery, CountResult>("Query", query);
     }
 
-    public async Task<QueryResult> ScanAsync(ScanRequest request)
+    public Task<QueryResult> ScanAsync(ScanRequest request)
     {
-        return await HandleRequestAsync<ScanRequest, QueryResult>("Scan", request).ConfigureAwait(false);
+        return HandleRequestAsync<ScanRequest, QueryResult>("Scan", request);
     }
 
-    public async Task<TransactGetItemsResult> TransactGetItemsAsync(TransactGetItemRequest request)
+    public Task<TransactGetItemsResult> TransactGetItemsAsync(TransactGetItemRequest request)
     {
-        return await HandleRequestAsync<TransactGetItemRequest, TransactGetItemsResult>("TransactGetItems", request).ConfigureAwait(false);
+        return HandleRequestAsync<TransactGetItemRequest, TransactGetItemsResult>("TransactGetItems", request);
     }
 
-    public async Task<TransactWriteItemsResult> TransactWriteItemsAsync(TransactWriteItemsRequest request)
+    public Task<TransactWriteItemsResult> TransactWriteItemsAsync(TransactWriteItemsRequest request)
     {
-        return await HandleRequestAsync<TransactWriteItemsRequest, TransactWriteItemsResult>("TransactWriteItems", request).ConfigureAwait(false);
+        return HandleRequestAsync<TransactWriteItemsRequest, TransactWriteItemsResult>("TransactWriteItems", request);
     }
 
     public async Task<UpdateItemResult> UpdateItemAsync(UpdateItemRequest request)
@@ -212,8 +210,7 @@ public sealed class DynamoDbClient : AwsClient
 
     #region Helpers
 
-    [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
-    private async ValueTask<JsonElement> SendAndReadJsonElementAsync(HttpRequestMessage request)
+    private async Task<JsonElement> SendAndReadJsonElementAsync(HttpRequestMessage request)
     {
         await SignAsync(request).ConfigureAwait(false);
 
@@ -229,8 +226,7 @@ public sealed class DynamoDbClient : AwsClient
         return await JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
     }
 
-    [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
-    private async ValueTask<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
+    private async Task<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
         where TResult : notnull
     {
         var httpRequest = Setup(action, JsonSerializer.SerializeToUtf8Bytes(request));

@@ -11,7 +11,7 @@ public sealed class TableRequests
 
         if (requests.Count > 25)
         {
-            throw new ArgumentException($"May not exceed 25 items. Was {requests.Count} items.", nameof(requests));
+            throw new ArgumentException($"Must be 25 items or fewer. Was {requests.Count} items", nameof(requests));
         }
 
         TableName = tableName;

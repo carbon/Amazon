@@ -48,7 +48,7 @@ namespace Amazon.DynamoDb
                     message = property.Value.GetString()!;
                 }
 
-                else if (property.NameEquals("__type") && property.Value.ValueKind == JsonValueKind.String)
+                else if (property.NameEquals("__type") && property.Value.ValueKind is JsonValueKind.String)
                 {
                     type = property.Value.GetString()!;
 

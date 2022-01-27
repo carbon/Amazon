@@ -92,7 +92,7 @@ public readonly ref struct AttributeWriter
 
             writer.Write('"');
 
-            if (string.Equals(type, "S", StringComparison.Ordinal))
+            if (type is "S")
             {
                 JavaScriptEncoder.Default.Encode(writer, value.ToString());
             }

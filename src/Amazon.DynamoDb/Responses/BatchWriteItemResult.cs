@@ -26,7 +26,7 @@ public sealed class BatchWriteItemResult // : IConsumedResources
         }
         */
 
-        if (json.TryGetProperty("UnprocessedItems", out var unprocessedItemsEl))
+        if (json.TryGetProperty(nameof(UnprocessedItems), out var unprocessedItemsEl))
         {
             foreach (JsonProperty batch in unprocessedItemsEl.EnumerateObject())
             {
