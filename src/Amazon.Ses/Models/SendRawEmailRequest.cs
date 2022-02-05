@@ -5,6 +5,13 @@ namespace Amazon.Ses;
 
 public sealed class SendRawEmailRequest
 {
+    public SendRawEmailRequest() { }
+
+    public SendRawEmailRequest(RawMessage rawMessage)
+    {
+        RawMessage = rawMessage;
+    }
+
     public string? ConfigurationSetName { get; set; }
 
     public string? Source { get; set; }
@@ -25,7 +32,7 @@ public sealed class SendRawEmailRequest
 
     public List<KeyValuePair<string, string>> ToParams()
     {
-        var dic = new List<KeyValuePair<string, string>>(6);
+        var dic = new List<KeyValuePair<string, string>>(8);
 
         if (ConfigurationSetName != null)
         {
