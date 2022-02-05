@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
-using System.Threading.Tasks;
 
 using Carbon.Storage;
 
@@ -77,6 +76,13 @@ public sealed class S3Object : IBlobResult, IDisposable
         if (_response is null) throw new ObjectDisposedException(nameof(S3Object));
 
         return _stream ??= await _response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+    }
+
+    public Task<byte[]> ReadAsByteArrayAsync()
+    {
+        if (_response is null) throw new ObjectDisposedException(nameof(S3Object));
+
+        return _response.Content.ReadAsByteArrayAsync();
     }
 
     public async Task CopyToAsync(Stream output)
