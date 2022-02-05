@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 using Carbon.Storage;
 
@@ -86,13 +85,15 @@ public sealed class S3ObjectInfo : IBlob
 
         var properties = response.GetProperties();
 
-        var contentLength = long.Parse(properties["Content-Length"], NumberStyles.None, CultureInfo.InvariantCulture);
+        long contentLength = long.Parse(properties["Content-Length"], NumberStyles.None, CultureInfo.InvariantCulture);
+
+        DateTimeOffset lastModified = DateTimeOffset.ParseExact(properties["Last-Modified"], "R", CultureInfo.InvariantCulture);
 
         return new S3ObjectInfo(
             bucketName    : bucketName,
             key           : objectKey,
             contentLength : contentLength,
-            modified      : response.Content.Headers.LastModified!.Value.UtcDateTime, // Last-Modified
+            modified      : lastModified.UtcDateTime, // Last-Modified
             eTag          : eTag,
             properties    : properties
         );
