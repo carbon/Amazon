@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
 
 using Amazon.S3.Helpers;
 using Amazon.Scheduling;
@@ -16,9 +15,9 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
     private readonly string _bucketName;
 
     private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
-            initialDelay : TimeSpan.FromMilliseconds(50),
-            maxDelay     : TimeSpan.FromSeconds(3),
-            maxRetries   : 4
+        initialDelay : TimeSpan.FromMilliseconds(50),
+        maxDelay     : TimeSpan.FromSeconds(3),
+        maxRetries   : 4
     );
 
     public S3Bucket(AwsRegion region, string bucketName, IAwsCredential credential)
@@ -197,13 +196,13 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         throw lastException;
     }
 
-    public Task<RestoreObjectResult> InitiateRestoreAsync(string key, int days)
+    public async Task<RestoreObjectResult> InitiateRestoreAsync(string key, int days)
     {
         var request = new RestoreObjectRequest(_client.Host, _bucketName, key) {
             Days = days
         };
 
-        return _client.RestoreObjectAsync(request);
+        return await _client.RestoreObjectAsync(request).ConfigureAwait(false);
     }
 
     public async Task<CopyObjectResult> PutAsync(
@@ -214,7 +213,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         ArgumentNullException.ThrowIfNull(destinationKey);
          
         int retryCount = 0;
-        Exception lastException;
+        S3Exception lastException;
 
         do
         {
@@ -249,7 +248,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         }
         while (retryPolicy.ShouldRetry(retryCount));
 
-        throw new S3Exception($"Error copying '{sourceLocation}' to '{destinationKey}'", lastException);
+        throw new S3Exception($"Error copying '{sourceLocation}' to '{destinationKey}'", lastException, lastException.HttpStatusCode);
     }
 
     private static readonly PutBlobOptions defaultPutOptions = new ();
@@ -278,7 +277,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
         // Ensure we're at the start of the stream
         if (stream.CanSeek && stream.Position != 0)
-            throw new ArgumentException($"Invalid position. Expected 0. Was {stream.Position}.", nameof(blob));
+            throw new ArgumentException($"Invalid position. Expected 0. Was {stream.Position}", nameof(blob));
 
 
         int retryCount = 0;
@@ -394,6 +393,10 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
             {
                 lastException = ex;
             }
+            catch (HttpRequestException ex) // Broken pipe
+            {
+                lastException = ex;
+            }
 
             retryCount++;
         }
@@ -435,16 +438,16 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
             {
                 return await _client.UploadPartAsync(request).ConfigureAwait(false);
             }
+            catch (S3Exception ex) when (ex.IsTransient)
+            {
+                lastException = ex;
+            }
             catch (HttpRequestException httpException) // Broken pipe
             {
                 // Amazon may force close the connection before recieving the entire response.
                 // See: https://github.com/dotnet/runtime/issues/57186
 
                 lastException = httpException;
-            }
-            catch (S3Exception ex) when (ex.IsTransient)
-            {
-                lastException = ex;
             }
 
             stream.Position = 0;
@@ -455,7 +458,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
         throw lastException;
     }
-    
+
     public async Task FinalizeUploadAsync(IUpload upload, IUploadBlock[] blocks)
     {
         int retryCount = 0;
@@ -480,6 +483,10 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
             {
                 lastException = ex;
             }
+            catch (HttpRequestException httpException) // Broken pipe
+            {
+                lastException = httpException;
+            }
 
             retryCount++;
         }
@@ -488,7 +495,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         throw lastException;
     }
 
-    public async Task CancelUploadAsync(IUpload upload)
+    public Task CancelUploadAsync(IUpload upload)
     {
         ArgumentNullException.ThrowIfNull(upload);
 
@@ -499,12 +506,14 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
             uploadId   : upload.UploadId
         );
 
-        await _client.AbortMultipartUploadAsync(request).ConfigureAwait(false);
+        return _client.AbortMultipartUploadAsync(request);
     }
 
     #endregion
 
     #region Helpers
+
+    internal S3Client Client => _client;
 
     private GetObjectRequest ConstructGetRequest(string key, GetBlobOptions options)
     {

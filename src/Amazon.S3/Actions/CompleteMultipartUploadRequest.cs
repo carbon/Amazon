@@ -12,7 +12,7 @@ public sealed class CompleteMultipartUploadRequest : S3Request
         : this(host, upload.BucketName, upload.ObjectName, upload.UploadId, parts) { }
 
     public CompleteMultipartUploadRequest(string host, string bucketName, string key, string uploadId, IUploadBlock[] parts)
-        : base(HttpMethod.Post, host, bucketName, objectName: key + "?uploadId=" + uploadId)
+        : base(HttpMethod.Post, host, bucketName, objectName: $"{key}?uploadId={uploadId}")
     {
         CompletionOption = HttpCompletionOption.ResponseContentRead;
 

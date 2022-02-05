@@ -15,6 +15,9 @@ public static class S3Helper
 
     public static string GetPresignedUrl(GetPresignedUrlRequest request, IAwsCredential credential, DateTime now)
     {
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(credential);
+
         HttpMethod method = request.Method switch
         {
             "GET"  => HttpMethod.Get,

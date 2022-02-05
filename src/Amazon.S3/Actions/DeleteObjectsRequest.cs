@@ -14,8 +14,7 @@ public sealed class DeleteObjectsRequest : S3Request
 
         byte[] data = Encoding.UTF8.GetBytes(xmlText);
 
-        Content = new ByteArrayContent(data)
-        {
+        Content = new ByteArrayContent(data) {
             Headers = { { "Content-Type", "text/xml" } }
         };
 
@@ -35,7 +34,7 @@ public sealed class DeleteBatch
 
         if (keys.Count > 1_000)
         {
-            throw new ArgumentException($"May not exceed 1,000 items. Was {keys.Count} items.", nameof(keys));
+            throw new ArgumentException($"Must not exceed 1,000 items. Was {keys.Count} items.", nameof(keys));
         }
 
         _keys = keys;

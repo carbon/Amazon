@@ -47,12 +47,12 @@ public class PutObjectRequest : S3Request
 
             if (tag.Key.Length > 128)
             {
-                throw new ArgumentException("Tag key > 128 chars. Was " + tag.Key);
+                throw new ArgumentException($"Tag key > 128 chars. Was {tag.Key}");
             }
 
             if (tag.Value.Length > 256)
             {
-                throw new ArgumentException("Tag value > 256 chars. Was " + tag.Value);
+                throw new ArgumentException($"Tag value > 256 chars. Was {tag.Value}");
             }
 
             UrlEncoder.Default.Encode(writer, tag.Key);
@@ -63,40 +63,49 @@ public class PutObjectRequest : S3Request
         Headers.Add(S3HeaderNames.Tagging, writer.ToString());
     }
 
-    public void SetStream(Stream stream, string mediaType = "application/octet-stream")
+    public void SetStream(Stream stream, string contentType = "application/octet-stream")
     {
         ArgumentNullException.ThrowIfNull(stream);
 
-        SetStream(stream, sha256Hash: stream.CanSeek ? StreamHelper.ComputeSHA256(stream) : null, mediaType);
+        var hash = stream.CanSeek 
+            ? StreamHelper.ComputeSHA256(stream) 
+            : null;
+
+        SetStream(stream,
+            sha256Hash  : hash, 
+            contentType : contentType
+        );
     }
 
-    public void SetStream(Stream stream, byte[]? sha256Hash, string mediaType = "application/octet-stream")
+    public void SetStream(
+        Stream stream, 
+        byte[]? sha256Hash, 
+        string contentType = "application/octet-stream")
     {
         ArgumentNullException.ThrowIfNull(stream);
-        ArgumentNullException.ThrowIfNull(mediaType);
+        ArgumentNullException.ThrowIfNull(contentType);
 
         if (stream.Length is 0)
             throw new ArgumentException("Must not be empty", nameof(stream));
 
-        if (mediaType.Length is 0)
-            throw new ArgumentException("Required", nameof(mediaType));
+        if (contentType.Length is 0)
+            throw new ArgumentException("Required", nameof(contentType));
 
-        Content = new StreamContent(stream)
-        {
+        Content = new StreamContent(stream) {
             Headers = {
-                    { "Content-Type", mediaType }
-                }
+                { "Content-Type", contentType }
+            }
         };
 
         Content.Headers.ContentLength = stream.Length;
 
-        Headers.Add(S3HeaderNames.ContentSha256, sha256Hash is not null
+        Headers.TryAddWithoutValidation(S3HeaderNames.ContentSha256, sha256Hash is not null
             ? HexString.FromBytes(sha256Hash)
             : "UNSIGNED-PAYLOAD"
         );
     }
 
-    public void SetStream(Stream stream, long length, string mediaType = "application/octet-stream")
+    public void SetStream(Stream stream, long length, string contentType = "application/octet-stream")
     {
         ArgumentNullException.ThrowIfNull(stream);
 
@@ -105,10 +114,9 @@ public class PutObjectRequest : S3Request
             throw new ArgumentException("Must be greater than 0.", nameof(length));
         }
 
-        Content = new StreamContent(stream)
-        {
+        Content = new StreamContent(stream) {
             Headers = {
-                { "Content-Type", mediaType }
+                { "Content-Type", contentType }
             }
         };
 
@@ -116,7 +124,7 @@ public class PutObjectRequest : S3Request
 
         // TODO: Support chunked streaming...
 
-        Headers.Add(S3HeaderNames.ContentSha256, stream.CanSeek
+        Headers.TryAddWithoutValidation(S3HeaderNames.ContentSha256, stream.CanSeek
             ? HexString.FromBytes(StreamHelper.ComputeSHA256(stream))
             : "UNSIGNED-PAYLOAD");
     }

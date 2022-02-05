@@ -65,7 +65,7 @@ public abstract class S3Request : HttpRequestMessage
 
         BucketName = bucketName;
 
-        var urlBuilder = new ValueStringBuilder(128);
+        var urlBuilder = new ValueStringBuilder(256);
 
         urlBuilder.Append("https://");
         urlBuilder.Append(host);
@@ -103,10 +103,10 @@ public abstract class S3Request : HttpRequestMessage
     {
         return action switch
         {
-            S3ActionName.Tagging => "?tagging",
-            S3ActionName.Delete => "?delete",
-            S3ActionName.Restore => "?restore",
-            S3ActionName.Uploads => "?uploads",
+            S3ActionName.Tagging  => "?tagging",
+            S3ActionName.Delete   => "?delete",
+            S3ActionName.Restore  => "?restore",
+            S3ActionName.Uploads  => "?uploads",
             S3ActionName.Versions => "?versions",
             _ => throw new Exception("Invalid")
         };

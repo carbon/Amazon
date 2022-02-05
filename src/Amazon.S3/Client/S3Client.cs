@@ -1,8 +1,6 @@
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
 
 using Carbon.Storage;
 
@@ -16,7 +14,7 @@ public sealed class S3Client : AwsClient
         : this(region, host: $"s3.dualstack.{region.Name}.amazonaws.com", credential: credential) { }
 
     public S3Client(AwsRegion region, string host, IAwsCredential credential)
-        : base(AwsService.S3, region, credential)
+        : this(region, host, credential, HttpClientFactory.Create())
     {
         ArgumentNullException.ThrowIfNull(host);
 
@@ -33,7 +31,7 @@ public sealed class S3Client : AwsClient
 
     public S3Client WithTimeout(TimeSpan timeout)
     {
-        httpClient.Timeout = timeout;
+        _httpClient.Timeout = timeout;
 
         return this;
     }
@@ -76,7 +74,7 @@ public sealed class S3Client : AwsClient
 
     public async Task<UploadPartResult> UploadPartAsync(UploadPartRequest request, CancellationToken cancellationToken = default)
     {
-        using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await SendS3RequestAsync(request, request.CompletionOption, cancellationToken).ConfigureAwait(false);
 
         return new UploadPartResult(
             uploadId   : request.UploadId,
@@ -96,14 +94,9 @@ public sealed class S3Client : AwsClient
 
     public async Task<PutObjectResult> PutObjectAsync(PutObjectRequest request, CancellationToken cancellationToken = default)
     {
-        using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await SendS3RequestAsync(request, request.CompletionOption, cancellationToken).ConfigureAwait(false);
 
-        string? versionId = null;
-
-        if (response.Headers.TryGetValues(S3HeaderNames.VersionId, out var xVersionId))
-        {
-            versionId = xVersionId.FirstOrDefault();
-        }
+        string? versionId = response.Headers.GetValueOrDefault(S3HeaderNames.VersionId);
 
         return new PutObjectResult(
             eTag      : response.Headers.ETag!.Tag!,
@@ -120,7 +113,7 @@ public sealed class S3Client : AwsClient
 
     public async Task<DeleteObjectResult> DeleteObjectAsync(DeleteObjectRequest request, CancellationToken cancelationToken = default)
     {
-        using HttpResponseMessage response = await SendAsync2(request, HttpCompletionOption.ResponseHeadersRead, cancelationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await SendS3RequestAsync(request, HttpCompletionOption.ResponseHeadersRead, cancelationToken).ConfigureAwait(false);
 
         if (response.StatusCode is not HttpStatusCode.NoContent)
         {
@@ -143,33 +136,33 @@ public sealed class S3Client : AwsClient
 
     public async Task<RestoreObjectResult> RestoreObjectAsync(RestoreObjectRequest request, CancellationToken cancelationToken = default)
     {
-        using HttpResponseMessage response = await SendAsync2(request, request.CompletionOption, cancelationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await SendS3RequestAsync(request, request.CompletionOption, cancelationToken).ConfigureAwait(false);
 
         return new RestoreObjectResult(response.StatusCode);
     }
 
     public async Task<S3Object> GetObjectAsync(GetObjectRequest request, CancellationToken cancelationToken = default)
     {
-        var response = await SendAsync2(request, request.CompletionOption, cancelationToken).ConfigureAwait(false);
+        var response = await SendS3RequestAsync(request, request.CompletionOption, cancelationToken).ConfigureAwait(false);
 
         return new S3Object(request.ObjectName!, response);
     }
 
     public async Task<S3ObjectInfo> GetObjectHeadAsync(ObjectHeadRequest request, CancellationToken cancelationToken = default)
     {
-        using var response = await SendAsync2(request, HttpCompletionOption.ResponseHeadersRead, cancelationToken).ConfigureAwait(false);
+        using var response = await SendS3RequestAsync(request, HttpCompletionOption.ResponseHeadersRead, cancelationToken).ConfigureAwait(false);
 
         return S3ObjectInfo.FromResponse(request.BucketName, request.ObjectName!, response);
     }
 
-    private async Task<HttpResponseMessage> SendAsync2(
+    private async Task<HttpResponseMessage> SendS3RequestAsync(
         HttpRequestMessage request,
         HttpCompletionOption completionOption,
         CancellationToken cancellationToken)
     {
         await SignAsync(request).ConfigureAwait(false);
 
-        var response = await httpClient.SendAsync(request, completionOption, cancellationToken).ConfigureAwait(false);
+        var response = await _httpClient.SendAsync(request, completionOption, cancellationToken).ConfigureAwait(false);
 
         if (response.StatusCode is HttpStatusCode.NotModified)
         {
@@ -189,7 +182,7 @@ public sealed class S3Client : AwsClient
 
     public string GetPresignedUrl(GetPresignedUrlRequest request)
     {
-        return S3Helper.GetPresignedUrl(request, credential);
+        return S3Helper.GetPresignedUrl(request, _credential);
     }
 
     #region Helpers

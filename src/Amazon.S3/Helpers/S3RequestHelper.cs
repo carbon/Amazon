@@ -14,6 +14,7 @@ internal static class S3RequestExtensions
             switch (item.Key)
             {
                 case "Content-Encoding":
+                    request.Content!.Headers.ContentEncoding.Clear();
                     request.Content!.Headers.ContentEncoding.Add(item.Value);
                     break;
                 case "Content-Type":

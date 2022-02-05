@@ -6,7 +6,7 @@ internal static class HttpResponseMessageExtensions
 {
     public static Dictionary<string, string> GetProperties(this HttpResponseMessage response)
     {
-        var baseHeaders = response.Headers.NonValidated;
+        var baseHeaders    = response.Headers.NonValidated;
         var contentHeaders = response.Content.Headers.NonValidated;
 
         var result = new Dictionary<string, string>(baseHeaders.Count + contentHeaders.Count);
