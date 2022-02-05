@@ -3,13 +3,13 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Ses</AssemblyName>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>0.23.3</Version>
+    <Version>0.23.4</Version>
     <Nullable>enable</Nullable>
     
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern library for Amazon's Simple Email Service.</Description>    
+    <Description>A modern library for Amazon's Simple Email Service</Description>    
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;ses</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
