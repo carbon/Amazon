@@ -9,9 +9,9 @@ public sealed class DescribeImagesRequest : DescribeRequest, IEc2Request
         ImageIds.AddRange(imageIds);
     }
 
-    public List<string> ImageIds { get; } = new List<string>();
+    public List<string> ImageIds { get; } = new();
 
-    public List<string> OwnerIds { get; } = new List<string>();
+    public List<string> OwnerIds { get; } = new();
 
     public Dictionary<string, string> ToParams()
     {

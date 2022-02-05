@@ -192,7 +192,7 @@ public sealed class Ec2Client : AwsClient
     {
         var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        throw new Exception(response.StatusCode + "/" + responseText);
+        throw new Exception($"{response.StatusCode} -> {responseText}");
     }
 
     #endregion

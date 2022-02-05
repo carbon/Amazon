@@ -10,7 +10,7 @@ public abstract class DescribeRequest
 
     public string? NextToken { get; set; }
 
-    public List<Filter> Filters { get; } = new List<Filter>();
+    public List<Filter> Filters { get; } = new();
 
     protected void AddIds(Dictionary<string, string> parameters, string prefix, IReadOnlyList<string>? ids)
     {
@@ -18,27 +18,27 @@ public abstract class DescribeRequest
 
         for (int i = 0; i < ids.Count; i++)
         {
+            int number = i + 1;
+
             // e.g. VpcId.1
-            parameters.Add(prefix + "." + (i + 1), ids[i]);
+            parameters.Add(string.Create(CultureInfo.InvariantCulture, $"{prefix}.{number}"), ids[i]);
         }
     }
 
     protected Dictionary<string, string> GetParameters(string actionName)
     {
         var parameters = new Dictionary<string, string> {
-                { "Action", actionName }
-            };
+            { "Action", actionName }
+        };
 
-        int i = 1;
+        int number = 1;
 
         foreach (Filter filter in Filters)
         {
-            string prefix = "Filter." + i.ToString(CultureInfo.InvariantCulture) + ".";
+            parameters.Add(string.Create(CultureInfo.InvariantCulture, $"Filter.{number}.Name"),  filter.Name);
+            parameters.Add(string.Create(CultureInfo.InvariantCulture, $"Filter.{number}.Value"), filter.Value);
 
-            parameters.Add(prefix + "Name", filter.Name);
-            parameters.Add(prefix + "Value", filter.Value);
-
-            i++;
+            number++;
         }
 
         if (MaxResults is int maxResults)
