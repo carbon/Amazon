@@ -42,7 +42,7 @@ public sealed class SesClient : AwsClient
         return SendEmailResponse.Parse(text).SendEmailResult;
     }
 
-    public async Task<SendEmailResult> SendRawEmailAsync(SendRawEmailRequest request)
+    public async Task<SendRawEmailResult> SendRawEmailAsync(SendRawEmailRequest request)
     {
         var data = new SesRequest("SendRawEmail");
 
@@ -53,7 +53,7 @@ public sealed class SesClient : AwsClient
 
         var text = await SendWithRetryPolicy(data, retryPolicy).ConfigureAwait(false);
 
-        return SendEmailResponse.Parse(text).SendEmailResult;
+        return SendRawEmailResponse.Parse(text).SendRawEmailResult;
     }
 
     public async Task<GetSendQuotaResult> GetSendQuotaAsync()
