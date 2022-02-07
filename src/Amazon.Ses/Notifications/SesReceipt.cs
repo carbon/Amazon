@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System;
+﻿using System;
 using System.Text.Json.Serialization;
 
 namespace Amazon.Ses;
@@ -12,6 +10,14 @@ public sealed class SesReceipt
 
     [JsonPropertyName("processingTimeMillis")]
     public long ProcessingTimeMillis { get; init; }
+
+    /// <summary>
+    /// none | quarantine | reject
+    /// </summary>
+    [JsonPropertyName("dmarcPolicy")]
+    public string? DmarcPolicy { get; set; }
+
+#nullable disable
 
     [JsonPropertyName("recipients")]
     public string[] Recipients { get; init; }
