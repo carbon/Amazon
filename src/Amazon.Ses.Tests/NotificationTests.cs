@@ -49,7 +49,6 @@ public class NotificationTests
 
         Assert.Equal("email_1337983178613@amazon.com",                               mail.Source);
         Assert.Equal("0000013786031775-163e3910-53eb-4c8e-a04a-f29debf88a84-000000", mail.MessageId);
-
     }
 
     [Fact]
@@ -72,5 +71,39 @@ public class NotificationTests
         Assert.Equal("hi@simulator.amazonses.com", notification.Bounce.BouncedRecipients[0].EmailAddress);
 
         Assert.Equal("000001438fa37fa1-08180675-1d15-4bfc-b388-3b71a75f5a31-000000", mail.MessageId);
+    }
+
+    [Fact]
+    public void ParseDelivery()
+    {
+        var text = @"
+{
+  ""notificationType"":""Delivery"",
+  ""mail"":{
+    ""timestamp"":""2014-05-28T22:40:59.638Z"",
+    ""messageId"":""0000014644fe5ef6-9a483358-9170-4cb4-a269-f5dcdf415321-000000"",
+    ""source"":""test@ses-example.com"",
+    ""destination"":[
+    ""success@simulator.amazonses.com"",
+    ""recipient@ses-example.com"" ]
+  },
+  ""delivery"":{
+    ""timestamp"":""2014-05-28T22:41:01.184Z"",
+    ""recipients"":[""success@simulator.amazonses.com""],
+    ""processingTimeMillis"":1546,     
+    ""reportingMTA"":""a8-70.smtp-out.amazonses.com"",
+    ""smtpResponse"":""250 ok:  Message 64111812 accepted""
+  }
+}";
+
+        var notification = JsonSerializer.Deserialize<SesNotification>(text);
+
+        Assert.Equal(SesNotificationType.Delivery, notification.NotificationType);
+
+        var delivery = notification.Delivery;
+
+        Assert.Equal("success@simulator.amazonses.com", delivery.Recipients[0]);
+        Assert.Equal(1546, delivery.ProcessingTimeMillis);
+        Assert.Equal("250 ok:  Message 64111812 accepted", delivery.SmtpResponse);
     }
 }

@@ -23,6 +23,8 @@ public sealed class SesNotification
 	[JsonPropertyName("receipt")]
 	public SesReceipt? Receipt { get; init; }
 
+    [JsonPropertyName("delivery")]
+    public SesDelivery? Delivery { get; init; }
 
     /// <summary>
     /// This field is present only if the notification was triggered by an SNS action.
