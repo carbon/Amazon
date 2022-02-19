@@ -56,12 +56,11 @@ public sealed class StsClient : AwsClient
 
         var headers = new Dictionary<string, string>(4);
 
-        foreach (var header in httpRequest.Headers)
+        foreach (var header in httpRequest.Headers.NonValidated)
         {
-            if (header.Key.StartsWith("x-amz-", StringComparison.Ordinal)
-             || header.Key is "Authorization")
+            if (header.Key.StartsWith("x-amz-", StringComparison.Ordinal) || header.Key is "Authorization")
             {
-                headers.Add(header.Key, string.Join(";", header.Value));
+                headers.Add(header.Key, header.Value.ToString());
             }
         }
 
