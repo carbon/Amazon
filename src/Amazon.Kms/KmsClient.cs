@@ -85,19 +85,19 @@ public sealed class KmsClient : AwsClient
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
         {
             Headers = {
-                    { "x-amz-target", "TrentService." + action }
-                },
+                { "x-amz-target", $"TrentService.{action}" }
+            },
             Content = new ByteArrayContent(jsonBytes)
             {
                 Headers = {
-                        { "Content-Type", "application/x-amz-json-1.1" }
-                    }
+                    { "Content-Type", "application/x-amz-json-1.1" }
+                }
             }
         };
 
         await SignAsync(httpRequest).ConfigureAwait(false);
 
-        using var response = await httpClient.SendAsync(httpRequest).ConfigureAwait(false);
+        using var response = await _httpClient.SendAsync(httpRequest).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -126,9 +126,9 @@ public sealed class KmsClient : AwsClient
 
             return error.Type switch
             {
-                "AccessDeniedException" => new AccessDeniedException(error, response.StatusCode),
+                "AccessDeniedException"       => new AccessDeniedException(error, response.StatusCode),
                 "ServiceUnavailableException" => new ServiceUnavailableException(), // TODO: Provide the message
-                "KeyUnavailableException" => new KeyUnavailableException(error, response.StatusCode),
+                "KeyUnavailableException"     => new KeyUnavailableException(error, response.StatusCode),
                 _ => new KmsException(error, response.StatusCode)
             };
         }
