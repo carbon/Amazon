@@ -13,19 +13,15 @@ public sealed class S3Client : AwsClient
     public S3Client(AwsRegion region, IAwsCredential credential)
         : this(region, host: $"s3.dualstack.{region.Name}.amazonaws.com", credential: credential) { }
 
-    public S3Client(AwsRegion region, string host, IAwsCredential credential)
+    public S3Client(AwsRegion region, string host!!, IAwsCredential credential)
         : this(region, host, credential, HttpClientFactory.Create())
     {
-        ArgumentNullException.ThrowIfNull(host);
-
         Host = host;
     }
 
-    public S3Client(AwsRegion region, string host, IAwsCredential credential, HttpClient httpClient)
+    public S3Client(AwsRegion region, string host!!, IAwsCredential credential, HttpClient httpClient)
       : base(AwsService.S3, region, credential, httpClient)
     {
-        ArgumentNullException.ThrowIfNull(host);
-
         Host = host;
     }
 

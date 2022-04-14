@@ -5,11 +5,8 @@ public sealed class GetItemRequest
     public GetItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key)
         : this(tableName, key.ToDictionary()) { }
 
-    public GetItemRequest(string tableName, IReadOnlyDictionary<string, DbValue> key)
+    public GetItemRequest(string tableName!!, IReadOnlyDictionary<string, DbValue> key!!)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-        ArgumentNullException.ThrowIfNull(key);
-
         TableName = tableName;
         Key = key;
     }

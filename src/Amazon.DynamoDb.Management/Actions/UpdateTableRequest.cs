@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 using Amazon.DynamoDb.Models;
 
@@ -7,10 +6,8 @@ namespace Amazon.DynamoDb;
 
 public sealed class UpdateTableRequest
 {
-    public UpdateTableRequest(string tableName)
+    public UpdateTableRequest(string tableName!!)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-
         TableName = tableName;
     }
 

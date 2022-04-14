@@ -4,11 +4,8 @@ namespace Amazon.S3;
 
 public sealed class ObjectHeadRequest : S3Request
 {
-    public ObjectHeadRequest(string host, string bucketName, string key)
-        : base(HttpMethod.Head, host, bucketName, key)
-    {
-        ArgumentNullException.ThrowIfNull(key);
-    }
+    public ObjectHeadRequest(string host, string bucketName, string key!!)
+        : base(HttpMethod.Head, host, bucketName, key) { }
 
     internal void SetCustomerEncryptionKey(in ServerSideEncryptionKey key)
     {

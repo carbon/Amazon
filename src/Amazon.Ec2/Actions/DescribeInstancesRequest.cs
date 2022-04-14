@@ -2,7 +2,7 @@
 
 public sealed class DescribeInstancesRequest : DescribeRequest, IEc2Request
 {
-    public DescribeInstancesRequest(params string[] instanceIds)
+    public DescribeInstancesRequest(params string[] instanceIds!!)
     {
         InstanceIds = instanceIds;
     }

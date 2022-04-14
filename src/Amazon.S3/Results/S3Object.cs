@@ -16,11 +16,8 @@ public sealed class S3Object : IBlobResult, IDisposable
     private HttpResponseMessage? _response;
     private long? contentLength;
 
-    public S3Object(string name, HttpResponseMessage response)
+    public S3Object(string name!!, HttpResponseMessage response!!)
     {
-        ArgumentNullException.ThrowIfNull(name);
-        ArgumentNullException.ThrowIfNull(response);
-
         Key = name;
 
         _properties = response.GetProperties();

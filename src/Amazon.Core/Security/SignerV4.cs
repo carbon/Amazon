@@ -40,10 +40,8 @@ public static class SignerV4
     }
 
     [SkipLocalsInit]
-    public static string GetStringToSign(in CredentialScope scope, string timestamp, string canonicalRequest)
+    public static string GetStringToSign(in CredentialScope scope, string timestamp, string canonicalRequest!!)
     {
-        ArgumentNullException.ThrowIfNull(canonicalRequest);
-
         var output = new ValueStringBuilder(256);  // avg ~138
 
         output.Append(algorithmName)  ; output.Append('\n'); // Algorithm + \n
@@ -61,10 +59,8 @@ public static class SignerV4
         return GetCanonicalRequest(request, out _);
     }
         
-    public static string GetCanonicalRequest(HttpRequestMessage request, out List<string> signedHeaderNames)
+    public static string GetCanonicalRequest(HttpRequestMessage request!!, out List<string> signedHeaderNames)
     {
-        ArgumentNullException.ThrowIfNull(request);
-
         var output = new ValueStringBuilder(512);
 
         output.Append(request.Method.Method)                                  ; output.Append('\n'); // HTTPRequestMethod      + \n
@@ -198,11 +194,9 @@ public static class SignerV4
         CredentialScope scope,
         DateTime date,
         TimeSpan expires,
-        HttpRequestMessage request,
+        HttpRequestMessage request!!,
         string payloadHash = emptySha256)
     {
-        ArgumentNullException.ThrowIfNull(request);
-
         string presignedUrl = GetPresignedUrl(
             credential  : credential,
             scope       : scope,
@@ -309,10 +303,8 @@ public static class SignerV4
     }
 
     [SkipLocalsInit]
-    public static void Sign(IAwsCredential credential, in CredentialScope scope, HttpRequestMessage request)
+    public static void Sign(IAwsCredential credential!!, in CredentialScope scope, HttpRequestMessage request)
     {
-        ArgumentNullException.ThrowIfNull(credential);
-
         // If we're using S3, ensure the request content has been signed
         if (scope.Service.Equals(AwsService.S3) && !request.Headers.NonValidated.Contains("x-amz-content-sha256"))
         {

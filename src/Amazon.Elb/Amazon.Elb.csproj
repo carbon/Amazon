@@ -3,9 +3,10 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Elb</AssemblyName>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>0.22.0</Version>
+    <Version>0.23.0</Version>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>preview</LangVersion>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>

@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using System;
 
 namespace Amazon.Kinesis;
 
@@ -8,10 +7,8 @@ public sealed class DescribeStreamRequest : KinesisRequest
 {
     public DescribeStreamRequest() { }
 
-    public DescribeStreamRequest(string streamName)
+    public DescribeStreamRequest(string streamName!!)
     {
-        ArgumentNullException.ThrowIfNull(streamName);
-
         StreamName = streamName;
     }
 

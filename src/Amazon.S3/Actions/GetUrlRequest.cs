@@ -3,17 +3,13 @@ namespace Amazon.S3;
 public sealed class GetPresignedUrlRequest
 {
     public GetPresignedUrlRequest(
-        string method,
-        string host,
+        string method!!,
+        string host!!,
         AwsRegion region,
-        string bucketName,
+        string bucketName!!,
         string objectKey,
         TimeSpan expiresIn)
     {
-        ArgumentNullException.ThrowIfNull(method);
-        ArgumentNullException.ThrowIfNull(host);
-        ArgumentNullException.ThrowIfNull(bucketName);
-
         Method = method;
         Host = host;
         Region = region;

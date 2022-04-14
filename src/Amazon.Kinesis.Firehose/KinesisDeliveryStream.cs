@@ -7,11 +7,8 @@ public class DeliveryStream
 {
     private readonly KinesisFirehoseClient _client;
 
-    public DeliveryStream(string name, KinesisFirehoseClient client)
+    public DeliveryStream(string name!!, KinesisFirehoseClient client!!)
     {
-        ArgumentNullException.ThrowIfNull(name);
-        ArgumentNullException.ThrowIfNull(client);
-
         Name = name;
         _client = client;
     }

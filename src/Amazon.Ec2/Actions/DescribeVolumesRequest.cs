@@ -2,7 +2,7 @@
 
 public sealed class DescribeVolumesRequest : DescribeRequest, IEc2Request
 {
-    public DescribeVolumesRequest(params string[] volumeIds)
+    public DescribeVolumesRequest(params string[] volumeIds!!)
     {
         VolumeIds = volumeIds;
     }

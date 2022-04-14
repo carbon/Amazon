@@ -8,11 +8,9 @@ namespace Amazon.S3;
 
 public class PutObjectRequest : S3Request
 {
-    public PutObjectRequest(string host, string bucketName, string key)
+    public PutObjectRequest(string host, string bucketName, string key!!)
         : base(HttpMethod.Put, host, bucketName, key)
     {
-        ArgumentNullException.ThrowIfNull(key);
-
         CompletionOption = HttpCompletionOption.ResponseContentRead;
     }
 
@@ -63,10 +61,8 @@ public class PutObjectRequest : S3Request
         Headers.Add(S3HeaderNames.Tagging, writer.ToString());
     }
 
-    public void SetStream(Stream stream, string contentType = "application/octet-stream")
+    public void SetStream(Stream stream!!, string contentType = "application/octet-stream")
     {
-        ArgumentNullException.ThrowIfNull(stream);
-
         var hash = stream.CanSeek 
             ? StreamHelper.ComputeSHA256(stream) 
             : null;
@@ -78,11 +74,10 @@ public class PutObjectRequest : S3Request
     }
 
     public void SetStream(
-        Stream stream, 
+        Stream stream!!,
         byte[]? sha256Hash, 
         string contentType = "application/octet-stream")
     {
-        ArgumentNullException.ThrowIfNull(stream);
         ArgumentNullException.ThrowIfNull(contentType);
 
         if (stream.Length is 0)
@@ -105,10 +100,8 @@ public class PutObjectRequest : S3Request
         );
     }
 
-    public void SetStream(Stream stream, long length, string contentType = "application/octet-stream")
+    public void SetStream(Stream stream!!, long length, string contentType = "application/octet-stream")
     {
-        ArgumentNullException.ThrowIfNull(stream);
-
         if (length <= 0)
         {
             throw new ArgumentException("Must be greater than 0.", nameof(length));

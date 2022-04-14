@@ -6,10 +6,8 @@ public sealed class IamInstanceProfileSpecification
 {
     public IamInstanceProfileSpecification() { }
 
-    public IamInstanceProfileSpecification(string nameOrArn)
+    public IamInstanceProfileSpecification(string nameOrArn!!)
     {
-        ArgumentNullException.ThrowIfNull(nameOrArn);
-
         if (nameOrArn.StartsWith("arn:", StringComparison.Ordinal))
         {
             Arn = nameOrArn;

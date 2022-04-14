@@ -2,7 +2,7 @@
 
 public sealed class DescribeNetworkInterfacesRequest : DescribeRequest, IEc2Request
 {
-    public DescribeNetworkInterfacesRequest(params string[] networkInterfaceIds)
+    public DescribeNetworkInterfacesRequest(params string[] networkInterfaceIds!!)
     {
         NetworkInterfaceIds = networkInterfaceIds;
     }

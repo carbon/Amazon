@@ -23,11 +23,8 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
     public S3Bucket(AwsRegion region, string bucketName, IAwsCredential credential)
         : this(bucketName, new S3Client(region, credential)) { }
 
-    public S3Bucket(string bucketName, S3Client client)
+    public S3Bucket(string bucketName!!, S3Client client!!)
     {
-        ArgumentNullException.ThrowIfNull(bucketName);
-        ArgumentNullException.ThrowIfNull(client);
-
         _bucketName = bucketName;
         _client = client;
     }

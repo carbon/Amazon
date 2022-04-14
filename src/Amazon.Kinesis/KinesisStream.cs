@@ -18,11 +18,8 @@ public sealed class KinesisStream : IStream
         maxRetries   : 3
     );
 
-    public KinesisStream(string name, KinesisClient client)
+    public KinesisStream(string name!!, KinesisClient client!!)
     {
-        ArgumentNullException.ThrowIfNull(name);
-        ArgumentNullException.ThrowIfNull(client);
-
         Name = name;
         _client = client;
     }
@@ -80,11 +77,8 @@ public sealed class KinesisStream : IStream
         );
     }
 
-    public IDisposable Subscribe(IShard shard, IObserver<IRecord> observer)
+    public IDisposable Subscribe(IShard shard!!, IObserver<IRecord> observer!!)
     {
-        ArgumentNullException.ThrowIfNull(shard);
-        ArgumentNullException.ThrowIfNull(observer);
-
         return new KinesisStreamSubscription(this, shard, observer);
     }
 }

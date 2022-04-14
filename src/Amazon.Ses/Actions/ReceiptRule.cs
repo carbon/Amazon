@@ -1,14 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ses;
 
 public sealed class ReceiptRule
 {
-    public ReceiptRule(string name)
+    public ReceiptRule(string name!!)
     {
-        ArgumentNullException.ThrowIfNull(name);
-
         Name = name;
     }
 

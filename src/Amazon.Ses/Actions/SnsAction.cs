@@ -1,13 +1,9 @@
-﻿using System;
-
-namespace Amazon.Ses;
+﻿namespace Amazon.Ses;
 
 public sealed class SnsAction
 {
-    public SnsAction(string topicArn, string? encoding = null)
+    public SnsAction(string topicArn!!, string? encoding = null)
     {
-        ArgumentNullException.ThrowIfNull(topicArn);
-
         TopicArn = topicArn;
         Encoding = encoding;
     }

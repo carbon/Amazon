@@ -38,11 +38,8 @@ public class DynamoTable<T, TKey>
         : this(metadata.Name, client)
     { }
 
-    public DynamoTable(string tableName, DynamoDbClient client)
+    public DynamoTable(string tableName!!, DynamoDbClient client!!)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-        ArgumentNullException.ThrowIfNull(client);
-
         _tableName = tableName;
         _client = client;
 
@@ -62,8 +59,7 @@ public class DynamoTable<T, TKey>
             keyNames[i] = key[i].Key;
         }
 
-        var result = await FindAsync(new GetItemRequest(_tableName, key)
-        {
+        var result = await FindAsync(new GetItemRequest(_tableName, key) {
             ConsistentRead = false,
             AttributesToGet = keyNames
         }).ConfigureAwait(false);
@@ -83,8 +79,7 @@ public class DynamoTable<T, TKey>
 
     public Task<T?> FindAsync(Key<T> key, bool isConsistent)
     {
-        return FindAsync(new GetItemRequest(_tableName, key)
-        {
+        return FindAsync(new GetItemRequest(_tableName, key) {
             ConsistentRead = isConsistent
         });
     }
@@ -347,10 +342,8 @@ public class DynamoTable<T, TKey>
         return _client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
     }
 
-    public Task<DeleteItemResult> DeleteAsync(T record)
+    public Task<DeleteItemResult> DeleteAsync(T record!!)
     {
-        ArgumentNullException.ThrowIfNull(record);
-
         var request = new DeleteItemRequest(_tableName, Key<T>.FromObject(record));
 
         return InternalDeleteAsync(request);

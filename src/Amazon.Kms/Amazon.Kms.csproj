@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kms</AssemblyName>
-    <Version>0.22.0</Version>
+    <Version>0.23.0</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>preview</LangVersion>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>

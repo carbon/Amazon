@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
@@ -11,10 +10,8 @@ public sealed class ResourceRecordSet
     public ResourceRecordSet() { }
 
 #nullable enable
-    public ResourceRecordSet(ResourceRecordType type, string name, params ResourceRecord[] resourceRecords)
+    public ResourceRecordSet(ResourceRecordType type, string name!!, params ResourceRecord[] resourceRecords)
     {
-        ArgumentNullException.ThrowIfNull(name);
-
         Type = type;
         Name = name;
         ResourceRecords = resourceRecords;

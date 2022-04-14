@@ -7,11 +7,8 @@ namespace Amazon;
 
 public sealed class AwsCredential : IAwsCredential
 {
-    public AwsCredential(string accessKeyId, string secretAccessKey)
+    public AwsCredential(string accessKeyId!!, string secretAccessKey!!)
     {
-        ArgumentNullException.ThrowIfNull(accessKeyId);
-        ArgumentNullException.ThrowIfNull(secretAccessKey);
-
         AccessKeyId = accessKeyId;
         SecretAccessKey = secretAccessKey;
     }
@@ -25,10 +22,8 @@ public sealed class AwsCredential : IAwsCredential
 
     // {id}:{secret}
 
-    public static AwsCredential Parse(string text)
+    public static AwsCredential Parse(string text!!)
     {
-        ArgumentNullException.ThrowIfNull(text);
-
         int colonIndex = text.IndexOf(':');
 
         if (colonIndex == -1)
@@ -37,8 +32,8 @@ public sealed class AwsCredential : IAwsCredential
         }
 
         return new AwsCredential(
-            accessKeyId: text.Substring(0, colonIndex),
-            secretAccessKey: text.Substring(colonIndex + 1)
+            accessKeyId     : text.Substring(0, colonIndex),
+            secretAccessKey : text.Substring(colonIndex + 1)
         );
     }
 

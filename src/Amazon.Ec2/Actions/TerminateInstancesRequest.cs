@@ -4,10 +4,8 @@ namespace Amazon.Ec2;
 
 public sealed class TerminateInstancesRequest : IEc2Request
 {
-    public TerminateInstancesRequest(params string[] instanceIds)
+    public TerminateInstancesRequest(params string[] instanceIds!!)
     {
-        ArgumentNullException.ThrowIfNull(instanceIds);
-
         InstanceIds = instanceIds;
     }
 

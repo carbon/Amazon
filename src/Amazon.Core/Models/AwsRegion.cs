@@ -8,10 +8,8 @@ namespace Amazon;
 
 public sealed class AwsRegion : IEquatable<AwsRegion>
 {
-    public AwsRegion(string name)
+    public AwsRegion(string name!!)
     {
-        ArgumentNullException.ThrowIfNull(name);
-
         Name = name;
     }
 

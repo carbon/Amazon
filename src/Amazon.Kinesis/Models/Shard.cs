@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using System;
-
 using Carbon.Data.Streams;
 
 namespace Amazon.Kinesis;
@@ -10,10 +8,8 @@ public sealed class Shard : IShard
 {
     public Shard() { }
 
-    public Shard(string id)
+    public Shard(string id!!)
     {
-        ArgumentNullException.ThrowIfNull(id);
-
         ShardId = id;
     }
 

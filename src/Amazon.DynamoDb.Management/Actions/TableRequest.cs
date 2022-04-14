@@ -4,10 +4,8 @@ namespace Amazon.DynamoDb;
 
 internal class TableRequest
 {
-    internal TableRequest(string tableName)
+    internal TableRequest(string tableName!!)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-
         TableName = tableName;
     }
 

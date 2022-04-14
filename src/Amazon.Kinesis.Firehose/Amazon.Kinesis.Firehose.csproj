@@ -5,6 +5,7 @@
     <Version>0.12.0</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
 
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>

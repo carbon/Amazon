@@ -7,10 +7,8 @@ namespace Amazon.DynamoDb;
 [JsonConverter(typeof(BatchGetItemRequestConverter))]
 public sealed class BatchGetItemRequest
 {
-    public BatchGetItemRequest(params TableKeys[] sets)
+    public BatchGetItemRequest(params TableKeys[] sets!!)
     {
-        ArgumentNullException.ThrowIfNull(sets);
-
         Sets = sets;
     }
 
@@ -19,18 +17,14 @@ public sealed class BatchGetItemRequest
 
 public sealed class TableKeys
 {
-    public TableKeys(string tableName, params Dictionary<string, DbValue>[] keys)
+    public TableKeys(string tableName!!, params Dictionary<string, DbValue>[] keys)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-
         TableName = tableName;
         Keys = keys;
     }
 
-    public TableKeys(string tableName, params IEnumerable<KeyValuePair<string, object>>[] keys)
+    public TableKeys(string tableName!!, params IEnumerable<KeyValuePair<string, object>>[] keys)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-
         TableName = tableName;
         Keys = new Dictionary<string, DbValue>[keys.Length];
 

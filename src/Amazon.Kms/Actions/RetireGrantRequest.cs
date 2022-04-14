@@ -2,16 +2,13 @@
 
 public sealed class RetireGrantRequest : KmsRequest
 {
-    public RetireGrantRequest(string grantToken)
+    public RetireGrantRequest(string grantToken!!)
     {
         GrantToken = grantToken;
     }
 
-    public RetireGrantRequest(string keyId, string grantId)
+    public RetireGrantRequest(string keyId!!, string grantId!!)
     {
-        ArgumentNullException.ThrowIfNull(keyId);
-        ArgumentNullException.ThrowIfNull(grantId);
-
         KeyId = keyId;
         GrantId = grantId;
     }

@@ -6,11 +6,8 @@ namespace Amazon.Security;
 
 public readonly struct CredentialScope : ISpanFormattable
 {
-    public CredentialScope(DateTime date, AwsRegion region, AwsService service)
+    public CredentialScope(DateTime date, AwsRegion region!!, AwsService service!!)
     {
-        ArgumentNullException.ThrowIfNull(region);
-        ArgumentNullException.ThrowIfNull(service);
-
         Date = date;
         Region = region;
         Service = service;

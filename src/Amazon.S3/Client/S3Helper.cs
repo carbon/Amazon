@@ -13,11 +13,8 @@ public static class S3Helper
         return GetPresignedUrl(request, credential, DateTime.UtcNow);
     }
 
-    public static string GetPresignedUrl(GetPresignedUrlRequest request, IAwsCredential credential, DateTime now)
+    public static string GetPresignedUrl(GetPresignedUrlRequest request!!, IAwsCredential credential!!, DateTime now)
     {
-        ArgumentNullException.ThrowIfNull(request);
-        ArgumentNullException.ThrowIfNull(credential);
-
         HttpMethod method = request.Method switch
         {
             "GET"  => HttpMethod.Get,

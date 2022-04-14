@@ -6,11 +6,12 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>preview</LangVersion>
     
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern library for Amazon's Simple Queue Service.</Description>
+    <Description>A modern library for Amazon's Simple Queue Service</Description>
     
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;sqs</PackageTags>

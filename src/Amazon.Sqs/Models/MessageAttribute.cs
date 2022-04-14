@@ -29,10 +29,8 @@ public readonly struct MessageAttribute
 
 public readonly struct MessageAttributeValue
 {
-    public MessageAttributeValue(MessageAttributeDataType type, string value)
+    public MessageAttributeValue(MessageAttributeDataType type, string value!!)
     {
-        ArgumentNullException.ThrowIfNull(value);
-
         DataType = type;
         Value = value;
     }

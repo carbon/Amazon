@@ -3,14 +3,11 @@
 public sealed class EncryptRequest : KmsRequest
 {
     public EncryptRequest(
-        string keyId,
-        byte[] plaintext,
+        string keyId!!,
+        byte[] plaintext!!,
         IReadOnlyDictionary<string, string>? context = null,
         string[]? grantTokens = null)
     {
-        ArgumentNullException.ThrowIfNull(keyId);
-        ArgumentNullException.ThrowIfNull(plaintext);
-
         if (keyId.Length is 0)
         {
             throw new ArgumentException("Must not be empty", nameof(keyId));

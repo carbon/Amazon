@@ -6,6 +6,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningAsErrors>true</TreatWarningAsErrors>
+    <LangVersion>preview</LangVersion>
 
     <PackageId>Carbon.Amazon.Route53</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

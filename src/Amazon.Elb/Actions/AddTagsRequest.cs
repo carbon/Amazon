@@ -6,11 +6,8 @@ public sealed class AddTagsRequest : IElbRequest
 {
     public AddTagsRequest() { }
 
-    public AddTagsRequest(string[] resourceArns, Tag[] tags)
+    public AddTagsRequest(string[] resourceArns!!, Tag[] tags!!)
     {
-        ArgumentNullException.ThrowIfNull(resourceArns);
-        ArgumentNullException.ThrowIfNull(tags);
-
         ResourceArns = resourceArns;
         Tags = tags;
     }

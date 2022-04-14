@@ -10,21 +10,15 @@ public sealed class SendCommandRequest : ISsmRequest
     public SendCommandRequest() { }
 #nullable enable
 
-    public SendCommandRequest(string documentName, string[] instanceIds, Dictionary<string, string[]>? parameters = null)
+    public SendCommandRequest(string documentName!!, string[] instanceIds!!, Dictionary<string, string[]>? parameters = null)
     {
-        ArgumentNullException.ThrowIfNull(documentName);
-        ArgumentNullException.ThrowIfNull(instanceIds);
-
         DocumentName = documentName;
         InstanceIds = instanceIds;
         Parameters = parameters;
     }
 
-    public SendCommandRequest(string documentName, CommandTarget[] targets, Dictionary<string, string[]>? parameters = null)
+    public SendCommandRequest(string documentName!!, CommandTarget[] targets!!, Dictionary<string, string[]>? parameters = null)
     {
-        ArgumentNullException.ThrowIfNull(documentName);
-        ArgumentNullException.ThrowIfNull(targets);
-
         DocumentName = documentName;
         Targets = targets;
         Parameters = parameters;

@@ -1,13 +1,9 @@
-﻿using System;
-
-namespace Amazon.Kinesis.Firehose;
+﻿namespace Amazon.Kinesis.Firehose;
 
 public sealed class PutRecordRequest
 {
-    public PutRecordRequest(string deliveryStreamName, Record record)
+    public PutRecordRequest(string deliveryStreamName!!, Record record)
     {
-        ArgumentNullException.ThrowIfNull(deliveryStreamName);
-
         DeliveryStreamName = deliveryStreamName;
         Record = record;
     }

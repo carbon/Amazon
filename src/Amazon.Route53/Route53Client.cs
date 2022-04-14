@@ -17,24 +17,24 @@ public sealed class Route53Client : AwsClient
     {
     }
 
-    public async Task<ChangeResourceRecordSetsResponse> ChangeResourceRecordSetsAsync(string hostedZoneId, ChangeResourceRecordSetsRequest request)
+    public Task<ChangeResourceRecordSetsResponse> ChangeResourceRecordSetsAsync(string hostedZoneId!!, ChangeResourceRecordSetsRequest request!!)
     {
-            return await PostXmlAsync<ChangeResourceRecordSetsRequest, ChangeResourceRecordSetsResponse>(
-                path     : $"/hostedzone/{hostedZoneId}/rrset",
-                data : request
-        ).ConfigureAwait(false);
+        return PostXmlAsync<ChangeResourceRecordSetsRequest, ChangeResourceRecordSetsResponse>(
+            path     : $"/hostedzone/{hostedZoneId}/rrset",
+            data : request
+        );
     }
 
-    public async Task<ListResourceRecordSetsResponse> ListResourceRecordSetsAsync(ListResourceRecordSetsRequest request)
+    public Task<ListResourceRecordSetsResponse> ListResourceRecordSetsAsync(ListResourceRecordSetsRequest request!!)
     {
-        return await GetAsync<ListResourceRecordSetsResponse>($"/hostedzone/{request.Id}/rrset" + request.ToQueryString()).ConfigureAwait(false);
+        return GetAsync<ListResourceRecordSetsResponse>($"/hostedzone/{request.Id}/rrset" + request.ToQueryString());
     }
 
     #region Geolocations
 
-    public async Task<ListGeoLocationsResponse> ListGeoLocationsAsync(ListGeoLocationsRequest request)
+    public Task<ListGeoLocationsResponse> ListGeoLocationsAsync(ListGeoLocationsRequest request!!)
     {
-        return await GetAsync<ListGeoLocationsResponse>($"/geolocations" + request.ToQueryString()).ConfigureAwait(false);
+        return GetAsync<ListGeoLocationsResponse>("/geolocations" + request.ToQueryString());
     }
 
     #endregion

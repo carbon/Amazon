@@ -1,15 +1,11 @@
-﻿
-using Carbon.Data.Expressions;
+﻿using Carbon.Data.Expressions;
 
 namespace Amazon.DynamoDb;
 
 public sealed class PutItemRequest
 {
-    public PutItemRequest(string tableName, AttributeCollection item)
+    public PutItemRequest(string tableName!!, AttributeCollection item!!)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-        ArgumentNullException.ThrowIfNull(item);
-
         TableName = tableName;
         Item = item;
     }

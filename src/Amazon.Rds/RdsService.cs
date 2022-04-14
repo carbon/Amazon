@@ -12,11 +12,8 @@ public sealed class RdsService
     private readonly AwsRegion _region;
     private readonly IAwsCredential _credential;
 
-    public RdsService(AwsRegion region, IAwsCredential credential)
+    public RdsService(AwsRegion region!!, IAwsCredential credential!!)
     {
-        ArgumentNullException.ThrowIfNull(region);
-        ArgumentNullException.ThrowIfNull(credential);
-
         _region = region;
         _credential = credential;
     }

@@ -8,10 +8,11 @@ public sealed class GenerateDataKeyRequest : KmsRequest
     public GenerateDataKeyRequest() { }
 #nullable enable
 
-    public GenerateDataKeyRequest(string keyId, KeySpec keySpec, IReadOnlyDictionary<string, string>? encryptionContext)
+    public GenerateDataKeyRequest(
+        string keyId!!,
+        KeySpec keySpec,
+        IReadOnlyDictionary<string, string>? encryptionContext)
     {
-        ArgumentNullException.ThrowIfNull(keyId);
-
         KeyId = keyId;
         KeySpec = keySpec;
         EncryptionContext = encryptionContext;

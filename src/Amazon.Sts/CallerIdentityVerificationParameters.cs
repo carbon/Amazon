@@ -11,12 +11,8 @@ public sealed class CallerIdentityVerificationParameters
     public CallerIdentityVerificationParameters() { }
 #nullable enable
 
-    public CallerIdentityVerificationParameters(string url, IReadOnlyDictionary<string, string> headers, string body)
+    public CallerIdentityVerificationParameters(string url!!, IReadOnlyDictionary<string, string> headers!!, string body!!)
     {
-        ArgumentNullException.ThrowIfNull(url);
-        ArgumentNullException.ThrowIfNull(headers);
-        ArgumentNullException.ThrowIfNull(body);
-
         Url = url;
         Headers = headers;
         Body = body;

@@ -4,10 +4,8 @@ namespace Amazon.DynamoDb;
 
 public sealed class ScanRequest
 {
-    public ScanRequest(string tableName, Expression[]? conditions = null)
+    public ScanRequest(string tableName!!, Expression[]? conditions = null)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-
         TableName = tableName;
 
         if (conditions is not null)

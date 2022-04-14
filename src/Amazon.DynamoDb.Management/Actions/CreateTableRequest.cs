@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 using Amazon.DynamoDb.Models;
@@ -9,14 +8,10 @@ namespace Amazon.DynamoDb;
 public sealed class CreateTableRequest
 {
     public CreateTableRequest(
-        string tableName,
-        AttributeDefinition[] attributeDefinitions,
-        IEnumerable<KeySchemaElement> keySchema)
+        string tableName!!,
+        AttributeDefinition[] attributeDefinitions!!,
+        IEnumerable<KeySchemaElement> keySchema!!)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-        ArgumentNullException.ThrowIfNull(attributeDefinitions);
-        ArgumentNullException.ThrowIfNull(keySchema);
-
         TableName = tableName;
         AttributeDefinitions = attributeDefinitions;
         KeySchema = keySchema;

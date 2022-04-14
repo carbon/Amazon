@@ -4,11 +4,8 @@ namespace Amazon.S3;
 
 public sealed class UploadPartResult : IUploadBlock
 {
-    public UploadPartResult(string uploadId, int partNumber, string eTag)
+    public UploadPartResult(string uploadId!!, int partNumber, string eTag!!)
     {
-        ArgumentNullException.ThrowIfNull(uploadId);
-        ArgumentNullException.ThrowIfNull(eTag);
-
         UploadId = uploadId;
         PartNumber = partNumber;
         ETag = eTag;

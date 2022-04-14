@@ -2,11 +2,8 @@
 
 public sealed class PutItem
 {
-    public PutItem(string tableName, AttributeCollection item)
+    public PutItem(string tableName!!, AttributeCollection item!!)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-        ArgumentNullException.ThrowIfNull(item);
-
         TableName = tableName;
         Item = item;
     }

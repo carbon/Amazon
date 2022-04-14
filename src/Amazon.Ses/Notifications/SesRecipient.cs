@@ -7,7 +7,7 @@ namespace Amazon.Ses;
 public readonly struct SesRecipient
 {
     [JsonConstructor]
-    public SesRecipient(string emailAddress)
+    public SesRecipient(string emailAddress!!)
     {
         EmailAddress = emailAddress;
     }

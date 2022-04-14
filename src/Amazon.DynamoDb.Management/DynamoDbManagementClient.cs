@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -60,8 +59,7 @@ public sealed class DynamoDbManagementClient : AwsClient
 
     #region Helpers
 
-    [AsyncMethodBuilder(typeof(PoolingAsyncValueTaskMethodBuilder<>))]
-    private async ValueTask<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
+    private async Task<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
     {
         var httpRequest = Setup(action, JsonSerializer.SerializeToUtf8Bytes(request));
 

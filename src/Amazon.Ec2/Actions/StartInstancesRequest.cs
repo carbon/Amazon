@@ -4,10 +4,8 @@ namespace Amazon.Ec2;
 
 public sealed class StartInstancesRequest : IEc2Request
 {
-    public StartInstancesRequest(params string[] instanceIds)
+    public StartInstancesRequest(params string[] instanceIds!!)
     {
-        ArgumentNullException.ThrowIfNull(instanceIds);
-
         InstanceIds = instanceIds;
     }
 

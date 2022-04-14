@@ -4,17 +4,13 @@ namespace Amazon.Sqs;
 
 public sealed class SendMessageRequest
 {
-    public SendMessageRequest(string body)
+    public SendMessageRequest(string body!!)
     {
-        ArgumentNullException.ThrowIfNull(body);
-
         MessageBody = body;
     }
 
-    public SendMessageRequest(string body, string messageDeduplicationId, string messageGroupId)
+    public SendMessageRequest(string body!!, string messageDeduplicationId, string messageGroupId)
     {
-        ArgumentNullException.ThrowIfNull(body);
-
         MessageBody = body;
         MessageDeduplicationId = messageDeduplicationId;
         MessageGroupId = messageGroupId;

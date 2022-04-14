@@ -6,6 +6,7 @@
     <Version>0.23.0</Version>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>preview</LangVersion>
     
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>

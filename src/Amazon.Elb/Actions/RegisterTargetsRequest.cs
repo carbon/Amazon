@@ -8,11 +8,8 @@ public sealed class RegisterTargetsRequest : IElbRequest
 {
     public RegisterTargetsRequest() { }
 
-    public RegisterTargetsRequest(string targetGroupArn, params TargetDescription[] targets)
+    public RegisterTargetsRequest(string targetGroupArn!!, params TargetDescription[] targets!!)
     {
-        ArgumentNullException.ThrowIfNull(targetGroupArn);
-        ArgumentNullException.ThrowIfNull(targets);
-
         TargetGroupArn = targetGroupArn;
         Targets = targets;
     }

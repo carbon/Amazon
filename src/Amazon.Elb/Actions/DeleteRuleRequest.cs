@@ -2,10 +2,8 @@
 
 public sealed class DeleteRuleRequest : IElbRequest
 {
-    public DeleteRuleRequest(string ruleArn)
+    public DeleteRuleRequest(string ruleArn!!)
     {
-        ArgumentNullException.ThrowIfNull(ruleArn);
-
         RuleArn = ruleArn;
     }
 

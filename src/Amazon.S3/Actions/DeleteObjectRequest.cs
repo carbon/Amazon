@@ -4,11 +4,9 @@ namespace Amazon.S3;
 
 public sealed class DeleteObjectRequest : S3Request
 {
-    public DeleteObjectRequest(string host, string bucketName, string key, string? versionId = null)
+    public DeleteObjectRequest(string host, string bucketName, string key!!, string? versionId = null)
         : base(HttpMethod.Delete, host, bucketName, key, versionId: versionId)
     {
-        ArgumentNullException.ThrowIfNull(key);
-
         CompletionOption = HttpCompletionOption.ResponseContentRead;
     }
 }

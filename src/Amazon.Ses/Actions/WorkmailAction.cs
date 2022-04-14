@@ -1,13 +1,9 @@
-﻿using System;
-
-namespace Amazon.Ses;
+﻿namespace Amazon.Ses;
 
 public sealed class WorkmailAction
 {
-    public WorkmailAction(string organizationArn, string? topicArn = null)
+    public WorkmailAction(string organizationArn!!, string? topicArn = null)
     {
-        ArgumentNullException.ThrowIfNull(organizationArn);
-
         OrganizationArn = organizationArn;
         TopicArn = topicArn;
     }

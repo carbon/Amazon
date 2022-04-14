@@ -2,7 +2,7 @@
 
 public sealed class RawMessage
 {
-    public RawMessage(byte[] data)
+    public RawMessage(byte[] data!!)
     {
         Data = data;
     }

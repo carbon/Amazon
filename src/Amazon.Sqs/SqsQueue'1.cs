@@ -21,11 +21,8 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
         maxRetries   : 4
     );
 
-    public SqsQueue(AwsRegion region, string accountId, string queueName, IAwsCredential credential)
+    public SqsQueue(AwsRegion region, string accountId!!, string queueName!!, IAwsCredential credential)
     {
-        ArgumentNullException.ThrowIfNull(accountId);
-        ArgumentNullException.ThrowIfNull(queueName);
-
         _client = new SqsClient(region, credential);
         _url = new Uri($"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}");
     }

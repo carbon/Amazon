@@ -4,7 +4,7 @@ public sealed class DescribeImagesRequest : DescribeRequest, IEc2Request
 {
     public DescribeImagesRequest() { }
 
-    public DescribeImagesRequest(string[] imageIds)
+    public DescribeImagesRequest(string[] imageIds!!)
     {
         ImageIds.AddRange(imageIds);
     }

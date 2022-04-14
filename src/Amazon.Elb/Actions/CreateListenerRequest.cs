@@ -12,7 +12,7 @@ public sealed class CreateListenerRequest : IElbRequest
 
     public Certificate[] Certificates { get; init; }
 
-    public List<Action> Actions { get; } = new List<Action>();
+    public List<Action> Actions { get; } = new();
 
     [Range(1, 65535)]
     public ushort Port { get; init; }

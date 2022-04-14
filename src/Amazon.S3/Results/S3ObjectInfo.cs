@@ -9,18 +9,14 @@ namespace Amazon.S3;
 
 public sealed class S3ObjectInfo : IBlob
 {
-    public S3ObjectInfo(string key, long size)
+    public S3ObjectInfo(string key!!, long size)
     {
-        ArgumentNullException.ThrowIfNull(key);
-
         Key = key;
         ContentLength = size;
     }
 
-    public S3ObjectInfo(string key, long size, DateTime modified)
+    public S3ObjectInfo(string key!!, long size, DateTime modified)
     {
-        ArgumentNullException.ThrowIfNull(key);
-
         Key = key;
         ContentLength = size;
         Modified = modified;

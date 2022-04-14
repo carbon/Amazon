@@ -4,7 +4,7 @@ public sealed class CreateHostedZoneRequest
 {
     public CreateHostedZoneRequest() { }
 
-    public CreateHostedZoneRequest(string name)
+    public CreateHostedZoneRequest(string name!!)
     {
         Name = name;
     }

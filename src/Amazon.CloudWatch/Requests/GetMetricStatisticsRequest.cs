@@ -7,11 +7,8 @@ namespace Amazon.CloudWatch;
 
 public sealed class GetMetricStatisticsRequest
 {
-    public GetMetricStatisticsRequest(string nameSpace, string metricName)
+    public GetMetricStatisticsRequest(string nameSpace!!, string metricName!!)
     {
-        ArgumentNullException.ThrowIfNull(nameSpace);
-        ArgumentNullException.ThrowIfNull(metricName);
-
         Namespace = nameSpace;
         MetricName = metricName;
     }
@@ -47,8 +44,8 @@ public sealed class GetMetricStatisticsRequest
             // Required paramaeters
             { "Namespace"  , Namespace },
             { "MetricName" , MetricName },
-            { "StartTime"  , StartTime.ToString("yyyy-MM-ddTHH:mm:ssZ") },
-            { "EndTime"    , EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ") },
+            { "StartTime"  , StartTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture) },
+            { "EndTime"    , EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture) },
             { "Period"     , (int)Period.TotalSeconds }
         };
 
@@ -78,9 +75,7 @@ public sealed class GetMetricStatisticsRequest
                 var stat = Statistics[i];
                 int number = (i + 1);
 
-                var prefix = string.Create(CultureInfo.InvariantCulture, $"Statistics.member.{number}");
-
-                parameters.Add(prefix, stat.Name);
+                parameters.Add(string.Create(CultureInfo.InvariantCulture, $"Statistics.member.{number}"), stat.Name);
             }
         }
 

@@ -10,11 +10,8 @@ public sealed class KmsProtector
     public KmsProtector(AwsRegion region, string keyId, IAwsCredential credential)
         : this(new KmsClient(region, credential), keyId) { }
 
-    public KmsProtector(KmsClient client, string keyId)
+    public KmsProtector(KmsClient client!!, string keyId!!)
     {
-        ArgumentNullException.ThrowIfNull(client);
-        ArgumentNullException.ThrowIfNull(keyId);
-
         _client = client;
         _keyId = keyId;
     }

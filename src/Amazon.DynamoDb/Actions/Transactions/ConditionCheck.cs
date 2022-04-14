@@ -1,19 +1,14 @@
-﻿
-using Carbon.Data.Expressions;
+﻿using Carbon.Data.Expressions;
 
 namespace Amazon.DynamoDb.Transactions;
 
 public sealed class ConditionCheck
 {
     public ConditionCheck(
-        string tableName,
-        IReadOnlyDictionary<string, DbValue> key,
-        string conditionExpression)
+        string tableName!!,
+        IReadOnlyDictionary<string, DbValue> key!!,
+        string conditionExpression!!)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-        ArgumentNullException.ThrowIfNull(key);
-        ArgumentNullException.ThrowIfNull(conditionExpression);
-
         TableName = tableName;
         Key = key;
         ConditionExpression = conditionExpression;

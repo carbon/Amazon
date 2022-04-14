@@ -6,10 +6,8 @@ public sealed class TargetGroupService
 {
     private readonly ElbClient _client;
 
-    public TargetGroupService(ElbClient client)
+    public TargetGroupService(ElbClient client!!)
     {
-        ArgumentNullException.ThrowIfNull(client);
-
         _client = client;
     }
 
@@ -18,7 +16,7 @@ public sealed class TargetGroupService
         ArgumentNullException.ThrowIfNull(instanceIds);
 
         if (instanceIds.Length is 0)
-            throw new ArgumentException("May not be empty", nameof(instanceIds));
+            throw new ArgumentException("Must not be empty", nameof(instanceIds));
 
         var targets = new TargetDescription[instanceIds.Length];
 
@@ -37,7 +35,7 @@ public sealed class TargetGroupService
         ArgumentNullException.ThrowIfNull(instanceIds);
 
         if (instanceIds.Length is 0)
-            throw new ArgumentException("May not be empty", nameof(instanceIds));
+            throw new ArgumentException("Must not be empty", nameof(instanceIds));
 
         var targets = new TargetDescription[instanceIds.Length];
 

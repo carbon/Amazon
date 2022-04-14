@@ -7,10 +7,8 @@ public sealed class DeleteItemRequest
     public DeleteItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key)
         : this(tableName, key.ToDictionary()) { }
 
-    public DeleteItemRequest(string tableName, Dictionary<string, DbValue> key)
+    public DeleteItemRequest(string tableName!!, Dictionary<string, DbValue> key)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-
         TableName = tableName;
         Key = key;
     }

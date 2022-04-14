@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Ssm;
 
@@ -9,11 +8,8 @@ public sealed class Target
     public Target() { }
 #nullable enable
 
-    public Target(string key, string[] values)
+    public Target(string key!!, string[] values!!)
     {
-        ArgumentNullException.ThrowIfNull(key);
-        ArgumentNullException.ThrowIfNull(values);
-
         Key = key;
         Values = values;
     }

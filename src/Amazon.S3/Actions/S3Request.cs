@@ -8,15 +8,12 @@ public abstract class S3Request : HttpRequestMessage
 {
     internal S3Request(
         HttpMethod method,
-        string host,
-        string bucketName,
+        string host!!,
+        string bucketName!!,
         string? objectName,
         string? versionId = null,
         S3ActionName actionName = default)
     {
-        ArgumentNullException.ThrowIfNull(host);
-        ArgumentNullException.ThrowIfNull(bucketName);
-
         BucketName = bucketName;
         ObjectName = objectName;
 
@@ -55,14 +52,11 @@ public abstract class S3Request : HttpRequestMessage
 
     internal S3Request(
        HttpMethod method,
-       string host,
-       string bucketName,
+       string host!!,
+       string bucketName!!,
        Dictionary<string, string> parameters,
        S3ActionName actionName = default)
     {
-        ArgumentNullException.ThrowIfNull(host);
-        ArgumentNullException.ThrowIfNull(bucketName);
-
         BucketName = bucketName;
 
         var urlBuilder = new ValueStringBuilder(256);

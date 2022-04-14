@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.DynamoDb.Models;
+﻿namespace Amazon.DynamoDb.Models;
 
 public sealed class Tag
 {
@@ -8,11 +6,8 @@ public sealed class Tag
     public Tag() { }
 #nullable enable
 
-    public Tag(string key, string value)
+    public Tag(string key!!, string value!!)
     {
-        ArgumentNullException.ThrowIfNull(key);
-        ArgumentNullException.ThrowIfNull(value);
-
         Key = key;
         Value = value;
     }
