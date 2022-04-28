@@ -51,7 +51,6 @@ namespace System.Text
             return s;
         }
 
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Append(char c)
         {

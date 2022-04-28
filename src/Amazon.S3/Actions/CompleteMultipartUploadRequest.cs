@@ -26,8 +26,10 @@ public sealed class CompleteMultipartUploadRequest : S3Request
 
 public sealed class CompleteMultipartUpload
 {
-    public CompleteMultipartUpload(IUploadBlock[] parts!!)
+    public CompleteMultipartUpload(IUploadBlock[] parts)
     {
+        ArgumentNullException.ThrowIfNull(parts);
+
         Parts = parts;
     }
 

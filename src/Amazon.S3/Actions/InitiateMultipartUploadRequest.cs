@@ -7,11 +7,12 @@ namespace Amazon.S3;
 
 public sealed class InitiateMultipartUploadRequest : S3Request
 {
-    public InitiateMultipartUploadRequest(string host, string bucketName, string key!!)
+    public InitiateMultipartUploadRequest(string host, string bucketName, string key)
         : base(HttpMethod.Post, host, bucketName, objectName: key, actionName: S3ActionName.Uploads)
     {
-        CompletionOption = HttpCompletionOption.ResponseContentRead;
+        ArgumentNullException.ThrowIfNull(key);
 
+        CompletionOption = HttpCompletionOption.ResponseContentRead;
         Content = new ByteArrayContent(Array.Empty<byte>());
     }
 

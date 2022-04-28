@@ -5,9 +5,11 @@ namespace Amazon.S3;
 
 public sealed class GetObjectRequest : S3Request
 {
-    public GetObjectRequest(string host, string bucketName, string key!!)
+    public GetObjectRequest(string host, string bucketName, string key)
         : base(HttpMethod.Get, host, bucketName, key)
     {
+        ArgumentNullException.ThrowIfNull(key);
+
         CompletionOption = HttpCompletionOption.ResponseHeadersRead;
     }
 

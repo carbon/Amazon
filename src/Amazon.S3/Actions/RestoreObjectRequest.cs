@@ -5,9 +5,11 @@ namespace Amazon.S3;
 
 public sealed class RestoreObjectRequest : S3Request
 {
-    public RestoreObjectRequest(string host, string bucketName, string key!!, string? version = null)
+    public RestoreObjectRequest(string host, string bucketName, string key, string? version = null)
         : base(HttpMethod.Post, host, bucketName, key, version, S3ActionName.Restore)
     {
+        ArgumentNullException.ThrowIfNull(key);
+
         string xmlText = GetXmlString();
 
         Content = new StringContent(xmlText, Encoding.UTF8, "text/xml");

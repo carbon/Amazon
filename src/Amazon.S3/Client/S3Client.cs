@@ -13,15 +13,14 @@ public sealed class S3Client : AwsClient
     public S3Client(AwsRegion region, IAwsCredential credential)
         : this(region, host: $"s3.dualstack.{region.Name}.amazonaws.com", credential: credential) { }
 
-    public S3Client(AwsRegion region, string host!!, IAwsCredential credential)
-        : this(region, host, credential, HttpClientFactory.Create())
-    {
-        Host = host;
-    }
+    public S3Client(AwsRegion region, string host, IAwsCredential credential)
+        : this(region, host, credential, HttpClientFactory.Create()) { }
 
-    public S3Client(AwsRegion region, string host!!, IAwsCredential credential, HttpClient httpClient)
+    public S3Client(AwsRegion region, string host, IAwsCredential credential, HttpClient httpClient)
       : base(AwsService.S3, region, credential, httpClient)
     {
+        ArgumentNullException.ThrowIfNull(host);
+
         Host = host;
     }
 
@@ -56,9 +55,9 @@ public sealed class S3Client : AwsClient
 
     #region Multipart Uploads
 
-    public async Task AbortMultipartUploadAsync(AbortMultipartUploadRequest request)
+    public Task AbortMultipartUploadAsync(AbortMultipartUploadRequest request)
     {
-        await SendAsync(request).ConfigureAwait(false);
+        return SendAsync(request);
     }
 
     public async Task<InitiateMultipartUploadResult> InitiateMultipartUploadAsync(InitiateMultipartUploadRequest request)
@@ -204,19 +203,13 @@ public sealed class S3Client : AwsClient
         {
             if (ResponseHelper<S3ErrorResponse>.TryParseXml(responseText, out var wasabiError))
             {
-                throw new S3Exception(
-                    error      : wasabiError.Error,
-                    statusCode : response.StatusCode
-                );
+                throw new S3Exception(wasabiError.Error, response.StatusCode);
             }
         }
 
         else if (responseText.Contains("<Error>") && S3Error.TryParseXml(responseText, out var error))
         {
-            throw new S3Exception(
-                error      : error,
-                statusCode : response.StatusCode
-            );
+            throw new S3Exception(error, response.StatusCode);
         }
 
         throw new S3Exception($"Unexpected S3 error. {response.StatusCode}:{responseText}", response.StatusCode);

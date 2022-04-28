@@ -8,18 +8,21 @@ public abstract class S3Request : HttpRequestMessage
 {
     internal S3Request(
         HttpMethod method,
-        string host!!,
-        string bucketName!!,
+        string host,
+        string bucketName,
         string? objectName,
         string? versionId = null,
         S3ActionName actionName = default)
     {
+        ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(bucketName);
+
         BucketName = bucketName;
         ObjectName = objectName;
 
         // https://{bucket}.s3.amazonaws.com/{key}
 
-        var urlBuilder = new ValueStringBuilder(128);
+        var urlBuilder = new ValueStringBuilder(256);
 
         urlBuilder.Append("https://");
         urlBuilder.Append(host);
@@ -52,11 +55,14 @@ public abstract class S3Request : HttpRequestMessage
 
     internal S3Request(
        HttpMethod method,
-       string host!!,
-       string bucketName!!,
+       string host,
+       string bucketName,
        Dictionary<string, string> parameters,
        S3ActionName actionName = default)
     {
+        ArgumentNullException.ThrowIfNull(host);
+        ArgumentNullException.ThrowIfNull(bucketName);
+
         BucketName = bucketName;
 
         var urlBuilder = new ValueStringBuilder(256);

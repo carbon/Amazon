@@ -28,8 +28,10 @@ public sealed class DeleteBatch
 {
     private readonly IReadOnlyList<string> _keys;
 
-    public DeleteBatch(IReadOnlyList<string> keys!!, bool quite = false)
+    public DeleteBatch(IReadOnlyList<string> keys, bool quite = false)
     {
+        ArgumentNullException.ThrowIfNull(keys);
+
         if (keys.Count > 1_000)
         {
             throw new ArgumentException($"Must not exceed 1,000 items. Was {keys.Count} items.", nameof(keys));
