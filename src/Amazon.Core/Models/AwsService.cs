@@ -58,8 +58,10 @@ public sealed class AwsService : IEquatable<AwsService>
 
     public override int GetHashCode() => Name.GetHashCode();
 
-    public static implicit operator AwsService(string name!!)
+    public static implicit operator AwsService(string name)
     {
+        ArgumentNullException.ThrowIfNull(name);
+
         return new AwsService(name);
     }
 }

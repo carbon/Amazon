@@ -8,8 +8,10 @@ namespace Amazon;
 
 public sealed class AwsRegion : IEquatable<AwsRegion>
 {
-    public AwsRegion(string name!!)
+    public AwsRegion(string name)
     {
+        ArgumentNullException.ThrowIfNull(name);
+
         Name = name;
     }
 
@@ -144,5 +146,12 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
         string regionName = availabilityZone[0..^1];
 
         return Get(regionName);
+    }
+
+    public static implicit operator AwsRegion(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+
+        return new AwsRegion(name);
     }
 }

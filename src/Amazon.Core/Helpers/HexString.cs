@@ -45,6 +45,5 @@ internal static class HexString
 
             buffer[++cx] = (char)(b > 9 ? b + 0x37 + 0x20 : b + 0x30);
         }
-
     }
 }
