@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -16,9 +17,12 @@ public sealed class S3Object : IBlobResult, IDisposable
     private HttpResponseMessage? _response;
     private long? contentLength;
 
-    public S3Object(string name!!, HttpResponseMessage response!!)
+    public S3Object(string key, HttpResponseMessage response)
     {
-        Key = name;
+        ArgumentNullException.ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(response);
+
+        Key = key;
 
         _properties = response.GetProperties();
 
@@ -70,28 +74,28 @@ public sealed class S3Object : IBlobResult, IDisposable
 
     public async ValueTask<Stream> OpenAsync()
     {
-        if (_response is null) throw new ObjectDisposedException(nameof(S3Object));
+        ThrowIfDisposed();
 
         return _stream ??= await _response.Content.ReadAsStreamAsync().ConfigureAwait(false);
     }
 
     public Task<byte[]> ReadAsByteArrayAsync()
     {
-        if (_response is null) throw new ObjectDisposedException(nameof(S3Object));
+        ThrowIfDisposed();
 
         return _response.Content.ReadAsByteArrayAsync();
     }
 
     public async Task CopyToAsync(Stream output)
     {
-        if (_response is null) throw new ObjectDisposedException(nameof(S3Object));
+        ThrowIfDisposed();
 
         await _response.Content.CopyToAsync(output).ConfigureAwait(false);
     }
 
     public async Task CopyToAsync(Stream output, CancellationToken cancellationToken)
     {
-        if (_response is null) throw new ObjectDisposedException(nameof(S3Object));
+        ThrowIfDisposed();
 
         await _response.Content.CopyToAsync(output, cancellationToken).ConfigureAwait(false);
     }
@@ -108,9 +112,31 @@ public sealed class S3Object : IBlobResult, IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
+
+        InternalDispose();
+    }
+
+    ~S3Object()
+    {
+        InternalDispose();
+    }
+
+    private void InternalDispose()
+    {
         _stream?.Dispose();
         _response?.Dispose();
 
+        _stream = null;
         _response = null;
+    }
+
+    [MemberNotNull(nameof(_response))]
+    private void ThrowIfDisposed()
+    {
+        if (_response is null)
+        {
+            throw new ObjectDisposedException(nameof(S3Object));
+        }
     }
 }
