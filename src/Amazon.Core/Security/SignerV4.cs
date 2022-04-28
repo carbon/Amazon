@@ -40,9 +40,11 @@ public static class SignerV4
     }
 
     [SkipLocalsInit]
-    public static string GetStringToSign(in CredentialScope scope, string timestamp, string canonicalRequest!!)
+    public static string GetStringToSign(in CredentialScope scope, string timestamp, string canonicalRequest)
     {
-        var output = new ValueStringBuilder(256);  // avg ~138
+        ArgumentNullException.ThrowIfNull(canonicalRequest);
+
+        var output = new ValueStringBuilder(stackalloc char[256]);  // avg ~138
 
         output.Append(algorithmName)  ; output.Append('\n'); // Algorithm + \n
         output.Append(timestamp)      ; output.Append('\n'); // Timestamp + \n
@@ -59,9 +61,11 @@ public static class SignerV4
         return GetCanonicalRequest(request, out _);
     }
         
-    public static string GetCanonicalRequest(HttpRequestMessage request!!, out List<string> signedHeaderNames)
+    public static string GetCanonicalRequest(HttpRequestMessage request, out List<string> signedHeaderNames)
     {
-        var output = new ValueStringBuilder(512);
+        ArgumentNullException.ThrowIfNull(request);
+
+        var output = new ValueStringBuilder(512); // ~350
 
         output.Append(request.Method.Method)                                  ; output.Append('\n'); // HTTPRequestMethod      + \n
         WriteCanonicalizedUri(ref output, request.RequestUri!.AbsolutePath)   ; output.Append('\n'); // CanonicalURI           + \n
@@ -72,8 +76,9 @@ public static class SignerV4
         output.Append(GetPayloadHash(request));                                                      // HexEncode(Hash(Payload))
 
         return output.ToString();
-    }     
+    }
 
+    [SkipLocalsInit]
     public static string CanonicalizeUri(string path)
     {
         if (path is "/")
@@ -81,7 +86,7 @@ public static class SignerV4
             return path;
         }
 
-        var output = new ValueStringBuilder(256);
+        var output = new ValueStringBuilder(stackalloc char[256]);
 
         WriteCanonicalizedUri(ref output, path);
 
@@ -194,9 +199,11 @@ public static class SignerV4
         CredentialScope scope,
         DateTime date,
         TimeSpan expires,
-        HttpRequestMessage request!!,
+        HttpRequestMessage request,
         string payloadHash = emptySha256)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         string presignedUrl = GetPresignedUrl(
             credential  : credential,
             scope       : scope,
@@ -303,7 +310,7 @@ public static class SignerV4
     }
 
     [SkipLocalsInit]
-    public static void Sign(IAwsCredential credential!!, in CredentialScope scope, HttpRequestMessage request)
+    public static void Sign(IAwsCredential credential, in CredentialScope scope, HttpRequestMessage request)
     {
         // If we're using S3, ensure the request content has been signed
         if (scope.Service.Equals(AwsService.S3) && !request.Headers.NonValidated.Contains("x-amz-content-sha256"))
@@ -344,6 +351,7 @@ public static class SignerV4
         return CanonicalizeQueryString(ParseQueryString(uri.Query));
     }
 
+    [SkipLocalsInit]
     private static string CanonicalizeQueryString(SortedDictionary<string, string> sortedValues)
     {
         if (sortedValues.Count is 0)
@@ -351,7 +359,7 @@ public static class SignerV4
             return string.Empty;
         }
 
-        var output = new ValueStringBuilder(256);
+        var output = new ValueStringBuilder(stackalloc char[256]);
 
         WriteCanonicalQueryString(ref output, sortedValues);
 
@@ -425,9 +433,10 @@ public static class SignerV4
         return dictionary;
     }
 
+    [SkipLocalsInit]
     public static string CanonicalizeHeaders(HttpRequestMessage request, out List<string> signedHeaderNames)
     {
-        var output = new ValueStringBuilder(256);
+        var output = new ValueStringBuilder(stackalloc char[256]); // ~155
 
         WriteCanonicalizedHeaders(ref output, request, out signedHeaderNames);
 
