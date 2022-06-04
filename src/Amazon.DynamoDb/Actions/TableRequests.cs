@@ -27,17 +27,17 @@ public sealed class TableRequests
         {
             /* 
             { 
-                ""PutRequest"": { 
-                    ""Item"": { 
-                        ""name"": { ""S"": ""marcywilliams"" }, 
-                        ""ownerId"": { ""N"": ""3033325"" }, 
-                        ""type"": { ""N"": ""1"" } 
+                "PutRequest": { 
+                    "Item": { 
+                        "name": { "S": "marcywilliams" }, 
+                        "ownerId": { "N": "3033325" }, 
+                        "type": { "N": "1" } 
                     }
                 },
-                ""DeleteRequest"": { 
-                    ""Key"": { 
-                        ""name"": { ""S"": ""marcywilliams"" }, 
-                        ""ownerId"": { ""N"": ""3033325"" }
+                "DeleteRequest": { 
+                    "Key": { 
+                        "name": { "S": "marcywilliams" }, 
+                        "ownerId": { "N": "3033325" }
                     }
                 } 
             }

@@ -17,11 +17,14 @@ public class RestoreObjectRequestTests
 
         Assert.Equal("/a/b?restore", request.RequestUri.PathAndQuery);
 
-        Assert.Equal(@"<RestoreRequest>
-  <Days>30</Days>
-  <GlacierJobParameters>
-    <Tier>Standard</Tier>
-  </GlacierJobParameters>
-</RestoreRequest>", request.GetXmlString());
+        Assert.Equal(
+            """
+            <RestoreRequest>
+              <Days>30</Days>
+              <GlacierJobParameters>
+                <Tier>Standard</Tier>
+              </GlacierJobParameters>
+            </RestoreRequest>
+            """, request.GetXmlString());
     }
 }

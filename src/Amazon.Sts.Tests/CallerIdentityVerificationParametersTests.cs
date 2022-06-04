@@ -4,7 +4,7 @@ namespace Amazon.Sts.Tests;
 
 public class CallerIdentityVerificationParametersTests
 {
-    private CallerIdentityVerificationParameters GetMock()
+    private static CallerIdentityVerificationParameters GetMock()
     {
         return  new CallerIdentityVerificationParameters
         {
@@ -23,10 +23,8 @@ public class CallerIdentityVerificationParametersTests
     {
         var a = GetMock();
 
-        Assert.Equal(@"{""url"":""url"",""headers"":{""a"":""1"",""b"":""2""},""body"":""body""}", JsonSerializer.Serialize(a));
-
-       
-        Assert.Equal(@"{""url"":""url"",""headers"":{""a"":""1"",""b"":""2""},""body"":""body""}", JsonSerializer.Serialize(a, StsJsonContext.Default.CallerIdentityVerificationParameters));
+        Assert.Equal("""{"url":"url","headers":{"a":"1","b":"2"},"body":"body"}""", JsonSerializer.Serialize(a));       
+        Assert.Equal("""{"url":"url","headers":{"a":"1","b":"2"},"body":"body"}""", JsonSerializer.Serialize(a, StsJsonContext.Default.CallerIdentityVerificationParameters));
 
         var b = JsonSerializer.Deserialize<CallerIdentityVerificationParameters>(JsonSerializer.Serialize(a));
 
@@ -45,7 +43,7 @@ public class CallerIdentityVerificationParametersTests
         var a = GetMock();
 
         
-        Assert.Equal(@"{""url"":""url"",""headers"":{""a"":""1"",""b"":""2""},""body"":""body""}", JsonSerializer.Serialize(a, StsJsonContext.Default.CallerIdentityVerificationParameters));
+        Assert.Equal("""{"url":"url","headers":{"a":"1","b":"2"},"body":"body"}""", JsonSerializer.Serialize(a, StsJsonContext.Default.CallerIdentityVerificationParameters));
 
         var b = JsonSerializer.Deserialize(JsonSerializer.Serialize(a), StsJsonContext.Default.CallerIdentityVerificationParameters);
 

@@ -33,7 +33,7 @@ public class QuotedPrintableTests
     [Fact]
     public void DeodeUtf8Code_WithSpace()
     {
-        var q = "=?utf-8?Q?\"Jo=C3=A3o\" <x@x>?=";
+        var q = """=?utf-8?Q?"Jo=C3=A3o" <x@x>?=""";
 
         MailAddress.TryCreate(QuotedPrintable.Decode(q), out var r);
 
