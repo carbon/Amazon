@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Globalization;
+using System.Net.Http;
 using System.Text;
 
 namespace Amazon.S3;
@@ -23,13 +24,19 @@ public sealed class RestoreObjectRequest : S3Request
 
     public int Days { get; init; } = 7; // Default to 7
 
-    public string GetXmlString() =>
-FormattableString.Invariant($@"<RestoreRequest>
-  <Days>{Days}</Days>
-  <GlacierJobParameters>
-    <Tier>{Tier}</Tier>
-  </GlacierJobParameters>
-</RestoreRequest>");
+    public string GetXmlString()
+    {
+        return string.Create(CultureInfo.InvariantCulture, 
+            $"""
+            <RestoreRequest>
+              <Days>{Days}</Days>
+              <GlacierJobParameters>
+                <Tier>{Tier}</Tier>
+              </GlacierJobParameters>
+            </RestoreRequest>
+            """
+        );
+    }
 }
 
 /*
