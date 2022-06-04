@@ -2,8 +2,10 @@
 
 public sealed class S3Action
 {
-    public S3Action(string bucketName!!, string objectKeyPrefix, string? kmsKeyArn, string? topicArn)
+    public S3Action(string bucketName, string objectKeyPrefix, string? kmsKeyArn, string? topicArn)
     {
+        ArgumentNullException.ThrowIfNull(bucketName);
+
         BucketName = bucketName;
         ObjectKeyPrefix = objectKeyPrefix;
         KmsKeyArn = kmsKeyArn;

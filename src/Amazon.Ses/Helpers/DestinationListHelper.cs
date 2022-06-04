@@ -9,7 +9,7 @@ internal static class DestinationListHelper
     {
         // http://www.ietf.org/rfc/rfc0822.txt
 
-        if (addresses is null || addresses.Length == 0) return;
+        if (addresses is null || addresses.Length is 0) return;
 
         int i = 1;
 

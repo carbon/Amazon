@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Amazon.Ses;
+﻿namespace Amazon.Ses;
 
 public sealed class SendRawEmailRequest
 {
@@ -34,22 +31,22 @@ public sealed class SendRawEmailRequest
     {
         var dic = new List<KeyValuePair<string, string>>(8);
 
-        if (ConfigurationSetName != null)
+        if (ConfigurationSetName is not null)
         {
             dic.Add(new ("ConfigurationSetName", Source));
         }
 
-        if (Source != null)
+        if (Source is not null)
         {
             dic.Add(new("Source", Source));
         }
 
-        if (FromArn != null)
+        if (FromArn is not null)
         {
             dic.Add(new("FromArn", FromArn));
         }
 
-        if (ReturnPathArn != null)
+        if (ReturnPathArn is not null)
         {
             dic.Add(new("ReturnPathArn", FromArn));
         }

@@ -2,8 +2,10 @@
 
 public sealed class SnsAction
 {
-    public SnsAction(string topicArn!!, string? encoding = null)
+    public SnsAction(string topicArn, string? encoding = null)
     {
+        ArgumentNullException.ThrowIfNull(topicArn);
+
         TopicArn = topicArn;
         Encoding = encoding;
     }

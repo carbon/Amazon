@@ -1,9 +1,11 @@
 ﻿namespace Amazon.Ses;
 
-public sealed class RawMessage
+public readonly struct RawMessage
 {
-    public RawMessage(byte[] data!!)
+    public RawMessage(byte[] data)
     {
+        ArgumentNullException.ThrowIfNull(data);
+
         Data = data;
     }
 

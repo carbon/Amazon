@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using System;
 using System.Text.Json.Serialization;
 
 namespace Amazon.Ses;
@@ -8,17 +7,17 @@ namespace Amazon.Ses;
 public sealed class SesBounce
 {
     [JsonPropertyName("bounceType")]
-    public SesBounceType BounceType { get; init; }
+    public SesBounceType BounceType { get; set; }
 
     [JsonPropertyName("bounceSubType")]
-    public SesBounceSubtype BounceSubType { get; init; }
+    public SesBounceSubtype BounceSubType { get; set; }
 
     [JsonPropertyName("bouncedRecipients")]
-    public BouncedRecipient[] BouncedRecipients { get; init; }
+    public BouncedRecipient[] BouncedRecipients { get; set; }
 
     [JsonPropertyName("timestamp")]
-    public DateTime Timestamp { get; init; }
+    public DateTime Timestamp { get; set; }
 
     [JsonPropertyName("reportingMTA")]
-    public string ReportingMta { get; init; }
+    public string ReportingMta { get; set; }
 }

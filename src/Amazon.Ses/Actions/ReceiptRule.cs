@@ -4,8 +4,10 @@ namespace Amazon.Ses;
 
 public sealed class ReceiptRule
 {
-    public ReceiptRule(string name!!)
+    public ReceiptRule(string name)
     {
+        ArgumentNullException.ThrowIfNull(name);
+
         Name = name;
     }
 

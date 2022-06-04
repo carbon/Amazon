@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -61,8 +59,10 @@ public sealed class SesEmail
         return result;
     }
 
-    public static SesEmail FromMailMessage(MailMessage message!!)
+    public static SesEmail FromMailMessage(MailMessage message)
     {
+        ArgumentNullException.ThrowIfNull(message);
+
         var doc = new SesEmail {
             Source = SesHelper.EncodeMailAddress(message.From!),
             To = message.To.Select(r => SesHelper.EncodeMailAddress(r)).ToArray(),
