@@ -26,24 +26,33 @@ public static class SignerV4
         return GetStringToSign(scope, request, out _);
     }
 
+    [SkipLocalsInit]
     public static string GetStringToSign(in CredentialScope scope, HttpRequestMessage request, out List<string> signedHeaders)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         string timestamp = request.Headers.NonValidated.TryGetValues("x-amz-date", out var xAmzDateHeader)
             ? xAmzDateHeader.ToString()
             : throw new Exception("Missing 'x-amz-date' header");
 
-        return GetStringToSign(
+        var sb = new ValueStringBuilder(stackalloc char[512]); // ~350
+
+        WriteCanonicalRequest(request, ref sb, out signedHeaders);
+
+        var result = GetStringToSign(
             scope            : scope,
             timestamp        : timestamp,
-            canonicalRequest : GetCanonicalRequest(request, out signedHeaders)
+            canonicalRequest : sb.AsSpan()
         );
+
+        sb.Dispose();
+
+        return result;
     }
 
     [SkipLocalsInit]
-    public static string GetStringToSign(in CredentialScope scope, string timestamp, string canonicalRequest)
+    public static string GetStringToSign(in CredentialScope scope, string timestamp, ReadOnlySpan<char> canonicalRequest)
     {
-        ArgumentNullException.ThrowIfNull(canonicalRequest);
-
         var output = new ValueStringBuilder(stackalloc char[256]);  // avg ~138
 
         output.Append(algorithmName)  ; output.Append('\n'); // Algorithm + \n
@@ -60,13 +69,21 @@ public static class SignerV4
     {
         return GetCanonicalRequest(request, out _);
     }
-        
+
+    [SkipLocalsInit]
     public static string GetCanonicalRequest(HttpRequestMessage request, out List<string> signedHeaderNames)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var output = new ValueStringBuilder(512); // ~350
+        var output = new ValueStringBuilder(stackalloc char[512]); // ~350
+        
+        WriteCanonicalRequest(request, ref output, out signedHeaderNames);
 
+        return output.ToString();
+    }
+
+    internal static void WriteCanonicalRequest(HttpRequestMessage request, ref ValueStringBuilder output, out List<string> signedHeaderNames)
+    {
         output.Append(request.Method.Method)                                  ; output.Append('\n'); // HTTPRequestMethod      + \n
         WriteCanonicalizedUri(ref output, request.RequestUri!.AbsolutePath)   ; output.Append('\n'); // CanonicalURI           + \n
         WriteCanonicalizedQueryString(ref output, request.RequestUri)         ; output.Append('\n'); // CanonicalQueryString   + \n
@@ -74,8 +91,6 @@ public static class SignerV4
                                                                               ; output.Append('\n'); //                        + \n
         output.AppendJoin(';', signedHeaderNames)                             ; output.Append('\n'); // SignedHeaders          + \n
         output.Append(GetPayloadHash(request));                                                      // HexEncode(Hash(Payload))
-
-        return output.ToString();
     }
 
     [SkipLocalsInit]
@@ -121,6 +136,7 @@ public static class SignerV4
         }
     }
 
+    [SkipLocalsInit]
     public static string GetCanonicalRequest(
         HttpMethod method,
         string canonicalURI,
@@ -129,7 +145,7 @@ public static class SignerV4
         string signedHeaders,
         string payloadHash)
     {
-        var sb = new ValueStringBuilder(512);
+        var sb = new ValueStringBuilder(stackalloc char[512]);
 
         sb.Append(method.Method);        sb.Append('\n'); // HTTPRequestMethod           + \n
         sb.Append(canonicalURI);         sb.Append('\n'); // CanonicalURI                + \n
@@ -253,7 +269,7 @@ public static class SignerV4
         queryParameters[SigningParameterNames.SignedHeaders] = signedHeaders;
 
         string canonicalHeaders = requestUri.IsDefaultPort
-            ? "host:" + requestUri.Host
+            ? $"host:{requestUri.Host}"
             : string.Create(CultureInfo.InvariantCulture, $"host:{requestUri.Host}:{requestUri.Port}");
 
         string canonicalRequest = GetCanonicalRequest(
@@ -324,7 +340,7 @@ public static class SignerV4
 
         string stringToSign = GetStringToSign(scope, request, out var signedHeaderNames);
 
-        var authWriter = new ValueStringBuilder(512);
+        var authWriter = new ValueStringBuilder(stackalloc char[256]); // ~235
 
         // AWS4-HMAC-SHA256 Credential={0},SignedHeaders={0},Signature={0}
         // $"AWS4-HMAC-SHA256 Credential={credential.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
