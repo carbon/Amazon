@@ -5,36 +5,36 @@ namespace Amazon.Ec2.Tests;
 public class DescribeVolumesResponseTests
 {
     [Fact]
-    public void X()
+    public void CanDeserialize()
     {
-        var text =
-@"<DescribeVolumesResponse xmlns=""http://ec2.amazonaws.com/doc/2016-11-15/"">
-   <requestId>59dbff89-35bd-4eac-99ed-be587EXAMPLE</requestId> 
-   <volumeSet>
-      <item>
-         <volumeId>vol-1234567890abcdef0</volumeId>
-         <size>80</size>
-         <snapshotId/>
-         <availabilityZone>us-east-1a</availabilityZone>
-         <status>in-use</status>
-         <createTime>2016-01-05T03:15:30Z</createTime>
-         <attachmentSet>
-            <item>
-               <volumeId>vol-1234567890abcdef0</volumeId>
-               <instanceId>i-1234567890abcdef0</instanceId>
-               <device>/dev/sdh</device>
-               <status>attached</status>
-               <attachTime>2016-01-05T03:15:30Z</attachTime>
-               <deleteOnTermination>false</deleteOnTermination>
-            </item>
-         </attachmentSet>
-         <volumeType>standard</volumeType>
-         <encrypted>true</encrypted>
-      </item>
-   </volumeSet>
-</DescribeVolumesResponse>";
-
-        var response = Ec2Serializer<DescribeVolumesResponse>.Deserialize(text);
+        var response = Ec2Serializer<DescribeVolumesResponse>.Deserialize(
+            """
+            <DescribeVolumesResponse xmlns="http://ec2.amazonaws.com/doc/2016-11-15/">
+               <requestId>59dbff89-35bd-4eac-99ed-be587EXAMPLE</requestId> 
+               <volumeSet>
+                  <item>
+                     <volumeId>vol-1234567890abcdef0</volumeId>
+                     <size>80</size>
+                     <snapshotId/>
+                     <availabilityZone>us-east-1a</availabilityZone>
+                     <status>in-use</status>
+                     <createTime>2016-01-05T03:15:30Z</createTime>
+                     <attachmentSet>
+                        <item>
+                           <volumeId>vol-1234567890abcdef0</volumeId>
+                           <instanceId>i-1234567890abcdef0</instanceId>
+                           <device>/dev/sdh</device>
+                           <status>attached</status>
+                           <attachTime>2016-01-05T03:15:30Z</attachTime>
+                           <deleteOnTermination>false</deleteOnTermination>
+                        </item>
+                     </attachmentSet>
+                     <volumeType>standard</volumeType>
+                     <encrypted>true</encrypted>
+                  </item>
+               </volumeSet>
+            </DescribeVolumesResponse>
+            """);
 
         Assert.Single(response.Volumes);
 
