@@ -10,7 +10,7 @@ public sealed class SendEmailResponse
     [XmlElement]
     public SendEmailResult SendEmailResult { get; init; }
 
-    public static SendEmailResponse Parse(string text)
+    public static SendEmailResponse Deserialize(string text)
     {
         return XmlHelper<SendEmailResponse>.Deserialize(text);
     }

@@ -38,7 +38,7 @@ public sealed class SesClient : AwsClient
 
         var text = await SendWithRetryPolicy(request, retryPolicy).ConfigureAwait(false);
 
-        return SendEmailResponse.Parse(text).SendEmailResult;
+        return SendEmailResponse.Deserialize(text).SendEmailResult;
     }
 
     public async Task<SendRawEmailResult> SendRawEmailAsync(SendRawEmailRequest request)
@@ -61,7 +61,7 @@ public sealed class SesClient : AwsClient
 
         var text = await PostAsync(request).ConfigureAwait(false);
 
-        return GetSendQuotaResponse.Parse(text).GetSendQuotaResult;
+        return GetSendQuotaResponse.Deserialize(text).GetSendQuotaResult;
     }
 
     #region Helpers

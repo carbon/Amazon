@@ -10,7 +10,7 @@ public sealed class GetSendQuotaResponse
     [XmlElement]
     public GetSendQuotaResult GetSendQuotaResult { get; init; }
 
-    public static GetSendQuotaResponse Parse(string text)
+    public static GetSendQuotaResponse Deserialize(string text)
     {
         return XmlHelper<GetSendQuotaResponse>.Deserialize(text);
     }
