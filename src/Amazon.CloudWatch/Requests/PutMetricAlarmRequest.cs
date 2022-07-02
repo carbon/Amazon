@@ -2,11 +2,11 @@
 
 namespace Amazon.CloudWatch;
 
-public class PutMetricAlarmRequest
+public sealed class PutMetricAlarmRequest
 {
-    public string Namespace { get; set; }
+    public string Namespace { get; init; }
 
-    public bool ActionsEnabled { get; set; }
+    public bool ActionsEnabled { get; init; }
 
     public AwsRequest ToParams()
     {

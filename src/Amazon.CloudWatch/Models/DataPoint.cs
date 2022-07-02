@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace Amazon.CloudWatch;
 
-public class DataPoint
+public sealed class DataPoint
 {
     public double? Average { get; set; }
 
