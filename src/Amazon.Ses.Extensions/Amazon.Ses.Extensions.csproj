@@ -3,15 +3,13 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Ses.Extensions</AssemblyName>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>0.0.5</Version>
+    <Version>0.0.7</Version>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
 
 	<!-- Package Details-->
     <PackageId>Carbon.Amazon.Ses.Extensions</PackageId>
-	<Authors>iamcarbon</Authors
->
+	<Authors>iamcarbon</Authors>
 	<Copyright>© Jason Nelson</Copyright>
 	<Description>A set of extensions to handle raw emails in the Amazon.Ses project</Description>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -20,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MimeKitLite" Version="3.2.0" />
+    <PackageReference Include="MimeKitLite" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>
