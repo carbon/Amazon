@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Rds</AssemblyName>
-    <Version>0.13.0</Version>
+    <Version>0.14.0</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
