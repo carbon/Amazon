@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-namespace Amazon.CodeBuild
-{
-    public class ListBuildsRequest : ICodeBuildRequest
-    {
-        public string NextToken { get; set; }
+namespace Amazon.CodeBuild;
 
-        public string SortOrder { get; set; }
-    }
+public class ListBuildsRequest : ICodeBuildRequest
+{
+    public string NextToken { get; set; }
+
+    public string SortOrder { get; set; }
 }
