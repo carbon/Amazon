@@ -3,11 +3,14 @@
 public sealed class DecryptRequest : KmsRequest
 {
     public DecryptRequest(
-        string keyId!!,
-        byte[] ciphertext!!,
+        string keyId,
+        byte[] ciphertext,
         IReadOnlyDictionary<string, string>? context,
         string[]? grantTokens = null)
     {
+        ArgumentNullException.ThrowIfNull(keyId);
+        ArgumentNullException.ThrowIfNull(ciphertext);
+
         if (keyId.Length is 0)
         {
             throw new ArgumentException("Must not be empty", nameof(keyId));

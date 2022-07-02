@@ -8,8 +8,10 @@ public sealed class CreateLoadBalancerRequest : IElbRequest
 {
     public CreateLoadBalancerRequest() { }
 
-    public CreateLoadBalancerRequest(string name!!)
+    public CreateLoadBalancerRequest(string name)
     {
+        ArgumentNullException.ThrowIfNull(name);
+
         Name = name;
     }
 

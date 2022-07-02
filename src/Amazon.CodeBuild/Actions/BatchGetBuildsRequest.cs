@@ -1,9 +1,13 @@
-﻿namespace Amazon.CodeBuild;
+﻿using System;
+
+namespace Amazon.CodeBuild;
 
 public sealed class BatchGetBuildsRequest : ICodeBuildRequest
 {
-    public BatchGetBuildsRequest(params string[] ids!!)
+    public BatchGetBuildsRequest(params string[] ids)
     {
+        ArgumentNullException.ThrowIfNull(ids);
+
         Ids = ids;
     }
 

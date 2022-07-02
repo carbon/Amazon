@@ -6,8 +6,12 @@ public sealed class Certificate
 {
     public Certificate() { }
 
-    public Certificate(string arn!!)
+#nullable enable
+
+    public Certificate(string arn)
     {
+        ArgumentNullException.ThrowIfNull(arn);
+
         CertificateArn = arn;
     }
 

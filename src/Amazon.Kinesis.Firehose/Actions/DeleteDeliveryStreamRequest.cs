@@ -1,9 +1,13 @@
-﻿namespace Amazon.Kinesis.Firehose;
+﻿using System;
+
+namespace Amazon.Kinesis.Firehose;
 
 public sealed class DeleteDeliveryStreamRequest
 {
-    public DeleteDeliveryStreamRequest(string deliveryStreamName!!)
+    public DeleteDeliveryStreamRequest(string deliveryStreamName)
     {
+        ArgumentNullException.ThrowIfNull(deliveryStreamName);
+
         DeliveryStreamName = deliveryStreamName;
     }
 

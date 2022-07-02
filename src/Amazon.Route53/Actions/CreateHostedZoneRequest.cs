@@ -1,11 +1,15 @@
-﻿namespace Amazon.Route53;
+﻿using System;
+
+namespace Amazon.Route53;
 
 public sealed class CreateHostedZoneRequest
 {
     public CreateHostedZoneRequest() { }
 
-    public CreateHostedZoneRequest(string name!!)
+    public CreateHostedZoneRequest(string name)
     {
+        ArgumentNullException.ThrowIfNull(name);
+
         Name = name;
     }
 

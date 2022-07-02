@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.CodeBuild;
 
 public sealed class BatchGetProjectsRequest : ICodeBuildRequest
 {
-    public BatchGetProjectsRequest(params string[] names!!)
+    public BatchGetProjectsRequest(params string[] names)
     {
+        ArgumentNullException.ThrowIfNull(names);
+
         Names = names;
     }
 

@@ -2,8 +2,11 @@
 
 public sealed class CreateAliasRequest : KmsRequest
 {
-    public CreateAliasRequest(string targetKeyId!!, string aliasName!!)
+    public CreateAliasRequest(string targetKeyId, string aliasName)
     {
+        ArgumentNullException.ThrowIfNull(targetKeyId);
+        ArgumentNullException.ThrowIfNull(aliasName);
+
         TargetKeyId = targetKeyId;
         AliasName = aliasName;
     }

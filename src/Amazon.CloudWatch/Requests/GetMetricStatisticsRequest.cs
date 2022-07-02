@@ -1,14 +1,15 @@
-﻿#nullable disable
-
-using System;
+﻿using System;
 using System.Globalization;
 
 namespace Amazon.CloudWatch;
 
 public sealed class GetMetricStatisticsRequest
 {
-    public GetMetricStatisticsRequest(string nameSpace!!, string metricName!!)
+    public GetMetricStatisticsRequest(string nameSpace, string metricName)
     {
+        ArgumentNullException.ThrowIfNull(nameSpace);
+        ArgumentNullException.ThrowIfNull(metricName);
+
         Namespace = nameSpace;
         MetricName = metricName;
     }
@@ -19,15 +20,15 @@ public sealed class GetMetricStatisticsRequest
     // Required
     public string Namespace { get; }
 
-    public Dimension[] Dimensions { get; set; }
+    public Dimension[]? Dimensions { get; set; }
 
-    public Statistic[] Statistics { get; set; }
+    public Statistic[]? Statistics { get; set; }
 
     public DateTime StartTime { get; set; }
 
     public DateTime EndTime { get; set; }
 
-    public string Unit { get; set; }
+    public string? Unit { get; set; }
 
     /// <summary>
     /// The granularity, in seconds, of the returned data points. 
