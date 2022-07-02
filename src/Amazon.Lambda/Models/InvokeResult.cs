@@ -1,18 +1,17 @@
 ﻿#nullable disable
 
-namespace Amazon.Lambda
+namespace Amazon.Lambda;
+
+public class InvokeResult
 {
-    public class InvokeResult
+    public InvokeResult(string responseText)
     {
-        public InvokeResult(string responseText)
-        {
-            ResponseText = responseText;
-        }
-
-        public string LogResult { get; set; }
-
-        public string ResponseText { get; }
+        ResponseText = responseText;
     }
+
+    public string LogResult { get; set; }
+
+    public string ResponseText { get; }
 }
 
 /*
