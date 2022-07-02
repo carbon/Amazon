@@ -2,11 +2,10 @@
 
 using System.Xml.Serialization;
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public class Ipv6CidrBlockState
 {
-    public class Ipv6CidrBlockState
-    {
-        [XmlElement("state")]
-        public string State { get; set; }
-    }
+    [XmlElement("state")]
+    public string State { get; set; }
 }

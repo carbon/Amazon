@@ -1,16 +1,15 @@
 ﻿#nullable disable
 
-namespace Amazon.Ec2
+namespace Amazon.Ec2;
+
+public sealed class UserData
 {
-    public class UserData
+    public UserData() { }
+
+    public UserData(string data)
     {
-        public UserData() { }
-
-        public UserData(string data)
-        {
-            Data = data;
-        }
-
-        public string Data { get; set; }
+        Data = data;
     }
+
+    public string Data { get; set; }
 }
