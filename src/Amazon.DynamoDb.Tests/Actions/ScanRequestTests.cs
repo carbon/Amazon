@@ -9,14 +9,16 @@ public class ScanRequestTests
     {
         var request = new ScanRequest("Libraries", new[] { Expression.Lt("id", 10) });
 
-        Assert.Equal(@"{
-  ""TableName"": ""Libraries"",
-  ""FilterExpression"": ""id \u003C :v0"",
-  ""ExpressionAttributeValues"": {
-    "":v0"": {
-      ""N"": ""10""
-    }
-  }
-}", request.ToSystemTextJsonIndented());
+        Assert.Equal("""
+            {
+              "TableName": "Libraries",
+              "FilterExpression": "id \u003C :v0",
+              "ExpressionAttributeValues": {
+                ":v0": {
+                  "N": "10"
+                }
+              }
+            }
+            """, request.ToSystemTextJsonIndented());
     }
 }

@@ -5,9 +5,10 @@ namespace Amazon.Ses.Tests;
 public class NotificationTests
 {
     [Fact]
-    public void ParseComplaint()
+    public void CanDeserializeComplaint()
     {
-        var text = """
+        var notification = JsonSerializer.Deserialize<SesNotification>(
+            """
             {
                 "notificationType":"Complaint",
                 "complaint":{
@@ -31,9 +32,7 @@ public class NotificationTests
                     ]
                 }
             }
-            """;
-
-        var notification = JsonSerializer.Deserialize<SesNotification>(text);
+            """);
 
         var complaint = notification.Complaint;
         var mail = notification.Mail;
@@ -78,7 +77,8 @@ public class NotificationTests
     [Fact]
     public void ParseDelivery()
     {
-        var text = """
+        var notification = JsonSerializer.Deserialize<SesNotification>(
+            """
             {
               "notificationType":"Delivery",
               "mail":{
@@ -97,9 +97,7 @@ public class NotificationTests
                 "smtpResponse":"250 ok:  Message 64111812 accepted"
               }
             }
-            """;
-
-        var notification = JsonSerializer.Deserialize<SesNotification>(text);
+            """);
 
         Assert.Equal(SesNotificationType.Delivery, notification.NotificationType);
 

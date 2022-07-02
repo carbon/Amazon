@@ -13,13 +13,15 @@ public class DeleteItemRequestTests
 
         var x2 = new DeleteItemRequest("Fruits", key);
 
-        Assert.Equal(@"{
-  ""TableName"": ""Fruits"",
-  ""Key"": {
-    ""name"": {
-      ""S"": ""banana""
-    }
-  }
-}", x2.ToSystemTextJsonIndented());
+        Assert.Equal("""
+            {
+              "TableName": "Fruits",
+              "Key": {
+                "name": {
+                  "S": "banana"
+                }
+              }
+            }
+            """, x2.ToSystemTextJsonIndented());
     }
 }

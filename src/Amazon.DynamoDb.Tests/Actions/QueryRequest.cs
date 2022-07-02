@@ -12,16 +12,19 @@ public class QueryRequestTests
             Limit = 1
         };
 
-        Assert.Equal(@"{
-  ""TableName"": ""Libraries"",
-  ""KeyConditionExpression"": ""id = :v0"",
-  ""ExpressionAttributeValues"": {
-    "":v0"": {
-      ""N"": ""1""
-    }
-  },
-  ""Limit"": 1
-}", request.ToSystemTextJsonIndented());
+        Assert.Equal(
+            """
+            {
+              "TableName": "Libraries",
+              "KeyConditionExpression": "id = :v0",
+              "ExpressionAttributeValues": {
+                ":v0": {
+                  "N": "1"
+                }
+              },
+              "Limit": 1
+            }
+            """, request.ToSystemTextJsonIndented());
     }
 
     [Fact]
@@ -32,19 +35,22 @@ public class QueryRequestTests
 
         query.TableName = "Conversations";
 
-        Assert.Equal(@"{
-  ""TableName"": ""Conversations"",
-  ""KeyConditionExpression"": ""userId = :v0"",
-  ""ExpressionAttributeValues"": {
-    "":v0"": {
-      ""N"": ""1""
-    },
-    "":v1"": {
-      ""N"": ""2""
-    }
-  },
-  ""FilterExpression"": ""contains(participantIds, :v1)""
-}", query.ToSystemTextJsonIndented());
+        Assert.Equal(
+            """
+            {
+              "TableName": "Conversations",
+              "KeyConditionExpression": "userId = :v0",
+              "ExpressionAttributeValues": {
+                ":v0": {
+                  "N": "1"
+                },
+                ":v1": {
+                  "N": "2"
+                }
+              },
+              "FilterExpression": "contains(participantIds, :v1)"
+            }
+            """, query.ToSystemTextJsonIndented());
     }
 
     [Fact]
@@ -60,16 +66,18 @@ public class QueryRequestTests
         };
 
 
-        Assert.Equal(@"{
-  ""TableName"": ""Libraries"",
-  ""KeyConditionExpression"": ""id = :v1"",
-  ""ExpressionAttributeValues"": {
-    "":v1"": {
-      ""N"": ""1""
-    }
-  },
-  ""Limit"": 1
-}", request.ToSystemTextJsonIndented());
+        Assert.Equal("""
+            {
+              "TableName": "Libraries",
+              "KeyConditionExpression": "id = :v1",
+              "ExpressionAttributeValues": {
+                ":v1": {
+                  "N": "1"
+                }
+              },
+              "Limit": 1
+            }
+            """, request.ToSystemTextJsonIndented());
     }
 
     [Fact]
@@ -85,20 +93,23 @@ public class QueryRequestTests
         }.Include("name", "version");
 
 
-        Assert.Equal(@"{
-  ""TableName"": ""Libraries"",
-  ""KeyConditionExpression"": ""id = :v1"",
-  ""ExpressionAttributeNames"": {
-    ""#name"": ""name""
-  },
-  ""ExpressionAttributeValues"": {
-    "":v1"": {
-      ""N"": ""1""
-    }
-  },
-  ""ProjectionExpression"": ""#name,version"",
-  ""Limit"": 1
-}", request.ToSystemTextJsonIndented());
+        Assert.Equal(
+            """
+            {
+              "TableName": "Libraries",
+              "KeyConditionExpression": "id = :v1",
+              "ExpressionAttributeNames": {
+                "#name": "name"
+              },
+              "ExpressionAttributeValues": {
+                ":v1": {
+                  "N": "1"
+                }
+              },
+              "ProjectionExpression": "#name,version",
+              "Limit": 1
+            }
+            """, request.ToSystemTextJsonIndented());
     }
 
     [Fact]
@@ -114,18 +125,21 @@ public class QueryRequestTests
             Limit = 1
         };
 
-        Assert.Equal(@"{
-  ""TableName"": ""Libraries"",
-  ""KeyConditionExpression"": ""#name = :v0"",
-  ""ExpressionAttributeNames"": {
-    ""#name"": ""name""
-  },
-  ""ExpressionAttributeValues"": {
-    "":v0"": {
-      ""S"": ""sortable""
-    }
-  },
-  ""Limit"": 1
-}", request.ToSystemTextJsonIndented());
+        Assert.Equal(
+            """
+            {
+              "TableName": "Libraries",
+              "KeyConditionExpression": "#name = :v0",
+              "ExpressionAttributeNames": {
+                "#name": "name"
+              },
+              "ExpressionAttributeValues": {
+                ":v0": {
+                  "S": "sortable"
+                }
+              },
+              "Limit": 1
+            }
+            """, request.ToSystemTextJsonIndented());
     }
 }

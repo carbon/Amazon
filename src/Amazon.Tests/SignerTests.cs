@@ -112,22 +112,26 @@ public class SignerTests
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "s3.us-east-1.amazonaws.com";
 
-        Assert.Equal(@"host:s3.us-east-1.amazonaws.com
-x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
-x-amz-date:2012-02-17".Replace("\r", ""), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
+        Assert.Equal("""
+            host:s3.us-east-1.amazonaws.com
+            x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            x-amz-date:2012-02-17
+            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
 
         Assert.Equal("host;x-amz-content-sha256;x-amz-date", string.Join(';', signedHeaderNames));
 
 
-        Assert.Equal(@"POST
-/
+        Assert.Equal("""
+            POST
+            /
 
-host:s3.us-east-1.amazonaws.com
-x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
-x-amz-date:2012-02-17
+            host:s3.us-east-1.amazonaws.com
+            x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            x-amz-date:2012-02-17
 
-host;x-amz-content-sha256;x-amz-date
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), SignerV4.GetCanonicalRequest(request));
+            host;x-amz-content-sha256;x-amz-date
+            e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            """.ReplaceLineEndings("\n"), SignerV4.GetCanonicalRequest(request));
     }
 
 
@@ -145,24 +149,28 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), 
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "s3.us-east-1.amazonaws.com";
 
-        Assert.Equal(@"host:s3.us-east-1.amazonaws.com
-x-amz-a:out-of-order
-x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
-x-amz-date:2012-02-17".Replace("\r", ""), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
+        Assert.Equal("""
+            host:s3.us-east-1.amazonaws.com
+            x-amz-a:out-of-order
+            x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            x-amz-date:2012-02-17
+            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
 
         Assert.Equal("host;x-amz-a;x-amz-content-sha256;x-amz-date", string.Join(';', signedHeaderNames));
 
 
-        Assert.Equal(@"POST
-/
+        Assert.Equal("""
+            POST
+            /
 
-host:s3.us-east-1.amazonaws.com
-x-amz-a:out-of-order
-x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
-x-amz-date:2012-02-17
+            host:s3.us-east-1.amazonaws.com
+            x-amz-a:out-of-order
+            x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            x-amz-date:2012-02-17
 
-host;x-amz-a;x-amz-content-sha256;x-amz-date
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), SignerV4.GetCanonicalRequest(request));
+            host;x-amz-a;x-amz-content-sha256;x-amz-date
+            e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            """.ReplaceLineEndings("\n"), SignerV4.GetCanonicalRequest(request));
     }
 
     [Fact]
@@ -177,16 +185,16 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), 
         request.Headers.Date = new DateTimeOffset(2015, 08, 30, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "example.amazonaws.com";
 
-        Assert.Equal(@"GET
-/%E1%88%B4
+        Assert.Equal("""
+            GET
+            /%E1%88%B4
 
-host:example.amazonaws.com
-x-amz-date:20150830T123600Z
+            host:example.amazonaws.com
+            x-amz-date:20150830T123600Z
 
-host;x-amz-date
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-
-".Trim().Replace("\r", ""), SignerV4.GetCanonicalRequest(request));
+            host;x-amz-date
+            e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+            """.ReplaceLineEndings("\n"), SignerV4.GetCanonicalRequest(request));
 
         var scope = new CredentialScope(new DateTime(2015, 08, 30), AwsRegion.USEast1, (AwsService)("service"));
 
@@ -212,17 +220,19 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "s3.us-east-1.amazonaws.com";
 
-        Assert.Equal(@"POST
-/frame%3A1
+        Assert.Equal(
+            """
+            POST
+            /frame%3A1
 
-host:s3.us-east-1.amazonaws.com
-x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
-x-amz-date:2012-02-17
+            host:s3.us-east-1.amazonaws.com
+            x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            x-amz-date:2012-02-17
 
-host;x-amz-content-sha256;x-amz-date
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), SignerV4.GetCanonicalRequest(request));
+            host;x-amz-content-sha256;x-amz-date
+            e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            """.ReplaceLineEndings("\n"), SignerV4.GetCanonicalRequest(request));
     }
-
 
     [Fact]
     public void DoubleEscape()
@@ -237,15 +247,18 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), 
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "s3.us-east-1.amazonaws.com";
 
-        Assert.Equal(@"POST
-/frame%3A1
+        Assert.Equal(
+            """
+            POST
+            /frame%3A1
 
-host:s3.us-east-1.amazonaws.com
-x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
-x-amz-date:2012-02-17
+            host:s3.us-east-1.amazonaws.com
+            x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            x-amz-date:2012-02-17
 
-host;x-amz-content-sha256;x-amz-date
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), SignerV4.GetCanonicalRequest(request));
+            host;x-amz-content-sha256;x-amz-date
+            e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            """.ReplaceLineEndings("\n"), SignerV4.GetCanonicalRequest(request));
     }
 
     [Fact]
@@ -261,26 +274,26 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785".Replace("\r", ""), 
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "s3.us-east-1.amazonaws.com";
 
-        Assert.Equal(@"host:s3.us-east-1.amazonaws.com
-x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
-x-amz-date:2012-02-17".Replace("\r", ""), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
+        Assert.Equal("""
+            host:s3.us-east-1.amazonaws.com
+            x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            x-amz-date:2012-02-17
+            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
 
         Assert.Equal("host;x-amz-content-sha256;x-amz-date", string.Join(';', signedHeaderNames));
 
-        Assert.Equal(@"
+        Assert.Equal(
+            """
+            PUT
+            /fruits/bananas
 
-PUT
-/fruits/bananas
+            host:s3.us-east-1.amazonaws.com
+            x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            x-amz-date:2012-02-17
 
-host:s3.us-east-1.amazonaws.com
-x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
-x-amz-date:2012-02-17
-
-host;x-amz-content-sha256;x-amz-date
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
-
-
-".Trim().Replace("\r", ""), SignerV4.GetCanonicalRequest(request));
+            host;x-amz-content-sha256;x-amz-date
+            e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            """.ReplaceLineEndings("\n"), SignerV4.GetCanonicalRequest(request));
     }
 
     [Fact]
@@ -299,9 +312,12 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "s3.amazonaws.com";
 
-        Assert.Equal(@"content-md5:XUFAKrxLKna5cZ2REBfFkg==
-date:Fri, 17 Feb 2012 18:31:22 GMT
-host:s3.amazonaws.com".Replace("\r", ""), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
+        Assert.Equal(
+            """
+            content-md5:XUFAKrxLKna5cZ2REBfFkg==
+            date:Fri, 17 Feb 2012 18:31:22 GMT
+            host:s3.amazonaws.com
+            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
 
         Assert.Equal("content-md5;date;host", string.Join(';', signedHeaderNames));
     }
@@ -381,10 +397,13 @@ host:s3.amazonaws.com".Replace("\r", ""), SignerV4.CanonicalizeHeaders(request, 
         var auth = request.Headers.GetValues("Authorization").First();
 
 
-        Assert.Equal(@"AWS4-HMAC-SHA256
-2012-02-17
-20120215/us-east-1/dynamodb/aws4_request
-70fdf1d6922246b48d56d3e0c1f7cc0d5dfc79acf421cf066e2033ba0025af40".Replace(Environment.NewLine, "\n"), SignerV4.GetStringToSign(dynamoScope, request));
+        Assert.Equal(
+            """
+            AWS4-HMAC-SHA256
+            2012-02-17
+            20120215/us-east-1/dynamodb/aws4_request
+            70fdf1d6922246b48d56d3e0c1f7cc0d5dfc79acf421cf066e2033ba0025af40
+            """.ReplaceLineEndings("\n"), SignerV4.GetStringToSign(dynamoScope, request));
 
         Assert.Equal("AWS4-HMAC-SHA256 Credential=carbon/20120215/us-east-1/dynamodb/aws4_request,SignedHeaders=host;x-amz-content-sha256;x-amz-date;x-amz-security-token;x-amz-target,Signature=26b5130264847f3848c1649ebf97feebbbede1f23b0ac2b55e539d2c50d25594", auth);
     }

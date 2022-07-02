@@ -31,12 +31,12 @@ public class DbValueTests
     [Fact]
     public void BinaryTests()
     {
-        var value = JsonSerializer.Deserialize<DbValue>(@"{""B"":""dmFsdWU=""}");
+        var value = JsonSerializer.Deserialize<DbValue>("""{"B":"dmFsdWU="}""");
 
         Assert.Equal(DbValueType.B, value.Kind);
         Assert.Equal("dmFsdWU=", Convert.ToBase64String(value.ToBinary()));
 
-        Assert.Equal(@"{""B"":""dmFsdWU=""}", value.ToSystemTextJson());
+        Assert.Equal("""{"B":"dmFsdWU="}""", value.ToSystemTextJson());
     }
 
     [Fact]
@@ -91,7 +91,7 @@ public class DbValueTests
     [Fact]
     public void DbList()
     {
-        var value = JsonSerializer.Deserialize<DbValue>(@"{ ""L"": [ { ""N"": ""1"" }, { ""N"":""2"" } ] }");
+        var value = JsonSerializer.Deserialize<DbValue>("""{ "L": [ { "N": "1" }, { "N":"2" } ] }""");
 
         Assert.Equal(DbValueType.L, value.Kind);
 
@@ -105,21 +105,22 @@ public class DbValueTests
     public void DbMap()
     {
         var value = new DbValue(new AttributeCollection {
-                { "a", 1 },
-                { "b", "boat" }
-            });
+            { "a", 1 },
+            { "b", "boat" }
+        });
 
-
-        Assert.Equal(@"{
-  ""M"": {
-    ""a"": {
-      ""N"": ""1""
-    },
-    ""b"": {
-      ""S"": ""boat""
-    }
-  }
-}", value.ToSystemTextJsonIndented());
+        Assert.Equal("""
+            {
+              "M": {
+                "a": {
+                  "N": "1"
+                },
+                "b": {
+                  "S": "boat"
+                }
+              }
+            }
+            """, value.ToSystemTextJsonIndented());
     }
 
     [Fact]
@@ -135,23 +136,26 @@ public class DbValueTests
             Ips = ips
         }));
 
-        Assert.Equal(@"{
-  ""M"": {
-    ""id"": {
-      ""N"": ""1""
-    },
-    ""ips"": {
-      ""L"": [
-        {
-          ""B"": ""wKgBAQ==""
-        },
-        {
-          ""B"": ""wKgBAg==""
-        }
-      ]
-    }
-  }
-}", value.ToSystemTextJsonIndented());
+        Assert.Equal(
+            """
+            {
+              "M": {
+                "id": {
+                  "N": "1"
+                },
+                "ips": {
+                  "L": [
+                    {
+                      "B": "wKgBAQ=="
+                    },
+                    {
+                      "B": "wKgBAg=="
+                    }
+                  ]
+                }
+              }
+            }
+            """, value.ToSystemTextJsonIndented());
     }
 
     [Fact]
@@ -168,31 +172,35 @@ public class DbValueTests
         });
 
 
-        Assert.Equal(@"{
-  ""a"": {
-    ""M"": {
-      ""a"": {
-        ""N"": ""1""
-      },
-      ""b"": {
-        ""S"": ""boat""
-      }
-    }
-  }
-}", value.ToSystemTextJsonIndented());
+        Assert.Equal("""
+            {
+              "a": {
+                "M": {
+                  "a": {
+                    "N": "1"
+                  },
+                  "b": {
+                    "S": "boat"
+                  }
+                }
+              }
+            }
+            """, value.ToSystemTextJsonIndented());
 
-        Assert.Equal(@"{
-  ""a"": {
-    ""M"": {
-      ""a"": {
-        ""N"": ""1""
-      },
-      ""b"": {
-        ""S"": ""boat""
-      }
-    }
-  }
-}", value.ToSystemTextJsonIndented());
+        Assert.Equal("""
+            {
+              "a": {
+                "M": {
+                  "a": {
+                    "N": "1"
+                  },
+                  "b": {
+                    "S": "boat"
+                  }
+                }
+              }
+            }
+            """, value.ToSystemTextJsonIndented());
 
         var a = JsonSerializer.Deserialize<AttributeCollection>(value.ToSystemTextJson()).As<Hi>();
 
@@ -210,11 +218,14 @@ public class DbValueTests
             Id = id
         });
 
-        Assert.Equal(@"{
-  ""id"": {
-    ""B"": ""ZKWQKAIkHUiA4MGBMfFiGg==""
-  }
-}", value.ToSystemTextJsonIndented());
+        Assert.Equal(
+            """
+            {
+              "id": {
+                "B": "ZKWQKAIkHUiA4MGBMfFiGg=="
+              }
+            }
+            """, value.ToSystemTextJsonIndented());
 
         var a = JsonSerializer.Deserialize<AttributeCollection>(value.ToSystemTextJson()).As<Entity>();
 
@@ -239,50 +250,51 @@ public class DbValueTests
 
         var value = AttributeCollection.FromObject(meta);
 
-        string json = @"{
-  ""name"": {
-    ""S"": ""faces""
-  },
-  ""annotations"": {
-    ""L"": [
-      {
-        ""M"": {
-          ""id"": {
-            ""N"": ""1""
-          },
-          ""description"": {
-            ""S"": ""dog""
-          },
-          ""position"": {
-            ""M"": {
-              ""x"": {
-                ""N"": ""1""
+        string json = """
+            {
+              "name": {
+                "S": "faces"
               },
-              ""y"": {
-                ""N"": ""2""
-              },
-              ""z"": {
-                ""N"": ""3""
+              "annotations": {
+                "L": [
+                  {
+                    "M": {
+                      "id": {
+                        "N": "1"
+                      },
+                      "description": {
+                        "S": "dog"
+                      },
+                      "position": {
+                        "M": {
+                          "x": {
+                            "N": "1"
+                          },
+                          "y": {
+                            "N": "2"
+                          },
+                          "z": {
+                            "N": "3"
+                          }
+                        }
+                      },
+                      "score": {
+                        "N": "0"
+                      },
+                      "confidence": {
+                        "N": "1"
+                      },
+                      "topicality": {
+                        "N": "0"
+                      }
+                    }
+                  }
+                ]
               }
             }
-          },
-          ""score"": {
-            ""N"": ""0""
-          },
-          ""confidence"": {
-            ""N"": ""1""
-          },
-          ""topicality"": {
-            ""N"": ""0""
-          }
-        }
-      }
-    ]
-  }
-}";
+            """;
 
         Assert.Equal(json, value.ToSystemTextJsonIndented());
-
 
         var a = JsonSerializer.Deserialize<AttributeCollection>(json);
         var m = a.As<Meta>();
@@ -294,7 +306,7 @@ public class DbValueTests
     [Fact]
     public void DbList2()
     {
-        var value = JsonSerializer.Deserialize<DbValue>(@"{ ""L"": [ { ""N"": ""1.1"" }, { ""N"":""7.543"" } ] }");
+        var value = JsonSerializer.Deserialize<DbValue>("""{ "L": [ { "N": "1.1" }, { "N":"7.543" } ] }""");
 
         Assert.Equal(DbValueType.L, value.Kind);
 
@@ -304,7 +316,7 @@ public class DbValueTests
     [Fact]
     public void DbMap1()
     {
-        string text = @"{""M"":{""a"":{""N"":""1""},""b"":{""S"":""boat""},""c"":{""BOOL"":true}}}";
+        string text = """{"M":{"a":{"N":"1"},"b":{"S":"boat"},"c":{"BOOL":true}}}""";
 
         var dbValue = Parse(text);
 

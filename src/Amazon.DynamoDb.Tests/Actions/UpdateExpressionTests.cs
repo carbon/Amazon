@@ -17,7 +17,7 @@ public class UpdateExpressionTests
             Change.Replace("locked", locked)
         }, attributeNames, values);
 
-        Assert.Equal(@"SET locked = :v0", expression.ToString());
+        Assert.Equal("SET locked = :v0", expression.ToString());
 
         Assert.Equal(1497212690L, values.Get(":v0").Value);
     }
@@ -33,8 +33,11 @@ public class UpdateExpressionTests
             Change.Remove("deleted")
         }, attrNames, attrValues);
 
-        Assert.Equal(@"REMOVE deleted
-ADD #list :v0", expression.ToString());
+        Assert.Equal(
+            """
+            REMOVE deleted
+            ADD #list :v0
+            """, expression.ToString());
 
         Assert.Single(attrNames);
         Assert.Equal("list", attrNames["#list"]);
@@ -49,7 +52,7 @@ ADD #list :v0", expression.ToString());
             Change.Replace("version", 1)
         }, new Dictionary<string, string>(), new AttributeCollection());
 
-        Assert.Equal(@"SET deleted = :v0, colors = :v1, version = :v2", expression.ToString());
+        Assert.Equal("SET deleted = :v0, colors = :v1, version = :v2", expression.ToString());
     }
 
     [Fact]
@@ -63,8 +66,11 @@ ADD #list :v0", expression.ToString());
             Change.Replace("modified", DateTime.UtcNow)
         }, new Dictionary<string, string>(), new AttributeCollection());
 
-        Assert.Equal(@"SET deleted = :v0, colors = :v1, modified = :v3
-REMOVE deleted
-ADD version :v2", expression.ToString());
+        Assert.Equal(
+            """
+            SET deleted = :v0, colors = :v1, modified = :v3
+            REMOVE deleted
+            ADD version :v2
+            """, expression.ToString());
     }
 }

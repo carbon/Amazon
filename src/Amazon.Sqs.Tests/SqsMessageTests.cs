@@ -1,26 +1,25 @@
-﻿namespace Amazon.Sqs.Tests
+﻿namespace Amazon.Sqs.Tests;
+
+public class SqsMessageTests
 {
-    public class SqsMessageTests
+    [Fact]
+    public void TypedMessageTests()
     {
-        [Fact]
-        public void TypedMessageTests()
+        var m = new SqsMessage
         {
-            var m = new SqsMessage
-            {
-                Body = @"{ ""position"": 1, ""text"": ""hello"" }"
-            };
+            Body = """{ "position": 1, "text": "hello" }"""
+        };
 
-            var b = JsonEncodedMessage<SampleMessage>.Create(m);
+        var b = JsonEncodedMessage<SampleMessage>.Create(m);
 
-            Assert.Equal(1, b.Body.Position);
-            Assert.Equal("hello", b.Body.Text);
-        }
+        Assert.Equal(1, b.Body.Position);
+        Assert.Equal("hello", b.Body.Text);
     }
+}
 
-    public class SampleMessage
-    {
-        public int Position { get; set; }
+public class SampleMessage
+{
+    public int Position { get; set; }
 
-        public string Text { get; set; }
-    }
+    public string Text { get; set; }
 }

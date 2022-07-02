@@ -9,71 +9,69 @@ public class DescribeTableResultTests
     [Fact]
     public void Parse()
     {
-        string text = @"
-{
-    ""Table"": {
-        ""TableArn"": ""arn:aws:dynamodb:us-west-2:123456789012:table/Thread"",
-        ""AttributeDefinitions"": [
+        var result = JsonSerializer.Deserialize<DescribeTableResult>(
+            """
             {
-                ""AttributeName"": ""ForumName"",
-                ""AttributeType"": ""S""
-            },
-            {
-                ""AttributeName"": ""LastPostDateTime"",
-                ""AttributeType"": ""S""
-            },
-            {
-                ""AttributeName"": ""Subject"",
-                ""AttributeType"": ""S""
-            }
-        ],
-        ""CreationDateTime"": 1.363729002358E9,
-        ""ItemCount"": 0,
-        ""KeySchema"": [
-            {
-                ""AttributeName"": ""ForumName"",
-                ""KeyType"": ""HASH""
-            },
-            {
-                ""AttributeName"": ""Subject"",
-                ""KeyType"": ""RANGE""
-            }
-        ],
-        ""LocalSecondaryIndexes"": [
-            {
-                ""IndexArn"": ""arn:aws:dynamodb:us-west-2:123456789012:table/Thread/index/LastPostIndex"",
-                ""IndexName"": ""LastPostIndex"",
-                ""IndexSizeBytes"": 0,
-                ""ItemCount"": 0,
-                ""KeySchema"": [
-                    {
-                        ""AttributeName"": ""ForumName"",
-                        ""KeyType"": ""HASH""
+                "Table": {
+                    "TableArn": "arn:aws:dynamodb:us-west-2:123456789012:table/Thread",
+                    "AttributeDefinitions": [
+                        {
+                            "AttributeName": "ForumName",
+                            "AttributeType": "S"
+                        },
+                        {
+                            "AttributeName": "LastPostDateTime",
+                            "AttributeType": "S"
+                        },
+                        {
+                            "AttributeName": "Subject",
+                            "AttributeType": "S"
+                        }
+                    ],
+                    "CreationDateTime": 1.363729002358E9,
+                    "ItemCount": 0,
+                    "KeySchema": [
+                        {
+                            "AttributeName": "ForumName",
+                            "KeyType": "HASH"
+                        },
+                        {
+                            "AttributeName": "Subject",
+                            "KeyType": "RANGE"
+                        }
+                    ],
+                    "LocalSecondaryIndexes": [
+                        {
+                            "IndexArn": "arn:aws:dynamodb:us-west-2:123456789012:table/Thread/index/LastPostIndex",
+                            "IndexName": "LastPostIndex",
+                            "IndexSizeBytes": 0,
+                            "ItemCount": 0,
+                            "KeySchema": [
+                                {
+                                    "AttributeName": "ForumName",
+                                    "KeyType": "HASH"
+                                },
+                                {
+                                    "AttributeName": "LastPostDateTime",
+                                    "KeyType": "RANGE"
+                                }
+                            ],
+                            "Projection": {
+                                "ProjectionType": "KEYS_ONLY"
+                            }
+                        }
+                    ],
+                    "ProvisionedThroughput": {
+                        "NumberOfDecreasesToday": 0,
+                        "ReadCapacityUnits": 5,
+                        "WriteCapacityUnits": 5
                     },
-                    {
-                        ""AttributeName"": ""LastPostDateTime"",
-                        ""KeyType"": ""RANGE""
-                    }
-                ],
-                ""Projection"": {
-                    ""ProjectionType"": ""KEYS_ONLY""
+                    "TableName": "Thread",
+                    "TableSizeBytes": 0,
+                    "TableStatus": "ACTIVE"
                 }
             }
-        ],
-        ""ProvisionedThroughput"": {
-            ""NumberOfDecreasesToday"": 0,
-            ""ReadCapacityUnits"": 5,
-            ""WriteCapacityUnits"": 5
-        },
-        ""TableName"": ""Thread"",
-        ""TableSizeBytes"": 0,
-        ""TableStatus"": ""ACTIVE""
-    }
-}
-
-";
-
-        var result = JsonSerializer.Deserialize<DescribeTableResult>(text);
+            """);
 
         var table = result.Table;
         var keySchema = table.KeySchema;

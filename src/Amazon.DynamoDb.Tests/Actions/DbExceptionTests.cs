@@ -6,7 +6,7 @@ public class DbExceptionTests
     [Fact]
     public async Task DynamoParseException()
     {
-        var text = @"{""__type"":""com.amazon.coral.service#SerializationException"",""Message"":""Start of list found where not expected""}";
+        var text = """{"__type":"com.amazon.coral.service#SerializationException","Message":"Start of list found where not expected"}""";
 
         var ms = new MemoryStream(Encoding.UTF8.GetBytes(text));
 
@@ -19,7 +19,7 @@ public class DbExceptionTests
     [Fact]
     public async Task DynamoParseException_Lowercase()
     {
-        var text = @"{""__type"":""Exception"",""message"":""Something went wrong""}";
+        var text = """{"__type":"Exception","message":"Something went wrong"}""";
 
         var ms = new MemoryStream(Encoding.UTF8.GetBytes(text));
 

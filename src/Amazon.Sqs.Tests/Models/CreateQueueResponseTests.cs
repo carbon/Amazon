@@ -1,21 +1,21 @@
-﻿namespace Amazon.Sqs.Models.Tests
+﻿namespace Amazon.Sqs.Models.Tests;
+
+public class CreateQueueResponseTests
 {
-    public class CreateQueueResponseTests
+    [Fact]
+    public void Parse()
     {
-        [Fact]
-        public void Parse()
-        {
-            var xmlText =
+        var response = CreateQueueResponse.Parse(
+            """
+            <CreateQueueResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/">
+                <CreateQueueResult>
+            	    <QueueUrl>http://queue.amazonaws.com/1234/hello</QueueUrl>
+                </CreateQueueResult>
+            </CreateQueueResponse>
+            """);
 
-            @"<CreateQueueResponse xmlns=""http://queue.amazonaws.com/doc/2012-11-05/"">
-				<CreateQueueResult>
-					<QueueUrl>http://queue.amazonaws.com/1234/hello</QueueUrl>
-				</CreateQueueResult>
-			</CreateQueueResponse>";
+        var result = response.CreateQueueResult;
 
-            var result = CreateQueueResponse.Parse(xmlText).CreateQueueResult;
-
-            Assert.Equal("http://queue.amazonaws.com/1234/hello", result.QueueUrl);
-        }
+        Assert.Equal("http://queue.amazonaws.com/1234/hello", result.QueueUrl);
     }
 }

@@ -8,76 +8,78 @@ public class BatchGetItemResultTests
     public void Deserialize()
     {
         var text =
-@"{
-    ""Responses"": {
-        ""Forum"": [
+            """
             {
-                ""Name"":{
-                    ""S"":""Amazon DynamoDB""
+                "Responses": {
+                    "Forum": [
+                        {
+                            "Name":{
+                                "S":"Amazon DynamoDB"
+                            },
+                            "Threads":{
+                                "N":"5"
+                            },
+                            "Messages":{
+                                "N":"19"
+                            },
+                            "Views":{
+                                "N":"35"
+                            }
+                        },
+                        {
+                            "Name":{
+                                "S":"Amazon RDS"
+                            },
+                            "Threads":{
+                                "N":"8"
+                            },
+                            "Messages":{
+                                "N":"32"
+                            },
+                            "Views":{
+                                "N":"38"
+                            }
+                        },
+                        {
+                            "Name":{
+                                "S":"Amazon Redshift"
+                            },
+                            "Threads":{
+                                "N":"12"
+                            },
+                            "Messages":{
+                                "N":"55"
+                            },
+                            "Views":{
+                                "N":"47"
+                            }
+                        }
+                    ],
+                    "Thread": [
+                        {
+                            "Tags":{
+                                "SS":["Reads","MultipleUsers"]
+                            },
+                            "Message":{
+                                "S":"How many users can read a single data item at a time? Are there any limits?"
+                            }
+                        }
+                    ]
                 },
-                ""Threads"":{
-                    ""N"":""5""
+                "UnprocessedKeys": {
                 },
-                ""Messages"":{
-                    ""N"":""19""
-                },
-                ""Views"":{
-                    ""N"":""35""
-                }
-            },
-            {
-                ""Name"":{
-                    ""S"":""Amazon RDS""
-                },
-                ""Threads"":{
-                    ""N"":""8""
-                },
-                ""Messages"":{
-                    ""N"":""32""
-                },
-                ""Views"":{
-                    ""N"":""38""
-                }
-            },
-            {
-                ""Name"":{
-                    ""S"":""Amazon Redshift""
-                },
-                ""Threads"":{
-                    ""N"":""12""
-                },
-                ""Messages"":{
-                    ""N"":""55""
-                },
-                ""Views"":{
-                    ""N"":""47""
-                }
+                "ConsumedCapacity": [
+                    {
+                        "TableName": "Forum",
+                        "CapacityUnits": 3
+                    },
+                    {
+                        "TableName": "Thread",
+                        "CapacityUnits": 1
+                    }
+                ]
             }
-        ],
-        ""Thread"": [
-            {
-                ""Tags"":{
-                    ""SS"":[""Reads"",""MultipleUsers""]
-                },
-                ""Message"":{
-                    ""S"":""How many users can read a single data item at a time? Are there any limits?""
-                }
-            }
-        ]
-    },
-    ""UnprocessedKeys"": {
-    },
-    ""ConsumedCapacity"": [
-        {
-            ""TableName"": ""Forum"",
-            ""CapacityUnits"": 3
-        },
-        {
-            ""TableName"": ""Thread"",
-            ""CapacityUnits"": 1
-        }
-    ]
-}";
+            """;
 
         using var doc = JsonDocument.Parse(text);
 

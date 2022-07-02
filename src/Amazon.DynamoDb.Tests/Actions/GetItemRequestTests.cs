@@ -13,14 +13,16 @@ public class GetItemRequestTests
 
         var x2 = new GetItemRequest("Fruits", key);
 
-        Assert.Equal(@"{
-  ""TableName"": ""Fruits"",
-  ""Key"": {
-    ""name"": {
-      ""S"": ""banana""
-    }
-  }
-}", x2.ToSystemTextJsonIndented());
+        Assert.Equal("""
+            {
+              "TableName": "Fruits",
+              "Key": {
+                "name": {
+                  "S": "banana"
+                }
+              }
+            }
+            """, x2.ToSystemTextJsonIndented());
     }
 
     [Fact]
@@ -36,18 +38,20 @@ public class GetItemRequestTests
             ReturnConsumedCapacity = ReturnConsumedCapacity.TOTAL
         };
 
-        Assert.Equal(@"{
-  ""TableName"": ""Products"",
-  ""Key"": {
-    ""primary"": {
-      ""N"": ""1""
-    },
-    ""secondary"": {
-      ""S"": ""2""
-    }
-  },
-  ""ConsistentRead"": true,
-  ""ReturnConsumedCapacity"": ""TOTAL""
-}", x2.ToSystemTextJsonIndented());
+        Assert.Equal("""
+            {
+              "TableName": "Products",
+              "Key": {
+                "primary": {
+                  "N": "1"
+                },
+                "secondary": {
+                  "S": "2"
+                }
+              },
+              "ConsistentRead": true,
+              "ReturnConsumedCapacity": "TOTAL"
+            }
+            """, x2.ToSystemTextJsonIndented());
     }
 }

@@ -23,8 +23,7 @@ public readonly ref struct AttributeWriter
 
         WriteDbValue(value);
     }
-
-     
+         
     public void WriteDbValue(in DbValue value)
     {
         switch (value.Kind)
@@ -74,13 +73,13 @@ public readonly ref struct AttributeWriter
             WriteDbValue(value);
         }
 
-        writer.Write(@"]}");
+        writer.Write("]}");
     }
 
     private void WriteSet(string type, IEnumerable<object> values)
     {
         // { "SS":[] }
-        writer.Write(@"{""");
+        writer.Write("{\"");
         writer.Write(type);
         writer.Write(@""":[");
 
@@ -106,19 +105,19 @@ public readonly ref struct AttributeWriter
             i++;
         }
 
-        writer.Write(@"]}");
+        writer.Write("]}");
     }
 
     private void WriteBool(bool value)
     {
-        writer.Write(@"{""BOOL"":");
+        writer.Write("{\"BOOL\":");
         writer.Write(value ? "true" : "false");
         writer.Write('}');
     }
 
     private void WriteString(string value)
     {
-        writer.Write(@"{""S"":");
+        writer.Write("{\"S\":");
         writer.Write('"');
         JavaScriptEncoder.Default.Encode(writer, value);
         writer.Write('"');
@@ -127,10 +126,10 @@ public readonly ref struct AttributeWriter
 
     private void WriteValue(string type, string value)
     {
-        writer.Write(@"{""");
+        writer.Write("{\"");
         writer.Write(type);
-        writer.Write(@""":""");
+        writer.Write("\":\"");
         writer.Write(value);
-        writer.Write(@"""}");
+        writer.Write("\"}");
     }
 }

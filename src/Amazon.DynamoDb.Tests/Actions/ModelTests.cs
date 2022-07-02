@@ -30,17 +30,19 @@ public class ModelTests
 
         var x = AttributeCollection.FromObject(point);
 
-        Assert.Equal(@"{
-  ""1"": {
-    ""N"": ""1""
-  },
-  ""2"": {
-    ""N"": ""2""
-  },
-  ""3"": {
-    ""N"": ""3""
-  }
-}", x.ToSystemTextJsonIndented());
+        Assert.Equal("""
+            {
+              "1": {
+                "N": "1"
+              },
+              "2": {
+                "N": "2"
+              },
+              "3": {
+                "N": "3"
+              }
+            }
+            """, x.ToSystemTextJsonIndented());
     }
 
     [Fact]
@@ -56,16 +58,18 @@ public class ModelTests
 
         var x = AttributeCollection.FromObject(orange);
 
-        Assert.Equal(@"{
-  ""name"": {
-    ""S"": ""orange""
-  },
-  ""calories"": {
-    ""N"": ""50""
-  },
-  ""description"": {
-    ""S"": ""Amazing""
-  }
-}", x.ToSystemTextJsonIndented());
+        Assert.Equal("""
+            {
+              "name": {
+                "S": "orange"
+              },
+              "calories": {
+                "N": "50"
+              },
+              "description": {
+                "S": "Amazing"
+              }
+            }
+            """, x.ToSystemTextJsonIndented());
     }
 }

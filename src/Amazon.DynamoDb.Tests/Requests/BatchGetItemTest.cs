@@ -18,7 +18,7 @@ public class BatchGetItemRequestTests
             })
         );
 
-        var expected = @"{""RequestItems"":{""Table1"":{""Keys"":[{""id"":{""N"":""1""}},{""id"":{""N"":""2""}}]},""Table2"":{""Keys"":[{""id"":{""N"":""3""}},{""id"":{""N"":""4""}}]}}}";
+        var expected = """{"RequestItems":{"Table1":{"Keys":[{"id":{"N":"1"}},{"id":{"N":"2"}}]},"Table2":{"Keys":[{"id":{"N":"3"}},{"id":{"N":"4"}}]}}}""";
 
         Assert.Equal(expected, request.ToSystemTextJson());
     }
@@ -31,7 +31,7 @@ public class BatchGetItemRequestTests
             new TableKeys("Table2", new RecordKey("id", 3), new RecordKey("id", 4))
         );
 
-        var expected = @"{""RequestItems"":{""Table1"":{""Keys"":[{""id"":{""N"":""1""}},{""id"":{""N"":""2""}}]},""Table2"":{""Keys"":[{""id"":{""N"":""3""}},{""id"":{""N"":""4""}}]}}}";
+        var expected = """{"RequestItems":{"Table1":{"Keys":[{"id":{"N":"1"}},{"id":{"N":"2"}}]},"Table2":{"Keys":[{"id":{"N":"3"}},{"id":{"N":"4"}}]}}}""";
 
         Assert.Equal(expected, request.ToSystemTextJson());
     }

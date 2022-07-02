@@ -17,6 +17,6 @@ public class AttributeWriterTests
 
         writer.WriteDbValue(value);
 
-        Assert.Equal(@"{""M"":{""a"":{""N"":""1""},""b"":{""S"":""boat""}}}", sb.ToString());
+        Assert.Equal("""{"M":{"a":{"N":"1"},"b":{"S":"boat"}}}""", sb.ToString());
     }
 }

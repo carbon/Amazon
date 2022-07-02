@@ -9,15 +9,18 @@ public class BatchDeleteTests
     {
         var batch = new DeleteBatch(new[] { "1", "2" }, quite: true);
 
-        Assert.Equal(expected: @"<Delete>
-  <Quiet>true</Quiet>
-  <Object>
-    <Key>1</Key>
-  </Object>
-  <Object>
-    <Key>2</Key>
-  </Object>
-</Delete>",
+        Assert.Equal(
+            """
+            <Delete>
+              <Quiet>true</Quiet>
+              <Object>
+                <Key>1</Key>
+              </Object>
+              <Object>
+                <Key>2</Key>
+              </Object>
+            </Delete>
+            """,
       actual: batch.ToXmlString(SaveOptions.None));
     }
 
@@ -26,14 +29,17 @@ public class BatchDeleteTests
     {
         var batch = new DeleteBatch(new[] { "1", "2" });
 
-        Assert.Equal(expected: @"<Delete>
-  <Object>
-    <Key>1</Key>
-  </Object>
-  <Object>
-    <Key>2</Key>
-  </Object>
-</Delete>",
+        Assert.Equal(
+            """
+            <Delete>
+              <Object>
+                <Key>1</Key>
+              </Object>
+              <Object>
+                <Key>2</Key>
+              </Object>
+            </Delete>
+            """,
       actual: batch.ToXmlString(SaveOptions.None));
     }
 
@@ -41,17 +47,19 @@ public class BatchDeleteTests
     [Fact]
     public void TestResponse()
     {
-        var xml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
-<DeleteResult xmlns=""http://s3.amazonaws.com/doc/2006-03-01/"">
-	<Deleted>
-		<Key>sample1.txt</Key>
-	</Deleted>
-	<Error>
-		<Key>sample2.txt</Key>
-		<Code>AccessDenied</Code>
-		<Message>Access Denied</Message>
-	</Error>
-</DeleteResult>";
+        var xml = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <DeleteResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+            	<Deleted>
+            		<Key>sample1.txt</Key>
+            	</Deleted>
+            	<Error>
+            		<Key>sample2.txt</Key>
+            		<Code>AccessDenied</Code>
+            		<Message>Access Denied</Message>
+            	</Error>
+            </DeleteResult>
+            """;
 
         var result = DeleteResult.ParseXml(xml);
 
@@ -65,15 +73,17 @@ public class BatchDeleteTests
     [Fact]
     public void TestResponse2()
     {
-        var xml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
-<DeleteResult xmlns=""http://s3.amazonaws.com/doc/2006-03-01/"">
-	<Deleted>
-		<Key>1.txt</Key>
-	</Deleted>
-    <Deleted>
-		<Key>2.txt</Key>
-	</Deleted>
-</DeleteResult>";
+        var xml = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <DeleteResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+            	<Deleted>
+            		<Key>1.txt</Key>
+            	</Deleted>
+                <Deleted>
+            		<Key>2.txt</Key>
+            	</Deleted>
+            </DeleteResult>
+            """;
 
         var result = DeleteResult.ParseXml(xml);
 

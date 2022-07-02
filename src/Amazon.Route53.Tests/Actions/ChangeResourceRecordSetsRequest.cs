@@ -28,30 +28,33 @@ public class ChangeResourceRecordSetsRequestTests
 
         byte[] bytes = Route53Serializer<ChangeResourceRecordSetsRequest>.SerializeToUtf8Bytes(request);
 
-        Assert.Equal(Flatten(@"﻿<?xml version=""1.0"" encoding=""utf-8""?>
-<ChangeResourceRecordSetsRequest xmlns=""https://route53.amazonaws.com/doc/2013-04-01/"">
-  <ChangeBatch>
-    <Changes>
-      <Change>
-        <Action>CREATE</Action>
-        <ResourceRecordSet>
-          <AliasTarget>
-            <DNSName>bananas</DNSName>
-            <EvaluateTargetHealth>false</EvaluateTargetHealth>
-          </AliasTarget>
-          <GeoLocation>
-            <ContinentCode>NA</ContinentCode>
-          </GeoLocation>
-          <HealthCheckId>1</HealthCheckId>
-          <Name>name</Name>
-          <SetIdentifier>set-id</SetIdentifier>
-          <TTL>600</TTL>
-          <Type>CNAME</Type>
-        </ResourceRecordSet>
-      </Change>
-    </Changes>
-  </ChangeBatch>
-</ChangeResourceRecordSetsRequest>"), Encoding.UTF8.GetString(bytes));
+        Assert.Equal(Flatten(
+            """
+            ﻿<?xml version="1.0" encoding="utf-8"?>
+            <ChangeResourceRecordSetsRequest xmlns="https://route53.amazonaws.com/doc/2013-04-01/">
+              <ChangeBatch>
+                <Changes>
+                  <Change>
+                    <Action>CREATE</Action>
+                    <ResourceRecordSet>
+                      <AliasTarget>
+                        <DNSName>bananas</DNSName>
+                        <EvaluateTargetHealth>false</EvaluateTargetHealth>
+                      </AliasTarget>
+                      <GeoLocation>
+                        <ContinentCode>NA</ContinentCode>
+                      </GeoLocation>
+                      <HealthCheckId>1</HealthCheckId>
+                      <Name>name</Name>
+                      <SetIdentifier>set-id</SetIdentifier>
+                      <TTL>600</TTL>
+                      <Type>CNAME</Type>
+                    </ResourceRecordSet>
+                  </Change>
+                </Changes>
+              </ChangeBatch>
+            </ChangeResourceRecordSetsRequest>
+            """), Encoding.UTF8.GetString(bytes));
     }
 
 
@@ -73,23 +76,25 @@ public class ChangeResourceRecordSetsRequestTests
 
         Assert.Equal("0be4fa0293ad2ede7dc2fcb61c7f92922ef70f4addcd4d02abc707deb43184bf", SignerV4.ComputeSHA256(new ByteArrayContent(bytes)));
 
-        Assert.Equal(Flatten(@"﻿<?xml version=""1.0"" encoding=""utf-8""?>
-<ChangeResourceRecordSetsRequest xmlns=""https://route53.amazonaws.com/doc/2013-04-01/"">
-  <ChangeBatch>
-    <Changes>
-      <Change>
-        <Action>CREATE</Action>
-        <ResourceRecordSet>
-          <Failover>SECONDARY</Failover>
-          <TTL>600</TTL>
-          <Type>NS</Type>
-        </ResourceRecordSet>
-      </Change>
-    </Changes>
-  </ChangeBatch>
-</ChangeResourceRecordSetsRequest>"), Encoding.UTF8.GetString(bytes), ignoreWhiteSpaceDifferences: true);
+        Assert.Equal(Flatten(
+            """
+            ﻿<?xml version="1.0" encoding="utf-8"?>
+            <ChangeResourceRecordSetsRequest xmlns="https://route53.amazonaws.com/doc/2013-04-01/">
+              <ChangeBatch>
+                <Changes>
+                  <Change>
+                    <Action>CREATE</Action>
+                    <ResourceRecordSet>
+                      <Failover>SECONDARY</Failover>
+                      <TTL>600</TTL>
+                      <Type>NS</Type>
+                    </ResourceRecordSet>
+                  </Change>
+                </Changes>
+              </ChangeBatch>
+            </ChangeResourceRecordSetsRequest>
+            """), Encoding.UTF8.GetString(bytes), ignoreWhiteSpaceDifferences: true);
     }
-
 
     [Fact]
     public void Serialize3()
@@ -122,49 +127,52 @@ public class ChangeResourceRecordSetsRequestTests
 
         byte[] bytes = Route53Serializer<ChangeResourceRecordSetsRequest>.SerializeToUtf8Bytes(request);
 
-        Assert.Equal(Flatten(@"﻿<?xml version=""1.0"" encoding=""utf-8""?>
-<ChangeResourceRecordSetsRequest xmlns=""https://route53.amazonaws.com/doc/2013-04-01/"">
-  <ChangeBatch>
-    <Changes>
-      <Change>
-        <Action>CREATE</Action>
-        <ResourceRecordSet>
-          <Failover>SECONDARY</Failover>
-          <TTL>600</TTL>
-          <Type>NS</Type>
-        </ResourceRecordSet>
-      </Change>
-      <Change>
-        <Action>DELETE</Action>
-        <ResourceRecordSet>
-          <Name>example.com.</Name>
-          <ResourceRecords />
-          <Type>AAAA</Type>
-        </ResourceRecordSet>
-      </Change>
-      <Change>
-        <Action>UPSERT</Action>
-        <ResourceRecordSet>
-          <Failover>SECONDARY</Failover>
-          <ResourceRecords>
-            <ResourceRecord>
-              <Value>a</Value>
-            </ResourceRecord>
-            <ResourceRecord>
-              <Value>b</Value>
-            </ResourceRecord>
-            <ResourceRecord>
-              <Value>c</Value>
-            </ResourceRecord>
-          </ResourceRecords>
-          <TTL>30</TTL>
-          <Type>TXT</Type>
-          <Weight>255</Weight>
-        </ResourceRecordSet>
-      </Change>
-    </Changes>
-  </ChangeBatch>
-</ChangeResourceRecordSetsRequest>"), Encoding.UTF8.GetString(bytes), ignoreWhiteSpaceDifferences: true);
+        Assert.Equal(Flatten(
+            """
+            ﻿<?xml version="1.0" encoding="utf-8"?>
+            <ChangeResourceRecordSetsRequest xmlns="https://route53.amazonaws.com/doc/2013-04-01/">
+              <ChangeBatch>
+                <Changes>
+                  <Change>
+                    <Action>CREATE</Action>
+                    <ResourceRecordSet>
+                      <Failover>SECONDARY</Failover>
+                      <TTL>600</TTL>
+                      <Type>NS</Type>
+                    </ResourceRecordSet>
+                  </Change>
+                  <Change>
+                    <Action>DELETE</Action>
+                    <ResourceRecordSet>
+                      <Name>example.com.</Name>
+                      <ResourceRecords />
+                      <Type>AAAA</Type>
+                    </ResourceRecordSet>
+                  </Change>
+                  <Change>
+                    <Action>UPSERT</Action>
+                    <ResourceRecordSet>
+                      <Failover>SECONDARY</Failover>
+                      <ResourceRecords>
+                        <ResourceRecord>
+                          <Value>a</Value>
+                        </ResourceRecord>
+                        <ResourceRecord>
+                          <Value>b</Value>
+                        </ResourceRecord>
+                        <ResourceRecord>
+                          <Value>c</Value>
+                        </ResourceRecord>
+                      </ResourceRecords>
+                      <TTL>30</TTL>
+                      <Type>TXT</Type>
+                      <Weight>255</Weight>
+                    </ResourceRecordSet>
+                  </Change>
+                </Changes>
+              </ChangeBatch>
+            </ChangeResourceRecordSetsRequest>
+            """), Encoding.UTF8.GetString(bytes), ignoreWhiteSpaceDifferences: true);
     }
 
     public static string Flatten(string xml)

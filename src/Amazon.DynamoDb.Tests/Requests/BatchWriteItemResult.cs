@@ -21,54 +21,57 @@ public class DynamoBatchTests
         var tableBatch = new TableRequests("Posts", requests).SerializeList();
 
         Assert.Equal(
-@"[
-  {
-    ""PutRequest"": {
-      ""Item"": {
-        ""title"": {
-          ""S"": ""awesomeness""
-        },
-        ""ownerId"": {
-          ""N"": ""1""
-        }
-      }
-    }
-  },
-  {
-    ""DeleteRequest"": {
-      ""Key"": {
-        ""title"": {
-          ""S"": ""notawesome""
-        },
-        ""ownerId"": {
-          ""N"": ""2""
-        }
-      }
-    }
-  }
-]", tableBatch.ToSystemTextJsonIndented());
+            """
+            [
+              {
+                "PutRequest": {
+                  "Item": {
+                    "title": {
+                      "S": "awesomeness"
+                    },
+                    "ownerId": {
+                      "N": "1"
+                    }
+                  }
+                }
+              },
+              {
+                "DeleteRequest": {
+                  "Key": {
+                    "title": {
+                      "S": "notawesome"
+                    },
+                    "ownerId": {
+                      "N": "2"
+                    }
+                  }
+                }
+              }
+            ]
+            """, tableBatch.ToSystemTextJsonIndented());
     }
 
     [Fact]
     public void BatchWriteRequest1()
     {
-        var text = @"{ 
- ""UnprocessedItems"":  { 
-	""Slugs"": [ 
-		{ 
-			""PutRequest"": { ""Item"": { ""name"": { ""S"": ""apples"" }, ""ownerId"": { ""N"": ""1"" }, ""type"": { ""N"": ""1"" } } } 
-		}, 
-		{
-			""PutRequest"": { ""Item"": { ""name"": { ""S"": ""bananas"" }, ""ownerId"": { ""N"": ""2"" }, ""type"": { ""N"": ""1"" } } } 
-		},
-		{
-			""DeleteRequest"": { ""Key"": { ""name"": { ""S"": ""oranges"" }, ""ownerId"": { ""N"": ""3"" } } } 
-		}
-	] 
-  } 
-}";
-
-        using var doc = JsonDocument.Parse(text);
+        using var doc = JsonDocument.Parse(
+            """
+            {
+             "UnprocessedItems":  { 
+            	"Slugs": [ 
+            		{ 
+            			"PutRequest": { "Item": { "name": { "S": "apples" }, "ownerId": { "N": "1" }, "type": { "N": "1" } } } 
+            		}, 
+            		{
+            			"PutRequest": { "Item": { "name": { "S": "bananas" }, "ownerId": { "N": "2" }, "type": { "N": "1" } } } 
+            		},
+            		{
+            			"DeleteRequest": { "Key": { "name": { "S": "oranges" }, "ownerId": { "N": "3" } } } 
+            		}
+            	] 
+              } 
+            }
+            """);
 
         var result = BatchWriteItemResult.FromJsonElement(doc.RootElement);
 

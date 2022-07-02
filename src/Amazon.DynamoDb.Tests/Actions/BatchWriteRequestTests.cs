@@ -30,6 +30,6 @@ public class BatchWriteRequestTests
             RequestItems = q
         };
 
-        Assert.Equal(@"{""RequestItems"":{""A"":[{""PutRequest"":{""Item"":{""id"":{""N"":""1""}}}},{""DeleteRequest"":{""Key"":{""id"":{""N"":""2""}}}}],""B"":[{""DeleteRequest"":{""Key"":{""id"":{""N"":""1""}}}},{""DeleteRequest"":{""Key"":{""id"":{""N"":""2""}}}}]}}", r.ToSystemTextJson());
+        Assert.Equal("""{"RequestItems":{"A":[{"PutRequest":{"Item":{"id":{"N":"1"}}}},{"DeleteRequest":{"Key":{"id":{"N":"2"}}}}],"B":[{"DeleteRequest":{"Key":{"id":{"N":"1"}}}},{"DeleteRequest":{"Key":{"id":{"N":"2"}}}}]}}""", r.ToSystemTextJson());
     }
 }
