@@ -114,15 +114,15 @@ public sealed class DynamoExpression
 
     private void WriteFunctionExpression(FunctionExpression funcExp)
     {
-        switch (funcExp.Name)
+        sb.Append(funcExp.Name switch
         {
-            case "isNotNull": sb.Append("attribute_exists"); break;
-            case "exists": sb.Append("attribute_exists"); break;
-            case "notExists": sb.Append("attribute_not_exists"); break;
-            case "isNull": sb.Append("attribute_not_exists"); break;
-            case "startsWith": sb.Append("begins_with"); break;
-            default: sb.Append(funcExp.Name); break;
-        }
+            "isNotNull"  => "attribute_exists",
+            "exists"     => "attribute_exists",
+            "notExists"  => "attribute_not_exists",
+            "isNull"     => "attribute_not_exists",
+            "startsWith" => "begins_with",
+            _            => funcExp.Name
+        });
 
         sb.Append('(');
 

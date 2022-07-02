@@ -38,12 +38,16 @@ public class DynamoTable<T, TKey>
         : this(metadata.Name, client)
     { }
 
-    public DynamoTable(string tableName!!, DynamoDbClient client!!)
+    public DynamoTable(string tableName, DynamoDbClient client)
     {
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(client);
+
         _tableName = tableName;
         _client = client;
 
-        // TODO: Validate the key properties
+        // TODO:
+        // [ ] validate the key properties
     }
 
     public IKeyInfo PrimaryKey => metadata.PrimaryKey;
@@ -52,29 +56,27 @@ public class DynamoTable<T, TKey>
     {
         var key = Key<T>.FromTuple(keyValue);
 
-        string[] keyNames = new string[key.Length];
-
-        for (int i = 0; i < keyNames.Length; i++)
-        {
-            keyNames[i] = key[i].Key;
-        }
-
         var result = await FindAsync(new GetItemRequest(_tableName, key) {
             ConsistentRead = false,
-            AttributesToGet = keyNames
+            AttributesToGet = PrimaryKey.Names
         }).ConfigureAwait(false);
 
         return result is not null;
     }
 
-    public Task<T?> FindAsync(Key<T> key)
-    {
-        return FindAsync(key, isConsistent: false);
-    }
-
     public Task<T?> FindAsync(TKey keyValue)
     {
         return FindAsync(Key<T>.FromTuple(keyValue), isConsistent: false);
+    }
+
+    public Task<T?> FindAsync(TKey keyValue, bool isConsistent)
+    {
+        return FindAsync(Key<T>.FromTuple(keyValue), isConsistent);
+    }
+
+    public Task<T?> FindAsync(Key<T> key)
+    {
+        return FindAsync(key, isConsistent: false);
     }
 
     public Task<T?> FindAsync(Key<T> key, bool isConsistent)
@@ -86,6 +88,8 @@ public class DynamoTable<T, TKey>
 
     internal async Task<T?> FindAsync(GetItemRequest request)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         var retryCount = 0;
         Exception? lastException = null;
 
@@ -115,7 +119,7 @@ public class DynamoTable<T, TKey>
         }
         while (retryPolicy.ShouldRetry(retryCount));
 
-        var key = string.Join(",", request.Key.Select(k => k.Value));
+        var key = string.Join(',', request.Key.Select(static k => k.Value));
 
         var errorMessage = $"Unrecoverable exception getting '{key}' from '{_tableName}'";
 
@@ -227,8 +231,7 @@ public class DynamoTable<T, TKey>
 
         do
         {
-            var request = new ScanRequest(_tableName)
-            {
+            var request = new ScanRequest(_tableName) {
                 ExclusiveStartKey = result?.LastEvaluatedKey
             };
 
@@ -256,8 +259,7 @@ public class DynamoTable<T, TKey>
         Expression[]? conditions = null,
         int take = 1000)
     {
-        var request = new ScanRequest(_tableName)
-        {
+        var request = new ScanRequest(_tableName) {
             Limit = take
         };
 
@@ -316,33 +318,32 @@ public class DynamoTable<T, TKey>
         return result;
     }
 
-    public async Task<UpdateItemResult> PatchAsync(Key<T> key, params Change[] changes)
+    public async Task<UpdateItemResult> PatchAsync(TKey key, params Change[] changes)
     {
-        var request = new UpdateItemRequest(_tableName, key.ToDictionary(), changes);
+        var request = new UpdateItemRequest(_tableName, Key<T>.FromTuple(key).ToDictionary(), changes);
 
         return await _client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy).ConfigureAwait(false);
     }
 
-    // Conditional patch
     public Task<UpdateItemResult> PatchAsync(
-        Key<T> key,
+        TKey key,
         Change[] changes,
         Expression[] conditions,
         ReturnValues? returnValues = null)
     {
-        var request = new UpdateItemRequest(_tableName, key.ToDictionary(), changes, conditions, returnValues);
+        var request = new UpdateItemRequest(_tableName, Key<T>.FromTuple(key).ToDictionary(), changes, conditions, returnValues);
 
         return _client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
     }
 
-    public Task<UpdateItemResult> PatchAsync(Key<T> key, Change[] changes, ReturnValues returnValues)
+    public Task<UpdateItemResult> PatchAsync(TKey key, Change[] changes, ReturnValues returnValues)
     {
-        var request = new UpdateItemRequest(_tableName, key.ToDictionary(), changes, returnValues: returnValues);
+        var request = new UpdateItemRequest(_tableName, Key<T>.FromTuple(key).ToDictionary(), changes, returnValues: returnValues);
 
         return _client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
     }
 
-    public Task<DeleteItemResult> DeleteAsync(T record!!)
+    public Task<DeleteItemResult> DeleteAsync(T record)
     {
         var request = new DeleteItemRequest(_tableName, Key<T>.FromObject(record));
 

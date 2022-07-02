@@ -7,11 +7,13 @@ public sealed class UpdateItemRequest
 {
     public UpdateItemRequest(
         string tableName!!,
-        IReadOnlyDictionary<string, DbValue> key!!,
+        IReadOnlyDictionary<string, DbValue> key,
         Change[] changes,
         Expression[]? conditions = null,
         ReturnValues? returnValues = null)
     {
+        ArgumentNullException.ThrowIfNull(key);
+
         TableName = tableName;
         Key = key;
         ReturnValues = returnValues;
