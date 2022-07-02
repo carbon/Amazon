@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-namespace Amazon.Translate
-{
-    public class Term
-    {
-        public string SourceText { get; init; }
+namespace Amazon.Translate;
 
-        public string TargetText { get; init; }
-    }
+public sealed class Term
+{
+    public string SourceText { get; init; }
+
+    public string TargetText { get; init; }
 }

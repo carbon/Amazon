@@ -1,15 +1,14 @@
 ﻿#nullable disable
 
-namespace Amazon.Translate
+namespace Amazon.Translate;
+
+public sealed class TranslateTextResult
 {
-    public class TranslateTextResult
-    {
-        public AppliedTerminology[] AppliedTerminologies { get; init; }
+    public AppliedTerminology[] AppliedTerminologies { get; init; }
 
-        public string SourceLanguageCode { get; init; }
+    public string SourceLanguageCode { get; init; }
 
-        public string TargetLanguageCode { get; init; }
+    public string TargetLanguageCode { get; init; }
 
-        public string TranslatedText { get; init; }
-    }
+    public string TranslatedText { get; init; }
 }
