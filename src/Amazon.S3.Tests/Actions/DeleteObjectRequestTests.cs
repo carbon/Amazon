@@ -3,7 +3,7 @@
 public class DeleteObjectRequestTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
         var request = new DeleteObjectRequest("s3.amazon.com", "bucket", "key", "1");
 

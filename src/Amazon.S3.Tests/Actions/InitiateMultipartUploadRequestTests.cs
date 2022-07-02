@@ -3,10 +3,9 @@
 public class InitiateMultipartUploadRequestTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
-        var request = new InitiateMultipartUploadRequest("s3.aws.com", "bucket-name", "object-key")
-        {
+        var request = new InitiateMultipartUploadRequest("s3.aws.com", "bucket-name", "object-key") {
             ContentType = "application/json"
         };
 
@@ -21,7 +20,7 @@ public class InitiateMultipartUploadRequestTests
     }
 
     [Fact]
-    public void Construct2()
+    public void CanConstruct2()
     {
         var request = new InitiateMultipartUploadRequest("s3.aws.com", "bucket-name", "object-key", new Dictionary<string, string> {
             { "Content-Type", "image/png" },
@@ -33,7 +32,7 @@ public class InitiateMultipartUploadRequestTests
     }
 
     [Fact]
-    public void Construct3()
+    public void CanConstruct3()
     {
         var request = new InitiateMultipartUploadRequest("s3.aws.com", "bucket-name", "object-key", new Dictionary<string, string> {
             { "Content-Type", "image/png" },

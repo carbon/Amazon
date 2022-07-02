@@ -3,9 +3,10 @@
 public class TestDnsAnswerResponseTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
-        var result = Route53Serializer<TestDnsAnswerResponse>.DeserializeXml("""
+        var result = Route53Serializer<TestDnsAnswerResponse>.DeserializeXml(
+            """
             <TestDnsAnswerResponse xmlns="https://route53.amazonaws.com/doc/2013-04-01/">
                 <Nameserver>ns-2048.awsdns-64.com</Nameserver>
                 <RecordName>www.example.com</RecordName>

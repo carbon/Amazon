@@ -3,7 +3,7 @@
 public class GetHealthCheckResponseTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
         var result = Route53Serializer<GetHealthCheckResponse>.DeserializeXml(
             """

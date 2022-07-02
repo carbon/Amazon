@@ -3,7 +3,7 @@
 public class DeleteObjectBatchRequestTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
         var batch = new DeleteBatch(new[] { "a", "b" });
 

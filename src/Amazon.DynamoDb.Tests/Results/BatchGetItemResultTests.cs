@@ -5,9 +5,9 @@ namespace Amazon.DynamoDb.Results.Tests;
 public class BatchGetItemResultTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
-        var text =
+        using var doc = JsonDocument.Parse(
             """
             {
                 "Responses": {
@@ -79,9 +79,7 @@ public class BatchGetItemResultTests
                     }
                 ]
             }
-            """;
-
-        using var doc = JsonDocument.Parse(text);
+            """);
 
         var result = BatchGetItemResult.FromJsonElement(doc.RootElement);
 

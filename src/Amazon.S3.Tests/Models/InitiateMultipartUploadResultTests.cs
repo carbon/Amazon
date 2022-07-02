@@ -3,7 +3,7 @@
 public class InitiateMultipartUploadResultTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
         var result = InitiateMultipartUploadResult.ParseXml(
             """

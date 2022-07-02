@@ -3,7 +3,7 @@
 public class ChangeResourceRecordSetsResponseTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
         var result = Route53Serializer<ChangeResourceRecordSetsResponse>.DeserializeXml(
             $"""

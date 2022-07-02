@@ -3,9 +3,9 @@
 public class ListResourceRecordSetResponseTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
-        var result = Route53Serializer<ListResourceRecordSetsResponse>.DeserializeXml(
+        var response = Route53Serializer<ListResourceRecordSetsResponse>.DeserializeXml(
             """
             <ListResourceRecordSetsResponse xmlns="https://route53.amazonaws.com/doc/2013-04-01/">
                 <ResourceRecordSets>
@@ -27,7 +27,7 @@ public class ListResourceRecordSetResponseTests
             </ListResourceRecordSetsResponse>
             """);
 
-        var recordSet = result.ResourceRecordSets[0];
+        var recordSet = response.ResourceRecordSets[0];
 
         Assert.Equal("example.com.", recordSet.Name);
         Assert.Equal(ResourceRecordType.SOA, recordSet.Type);
@@ -37,9 +37,9 @@ public class ListResourceRecordSetResponseTests
 
         Assert.Equal("ns-2048.awsdns-64.net. hostmaster.awsdns.com. 1 7200 900 1209600 86400", recordSet.ResourceRecords[0].Value);
 
-        Assert.True(result.IsTruncated);
-        Assert.Equal(1, result.MaxItems);
-        Assert.Equal("example.com.", result.NextRecordName);
-        Assert.Equal("NS", result.NextRecordType);
+        Assert.True(response.IsTruncated);
+        Assert.Equal(1, response.MaxItems);
+        Assert.Equal("example.com.", response.NextRecordName);
+        Assert.Equal("NS", response.NextRecordType);
     }
 }

@@ -3,7 +3,7 @@
 public class PutObjectRequestTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
         var request = new PutObjectRequest("s3.amazon.com", "bucket", "key");
 
@@ -24,7 +24,7 @@ public class PutObjectRequestTests
     }
 
     [Fact]
-    public void Construct_2()
+    public void CanConstruct_2()
     {
         var request = new PutObjectRequest("s3.amazon.com", "bucket", "key");
 
@@ -57,6 +57,5 @@ public class PutObjectRequestTests
         contentEncoding = request.Content.Headers.NonValidated["Content-Encoding"].ToString();
 
         Assert.Equal("gzip", contentEncoding);
-
     }
 }

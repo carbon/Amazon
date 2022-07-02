@@ -3,7 +3,7 @@
 public class CompleteMultipartUploadTests
 {
     [Fact]
-    public void Serialize()
+    public void CanSerialize()
     {
         var g = new CompleteMultipartUpload(new UploadPartResult[] {
             new ("uploadId", 1, "eTag1"),

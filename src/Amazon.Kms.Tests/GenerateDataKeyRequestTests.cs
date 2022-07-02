@@ -5,7 +5,7 @@ namespace Amazon.Kms.Tests;
 public class GenerateDataKeyRequestTests
 {
     [Fact]
-    public void Serialize1()
+    public void CanSerialize1()
     {
         var request = new GenerateDataKeyRequest {
             KeyId = "1",
@@ -24,7 +24,7 @@ public class GenerateDataKeyRequestTests
     }
 
     [Fact]
-    public void Serialize2()
+    public void CanSerialize2()
     {
         var request = new GenerateDataKeyRequest {
             KeyId = "1",

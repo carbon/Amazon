@@ -5,7 +5,7 @@ namespace Amazon.Kinesis.Tests;
 public class GetShardIteratorResponseTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
         var result = JsonSerializer.Deserialize<GetShardIteratorResponse>(
             """

@@ -5,7 +5,7 @@ namespace Amazon.Kms.Tests;
 public class CreateGrantTests
 {
     [Fact]
-    public void Serialize()
+    public void CanSerialize()
     {
         var request = new CreateGrantRequest
         {
@@ -19,7 +19,8 @@ public class CreateGrantTests
             }
         };
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             {
               "Constraints": {
                 "EncryptionContextEquals": {

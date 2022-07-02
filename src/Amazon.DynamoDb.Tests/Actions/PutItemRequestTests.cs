@@ -3,7 +3,7 @@
 public class PutItemRequestTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
         var item = new PutItemRequest("Accounts", new AttributeCollection { { "id", 1 } });
 

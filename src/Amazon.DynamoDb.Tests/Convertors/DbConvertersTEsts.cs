@@ -3,7 +3,7 @@
 public class DbConvertersTests
 {
     [Fact]
-    public void SerializeBoolTest()
+    public void CanSerializeBool()
     {
         var converter = DbValueConverterFactory.Get(typeof(bool));
 
@@ -20,7 +20,7 @@ public class DbConvertersTests
     }
 
     [Fact]
-    public void SerializeDbValueListTest()
+    public void CanSerializeDbValueList()
     {
         var converter = DbValueConverterFactory.Get(typeof(DbValue[]));
 

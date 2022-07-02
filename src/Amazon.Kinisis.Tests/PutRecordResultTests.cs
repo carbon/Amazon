@@ -5,7 +5,7 @@ namespace Amazon.Kinesis.Firehose;
 public class PutRecordResultTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
         var result = JsonSerializer.Deserialize<PutRecordResult>(
             """

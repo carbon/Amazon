@@ -5,9 +5,9 @@ namespace Amazon.Metadata.Tests;
 public sealed class InstanceActionTests
 {
     [Fact]
-    public void Deserialize_Stop()
+    public void CanDeserialize_Stop()
     {
-        string text = """{"action": "stop", "time": "2017-09-18T08:22:00Z"}""";
+        var text = """{"action": "stop", "time": "2017-09-18T08:22:00Z"}""";
 
         var action = JsonSerializer.Deserialize<InstanceAction>(text);
 
@@ -16,9 +16,9 @@ public sealed class InstanceActionTests
     }
 
     [Fact]
-    public void Deserialize_Terminate()
+    public void CanDeserialize_Terminate()
     {
-        string text = """{"action": "terminate", "time": "2017-09-18T08:22:00Z"}""";
+        var text = """{"action": "terminate", "time": "2017-09-18T08:22:00Z"}""";
 
         var action = JsonSerializer.Deserialize<InstanceAction>(text);
 

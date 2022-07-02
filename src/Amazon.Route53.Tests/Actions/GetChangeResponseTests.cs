@@ -3,7 +3,7 @@
 public class GetChangeResponseTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
         var result = Route53Serializer<GetChangeResponse>.DeserializeXml(
             """

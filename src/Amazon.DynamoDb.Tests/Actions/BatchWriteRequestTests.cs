@@ -3,7 +3,7 @@
 public class BatchWriteRequestTests
 {
     [Fact]
-    public void Serialize()
+    public void CanSerialize()
     {
         var batches = new TableRequests[]
         {

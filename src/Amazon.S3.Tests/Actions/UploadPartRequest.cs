@@ -3,7 +3,7 @@
 public class UploadPartRequestTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
         var request = new UploadPartRequest("s3.amazon.com", "bucket", "key", "uploadId", 1);
 

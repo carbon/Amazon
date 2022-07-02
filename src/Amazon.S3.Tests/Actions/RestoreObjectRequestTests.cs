@@ -3,7 +3,7 @@
 public class RestoreObjectRequestTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
         var request = new RestoreObjectRequest("s3.amazon.com", "bucket-name", "key", "version");
 
@@ -11,7 +11,7 @@ public class RestoreObjectRequestTests
     }
 
     [Fact]
-    public void Serialize()
+    public void CanSerialize()
     {
         var request = new RestoreObjectRequest("s3.amazonaws.com", "a", "b") { Days = 30 };
 

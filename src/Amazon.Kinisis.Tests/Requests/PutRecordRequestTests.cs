@@ -1,18 +1,17 @@
 ﻿using System.Text;
 using System.Text.Json;
 
-using Xunit;
-
 namespace Amazon.Kinesis.Firehose;
 
 public class PutRecordRequestTests
 {
     [Fact]
-    public void Serialize()
+    public void CanSerialize()
     {
         var putRecord = new PutRecordRequest("Events", new Record(Encoding.UTF32.GetBytes("hello")));
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             {
               "DeliveryStreamName": "Events",
               "Record": {

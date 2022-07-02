@@ -3,7 +3,7 @@
 public class ListBucketRequestTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
         var request = new ListBucketRequest("s3.amazon.com", "bucket", new ListBucketOptions { MaxKeys = 1000 });
 

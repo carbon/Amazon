@@ -3,22 +3,18 @@
 public class DescribeVolumesRequestTests
 {
     [Fact]
-    public void Serialize()
+    public void CanSerialize()
     {
         var request = new DescribeVolumesRequest(new[] { "a", "b", "c" });
 
-        string data = string.Join('&', request.ToParams().Select(a => a.Key + "=" + a.Value));
-
-        Assert.Equal("Action=DescribeVolumes&VolumeId.1=a&VolumeId.2=b&VolumeId.3=c", data);
+        Assert.Equal("Action=DescribeVolumes&VolumeId.1=a&VolumeId.2=b&VolumeId.3=c", request.Serialize());
     }
 
     [Fact]
-    public void SerializeEmpty()
+    public void CanSerializeEmpty()
     {
         var request = new DescribeVolumesRequest();
 
-        string data = string.Join('&', request.ToParams().Select(a => a.Key + "=" + a.Value));
-
-        Assert.Equal("Action=DescribeVolumes", data);
+        Assert.Equal("Action=DescribeVolumes", request.Serialize());
     }
 }

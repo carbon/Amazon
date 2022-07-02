@@ -3,7 +3,7 @@
 public class DeleteObjectResultTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
         var result = new DeleteObjectResult(
             "true",

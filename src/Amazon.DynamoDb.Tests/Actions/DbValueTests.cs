@@ -316,9 +316,7 @@ public class DbValueTests
     [Fact]
     public void DbMap1()
     {
-        string text = """{"M":{"a":{"N":"1"},"b":{"S":"boat"},"c":{"BOOL":true}}}""";
-
-        var dbValue = Parse(text);
+        var dbValue = Parse("""{"M":{"a":{"N":"1"},"b":{"S":"boat"},"c":{"BOOL":true}}}""");
 
         Assert.Equal(DbValueType.M, dbValue.Kind);
 

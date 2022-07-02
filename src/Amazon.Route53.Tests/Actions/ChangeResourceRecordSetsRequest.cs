@@ -7,7 +7,7 @@ namespace Amazon.Route53.Tests;
 public class ChangeResourceRecordSetsRequestTests
 {
     [Fact]
-    public void Serialize()
+    public void CanSerialize()
     {
         var request = new ChangeResourceRecordSetsRequest(new[] {
             new ResourceRecordSetChange {
@@ -57,9 +57,8 @@ public class ChangeResourceRecordSetsRequestTests
             """), Encoding.UTF8.GetString(bytes));
     }
 
-
     [Fact]
-    public void Serialize2()
+    public void CanSerialize2()
     {
         var request = new ChangeResourceRecordSetsRequest(new[] {
             new ResourceRecordSetChange {
@@ -177,6 +176,6 @@ public class ChangeResourceRecordSetsRequestTests
 
     public static string Flatten(string xml)
     {
-        return xml.Replace("\r\n", string.Empty).Replace("  ", string.Empty);
+        return xml.ReplaceLineEndings(string.Empty).Replace("  ", string.Empty);
     }
 }

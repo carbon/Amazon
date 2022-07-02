@@ -5,7 +5,7 @@ public class RecieveMessageResponseTests
     [Fact]
     public void Parse_1()
     {
-        var result = ReceiveMessageResponse.ParseXml(
+        var response = ReceiveMessageResponse.ParseXml(
             """
             <ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/">
                 <ReceiveMessageResult>
@@ -21,7 +21,7 @@ public class RecieveMessageResponseTests
             </ReceiveMessageResponse>
             """);
 
-        var messages = result.ReceiveMessageResult.Items;
+        var messages = response.ReceiveMessageResult.Items;
 
         Assert.Equal("12c1f093-643c-49e2-af28-94df4b9d6a84", messages[0].MessageId);
 
@@ -69,8 +69,7 @@ public class RecieveMessageResponseTests
     [Fact]
     public void Parse_3()
     {
-        string xmlText =
-
+        var response = ReceiveMessageResponse.ParseXml(
             """
             <ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/">
               <ReceiveMessageResult>
@@ -105,9 +104,9 @@ public class RecieveMessageResponseTests
                 <RequestId>b6633655-283d-45b4-aee4-4e84e0ae6afa</RequestId>
               </ResponseMetadata>
             </ReceiveMessageResponse>
-            """;
+            """);
 
-        var messages = ReceiveMessageResponse.ParseXml(xmlText).ReceiveMessageResult.Items;
+        var messages = response.ReceiveMessageResult.Items;
 
         var message = messages[0];
 

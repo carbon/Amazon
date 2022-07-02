@@ -3,9 +3,9 @@ namespace Amazon.Route53.Tests;
 public class GetHostedZoneResponseTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
-        var result = Route53Serializer<GetHostedZoneResponse>.DeserializeXml(
+        var response = Route53Serializer<GetHostedZoneResponse>.DeserializeXml(
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <GetHostedZoneResponse xmlns="https://route53.amazonaws.com/doc/2013-04-01/">
@@ -30,7 +30,7 @@ public class GetHostedZoneResponseTests
             </GetHostedZoneResponse>
             """);
 
-        var hostedZone = result.HostedZone;
+        var hostedZone = response.HostedZone;
 
         Assert.Equal("/hostedzone/Z1PA6795UKMFR9",    hostedZone.Id);
         Assert.Equal("example.com.",                  hostedZone.Name);
@@ -39,8 +39,8 @@ public class GetHostedZoneResponseTests
         Assert.Equal("This is my first hosted zone.", hostedZone.Config.Comment);
         Assert.False(hostedZone.Config.PrivateZone);
 
-        Assert.Equal(4, result.DelegationSet.NameServers.Length);
-        Assert.Equal("ns-2048.awsdns-64.com", result.DelegationSet.NameServers[0]);
-        Assert.Equal("ns-2049.awsdns-65.net", result.DelegationSet.NameServers[1]);
+        Assert.Equal(4, response.DelegationSet.NameServers.Length);
+        Assert.Equal("ns-2048.awsdns-64.com", response.DelegationSet.NameServers[0]);
+        Assert.Equal("ns-2049.awsdns-65.net", response.DelegationSet.NameServers[1]);
     }
 }

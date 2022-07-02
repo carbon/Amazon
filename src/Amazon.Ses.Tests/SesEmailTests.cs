@@ -5,7 +5,7 @@ namespace Amazon.Ses.Tests;
 public class SesEmailTests
 {
     [Fact]
-    public void ConstructFromMailMessage()
+    public void CanConstructFromMailMessage()
     {
         var message = new MailMessage("from@test.com", "to@test.com", "Subject", "Body");
 
@@ -16,13 +16,13 @@ public class SesEmailTests
         Assert.Equal("Body",                  sesEmail.Text.Data);
         Assert.Equal("Subject",               sesEmail.Subject.Data);
 
-        var content = string.Join('&', sesEmail.ToParams().Select(p => p.Key + "=" + p.Value));
+        var content = string.Join('&', sesEmail.ToParams().Select(p => $"{p.Key}={p.Value}"));
 
         Assert.Equal("Source=from@test.com&Message.Subject.Data=Subject&Message.Subject.Charset=UTF-8&Message.Body.Text.Data=Body&Message.Body.Text.Charset=UTF-8&Destination.ToAddresses.member.1=to@test.com", content);
     }
 
     [Fact]
-    public void ConstructFromMailMessage_Complex()
+    public void CanConstructFromMailMessage_Complex()
     {
         var message = new MailMessage("from@test.com", "to@test.com", "Subject", "Body") {
             IsBodyHtml = true,
@@ -48,7 +48,7 @@ public class SesEmailTests
 
         var q = sesEmail.ToParams();
 
-        var content = string.Join('&', sesEmail.ToParams().Select(p => p.Key + "=" + p.Value));
+        var content = string.Join('&', sesEmail.ToParams().Select(p => $"{p.Key}={p.Value}"));
 
         Assert.Equal("Source=from@test.com&Message.Subject.Data=Subject&Message.Subject.Charset=UTF-8&Message.Body.Html.Data=Body&Message.Body.Html.Charset=UTF-8&ReplyToAddresses.member.1=c@test.com&Destination.ToAddresses.member.1=to@test.com&Destination.CcAddresses.member.1=a@test.com&Destination.CcAddresses.member.2=b@test.com", content);
 

@@ -1,26 +1,25 @@
 ﻿using System.Text;
 
-namespace Amazon.Elb.Tests
+namespace Amazon.Elb.Tests;
+
+public static class Serializer
 {
-    public static class Serializer
+    public static string Serialize(IElbRequest request)
     {
-        public static string Serialize(IElbRequest request)
+        var sb = new StringBuilder();
+
+        foreach (var (key, value) in RequestHelper.ToParams(request))
         {
-            var sb = new StringBuilder();
-
-            foreach (var (key, value) in RequestHelper.ToParams(request))
+            if (sb.Length > 0)
             {
-                if (sb.Length > 0)
-                {
-                    sb.Append('&');
-                }
-
-                sb.Append(key);
-                sb.Append('=');
-                sb.Append(value);
+                sb.Append('&');
             }
 
-            return sb.ToString();
+            sb.Append(key);
+            sb.Append('=');
+            sb.Append(value);
         }
+
+        return sb.ToString();
     }
 }

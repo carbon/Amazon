@@ -5,7 +5,7 @@ namespace Amazon.Kinesis.Firehose;
 public class PutRecordBatchResultTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
         var text = """{"FailedPutCount":0,"RequestResponses":[{"RecordId":"r1"},{"RecordId":"r2"}]}""";
 

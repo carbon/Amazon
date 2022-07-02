@@ -6,7 +6,7 @@ namespace Amazon.Kms.Tests;
 public class DecryptRequestTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
         var data = Encoding.UTF8.GetBytes("test");
         var context = new Dictionary<string, string>();
@@ -19,7 +19,7 @@ public class DecryptRequestTests
     }
 
     [Fact]
-    public void Serialize()
+    public void CanSerialize()
     {
         var data = Encoding.UTF8.GetBytes("test");
         var request = new DecryptRequest("abc", data, null);

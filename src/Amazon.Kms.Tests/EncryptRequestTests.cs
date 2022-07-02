@@ -6,7 +6,7 @@ namespace Amazon.Kms.Tests;
 public class EncryptRequestTests
 {
     [Fact]
-    public void Serialize()
+    public void CanSerialize()
     {
         var request = new EncryptRequest(
             keyId     : "1",

@@ -3,12 +3,10 @@
 public class StopInstancesRequestTests
 {
     [Fact]
-    public void Request()
+    public void CanSerialize()
     {
-        var a = new StopInstancesRequest(new[] { "i-1234567890abcdef0" });
+        var request = new StopInstancesRequest(new[] { "i-1234567890abcdef0" });
 
-        var result = string.Join('&', a.ToParams().Select(pair => pair.Key + "=" + pair.Value));
-
-        Assert.Equal("Action=StopInstances&InstanceId.1=i-1234567890abcdef0", result);
+        Assert.Equal("Action=StopInstances&InstanceId.1=i-1234567890abcdef0", request.Serialize());
     }
 }

@@ -5,7 +5,7 @@ namespace Amazon.DynamoDb.Tests;
 public class ModelTests
 {
     [Fact]
-    public void SerializeEnumTest()
+    public void CanSerializeEnum()
     {
         var entity = new Thing { Color = Color.Red, Y = null };
 

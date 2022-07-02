@@ -3,7 +3,7 @@
 public class S3ErrorTests
 {
     [Fact]
-    public void Deserialize_NoSuchKey()
+    public void CanDeserialize_NoSuchKey()
     {
         var error = S3Error.ParseXml(
             """
@@ -23,7 +23,7 @@ public class S3ErrorTests
     }
 
     [Fact]
-    public void Deserialize_BadDigest()
+    public void CanDeserialize_BadDigest()
     {
         var error = S3Error.ParseXml(
             """
@@ -44,7 +44,7 @@ public class S3ErrorTests
     }
 
     [Fact]
-    public void Deserialize_InvalidRange()
+    public void CanDeserialize_InvalidRange()
     {
         var error = S3Error.ParseXml(
             """
@@ -67,9 +67,9 @@ public class S3ErrorTests
     }
 
     [Fact]
-    public void Deserialize_WasabiErrorResponse()
+    public void CanDeserialize_WasabiErrorResponse()
     {
-        var a = S3ResponseHelper<S3ErrorResponse>.ParseXml(
+        var response = S3ResponseHelper<S3ErrorResponse>.ParseXml(
             """
             <ErrorResponse xmlns="https://iam.amazonaws.com/doc/2010-05-08/">
               <Error>
@@ -80,7 +80,7 @@ public class S3ErrorTests
             </ErrorResponse>
             """);
 
-        Assert.Equal("TemporarilyUnavailable", a.Error.Code);
-        Assert.Equal("Maximum number of server active requests exceeded", a.Error.Message);
+        Assert.Equal("TemporarilyUnavailable", response.Error.Code);
+        Assert.Equal("Maximum number of server active requests exceeded", response.Error.Message);
     }
 }

@@ -5,7 +5,7 @@ namespace Amazon.Kms.Tests;
 public class ListGrantsResponseTests
 {
     [Fact]
-    public void Deserialize()
+    public void CanDeserialize()
     {
         var result = JsonSerializer.Deserialize<ListGrantsResponse>(
             """

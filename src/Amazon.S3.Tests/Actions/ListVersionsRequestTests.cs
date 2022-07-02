@@ -3,10 +3,9 @@
 public class ListVersionsRequestTests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
-        var request = new ListVersionsRequest("s3.amazon.com", "bucket", new ListVersionsOptions
-        {
+        var request = new ListVersionsRequest("s3.amazon.com", "bucket", new ListVersionsOptions {
             Prefix = "apples",
             MaxKeys = 1000
         });
