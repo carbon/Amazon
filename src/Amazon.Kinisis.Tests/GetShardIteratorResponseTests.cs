@@ -1,19 +1,19 @@
 ﻿using System.Text.Json;
 
-namespace Amazon.Kinesis.Tests
+namespace Amazon.Kinesis.Tests;
+
+public class GetShardIteratorResponseTests
 {
-    public class GetShardIteratorResponseTests
+    [Fact]
+    public void Deserialize()
     {
-        [Fact]
-        public void Deserialize()
-        {
-            string text = @"{
-                ""ShardIterator"": ""string""
-            }";
+        var result = JsonSerializer.Deserialize<GetShardIteratorResponse>(
+            """
+            {
+                "ShardIterator": "string"
+            }
+            """);
 
-            var result = JsonSerializer.Deserialize<GetShardIteratorResponse>(text);
-
-            Assert.Equal("string", result.ShardIterator);
-        }
+        Assert.Equal("string", result.ShardIterator);
     }
 }
