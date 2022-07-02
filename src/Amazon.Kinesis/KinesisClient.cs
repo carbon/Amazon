@@ -94,7 +94,7 @@ public sealed class KinesisClient : AwsClient
 
         return new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Headers = {
-                { "x-amz-target", TargetPrefix  + "." + action }
+                { "x-amz-target", $"{TargetPrefix}.{action}" }
             },
             Content = new ByteArrayContent(jsonBytes) {
                 Headers = {

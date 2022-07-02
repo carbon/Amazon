@@ -7,23 +7,22 @@ namespace Amazon.Kinesis;
 
 public sealed class KinesisException : AwsException, IException
 {
-    private readonly ErrorResult error;
+    private readonly ErrorResult _error;
 
     public KinesisException(ErrorResult error, HttpStatusCode statusCode)
         : base(error.Type ?? error.Text, statusCode)
     {
-        this.error = error;
+        _error = error;
     }
 
-    public string Type => error.Type;
+    public string Type => _error.Type;
 
-    public bool IsTransient => error.Type is "ProvisionedThroughputExceededException" or "InternalFailure";
+    public bool IsTransient => _error.Type is "ProvisionedThroughputExceededException" or "InternalFailure";
 }
 
 /*
  {
 	"ErrorCode": "ProvisionedThroughputExceededException",
     "ErrorMessage": "Rate exceeded for shard shardId-000000000001 in stream exampleStreamName under account 111111111111."
- },
-
+ }
 */
