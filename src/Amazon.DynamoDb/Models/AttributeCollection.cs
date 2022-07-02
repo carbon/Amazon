@@ -211,7 +211,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
         return attributes;
     }
 
-    public RecordKey ToKey()
+    public KeyValuePair<string, object>[] ToKey()
     {
         var keyItems = new KeyValuePair<string, object>[_items.Count];
         int i = 0;
@@ -223,7 +223,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
             i++;
         }
 
-        return new RecordKey(keyItems);
+        return keyItems;
     }
 
     public T As<T>() where T : notnull => As<T>(DatasetInfo.Get<T>());
