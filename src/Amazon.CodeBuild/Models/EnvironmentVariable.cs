@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.CodeBuild;

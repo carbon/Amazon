@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.CodeBuild;
+﻿namespace Amazon.CodeBuild;
 
 public sealed class BatchGetBuildsRequest : ICodeBuildRequest
 {
