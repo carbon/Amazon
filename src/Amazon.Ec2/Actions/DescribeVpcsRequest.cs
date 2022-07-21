@@ -2,8 +2,10 @@
 
 public sealed class DescribeVpcsRequest : DescribeRequest, IEc2Request
 {
-    public DescribeVpcsRequest(params string[] vpcIds!!)
+    public DescribeVpcsRequest(params string[] vpcIds)
     {
+        ArgumentNullException.ThrowIfNull(vpcIds);
+
         VpcIds = vpcIds;
     }
 

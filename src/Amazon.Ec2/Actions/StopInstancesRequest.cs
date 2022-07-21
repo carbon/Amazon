@@ -4,8 +4,10 @@ namespace Amazon.Ec2;
 
 public sealed class StopInstancesRequest : IEc2Request
 {
-    public StopInstancesRequest(params string[] instanceIds!!)
+    public StopInstancesRequest(params string[] instanceIds)
     {
+        ArgumentNullException.ThrowIfNull(instanceIds);
+
         InstanceIds = instanceIds;
     }
 

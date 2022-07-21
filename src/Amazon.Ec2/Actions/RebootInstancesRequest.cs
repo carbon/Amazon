@@ -4,8 +4,10 @@ namespace Amazon.Ec2;
 
 public sealed class RebootInstancesRequest : IEc2Request
 {
-    public RebootInstancesRequest(params string[] instanceIds!!)
+    public RebootInstancesRequest(params string[] instanceIds)
     {
+        ArgumentNullException.ThrowIfNull(instanceIds);
+
         InstanceIds = instanceIds;
     }
 
