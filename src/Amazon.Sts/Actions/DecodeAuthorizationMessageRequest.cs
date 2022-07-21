@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Sts;
+﻿namespace Amazon.Sts;
 
 public sealed class DecodeAuthorizationMessageRequest : IStsRequest
 {

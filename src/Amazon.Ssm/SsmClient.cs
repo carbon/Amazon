@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -506,7 +505,7 @@ public sealed class SsmClient : AwsClient
     {
         var responseText = await response.Content.ReadAsStringAsync();
    
-        throw new Exception(response.StatusCode + "/" + responseText);
+        throw new Exception($"{response.StatusCode} -> {responseText}");
     }
 
     #endregion

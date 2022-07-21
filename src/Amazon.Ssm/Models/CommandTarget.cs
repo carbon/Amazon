@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class CommandTarget
 {
