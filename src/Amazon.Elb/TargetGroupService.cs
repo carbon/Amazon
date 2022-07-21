@@ -4,11 +4,13 @@ namespace Amazon.Elb;
 
 public sealed class TargetGroupService
 {
-    private readonly ElbClient _client;
+    private readonly ElbClient _elbClient;
 
-    public TargetGroupService(ElbClient client!!)
+    public TargetGroupService(ElbClient client)
     {
-        _client = client;
+        ArgumentNullException.ThrowIfNull(client);
+
+        _elbClient = client;
     }
 
     public async Task AddInstancesAsync(string targetGroupArn, params string[] instanceIds)
@@ -27,7 +29,7 @@ public sealed class TargetGroupService
 
         var request = new RegisterTargetsRequest(targetGroupArn, targets);
 
-        await _client.RegisterTargetsAsync(request).ConfigureAwait(false);
+        await _elbClient.RegisterTargetsAsync(request).ConfigureAwait(false);
     }
 
     public async Task RemoveInstancesAsync(string targetGroupArn, params string[] instanceIds)
@@ -46,6 +48,6 @@ public sealed class TargetGroupService
 
         var request = new DeregisterTargetsRequest(targetGroupArn, targets);
 
-        await _client.DeregisterTargetsAsync(request).ConfigureAwait(false);
+        await _elbClient.DeregisterTargetsAsync(request).ConfigureAwait(false);
     }
 }

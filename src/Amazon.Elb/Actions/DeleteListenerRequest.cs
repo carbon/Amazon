@@ -2,8 +2,10 @@
 
 public sealed class DeleteListenerRequest : IElbRequest
 {
-    public DeleteListenerRequest(string listenerArn!!)
+    public DeleteListenerRequest(string listenerArn)
     {
+        ArgumentNullException.ThrowIfNull(listenerArn);
+
         ListenerArn = listenerArn;
     }
 

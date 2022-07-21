@@ -2,8 +2,10 @@
 
 public sealed class DescribeLoadBalancerAttributesRequest : IElbRequest
 {
-    public DescribeLoadBalancerAttributesRequest(string loadBalancerArn!!)
+    public DescribeLoadBalancerAttributesRequest(string loadBalancerArn)
     {
+        ArgumentNullException.ThrowIfNull(loadBalancerArn);
+
         LoadBalancerArn = loadBalancerArn;
     }
 

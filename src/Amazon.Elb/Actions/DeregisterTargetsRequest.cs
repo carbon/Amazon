@@ -9,9 +9,12 @@ public sealed class DeregisterTargetsRequest : IElbRequest
     public DeregisterTargetsRequest() { }
 
     public DeregisterTargetsRequest(
-        string targetGroupArn!!,
-        params TargetDescription[] targets!!)
+        string targetGroupArn,
+        params TargetDescription[] targets)
     {
+        ArgumentNullException.ThrowIfNull(targetGroupArn);
+        ArgumentNullException.ThrowIfNull(targets);
+
         TargetGroupArn = targetGroupArn;
         Targets = targets;
     }

@@ -6,8 +6,10 @@ public sealed class SetRulePrioritiesRequest : IElbRequest
 {
     public string Action => "SetRulePriorities";
 
-    public SetRulePrioritiesRequest(RulePriorityPair[] rulePriorities!!)
+    public SetRulePrioritiesRequest(RulePriorityPair[] rulePriorities)
     {
+        ArgumentNullException.ThrowIfNull(rulePriorities);
+
         RulePriorities = rulePriorities;
     }
 

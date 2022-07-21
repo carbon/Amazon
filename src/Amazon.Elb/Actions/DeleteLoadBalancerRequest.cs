@@ -2,8 +2,10 @@
 
 public sealed class DeleteLoadBalancerRequest : IElbRequest
 {
-    public DeleteLoadBalancerRequest(string loadBalancerArn!!)
+    public DeleteLoadBalancerRequest(string loadBalancerArn)
     {
+        ArgumentNullException.ThrowIfNull(loadBalancerArn);
+
         LoadBalancerArn = loadBalancerArn;
     }
 

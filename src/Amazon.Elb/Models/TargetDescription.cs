@@ -8,8 +8,10 @@ public sealed class TargetDescription
 {
     public TargetDescription() { }
 
-    public TargetDescription(string id!!, int? port = null)
+    public TargetDescription(string id, int? port = null)
     {
+        ArgumentNullException.ThrowIfNull(id);
+
         Id = id;
         Port = port;
     }
