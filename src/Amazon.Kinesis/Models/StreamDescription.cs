@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using System.Collections.Generic;
-
 namespace Amazon.Kinesis;
 
 public sealed class StreamDescription

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Kinesis.Firehose;
+﻿namespace Amazon.Kinesis.Firehose;
 
 public readonly struct Record
 {
@@ -8,7 +6,7 @@ public readonly struct Record
 
     public Record(byte[] data)
     {
-        if (data.Length == 0)
+        if (data.Length is 0)
         {
             throw new ArgumentException("Must not be empty", nameof(data));
         }

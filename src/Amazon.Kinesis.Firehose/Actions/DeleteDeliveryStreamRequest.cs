@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Kinesis.Firehose;
+﻿namespace Amazon.Kinesis.Firehose;
 
 public sealed class DeleteDeliveryStreamRequest
 {
