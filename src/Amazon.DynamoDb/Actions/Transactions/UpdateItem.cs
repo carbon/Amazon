@@ -6,11 +6,14 @@ namespace Amazon.DynamoDb.Transactions;
 public sealed class UpdateItem
 {
     public UpdateItem(
-        string tableName!!,
-        AttributeCollection key!!,
+        string tableName,
+        AttributeCollection key,
         Change[] changes,
         Expression[]? conditions = null)
     {
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(key);
+
         TableName = tableName;
         Key = key;
 

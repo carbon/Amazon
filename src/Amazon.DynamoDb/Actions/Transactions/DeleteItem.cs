@@ -2,8 +2,11 @@
 
 public sealed class DeleteItem
 {
-    public DeleteItem(string tableName!!, AttributeCollection key!!)
+    public DeleteItem(string tableName, AttributeCollection key)
     {
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(key);
+
         TableName = tableName;
         Key = key;
     }

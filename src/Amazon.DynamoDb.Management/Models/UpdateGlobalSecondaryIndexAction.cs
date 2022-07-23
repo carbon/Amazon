@@ -1,9 +1,16 @@
-﻿namespace Amazon.DynamoDb.Models;
+﻿using System;
+
+namespace Amazon.DynamoDb.Models;
 
 public sealed class UpdateGlobalSecondaryIndexAction
 {
-    public UpdateGlobalSecondaryIndexAction(string indexName!!, ProvisionedThroughput provisionedThroughput!!)
+    public UpdateGlobalSecondaryIndexAction(
+        string indexName,
+        ProvisionedThroughput provisionedThroughput)
     {
+        ArgumentNullException.ThrowIfNull(indexName);
+        ArgumentNullException.ThrowIfNull(provisionedThroughput);
+
         IndexName = indexName;
         ProvisionedThroughput = provisionedThroughput;
     }

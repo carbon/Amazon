@@ -1,4 +1,6 @@
-﻿using Carbon.Data.Expressions;
+﻿using System;
+
+using Carbon.Data.Expressions;
 
 namespace Amazon.DynamoDb;
 
@@ -7,8 +9,11 @@ public sealed class DeleteItemRequest
     public DeleteItemRequest(string tableName, IEnumerable<KeyValuePair<string, object>> key)
         : this(tableName, key.ToDictionary()) { }
 
-    public DeleteItemRequest(string tableName!!, Dictionary<string, DbValue> key)
+    public DeleteItemRequest(string tableName, Dictionary<string, DbValue> key)
     {
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(key);
+
         TableName = tableName;
         Key = key;
     }

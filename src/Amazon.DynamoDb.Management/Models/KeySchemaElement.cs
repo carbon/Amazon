@@ -6,8 +6,10 @@ public sealed class KeySchemaElement
 {
     public KeySchemaElement() { }
 
-    public KeySchemaElement(string attributeName!!, KeyType keyType)
+    public KeySchemaElement(string attributeName, KeyType keyType)
     {
+        ArgumentNullException.ThrowIfNull(attributeName);
+
         AttributeName = attributeName;
         KeyType = keyType;
     }

@@ -2,8 +2,10 @@
 
 public sealed class TransactWriteItemsRequest
 {
-    public TransactWriteItemsRequest(params TransactWriteItem[] transactItems!!)
+    public TransactWriteItemsRequest(params TransactWriteItem[] transactItems)
     {
+        ArgumentNullException.ThrowIfNull(transactItems);
+
         TransactItems = transactItems;
     }
 

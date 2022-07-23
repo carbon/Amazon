@@ -1,9 +1,13 @@
-﻿namespace Amazon.DynamoDb.Models;
+﻿using System;
+
+namespace Amazon.DynamoDb.Models;
 
 public sealed class DeleteGlobalSecondaryIndexAction
 {
-    public DeleteGlobalSecondaryIndexAction(string indexName!!)
+    public DeleteGlobalSecondaryIndexAction(string indexName)
     {
+        ArgumentNullException.ThrowIfNull(indexName);
+
         IndexName = indexName;
     }
 

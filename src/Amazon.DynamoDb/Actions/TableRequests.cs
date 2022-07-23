@@ -4,8 +4,11 @@ namespace Amazon.DynamoDb;
 
 public sealed class TableRequests
 {
-    public TableRequests(string tableName!!, IReadOnlyList<ItemRequest> requests!!)
+    public TableRequests(string tableName, IReadOnlyList<ItemRequest> requests)
     {
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(requests);
+
         if (requests.Count > 25)
         {
             throw new ArgumentException($"Must be 25 items or fewer. Was {requests.Count} items", nameof(requests));

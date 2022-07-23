@@ -2,20 +2,24 @@
 
 public sealed class TransactGetItemRequest
 {
+    public TransactGetItemRequest(TransactGetItem[] transactItems)
+    {
+        ArgumentNullException.ThrowIfNull(transactItems);
+
+        TransactItems = transactItems;
+    }
+
     public TransactGetItem[] TransactItems { get; init; }
 
     public ReturnConsumedCapacity? ReturnConsumedCapacity { get; init; }
-
-    public TransactGetItemRequest(TransactGetItem[] transactItems!!)
-    {
-        TransactItems = transactItems;
-    }
 }
 
 public sealed class TransactGetItem
 {
-    public TransactGetItem(Get get!!)
+    public TransactGetItem(Get get)
     {
+        ArgumentNullException.ThrowIfNull(get);
+
         Get = get;
     }
 
@@ -24,8 +28,13 @@ public sealed class TransactGetItem
 
 public sealed class Get
 {
-    public Get(string tableName!!, IReadOnlyDictionary<string, DbValue> key!!)
+    public Get(
+        string tableName,
+        IReadOnlyDictionary<string, DbValue> key)
     {
+        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNull(key);
+
         TableName = tableName;
         Key = key;
     }
