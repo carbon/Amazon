@@ -8,8 +8,10 @@ public sealed class DeregisterManagedInstanceRequest : ISsmRequest
 {
     public DeregisterManagedInstanceRequest() { }
 
-    public DeregisterManagedInstanceRequest(string instanceId!!)
+    public DeregisterManagedInstanceRequest(string instanceId)
     {
+        ArgumentNullException.ThrowIfNull(instanceId);
+
         InstanceId = instanceId;
     }
 

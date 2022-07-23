@@ -3,10 +3,12 @@
 public sealed class GetFederationTokenRequest : IStsRequest
 {
     public GetFederationTokenRequest(
-        string name!!,
+        string name,
         string? policy = null, 
         int? durationSeconds = null)
     {
+        ArgumentNullException.ThrowIfNull(name);
+
         Name = name;
         Policy = policy;
         DurationSeconds = durationSeconds;

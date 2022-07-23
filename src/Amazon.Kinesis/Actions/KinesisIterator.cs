@@ -4,8 +4,10 @@ namespace Amazon.Kinesis;
 
 public readonly struct KinesisIterator : IIterator
 {
-    public KinesisIterator(string value!!)
+    public KinesisIterator(string value)
     {
+        ArgumentNullException.ThrowIfNull(value);
+
         Value = value;
     }
 

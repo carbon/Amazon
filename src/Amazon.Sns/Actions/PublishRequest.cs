@@ -1,14 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Amazon.Sns;
 
 public sealed class PublishRequest
 {
     public PublishRequest(
-        string topicArn!!,
-        string message!!,
+        string topicArn,
+        string message,
         string? subject = null)
     {
+        ArgumentNullException.ThrowIfNull(topicArn);
+        ArgumentNullException.ThrowIfNull(message);
+
         TopicArn = topicArn;
         Message = message;
         Subject = subject;

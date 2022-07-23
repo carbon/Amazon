@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Amazon.Kms;
+﻿namespace Amazon.Kms;
 
 public sealed class GenerateDataKeyRequest : KmsRequest
 {
@@ -9,10 +7,12 @@ public sealed class GenerateDataKeyRequest : KmsRequest
 #nullable enable
 
     public GenerateDataKeyRequest(
-        string keyId!!,
+        string keyId,
         KeySpec keySpec,
         IReadOnlyDictionary<string, string>? encryptionContext)
     {
+        ArgumentNullException.ThrowIfNull(keyId);
+
         KeyId = keyId;
         KeySpec = keySpec;
         EncryptionContext = encryptionContext;

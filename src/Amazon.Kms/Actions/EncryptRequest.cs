@@ -1,13 +1,18 @@
-﻿namespace Amazon.Kms;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Kms;
 
 public sealed class EncryptRequest : KmsRequest
 {
     public EncryptRequest(
-        string keyId!!,
-        byte[] plaintext!!,
+        string keyId,
+        byte[] plaintext,
         IReadOnlyDictionary<string, string>? context = null,
         string[]? grantTokens = null)
     {
+        ArgumentNullException.ThrowIfNull(keyId);
+        ArgumentNullException.ThrowIfNull(plaintext);
+
         if (keyId.Length is 0)
         {
             throw new ArgumentException("Must not be empty", nameof(keyId));
@@ -39,6 +44,7 @@ public sealed class EncryptRequest : KmsRequest
     /// </summary>
     public IReadOnlyDictionary<string, string>? EncryptionContext { get; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string[]? GrantTokens { get; }
 
     public string KeyId { get; }

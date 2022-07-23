@@ -2,8 +2,10 @@
 
 public sealed class DeleteDocumentRequest : ISsmRequest
 {
-    public DeleteDocumentRequest(string name!!)
+    public DeleteDocumentRequest(string name)
     {
+        ArgumentNullException.ThrowIfNull(name);
+
         Name = name;
     }
 

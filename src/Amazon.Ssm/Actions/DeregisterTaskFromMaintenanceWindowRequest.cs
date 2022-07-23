@@ -2,8 +2,13 @@
 
 public sealed class DeregisterTaskFromMaintenanceWindowRequest
 {
-    public DeregisterTaskFromMaintenanceWindowRequest(string windowId!!, string windowTaskId!!)
+    public DeregisterTaskFromMaintenanceWindowRequest(
+        string windowId,
+        string windowTaskId)
     {
+        ArgumentNullException.ThrowIfNull(windowId);
+        ArgumentNullException.ThrowIfNull(windowTaskId);
+
         WindowId = windowId;
         WindowTaskId = windowTaskId;
     }

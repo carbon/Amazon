@@ -12,8 +12,10 @@ public sealed class SqsMessage : IQueueMessage<string>
 {
     public SqsMessage() { }
 
-    public SqsMessage(string body!!)
+    public SqsMessage(string body)
     {
+        ArgumentNullException.ThrowIfNull(body);
+
         Body = body;
     }
 

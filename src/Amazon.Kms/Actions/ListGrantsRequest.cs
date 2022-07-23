@@ -6,8 +6,10 @@ public sealed class ListGrantsRequest : KmsRequest
 {
     public ListGrantsRequest() { }
 
-    public ListGrantsRequest(string keyId!!)
+    public ListGrantsRequest(string keyId)
     {
+        ArgumentNullException.ThrowIfNull(keyId);
+
         KeyId = keyId;
     }
 

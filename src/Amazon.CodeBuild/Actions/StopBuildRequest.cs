@@ -2,8 +2,10 @@
 
 public sealed class StopBuildRequest : ICodeBuildRequest
 {
-    public StopBuildRequest(string id!!)
+    public StopBuildRequest(string id)
     {
+        ArgumentNullException.ThrowIfNull(id);
+
         Id = id;
     }
 
