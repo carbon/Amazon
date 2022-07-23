@@ -1,7 +1,5 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Mime;
-using System.Threading.Tasks;
 
 using Amazon.Route53.Exceptions;
 
@@ -17,22 +15,25 @@ public sealed class Route53Client : AwsClient
     {
     }
 
-    public Task<ChangeResourceRecordSetsResponse> ChangeResourceRecordSetsAsync(string hostedZoneId!!, ChangeResourceRecordSetsRequest request!!)
+    public Task<ChangeResourceRecordSetsResponse> ChangeResourceRecordSetsAsync(string hostedZoneId, ChangeResourceRecordSetsRequest request)
     {
+        ArgumentNullException.ThrowIfNull(hostedZoneId);
+        ArgumentNullException.ThrowIfNull(request);
+
         return PostXmlAsync<ChangeResourceRecordSetsRequest, ChangeResourceRecordSetsResponse>(
-            path     : $"/hostedzone/{hostedZoneId}/rrset",
+            path : $"/hostedzone/{hostedZoneId}/rrset",
             data : request
         );
     }
 
-    public Task<ListResourceRecordSetsResponse> ListResourceRecordSetsAsync(ListResourceRecordSetsRequest request!!)
+    public Task<ListResourceRecordSetsResponse> ListResourceRecordSetsAsync(ListResourceRecordSetsRequest request)
     {
         return GetAsync<ListResourceRecordSetsResponse>($"/hostedzone/{request.Id}/rrset" + request.ToQueryString());
     }
 
     #region Geolocations
 
-    public Task<ListGeoLocationsResponse> ListGeoLocationsAsync(ListGeoLocationsRequest request!!)
+    public Task<ListGeoLocationsResponse> ListGeoLocationsAsync(ListGeoLocationsRequest request)
     {
         return GetAsync<ListGeoLocationsResponse>("/geolocations" + request.ToQueryString());
     }
