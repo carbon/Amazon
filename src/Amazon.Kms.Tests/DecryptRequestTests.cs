@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace Amazon.Kms.Tests;
 
@@ -8,7 +7,7 @@ public class DecryptRequestTests
     [Fact]
     public void CanConstruct()
     {
-        var data = Encoding.UTF8.GetBytes("test");
+        var data = "test"u8.ToArray();
         var context = new Dictionary<string, string>();
         var request = new DecryptRequest("abc", data, context);
 
@@ -21,7 +20,7 @@ public class DecryptRequestTests
     [Fact]
     public void CanSerialize()
     {
-        var data = Encoding.UTF8.GetBytes("test");
+        var data = "test"u8.ToArray();
         var request = new DecryptRequest("abc", data, null);
 
         Assert.Equal("abc", request.KeyId);

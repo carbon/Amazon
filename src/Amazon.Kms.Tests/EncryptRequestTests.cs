@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace Amazon.Kms.Tests;
 
@@ -10,7 +9,7 @@ public class EncryptRequestTests
     {
         var request = new EncryptRequest(
             keyId     : "1",
-            plaintext : Encoding.UTF8.GetBytes("applesauce"),
+            plaintext : "applesauce"u8.ToArray(),
             context   : new Dictionary<string, string> {
                             { "user", "1" }
                         }

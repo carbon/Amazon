@@ -173,8 +173,8 @@ public static class SignerV4
             : ComputeSHA256(request.Content);
     }
 
-    private static readonly byte[] aws4_request_bytes = Encoding.ASCII.GetBytes("aws4_request");
-    private static ReadOnlySpan<byte> AWS4 => new byte[] { (byte)'A', (byte)'W', (byte)'S', (byte)'4' };
+    private static ReadOnlySpan<byte> aws4_request_bytes => "aws4_request"u8;
+    private static ReadOnlySpan<byte> AWS4 => "AWS4"u8;
 
     [SkipLocalsInit]
     private static void ComputeSigningKey(string secretAccessKey, in CredentialScope scope, Span<byte> signingKey)
@@ -544,7 +544,6 @@ public static class SignerV4
 
         HexString.DecodeBytesTo(hash, destination);
     }
-
 
     [SkipLocalsInit]
     private static void SHA256_Hex(ReadOnlySpan<char> data, Span<char> destination)

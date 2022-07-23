@@ -1,10 +1,10 @@
 ﻿using System.Net;
-using System.Text;
 using System.Text.Json;
 
 using Carbon.Data.Sequences;
 
 namespace Amazon.DynamoDb.Models.Tests;
+
 
 public class DbValueTests
 {
@@ -42,7 +42,7 @@ public class DbValueTests
     [Fact]
     public void DbValueTypes()
     {
-        Assert.Equal(DbValueType.B, new DbValue(Encoding.UTF8.GetBytes("abc")).Kind);
+        Assert.Equal(DbValueType.B, new DbValue("abc"u8.ToArray()).Kind);
         Assert.Equal(DbValueType.S, new DbValue("hellow").Kind);
         Assert.Equal(DbValueType.N, new DbValue((short)123).Kind);
         Assert.Equal(DbValueType.N, new DbValue(123).Kind);
