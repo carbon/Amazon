@@ -39,6 +39,9 @@ public sealed class Instance
     [XmlArrayItem("item")]
     public BlockDeviceMapping[] BlockDeviceMappings { get; init; }
 
+    [XmlArray("tagSet")]
+    [XmlArrayItem("item")]
+    public Tag[] TagSet { get; init; }
 
 #nullable enable
 

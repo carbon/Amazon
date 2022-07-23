@@ -1,9 +1,12 @@
-﻿namespace Amazon.Ec2;
+﻿using System.Globalization;
+using System.Xml.Serialization;
+
+namespace Amazon.Ec2;
 
 public sealed class Tag
 {
 #nullable disable
-    public Tag() { }
+    private Tag() { }
 #nullable enable
 
     public Tag(string key, string value)
@@ -12,7 +15,9 @@ public sealed class Tag
         Value = value;
     }
 
-    public string Key { get; set; }
+    [XmlElement("key")]
+    public string Key { get; init; }
 
-    public string Value { get; set; }
+    [XmlElement("value")]
+    public string Value { get; init; }
 }

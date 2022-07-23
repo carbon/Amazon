@@ -138,5 +138,9 @@ public class DescribeInstancesResponseTests
         Assert.Single(instance.NetworkInterfaces);
         Assert.Equal("eni-551ba033", instance.NetworkInterfaces[0].NetworkInterfaceId);
         Assert.Equal("vpc-11112222", instance.NetworkInterfaces[0].VpcId);
+
+        Assert.Single(instance.TagSet);
+        Assert.Equal("Name", instance.TagSet[0].Key);
+        Assert.Equal("Server_1", instance.TagSet[0].Value);
     }
 }
