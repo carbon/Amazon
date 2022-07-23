@@ -16,15 +16,11 @@ public readonly struct Timestamp
 
     public static implicit operator DateTime(Timestamp timestamp)
     {
-        long unixTimeMillseconds = (long)(timestamp.Value * 1000d);
-
-        return DateTimeOffset.FromUnixTimeMilliseconds(unixTimeMillseconds).UtcDateTime;
+        return DateTime.UnixEpoch.AddSeconds(timestamp.Value);
     }
 
     public static implicit operator DateTimeOffset(Timestamp timestamp)
     {
-        long unixTimeMillseconds = (long)(timestamp.Value * 1000d);
-
-        return DateTimeOffset.FromUnixTimeMilliseconds(unixTimeMillseconds);
+        return DateTimeOffset.UnixEpoch.AddSeconds(timestamp.Value);
     }
 }
