@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Net.Http;
 using System.Xml.Linq;
 
 namespace Amazon.CloudWatch;
@@ -42,8 +39,6 @@ public sealed class CloudWatchClient : AwsClient
         var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
         return GetMetricStatatisticsResponse.Parse(responseText);
-
-        // return PutMetricDataResult.Parse(responseText);
     }
 
     public async Task<List<Metric>> ListMetricsAsyncAsync(ListMetricsRequest request)

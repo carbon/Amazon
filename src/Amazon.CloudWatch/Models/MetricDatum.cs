@@ -1,8 +1,5 @@
 ﻿#nullable disable
 
-using System;
-using System.Collections.Generic;
-
 namespace Amazon.CloudWatch;
 
 public class MetricDatum

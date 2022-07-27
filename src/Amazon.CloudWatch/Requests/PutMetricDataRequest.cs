@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-using System.Collections.ObjectModel;
 using System.Globalization;
 
 namespace Amazon.CloudWatch;
 
-public sealed class PutMetricDataRequest : Collection<MetricDatum>
+public sealed class PutMetricDataRequest : List<MetricDatum>
 {
     public string Namespace { get; set; }
 
