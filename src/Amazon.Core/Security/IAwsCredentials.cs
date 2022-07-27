@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Amazon;
+﻿namespace Amazon;
 
 public interface IAwsCredential
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace Amazon.Scheduling;
+﻿namespace Amazon.Scheduling;
 
 public static class Scheduler
 {

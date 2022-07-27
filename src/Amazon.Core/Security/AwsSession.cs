@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace Amazon;
+﻿namespace Amazon;
 
 public sealed class AwsSession : IAwsCredential
 {

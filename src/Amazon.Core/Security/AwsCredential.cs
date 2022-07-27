@@ -1,8 +1,5 @@
 ﻿#pragma warning disable IDE0057 // Use range operator
 
-using System;
-using System.Threading.Tasks;
-
 namespace Amazon;
 
 public sealed class AwsCredential : IAwsCredential

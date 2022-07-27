@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using System;
-
 namespace Amazon.Metadata;
 
 internal sealed class IamSecurityCredentials

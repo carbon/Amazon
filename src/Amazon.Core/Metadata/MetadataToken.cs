@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Metadata;
+﻿namespace Amazon.Metadata;
 
 internal sealed class MetadataToken
 {

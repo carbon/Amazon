@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 using Amazon.Metadata;
 
@@ -8,6 +6,8 @@ namespace Amazon;
 
 public sealed class AwsRegion : IEquatable<AwsRegion>
 {
+    private byte[]? utf8Bytes;
+
     public AwsRegion(string name)
     {
         ArgumentNullException.ThrowIfNull(name);
@@ -19,9 +19,7 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
 
     public override string ToString() => Name;
 
-    private byte[]? utf8Bytes;
-
-    internal byte[] Utf8Name => utf8Bytes ??= Encoding.ASCII.GetBytes(Name); 
+    internal ReadOnlySpan<byte> Utf8Name => utf8Bytes ??= Encoding.ASCII.GetBytes(Name); 
 
     #region Equality
 
@@ -141,7 +139,7 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
         return current;
     }
 
-    public static AwsRegion FromAvailabilityZone(string availabilityZone)
+    public static AwsRegion FromAvailabilityZone(ReadOnlySpan<char> availabilityZone)
     {
         string regionName = availabilityZone[0..^1];
 

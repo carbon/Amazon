@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Scheduling;
+﻿namespace Amazon.Scheduling;
 
 public sealed class ExponentialBackoffRetryPolicy : RetryPolicy
 {

@@ -1,8 +1,6 @@
 ﻿#pragma warning disable IDE0057 // Use range operator
 
-using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;

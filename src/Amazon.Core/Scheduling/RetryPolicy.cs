@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Scheduling;
+﻿namespace Amazon.Scheduling;
 
 public abstract class RetryPolicy
 {

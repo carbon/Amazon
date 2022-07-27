@@ -1,7 +1,5 @@
 ﻿#pragma warning disable IDE0057 // Use range operator
 
-using System;
-
 namespace Amazon.Helpers;
 
 public ref struct Splitter

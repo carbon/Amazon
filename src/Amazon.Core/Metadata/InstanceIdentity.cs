@@ -1,7 +1,6 @@
 ﻿#nullable disable
 
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Amazon.Metadata;
 

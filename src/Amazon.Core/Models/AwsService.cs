@@ -1,10 +1,11 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace Amazon;
 
 public sealed class AwsService : IEquatable<AwsService>
 {
+    private byte[]? _utf8Bytes;
+
     private AwsService(string name)
     {
         Name = name;
@@ -12,9 +13,7 @@ public sealed class AwsService : IEquatable<AwsService>
 
     public string Name { get; }
 
-    private byte[]? utf8Bytes;
-
-    internal byte[] Utf8Name => utf8Bytes ??= Encoding.ASCII.GetBytes(Name);
+    internal ReadOnlySpan<byte> Utf8Name => _utf8Bytes ??= Encoding.ASCII.GetBytes(Name);
 
     public override string ToString() => Name;
 
