@@ -1,11 +1,10 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 namespace Amazon.Sts.Models;
 
 public sealed class GetSessionTokenResponse
 {
-    public static AwsSession Parse(string text)
+    public static AwsSession Deserialize(string text)
     {
         XElement rootEl = XElement.Parse(text); // GetSessionTokenResponse
 

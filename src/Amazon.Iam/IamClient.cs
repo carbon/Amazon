@@ -1,7 +1,4 @@
-﻿#nullable enable
-
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Net.Http;
 
 namespace Amazon.Iam;
 
@@ -25,6 +22,8 @@ public sealed class IamClient : AwsClient
 
     public async Task CreateUserAsync(string userName)
     {
+        ArgumentNullException.ThrowIfNull(userName);
+
         var parameters = new AwsRequest {
             { "Action", "CreateUser" },
             { "UserName", userName }

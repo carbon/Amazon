@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Net.Http;
 
 using Amazon.Helpers;
 using Amazon.Sts.Models;
@@ -31,6 +29,6 @@ public sealed class StsClient : AwsClient
 
         var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-        return GetSessionTokenResponse.Parse(responseText);
+        return GetSessionTokenResponse.Deserialize(responseText);
     }
 }
