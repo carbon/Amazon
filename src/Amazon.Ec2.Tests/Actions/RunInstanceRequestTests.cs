@@ -53,7 +53,7 @@ public class RunInstanceRequestTests
     }
 
     [Fact]
-    public void CanSerializeRequest2()
+    public void CanSerializeRequestWithTags()
     {
         var request = new RunInstancesRequest {
             TagSpecifications = new[] {
