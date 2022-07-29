@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Amazon.Elb;
+﻿namespace Amazon.Elb;
 
 public sealed class TargetGroupService
 {

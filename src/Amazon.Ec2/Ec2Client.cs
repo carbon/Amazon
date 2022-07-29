@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace Amazon.Ec2;
 

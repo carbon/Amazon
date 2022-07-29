@@ -1,9 +1,7 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Amazon.Metadata;
 
@@ -17,7 +15,7 @@ public sealed partial class InstanceMetadataService
 
     private readonly HttpClient httpClient = new()
     {
-        Timeout = TimeSpan.FromSeconds(3)
+        Timeout = TimeSpan.FromSeconds(5)
     };
 
     // If Amazon EC2 is not preparing to stop or terminate the instance, 
