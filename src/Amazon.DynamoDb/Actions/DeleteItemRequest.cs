@@ -1,6 +1,4 @@
-﻿using System;
-
-using Carbon.Data.Expressions;
+﻿using Carbon.Data.Expressions;
 
 namespace Amazon.DynamoDb;
 
