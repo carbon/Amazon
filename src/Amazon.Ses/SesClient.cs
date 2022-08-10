@@ -97,7 +97,7 @@ public sealed class SesClient : AwsClient
     {
         var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        var errorResponse = ErrorResponse.Parse(responseText);
+        var errorResponse = ErrorResponse.Deserialize(responseText);
 
         return new SesException(errorResponse.Error, response.StatusCode);
     }

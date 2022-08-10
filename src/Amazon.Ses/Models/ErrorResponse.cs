@@ -10,7 +10,7 @@ public sealed class ErrorResponse
     [XmlElement]
     public SesError Error { get; init; }
 
-    public static ErrorResponse Parse(string text)
+    public static ErrorResponse Deserialize(string text)
     {
         return XmlHelper<ErrorResponse>.Deserialize(text);
     }
