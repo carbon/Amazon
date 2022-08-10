@@ -1,21 +1,22 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace Amazon.S3;
 
-internal static class ResponseHelper<T>
+internal static class S3Serializer<T>
     where T : class
 {
     private static readonly XmlSerializer serializer = new(typeof(T));
 
-    public static T ParseXml(string xmlText)
+    public static T Deserialize(string xmlText)
     {
         using var reader = new StringReader(xmlText);
 
         return (T)serializer.Deserialize(reader)!;
     }
 
-    public static bool TryParseXml(string xmlText, out T result)
+    public static bool TryDeserialize(string xmlText, [NotNullWhen(true)] out T? result)
     {
         try
         {
@@ -27,7 +28,7 @@ internal static class ResponseHelper<T>
         }
         catch
         {
-            result = null!;
+            result = null;
 
             return false;
         }

@@ -5,7 +5,7 @@ public class InitiateMultipartUploadResultTests
     [Fact]
     public void CanDeserialize()
     {
-        var result = InitiateMultipartUploadResult.ParseXml(
+        var result = InitiateMultipartUploadResult.Deserialize(
             """
             <InitiateMultipartUploadResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
               <Bucket>example-bucket</Bucket>

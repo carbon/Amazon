@@ -5,7 +5,7 @@ public class ListObjectVersionsTests
     [Fact]
     public void Parse()
     {
-        var result = ListVersionsResult.ParseXml(
+        var result = ListVersionsResult.Deserialize(
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <ListVersionsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">

@@ -5,7 +5,7 @@ public class CompleteMultipartUploadResultTests
     [Fact]
     public void CompleteXmlTests()
     {
-        var result = CompleteMultipartUploadResult.ParseXml(
+        var result = CompleteMultipartUploadResult.Deserialize(
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <CompleteMultipartUploadResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">

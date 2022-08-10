@@ -3,9 +3,9 @@
 public class CopyObjectResultTests
 {
     [Fact]
-    public void ParseXml()
+    public void CanDeserialize()
     {
-        var result = CopyObjectResult.ParseXml(
+        var result = CopyObjectResult.Deserialize(
             """
             <CopyObjectResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
             	<LastModified>2008-02-20T22:13:01</LastModified>

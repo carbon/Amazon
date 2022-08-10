@@ -26,9 +26,9 @@ public sealed class InitiateMultipartUploadResult : IUpload
 
     #endregion
 
-    public static InitiateMultipartUploadResult ParseXml(string xmlText)
+    public static InitiateMultipartUploadResult Deserialize(string xmlText)
     {
-        return ResponseHelper<InitiateMultipartUploadResult>.ParseXml(xmlText);
+        return S3Serializer<InitiateMultipartUploadResult>.Deserialize(xmlText);
     }
 }
 

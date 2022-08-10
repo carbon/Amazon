@@ -25,14 +25,14 @@ public sealed class S3Error
     // RangeRequested
     // ActualObjectSize
 
-    public static S3Error ParseXml(string xmlText)
+    public static S3Error Deserialize(string xmlText)
     {
-        return ResponseHelper<S3Error>.ParseXml(xmlText);
+        return S3Serializer<S3Error>.Deserialize(xmlText);
     }
 
-    internal static bool TryParseXml(string xmlText, out S3Error error)
+    internal static bool TryDeserialize(string xmlText, out S3Error error)
     {
-        return ResponseHelper<S3Error>.TryParseXml(xmlText, out error);
+        return S3Serializer<S3Error>.TryDeserialize(xmlText, out error);
     }
 }
 

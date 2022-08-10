@@ -2,11 +2,11 @@
 
 namespace Amazon.S3.Models.Tests;
 
-internal static class S3ResponseHelper<T>
+internal static class S3Serializer<T>
 {
     private static readonly XmlSerializer serializer = new(typeof(T));
 
-    public static T ParseXml(string xml)
+    public static T Deserialize(string xml)
     {
         using var reader = new StringReader(xml);
 

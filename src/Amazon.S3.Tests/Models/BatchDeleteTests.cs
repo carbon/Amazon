@@ -42,12 +42,15 @@ public class BatchDeleteTests
             """,
       actual: batch.ToXmlString(SaveOptions.None));
     }
+}
 
 
+public class DeleteResultTests
+{
     [Fact]
-    public void TestResponse()
+    public void CanDeserializeError()
     {
-        var result = DeleteResult.ParseXml(
+        var result = DeleteResult.Deserialize(
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <DeleteResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
@@ -70,9 +73,9 @@ public class BatchDeleteTests
     }
 
     [Fact]
-    public void TestResponse2()
+    public void CanDeserialize()
     {
-        var result = DeleteResult.ParseXml(
+        var result = DeleteResult.Deserialize(
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <DeleteResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">

@@ -28,9 +28,9 @@ public sealed class ListBucketResult
     [XmlElement("Contents")]
     public ListBucketObject[] Items { get; init; }
 
-    public static ListBucketResult ParseXml(string xmlText)
+    public static ListBucketResult Deserialize(string xmlText)
     {
-        return ResponseHelper<ListBucketResult>.ParseXml(xmlText);
+        return S3Serializer<ListBucketResult>.Deserialize(xmlText);
     }
 }
 

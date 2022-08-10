@@ -5,7 +5,7 @@ public class S3ErrorTests
     [Fact]
     public void CanDeserialize_NoSuchKey()
     {
-        var error = S3Error.ParseXml(
+        var error = S3Error.Deserialize(
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <Error>
@@ -25,7 +25,7 @@ public class S3ErrorTests
     [Fact]
     public void CanDeserialize_BadDigest()
     {
-        var error = S3Error.ParseXml(
+        var error = S3Error.Deserialize(
             """
             <Error>
                 <Code>BadDigest</Code>
@@ -46,7 +46,7 @@ public class S3ErrorTests
     [Fact]
     public void CanDeserialize_InvalidRange()
     {
-        var error = S3Error.ParseXml(
+        var error = S3Error.Deserialize(
             """
             <?xml version="1.0" encoding="UTF-8" ?> 
             <Error>
@@ -69,7 +69,7 @@ public class S3ErrorTests
     [Fact]
     public void CanDeserialize_WasabiErrorResponse()
     {
-        var response = S3ResponseHelper<S3ErrorResponse>.ParseXml(
+        var response = S3Serializer<S3ErrorResponse>.Deserialize(
             """
             <ErrorResponse xmlns="https://iam.amazonaws.com/doc/2010-05-08/">
               <Error>

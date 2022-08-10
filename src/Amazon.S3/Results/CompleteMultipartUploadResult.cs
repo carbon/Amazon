@@ -19,9 +19,9 @@ public sealed class CompleteMultipartUploadResult
     [XmlElement]
     public string ETag { get; init; }
 
-    public static CompleteMultipartUploadResult ParseXml(string xmlText)
+    public static CompleteMultipartUploadResult Deserialize(string xmlText)
     {
-        return ResponseHelper<CompleteMultipartUploadResult>.ParseXml(xmlText);
+        return S3Serializer<CompleteMultipartUploadResult>.Deserialize(xmlText);
     }
 }
 

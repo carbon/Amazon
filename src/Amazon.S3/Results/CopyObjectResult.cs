@@ -13,9 +13,9 @@ public sealed class CopyObjectResult
     [XmlElement]
     public string ETag { get; init; }
 
-    public static CopyObjectResult ParseXml(string xmlText)
+    public static CopyObjectResult Deserialize(string xmlText)
     {
-        return ResponseHelper<CopyObjectResult>.ParseXml(xmlText);
+        return S3Serializer<CopyObjectResult>.Deserialize(xmlText);
     }
 }
 

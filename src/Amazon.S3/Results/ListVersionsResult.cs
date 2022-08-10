@@ -34,8 +34,8 @@ public sealed class ListVersionsResult
     [XmlElement("Version")]
     public ObjectVersion[] Versions { get; init; }
 
-    public static ListVersionsResult ParseXml(string xmlText)
+    public static ListVersionsResult Deserialize(string xmlText)
     {
-        return ResponseHelper<ListVersionsResult>.ParseXml(xmlText);
+        return S3Serializer<ListVersionsResult>.Deserialize(xmlText);
     }
 }

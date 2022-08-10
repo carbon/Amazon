@@ -41,7 +41,7 @@ public sealed class S3Client : AwsClient
 
         string responseText = await SendAsync(request).ConfigureAwait(false);
 
-        return ListBucketResult.ParseXml(responseText);
+        return ListBucketResult.Deserialize(responseText);
     }
 
     public async Task<ListVersionsResult> ListObjectVersionsAsync(string bucketName, ListVersionsOptions options)
@@ -50,7 +50,7 @@ public sealed class S3Client : AwsClient
 
         string responseText = await SendAsync(request).ConfigureAwait(false);
 
-        return ListVersionsResult.ParseXml(responseText);
+        return ListVersionsResult.Deserialize(responseText);
     }
 
     #region Multipart Uploads
@@ -64,7 +64,7 @@ public sealed class S3Client : AwsClient
     {
         string responseText = await SendAsync(request).ConfigureAwait(false);
 
-        return InitiateMultipartUploadResult.ParseXml(responseText);
+        return InitiateMultipartUploadResult.Deserialize(responseText);
     }
 
     public async Task<UploadPartResult> UploadPartAsync(UploadPartRequest request, CancellationToken cancellationToken = default)
@@ -82,7 +82,7 @@ public sealed class S3Client : AwsClient
     {
         string responseText = await SendAsync(request).ConfigureAwait(false);
 
-        return ResponseHelper<CompleteMultipartUploadResult>.ParseXml(responseText);
+        return S3Serializer<CompleteMultipartUploadResult>.Deserialize(responseText);
     }
 
     #endregion
@@ -103,7 +103,7 @@ public sealed class S3Client : AwsClient
     {
         string responseText = await SendAsync(request).ConfigureAwait(false);
 
-        return CopyObjectResult.ParseXml(responseText);
+        return CopyObjectResult.Deserialize(responseText);
     }
 
     public async Task<DeleteObjectResult> DeleteObjectAsync(DeleteObjectRequest request, CancellationToken cancelationToken = default)
@@ -126,7 +126,7 @@ public sealed class S3Client : AwsClient
     {
         var responseText = await SendAsync(request).ConfigureAwait(false);
 
-        return DeleteResult.ParseXml(responseText);
+        return DeleteResult.Deserialize(responseText);
     }
 
     public async Task<RestoreObjectResult> RestoreObjectAsync(RestoreObjectRequest request, CancellationToken cancelationToken = default)
@@ -201,13 +201,13 @@ public sealed class S3Client : AwsClient
         // Wasabi returns a non-standard ErrorResponse
         if (responseText.Contains("<ErrorResponse"))
         {
-            if (ResponseHelper<S3ErrorResponse>.TryParseXml(responseText, out var wasabiError))
+            if (S3Serializer<S3ErrorResponse>.TryDeserialize(responseText, out var wasabiError))
             {
                 throw new S3Exception(wasabiError.Error, response.StatusCode);
             }
         }
 
-        else if (responseText.Contains("<Error>") && S3Error.TryParseXml(responseText, out var error))
+        else if (responseText.Contains("<Error>") && S3Error.TryDeserialize(responseText, out var error))
         {
             throw new S3Exception(error, response.StatusCode);
         }

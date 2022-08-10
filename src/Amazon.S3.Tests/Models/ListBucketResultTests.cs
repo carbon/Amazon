@@ -7,7 +7,7 @@ public class ListBucketResultTests
     [Fact]
     public void Test2()
     {
-        var result = ListBucketResult.ParseXml(
+        var result = ListBucketResult.Deserialize(
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
@@ -58,7 +58,7 @@ public class ListBucketResultTests
     [Fact]
     public void Test()
     {
-        var result = ListBucketResult.ParseXml(
+        var result = ListBucketResult.Deserialize(
             """
             <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
                 <Name>cmcdn</Name>
