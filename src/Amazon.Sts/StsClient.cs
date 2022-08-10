@@ -90,7 +90,7 @@ public sealed class StsClient : AwsClient
 
         string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-        return StsSerializer<TResponse>.ParseXml(responseText);
+        return StsSerializer<TResponse>.Deserialize(responseText);
     }
 
     private static FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)

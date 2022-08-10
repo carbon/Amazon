@@ -50,7 +50,7 @@ public sealed class CallerIdentityVerifier
             throw new StsException(responseText, response.StatusCode);
         }
 
-        return StsSerializer<GetCallerIdentityResponse>.ParseXml(responseText).GetCallerIdentityResult;
+        return StsSerializer<GetCallerIdentityResponse>.Deserialize(responseText).GetCallerIdentityResult;
     }
 }
 
