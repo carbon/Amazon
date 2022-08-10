@@ -2,6 +2,9 @@
 
 using System.Net.Http;
 
+using Amazon.Ec2.Exceptions;
+using Amazon.Ec2.Responses;
+
 namespace Amazon.Ec2;
 
 public sealed class Ec2Client : AwsClient
@@ -191,7 +194,15 @@ public sealed class Ec2Client : AwsClient
     {
         var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        throw new Exception($"{response.StatusCode} -> {responseText}");
+        try
+        {
+            var errorResponse = ErrorResponse.Deserialize(responseText);
+
+            throw new Ec2Exception(errorResponse.Errors, response.StatusCode);            
+        }
+        catch { }
+
+        throw new Ec2Exception(responseText, response.StatusCode);
     }
 
     #endregion
