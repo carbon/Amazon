@@ -12,7 +12,7 @@ public sealed class SendEmailResponse
 
     public static SendEmailResponse Deserialize(string text)
     {
-        return XmlHelper<SendEmailResponse>.Deserialize(text);
+        return SesSerializer<SendEmailResponse>.Deserialize(text);
     }
 }
 

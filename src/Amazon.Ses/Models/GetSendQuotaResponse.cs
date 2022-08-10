@@ -12,7 +12,7 @@ public sealed class GetSendQuotaResponse
 
     public static GetSendQuotaResponse Deserialize(string text)
     {
-        return XmlHelper<GetSendQuotaResponse>.Deserialize(text);
+        return SesSerializer<GetSendQuotaResponse>.Deserialize(text);
     }
 }
 

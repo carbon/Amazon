@@ -51,7 +51,7 @@ public sealed class SesClient : AwsClient
 
         var text = await SendWithRetryPolicy(data, retryPolicy).ConfigureAwait(false);
 
-        return SendRawEmailResponse.Parse(text).SendRawEmailResult;
+        return SendRawEmailResponse.Deserialize(text).SendRawEmailResult;
     }
 
     public async Task<GetSendQuotaResult> GetSendQuotaAsync()

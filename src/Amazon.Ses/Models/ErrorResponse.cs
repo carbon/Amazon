@@ -12,7 +12,7 @@ public sealed class ErrorResponse
 
     public static ErrorResponse Deserialize(string text)
     {
-        return XmlHelper<ErrorResponse>.Deserialize(text);
+        return SesSerializer<ErrorResponse>.Deserialize(text);
     }
 }
 

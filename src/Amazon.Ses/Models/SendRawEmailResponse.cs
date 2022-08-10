@@ -10,9 +10,9 @@ public sealed class SendRawEmailResponse
     [XmlElement]
     public SendRawEmailResult SendRawEmailResult { get; init; }
 
-    public static SendRawEmailResponse Parse(string text)
+    public static SendRawEmailResponse Deserialize(string xmlText)
     {
-        return XmlHelper<SendRawEmailResponse>.Deserialize(text);
+        return SesSerializer<SendRawEmailResponse>.Deserialize(xmlText);
     }
 }
 
