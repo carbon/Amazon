@@ -5,7 +5,7 @@ public class GetMetricStatsTests
     [Fact]
     public void A()
     {        
-        var result = GetMetricStatatisticsResponse.Parse(
+        var result = GetMetricStatatisticsResponse.Deserialize(
             """
             <GetMetricStatisticsResponse xmlns="http://monitoring.amazonaws.com/doc/2010-08-01/">
               <GetMetricStatisticsResult>

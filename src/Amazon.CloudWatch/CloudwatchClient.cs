@@ -38,7 +38,7 @@ public sealed class CloudWatchClient : AwsClient
 
         var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-        return GetMetricStatatisticsResponse.Parse(responseText);
+        return GetMetricStatatisticsResponse.Deserialize(responseText);
     }
 
     public async Task<List<Metric>> ListMetricsAsyncAsync(ListMetricsRequest request)

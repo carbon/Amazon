@@ -12,7 +12,7 @@ public sealed class GetMetricStatatisticsResponse
 
     public List<DataPoint> Datapoints { get; } = new();
 
-    public static GetMetricStatatisticsResponse Parse(string xmlText)
+    public static GetMetricStatatisticsResponse Deserialize(string xmlText)
     {
         var result = new GetMetricStatatisticsResponse();
 
