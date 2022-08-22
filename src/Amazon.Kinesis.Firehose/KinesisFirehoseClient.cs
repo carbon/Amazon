@@ -2,6 +2,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Amazon.Exceptions;
+
 namespace Amazon.Kinesis.Firehose;
 
 public sealed class KinesisFirehoseClient : AwsClient
@@ -66,9 +68,7 @@ public sealed class KinesisFirehoseClient : AwsClient
     {
         var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        // var result = JsonObject.Parse(responseText);
-
-        throw new Exception(responseText);
+        throw new AwsException(responseText, response.StatusCode);
     }
 
     private static readonly JsonSerializerOptions jso = new () {
