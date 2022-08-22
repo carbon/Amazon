@@ -2,6 +2,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Amazon.Exceptions;
+
 namespace Amazon.Ssm;
 
 public sealed class SsmClient : AwsClient
@@ -504,7 +506,7 @@ public sealed class SsmClient : AwsClient
     {
         var responseText = await response.Content.ReadAsStringAsync();
    
-        throw new Exception($"{response.StatusCode} -> {responseText}");
+        throw new AwsException(responseText, response.StatusCode);
     }
 
     #endregion
