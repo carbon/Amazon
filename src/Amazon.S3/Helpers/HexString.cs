@@ -4,7 +4,7 @@ internal static class HexString
 {
     // Based on: http://stackoverflow.com/questions/623104/byte-to-hex-string/3974535#3974535
 
-    public static string FromBytes(this byte[] bytes)
+    public static string FromBytes(this ReadOnlySpan<byte> bytes)
     {
         Span<char> buffer = bytes.Length < 128
             ? stackalloc char[bytes.Length * 2]

@@ -15,7 +15,7 @@ public sealed class S3Object : IBlobResult, IDisposable
     private Stream? _stream;
     private readonly Dictionary<string, string> _properties;
     private HttpResponseMessage? _response;
-    private long? contentLength;
+    private long? _contentLength;
 
     public S3Object(string key, HttpResponseMessage response)
     {
@@ -48,7 +48,7 @@ public sealed class S3Object : IBlobResult, IDisposable
 
     public long ContentLength
     {
-        get => contentLength ??= long.Parse(_properties["Content-Length"], NumberStyles.None, CultureInfo.InvariantCulture);
+        get => _contentLength ??= long.Parse(_properties["Content-Length"], NumberStyles.None, CultureInfo.InvariantCulture);
     }
 
     public DateTimeOffset LastModified

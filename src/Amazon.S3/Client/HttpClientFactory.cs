@@ -13,7 +13,7 @@ internal sealed class HttpClientFactory
         })
         {
             DefaultRequestHeaders = {
-                { "User-Agent", "Carbon/3.1" }
+                { "User-Agent", "Carbon/4.0" }
             }
         };
     }
