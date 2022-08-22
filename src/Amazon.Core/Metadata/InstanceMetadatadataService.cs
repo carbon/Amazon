@@ -7,11 +7,12 @@ namespace Amazon.Metadata;
 
 public sealed partial class InstanceMetadataService
 {
+    private const string host = "169.254.169.254";
+    private const string baseMetadataUri = $"http://{host}/latest/meta-data";
+
     public static readonly InstanceMetadataService Instance = new();
 
     private InstanceMetadataService() { }
-
-    private const string baseMetadataUri = "http://169.254.169.254/latest/meta-data";
 
     private readonly HttpClient httpClient = new()
     {
@@ -24,11 +25,11 @@ public sealed partial class InstanceMetadataService
 
     public async Task<InstanceAction?> GetSpotInstanceActionOrDefaultAsync()
     {
-        string? value = await GetStringOrDefaultAsync(baseMetadataUri + "/spot/instance-action").ConfigureAwait(false);
+        byte[]? value = await GetByteArrayOrDefaultAsync($"{baseMetadataUri}/spot/instance-action").ConfigureAwait(false);
 
-        if (value is null) return null;
-
-        return JsonSerializer.Deserialize<InstanceAction>(value);
+        return value is { Length: > 0 }
+            ? JsonSerializer.Deserialize<InstanceAction>(value)
+            : null;
     }
 
     internal async Task<IamSecurityCredentials> GetIamSecurityCredentialsAsync(string roleName)
@@ -67,7 +68,7 @@ public sealed partial class InstanceMetadataService
 
     public async Task<InstanceIdentity> GetInstanceIdentityAsync()
     {
-        using var response = await GetAsync("http://169.254.169.254/latest/dynamic/instance-identity/document").ConfigureAwait(false);
+        using var response = await GetAsync($"http://{host}/latest/dynamic/instance-identity/document").ConfigureAwait(false);
 
         using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
@@ -77,40 +78,40 @@ public sealed partial class InstanceMetadataService
     // us-east-1a
     public Task<string> GetAvailabilityZoneAsync()
     {
-        return GetStringAsync(baseMetadataUri + "/placement/availability-zone");
+        return GetStringAsync($"{baseMetadataUri}/placement/availability-zone");
     }
 
     public async Task<string?> GetIamRoleNameAsync()
     {
         // TODO: Limit to first line...
 
-        return await GetStringOrDefaultAsync(baseMetadataUri + "/iam/security-credentials/").ConfigureAwait(false);
+        return await GetStringOrDefaultAsync($"{baseMetadataUri}/iam/security-credentials/").ConfigureAwait(false);
     }
 
     public Task<string> GetInstanceIdAsync()
     {
-        return GetStringAsync(baseMetadataUri + "/instance-id");
+        return GetStringAsync($"{baseMetadataUri}/instance-id");
     }
 
     public async Task<IPAddress?> GetPublicIpv4Async()
     {
-        string? result = await GetStringOrDefaultAsync(baseMetadataUri + "/public-ipv4").ConfigureAwait(false);
+        string? result = await GetStringOrDefaultAsync($"{baseMetadataUri}/public-ipv4").ConfigureAwait(false);
 
-        if (result is null || result.Length == 0) return null;
+        if (result is null || result.Length is 0) return null;
 
         return IPAddress.Parse(result);
     }
 
     public async Task<byte[]> GetUserDataAsync()
     {
-        using var response = await GetAsync(baseMetadataUri + "/user-data").ConfigureAwait(false);
+        using var response = await GetAsync($"{baseMetadataUri}/user-data").ConfigureAwait(false);
 
         return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
     }
 
     public Task<string?> GetUserDataStringAsync()
     {
-        return GetStringOrDefaultAsync(baseMetadataUri + "/user-data");
+        return GetStringOrDefaultAsync($"{baseMetadataUri}/user-data");
     }
 
     private MetadataToken? token;
@@ -124,7 +125,7 @@ public sealed partial class InstanceMetadataService
 
         int lifetimeInSeconds = (int)lifetime.TotalSeconds;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, "http://169.254.169.254/latest/api/token") {
+        var request = new HttpRequestMessage(HttpMethod.Put, $"http://{host}/latest/api/token") {
             Headers = {
                 { "X-aws-ec2-metadata-token-ttl-seconds", lifetimeInSeconds.ToString(CultureInfo.InvariantCulture) }
             }
@@ -134,7 +135,7 @@ public sealed partial class InstanceMetadataService
 
         string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        return new MetadataToken(responseText, DateTime.UtcNow + lifetime);
+        return new MetadataToken(responseText, expires: DateTime.UtcNow + lifetime);
     }
 
     private async Task<MetadataToken> GetTokenAsync()
@@ -158,9 +159,7 @@ public sealed partial class InstanceMetadataService
 
         request.Headers.Add("X-aws-ec2-metadata-token", token.Value);
 
-        HttpResponseMessage response = await httpClient.SendAsync(request).ConfigureAwait(false);
-
-        return response;
+        return await httpClient.SendAsync(request).ConfigureAwait(false);
     }
 
     private async Task<string?> GetStringOrDefaultAsync(string url)
@@ -173,6 +172,18 @@ public sealed partial class InstanceMetadataService
         }
 
         return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+    }
+
+    private async Task<byte[]?> GetByteArrayOrDefaultAsync(string url)
+    {
+        using HttpResponseMessage response = await GetAsync(url).ConfigureAwait(false);
+
+        if (response.StatusCode is HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
     }
 
     private async Task<string> GetStringAsync(string url)
