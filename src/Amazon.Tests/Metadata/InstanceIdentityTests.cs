@@ -5,7 +5,7 @@ namespace Amazon.Metadata.Tests;
 public sealed class InstanceIdentityTests
 {
     [Fact]
-    public void Parse()
+    public void CanDeserialize()
     {
         // From: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-identity-documents.html
 
@@ -28,7 +28,7 @@ public sealed class InstanceIdentityTests
                 "ramdiskId" : null,
                 "region" : "us-west-2"
             }
-            """);
+            """u8);
 
         Assert.Null(result.KernelId);
         Assert.Equal("i-1234567890abcdef0", result.InstanceId);

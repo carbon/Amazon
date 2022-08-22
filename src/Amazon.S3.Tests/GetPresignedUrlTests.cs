@@ -27,6 +27,8 @@ public class GetPresignedUrlTests
         var request = new GetPresignedUrlRequest("GET", "us-east-1.s3.aws.com", AwsRegion.USEast1, "test", "hi.txt", TimeSpan.FromMinutes(10));
 
         // 1.4s on Surface 4 per 100K iterations
+        // -> 1.3s
+        // -> 1.2s
 
         for (int i = 0; i < 100_000; i++)
         {

@@ -274,7 +274,8 @@ public class SignerTests
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "s3.us-east-1.amazonaws.com";
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             host:s3.us-east-1.amazonaws.com
             x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
             x-amz-date:2012-02-17
@@ -395,7 +396,6 @@ public class SignerTests
         SignerV4.Sign(cred, dynamoScope, request);
 
         var auth = request.Headers.GetValues("Authorization").First();
-
 
         Assert.Equal(
             """

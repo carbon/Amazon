@@ -3,7 +3,7 @@
 public class AwsCredentialTests
 {
     [Fact]
-    public void Parse()
+    public void CanParse()
     {
         var accessKey = AwsCredential.Parse("a:b");
 

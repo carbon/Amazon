@@ -1,13 +1,15 @@
-﻿namespace Amazon.S3.Actions.Tests;
+﻿using System.Text;
+
+namespace Amazon.S3.Actions.Tests;
 
 public class PutObjectTaggingRequestRequests
 {
     [Fact]
-    public void Construct()
+    public void CanConstruct()
     {
-        var request = new PutObjectTaggingRequest("s3.amazon.com", "bucket-name", "object-name", null, new[] {
-            new KeyValuePair<string, string>("a", "1"),
-            new KeyValuePair<string, string>("b", "2")
+        var request = new PutObjectTaggingRequest("s3.amazon.com", "bucket-name", "object-name", null, new KeyValuePair<string, string>[] {
+            new ("a", "1"),
+            new ("b", "2")
         });
 
         Assert.Equal(HttpMethod.Put, request.Method);
@@ -16,13 +18,17 @@ public class PutObjectTaggingRequestRequests
     }
 
     [Fact]
-    public void ConstructWithVersion()
+    public async Task CanConstructWithVersion()
     {
-        var request = new PutObjectTaggingRequest("s3.amazon.com", "bucket-name", "object-name", "1", new[] {
-            new KeyValuePair<string, string>("a", "1"),
-            new KeyValuePair<string, string>("b", "2")
+        var request = new PutObjectTaggingRequest("s3.amazon.com", "bucket-name", "object-name", "1", new KeyValuePair<string, string>[] {
+            new ("a", "1"),
+            new ("b", "2")
         });
 
         Assert.Equal("/bucket-name/object-name?tagging&versionId=1", request.RequestUri.PathAndQuery);
+
+        var data = await request.Content.ReadAsByteArrayAsync();
+
+        Assert.Equal("<Tagging><TagSet><Tag><Key>a</Key><Value>1</Value></Tag><Tag><Key>b</Key><Value>2</Value></Tag></TagSet></Tagging>", Encoding.UTF8.GetString(data));
     }
 }

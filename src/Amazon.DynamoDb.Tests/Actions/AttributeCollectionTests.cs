@@ -54,8 +54,10 @@ public class AttributeCollectionTests
         var attributes = AttributeCollection.FromObject(media);
 
         Assert.Equal("resize:500x500.jpeg", attributes["Transformation"].Value.ToString());
-        Assert.Equal(DbValueType.N, attributes["Duration"].Kind);
-        Assert.Equal(DbValueType.N, attributes["Created"].Kind);
+        Assert.Equal(DbValueType.N,         attributes["Duration"].Kind);
+        Assert.Equal(DbValueType.N,         attributes["Created"].Kind);
+        Assert.Equal(1325376000L,           attributes["Created"].Value);
+
     }
 
     [Fact]
@@ -146,6 +148,5 @@ public class AttributeCollectionTests
               }
             }
             """, item.ToSystemTextJsonIndented());
-
     }
 }
