@@ -5,7 +5,7 @@ public class SendMessageBatchResponseTests
 	[Fact]
 	public void SendMessageBatchResponseParse()
 	{
-        var response = SendMessageBatchResponse.Parse(
+        var response = SendMessageBatchResponse.Deserialize(
 			$"""
 			<SendMessageBatchResponse xmlns="{SqsClient.NS}">
 				<SendMessageBatchResult>

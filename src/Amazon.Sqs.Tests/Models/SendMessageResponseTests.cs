@@ -5,7 +5,7 @@ public class SendMessageResultTests
     [Fact]
     public void Parse()
     {
-        var response = SendMessageResponse.Parse(
+        var response = SendMessageResponse.Deserialize(
             """
             <SendMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/">
               <SendMessageResult>

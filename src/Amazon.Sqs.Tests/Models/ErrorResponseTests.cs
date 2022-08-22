@@ -5,7 +5,7 @@ public class ErrorResponseTests
     [Fact]
     public void CanParse()
     {
-        var result = ErrorResponse.ParseXml(
+        var result = ErrorResponse.Deserialize(
             """
             <?xml version="1.0"?>
                 <ErrorResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/">

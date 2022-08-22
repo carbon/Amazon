@@ -5,7 +5,7 @@ public class DeleteMessageBatchResponseTests
 	[Fact]
 	public void Parse()
 	{
-        var result = DeleteMessageBatchResponse.Parse(
+        var result = DeleteMessageBatchResponse.Deserialize(
             """
             <DeleteMessageBatchResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/">
                 <DeleteMessageBatchResult>

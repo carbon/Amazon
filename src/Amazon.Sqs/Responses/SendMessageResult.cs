@@ -9,7 +9,7 @@ public sealed class SendMessageResponse
     [XmlElement("SendMessageResult")]
     public SendMessageResult SendMessageResult { get; init; }
 
-    public static SendMessageResponse Parse(string xmlText)
+    public static SendMessageResponse Deserialize(string xmlText)
     {
         return SqsSerializer<SendMessageResponse>.Deserialize(xmlText);
     }

@@ -5,7 +5,7 @@ public class CreateQueueResponseTests
     [Fact]
     public void Parse()
     {
-        var response = CreateQueueResponse.Parse(
+        var response = CreateQueueResponse.Deserialize(
             """
             <CreateQueueResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/">
                 <CreateQueueResult>

@@ -9,7 +9,7 @@ public sealed class ReceiveMessageResponse
     [XmlElement("ReceiveMessageResult")]
     public ReceiveMessageResult ReceiveMessageResult { get; init; }
 
-    public static ReceiveMessageResponse ParseXml(string xmlText)
+    public static ReceiveMessageResponse Deserialize(string xmlText)
     {
         return SqsSerializer<ReceiveMessageResponse>.Deserialize(xmlText);
     }

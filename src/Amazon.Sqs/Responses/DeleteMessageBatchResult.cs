@@ -9,7 +9,7 @@ public sealed class DeleteMessageBatchResponse
     [XmlElement("DeleteMessageBatchResult")]
     public DeleteMessageBatchResult DeleteMessageBatchResult { get; init; }
 
-    public static DeleteMessageBatchResponse Parse(string xmlText)
+    public static DeleteMessageBatchResponse Deserialize(string xmlText)
     {
         return SqsSerializer<DeleteMessageBatchResponse>.Deserialize(xmlText);
     }

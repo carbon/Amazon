@@ -12,7 +12,7 @@ public sealed class ErrorResponse
     [XmlElement("RequestId")]
     public string RequestId { get; init; }
 
-    public static ErrorResponse ParseXml(string xmlText)
+    public static ErrorResponse Deserialize(string xmlText)
     {
         return SqsSerializer<ErrorResponse>.Deserialize(xmlText);
     }

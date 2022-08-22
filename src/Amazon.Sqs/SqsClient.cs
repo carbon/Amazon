@@ -37,7 +37,7 @@ public sealed class SqsClient : AwsClient
 
         var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-        return CreateQueueResponse.Parse(responseText).CreateQueueResult;
+        return CreateQueueResponse.Deserialize(responseText).CreateQueueResult;
     }
 
     /*
@@ -47,20 +47,20 @@ public sealed class SqsClient : AwsClient
     }
     */
 
-    public async Task<SendMessageBatchResultEntry[]> SendMessageBatchAsync(Uri queueUrl, string[] messages)
+    public async Task<SendMessageBatchResultEntry[]> SendMessageBatchAsync(Uri queueUrl, IReadOnlyList<string> messages)
     {
         ArgumentNullException.ThrowIfNull(messages);
 
-        if (messages.Length > 10)
+        if (messages.Count > 10)
             throw new ArgumentException("Must be 10 or fewer", nameof(messages));
 
         // Max payload = 256KB (262,144 bytes)
 
-        var parameters = new List<KeyValuePair<string, string>>((messages.Length * 2) + 2) {
+        var parameters = new List<KeyValuePair<string, string>>((messages.Count * 2) + 2) {
             new ("Action", "SendMessageBatch")
         };
 
-        for (int i = 0; i < messages.Length; i++)
+        for (int i = 0; i < messages.Count; i++)
         {
             int number = i + 1;
 
@@ -78,7 +78,7 @@ public sealed class SqsClient : AwsClient
 
         string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-        return SendMessageBatchResponse.Parse(responseText).SendMessageBatchResult.Items;
+        return SendMessageBatchResponse.Deserialize(responseText).SendMessageBatchResult.Items;
     }
 
     public async Task<SendMessageResult> SendMessageAsync(Uri queueUrl, SendMessageRequest request)
@@ -91,7 +91,7 @@ public sealed class SqsClient : AwsClient
 
         var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-        return SendMessageResponse.Parse(responseText).SendMessageResult;
+        return SendMessageResponse.Deserialize(responseText).SendMessageResult;
     }
 
     public async Task<SqsMessage[]> ReceiveMessagesAsync(
@@ -107,7 +107,7 @@ public sealed class SqsClient : AwsClient
 
         string responseText = await SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 
-        var response = ReceiveMessageResponse.ParseXml(responseText);
+        var response = ReceiveMessageResponse.Deserialize(responseText);
 
         return response.ReceiveMessageResult.Items ?? Array.Empty<SqsMessage>();
     }
@@ -170,7 +170,7 @@ public sealed class SqsClient : AwsClient
 
         // Because the batch request can result in a combination of successful and unsuccessful actions, 
         // you should check for batch errors even when the call returns an HTTP status code of 200.
-        return DeleteMessageBatchResponse.Parse(responseText).DeleteMessageBatchResult.Items;
+        return DeleteMessageBatchResponse.Deserialize(responseText).DeleteMessageBatchResult.Items;
     }
 
     #region Helpers
@@ -193,7 +193,7 @@ public sealed class SqsClient : AwsClient
 
         try
         {
-            var errorResponse = ErrorResponse.ParseXml(responseText);
+            var errorResponse = ErrorResponse.Deserialize(responseText);
 
             return new SqsException(errorResponse.Error);
         }

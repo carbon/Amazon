@@ -5,7 +5,7 @@ public class RecieveMessageResponseTests
     [Fact]
     public void Parse_1()
     {
-        var response = ReceiveMessageResponse.ParseXml(
+        var response = ReceiveMessageResponse.Deserialize(
             """
             <ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/">
                 <ReceiveMessageResult>
@@ -36,7 +36,7 @@ public class RecieveMessageResponseTests
     [Fact]
     public void Parse_2()
     {
-        var response = ReceiveMessageResponse.ParseXml(
+        var response = ReceiveMessageResponse.Deserialize(
             """
             <ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/">
                 <ReceiveMessageResult>
@@ -69,7 +69,7 @@ public class RecieveMessageResponseTests
     [Fact]
     public void Parse_3()
     {
-        var response = ReceiveMessageResponse.ParseXml(
+        var response = ReceiveMessageResponse.Deserialize(
             """
             <ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/">
               <ReceiveMessageResult>

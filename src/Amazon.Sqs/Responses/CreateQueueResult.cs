@@ -9,7 +9,7 @@ public sealed class CreateQueueResponse
     [XmlElement("CreateQueueResult")]
     public CreateQueueResult CreateQueueResult { get; init; }
 
-    public static CreateQueueResponse Parse(string xmlText)
+    public static CreateQueueResponse Deserialize(string xmlText)
     {
         return SqsSerializer<CreateQueueResponse>.Deserialize(xmlText);
     }
