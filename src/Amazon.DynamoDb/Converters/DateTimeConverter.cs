@@ -23,6 +23,6 @@ internal sealed class DateTimeConverter : IDbValueConverter
             return DateTimeOffset.FromUnixTimeMilliseconds(item.ToInt64()).UtcDateTime;
         }
 
-        return DateTimeOffset.FromUnixTimeSeconds(item.ToInt64()).UtcDateTime;
+        return DateTime.UnixEpoch.AddTicks(item.ToInt64() * TimeSpan.TicksPerSecond);
     }
 }

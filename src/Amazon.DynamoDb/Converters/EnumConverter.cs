@@ -15,7 +15,7 @@ internal sealed class EnumConverter : IDbValueConverter
 
     public object ToObject(DbValue item, IMember member)
     {
-        return item.Kind == DbValueType.S
+        return item.Kind is DbValueType.S
             ? Enum.Parse(member.Type, item.ToString())
             : Enum.ToObject(member.Type, item.ToInt());
     }

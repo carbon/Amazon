@@ -87,7 +87,7 @@ public readonly struct DbValue : IConvertible
 				TypeCode.UInt16 or 
 				TypeCode.UInt32 or
 				TypeCode.UInt64 => DbValueType.NS,
-                _ => throw new Exception($"Invalid array element type. Was{type.Name}"),
+                _ => throw new Exception($"Invalid array element type. Was {type.Name}"),
             };
         }
 		else
