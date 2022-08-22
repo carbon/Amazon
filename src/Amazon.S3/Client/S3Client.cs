@@ -190,7 +190,7 @@ public sealed class S3Client : AwsClient
 
             if (key.Length > 0 && key[0] is '/')
             {
-                key = key[1..];
+                key = key.Substring(1);
             }
 
             throw StorageException.NotFound(key);

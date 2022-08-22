@@ -1,6 +1,4 @@
-﻿#pragma warning disable IDE0057 // Use range operator
-
-#nullable disable
+﻿#nullable disable
 
 namespace Amazon.Metadata;
 

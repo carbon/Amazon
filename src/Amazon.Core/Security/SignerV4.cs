@@ -1,6 +1,4 @@
-﻿#pragma warning disable IDE0057 // Use range operator
-
-using System.Buffers;
+﻿using System.Buffers;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -171,8 +169,8 @@ public static class SignerV4
             : ComputeSHA256(request.Content);
     }
 
-    private static ReadOnlySpan<byte> aws4_request_bytes => "aws4_request"u8;
-    private static ReadOnlySpan<byte> AWS4 => "AWS4"u8;
+    private static ReadOnlySpan<byte> s_aws4_request => "aws4_request"u8;
+    private static ReadOnlySpan<byte> s_AWS4 => "AWS4"u8;
 
     [SkipLocalsInit]
     private static void ComputeSigningKey(string secretAccessKey, in CredentialScope scope, Span<byte> signingKey)
@@ -184,7 +182,7 @@ public static class SignerV4
 
         Span<byte> kSecret = stackalloc byte[secretAccessKey.Length + 4];
 
-        AWS4.CopyTo(kSecret);
+        s_AWS4.CopyTo(kSecret);
         Encoding.ASCII.GetBytes(secretAccessKey, kSecret.Slice(4));
 
         Span<byte> formattedDateBytes = stackalloc byte[8];
@@ -194,7 +192,7 @@ public static class SignerV4
         HMACSHA256.HashData(kSecret, formattedDateBytes,        signingKey);
         HMACSHA256.HashData(signingKey, scope.Region.Utf8Name,  signingKey);
         HMACSHA256.HashData(signingKey, scope.Service.Utf8Name, signingKey);
-        HMACSHA256.HashData(signingKey, aws4_request_bytes,     signingKey);
+        HMACSHA256.HashData(signingKey, s_aws4_request,     signingKey);
     }
 
     public static byte[] ComputeSigningKey(string secretAccessKey, in CredentialScope scope)
@@ -425,7 +423,7 @@ public static class SignerV4
 
         if (query[0] is '?')
         {
-            query = query[1..];
+            query = query.Slice(1);
         }
 
         var splitter = new Splitter(query, '&');
@@ -485,8 +483,8 @@ public static class SignerV4
         output.Append(request.Headers.Host);
 
         foreach (var header in request.Headers.NonValidated
-            .Where(item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
-            .OrderBy(item => item.Key, StringComparer.OrdinalIgnoreCase))
+            .Where(static item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(static item => item.Key, StringComparer.OrdinalIgnoreCase))
         {
             string headerName = header.Key.ToLowerInvariant();
 

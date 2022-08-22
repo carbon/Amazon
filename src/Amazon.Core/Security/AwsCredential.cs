@@ -1,6 +1,4 @@
-﻿#pragma warning disable IDE0057 // Use range operator
-
-namespace Amazon;
+﻿namespace Amazon;
 
 public sealed class AwsCredential : IAwsCredential
 {

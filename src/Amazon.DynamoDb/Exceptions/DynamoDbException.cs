@@ -1,6 +1,4 @@
-﻿#pragma warning disable IDE0057 // Use range operator
-
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 

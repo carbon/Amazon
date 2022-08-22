@@ -3,8 +3,6 @@
 
 // Via: https://github.com/dotnet/runtime/blob/ab7492c4a77f0315d384b4c7648d0cefa36b18d1/src/libraries/Common/src/System/Text/ValueStringBuilder.cs
 
-#pragma warning disable IDE0057 // Use range operator
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
