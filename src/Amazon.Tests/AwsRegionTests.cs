@@ -5,7 +5,7 @@ public class AwsRegionTests
     [Fact]
     public void Enum()
     {
-        Assert.Equal(21, AwsRegion.All.Length);
+        Assert.Equal(22, AwsRegion.All.Length);
 
         foreach (var region in AwsRegion.All)
         {
@@ -13,7 +13,7 @@ public class AwsRegionTests
         }
 
         // Ensure all the regions are unique
-        var names = AwsRegion.All.Select(a => a.Name).Distinct().ToArray();
+        var names = AwsRegion.All.Select(static a => a.Name).Distinct().ToArray();
 
         Assert.Equal(AwsRegion.All.Length, names.Length);
     }

@@ -41,31 +41,32 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
     #endregion
 
     // In launch order...
-    public static readonly AwsRegion USEast1      = new ("us-east-1");      // | US            | N. Virginia   | 2006-08-25
-    public static readonly AwsRegion EUWest1      = new ("eu-west-1");      // | EU            | Ireland       | 2008-12-10
-    public static readonly AwsRegion USWest1      = new ("us-west-1");      // | US            | N. California | 2009-12-03
-    public static readonly AwsRegion APSouthEast1 = new ("ap-southeast-1"); // | Asia Pacific  | Singapore     | 2010-04-29
-    public static readonly AwsRegion APNorthEast1 = new ("ap-northeast-1"); // | Asia Pacific  | Tokyo         | 2011-03-02
-    public static readonly AwsRegion USGovWest1   = new ("us-gov-west-1");  // | US            | AWS GovCloud  | 2011-08-16
-    public static readonly AwsRegion USWest2      = new ("us-west-2");      // | US            | Oregon        | 2011-11-09
-    public static readonly AwsRegion SAEast1      = new ("sa-east-1");      // | South America | São Paulo     | 2011-12-14
-    public static readonly AwsRegion APSouthEast2 = new ("ap-southeast-2"); // | Asia Pacific  | Sydney        | 2012-11-12
-    public static readonly AwsRegion CNNorth1     = new ("cn-north-1");     // | China         | Beijing       | 2013-12-18
-    public static readonly AwsRegion EUCentral1   = new ("eu-central-1");   // | EU            | Frankfurt     | 2014-10-23
-    public static readonly AwsRegion APNortheast2 = new ("ap-northeast-2"); // | Asia Pacific  | Seoul         | 2016-01-06
-    public static readonly AwsRegion APSouth1     = new ("ap-south-1");     // | Asia Pacific  | Mumbai        | 2016-06-27
-    public static readonly AwsRegion USEast2      = new ("us-east-2");      // | US            | Ohio          | 2016-10-17
-    public static readonly AwsRegion CACentral1   = new ("ca-central-1");   // | Canada        | Central       | 2016-12-08
-    public static readonly AwsRegion EUWest2      = new ("eu-west-2");      // | EU            | London        | 2016-12-13
-    public static readonly AwsRegion EUWest3      = new ("eu-west-3");      // | EU            | Paris         | 2017-12-18
-    public static readonly AwsRegion MESouth1     = new ("me-south-1");     // | ME            | Bahrain       | 2019-07-29
-    public static readonly AwsRegion AFSouth1     = new ("af-south-1");     // |               | Cape Town     | ~2020-04
-    public static readonly AwsRegion EUSouth1     = new ("eu-south-1");     // | EU            | Milan         | ~2020-05	
-    public static readonly AwsRegion APSouthEast3 = new ("ap-southeast-3"); // | Asia Pacific  | Jakarta       | ~2021-11
+    public static readonly AwsRegion USEast1      = new("us-east-1");      // | US            | N. Virginia   | 2006-08-25
+    public static readonly AwsRegion EUWest1      = new("eu-west-1");      // | EU            | Ireland       | 2008-12-10
+    public static readonly AwsRegion USWest1      = new("us-west-1");      // | US            | N. California | 2009-12-03
+    public static readonly AwsRegion APSouthEast1 = new("ap-southeast-1"); // | Asia Pacific  | Singapore     | 2010-04-29
+    public static readonly AwsRegion APNorthEast1 = new("ap-northeast-1"); // | Asia Pacific  | Tokyo         | 2011-03-02
+    public static readonly AwsRegion USGovWest1   = new("us-gov-west-1");  // | US            | AWS GovCloud  | 2011-08-16
+    public static readonly AwsRegion USWest2      = new("us-west-2");      // | US            | Oregon        | 2011-11-09
+    public static readonly AwsRegion SAEast1      = new("sa-east-1");      // | South America | São Paulo     | 2011-12-14
+    public static readonly AwsRegion APSouthEast2 = new("ap-southeast-2"); // | Asia Pacific  | Sydney        | 2012-11-12
+    public static readonly AwsRegion CNNorth1     = new("cn-north-1");     // | China         | Beijing       | 2013-12-18
+    public static readonly AwsRegion EUCentral1   = new("eu-central-1");   // | EU            | Frankfurt     | 2014-10-23
+    public static readonly AwsRegion APNortheast2 = new("ap-northeast-2"); // | Asia Pacific  | Seoul         | 2016-01-06
+    public static readonly AwsRegion APSouth1     = new("ap-south-1");     // | Asia Pacific  | Mumbai        | 2016-06-27
+    public static readonly AwsRegion USEast2      = new("us-east-2");      // | US            | Ohio          | 2016-10-17
+    public static readonly AwsRegion CACentral1   = new("ca-central-1");   // | Canada        | Central       | 2016-12-08
+    public static readonly AwsRegion EUWest2      = new("eu-west-2");      // | EU            | London        | 2016-12-13
+    public static readonly AwsRegion EUWest3      = new("eu-west-3");      // | EU            | Paris         | 2017-12-18
+    public static readonly AwsRegion MESouth1     = new("me-south-1");     // | ME            | Bahrain       | 2019-07-29
+    public static readonly AwsRegion AFSouth1     = new("af-south-1");     // |               | Cape Town     | ~2020-04
+    public static readonly AwsRegion EUSouth1     = new("eu-south-1");     // | EU            | Milan         | ~2020-05	
+    public static readonly AwsRegion APSouthEast3 = new("ap-southeast-3"); // | Asia Pacific  | Jakarta       | ~2021-11
+    public static readonly AwsRegion MECentral1   = new("me-central-1");   // | ME            | UAE           | 2022-09
 
     public static readonly AwsRegion[] All = new [] {
         USEast1,
-        EUWest1,  
+        EUWest1,
         USWest1,     
         APSouthEast1, 
         APNorthEast1, 
@@ -84,7 +85,8 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
         MESouth1,
         AFSouth1,
         EUSouth1,
-        APSouthEast3
+        APSouthEast3,
+        MECentral1
     };
         
     public static AwsRegion Get(string name) => name switch
@@ -107,6 +109,7 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
         "sa-east-1"      => SAEast1,
         "cn-north-1"     => CNNorth1,
         "us-gov-west-1"  => USGovWest1,
+        "me-central-1"   => MECentral1,
         "me-south-1"     => MESouth1,
         "af-south-1"     => AFSouth1,
         "eu-south-1"     => EUSouth1,
@@ -139,7 +142,7 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
         return current;
     }
 
-    public static AwsRegion FromAvailabilityZone(ReadOnlySpan<char> availabilityZone)
+    public static AwsRegion FromAvailabilityZone(string availabilityZone)
     {
         string regionName = availabilityZone[0..^1];
 
