@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using System.Text.Json.Serialization;
 using System.Threading;
 
 using Amazon.Metadata;
@@ -10,7 +11,8 @@ public sealed class InstanceRoleCredential : IAwsCredential
 {
     private int renewCount = 0;
 
-    private readonly SemaphoreSlim gate = new(1, 1);
+    private readonly SemaphoreSlim _gate = new(1, 1);
+    private IamSecurityCredentials _credential;
 
     public InstanceRoleCredential() { }
 
@@ -26,19 +28,22 @@ public sealed class InstanceRoleCredential : IAwsCredential
         ArgumentNullException.ThrowIfNull(roleName);
 
         RoleName = roleName;
-
-        Set(credential);
+        _credential = credential;
     }
 
-    public string RoleName { get; internal set; }
+    public string RoleName { get; private set; }
 
-    public string AccessKeyId { get; internal set; }
+    public string AccessKeyId => _credential.AccessKeyId;
 
-    public string SecretAccessKey { get; internal set; }
+    [JsonIgnore]
+    public string SecretAccessKey => _credential.SecretAccessKey;
 
-    public string SecurityToken { get; internal set; }
+    [JsonIgnore]
+    public string SecurityToken => _credential.Token;
 
-    public DateTime Expires { get; internal set; }
+    public DateTime Expires => _credential?.Expiration ?? default;
+
+    public DateTime Modified => _credential?.LastUpdated ?? default;
 
     public int RenewCount => renewCount;
 
@@ -48,29 +53,25 @@ public sealed class InstanceRoleCredential : IAwsCredential
 
     public bool IsExpired => DateTime.UtcNow < Expires;
 
-    public bool ShouldRenew
-    {
-        get => RoleName is null || Expires == default || ExpiresIn <= TimeSpan.FromMinutes(5);
-    }
-
-    private void Set(IamSecurityCredentials credential)
-    {
-        AccessKeyId = credential.AccessKeyId;
-        SecretAccessKey = credential.SecretAccessKey;
-        SecurityToken = credential.Token;
-        Expires = credential.Expiration;
-    }
+    // AWS Recomendation:
+    // - refresh 5 minutes before expiration
+    public bool ShouldRenew => RoleName is null || _credential is null || Expires <= DateTime.UtcNow.AddMinutes(5);
 
     #endregion
-
-    // aws note: refresh 5 minutes before expiration
 
     public async Task<bool> RenewAsync()
     {
         if (!ShouldRenew) return false;
 
+        RoleName ??= await InstanceMetadataService.Instance.GetIamRoleNameAsync().ConfigureAwait(false);
+
+        if (RoleName is null)
+        {
+            throw new Exception("The instance is not configured with an IAM role");
+        }
+
         // Lock so we only renew the credentials once
-        if (!(await gate.WaitAsync(2_000).ConfigureAwait(false)))
+        if (!(await _gate.WaitAsync(2_000).ConfigureAwait(false)))
         {
             throw new TimeoutException("Timeout waiting for mutex to renew credentials (2s)");
         }
@@ -79,23 +80,16 @@ public sealed class InstanceRoleCredential : IAwsCredential
         {
             if (ShouldRenew)
             {
-                RoleName ??= await InstanceMetadataService.Instance.GetIamRoleNameAsync().ConfigureAwait(false);
-
-                if (RoleName is null)
-                {
-                    throw new Exception("The instance is not configured with an IAM role");
-                }
-
                 var iamCredential = await InstanceMetadataService.Instance.GetIamSecurityCredentialsAsync(RoleName).ConfigureAwait(false);
 
-                Set(iamCredential);
+                _credential = iamCredential;
 
                 Interlocked.Increment(ref renewCount);
             }
         }
         finally
         {
-            gate.Release();
+            _gate.Release();
         }
 
         return true;
@@ -125,6 +119,8 @@ public sealed class InstanceRoleCredential : IAwsCredential
 
     public static async Task<InstanceRoleCredential> GetAsync(string roleName)
     {
+        ArgumentNullException.ThrowIfNull(roleName);
+
         var iamCredential = await InstanceMetadataService.Instance.GetIamSecurityCredentialsAsync(roleName).ConfigureAwait(false);
 
         return new InstanceRoleCredential(roleName, iamCredential);
