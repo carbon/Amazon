@@ -75,7 +75,7 @@ public abstract class AwsClient
             await _credential.RenewAsync().ConfigureAwait(false);   
         }
 
-        DateTimeOffset date = DateTimeOffset.UtcNow;
+        var date = DateTimeOffset.UtcNow;
 
         request.Headers.Host = request.RequestUri!.Host;
         request.Headers.Date = date;

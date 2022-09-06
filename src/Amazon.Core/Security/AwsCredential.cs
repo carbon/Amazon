@@ -26,7 +26,7 @@ public sealed class AwsCredential : IAwsCredential
 
         int colonIndex = text.IndexOf(':');
 
-        if (colonIndex == -1)
+        if (colonIndex is -1)
         {
             throw new ArgumentException("accessKeyId & secretAccessKey must be seperated by ':'");
         }

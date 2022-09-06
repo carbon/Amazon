@@ -13,7 +13,7 @@ public sealed class ExponentialBackoffRetryPolicy : RetryPolicy
         _maxRetries = maxRetries;
     }
 
-    public override bool ShouldRetry(int retryCount) => _maxRetries == -1 || _maxRetries > retryCount;
+    public override bool ShouldRetry(int retryCount) => _maxRetries is -1 || _maxRetries > retryCount;
 
     public override TimeSpan GetDelay(int retryCount)
     {

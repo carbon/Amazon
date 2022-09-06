@@ -42,7 +42,7 @@ public sealed partial class InstanceMetadataService
             }
             catch (Exception ex)
             {
-                token = null;
+                _token = null;
 
                 lastException = ex;
             }
@@ -54,14 +54,14 @@ public sealed partial class InstanceMetadataService
     private MetadataToken GetToken()
     {
         // does not expire within 5 minutes
-        if (token is not null && token.Expires > DateTime.UtcNow.AddMinutes(5))
+        if (_token is not null && _token.Expires > DateTime.UtcNow.AddMinutes(5))
         {
-            return token;
+            return _token;
         }
 
-        token = GetToken(TimeSpan.FromHours(1));
+        _token = GetToken(TimeSpan.FromHours(1));
 
-        return token;
+        return _token;
     }
 
     private HttpResponseMessage Get(string requestUri)

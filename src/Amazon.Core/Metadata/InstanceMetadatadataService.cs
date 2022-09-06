@@ -9,14 +9,18 @@ public sealed partial class InstanceMetadataService
 {
     private const string host = "169.254.169.254";
     private const string baseMetadataUri = $"http://{host}/latest/meta-data";
+    private static readonly TimeSpan _1hour = TimeSpan.FromHours(1);
 
     public static readonly InstanceMetadataService Instance = new();
 
     private InstanceMetadataService() { }
 
-    private readonly HttpClient httpClient = new()
-    {
-        Timeout = TimeSpan.FromSeconds(5)
+    private readonly HttpClient httpClient = new(new SocketsHttpHandler {
+        ConnectTimeout = TimeSpan.FromSeconds(5),
+        AllowAutoRedirect = false,
+        UseCookies = false
+    }) {
+        Timeout = TimeSpan.FromSeconds(6)
     };
 
     // If Amazon EC2 is not preparing to stop or terminate the instance, 
@@ -46,24 +50,20 @@ public sealed partial class InstanceMetadataService
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception($"Invalid response getting /iam/security-credentials. {response.StatusCode}");
+                    throw new Exception($"Invalid response getting /iam/security-credentials. StatusCode = {response.StatusCode}");
                 }
 
-                using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                byte[] responseBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
-                var result = await JsonSerializer.DeserializeAsync(responseStream, IamJsonContext.Default.IamSecurityCredentials).ConfigureAwait(false);
-
-                return result!;
+                return JsonSerializer.Deserialize(responseBytes, IamJsonContext.Default.IamSecurityCredentials)!;
             }
             catch (Exception ex)
             {
-                token = null;
-
                 lastException = ex;
             }
         }
 
-        throw new Exception("error getting security credentials", lastException);
+        throw new Exception("error fetching security-credentials", lastException);
     }
 
     public async Task<InstanceIdentity> GetInstanceIdentityAsync()
@@ -114,13 +114,18 @@ public sealed partial class InstanceMetadataService
         return GetStringOrDefaultAsync($"{baseMetadataUri}/user-data");
     }
 
-    private MetadataToken? token;
+    private MetadataToken? _token;
 
     private async Task<MetadataToken> GetTokenAsync(TimeSpan lifetime)
     {
-        if (lifetime < TimeSpan.Zero || lifetime > TimeSpan.FromHours(6))
+        if (lifetime < TimeSpan.Zero)
         {
-            throw new ArgumentException("Must be > 0 & less than 6 hours", nameof(lifetime));
+            throw new ArgumentException("Must be > 0", nameof(lifetime));
+        }
+
+        if (lifetime > TimeSpan.FromHours(6))
+        {
+            throw new ArgumentException("Must be less than 6 hours", nameof(lifetime));
         }
 
         int lifetimeInSeconds = (int)lifetime.TotalSeconds;
@@ -140,24 +145,27 @@ public sealed partial class InstanceMetadataService
 
     private async Task<MetadataToken> GetTokenAsync()
     {
-        // does not expire within 5 minutes
-        if (token is not null && token.Expires > DateTime.UtcNow.AddMinutes(5))
+        var _5minutesFromNow = DateTime.UtcNow.AddMinutes(5);
+
+        if (_token is not null && _token.Expires > _5minutesFromNow) // does not expire within 5 minutes
         {
-            return token;
+            return _token;
         }
 
-        token = await GetTokenAsync(TimeSpan.FromHours(1)).ConfigureAwait(false);
+        _token = await GetTokenAsync(lifetime: _1hour).ConfigureAwait(false);
 
-        return token;
+        return _token;
     }
 
     private async Task<HttpResponseMessage> GetAsync(string requestUri)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-
         MetadataToken token = await GetTokenAsync().ConfigureAwait(false);
 
-        request.Headers.Add("X-aws-ec2-metadata-token", token.Value);
+        var request = new HttpRequestMessage(HttpMethod.Get, requestUri) {
+            Headers = {
+                { "X-aws-ec2-metadata-token", token.Value }
+            }
+        };
 
         return await httpClient.SendAsync(request).ConfigureAwait(false);
     }

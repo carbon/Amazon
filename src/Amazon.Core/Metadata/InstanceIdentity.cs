@@ -35,6 +35,9 @@ public sealed class InstanceIdentity
     [JsonPropertyName("kernelId")]
     public string? KernelId { get; set; }
 
+    [JsonPropertyName("ramdiskId")]
+    public string? RamdiskId { get; set; }
+
     public static Task<InstanceIdentity> GetAsync()
     {
         return InstanceMetadataService.Instance.GetInstanceIdentityAsync();
