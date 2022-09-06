@@ -3,10 +3,12 @@
   <PropertyGroup>
     <AssemblyName>Amazon.DynamoDb</AssemblyName>
     <TargetFramework>net6.0</TargetFramework>
-    <Version>0.24.3</Version>
+    <Version>0.25.0</Version>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>preview</LangVersion>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <NoWarn>IDE0090</NoWarn>
 
     <!-- Package Details-->
