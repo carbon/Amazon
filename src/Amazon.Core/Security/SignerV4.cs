@@ -112,7 +112,7 @@ public static class SignerV4
             return;
         }
 
-        var splitter = new Splitter(path.AsSpan(), '/');
+        var splitter = new StringSplitter(path.AsSpan(), '/');
 
         while (splitter.TryGetNext(out var segment))
         {
@@ -292,7 +292,7 @@ public static class SignerV4
         queryString += &X-Amz-SignedHeaders=signed_headers
         */
 
-        var urlBuilder = new ValueStringBuilder(512);
+        var urlBuilder = new ValueStringBuilder(stackalloc char[512]);
 
         urlBuilder.Append("https://");
         urlBuilder.Append(requestUri.Host);
@@ -426,7 +426,7 @@ public static class SignerV4
             query = query.Slice(1);
         }
 
-        var splitter = new Splitter(query, '&');
+        var splitter = new StringSplitter(query, '&');
 
         while (splitter.TryGetNext(out ReadOnlySpan<char> segment))
         {
