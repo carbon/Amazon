@@ -104,7 +104,7 @@ public static class SignerV4
         return output.ToString();
     }
 
-    private static void WriteCanonicalizedUri(ref ValueStringBuilder output, string path)
+    private static void WriteCanonicalizedUri(ref ValueStringBuilder output, ReadOnlySpan<char> path)
     {
         if (path is "/")
         {
@@ -112,7 +112,7 @@ public static class SignerV4
             return;
         }
 
-        var splitter = new StringSplitter(path.AsSpan(), '/');
+        var splitter = new StringSplitter(path, '/');
 
         while (splitter.TryGetNext(out var segment))
         {
@@ -192,7 +192,7 @@ public static class SignerV4
         HMACSHA256.HashData(kSecret, formattedDateBytes,        signingKey);
         HMACSHA256.HashData(signingKey, scope.Region.Utf8Name,  signingKey);
         HMACSHA256.HashData(signingKey, scope.Service.Utf8Name, signingKey);
-        HMACSHA256.HashData(signingKey, s_aws4_request,     signingKey);
+        HMACSHA256.HashData(signingKey, s_aws4_request,         signingKey);
     }
 
     public static byte[] ComputeSigningKey(string secretAccessKey, in CredentialScope scope)
@@ -544,15 +544,15 @@ public static class SignerV4
     [SkipLocalsInit]
     private static void SHA256_Hex(ReadOnlySpan<char> data, Span<char> destination)
     {
-        var dataBuffer = ArrayPool<byte>.Shared.Rent(data.Length * 4);
+        byte[] rentedBuffer = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(data.Length));
 
-        int encodedByteCount = Encoding.UTF8.GetBytes(data, dataBuffer);
+        int encodedByteCount = Encoding.UTF8.GetBytes(data, rentedBuffer);
 
         Span<byte> hash = stackalloc byte[32];
 
-        SHA256.HashData(dataBuffer.AsSpan(0, encodedByteCount), hash);
+        SHA256.HashData(rentedBuffer.AsSpan(0, encodedByteCount), hash);
 
-        ArrayPool<byte>.Shared.Return(dataBuffer);
+        ArrayPool<byte>.Shared.Return(rentedBuffer);
 
         HexString.DecodeBytesTo(hash, destination);
     }
