@@ -5,7 +5,7 @@ namespace Amazon.Security;
 
 public readonly struct CredentialScope : ISpanFormattable
 {
-    public CredentialScope(DateTime date, AwsRegion region, AwsService service)
+    public CredentialScope(DateOnly date, AwsRegion region, AwsService service)
     {
         ArgumentNullException.ThrowIfNull(region);
         ArgumentNullException.ThrowIfNull(service);
@@ -15,7 +15,7 @@ public readonly struct CredentialScope : ISpanFormattable
         Service = service;
     }
 
-    public DateTime Date { get; }
+    public DateOnly Date { get; }
 
     public AwsRegion Region { get; }
 
@@ -48,7 +48,7 @@ public readonly struct CredentialScope : ISpanFormattable
         return ToString();
     }
 
-    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    bool ISpanFormattable.TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         return destination.TryWrite(CultureInfo.InvariantCulture, $"{Date:yyyyMMdd}/{Region}/{Service}/aws4_request", out charsWritten);
     }

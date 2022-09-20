@@ -53,7 +53,7 @@ public class SignerTests
     public void SigningKey()
     {
         var scope = new CredentialScope(
-            date    : new DateTime(2012, 02, 15),
+            date    : new DateOnly(2012, 02, 15),
             region  : AwsRegion.USEast1,
             service : AwsService.Iam
         );
@@ -67,7 +67,7 @@ public class SignerTests
     public void SigningKey2()
     {
         var scope = new CredentialScope(
-            date    : new DateTime(2022, 02, 15),
+            date    : new DateOnly(2022, 02, 15),
             region  : AwsRegion.USWest1,
             service : AwsService.Iam
         );
@@ -196,7 +196,7 @@ public class SignerTests
             e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
             """.ReplaceLineEndings("\n"), SignerV4.GetCanonicalRequest(request));
 
-        var scope = new CredentialScope(new DateTime(2015, 08, 30), AwsRegion.USEast1, (AwsService)("service"));
+        var scope = new CredentialScope(new DateOnly(2015, 08, 30), AwsRegion.USEast1, (AwsService)("service"));
 
         var cred = new AwsCredential("AKIDEXAMPLE", "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY");
 
@@ -328,13 +328,13 @@ public class SignerTests
     {
         var key = new AwsCredential("carbon", "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY");
 
-        var date = new DateTime(2016, 01, 01);
+        var dateTime = new DateTime(2016, 01, 01);
 
-        var scope = new CredentialScope(date, AwsRegion.USEast1, AwsService.RdsDb);
+        var scope = new CredentialScope(DateOnly.FromDateTime(dateTime), AwsRegion.USEast1, AwsService.RdsDb);
 
         var request = new HttpRequestMessage(HttpMethod.Get, "https://carbon.db:3010?Action=connect&DBUser=carbon");
 
-        SignerV4.Presign(key, scope, date, TimeSpan.FromMinutes(15), request);
+        SignerV4.Presign(key, scope, dateTime, TimeSpan.FromMinutes(15), request);
 
         var signedUrl = request.RequestUri.ToString();
 
@@ -346,11 +346,11 @@ public class SignerTests
     {
         var key = new AwsCredential("carbon", "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY");
 
-        var date = new DateTime(2016, 01, 01);
+        var dateTime = new DateTime(2016, 01, 01);
 
-        var scope = new CredentialScope(date, AwsRegion.USEast1, AwsService.RdsDb);
+        var scope = new CredentialScope(DateOnly.FromDateTime(dateTime), AwsRegion.USEast1, AwsService.RdsDb);
 
-        string signedUrl = SignerV4.GetPresignedUrl(key, scope, date, TimeSpan.FromMinutes(15), HttpMethod.Get, new Uri("https://carbon.db:3010?Action=connect&DBUser=carbon"));
+        string signedUrl = SignerV4.GetPresignedUrl(key, scope, dateTime, TimeSpan.FromMinutes(15), HttpMethod.Get, new Uri("https://carbon.db:3010?Action=connect&DBUser=carbon"));
 
         Assert.Equal("https://carbon.db:3010/?Action=connect&DBUser=carbon&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=carbon%2F20160101%2Fus-east-1%2Frds-db%2Faws4_request&X-Amz-Date=20160101T000000Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=7c7f54b5f2ae7de227c96b59680f1a443562785addb8c62c0f674b052c3ebfae", signedUrl.ToString());
     }
@@ -360,15 +360,15 @@ public class SignerTests
     {
         var key = new AwsCredential("carbon", "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY");
 
-        var date = new DateTime(2016, 01, 01);
+        var dateTime = new DateTime(2016, 01, 01);
 
-        var scope = new CredentialScope(date, AwsRegion.USEast1, AwsService.RdsDb);
+        var scope = new CredentialScope(DateOnly.FromDateTime(dateTime), AwsRegion.USEast1, AwsService.RdsDb);
 
         var request = new HttpRequestMessage(HttpMethod.Get,
             "https://carbon.db:3036?Action=connect&DBUser=carbon"
         );
 
-        SignerV4.Presign(key, scope, date, TimeSpan.FromMinutes(15), request);
+        SignerV4.Presign(key, scope, dateTime, TimeSpan.FromMinutes(15), request);
 
         var signedUrl = request.RequestUri.ToString();
 
@@ -454,9 +454,9 @@ public class SignerTests
     }
 
     private static readonly CredentialScope dynamoScope = new(
-        date: new DateTime(2012, 02, 15),
-        region: AwsRegion.USEast1,
-        service: AwsService.DynamoDb
+        date    : new DateOnly(2012, 02, 15),
+        region  : AwsRegion.USEast1,
+        service : AwsService.DynamoDb
     );
 
     /*

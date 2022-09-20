@@ -104,6 +104,8 @@ public abstract class AwsClient
             throw new Exception("Headers.Date must be set");
         }
 
-        return new CredentialScope(httpRequest.Headers.Date.Value.UtcDateTime, Region, _service);
+        var date = httpRequest.Headers.Date.Value.UtcDateTime;
+
+        return new CredentialScope(DateOnly.FromDateTime(date), Region, _service);
     }
 }
