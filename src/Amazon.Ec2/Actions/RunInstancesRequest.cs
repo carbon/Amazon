@@ -117,7 +117,7 @@ public sealed class RunInstancesRequest : IEc2Request
     [DataMember(Order = 22)]
     public string? UserData { get; set; }
 
-    public Dictionary<string, string> ToParams()
+    List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
         return Ec2RequestHelper.ToParams("RunInstances", this);
     }

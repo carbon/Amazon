@@ -5,10 +5,10 @@ namespace Amazon.Ec2;
 
 internal static class Ec2RequestHelper
 {
-    public static Dictionary<string, string> ToParams(string actionName, object instance)
+    public static List<KeyValuePair<string, string>> ToParams(string actionName, object instance)
     {
-        var parameters = new Dictionary<string, string> {
-            { "Action", actionName }
+        var parameters = new List<KeyValuePair<string, string>> {
+            new ("Action", actionName)
         };
 
         var model = InstanceModel.Get(instance.GetType());
@@ -29,14 +29,14 @@ internal static class Ec2RequestHelper
             }
             else
             {
-                parameters.Add(member.Name, value.ToString()!);
+                parameters.Add(new (member.Name, value.ToString()!));
             }
         }
 
         return parameters;
     }
 
-    private static void AddArray(Dictionary<string, string> parameters, string prefix, IList array)
+    private static void AddArray(List<KeyValuePair<string, string>> parameters, string prefix, IList array)
     {
         for (int i = 0; i < array.Count; i++)
         {
@@ -50,12 +50,12 @@ internal static class Ec2RequestHelper
             }
             else
             {
-                parameters.Add(key, element.ToString()!);
+                parameters.Add(new (key, element.ToString()!));
             }
         }
     }
 
-    private static void AddObject(Dictionary<string, string> parameters, string prefix, object instance)
+    private static void AddObject(List<KeyValuePair<string, string>> parameters, string prefix, object instance)
     {
         if (parameters.Count > 100)
         {
@@ -82,7 +82,7 @@ internal static class Ec2RequestHelper
             }
             else
             {
-                parameters.Add(key, value.ToString()!);
+                parameters.Add(new (key, value.ToString()!));
             }
         }
     }

@@ -11,7 +11,7 @@ public sealed class DescribeVpcsRequest : DescribeRequest, IEc2Request
 
     public string[] VpcIds { get; }
 
-    public Dictionary<string, string> ToParams()
+    List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
         var parameters = GetParameters("DescribeVpcs");
 

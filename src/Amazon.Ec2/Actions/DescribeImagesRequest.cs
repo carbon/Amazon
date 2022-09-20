@@ -15,7 +15,7 @@ public sealed class DescribeImagesRequest : DescribeRequest, IEc2Request
 
     public List<string> OwnerIds { get; } = new();
 
-    public Dictionary<string, string> ToParams()
+    List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
         var parameters = GetParameters("DescribeImages");
 

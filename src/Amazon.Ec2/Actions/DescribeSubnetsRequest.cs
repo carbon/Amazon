@@ -9,7 +9,7 @@ public sealed class DescribeSubnetsRequest : DescribeRequest, IEc2Request
 
     public string[] SubnetIds { get; }
 
-    public Dictionary<string, string> ToParams()
+    List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
         var parameters = GetParameters("DescribeSubnets");
 

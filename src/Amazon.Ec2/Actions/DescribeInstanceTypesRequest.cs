@@ -4,12 +4,14 @@ public sealed class DescribeInstanceTypesRequest : DescribeRequest, IEc2Request
 {
     public DescribeInstanceTypesRequest(params string[] instanceTypes)
     {
+        ArgumentNullException.ThrowIfNull(instanceTypes);
+
         InstanceTypes = instanceTypes;
     }
 
     public string[] InstanceTypes { get; }
 
-    public Dictionary<string, string> ToParams()
+    List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
         var parameters = GetParameters("DescribeInstanceTypes");
 

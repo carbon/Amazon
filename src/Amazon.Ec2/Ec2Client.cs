@@ -173,8 +173,7 @@ public sealed class Ec2Client : AwsClient
     private async Task<TResponse> SendAsync<TResponse>(IEc2Request request)
         where TResponse: IEc2Response
     {
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-        {
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Content = GetPostContent(request.ToParams())
         };
 
@@ -183,9 +182,9 @@ public sealed class Ec2Client : AwsClient
         return Ec2Serializer<TResponse>.Deserialize(responseXml);
     }
 
-    private static FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)
+    private static FormUrlEncodedContent GetPostContent(List<KeyValuePair<string, string>> parameters)
     {
-        parameters.Add("Version", Version);
+        parameters.Add(new ("Version", Version));
 
         return new FormUrlEncodedContent(parameters!);
     }

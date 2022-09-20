@@ -11,7 +11,7 @@ public sealed class DescribeVolumesRequest : DescribeRequest, IEc2Request
 
     public string[] VolumeIds { get; }
 
-    public Dictionary<string, string> ToParams()
+    List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
         var parameters = GetParameters("DescribeVolumes");
 

@@ -18,7 +18,7 @@ public sealed class StopInstancesRequest : IEc2Request
     [DataMember(Name = "InstanceId")]
     public string[] InstanceIds { get; }
 
-    public Dictionary<string, string> ToParams()
+    List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
         return Ec2RequestHelper.ToParams("StopInstances", this);
     }

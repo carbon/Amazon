@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace Amazon.Ec2;
 
@@ -12,7 +10,7 @@ public abstract class DescribeRequest
 
     public List<Filter> Filters { get; } = new();
 
-    protected void AddIds(Dictionary<string, string> parameters, string prefix, IReadOnlyList<string>? ids)
+    protected void AddIds(List<KeyValuePair<string, string>> parameters, string prefix, IReadOnlyList<string>? ids)
     {
         if (ids is null) return;
 
@@ -21,34 +19,34 @@ public abstract class DescribeRequest
             int number = i + 1;
 
             // e.g. VpcId.1
-            parameters.Add(string.Create(CultureInfo.InvariantCulture, $"{prefix}.{number}"), ids[i]);
+            parameters.Add(new (string.Create(CultureInfo.InvariantCulture, $"{prefix}.{number}"), ids[i]));
         }
     }
 
-    protected Dictionary<string, string> GetParameters(string actionName)
+    protected List<KeyValuePair<string, string>> GetParameters(string actionName)
     {
-        var parameters = new Dictionary<string, string> {
-            { "Action", actionName }
+        var parameters = new List<KeyValuePair<string, string>> {
+            new ("Action", actionName)
         };
 
-        int number = 1;
+        uint number = 1;
 
         foreach (Filter filter in Filters)
         {
-            parameters.Add(string.Create(CultureInfo.InvariantCulture, $"Filter.{number}.Name"),  filter.Name);
-            parameters.Add(string.Create(CultureInfo.InvariantCulture, $"Filter.{number}.Value"), filter.Value);
+            parameters.Add(new (string.Create(CultureInfo.InvariantCulture, $"Filter.{number}.Name"),  filter.Name));
+            parameters.Add(new (string.Create(CultureInfo.InvariantCulture, $"Filter.{number}.Value"), filter.Value));
 
             number++;
         }
 
         if (MaxResults is int maxResults)
         {
-            parameters.Add("MaxResults", maxResults.ToString(CultureInfo.InvariantCulture));
+            parameters.Add(new ("MaxResults", maxResults.ToString(CultureInfo.InvariantCulture)));
         }
 
-        if (NextToken != null)
+        if (NextToken is not null)
         {
-            parameters.Add("NextToken", NextToken);
+            parameters.Add(new ("NextToken", NextToken));
         }
 
         return parameters;

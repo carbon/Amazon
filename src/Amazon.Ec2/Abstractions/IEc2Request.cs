@@ -2,5 +2,5 @@
 
 public interface IEc2Request
 {
-    Dictionary<string, string> ToParams();
+    List<KeyValuePair<string, string>> ToParams();
 }

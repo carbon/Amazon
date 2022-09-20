@@ -11,7 +11,7 @@ public sealed class DescribeInstancesRequest : DescribeRequest, IEc2Request
 
     public string[] InstanceIds { get; }
 
-    public Dictionary<string, string> ToParams()
+    List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
         var parameters = GetParameters("DescribeInstances");
 
