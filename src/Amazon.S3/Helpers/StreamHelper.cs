@@ -7,12 +7,15 @@ internal static class StreamHelper
 {
     public static byte[] ComputeSHA256(Stream stream)
     {
+#if NET7_0_OR_GREATER
+        byte[] hash = SHA256.HashData(stream);
+#else
         using SHA256 sha = SHA256.Create();
 
-        byte[] data = sha.ComputeHash(stream);
-
+        byte[] hash = sha.ComputeHash(stream);
+#endif
         stream.Position = 0;
 
-        return data;
+        return hash;
     }
 }
