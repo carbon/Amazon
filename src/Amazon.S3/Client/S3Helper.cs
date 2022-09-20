@@ -13,14 +13,14 @@ public static class S3Helper
         return GetPresignedUrl(request, credential, DateTime.UtcNow);
     }
 
-    public static string GetPresignedUrl(GetPresignedUrlRequest request, IAwsCredential credential, DateTime now)
+    public static string GetPresignedUrl(GetPresignedUrlRequest request, IAwsCredential credential, DateTime utcNow)
     {
         // TODO: support version querystring
 
         return SignerV4.GetPresignedUrl(
             credential  : credential, 
-            scope       : new CredentialScope(now, request.Region, AwsService.S3),
-            date        : now,
+            scope       : new CredentialScope(DateOnly.FromDateTime(utcNow), request.Region, AwsService.S3),
+            date        : utcNow,
             expires     : request.ExpiresIn, 
             method      : GetHttpMethod(request.Method),
             requestUri  : new Uri(request.GetUrl()),
