@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.DynamoDb</AssemblyName>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <Version>0.25.0</Version>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>11</LangVersion>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <NoWarn>IDE0090</NoWarn>
