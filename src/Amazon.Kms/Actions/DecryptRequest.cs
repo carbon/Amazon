@@ -8,13 +8,18 @@ public sealed class DecryptRequest : KmsRequest
         IReadOnlyDictionary<string, string>? context,
         string[]? grantTokens = null)
     {
+#if NET7_0_OR_GREATER
+        ArgumentException.ThrowIfNullOrEmpty(keyId);
+#else
         ArgumentNullException.ThrowIfNull(keyId);
-        ArgumentNullException.ThrowIfNull(ciphertext);
 
         if (keyId.Length is 0)
         {
             throw new ArgumentException("Must not be empty", nameof(keyId));
         }
+#endif
+
+        ArgumentNullException.ThrowIfNull(ciphertext);
 
         if (ciphertext.Length is 0)
         {

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -117,9 +118,9 @@ public sealed class KmsClient : AwsClient
 
     private static async Task<Exception> GetExceptionFromResponseAsync(HttpResponseMessage response)
     {
-        string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        byte[] responseText = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
-        if (responseText.Length > 0 && responseText[0] == '{')
+        if (responseText.Length > 0 && responseText[0] is (byte)'{')
         {
             var error = JsonSerializer.Deserialize<KmsError>(responseText)!;
 
@@ -133,7 +134,7 @@ public sealed class KmsClient : AwsClient
         }
         else
         {
-            throw new AwsException(responseText, response.StatusCode);
+            throw new AwsException(Encoding.UTF8.GetString(responseText), response.StatusCode);
         }
     }
 

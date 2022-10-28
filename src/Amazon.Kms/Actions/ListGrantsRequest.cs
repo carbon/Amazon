@@ -8,8 +8,11 @@ public sealed class ListGrantsRequest : KmsRequest
 
     public ListGrantsRequest(string keyId)
     {
+#if NET7_0_OR_GREATER
+        ArgumentException.ThrowIfNullOrEmpty(keyId);
+#else
         ArgumentNullException.ThrowIfNull(keyId);
-
+#endif
         KeyId = keyId;
     }
 
