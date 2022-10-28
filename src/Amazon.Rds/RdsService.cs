@@ -31,7 +31,7 @@ public sealed class RdsService
 
         var date = DateTime.UtcNow;
 
-        var scope = new CredentialScope(date, _region, AwsService.RdsDb);
+        var scope = new CredentialScope(DateOnly.FromDateTime(date), _region, AwsService.RdsDb);
 
         var requestUri = new Uri($"https://{request.HostName}:{request.Port}?Action=connect&DBUser={request.UserName}");
 

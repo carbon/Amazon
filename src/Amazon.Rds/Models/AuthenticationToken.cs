@@ -9,7 +9,7 @@ public sealed class AuthenticationToken
         DateTime issued,
         DateTime expires)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        ArgumentException.ThrowIfNullOrEmpty(value);
 
         Value = value;
         Issued = issued;

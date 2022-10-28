@@ -9,8 +9,8 @@ public sealed class GetAuthenticationTokenRequest
 
     public GetAuthenticationTokenRequest(string hostname, int port, string userName, TimeSpan expires)
     {
-        ArgumentNullException.ThrowIfNull(hostname);
-        ArgumentNullException.ThrowIfNull(userName);
+        ArgumentException.ThrowIfNullOrEmpty(hostname);
+        ArgumentException.ThrowIfNullOrEmpty(userName);
 
         HostName = hostname;
         Port = port;
