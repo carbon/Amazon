@@ -6,7 +6,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>11</LangVersion>
+    <NoWarn>IDE0090</NoWarn>
     
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
