@@ -7,14 +7,14 @@ namespace Amazon.Ses;
 public sealed class BouncedRecipient
 {
     [JsonPropertyName("status")]
-    public string Status { get; init; }
+    public string Status { get; set; }
 
     [JsonPropertyName("action")]
-    public string Action { get; init; }
+    public string Action { get; set; }
 
     [JsonPropertyName("diagnosticCode")]
-    public string DiagnosticCode { get; init; }
+    public string DiagnosticCode { get; set; }
 
     [JsonPropertyName("emailAddress")]
-    public string EmailAddress { get; init; }
+    public string EmailAddress { get; set; }
 }

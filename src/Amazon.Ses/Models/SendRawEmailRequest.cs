@@ -29,34 +29,34 @@ public sealed class SendRawEmailRequest
 
     public List<KeyValuePair<string, string>> ToParams()
     {
-        var dic = new List<KeyValuePair<string, string>>(8);
+        var parameters = new List<KeyValuePair<string, string>>(8);
 
         if (ConfigurationSetName is not null)
         {
-            dic.Add(new ("ConfigurationSetName", Source));
+            parameters.Add(new ("ConfigurationSetName", Source));
         }
 
         if (Source is not null)
         {
-            dic.Add(new("Source", Source));
+            parameters.Add(new("Source", Source));
         }
 
         if (FromArn is not null)
         {
-            dic.Add(new("FromArn", FromArn));
+            parameters.Add(new("FromArn", FromArn));
         }
 
         if (ReturnPathArn is not null)
         {
-            dic.Add(new("ReturnPathArn", FromArn));
+            parameters.Add(new("ReturnPathArn", FromArn));
         }
 
-        dic.Add(new("RawMessage.Data", Convert.ToBase64String(RawMessage.Data)));
+        parameters.Add(new("RawMessage.Data", Convert.ToBase64String(RawMessage.Data)));
 
-        DestinationListHelper.AddDestinationList(RecipientType.To, To, dic);
-        DestinationListHelper.AddDestinationList(RecipientType.Cc, CC, dic);
-        DestinationListHelper.AddDestinationList(RecipientType.Bcc, BCC, dic);        
+        DestinationListHelper.AddDestinationList(RecipientType.To, To, parameters);
+        DestinationListHelper.AddDestinationList(RecipientType.Cc, CC, parameters);
+        DestinationListHelper.AddDestinationList(RecipientType.Bcc, BCC, parameters);        
 
-        return dic;
+        return parameters;
     }
 }

@@ -13,7 +13,7 @@ public static class QuotedPrintable
         string encoded = EncodeContent(text);
 
         return !encoded.Equals(text, StringComparison.Ordinal)
-            ? "=?utf-8?Q?" + encoded + "?="
+            ? $"=?utf-8?Q?{encoded}?="
             : text;
     }
 
@@ -35,15 +35,18 @@ public static class QuotedPrintable
 
     private static string EncodeContent(string value)
     {
-        if (string.IsNullOrEmpty(value)) return value;
+        if (string.IsNullOrEmpty(value))
+        {
+            return value;
+        }
+
+        byte[] rentedBuffer = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(value.Length));
+
+        ReadOnlySpan<byte> bytes = rentedBuffer.AsSpan(0, Encoding.UTF8.GetBytes(value, rentedBuffer));
 
         var sb = new StringBuilder();
 
-        byte[] buffer = ArrayPool<byte>.Shared.Rent(value.Length * 4);
-
-        int byteCount = Encoding.UTF8.GetBytes(value, buffer);
-
-        foreach (byte v in buffer.AsSpan(0, byteCount))
+        foreach (byte v in bytes)
         {
             // The following are not required to be encoded:
             // - Tab (ASCII 9)
@@ -60,7 +63,7 @@ public static class QuotedPrintable
             }
         }
 
-        ArrayPool<byte>.Shared.Return(buffer);
+        ArrayPool<byte>.Shared.Return(rentedBuffer);
 
         char lastChar = sb[^1];
 

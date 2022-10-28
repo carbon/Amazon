@@ -31,8 +31,8 @@ public sealed class EmailMessageDecryptor
 
         byte[] envelopeKey = Convert.FromBase64String(encryptedBlob.Properties["x-amz-meta-x-amz-key-v2"]);
         byte[] envelopeIV  = Convert.FromBase64String(encryptedBlob.Properties["x-amz-meta-x-amz-iv"]);
-        long contentLength = long.Parse(encryptedBlob.Properties["x-amz-meta-x-amz-unencrypted-content-length"], CultureInfo.InvariantCulture);
-        int tagLength      = int.Parse(encryptedBlob.Properties["x-amz-meta-x-amz-tag-len"], CultureInfo.InvariantCulture);
+        long contentLength = long.Parse(encryptedBlob.Properties["x-amz-meta-x-amz-unencrypted-content-length"], NumberStyles.None, CultureInfo.InvariantCulture);
+        int tagLength      = int.Parse(encryptedBlob.Properties["x-amz-meta-x-amz-tag-len"], NumberStyles.None, CultureInfo.InvariantCulture);
 
         if (tagLength != 128)
         {
