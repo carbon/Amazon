@@ -528,15 +528,15 @@ public static class SignerV4
     [SkipLocalsInit]
     private static void HMACSHA256_Hex(ReadOnlySpan<byte> key, ReadOnlySpan<char> data, Span<char> destination)
     {
-        var dataBuffer = ArrayPool<byte>.Shared.Rent(data.Length * 4);
+        byte[] rentedBuffer = ArrayPool<byte>.Shared.Rent(data.Length * 4);
 
-        int encodedByteCount = Encoding.UTF8.GetBytes(data, dataBuffer);
+        int encodedByteCount = Encoding.UTF8.GetBytes(data, rentedBuffer);
 
         Span<byte> hash = stackalloc byte[32];
 
-        HMACSHA256.HashData(key, dataBuffer.AsSpan(0, encodedByteCount), hash);
+        HMACSHA256.HashData(key, rentedBuffer.AsSpan(0, encodedByteCount), hash);
 
-        ArrayPool<byte>.Shared.Return(dataBuffer);
+        ArrayPool<byte>.Shared.Return(rentedBuffer);
 
         HexString.DecodeBytesTo(hash, destination);
     }

@@ -114,20 +114,20 @@ public static class S3ClientExtensions
             throw new Exception($"Expected {rangeLength} bytes. Was {result.ContentLength})");
         }
 
-        byte[] buffer = ArrayPool<byte>.Shared.Rent(bufferSize); // 64KiB
+        byte[] rentedBuffer = ArrayPool<byte>.Shared.Rent(bufferSize); // 64KiB
 
         try
         {
             int read = 0;
 
-            while ((read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0)
+            while ((read = await stream.ReadAsync(rentedBuffer, cancellationToken).ConfigureAwait(false)) > 0)
             {
                 if (remaining is 0)
                 {
                     throw new Exception("Stream returned more bytes than chuck size");
                 }
 
-                await RandomAccess.WriteAsync(fileHandle, buffer.AsMemory(0, read), fileOffset + position).ConfigureAwait(false);
+                await RandomAccess.WriteAsync(fileHandle, rentedBuffer.AsMemory(0, read), fileOffset + position).ConfigureAwait(false);
 
                 position += read;
                 remaining -= read;
@@ -135,7 +135,7 @@ public static class S3ClientExtensions
         }
         finally
         {
-            ArrayPool<byte>.Shared.Return(buffer);
+            ArrayPool<byte>.Shared.Return(rentedBuffer);
         }      
     }
 
