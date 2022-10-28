@@ -23,9 +23,9 @@ public sealed class SnsClient : AwsClient
 
     #region Helpers
 
-    private static FormUrlEncodedContent GetFormContent(Dictionary<string, string> parameters)
+    private static FormUrlEncodedContent GetFormContent(List<KeyValuePair<string, string>> parameters)
     {
-        parameters.Add("Version", Version);
+        parameters.Add(new ("Version", Version));
 
         return new FormUrlEncodedContent(parameters!);
     }

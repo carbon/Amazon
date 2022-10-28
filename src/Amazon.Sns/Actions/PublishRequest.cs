@@ -24,17 +24,17 @@ public sealed class PublishRequest
 
     public string? Subject { get; }
 
-    internal Dictionary<string, string> ToParams()
+    internal List<KeyValuePair<string, string>> ToParams()
     {
-        var dic = new Dictionary<string, string>(5) {
-            { "Action", "Publish" },
-            { "TopicArn", TopicArn },
-            { "Message", Message }
+        var dic = new List<KeyValuePair<string, string>>(5) {
+            new ("Action", "Publish"),
+            new ("TopicArn", TopicArn),
+            new ("Message", Message)
         };
 
         if (Subject is not null)
         {
-            dic.Add("Subject", Subject);
+            dic.Add(new ("Subject", Subject));
         }
 
         return dic;
