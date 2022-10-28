@@ -3,6 +3,27 @@
 public class RunInstanceRequestTests
 {
     [Fact]
+    public void CanConstruct()
+    {
+        var request = new RunInstancesRequest(null, null, 1, 100);
+
+        Assert.Equal(1,   request.MinCount);
+        Assert.Equal(100, request.MaxCount);
+    }
+
+    [Fact]
+    public void ThrowsWhenMaxCountGreaterThan100()
+    {
+        Assert.Throws<ArgumentException>(() => new RunInstancesRequest(null, null, 1, 101));
+    }
+
+    [Fact]
+    public void ThrowsWhenMinCountLessThan1()
+    {
+        Assert.Throws<ArgumentException>(() => new RunInstancesRequest(null, null, 0, 100));
+    }
+
+    [Fact]
     public void CanSerializeRequest()
     {
         var request = new RunInstancesRequest {

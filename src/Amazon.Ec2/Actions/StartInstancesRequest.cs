@@ -6,7 +6,7 @@ public sealed class StartInstancesRequest : IEc2Request
 {
     public StartInstancesRequest(params string[] instanceIds)
     {
-        ArgumentNullException.ThrowIfNull(instanceIds);
+        Ensure.NotEmpty(instanceIds);
 
         InstanceIds = instanceIds;
     }

@@ -21,11 +21,8 @@ public sealed class RunInstancesRequest : IEc2Request
         InstanceMetadataOptionsRequest? metadataOptions = null,
         string[]? securityGroupIds = null)
     {
-        if (minCount <= 0)
-            throw new ArgumentException("Must be > 0", nameof(minCount));
-
-        if (maxCount <= 0 || maxCount > 100)
-            throw new ArgumentException("Must be between 1 and 100", nameof(maxCount));
+        Ensure.AtLeast(minCount, 1);
+        Ensure.ValueBetween(maxCount, 1, 100);
 
         ImageId = imageId;
         InstanceType = instanceType;

@@ -6,7 +6,7 @@ public sealed class RebootInstancesRequest : IEc2Request
 {
     public RebootInstancesRequest(params string[] instanceIds)
     {
-        ArgumentNullException.ThrowIfNull(instanceIds);
+        Ensure.NotEmpty(instanceIds);
 
         InstanceIds = instanceIds;
     }

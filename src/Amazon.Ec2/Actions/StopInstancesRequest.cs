@@ -6,7 +6,7 @@ public sealed class StopInstancesRequest : IEc2Request
 {
     public StopInstancesRequest(params string[] instanceIds)
     {
-        ArgumentNullException.ThrowIfNull(instanceIds);
+        Ensure.NotEmpty(instanceIds);
 
         InstanceIds = instanceIds;
     }

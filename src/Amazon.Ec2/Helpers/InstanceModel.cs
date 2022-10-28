@@ -6,7 +6,7 @@ namespace Amazon.Ec2;
 
 internal sealed class InstanceModel
 {
-    private static readonly ConcurrentDictionary<Type, InstanceModel> models = new ConcurrentDictionary<Type, InstanceModel>();
+    private static readonly ConcurrentDictionary<Type, InstanceModel> models = new();
 
     public InstanceModel(IReadOnlyList<InstanceModelMember> members)
     {
