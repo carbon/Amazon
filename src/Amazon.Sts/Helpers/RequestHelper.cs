@@ -1,22 +1,25 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Amazon.Sts;
 
 internal static class StsRequestHelper
 {
-    private static readonly JsonSerializerOptions jso = new() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
-
-    public static Dictionary<string, string> ToParams<T>(T instance)
+    public static List<KeyValuePair<string, string>> ToParams<T>(T instance)
        where T : IStsRequest
     {
-        using var doc = JsonSerializer.SerializeToDocument(instance, jso);
+        using var doc = JsonSerializer.SerializeToDocument(instance);
 
-        var parameters = new Dictionary<string, string>(2);
+        var parameters = new List<KeyValuePair<string, string>>(4);
+
+        parameters.Add(new("Action", instance.Action));
 
         foreach (var member in doc.RootElement.EnumerateObject())
         {
-            parameters.Add(member.Name, member.Value.ToString()!);
+            if (member.Value.ValueKind is JsonValueKind.Null) continue;
+
+            var value = member.Value.ToString()!;
+
+            parameters.Add(new (member.Name, value));
         }
 
         return parameters;

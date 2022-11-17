@@ -6,5 +6,5 @@ public sealed class GetCallerIdentityRequest : IStsRequest
 
     public GetCallerIdentityRequest() { }
 
-    public string Action => "GetCallerIdentity";
+    string IStsRequest.Action => "GetCallerIdentity";
 }

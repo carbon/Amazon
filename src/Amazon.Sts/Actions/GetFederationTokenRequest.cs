@@ -14,7 +14,7 @@ public sealed class GetFederationTokenRequest : IStsRequest
         DurationSeconds = durationSeconds;
     }
 
-    public string Action => "GetFederationToken";
+    string IStsRequest.Action => "GetFederationToken";
 
     // 43,200 seconds (12 hours) default
     public int? DurationSeconds { get; }

@@ -3,14 +3,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Amazon.Sts.Exceptions;
+using Amazon.Sts.Serialization;
 
 namespace Amazon.Sts;
 
 public sealed class CallerIdentityVerifier 
 {
-    private readonly HttpClient httpClient = new () {
+    private readonly HttpClient _httpClient = new () {
         DefaultRequestHeaders = {
-            { "User-Agent", "Carbon/3" }
+            { "User-Agent", "Carbon/4" }
         }
     };
                 
@@ -41,7 +42,7 @@ public sealed class CallerIdentityVerifier
 
         // Our message should be signed
 
-        using HttpResponseMessage response = await httpClient.SendAsync(request).ConfigureAwait(false);
+        using HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
 
         string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -50,7 +51,7 @@ public sealed class CallerIdentityVerifier
             throw new StsException(responseText, response.StatusCode);
         }
 
-        return StsSerializer<GetCallerIdentityResponse>.Deserialize(responseText).GetCallerIdentityResult;
+        return StsXmlSerializer<GetCallerIdentityResponse>.Deserialize(responseText).GetCallerIdentityResult;
     }
 }
 

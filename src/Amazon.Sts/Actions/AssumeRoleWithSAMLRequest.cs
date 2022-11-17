@@ -1,6 +1,6 @@
 ﻿namespace Amazon.Sts;
 
-public sealed class AssumeRoleWithSAMLRequest : IStsRequest
+public sealed class AssumeRoleWithSamlRequest : IStsRequest
 {
-    public string Action => "AssumeRoleWithSAML";
+    string IStsRequest.Action => "AssumeRoleWithSAML";
 }

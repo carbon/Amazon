@@ -2,7 +2,7 @@
 
 public sealed class DecodeAuthorizationMessageRequest : IStsRequest
 {
-    public string Action => "DecodeAuthorizationMessage";
+    string IStsRequest.Action => "DecodeAuthorizationMessage";
 
     public DecodeAuthorizationMessageRequest(string encodedMessage)
     {

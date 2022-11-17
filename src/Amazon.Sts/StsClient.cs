@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Amazon.Sts.Exceptions;
+using Amazon.Sts.Serialization;
 
 namespace Amazon.Sts;
 
@@ -16,37 +17,36 @@ public sealed class StsClient : AwsClient
     {
     }
 
-    public Task<AssumeRoleResponse> AssumeRoleAsync(AssumeRoleResponseRequest request)
+    public Task<AssumeRoleResponse> AssumeRoleAsync(AssumeRoleRequest request)
     {
-        return SendAsync<AssumeRoleResponse>(request);
+        return SendAsync<AssumeRoleRequest, AssumeRoleResponse>(request);
     }
 
-    public Task<AssumeRoleWithSAMLResponse> AssumeRoleWithSAMLAsync(AssumeRoleWithSAMLRequest request)
+    public Task<AssumeRoleWithSamlResponse> AssumeRoleWithSAMLAsync(AssumeRoleWithSamlRequest request)
     {
-        return SendAsync<AssumeRoleWithSAMLResponse>(request);
+        return SendAsync<AssumeRoleWithSamlRequest, AssumeRoleWithSamlResponse>(request);
     }
 
     public Task<AssumeRoleWithWebIdentityResponse> AssumeRoleWithWebIdentityAsync(AssumeRoleWithWebIdentityRequest request)
     {
-        return SendAsync<AssumeRoleWithWebIdentityResponse>(request);
+        return SendAsync<AssumeRoleWithWebIdentityRequest, AssumeRoleWithWebIdentityResponse>(request);
     }
 
     public Task<DecodeAuthorizationMessageResponse> DecodeAuthorizationMessageAsync(DecodeAuthorizationMessageRequest request)
     {
-        return SendAsync<DecodeAuthorizationMessageResponse>(request);
+        return SendAsync<DecodeAuthorizationMessageRequest, DecodeAuthorizationMessageResponse>(request);
     }
 
     public Task<GetCallerIdentityResponse> GetCallerIdentityAsync()
     {
-        return SendAsync<GetCallerIdentityResponse>(GetCallerIdentityRequest.Default);
+        return SendAsync<GetCallerIdentityRequest, GetCallerIdentityResponse>(GetCallerIdentityRequest.Default);
     }
 
     public async ValueTask<CallerIdentityVerificationParameters> GetCallerIdentityVerificationParametersAsync()
     {
         const string body = $"Action=GetCallerIdentity&Version={Version}";
 
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-        {
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Content = new ByteArrayContent(Encoding.ASCII.GetBytes(body))
         };
 
@@ -71,18 +71,19 @@ public sealed class StsClient : AwsClient
 
     public Task<GetFederationTokenResponse> GetFederationTokenAsync(GetFederationTokenRequest request)
     {
-        return SendAsync<GetFederationTokenResponse>(request);
+        return SendAsync<GetFederationTokenRequest, GetFederationTokenResponse>(request);
     }
 
     public Task<GetSessionTokenResponse> GetSessionTokenAsync(GetSessionTokenRequest request)
     {
-        return SendAsync<GetSessionTokenResponse>(request);
+        return SendAsync<GetSessionTokenRequest, GetSessionTokenResponse>(request);
     }
 
     #region API Helpers
 
-    private async Task<TResponse> SendAsync<TResponse>(IStsRequest request)
-      where TResponse : IStsResponse
+    private async Task<TResponse> SendAsync<TRequest, TResponse>(TRequest request)
+        where TRequest : IStsRequest
+        where TResponse : IStsResponse
     {
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Content = GetPostContent(StsRequestHelper.ToParams(request))
@@ -90,14 +91,14 @@ public sealed class StsClient : AwsClient
 
         string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-        return StsSerializer<TResponse>.Deserialize(responseText);
+        return StsXmlSerializer<TResponse>.Deserialize(responseText);
     }
 
-    private static FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)
+    private static FormUrlEncodedContent GetPostContent(List<KeyValuePair<string, string>> parameters)
     {
-        parameters.Add("Version", Version);
+        parameters.Add(new ("Version", Version));
 
-        return new FormUrlEncodedContent(parameters!);
+        return new FormUrlEncodedContent(parameters);
     }
 
     protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)

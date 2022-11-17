@@ -13,8 +13,10 @@ public sealed class Credentials
     public string SecretAccessKey { get; init; }
 
     [XmlElement]
-    public string Expiration { get; init; }
+    public DateTime Expiration { get; init; }
 
     [XmlElement]
     public string AccessKeyId { get; init; }
+
+    public TimeSpan ExpiresIn => Expiration - DateTime.UtcNow;
 }

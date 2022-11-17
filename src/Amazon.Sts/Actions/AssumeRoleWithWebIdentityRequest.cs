@@ -4,7 +4,7 @@ namespace Amazon.Sts;
 
 public sealed class AssumeRoleWithWebIdentityRequest : IStsRequest
 {
-    public string Action => "AssumeRoleWithWebIdentity";
+    string IStsRequest.Action => "AssumeRoleWithWebIdentity";
 
     public int DurationSeconds { get; init; }
 
