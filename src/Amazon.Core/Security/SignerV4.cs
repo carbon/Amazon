@@ -17,23 +17,23 @@ public static class SignerV4
     private const string algorithmName     = "AWS4-HMAC-SHA256";
     private const string isoDateTimeFormat = "yyyyMMddTHHmmssZ";  // ISO8601
 
-    public static string GetStringToSign(in CredentialScope scope, HttpRequestMessage request)
-    {
-        return GetStringToSign(scope, request, out _);
-    }
+    private static readonly StringListPool listPool = new();
 
     [SkipLocalsInit]
-    public static string GetStringToSign(in CredentialScope scope, HttpRequestMessage request, out List<string> signedHeaders)
+    internal static string GetStringToSign(
+        HttpRequestMessage request,
+        in CredentialScope scope,
+        List<string> signedHeaderNames)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        string timestamp = request.Headers.NonValidated.TryGetValues("x-amz-date", out var xAmzDateHeader)
+        string timestamp = request.Headers.NonValidated.TryGetValues(XAmzHeaderNames.Date, out var xAmzDateHeader)
             ? xAmzDateHeader.ToString()
-            : throw new Exception("Missing 'x-amz-date' header");
+            : throw new Exception($"Missing '{XAmzHeaderNames.Date}' header");
 
         var sb = new ValueStringBuilder(stackalloc char[512]); // ~350
 
-        WriteCanonicalRequest(request, ref sb, out signedHeaders);
+        WriteCanonicalRequest(ref sb, request, signedHeaderNames);
 
         var result = GetStringToSign(
             scope            : scope,
@@ -61,38 +61,43 @@ public static class SignerV4
 
     // Timestamp format: ISO8601 Basic format, YYYYMMDD'T'HHMMSS'Z'
 
-    public static string GetCanonicalRequest(HttpRequestMessage request)
+    internal static string GetCanonicalRequest(HttpRequestMessage request)
     {
-        return GetCanonicalRequest(request, out _);
+        return GetCanonicalRequest(request, new List<string>());
     }
 
     [SkipLocalsInit]
-    public static string GetCanonicalRequest(HttpRequestMessage request, out List<string> signedHeaderNames)
+    internal static string GetCanonicalRequest(
+        HttpRequestMessage request,
+        List<string> signedHeaderNames)
     {
         ArgumentNullException.ThrowIfNull(request);
 
         var output = new ValueStringBuilder(stackalloc char[512]); // ~350
         
-        WriteCanonicalRequest(request, ref output, out signedHeaderNames);
+        WriteCanonicalRequest(ref output, request, signedHeaderNames);
 
         return output.ToString();
     }
 
-    internal static void WriteCanonicalRequest(HttpRequestMessage request, ref ValueStringBuilder output, out List<string> signedHeaderNames)
+    internal static void WriteCanonicalRequest(
+        ref ValueStringBuilder output, 
+        HttpRequestMessage request, 
+        List<string> signedHeaderNames)
     {
-        output.Append(request.Method.Method)                                  ; output.Append('\n'); // HTTPRequestMethod      + \n
-        WriteCanonicalizedUri(ref output, request.RequestUri!.AbsolutePath)   ; output.Append('\n'); // CanonicalURI           + \n
-        WriteCanonicalizedQueryString(ref output, request.RequestUri)         ; output.Append('\n'); // CanonicalQueryString   + \n
-        WriteCanonicalizedHeaders(ref output, request, out signedHeaderNames) ; output.Append('\n'); // CanonicalHeaders       + \n
-                                                                              ; output.Append('\n'); //                        + \n
-        output.AppendJoin(';', signedHeaderNames)                             ; output.Append('\n'); // SignedHeaders          + \n
-        output.Append(GetPayloadHash(request));                                                      // HexEncode(Hash(Payload))
+        output.Append(request.Method.Method)                                ; output.Append('\n'); // HTTPRequestMethod      + \n
+        WriteCanonicalizedUri(ref output, request.RequestUri!.AbsolutePath) ; output.Append('\n'); // CanonicalURI           + \n
+        WriteCanonicalizedQueryString(ref output, request.RequestUri)       ; output.Append('\n'); // CanonicalQueryString   + \n
+        WriteCanonicalizedHeaders(ref output, request, signedHeaderNames)   ; output.Append('\n'); // CanonicalHeaders       + \n
+                                                                            ; output.Append('\n'); //                        + \n
+        output.AppendJoin(';', signedHeaderNames)                           ; output.Append('\n'); // SignedHeaders          + \n
+        output.Append(GetPayloadHash(request));                                                    // HexEncode(Hash(Payload))
     }
 
     [SkipLocalsInit]
     public static string CanonicalizeUri(string path)
     {
-        if (path is "/")
+        if (path is " /")
         {
             return path;
         }
@@ -158,13 +163,7 @@ public static class SignerV4
     // If the payload is empty, use an empty string
     private static string GetPayloadHash(HttpRequestMessage request)
     {
-        // http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-streaming.html
-        // x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
-
-        // STREAMING-AWS4-HMAC-SHA256-PAYLOAD
-        // UNSIGNED-PAYLOAD
-
-        return request.Headers.NonValidated.TryGetValues("x-amz-content-sha256", out var contentSha256Header)
+        return request.Headers.NonValidated.TryGetValues(XAmzHeaderNames.ContentSHA256, out var contentSha256Header)
             ? contentSha256Header.ToString()
             : ComputeSHA256(request.Content);
     }
@@ -277,11 +276,7 @@ public static class SignerV4
             payloadHash          : payloadHash
         );
 
-        string stringToSign = GetStringToSign(
-            scope,
-            timestamp,
-            canonicalRequest
-        );
+        string stringToSign = GetStringToSign(scope, timestamp, canonicalRequest);
                         
         /*
         queryString = Action=action
@@ -325,18 +320,20 @@ public static class SignerV4
     public static void Sign(IAwsCredential credential, in CredentialScope scope, HttpRequestMessage request)
     {
         // If we're using S3, ensure the request content has been signed
-        if (scope.Service.Equals(AwsService.S3) && !request.Headers.NonValidated.Contains("x-amz-content-sha256"))
+        if (scope.Service.Equals(AwsService.S3) && !request.Headers.NonValidated.Contains(XAmzHeaderNames.ContentSHA256))
         {
-            request.Headers.TryAddWithoutValidation("x-amz-content-sha256", ComputeSHA256(request.Content));
+            request.Headers.TryAddWithoutValidation(XAmzHeaderNames.ContentSHA256, ComputeSHA256(request.Content));
         }
 
         Span<byte> signingKey = stackalloc byte[32];
 
         ComputeSigningKey(credential.SecretAccessKey, scope, signingKey);
 
-        string stringToSign = GetStringToSign(scope, request, out var signedHeaderNames);
+        var signedHeaderNames = listPool.Rent();
 
-        var authWriter = new ValueStringBuilder(stackalloc char[256]); // ~235
+        string stringToSign = GetStringToSign(request, scope, signedHeaderNames);
+
+        var authWriter = new ValueStringBuilder(stackalloc char[512]); // ~235
 
         // AWS4-HMAC-SHA256 Credential={0},SignedHeaders={0},Signature={0}
         // $"AWS4-HMAC-SHA256 Credential={credential.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
@@ -351,6 +348,8 @@ public static class SignerV4
         HMACSHA256_Hex(signingKey, stringToSign, authWriter.AppendSpan(64)); // signature
 
         request.Headers.TryAddWithoutValidation("Authorization", authWriter.ToString());
+
+        listPool.Return(signedHeaderNames);
     }
 
     public static string CanonicalizeQueryString(Uri uri)
@@ -446,29 +445,37 @@ public static class SignerV4
     }
 
     [SkipLocalsInit]
-    public static string CanonicalizeHeaders(HttpRequestMessage request, out List<string> signedHeaderNames)
+    internal static string CanonicalizeHeaders(
+        HttpRequestMessage request,
+        List<string> signedHeaderNames)
     {
         var output = new ValueStringBuilder(stackalloc char[256]); // ~155
 
-        WriteCanonicalizedHeaders(ref output, request, out signedHeaderNames);
+        WriteCanonicalizedHeaders(ref output, request, signedHeaderNames);
 
         return output.ToString();
     }
 
-    private static void WriteCanonicalizedHeaders(ref ValueStringBuilder output, HttpRequestMessage request, out List<string> signedHeaderNames)
+    private static void WriteCanonicalizedHeaders(
+        ref ValueStringBuilder output, 
+        HttpRequestMessage request, 
+        List<string> signedHeaderNames)
     {
-        signedHeaderNames = new List<string>(8);
-
-        if (request.Content is not null && request.Content.Headers.NonValidated.TryGetValues("Content-MD5", out var md5Header))
+        if (request.Content is not null)
         {
-            signedHeaderNames.Add("content-md5");
+            var contentHeaders = request.Content.Headers.NonValidated;
 
-            output.Append("content-md5:");
-            output.Append(md5Header.ToString());
-            output.Append('\n');
+            if (contentHeaders.TryGetValues("Content-MD5", out var md5Header))
+            {
+                signedHeaderNames.Add("content-md5");
+
+                output.Append("content-md5:");
+                output.Append(md5Header.ToString());
+                output.Append('\n');
+            }
         }
 
-        if (!request.Headers.NonValidated.Contains("x-amz-date") && request.Headers.NonValidated.TryGetValues("Date", out var dateHeader))
+        if (!request.Headers.NonValidated.Contains(XAmzHeaderNames.Date) && request.Headers.NonValidated.TryGetValues("Date", out var dateHeader))
         {
             signedHeaderNames.Add("date");
 
@@ -481,6 +488,9 @@ public static class SignerV4
 
         output.Append("host:");
         output.Append(request.Headers.Host);
+
+        // Convert header names to lowercase
+        // Order by name
 
         foreach (var header in request.Headers.NonValidated
             .Where(static item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
@@ -497,10 +507,6 @@ public static class SignerV4
             signedHeaderNames.Add(headerName);
         }
     }
-
-    // Convert all header names to lowercase
-    // Sort them by character code
-    // Use a semicolon to separate the header names
 
     // The host header must be included as a signed header.
 
