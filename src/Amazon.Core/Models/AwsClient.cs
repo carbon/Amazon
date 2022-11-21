@@ -82,10 +82,10 @@ public abstract class AwsClient
 
         if (_credential.SecurityToken is not null)
         {
-            request.Headers.Add("x-amz-security-token", _credential.SecurityToken);
+            request.Headers.Add(XAmzHeaderNames.SecurityToken, _credential.SecurityToken);
         }
 
-        request.Headers.Add("x-amz-date", date.UtcDateTime.ToString("yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture));
+        request.Headers.Add(XAmzHeaderNames.Date, date.UtcDateTime.ToString("yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture));
 
         SignerV4.Sign(_credential, scope: GetCredentialScope(request), request: request);
     }

@@ -73,7 +73,6 @@ public sealed partial class InstanceMetadataService
         request.Headers.Add("X-aws-ec2-metadata-token", token.Value);
 
         return httpClient.Send(request);
-
     }
 
     private MetadataToken GetToken(TimeSpan lifetime)
