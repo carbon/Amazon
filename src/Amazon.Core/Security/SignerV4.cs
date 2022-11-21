@@ -465,12 +465,34 @@ public static class SignerV4
         {
             var contentHeaders = request.Content.Headers.NonValidated;
 
+            /*
+            note Content-Length header is may not yet be materialized
+            see: https://github.com/dotnet/runtime/issues/25086
+            if (contentHeaders.TryGetValues("Content-Length", out var contentLengthHeader))
+            {
+                signedHeaderNames.Add("content-length");
+
+                output.Append("content-length:");
+                output.Append(contentLengthHeader.ToString());
+                output.Append('\n');
+            }
+            */
+
             if (contentHeaders.TryGetValues("Content-MD5", out var md5Header))
             {
                 signedHeaderNames.Add("content-md5");
 
                 output.Append("content-md5:");
                 output.Append(md5Header.ToString());
+                output.Append('\n');
+            }
+
+            if (contentHeaders.TryGetValues("Content-Type", out var contentTypeHeader))
+            {
+                signedHeaderNames.Add("content-type");
+
+                output.Append("content-type:");
+                output.Append(contentTypeHeader.ToString());
                 output.Append('\n');
             }
         }
