@@ -24,12 +24,12 @@ public sealed class BatchGetItemResult
 
         foreach (var property in json.EnumerateObject())
         {
-            if (property.NameEquals("ConsumedCapacity"))
+            if (property.NameEquals("ConsumedCapacity"u8))
             {
                 consumedCapacity = JsonSerializer.Deserialize<ConsumedCapacity[]>(property.Value);
             }
 
-            else if (property.NameEquals("Responses"))
+            else if (property.NameEquals("Responses"u8))
             {
                 var collections = new List<TableItemCollection>();
 

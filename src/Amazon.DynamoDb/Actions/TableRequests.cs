@@ -48,13 +48,13 @@ public sealed class TableRequests
 
             foreach (var property in request.EnumerateObject())
             {
-                if (property.NameEquals("PutRequest"))
+                if (property.NameEquals("PutRequest"u8))
                 {
                     var putRequest = JsonSerializer.Deserialize<PutRequest>(property.Value)!;
 
                     requests.Add(putRequest);
                 }
-                else if (property.NameEquals("DeleteRequest"))
+                else if (property.NameEquals("DeleteRequest"u8))
                 {
                     var deleteRequest = JsonSerializer.Deserialize<DeleteRequest>(property.Value)!;
 
