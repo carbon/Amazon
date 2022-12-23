@@ -1,5 +1,6 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
+
+using Microsoft.Extensions.ObjectPool;
 
 namespace Amazon.DynamoDb.JsonConverters;
 
@@ -7,6 +8,9 @@ using static DbValueTypeNames.Utf8;
 
 internal static class DbValueJsonSerializer
 {
+    private static readonly ObjectPool<List<string>> StringListPool   = ObjectPool.Create(new ObjectPoolListPolicy<string>());
+    private static readonly ObjectPool<List<DbValue>> DbValueListPool = ObjectPool.Create(new ObjectPoolListPolicy<DbValue>());
+
     public static DbValue Read(ref Utf8JsonReader reader)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
@@ -76,48 +80,63 @@ internal static class DbValueJsonSerializer
 
     private static string[] ReadStringArray(ref Utf8JsonReader reader)
     {
-        using var stringListHandle = ObjectListCache<string>.AcquireHandle();
+        var rentedStringList = StringListPool.Get();
 
-        reader.Read();
-        if (reader.TokenType != JsonTokenType.StartArray)
+        try
         {
-            throw new JsonException($"DbValue expected string array. Found {reader.TokenType}");
-        }
-
-        while (reader.Read())
-        {
-            if (reader.TokenType == JsonTokenType.EndArray)
+            reader.Read();
+            if (reader.TokenType != JsonTokenType.StartArray)
             {
-                break;
+                throw new JsonException($"DbValue expected string array. Found {reader.TokenType}");
             }
 
-            stringListHandle.Value.Add(reader.GetString()!);
-        }
+            while (reader.Read())
+            {
+                if (reader.TokenType is JsonTokenType.EndArray)
+                {
+                    break;
+                }
 
-        return stringListHandle.Value.ToArray();
+                rentedStringList.Add(reader.GetString()!);
+            }
+
+            return rentedStringList.ToArray();
+        }
+        finally
+        {
+            StringListPool.Return(rentedStringList);
+        }
     }
 
     private static DbValue[] ReadDbValueArray(ref Utf8JsonReader reader)
     {
-        using var dbValueListHandle = ObjectListCache<DbValue>.AcquireHandle();
+        var rentedDbValueList = DbValueListPool.Get();
 
-        reader.Read();
-        if (reader.TokenType != JsonTokenType.StartArray)
+        try
         {
-            throw new JsonException($"DbValue expected string array. Found {reader.TokenType}");
-        }
+            reader.Read();
 
-        while (reader.Read())
-        {
-            if (reader.TokenType == JsonTokenType.EndArray)
+            if (reader.TokenType != JsonTokenType.StartArray)
             {
-                break;
+                throw new JsonException($"DbValue expected string array. Found {reader.TokenType}");
             }
 
-            dbValueListHandle.Value.Add(Read(ref reader));
-        }
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.EndArray)
+                {
+                    break;
+                }
 
-        return dbValueListHandle.Value.ToArray();
+                rentedDbValueList.Add(Read(ref reader));
+            }
+
+            return rentedDbValueList.ToArray();
+        }
+        finally
+        {
+            DbValueListPool.Return(rentedDbValueList);
+        }
     }
 
     public static void Write(Utf8JsonWriter writer, DbValue dbValue)
