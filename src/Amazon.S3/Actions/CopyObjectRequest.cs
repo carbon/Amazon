@@ -4,8 +4,8 @@ namespace Amazon.S3;
 
 public sealed class CopyObjectRequest : S3Request
 {
-    public CopyObjectRequest(string host, S3ObjectLocation source, S3ObjectLocation target)
-        : base(HttpMethod.Put, host, target.BucketName, target.Key)
+    public CopyObjectRequest(string host, S3ObjectLocation source, S3ObjectLocation destination)
+        : base(HttpMethod.Put, host, destination.BucketName, destination.Key)
     {
         Headers.Add(S3HeaderNames.CopySource, $"/{source.BucketName}/{source.Key}");
 
