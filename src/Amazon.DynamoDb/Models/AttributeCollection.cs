@@ -2,11 +2,13 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Amazon.DynamoDb.Serialization;
+
 using Carbon.Data;
 
 namespace Amazon.DynamoDb;
 
-[JsonConverter(typeof(JsonConverters.AttributeCollectionConverter))]
+[JsonConverter(typeof(AttributeCollectionJsonConverter))]
 public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbValue>>, IReadOnlyDictionary<string, DbValue>
 {
     private readonly Dictionary<string, DbValue> _items;
@@ -114,7 +116,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
 
     public static AttributeCollection FromJsonElement(in JsonElement json)
     {
-        return JsonSerializer.Deserialize<AttributeCollection>(json)!;
+        return JsonSerializer.Deserialize(json, DynamoDbSerializationContext.Default.AttributeCollection)!;
     }
 
     public DbValue this[string key]
@@ -289,7 +291,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
 
         foreach (var attribute in _items)
         {
-            MemberDescriptor member = model[attribute.Key]!;
+            MemberDescriptor? member = model[attribute.Key];
 
             if (member is null) continue;
 
@@ -299,7 +301,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
 
                 member.SetValue(instance, value);
             }
-            else if (attribute.Value.Kind == DbValueType.M)
+            else if (attribute.Value.Kind is DbValueType.M)
             {
                 var map = (AttributeCollection)attribute.Value.Value;
 

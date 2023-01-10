@@ -2,11 +2,11 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
 
-using Amazon.DynamoDb.JsonConverters;
+using Amazon.DynamoDb.Serialization;
 
 namespace Amazon.DynamoDb;
 
-[JsonConverter(typeof(DbValueConverter))]
+[JsonConverter(typeof(DbValueJsonConverter))]
 public readonly struct DbValue : IConvertible
 {
 	public static readonly DbValue Empty = new (string.Empty, DbValueType.Unknown);

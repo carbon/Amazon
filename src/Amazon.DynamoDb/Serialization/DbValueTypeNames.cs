@@ -1,4 +1,4 @@
-﻿namespace Amazon.DynamoDb.JsonConverters;
+﻿namespace Amazon.DynamoDb.Serialization;
 
 internal static class DbValueTypeNames
 {

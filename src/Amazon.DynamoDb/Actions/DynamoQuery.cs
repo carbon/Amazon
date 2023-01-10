@@ -12,7 +12,7 @@ public sealed class DynamoQuery
 
     public DynamoQuery(params Expression[] conditions)
     {
-        if (conditions.Length == 0)
+        if (conditions.Length is 0)
         {
             return;
         }
@@ -67,7 +67,6 @@ public sealed class DynamoQuery
 
     public Dictionary<string, DbValue>? ExclusiveStartKey { get; set; }
 
-
     #region Helpers
 
     public DynamoQuery Descending()
@@ -119,19 +118,15 @@ public sealed class DynamoQuery
 
     public DynamoQuery Include(params string[] values)
     {
-        ExpressionAttributeNames ??= new Dictionary<string, string>();
+        ExpressionAttributeNames ??= new();
 
         var sb = StringBuilderCache.Aquire();
 
-        int i = 0;
-
         foreach (string value in values)
         {
-            if (i != 0) sb.Append(',');
+            if (sb.Length > 0) sb.Append(',');
 
             sb.WriteName(value, ExpressionAttributeNames);
-
-            i++;
         }
 
         ProjectionExpression = StringBuilderCache.ExtractAndRelease(sb);

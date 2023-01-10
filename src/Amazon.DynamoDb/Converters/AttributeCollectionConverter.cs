@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb;
 
-internal sealed class AttributeCollectionConverter : IDbValueConverter
+public sealed class AttributeCollectionConverter : IDbValueConverter
 {
     public DbValue FromObject(object value, IMember member) => new DbValue((AttributeCollection)value);
 

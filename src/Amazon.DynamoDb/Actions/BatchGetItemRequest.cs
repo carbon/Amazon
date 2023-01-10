@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-using Amazon.DynamoDb.JsonConverters;
+using Amazon.DynamoDb.Serialization;
 
 namespace Amazon.DynamoDb;
 

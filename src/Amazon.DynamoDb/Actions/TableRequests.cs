@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using Amazon.DynamoDb.Serialization;
+
 namespace Amazon.DynamoDb;
 
 public sealed class TableRequests
@@ -50,15 +52,15 @@ public sealed class TableRequests
             {
                 if (property.NameEquals("PutRequest"u8))
                 {
-                    var putRequest = JsonSerializer.Deserialize<PutRequest>(property.Value)!;
+                    var putRequest = JsonSerializer.Deserialize(property.Value, DynamoDbSerializationContext.Default.PutRequest);
 
-                    requests.Add(putRequest);
+                    requests.Add(putRequest!);
                 }
                 else if (property.NameEquals("DeleteRequest"u8))
                 {
-                    var deleteRequest = JsonSerializer.Deserialize<DeleteRequest>(property.Value)!;
+                    var deleteRequest = JsonSerializer.Deserialize(property.Value, DynamoDbSerializationContext.Default.DeleteRequest);
 
-                    requests.Add(deleteRequest);
+                    requests.Add(deleteRequest!);
                 }
             }
         }

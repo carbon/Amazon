@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Amazon.DynamoDb.JsonConverters;
+namespace Amazon.DynamoDb.Serialization;
 
 internal sealed class BatchGetItemRequestConverter : JsonConverter<BatchGetItemRequest>
 {
@@ -15,12 +15,12 @@ internal sealed class BatchGetItemRequestConverter : JsonConverter<BatchGetItemR
     public override void Write(Utf8JsonWriter writer, BatchGetItemRequest value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
-        writer.WriteStartObject("RequestItems");
+        writer.WriteStartObject("RequestItems"u8);
 
         foreach (TableKeys set in value.Sets)
         {
             writer.WriteStartObject(set.TableName);
-            writer.WriteStartArray("Keys");
+            writer.WriteStartArray("Keys"u8);
 
             foreach (var keySet in set.Keys)
             {
@@ -39,7 +39,7 @@ internal sealed class BatchGetItemRequestConverter : JsonConverter<BatchGetItemR
 
             if (set.AttributesToGet is { Length: > 0 })
             {
-                writer.WriteStartArray("AttributesToGet");
+                writer.WriteStartArray("AttributesToGet"u8);
 
                 foreach (var attr in set.AttributesToGet)
                 {
@@ -51,7 +51,7 @@ internal sealed class BatchGetItemRequestConverter : JsonConverter<BatchGetItemR
 
             if (set.ConsistentRead)
             {
-                writer.WriteBoolean("ConsistentRead", set.ConsistentRead);
+                writer.WriteBoolean("ConsistentRead"u8, set.ConsistentRead);
             }
 
             writer.WriteEndObject();
