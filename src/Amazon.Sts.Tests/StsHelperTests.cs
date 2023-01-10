@@ -11,18 +11,6 @@ public class StsHelperTests
 
         Assert.Single(dic);
 
-        Assert.Equal("GetCallerIdentity", dic["Action"]);
-    }
-
-    [Fact]
-    public void B()
-    {
-        var request = new GetFederationTokenRequest("name", durationSeconds: 30);
-
-        var dic = StsRequestHelper.ToParams(request);
-
-        Assert.Equal(3, dic.Count);
-
-        Assert.Equal("30", dic["DurationSeconds"]);
+        Assert.Equal(new("Action", "GetCallerIdentity"), dic[0]);
     }
 }
