@@ -1,13 +1,16 @@
-﻿namespace Amazon.CodeBuild;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Amazon.CodeBuild;
 
 public sealed class EnvironmentVariable
 {
     public EnvironmentVariable() { }
 
+    [SetsRequiredMembers]
     public EnvironmentVariable(string name, string value)
     {
         ArgumentException.ThrowIfNullOrEmpty(name);
-        ArgumentNullException.ThrowIfNull(value);
+        ArgumentException.ThrowIfNullOrEmpty(value);
 
         Name = name;
         Value = value;
