@@ -1,4 +1,4 @@
-﻿#nullable disable
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Amazon.Kinesis;
 
@@ -6,18 +6,19 @@ public sealed class DescribeStreamRequest : KinesisRequest
 {
     public DescribeStreamRequest() { }
 
+    [SetsRequiredMembers]
     public DescribeStreamRequest(string streamName)
     {
-        ArgumentNullException.ThrowIfNull(streamName);
+        ArgumentException.ThrowIfNullOrEmpty(streamName);
 
         StreamName = streamName;
     }
 
-    public string ExclusiveStartShardId { get; init; }
+    public string? ExclusiveStartShardId { get; init; }
 
     public int? Limit { get; init; }
 
-    public string StreamName { get; init; }
+    public required string StreamName { get; init; }
 }
 
 /*

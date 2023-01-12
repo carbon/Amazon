@@ -1,14 +1,12 @@
-﻿#nullable disable
-
-namespace Amazon.Kinesis;
+﻿namespace Amazon.Kinesis;
 
 public sealed class MergeShardsRequest : KinesisRequest
 {
-    public string AdjacentShardToMerge { get; init; }
+    public required string AdjacentShardToMerge { get; init; }
 
-    public string ShardToMerge { get; init; }
+    public required string ShardToMerge { get; init; }
 
-    public string StreamName { get; init; }
+    public required string StreamName { get; init; }
 }
 
 public sealed class MergeShardResult

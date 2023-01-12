@@ -1,15 +1,14 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Kinesis.Firehose;
 
 public sealed class UpdateDestinationRequest
 {
-    public string CurrentDeliveryStreamVersionId { get; init; }
+    public required string CurrentDeliveryStreamVersionId { get; init; }
 
-    public string DeliveryStreamName { get; init; }
+    [StringLength(64)]
+    public required string DeliveryStreamName { get; init; }
 
     [StringLength(100)]
-    public string DestinationId { get; init; }
+    public required string DestinationId { get; init; }
 }

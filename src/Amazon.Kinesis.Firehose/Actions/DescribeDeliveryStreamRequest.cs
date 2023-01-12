@@ -1,12 +1,8 @@
-﻿#nullable disable
-
-namespace Amazon.Kinesis.Firehose;
+﻿namespace Amazon.Kinesis.Firehose;
 
 public sealed class DescribeDeliveryStreamRequest
 {
-    public string DeliveryStreamName { get; init; }
-
-#nullable enable
+    public required string DeliveryStreamName { get; init; }
 
     public string? ExclusiveStartDestinationId { get; init; }
 
