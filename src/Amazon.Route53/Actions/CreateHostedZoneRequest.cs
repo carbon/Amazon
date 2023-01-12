@@ -6,7 +6,7 @@ public sealed class CreateHostedZoneRequest
 
     public CreateHostedZoneRequest(string name)
     {
-        ArgumentNullException.ThrowIfNull(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
         Name = name;
     }
@@ -17,9 +17,7 @@ public sealed class CreateHostedZoneRequest
 
     public HostedZoneConfig? HostedZoneConfig { get; set; }
 
-#nullable disable
-    public string Name { get; set; }
-#nullable enable
+    public required string Name { get; set; }
 
     public VPC? VPC { get; set; }
 }

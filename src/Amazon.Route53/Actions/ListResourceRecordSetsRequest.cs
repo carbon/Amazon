@@ -1,4 +1,4 @@
-﻿#nullable disable
+﻿using System.Diagnostics.CodeAnalysis;
 
 using Amazon.Helpers;
 
@@ -8,18 +8,19 @@ public sealed class ListResourceRecordSetsRequest
 {
     public ListResourceRecordSetsRequest() { }
 
+    [SetsRequiredMembers]
     public ListResourceRecordSetsRequest(string id)
     {
         Id = id;
     }
 
-    public string Id { get; set; }
+    public required string Id { get; set; }
 
-    public string Identifier { get; set; }
+    public string? Identifier { get; set; }
 
     public int? MaxItems { get; set; }
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     public ResourceRecordType? Type { get; set; }
 
@@ -43,9 +44,9 @@ public sealed class ListResourceRecordSetsRequest
             dic.Add("name", Name);
         }
 
-        if (Type != default)
+        if (Type.HasValue)
         {
-            dic.Add("type", Type.ToString());
+            dic.Add("type", Type.Value.ToString());
         }
 
         return dic.ToQueryString();

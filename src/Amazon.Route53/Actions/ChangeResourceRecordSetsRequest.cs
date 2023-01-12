@@ -1,5 +1,4 @@
-﻿#nullable disable
-
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 
 namespace Amazon.Route53;
@@ -9,47 +8,51 @@ public sealed class ChangeResourceRecordSetsRequest
 {
     public ChangeResourceRecordSetsRequest() { }
 
+    [SetsRequiredMembers]
     public ChangeResourceRecordSetsRequest(params ResourceRecordSetChange[] changes)
     {
         ChangeBatch = new ChangeBatch(changes);
     }
 
     [XmlElement]
-    public ChangeBatch ChangeBatch { get; init; }
+    public required ChangeBatch ChangeBatch { get; init; }
 }
 
 public sealed class ChangeBatch
 {
     public ChangeBatch() { }
 
+    [SetsRequiredMembers]
     public ChangeBatch(params ResourceRecordSetChange[] changes)
     {
         Changes = changes;
     }
 
     [XmlArrayItem("Change")]
-    public ResourceRecordSetChange[] Changes { get; init; }
+    public required ResourceRecordSetChange[] Changes { get; init; }
 }
 
 public sealed class ResourceRecordSetChange
 {
     public ResourceRecordSetChange() { }
 
+    [SetsRequiredMembers]
     public ResourceRecordSetChange(ChangeAction action, ResourceRecordSet resourceRecordSet)
     {
         Action = action;
         ResourceRecordSet = resourceRecordSet;
     }
 
+    [SetsRequiredMembers]
     public ResourceRecordSetChange(ChangeAction action, ResourceRecordType type, string name, string value, int ttl)
     {
         Action = action;
         ResourceRecordSet = new ResourceRecordSet(type, name, new ResourceRecord(value)) { TTL = ttl };
     }
 
-    public ChangeAction Action { get; init; }
+    public required ChangeAction Action { get; init; }
 
-    public ResourceRecordSet ResourceRecordSet { get; init; }
+    public required ResourceRecordSet ResourceRecordSet { get; init; }
 }
 
 public enum ChangeAction
