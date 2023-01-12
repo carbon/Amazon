@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 
 using Carbon.Storage;
+using Carbon.Storage.Helpers;
 
 using Microsoft.Win32.SafeHandles;
 
@@ -127,7 +128,7 @@ public static class S3ClientExtensions
                     throw new Exception("Stream returned more bytes than chuck size");
                 }
 
-                await RandomAccess.WriteAsync(fileHandle, rentedBuffer.AsMemory(0, read), fileOffset + position).ConfigureAwait(false);
+                await RandomAccess.WriteAsync(fileHandle, rentedBuffer.AsMemory(0, read), fileOffset + position, cancellationToken).ConfigureAwait(false);
 
                 position += read;
                 remaining -= read;
@@ -141,7 +142,7 @@ public static class S3ClientExtensions
 
     private static ByteRange[] GetRanges(long contentLength, int blockSize)
     {
-        int blockCount = GetBlockCount(contentLength, blockSize);
+        int blockCount = BlockHelper.GetBlockCount(contentLength, blockSize);
 
         if (blockCount > 10_000)
         {
@@ -153,7 +154,7 @@ public static class S3ClientExtensions
         for (int i = 0; i < ranges.Length; i++)
         {
             int rangeSize = (i + 1) == ranges.Length // tail
-                ? GetTailSize(contentLength, blockSize)
+                ? BlockHelper.GetTailSize(contentLength, blockSize)
                 : blockSize;
 
             long offset = (long)blockSize * i;
@@ -165,23 +166,5 @@ public static class S3ClientExtensions
         }
 
         return ranges;
-    }
-
-    private static int GetTailSize(long total, int blockSize)
-    {
-        var remaining = total % blockSize;
-
-        return remaining is 0 ? blockSize : (int)remaining;
-    }
-
-    private static int GetBlockCount(long totalSize, int blockSize)
-    {
-        if (totalSize is 0) return 0;
-
-        var blockCount = totalSize / blockSize;
-
-        if (totalSize % blockSize != 0) blockCount++;       
-
-        return (int)blockCount;
     }
 }
