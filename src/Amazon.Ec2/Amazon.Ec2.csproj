@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ec2</AssemblyName>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFramework>net7.0</TargetFramework>
     <Version>0.25.0</Version>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -11,7 +11,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
     <!-- Package Details-->
-    <Authors>iamcarbon</Authors>
+    <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A simple library for Amazon's EC2 service.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

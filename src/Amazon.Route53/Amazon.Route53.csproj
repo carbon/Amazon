@@ -2,11 +2,12 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Route53</AssemblyName>
-    <Version>0.9.0</Version>
-    <TargetFramework>net6.0</TargetFramework>
+    <Version>0.10.0</Version>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningAsErrors>true</TreatWarningAsErrors>
-    <LangVersion>preview</LangVersion>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
     <PackageId>Carbon.Amazon.Route53</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
