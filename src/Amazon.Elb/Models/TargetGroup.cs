@@ -46,7 +46,7 @@ public sealed class TargetGroup
     public int Port { get; init; }
 
     [XmlElement]
-    public string Protocol { get; init; }
+    public Protocol? Protocol { get; init; }
 
     // GRPC | HTTP1 | HTTP2
     [XmlElement]

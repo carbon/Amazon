@@ -10,7 +10,7 @@ public sealed class Listener
     public string LoadBalancerArn { get; init; }
 
     [XmlElement]
-    public string Protocol { get; init; }
+    public Protocol Protocol { get; init; }
 
     [XmlElement]
     public int Port { get; init; }

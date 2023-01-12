@@ -49,7 +49,7 @@ public class ModifyTargetGroupResponseTests
 
         Assert.Equal("200", tg_0.Matcher.HttpCode);
 
-        Assert.Equal("HTTPS", tg_0.Protocol);
+        Assert.Equal(Protocol.HTTPS, tg_0.Protocol.Value);
         Assert.Equal(443, tg_0.Port);
         Assert.Equal("vpc-3ac0fb5f", tg_0.VpcId);
         Assert.Equal(2, tg_0.UnhealthyThresholdCount);
