@@ -77,27 +77,33 @@ public class RunInstanceRequestTests
     public void CanSerializeRequestWithTags()
     {
         var request = new RunInstancesRequest {
+            MinCount = 1,
+            MaxCount = 2,
             TagSpecifications = new[] {
                 new TagSpecification("instance", new[] { new Tag("webserver", "production") })
             }
         };
 
-        Assert.Equal("Action=RunInstances&MaxCount=0&MinCount=0&TagSpecification.1.Tag.1.Key=webserver&TagSpecification.1.Tag.1.Value=production&TagSpecification.1.ResourceType=instance", request.Serialize());
+        Assert.Equal("Action=RunInstances&MaxCount=2&MinCount=1&TagSpecification.1.Tag.1.Key=webserver&TagSpecification.1.Tag.1.Value=production&TagSpecification.1.ResourceType=instance", request.Serialize());
     }
 
     [Fact]
     public void CanSerializeRequest4()
     {
         var request = new RunInstancesRequest {
+            MinCount = 1,
+            MaxCount = 1,
             IamInstanceProfile = new IamInstanceProfileSpecification("hello")
         };
 
-        Assert.Equal("Action=RunInstances&IamInstanceProfile.Name=hello&MaxCount=0&MinCount=0", request.Serialize());
+        Assert.Equal("Action=RunInstances&IamInstanceProfile.Name=hello&MaxCount=1&MinCount=1", request.Serialize());
 
         request = new RunInstancesRequest {
+            MinCount = 1,
+            MaxCount = 2,
             IamInstanceProfile = new IamInstanceProfileSpecification("arn:hello")
         };
 
-        Assert.Equal("Action=RunInstances&IamInstanceProfile.Arn=arn:hello&MaxCount=0&MinCount=0", request.Serialize());
+        Assert.Equal("Action=RunInstances&IamInstanceProfile.Arn=arn:hello&MaxCount=2&MinCount=1", request.Serialize());
     }
 }

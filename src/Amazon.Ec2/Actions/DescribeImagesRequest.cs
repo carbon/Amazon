@@ -8,10 +8,10 @@ public sealed class DescribeImagesRequest : DescribeRequest, IEc2Request
     {
         ArgumentNullException.ThrowIfNull(imageIds);
 
-        ImageIds.AddRange(imageIds);
+        ImageIds = imageIds;
     }
 
-    public List<string> ImageIds { get; } = new();
+    public string[]? ImageIds { get; }
 
     public List<string> OwnerIds { get; } = new();
 

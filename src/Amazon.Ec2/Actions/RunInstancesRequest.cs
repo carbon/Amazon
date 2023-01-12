@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace Amazon.Ec2;
 
 public sealed class RunInstancesRequest : IEc2Request
 {
-#nullable disable
     public RunInstancesRequest() { }
-#nullable enable
 
+    [SetsRequiredMembers]
     public RunInstancesRequest(
         string imageId,
         string instanceType,
@@ -59,7 +59,7 @@ public sealed class RunInstancesRequest : IEc2Request
 
     // [Required]
     [DataMember(Order = 7)]
-    public string ImageId { get; set; }
+    public string? ImageId { get; set; }
 
     // stop | terminate
     [DataMember(Order = 8)]
@@ -80,11 +80,11 @@ public sealed class RunInstancesRequest : IEc2Request
 
     [Range(1, 100)]
     [DataMember(Order = 13)]
-    public int MaxCount { get; set; }
+    public required int MaxCount { get; set; }
 
     [Range(1, 100)]
     [DataMember(Order = 14)]
-    public int MinCount { get; set; }
+    public required int MinCount { get; set; }
 
     [DataMember(Order = 15)]
     public InstanceMetadataOptionsRequest? MetadataOptions { get; set; }
