@@ -22,16 +22,16 @@ public class CreateGrantTests
         Assert.Equal(
             """
             {
+              "KeyId": "key",
+              "GranteePrincipal": "principle",
+              "Operations": [
+                "Decrypt"
+              ],
               "Constraints": {
                 "EncryptionContextEquals": {
                   "vault": "master"
                 }
-              },
-              "GranteePrincipal": "principle",
-              "KeyId": "key",
-              "Operations": [
-                "Decrypt"
-              ]
+              }
             }
             """, JsonSerializer.Serialize(request, JSO.Default));
     }

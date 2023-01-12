@@ -8,17 +8,3 @@ public sealed class DecryptResponse : KmsResponse
 
     public byte[] Plaintext { get; init; }
 }
-
-/*
-{
-   "EncryptionContext": 
-    {
-        "string" : "string"
-    },
-    "GrantTokens": [
-        "string"
-    ],
-    "KeyId": "string",
-    "Plaintext": blob
-}
-*/

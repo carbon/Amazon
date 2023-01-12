@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Amazon.Kms;
+﻿namespace Amazon.Kms;
 
 public sealed class GrantConstraints
 {

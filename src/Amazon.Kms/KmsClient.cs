@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -87,8 +88,7 @@ public sealed class KmsClient : AwsClient
             Headers = {
                 { "x-amz-target", $"TrentService.{action}" }
             },
-            Content = new ByteArrayContent(jsonBytes)
-            {
+            Content = new ByteArrayContent(jsonBytes) {
                 Headers = {
                     { "Content-Type", "application/x-amz-json-1.1" }
                 }
@@ -109,9 +109,7 @@ public sealed class KmsClient : AwsClient
             return null!;
         }
 
-        using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-        var result = await JsonSerializer.DeserializeAsync<TResult>(responseStream).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync<TResult>().ConfigureAwait(false);
 
         return result!;
     }

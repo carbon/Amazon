@@ -8,17 +8,3 @@ public sealed class CreateGrantResponse : KmsResponse
 
     public string GrantToken { get; init; }
 }
-
-/*
-{
-   "EncryptionContext": 
-    {
-        "string" : "string"
-    },
-    "GrantTokens": [
-        "string"
-    ],
-    "KeyId": "string",
-    "Plaintext": blob
-}
-*/

@@ -43,9 +43,9 @@ public sealed class KmsProtector
         IEnumerable<KeyValuePair<string, string>>? context = null)
     {
         var result = await _client.GenerateDataKeyAsync(new GenerateDataKeyRequest(
-           keyId: _keyId,
-           keySpec: KeySpec.AES_256,
-           encryptionContext: GetEncryptionContext(context)
+           keyId             : _keyId,
+           keySpec           : KeySpec.AES_256,
+           encryptionContext : GetEncryptionContext(context)
        )).ConfigureAwait(false);
 
         return result;

@@ -20,10 +20,10 @@ public sealed class Grant
 
     public string[] Operations { get; init; }
 
-    public string RetiringPrincipal { get; init; }
-
     // UnixTime seconds
     public double CreationDate { get; init; }
+
+    public string RetiringPrincipal { get; init; }
 }
 
 /*
