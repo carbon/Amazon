@@ -1,11 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.Elb;
+﻿namespace Amazon.Elb;
 
 public sealed class SetRulePrioritiesRequest : IElbRequest
 {
-    public string Action => "SetRulePriorities";
-
     public SetRulePrioritiesRequest(RulePriorityPair[] rulePriorities)
     {
         ArgumentNullException.ThrowIfNull(rulePriorities);
@@ -13,6 +9,7 @@ public sealed class SetRulePrioritiesRequest : IElbRequest
         RulePriorities = rulePriorities;
     }
 
-    [Required]
+    public string Action => "SetRulePriorities";
+
     public RulePriorityPair[] RulePriorities { get; }
 }

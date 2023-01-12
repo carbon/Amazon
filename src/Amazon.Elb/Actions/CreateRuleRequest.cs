@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb;
 
@@ -8,13 +6,12 @@ public sealed class CreateRuleRequest : IElbRequest
 {
     public string Action => "CreateRule";
 
-    public Action[] Actions { get; init; }
+    public required Action[] Actions { get; init; }
 
-    public RuleCondition[] Conditions { get; init; }
+    public required RuleCondition[] Conditions { get; init; }
 
-    [Required]
-    public string ListenerArn { get; init; }
+    public required string ListenerArn { get; init; }
 
     [Range(1, 99_999)]
-    public int Priority { get; init; }
+    public required int Priority { get; init; }
 }

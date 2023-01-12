@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Amazon.Elb;
 
@@ -8,11 +6,12 @@ public sealed class DeregisterTargetsRequest : IElbRequest
 {
     public DeregisterTargetsRequest() { }
 
+    [SetsRequiredMembers]
     public DeregisterTargetsRequest(
         string targetGroupArn,
         params TargetDescription[] targets)
     {
-        ArgumentNullException.ThrowIfNull(targetGroupArn);
+        ArgumentException.ThrowIfNullOrEmpty(targetGroupArn);
         ArgumentNullException.ThrowIfNull(targets);
 
         TargetGroupArn = targetGroupArn;
@@ -21,9 +20,7 @@ public sealed class DeregisterTargetsRequest : IElbRequest
 
     public string Action => "DeregisterTargets";
 
-    [Required]
-    public string TargetGroupArn { get; init; }
+    public required string TargetGroupArn { get; init; }
 
-    [Required]
-    public TargetDescription[] Targets { get; init; }
+    public required TargetDescription[] Targets { get; init; }
 }

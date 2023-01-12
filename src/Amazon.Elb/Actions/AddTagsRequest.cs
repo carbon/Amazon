@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-namespace Amazon.Elb;
+﻿namespace Amazon.Elb;
 
 public sealed class AddTagsRequest : IElbRequest
 {
@@ -17,7 +15,7 @@ public sealed class AddTagsRequest : IElbRequest
 
     public string Action => "AddTags";
 
-    public string[] ResourceArns { get; init; }
+    public required string[] ResourceArns { get; init; }
 
-    public Tag[] Tags { get; init; }
+    public required Tag[] Tags { get; init; }
 }

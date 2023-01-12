@@ -1,12 +1,10 @@
-﻿#nullable disable
-
-namespace Amazon.Elb;
+﻿namespace Amazon.Elb;
 
 public sealed class RemoveTagsRequest : IElbRequest
 {
     public string Action => "RemoveTags";
 
-    public string[] ResourceArns { get; init; }
+    public required string[] ResourceArns { get; init; }
 
-    public string[] TagKeys { get; init; }
+    public required string[] TagKeys { get; init; }
 }

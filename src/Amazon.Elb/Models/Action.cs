@@ -1,11 +1,14 @@
 ﻿#nullable disable
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Amazon.Elb;
 
 public sealed class Action
 {
     public Action() { }
 
+    [SetsRequiredMembers]
     public Action(string targetGroupArn, string type = "forward")
     {
         TargetGroupArn = targetGroupArn;
@@ -15,5 +18,5 @@ public sealed class Action
     public string TargetGroupArn { get; init; }
 
     // forward
-    public string Type { get; init; }
+    public required string Type { get; init; }
 }

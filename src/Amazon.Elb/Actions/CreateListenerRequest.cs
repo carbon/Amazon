@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Amazon.Elb;
 
@@ -8,22 +6,20 @@ public sealed class CreateListenerRequest : IElbRequest
 {
     public string Action => "CreateListener";
 
-    public string LoadBalancerArn { get; init; }
+    public required string LoadBalancerArn { get; init; }
 
-    public Certificate[] Certificates { get; init; }
+    public Certificate[]? Certificates { get; init; }
 
-    public List<Action> Actions { get; } = new();
+    public List<Action> DefaultActions { get; } = new();
 
     [Range(1, 65535)]
-    public ushort Port { get; init; }
+    public ushort? Port { get; init; }
 
-    [Required]
-    public string Protocal { get; init; }
+    public required Protocol Protocal { get; init; }
 
-    public string SslPolicy { get; init; }
+    public string? SslPolicy { get; init; }
 
     // Certificates
-    // Default actions
 }
 
 /*

@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Amazon.Elb;
 
@@ -8,9 +6,10 @@ public sealed class RegisterTargetsRequest : IElbRequest
 {
     public RegisterTargetsRequest() { }
 
+    [SetsRequiredMembers]
     public RegisterTargetsRequest(string targetGroupArn, params TargetDescription[] targets)
     {
-        ArgumentNullException.ThrowIfNull(targetGroupArn);
+        ArgumentException.ThrowIfNullOrEmpty(targetGroupArn);
         ArgumentNullException.ThrowIfNull(targets);
 
         TargetGroupArn = targetGroupArn;
@@ -19,9 +18,7 @@ public sealed class RegisterTargetsRequest : IElbRequest
 
     public string Action => "RegisterTargets";
 
-    [Required]
-    public string TargetGroupArn { get; init; }
+    public required string TargetGroupArn { get; init; }
 
-    [Required]
-    public TargetDescription[] Targets { get; init; }
+    public required TargetDescription[] Targets { get; init; }
 }
