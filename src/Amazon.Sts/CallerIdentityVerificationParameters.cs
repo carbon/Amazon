@@ -11,7 +11,7 @@ public sealed class CallerIdentityVerificationParameters
 
     public CallerIdentityVerificationParameters(string url, IReadOnlyDictionary<string, string> headers, string body)
     {
-        ArgumentNullException.ThrowIfNull(url);
+        ArgumentException.ThrowIfNullOrEmpty(url);
         ArgumentNullException.ThrowIfNull(headers);
         ArgumentNullException.ThrowIfNull(body);
 

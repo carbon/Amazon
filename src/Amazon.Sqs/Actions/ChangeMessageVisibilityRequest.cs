@@ -7,7 +7,7 @@ public sealed class ChangeMessageVisibilityRequest
 {
     public ChangeMessageVisibilityRequest(string receiptHandle, TimeSpan visibilityTimeout)
     {
-        ArgumentNullException.ThrowIfNull(receiptHandle);
+        ArgumentException.ThrowIfNullOrEmpty(receiptHandle);
 
         if (visibilityTimeout < TimeSpan.Zero)
         {

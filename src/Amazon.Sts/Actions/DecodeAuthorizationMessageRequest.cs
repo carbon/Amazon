@@ -6,7 +6,7 @@ public sealed class DecodeAuthorizationMessageRequest : IStsRequest
 
     public DecodeAuthorizationMessageRequest(string encodedMessage)
     {
-        ArgumentNullException.ThrowIfNull(encodedMessage);
+        ArgumentException.ThrowIfNullOrEmpty(encodedMessage);
 
         EncodedMessage = encodedMessage;
     }

@@ -6,7 +6,7 @@ public readonly struct KinesisIterator : IIterator
 {
     public KinesisIterator(string value)
     {
-        ArgumentNullException.ThrowIfNull(value);
+        ArgumentException.ThrowIfNullOrEmpty(value);
 
         Value = value;
     }

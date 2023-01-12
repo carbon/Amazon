@@ -4,7 +4,7 @@ public sealed class WorkmailAction
 {
     public WorkmailAction(string organizationArn, string? topicArn = null)
     {
-        ArgumentNullException.ThrowIfNull(organizationArn);
+        ArgumentException.ThrowIfNullOrEmpty(organizationArn);
 
         OrganizationArn = organizationArn;
         TopicArn = topicArn;

@@ -4,7 +4,7 @@ public sealed class DescribeLoadBalancerAttributesRequest : IElbRequest
 {
     public DescribeLoadBalancerAttributesRequest(string loadBalancerArn)
     {
-        ArgumentNullException.ThrowIfNull(loadBalancerArn);
+        ArgumentException.ThrowIfNullOrEmpty(loadBalancerArn);
 
         LoadBalancerArn = loadBalancerArn;
     }

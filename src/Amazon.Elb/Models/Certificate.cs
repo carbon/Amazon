@@ -10,7 +10,7 @@ public sealed class Certificate
 
     public Certificate(string arn)
     {
-        ArgumentNullException.ThrowIfNull(arn);
+        ArgumentException.ThrowIfNullOrEmpty(arn);
 
         CertificateArn = arn;
     }

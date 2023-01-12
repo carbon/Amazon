@@ -8,8 +8,8 @@ public class GetShardIteratorRequest : KinesisRequest
         ShardIteratorType type,
         string? startingSequenceNumber = null)
     {
-        ArgumentNullException.ThrowIfNull(streamName);
-        ArgumentNullException.ThrowIfNull(shardId);
+        ArgumentException.ThrowIfNullOrEmpty(streamName);
+        ArgumentException.ThrowIfNullOrEmpty(shardId);
 
         StreamName = streamName;
         ShardId = shardId;

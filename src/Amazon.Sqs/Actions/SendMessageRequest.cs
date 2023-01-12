@@ -6,14 +6,14 @@ public sealed class SendMessageRequest
 {
     public SendMessageRequest(string body)
     {
-        ArgumentNullException.ThrowIfNull(body);
+        ArgumentException.ThrowIfNullOrEmpty(body);
 
         MessageBody = body;
     }
 
     public SendMessageRequest(string body, string messageDeduplicationId, string messageGroupId)
     {
-        ArgumentNullException.ThrowIfNull(body);
+        ArgumentException.ThrowIfNullOrEmpty(body);
 
         MessageBody = body;
         MessageDeduplicationId = messageDeduplicationId;

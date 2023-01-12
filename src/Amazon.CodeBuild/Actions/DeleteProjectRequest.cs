@@ -4,7 +4,7 @@ public sealed class DeleteProjectRequest : ICodeBuildRequest
 {
     public DeleteProjectRequest(string name)
     {
-        ArgumentNullException.ThrowIfNull(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
         Name = name;
     }

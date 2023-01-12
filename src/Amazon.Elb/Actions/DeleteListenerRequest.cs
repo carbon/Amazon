@@ -4,7 +4,7 @@ public sealed class DeleteListenerRequest : IElbRequest
 {
     public DeleteListenerRequest(string listenerArn)
     {
-        ArgumentNullException.ThrowIfNull(listenerArn);
+        ArgumentException.ThrowIfNullOrEmpty(listenerArn);
 
         ListenerArn = listenerArn;
     }

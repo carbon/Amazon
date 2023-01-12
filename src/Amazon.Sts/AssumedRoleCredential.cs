@@ -15,8 +15,8 @@ public sealed class AssumedRoleCredential : IAwsCredential
 
     public AssumedRoleCredential(AwsRegion region, IAwsCredential credential, string roleArn, string roleSession)
     {
-        ArgumentNullException.ThrowIfNull(roleArn);
-        ArgumentNullException.ThrowIfNull(roleSession);
+        ArgumentException.ThrowIfNullOrEmpty(roleArn);
+        ArgumentException.ThrowIfNullOrEmpty(roleSession);
 
         _roleArn = roleArn;
         _roleSession = roleSession;
@@ -25,8 +25,8 @@ public sealed class AssumedRoleCredential : IAwsCredential
 
     public AssumedRoleCredential(StsClient stsClient, string roleArn, string roleSession)
     {
-        ArgumentNullException.ThrowIfNull(roleArn);
-        ArgumentNullException.ThrowIfNull(roleSession);
+        ArgumentException.ThrowIfNullOrEmpty(roleArn);
+        ArgumentException.ThrowIfNullOrEmpty(roleSession);
 
         _roleArn = roleArn;
         _roleSession = roleSession;

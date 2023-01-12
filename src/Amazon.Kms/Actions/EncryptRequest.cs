@@ -10,7 +10,7 @@ public sealed class EncryptRequest : KmsRequest
         IReadOnlyDictionary<string, string>? context = null,
         string[]? grantTokens = null)
     {
-        ArgumentNullException.ThrowIfNull(keyId);
+        ArgumentException.ThrowIfNullOrEmpty(keyId);
         ArgumentNullException.ThrowIfNull(plaintext);
 
         if (keyId.Length is 0)

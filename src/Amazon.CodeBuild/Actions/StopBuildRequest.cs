@@ -4,7 +4,7 @@ public sealed class StopBuildRequest : ICodeBuildRequest
 {
     public StopBuildRequest(string id)
     {
-        ArgumentNullException.ThrowIfNull(id);
+        ArgumentException.ThrowIfNullOrEmpty(id);
 
         Id = id;
     }

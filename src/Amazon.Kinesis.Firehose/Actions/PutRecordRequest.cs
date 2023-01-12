@@ -4,7 +4,7 @@ public sealed class PutRecordRequest
 {
     public PutRecordRequest(string deliveryStreamName, Record record)
     {
-        ArgumentNullException.ThrowIfNull(deliveryStreamName);
+        ArgumentException.ThrowIfNullOrEmpty(deliveryStreamName);
 
         DeliveryStreamName = deliveryStreamName;
         Record = record;

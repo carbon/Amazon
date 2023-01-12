@@ -7,7 +7,7 @@ public sealed class ListBuildsForProjectRequest : ICodeBuildRequest
         string? sortOrder = null,
         string? nextToken = null)
     {
-        ArgumentNullException.ThrowIfNull(projectName);
+        ArgumentException.ThrowIfNullOrEmpty(projectName);
 
         ProjectName = projectName;
         SortOrder = sortOrder;

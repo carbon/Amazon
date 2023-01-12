@@ -4,7 +4,7 @@ public sealed class PutRecordBatchRequest
 {
     public PutRecordBatchRequest(string deliveryStreamName, params Record[] records)
     {
-        ArgumentNullException.ThrowIfNull(deliveryStreamName);
+        ArgumentException.ThrowIfNullOrEmpty(deliveryStreamName);
         ArgumentNullException.ThrowIfNull(records);
 
         DeliveryStreamName = deliveryStreamName;

@@ -2,14 +2,14 @@
 
 public sealed class DeleteTargetGroupRequest : IElbRequest
 {
-    public string Action => "DeleteTargetGroup";
-
     public DeleteTargetGroupRequest(string targetGroupArn)
     {
-        ArgumentNullException.ThrowIfNull(targetGroupArn);
+        ArgumentException.ThrowIfNullOrEmpty(targetGroupArn);
 
         TargetGroupArn = targetGroupArn;
     }
+
+    public string Action => "DeleteTargetGroup";
 
     public string TargetGroupArn { get; }
 }

@@ -4,7 +4,7 @@ public sealed class DeleteDocumentRequest : ISsmRequest
 {
     public DeleteDocumentRequest(string name)
     {
-        ArgumentNullException.ThrowIfNull(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
         Name = name;
     }

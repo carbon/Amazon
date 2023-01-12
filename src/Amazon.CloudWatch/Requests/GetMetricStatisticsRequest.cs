@@ -6,8 +6,8 @@ public sealed class GetMetricStatisticsRequest
 {
     public GetMetricStatisticsRequest(string nameSpace, string metricName)
     {
-        ArgumentNullException.ThrowIfNull(nameSpace);
-        ArgumentNullException.ThrowIfNull(metricName);
+        ArgumentException.ThrowIfNullOrEmpty(nameSpace);
+        ArgumentException.ThrowIfNullOrEmpty(metricName);
 
         Namespace = nameSpace;
         MetricName = metricName;

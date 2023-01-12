@@ -6,8 +6,8 @@ public sealed class SetIpAddressTypeRequest : IElbRequest
 
     public SetIpAddressTypeRequest(string ipAddressType, string loadBalancerArn)
     {
-        ArgumentNullException.ThrowIfNull(ipAddressType);
-        ArgumentNullException.ThrowIfNull(loadBalancerArn);
+        ArgumentException.ThrowIfNullOrEmpty(ipAddressType);
+        ArgumentException.ThrowIfNullOrEmpty(loadBalancerArn);
 
         IpAddressType = ipAddressType;
         LoadBalancerArn = loadBalancerArn;

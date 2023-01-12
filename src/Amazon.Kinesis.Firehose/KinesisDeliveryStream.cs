@@ -6,7 +6,7 @@ public class DeliveryStream
 
     public DeliveryStream(string name, KinesisFirehoseClient client)
     {
-        ArgumentNullException.ThrowIfNull(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
         ArgumentNullException.ThrowIfNull(client);
 
         Name = name;

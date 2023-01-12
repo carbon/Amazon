@@ -10,8 +10,8 @@ public sealed class AssumeRoleRequest : IStsRequest
         TimeSpan? duration = null,
         JsonElement? policy = null)
     {
-        ArgumentNullException.ThrowIfNull(roleArn);
-        ArgumentNullException.ThrowIfNull(roleSessionName);
+        ArgumentException.ThrowIfNullOrEmpty(roleArn);
+        ArgumentException.ThrowIfNullOrEmpty(roleSessionName);
 
         RoleArn = roleArn;
         RoleSessionName = roleSessionName;
@@ -37,9 +37,9 @@ public sealed class AssumeRoleRequest : IStsRequest
 
     public int? DurationSeconds { get; }
 
-    public string RoleArn { get; init; }
+    public string RoleArn { get; }
 
-    public string RoleSessionName { get; init; }
+    public string RoleSessionName { get; }
 
-    public JsonElement? Policy { get; init; }
+    public JsonElement? Policy { get; }
 }
