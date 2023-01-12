@@ -4,7 +4,7 @@ public sealed class SnsAction
 {
     public SnsAction(string topicArn, string? encoding = null)
     {
-        ArgumentNullException.ThrowIfNull(topicArn);
+        ArgumentException.ThrowIfNullOrEmpty(topicArn);
 
         TopicArn = topicArn;
         Encoding = encoding;
@@ -13,5 +13,5 @@ public sealed class SnsAction
     // UTF-8 | Base64
     public string? Encoding { get; set; }
 
-    public string TopicArn { get; set; }
+    public required string TopicArn { get; set; }
 }

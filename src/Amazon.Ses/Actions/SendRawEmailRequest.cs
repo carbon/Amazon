@@ -1,9 +1,12 @@
-﻿namespace Amazon.Ses;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Amazon.Ses;
 
 public sealed class SendRawEmailRequest
 {
     public SendRawEmailRequest() { }
 
+    [SetsRequiredMembers]
     public SendRawEmailRequest(RawMessage rawMessage)
     {
         RawMessage = rawMessage;
@@ -23,9 +26,7 @@ public sealed class SendRawEmailRequest
 
     public string[]? CC { get; set; }
 
-#nullable disable
-
-    public RawMessage RawMessage { get; set; }
+    public required RawMessage RawMessage { get; set; }
 
     public List<KeyValuePair<string, string>> ToParams()
     {
@@ -33,7 +34,7 @@ public sealed class SendRawEmailRequest
 
         if (ConfigurationSetName is not null)
         {
-            parameters.Add(new ("ConfigurationSetName", Source));
+            parameters.Add(new("ConfigurationSetName", ConfigurationSetName));
         }
 
         if (Source is not null)
@@ -48,14 +49,14 @@ public sealed class SendRawEmailRequest
 
         if (ReturnPathArn is not null)
         {
-            parameters.Add(new("ReturnPathArn", FromArn));
+            parameters.Add(new("ReturnPathArn", ReturnPathArn));
         }
 
         parameters.Add(new("RawMessage.Data", Convert.ToBase64String(RawMessage.Data)));
 
         DestinationListHelper.AddDestinationList(RecipientType.To, To, parameters);
         DestinationListHelper.AddDestinationList(RecipientType.Cc, CC, parameters);
-        DestinationListHelper.AddDestinationList(RecipientType.Bcc, BCC, parameters);        
+        DestinationListHelper.AddDestinationList(RecipientType.Bcc, BCC, parameters);
 
         return parameters;
     }

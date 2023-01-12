@@ -6,22 +6,22 @@ public sealed class ReceiptRule
 {
     public ReceiptRule(string name)
     {
-        ArgumentNullException.ThrowIfNull(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
         Name = name;
     }
 
-    public ReceiptAction[]? Actions { get; set; }
+    public ReceiptAction[]? Actions { get; init; }
 
-    [Required, StringLength(64)]
-    public string Name { get; }
+    [StringLength(64)]
+    public required string Name { get; init; }
 
-    public bool Enabled { get; set; }
+    public bool Enabled { get; init; }
 
-    public string[]? Recipients { get; set; }
+    public string[]? Recipients { get; init; }
 
-    public bool? ScanEnabled { get; set; }
+    public bool? ScanEnabled { get; init; }
 
     // Require | Optional
-    public string? TlsPolicy { get; set; }
+    public string? TlsPolicy { get; init; }
 }
