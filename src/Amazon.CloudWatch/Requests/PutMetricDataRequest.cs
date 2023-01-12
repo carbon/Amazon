@@ -1,12 +1,10 @@
-﻿#nullable disable
-
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace Amazon.CloudWatch;
 
 public sealed class PutMetricDataRequest : List<MetricDatum>
 {
-    public string Namespace { get; set; }
+    public required string Namespace { get; init; }
 
     public AwsRequest ToParams()
     {

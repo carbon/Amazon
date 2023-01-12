@@ -1,12 +1,10 @@
-﻿#nullable disable
-
-namespace Amazon.CloudWatch;
+﻿namespace Amazon.CloudWatch;
 
 public sealed class PutMetricAlarmRequest
 {
-    public string Namespace { get; init; }
+    public string? Namespace { get; init; }
 
-    public bool ActionsEnabled { get; init; }
+    public bool? ActionsEnabled { get; init; }
 
     public AwsRequest ToParams()
     {
