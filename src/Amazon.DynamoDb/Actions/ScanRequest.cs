@@ -6,7 +6,7 @@ public sealed class ScanRequest
 {
     public ScanRequest(string tableName, Expression[]? conditions = null)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentException.ThrowIfNullOrEmpty(tableName);
 
         TableName = tableName;
 

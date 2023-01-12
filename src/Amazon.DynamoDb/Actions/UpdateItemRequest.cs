@@ -12,7 +12,7 @@ public sealed class UpdateItemRequest
         Expression[]? conditions = null,
         ReturnValues? returnValues = null)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentException.ThrowIfNullOrEmpty(tableName);
         ArgumentNullException.ThrowIfNull(key);
 
         TableName = tableName;

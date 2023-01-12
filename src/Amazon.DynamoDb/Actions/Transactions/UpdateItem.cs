@@ -37,9 +37,9 @@ public sealed class UpdateItem
         }
     }
 
-    public AttributeCollection Key { get; init; }
+    public required AttributeCollection Key { get; init; }
 
-    public string TableName { get; init; }
+    public required string TableName { get; init; }
 
     public string UpdateExpression { get; init; }
 

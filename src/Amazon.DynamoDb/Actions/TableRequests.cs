@@ -8,7 +8,7 @@ public sealed class TableRequests
 {
     public TableRequests(string tableName, IReadOnlyList<ItemRequest> requests)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentException.ThrowIfNullOrEmpty(tableName);
         ArgumentNullException.ThrowIfNull(requests);
 
         if (requests.Count > 25)

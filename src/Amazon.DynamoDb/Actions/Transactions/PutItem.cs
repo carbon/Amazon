@@ -13,9 +13,9 @@ public sealed class PutItem
         Item = item;
     }
 
-    public AttributeCollection Item { get; init; }
+    public required AttributeCollection Item { get; init; }
 
-    public string TableName { get; init; }
+    public required string TableName { get; init; }
 
     public string? ConditionExpression { get; init; }
 

@@ -11,9 +11,9 @@ public sealed class DeleteItem
         Key = key;
     }
 
-    public AttributeCollection Key { get; init; }
+    public required AttributeCollection Key { get; init; }
 
-    public string TableName { get; init; }
+    public required string TableName { get; init; }
 
     public string? ConditionExpression { get; init; }
 

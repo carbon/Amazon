@@ -21,7 +21,7 @@ public sealed class TableKeys
 {
     public TableKeys(string tableName, params Dictionary<string, DbValue>[] keys)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentException.ThrowIfNullOrEmpty(tableName);
 
         TableName = tableName;
         Keys = keys;
@@ -29,8 +29,7 @@ public sealed class TableKeys
 
     public TableKeys(string tableName, params IEnumerable<KeyValuePair<string, object>>[] keys)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
-
+        ArgumentException.ThrowIfNullOrEmpty(tableName);
 
         TableName = tableName;
         Keys = new Dictionary<string, DbValue>[keys.Length];

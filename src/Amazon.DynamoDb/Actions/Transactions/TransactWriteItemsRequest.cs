@@ -9,7 +9,7 @@ public sealed class TransactWriteItemsRequest
         TransactItems = transactItems;
     }
 
-    public TransactWriteItem[] TransactItems { get; init; }
+    public required TransactWriteItem[] TransactItems { get; init; }
 
     public string? ClientRequestToken { get; init; }
 

@@ -8,7 +8,7 @@ internal sealed class StringConverter : IDbValueConverter
     {
         string text = (string)value;
 
-        if (text.Length == 0) return DbValue.Empty;
+        if (text.Length is 0) return DbValue.Empty;
 
         return new DbValue(text);
     }

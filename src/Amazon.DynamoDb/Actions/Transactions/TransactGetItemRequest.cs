@@ -23,7 +23,7 @@ public sealed class TransactGetItem
         Get = get;
     }
 
-    public Get Get { get; init; }
+    public Get Get { get; }
 }
 
 public sealed class Get
@@ -39,9 +39,9 @@ public sealed class Get
         Key = key;
     }
 
-    public string TableName { get; init; }
+    public required string TableName { get; init; }
 
-    public IReadOnlyDictionary<string, DbValue> Key { get; init; }
+    public required IReadOnlyDictionary<string, DbValue> Key { get; init; }
 
     public Dictionary<string, string>? ExpressionAttributeNames { get; init; }
 

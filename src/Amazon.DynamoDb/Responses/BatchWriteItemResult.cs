@@ -6,6 +6,13 @@ namespace Amazon.DynamoDb;
 
 public sealed class BatchWriteItemResult // : IConsumedResources
 {
+    public BatchWriteItemResult() { }
+
+    public BatchWriteItemResult(List<TableRequests> unprocessedItems)
+    {
+        UnprocessedItems = unprocessedItems;
+    }
+
     // public ConsumedCapacity[] ConsumedCapacity { get; init; }
 
     public List<TableRequests> UnprocessedItems { get; init; }
@@ -34,9 +41,6 @@ public sealed class BatchWriteItemResult // : IConsumedResources
             }
         }
 
-        return new BatchWriteItemResult
-        {
-            UnprocessedItems = unprocessed
-        };
+        return new BatchWriteItemResult(unprocessed);
     }
 }
