@@ -1,16 +1,14 @@
-﻿#nullable disable
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class CreateActivationRequest : ISsmRequest
 {
-    public string DefaultInstanceName { get; set; }
+    public string? DefaultInstanceName { get; init; }
 
-    public string Description { get; set; }
+    public string? Description { get; init; }
 
-    public string ExpirationDate { get; set; }
+    public string? ExpirationDate { get; init; }
 
-    public string IamRole { get; set; }
+    public required string IamRole { get; init; }
 
-    public int RegistrationLimit { get; set; }
+    public int? RegistrationLimit { get; init; }
 }

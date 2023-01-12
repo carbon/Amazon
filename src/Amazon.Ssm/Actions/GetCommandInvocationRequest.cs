@@ -1,8 +1,4 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class GetCommandInvocationRequest : ISsmRequest
 {
@@ -14,11 +10,9 @@ public sealed class GetCommandInvocationRequest : ISsmRequest
         InstanceId = instanceId;
     }
 
-    [Required]
-    public string CommandId { get; init; }
+    public required string CommandId { get; init; }
 
-    [Required]
-    public string InstanceId { get; init; }
+    public required string InstanceId { get; init; }
 
-    public string PluginName { get; init; }
+    public string? PluginName { get; init; }
 }

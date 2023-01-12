@@ -1,8 +1,4 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class DeleteActivationRequest : ISsmRequest
 {
@@ -10,9 +6,10 @@ public sealed class DeleteActivationRequest : ISsmRequest
 
     public DeleteActivationRequest(string activationId)
     {
+        ArgumentException.ThrowIfNullOrEmpty(activationId);
+
         ActivationId = activationId;
     }
 
-    [Required]
-    public string ActivationId { get; init; }
+    public required string ActivationId { get; init; }
 }

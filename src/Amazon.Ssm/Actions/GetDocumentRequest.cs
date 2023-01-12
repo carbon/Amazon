@@ -1,13 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class GetDocumentRequest : ISsmRequest
 {
     public string? DocumentVersion { get; init; }
 
-#nullable disable
-
-    [Required]
-    public string Name { get; init; }
+    public required string Name { get; init; }
 }

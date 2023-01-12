@@ -1,18 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class DescribeDocumentPermissionRequest : ISsmRequest
 {
     public DescribeDocumentPermissionRequest(string name, string permissionType)
     {
+        ArgumentException.ThrowIfNullOrEmpty(name);
+        ArgumentException.ThrowIfNullOrEmpty(permissionType);
+
         Name = name;
         PermissionType = permissionType;
     }
 
-    [Required]
     public string Name { get; }
 
-    [Required]
     public string PermissionType { get; }
 }

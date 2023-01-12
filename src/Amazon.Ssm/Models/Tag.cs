@@ -2,9 +2,7 @@
 
 public sealed class Tag
 {
-#nullable disable
     public Tag() { }
-#nullable enable
 
     public Tag(string key, string value)
     {
@@ -12,7 +10,7 @@ public sealed class Tag
         Value = value;
     }
 
-    public string Key { get; set; }
+    public required string Key { get; init; }
 
-    public string Value { get; set; }
+    public required string Value { get; init; }
 }

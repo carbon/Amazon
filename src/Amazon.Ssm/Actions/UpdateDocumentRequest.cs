@@ -1,20 +1,10 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class UpdateDocumentRequest : ISsmRequest
 {
-    [Required]
-    public string Content { get; set; }
+    public required string Content { get; init; }
 
-#nullable enable
+    public string? DocumentVersion { get; init; }
 
-    public string? DocumentVersion { get; set; }
-
-#nullable disable
-
-    [Required]
-    public string Name { get; set; }
+    public required string Name { get; init; }
 }

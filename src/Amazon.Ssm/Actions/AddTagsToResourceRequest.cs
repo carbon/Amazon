@@ -1,12 +1,10 @@
-﻿#nullable disable
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class AddTagsToResourceRequest : ISsmRequest
 {
-    public string ResourceId { get; set; }
+    public required string ResourceId { get; set; }
 
-    public string ResourceType { get; set; }
+    public required string ResourceType { get; set; }
 
-    public Tag[] Tags { get; set; }
+    public required Tag[] Tags { get; set; }
 }

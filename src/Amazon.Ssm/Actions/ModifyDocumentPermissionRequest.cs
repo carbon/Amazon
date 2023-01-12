@@ -1,18 +1,12 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class ModifyDocumentPermissionRequest : ISsmRequest
 {
-    public string[] AccountIdsToAdd { get; set; }
+    public string[]? AccountIdsToAdd { get; init; }
 
-    public string[] AccountIdsToRemove { get; set; }
+    public string[]? AccountIdsToRemove { get; init; }
 
-    [Required]
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    [Required]
-    public string PermissionType { get; set; }
+    public required string PermissionType { get; init; }
 }

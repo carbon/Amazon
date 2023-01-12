@@ -1,15 +1,9 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class ListTagsForResourceRequest : ISsmRequest
 {
-    [Required]
-    public string ResourceId { get; set; }
+    public required string ResourceId { get; init; }
 
     // ManagedInstance | MaintenanceWindow | Parameter
-    [Required]
-    public string ResourceType { get; set; }
+    public required string ResourceType { get; init; }
 }

@@ -1,8 +1,4 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class ListDocumentVersionsRequest : ISsmRequest
 {
@@ -13,10 +9,9 @@ public sealed class ListDocumentVersionsRequest : ISsmRequest
         Name = name;
     }
 
-    public int? MaxResults { get; set; }
+    public int? MaxResults { get; init; }
 
-    [Required]
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public string NextToken { get; set; }
+    public string? NextToken { get; init; }
 }

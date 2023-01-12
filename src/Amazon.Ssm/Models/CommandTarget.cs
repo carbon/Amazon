@@ -2,20 +2,18 @@
 
 public sealed class CommandTarget
 {
-#nullable disable
     public CommandTarget() { }
-#nullable enable
 
     public CommandTarget(string key, params string[] values)
     {
-        ArgumentNullException.ThrowIfNull(key);
+        ArgumentException.ThrowIfNullOrEmpty(key);
         ArgumentNullException.ThrowIfNull(values);
 
         Key = key;
         Values = values;
     }
 
-    public string Key { get; set; }
+    public required string Key { get; set; }
 
-    public string[] Values { get; set; }
+    public required string[] Values { get; set; }
 } 

@@ -4,9 +4,7 @@ namespace Amazon.Ssm;
 
 public sealed class CommandFilter
 {
-#nullable disable
     public CommandFilter() { }
-#nullable enable
 
     public CommandFilter(string key, string value)
     {
@@ -15,8 +13,8 @@ public sealed class CommandFilter
     }
 
     [JsonPropertyName("key")]
-    public string Key { get; set; }
+    public required string Key { get; init; }
 
     [JsonPropertyName("value")]
-    public string Value { get; set; }
+    public required string Value { get; init; }
 }

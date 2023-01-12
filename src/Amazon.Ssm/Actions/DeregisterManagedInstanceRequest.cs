@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Amazon.Ssm;
 
@@ -8,13 +6,13 @@ public sealed class DeregisterManagedInstanceRequest : ISsmRequest
 {
     public DeregisterManagedInstanceRequest() { }
 
+    [SetsRequiredMembers]
     public DeregisterManagedInstanceRequest(string instanceId)
     {
-        ArgumentNullException.ThrowIfNull(instanceId);
+        ArgumentException.ThrowIfNullOrEmpty(instanceId);
 
         InstanceId = instanceId;
     }
 
-    [Required]
-    public string InstanceId { get; init; }
+    public required string InstanceId { get; init; }
 }

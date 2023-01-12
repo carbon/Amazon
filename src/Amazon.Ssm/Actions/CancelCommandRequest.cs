@@ -1,14 +1,9 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.Ssm;
+﻿namespace Amazon.Ssm;
 
 public sealed class CancelCommandRequest : ISsmRequest
 {
-    [Required]
-    public string CommandId { get; set; }
+    public required string CommandId { get; init; }
 
     // If empty, cancels all
-    public string[] InstanceIds { get; set; }
+    public string[]? InstanceIds { get; init; }
 }

@@ -4,9 +4,7 @@ namespace Amazon.Ssm;
 
 public sealed class Target
 {
-#nullable disable
     public Target() { }
-#nullable enable
 
     public Target(string key, string[] values)
     {
@@ -18,7 +16,7 @@ public sealed class Target
     }
 
     [StringLength(128)]
-    public string Key { get; set; }
+    public required string Key { get; init; }
 
-    public string[] Values { get; set; }
+    public required string[] Values { get; init; }
 }

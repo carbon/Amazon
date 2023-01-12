@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace Amazon.Ssm;
 
@@ -45,7 +44,6 @@ public sealed class Command
 
     public string ServiceRole { get; set; }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public CommandStatus Status { get; set; }
 
     public string StatusDetails { get; set; }

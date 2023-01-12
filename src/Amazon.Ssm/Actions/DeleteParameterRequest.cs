@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Amazon.Ssm;
 
@@ -8,11 +6,11 @@ public sealed class DeleteParameterRequest : ISsmRequest
 {
     public DeleteParameterRequest() { }
 
+    [SetsRequiredMembers]
     public DeleteParameterRequest(string name)
     {
         Name = name;
     }
 
-    [Required]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 }
