@@ -1,8 +1,4 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.CodeBuild;
+﻿namespace Amazon.CodeBuild;
 
 public sealed class EnvironmentVariable
 {
@@ -10,16 +6,14 @@ public sealed class EnvironmentVariable
 
     public EnvironmentVariable(string name, string value)
     {
-        ArgumentNullException.ThrowIfNull(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
         ArgumentNullException.ThrowIfNull(value);
 
         Name = name;
         Value = value;
     }
 
-    [Required]
-    public string Name { get; init; }
+    public required string Name { get; init; }
 
-    [Required]
-    public string Value { get; init; }
+    public required string Value { get; init; }
 }

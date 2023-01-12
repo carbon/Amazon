@@ -1,12 +1,8 @@
-﻿#nullable disable
-
-namespace Amazon.CodeBuild;
+﻿namespace Amazon.CodeBuild;
 
 public sealed class UpdateProjectRequest : ICodeBuildRequest
 {
-    public string Name { get; set; }
-
-#nullable enable
+    public required string Name { get; set; }
 
     public ProjectArtifacts? Artifacts { get; set; }
 

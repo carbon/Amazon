@@ -1,10 +1,8 @@
-﻿#nullable disable
+﻿namespace Amazon.CodeBuild;
 
-namespace Amazon.CodeBuild;
-
-public class ListBuildsRequest : ICodeBuildRequest
+public sealed class ListBuildsRequest : ICodeBuildRequest
 {
-    public string NextToken { get; set; }
+    public string? NextToken { get; set; }
 
-    public string SortOrder { get; set; }
+    public string? SortOrder { get; set; }
 }

@@ -1,22 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Amazon.CodeBuild;
 
 public sealed class StartBuildRequest : ICodeBuildRequest
 {
-#nullable disable
     public StartBuildRequest() { }
-#nullable enable
 
+    [SetsRequiredMembers]
     public StartBuildRequest(string projectName)
     {
-        ArgumentNullException.ThrowIfNull(projectName);
+        ArgumentException.ThrowIfNullOrEmpty(projectName);
 
         ProjectName = projectName;
     }
 
-    [Required]
-    public string ProjectName { get; set; }
+    public required string ProjectName { get; set; }
 
     public ProjectArtifacts? ArtifactsOverride { get; set; }
 

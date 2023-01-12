@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-namespace Amazon.CodeBuild;
+﻿namespace Amazon.CodeBuild;
 
 public sealed class ListCuratedEnvironmentImagesRequest : ICodeBuildRequest
 {

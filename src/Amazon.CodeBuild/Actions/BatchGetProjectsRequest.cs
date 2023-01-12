@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Amazon.CodeBuild;
+﻿namespace Amazon.CodeBuild;
 
 public sealed class BatchGetProjectsRequest : ICodeBuildRequest
 {
@@ -11,6 +9,5 @@ public sealed class BatchGetProjectsRequest : ICodeBuildRequest
         Names = names;
     }
 
-    [Required]
     public string[] Names { get; }
 }
