@@ -39,7 +39,7 @@ public class DescribeListenersTests
         Assert.Equal($"{arnPrefix}:loadbalancer/app/my-load-balancer/50dc6c495c0c9188", listeners[0].LoadBalancerArn);
         Assert.Equal($"{arnPrefix}:listener/app/my-load-balancer/50dc6c495c0c9188/f2f7dc8efc522ab2", listeners[0].ListenerArn);
 
-        Assert.Equal("HTTP", listeners[0].Protocol);
+        Assert.Equal(Protocol.HTTP, listeners[0].Protocol);
 
         Assert.Single(listeners[0].DefaultActions);
         Assert.Equal("forward", listeners[0].DefaultActions[0].Type);
