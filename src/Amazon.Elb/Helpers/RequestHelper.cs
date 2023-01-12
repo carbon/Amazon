@@ -5,9 +5,9 @@ namespace Amazon.Elb;
 
 public static class RequestHelper
 {
-    public static Dictionary<string, string> ToParams(object instance)
+    public static List<KeyValuePair<string, string>> ToParams(object instance)
     {
-        var parameters = new Dictionary<string, string>();
+        var parameters = new List<KeyValuePair<string, string>>(4);
 
         var model = InstanceModel.Get(instance.GetType());
 
@@ -31,7 +31,7 @@ public static class RequestHelper
                     }
                     else
                     {
-                        parameters.Add(prefix, element.ToString()!);
+                        parameters.Add(new(prefix, element.ToString()!));
                     }
                 }
             }
@@ -41,16 +41,19 @@ public static class RequestHelper
             }
             else
             {
-                parameters.Add(member.Name, value.ToString()!);
+                parameters.Add(new(member.Name, value.ToString()!));
             }
         }
 
         return parameters;
     }
 
-    private static void AddParameters(Dictionary<string, string> parameters, string prefix, object instance)
+    private static void AddParameters(List<KeyValuePair<string, string>> parameters, string prefix, object instance)
     {
-        if (parameters.Count > 100) throw new Exception("excedeeded max of 100 parameters");
+        if (parameters.Count > 100)
+        {
+            throw new Exception("exceeded max of 100 parameters");
+        }
 
         var model = InstanceModel.Get(instance.GetType());
 
@@ -62,13 +65,13 @@ public static class RequestHelper
 
             string key = $"{prefix}.{m.Name}";
 
-            if (Type.GetTypeCode(value.GetType()) == TypeCode.Object)
+            if (Type.GetTypeCode(value.GetType()) is TypeCode.Object)
             {
                 AddParameters(parameters, key, value);
             }
             else
             {
-                parameters.Add(key, value.ToString()!);
+                parameters.Add(new (key, value.ToString()!));
             }
         }
     }

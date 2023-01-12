@@ -203,9 +203,9 @@ public sealed class ElbClient : AwsClient
         return ElbSerializer<TResult>.DeserializeXml(responseText);
     }
 
-    private static FormUrlEncodedContent GetPostContent(Dictionary<string, string> parameters)
+    private static FormUrlEncodedContent GetPostContent(List<KeyValuePair<string, string>> parameters)
     {
-        parameters.Add("Version", Version);
+        parameters.Add(new("Version", Version));
 
         return new FormUrlEncodedContent(parameters!);
     }
