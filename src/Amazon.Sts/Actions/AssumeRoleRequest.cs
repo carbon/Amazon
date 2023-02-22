@@ -26,7 +26,7 @@ public sealed class AssumeRoleRequest : IStsRequest
 
             if (duration.Value > TimeSpan.FromHours(12))
             {
-                throw new ArgumentOutOfRangeException(nameof(duration), "May not excdeed 12 hours");
+                throw new ArgumentOutOfRangeException(nameof(duration), "May not exceed 12 hours");
             }
 
             DurationSeconds = (int)duration.Value.TotalSeconds;
