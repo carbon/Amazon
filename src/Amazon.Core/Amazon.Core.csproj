@@ -2,15 +2,14 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Core</AssemblyName>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Version>0.28.0</Version>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <LangVersion>11</LangVersion>
-    <NoWarn>IDE0057</NoWarn>
+    <NoWarn>IDE0057,IDE1006</NoWarn>
 	  
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
