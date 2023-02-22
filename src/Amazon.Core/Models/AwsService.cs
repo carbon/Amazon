@@ -17,7 +17,7 @@ public sealed class AwsService : IEquatable<AwsService>
 
     public override string ToString() => Name;
 
-    public static readonly AwsService Cloudfront       = new("cloudfront");
+    public static readonly AwsService CloudFront       = new("cloudfront");
     public static readonly AwsService CloudwatchEvents = new("events");
     public static readonly AwsService CodeBuild        = new("codebuild");
     public static readonly AwsService DynamoDb         = new("dynamodb");
@@ -31,6 +31,8 @@ public sealed class AwsService : IEquatable<AwsService>
     public static readonly AwsService Kms              = new("kms");
     public static readonly AwsService Lambda           = new("lambda");
     public static readonly AwsService Monitoring       = new("monitoring"); // Cloudwatch monitoring
+    public static readonly AwsService OpenSearch       = new("es");
+    public static readonly AwsService Rekognition      = new("rekognition");
     public static readonly AwsService Route53          = new("route53");
     public static readonly AwsService RdsDb            = new("rds-db");
     public static readonly AwsService Ses              = new("email");
@@ -41,7 +43,6 @@ public sealed class AwsService : IEquatable<AwsService>
     public static readonly AwsService Sqs              = new("sqs");
     public static readonly AwsService Translate        = new("translate");
     public static readonly AwsService Waf              = new("waf");
-    public static readonly AwsService OpenSearch       = new("es");
 
     public bool Equals(AwsService? other)
     {
@@ -60,7 +61,7 @@ public sealed class AwsService : IEquatable<AwsService>
 
     public static implicit operator AwsService(string name)
     {
-        ArgumentNullException.ThrowIfNull(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
 
         return new AwsService(name);
     }
