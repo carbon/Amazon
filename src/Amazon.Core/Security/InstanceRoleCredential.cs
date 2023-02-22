@@ -18,14 +18,14 @@ public sealed class InstanceRoleCredential : IAwsCredential
 
     public InstanceRoleCredential(string roleName)
     {
-        ArgumentNullException.ThrowIfNull(roleName);
+        ArgumentException.ThrowIfNullOrEmpty(roleName);
 
         RoleName = roleName;
     }
 
     internal InstanceRoleCredential(string roleName, IamSecurityCredentials credential)
     {
-        ArgumentNullException.ThrowIfNull(roleName);
+        ArgumentException.ThrowIfNullOrEmpty(roleName);
 
         RoleName = roleName;
         _credential = credential;
@@ -53,7 +53,7 @@ public sealed class InstanceRoleCredential : IAwsCredential
 
     public bool IsExpired => DateTime.UtcNow < Expires;
 
-    // AWS Recomendation:
+    // AWS Recommendation:
     // - refresh 5 minutes before expiration
     public bool ShouldRenew => RoleName is null || _credential is null || Expires <= DateTime.UtcNow.AddMinutes(5);
 
@@ -119,7 +119,7 @@ public sealed class InstanceRoleCredential : IAwsCredential
 
     public static async Task<InstanceRoleCredential> GetAsync(string roleName)
     {
-        ArgumentNullException.ThrowIfNull(roleName);
+        ArgumentException.ThrowIfNullOrEmpty(roleName);
 
         var iamCredential = await InstanceMetadataService.Instance.GetIamSecurityCredentialsAsync(roleName).ConfigureAwait(false);
 

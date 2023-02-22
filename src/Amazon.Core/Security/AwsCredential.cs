@@ -22,13 +22,13 @@ public sealed class AwsCredential : IAwsCredential
 
     public static AwsCredential Parse(string text)
     {
-        ArgumentNullException.ThrowIfNull(text);
+        ArgumentException.ThrowIfNullOrEmpty(text);
 
         int colonIndex = text.IndexOf(':');
 
         if (colonIndex is -1)
         {
-            throw new ArgumentException("accessKeyId & secretAccessKey must be seperated by ':'");
+            throw new ArgumentException("accessKeyId & secretAccessKey must be separated by a ':'");
         }
 
         return new AwsCredential(

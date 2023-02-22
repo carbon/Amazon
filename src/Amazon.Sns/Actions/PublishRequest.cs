@@ -10,8 +10,8 @@ public sealed class PublishRequest
         string message,
         string? subject = null)
     {
-        ArgumentNullException.ThrowIfNull(topicArn);
-        ArgumentNullException.ThrowIfNull(message);
+        ArgumentException.ThrowIfNullOrEmpty(topicArn);
+        ArgumentException.ThrowIfNullOrEmpty(message);
 
         TopicArn = topicArn;
         Message = message;
