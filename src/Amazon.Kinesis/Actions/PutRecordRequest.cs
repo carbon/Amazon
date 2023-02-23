@@ -4,7 +4,7 @@ public sealed class PutRecordsRequest : KinesisRequest
 {
     public PutRecordsRequest(string streamName, Record[] records)
     {
-        ArgumentNullException.ThrowIfNull(streamName);
+        ArgumentException.ThrowIfNullOrEmpty(streamName);
         ArgumentNullException.ThrowIfNull(records);
 
         StreamName = streamName;

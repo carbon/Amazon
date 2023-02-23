@@ -10,7 +10,7 @@ public sealed class Shard : IShard
 
     public Shard(string id)
     {
-        ArgumentNullException.ThrowIfNull(id);
+        ArgumentException.ThrowIfNullOrEmpty(id);
 
         ShardId = id;
     }

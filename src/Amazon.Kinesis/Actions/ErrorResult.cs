@@ -1,5 +1,7 @@
 ﻿#nullable disable
 
+using System.Text.Json.Serialization;
+
 namespace Amazon.Kinesis;
 
 public sealed class ErrorResult
@@ -8,6 +10,7 @@ public sealed class ErrorResult
 
     public string Message { get; set; }
 
+    [JsonIgnore]
     public string Text { get; set; }
 }
 

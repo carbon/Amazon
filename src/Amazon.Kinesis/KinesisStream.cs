@@ -16,7 +16,7 @@ public sealed class KinesisStream : IStream
 
     public KinesisStream(string name, KinesisClient client)
     {
-        ArgumentNullException.ThrowIfNull(name);
+        ArgumentException.ThrowIfNullOrEmpty(name);
         ArgumentNullException.ThrowIfNull(client);
 
         Name = name;
