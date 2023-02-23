@@ -3,14 +3,14 @@
 internal ref struct StringSplitter
 {
     private readonly ReadOnlySpan<char> _text;
-    private readonly char _seperator;
+    private readonly char _separator;
 
     private int _position;
 
-    public StringSplitter(ReadOnlySpan<char> text, char seperator)
+    public StringSplitter(ReadOnlySpan<char> text, char separator)
     {
         _text = text;
-        _seperator = seperator;
+        _separator = separator;
         _position = 0;
     }
 
@@ -25,7 +25,7 @@ internal ref struct StringSplitter
 
         int start = _position;
 
-        int commaIndex = _text.Slice(_position).IndexOf(_seperator);
+        int commaIndex = _text.Slice(_position).IndexOf(_separator);
 
         if (commaIndex > -1)
         {

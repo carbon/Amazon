@@ -71,8 +71,6 @@ public static class SignerV4
         HttpRequestMessage request,
         List<string> signedHeaderNames)
     {
-        ArgumentNullException.ThrowIfNull(request);
-
         var output = new ValueStringBuilder(stackalloc char[512]); // ~350
         
         WriteCanonicalRequest(ref output, request, signedHeaderNames);
@@ -97,7 +95,7 @@ public static class SignerV4
     [SkipLocalsInit]
     public static string CanonicalizeUri(string path)
     {
-        if (path is " /")
+        if (path is "/")
         {
             return path;
         }
@@ -311,7 +309,7 @@ public static class SignerV4
 
         urlBuilder.Append(SigningParameterNames.Signature);
         urlBuilder.Append('=');
-        HMACSHA256_Hex(signingKey, stringToSign, urlBuilder.AppendSpan(64)); //signature
+        ComputeAndWriteHMACSHA256Hex(signingKey, stringToSign, urlBuilder.AppendSpan(64)); //signature
 
         return urlBuilder.ToString();
     }
@@ -333,21 +331,20 @@ public static class SignerV4
 
         string stringToSign = GetStringToSign(request, scope, signedHeaderNames);
 
-        var authWriter = new ValueStringBuilder(stackalloc char[512]); // ~235
+        var sb = new ValueStringBuilder(stackalloc char[512]); // ~235
 
-        // AWS4-HMAC-SHA256 Credential={0},SignedHeaders={0},Signature={0}
-        // $"AWS4-HMAC-SHA256 Credential={credential.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}";
+        // AWS4-HMAC-SHA256 Credential={credential.AccessKeyId}/{scope},SignedHeaders={signedHeaders},Signature={signature}
 
-        authWriter.Append("AWS4-HMAC-SHA256 Credential=");
-        authWriter.Append(credential.AccessKeyId);
-        authWriter.Append('/');
-        scope.AppendTo(ref authWriter);
-        authWriter.Append(",SignedHeaders=");
-        authWriter.AppendJoin(';', signedHeaderNames);
-        authWriter.Append(",Signature=");
-        HMACSHA256_Hex(signingKey, stringToSign, authWriter.AppendSpan(64)); // signature
+        sb.Append("AWS4-HMAC-SHA256 Credential=");
+        sb.Append(credential.AccessKeyId);
+        sb.Append('/');
+        scope.AppendTo(ref sb);
+        sb.Append(",SignedHeaders=");
+        sb.AppendJoin(';', signedHeaderNames);
+        sb.Append(",Signature=");
+        ComputeAndWriteHMACSHA256Hex(signingKey, stringToSign, sb.AppendSpan(64)); // signature
 
-        request.Headers.TryAddWithoutValidation("Authorization", authWriter.ToString());
+        request.Headers.TryAddWithoutValidation("Authorization", sb.ToString());
 
         listPool.Return(signedHeaderNames);
     }
@@ -554,7 +551,10 @@ public static class SignerV4
     }
 
     [SkipLocalsInit]
-    private static void HMACSHA256_Hex(ReadOnlySpan<byte> key, ReadOnlySpan<char> data, Span<char> destination)
+    private static void ComputeAndWriteHMACSHA256Hex(
+        ReadOnlySpan<byte> key,
+        ReadOnlySpan<char> data,
+        Span<char> destination)
     {
         byte[] rentedBuffer = ArrayPool<byte>.Shared.Rent(data.Length * 4);
 

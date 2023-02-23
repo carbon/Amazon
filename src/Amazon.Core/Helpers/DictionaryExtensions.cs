@@ -7,7 +7,7 @@ public static class DictionaryExtensions
 {
     public static string ToPostData(this Dictionary<string, string> nvc)
     {
-        if (nvc is null || nvc.Count == 0)
+        if (nvc is null || nvc.Count is 0)
         {
             return string.Empty;
         }
@@ -17,7 +17,7 @@ public static class DictionaryExtensions
 
     public static string ToQueryString(this Dictionary<string, string> nvc)
     {
-        if (nvc is null || nvc.Count == 0)
+        if (nvc is null || nvc.Count is 0)
         {
             return string.Empty;
         }

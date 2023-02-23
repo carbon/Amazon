@@ -25,7 +25,7 @@ internal sealed class StringListPool
         _items = new Element[size];
     }
 
-    private List<string> CreateInstance()
+    private static List<string> CreateInstance()
     {
         return new List<string>(8);
     }
