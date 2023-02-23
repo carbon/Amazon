@@ -17,19 +17,19 @@ public sealed class DynamoQuery
             return;
         }
 
-        var conjuction = DynamoExpression.Conjunction(conditions);
+        var conjunction = DynamoExpression.Conjunction(conditions);
 
-        if (conjuction.HasAttributeNames)
+        if (conjunction.HasAttributeNames)
         {
-            ExpressionAttributeNames = conjuction.AttributeNames;
+            ExpressionAttributeNames = conjunction.AttributeNames;
         }
 
-        if (conjuction.HasAttributeValues)
+        if (conjunction.HasAttributeValues)
         {
-            ExpressionAttributeValues = conjuction.AttributeValues;
+            ExpressionAttributeValues = conjunction.AttributeValues;
         }
 
-        KeyConditionExpression = conjuction.Text;
+        KeyConditionExpression = conjunction.Text;
     }
 
 #nullable enable

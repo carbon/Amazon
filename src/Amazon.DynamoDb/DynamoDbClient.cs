@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -11,7 +12,7 @@ public sealed class DynamoDbClient : AwsClient
 {
     private const string TargetPrefix = "DynamoDB_20120810";
 
-    private static readonly JsonSerializerOptions serializerOptions = new()
+    private static readonly JsonSerializerOptions s_serializerOptions = new()
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
@@ -220,9 +221,7 @@ public sealed class DynamoDbClient : AwsClient
             throw await DynamoDbException.FromResponseAsync(response).ConfigureAwait(false);
         }
 
-        using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-        return await JsonSerializer.DeserializeAsync<JsonElement>(stream).ConfigureAwait(false);
+        return await response.Content.ReadFromJsonAsync<JsonElement>(JsonSerializerOptions.Default).ConfigureAwait(false);
     }
 
     private async Task<TResult> HandleRequestAsync<TRequest, TResult>(string action, TRequest request)
@@ -239,9 +238,7 @@ public sealed class DynamoDbClient : AwsClient
             throw await DynamoDbException.FromResponseAsync(response).ConfigureAwait(false);
         }
 
-        using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-        var result = await JsonSerializer.DeserializeAsync<TResult>(stream, serializerOptions).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync<TResult>(s_serializerOptions).ConfigureAwait(false);
 
         return result!;
     }

@@ -6,7 +6,7 @@ public sealed class PutItem
         string tableName,
         AttributeCollection item)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentException.ThrowIfNullOrEmpty(tableName);
         ArgumentNullException.ThrowIfNull(item);
 
         TableName = tableName;

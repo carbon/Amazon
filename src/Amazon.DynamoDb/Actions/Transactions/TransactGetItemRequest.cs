@@ -32,7 +32,7 @@ public sealed class Get
         string tableName,
         IReadOnlyDictionary<string, DbValue> key)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentException.ThrowIfNullOrEmpty(tableName);
         ArgumentNullException.ThrowIfNull(key);
 
         TableName = tableName;

@@ -15,7 +15,7 @@ internal static class AttributeCollectionJsonSerializer
 
         while (reader.Read())
         {
-            if (reader.TokenType == JsonTokenType.EndObject)
+            if (reader.TokenType is JsonTokenType.EndObject)
             {
                 break;
             }

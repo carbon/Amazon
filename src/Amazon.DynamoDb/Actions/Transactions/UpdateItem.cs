@@ -11,7 +11,7 @@ public sealed class UpdateItem
         Change[] changes,
         Expression[]? conditions = null)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentException.ThrowIfNullOrEmpty(tableName);
         ArgumentNullException.ThrowIfNull(key);
 
         TableName = tableName;

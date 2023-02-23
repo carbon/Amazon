@@ -18,7 +18,7 @@ public class DynamoTable<T, TKey>
 
     private static readonly DatasetInfo metadata = DatasetInfo.Get<T>();
 
-    // TODO: Historgram of consumed capacity
+    // TODO: Histogram of consumed capacity
 
     private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
         initialDelay : TimeSpan.FromMilliseconds(100),
@@ -152,8 +152,7 @@ public class DynamoTable<T, TKey>
     {
         var e = new DynamoQueryExpression(PrimaryKey.Names, expressions);
 
-        var query = new DynamoQuery
-        {
+        var query = new DynamoQuery {
             KeyConditionExpression = e.KeyExpression.Text,
             ExpressionAttributeNames = e.AttributeNames.Count > 0 ? e.AttributeNames : null,
             ExpressionAttributeValues = e.AttributeValues,
