@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Iam</AssemblyName>
     <Version>0.12.0</Version>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     
