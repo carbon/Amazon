@@ -2,12 +2,14 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sqs</AssemblyName>
-    <Version>0.23.1</Version>
+    <Version>0.28.0</Version>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>IDE0090</NoWarn>
-    
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
