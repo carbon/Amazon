@@ -6,8 +6,8 @@ public sealed class UploadPartResult : IUploadBlock
 {
     public UploadPartResult(string uploadId, int partNumber, string eTag)
     {
-        ArgumentNullException.ThrowIfNull(uploadId);
-        ArgumentNullException.ThrowIfNull(eTag);
+        ArgumentException.ThrowIfNullOrEmpty(uploadId);
+        ArgumentException.ThrowIfNullOrEmpty(eTag);
 
         UploadId = uploadId;
         PartNumber = partNumber;

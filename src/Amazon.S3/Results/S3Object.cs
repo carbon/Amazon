@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -74,33 +73,33 @@ public sealed class S3Object : IBlobResult, IDisposable
 
     public async ValueTask<Stream> OpenAsync()
     {
-        ThrowIfDisposed();
+        ObjectDisposedException.ThrowIf(_response is null, this);
 
         return _stream ??= await _response.Content.ReadAsStreamAsync().ConfigureAwait(false);
     }
 
     public Task<byte[]> ReadAsByteArrayAsync()
     {
-        ThrowIfDisposed();
+        ObjectDisposedException.ThrowIf(_response is null, this);
 
         return _response.Content.ReadAsByteArrayAsync();
     }
 
     public async Task CopyToAsync(Stream output)
     {
-        ThrowIfDisposed();
+        ObjectDisposedException.ThrowIf(_response is null, this);
 
         await _response.Content.CopyToAsync(output).ConfigureAwait(false);
     }
 
     public async Task CopyToAsync(Stream output, CancellationToken cancellationToken)
     {
-        ThrowIfDisposed();
+        ObjectDisposedException.ThrowIf(_response is null, this);
 
         await _response.Content.CopyToAsync(output, cancellationToken).ConfigureAwait(false);
     }
 
-    #region IBlob
+#region IBlob
 
     long IBlob.Size => ContentLength;
 
@@ -108,7 +107,7 @@ public sealed class S3Object : IBlobResult, IDisposable
 
     public IReadOnlyDictionary<string, string> Properties => _properties;
 
-    #endregion
+#endregion
 
     public void Dispose()
     {
@@ -129,14 +128,5 @@ public sealed class S3Object : IBlobResult, IDisposable
 
         _stream = null;
         _response = null;
-    }
-
-    [MemberNotNull(nameof(_response))]
-    private void ThrowIfDisposed()
-    {
-        if (_response is null)
-        {
-            throw new ObjectDisposedException(nameof(S3Object));
-        }
     }
 }

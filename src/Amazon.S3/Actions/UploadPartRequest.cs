@@ -8,7 +8,7 @@ public sealed class UploadPartRequest : PutObjectRequest
     public UploadPartRequest(string host, string bucketName, string key, string uploadId, int partNumber)
         : base(host, bucketName, string.Create(CultureInfo.InvariantCulture, $"{key}?partNumber={partNumber}&uploadId={uploadId}"))
     {
-        ArgumentNullException.ThrowIfNull(uploadId);
+        ArgumentException.ThrowIfNullOrEmpty(uploadId);
 
         if (partNumber < 1 || partNumber > 10_000)
         {

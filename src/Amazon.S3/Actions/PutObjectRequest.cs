@@ -81,7 +81,7 @@ public class PutObjectRequest : S3Request
         string contentType = "application/octet-stream")
     {
         ArgumentNullException.ThrowIfNull(stream);
-        ArgumentNullException.ThrowIfNull(contentType);
+        ArgumentException.ThrowIfNullOrEmpty(contentType);
 
         if (stream.Length is 0)
             throw new ArgumentException("Must not be empty", nameof(stream));

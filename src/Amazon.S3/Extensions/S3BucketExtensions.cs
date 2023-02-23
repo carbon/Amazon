@@ -12,8 +12,8 @@ public static class S3BucketExtensions
        S3DownloadOptions? options = null,
        CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(objectKey);
-        ArgumentNullException.ThrowIfNull(destinationPath);
+        ArgumentException.ThrowIfNullOrEmpty(objectKey);
+        ArgumentException.ThrowIfNullOrEmpty(destinationPath);
 
         options ??= S3DownloadOptions.Default;
 
