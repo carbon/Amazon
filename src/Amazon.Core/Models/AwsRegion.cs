@@ -57,7 +57,7 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
     public static readonly AwsRegion APSouthEast2 = new("ap-southeast-2"); // Sydney         | 2012-11-12
     public static readonly AwsRegion CNNorth1     = new("cn-north-1");     // Beijing        | 2013-12-18
     public static readonly AwsRegion EUCentral1   = new("eu-central-1");   // Frankfurt      | 2014-10-23
-    public static readonly AwsRegion APNortheast2 = new("ap-northeast-2"); // Seoul          | 2016-01-06
+    public static readonly AwsRegion APNorthEast2 = new("ap-northeast-2"); // Seoul          | 2016-01-06
     public static readonly AwsRegion APSouth1     = new("ap-south-1");     // Mumbai         | 2016-06-27
     public static readonly AwsRegion USEast2      = new("us-east-2");      // Ohio           | 2016-10-17
     public static readonly AwsRegion CACentral1   = new("ca-central-1");   // Central        | 2016-12-08
@@ -85,7 +85,7 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
         APSouthEast2, 
         CNNorth1,     
         EUCentral1,   
-        APNortheast2, 
+        APNorthEast2, 
         APSouth1,     
         USEast2,      
         CACentral1,   
@@ -111,7 +111,7 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
         "ap-southeast-3" => APSouthEast3,
         "ap-southeast-4" => APSouthEast4,
         "ap-northeast-1" => APNorthEast1,
-        "ap-northeast-2" => APNortheast2,
+        "ap-northeast-2" => APNorthEast2,
         "us-east-1"      => USEast1,
         "us-east-2"      => USEast2,
         "us-west-1"      => USWest1,
