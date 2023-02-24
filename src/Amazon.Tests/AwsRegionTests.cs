@@ -5,7 +5,7 @@ public class AwsRegionTests
     [Fact]
     public void Enum()
     {
-        Assert.Equal(22, AwsRegion.All.Length);
+        Assert.Equal(26, AwsRegion.All.Length);
 
         foreach (var region in AwsRegion.All)
         {
@@ -13,24 +13,26 @@ public class AwsRegionTests
         }
 
         // Ensure all the regions are unique
-        var names = AwsRegion.All.Select(static a => a.Name).Distinct().ToArray();
+        var names = new HashSet<string>(AwsRegion.All.Select(static a => a.Name));
 
-        Assert.Equal(AwsRegion.All.Length, names.Length);
+        Assert.Equal(AwsRegion.All.Length, names.Count);
     }
 
     [Fact]
     public void A()
     {
-        var r1 = AwsRegion.Get("us-east-1");
-        var r2 = AwsRegion.Get("us-east-2");
+        var usEast1 = AwsRegion.Get("us-east-1");
+        var usEast2 = AwsRegion.Get("us-east-2");
 
-        Assert.Same(AwsRegion.USEast1, r1);
-        Assert.Same(AwsRegion.USEast2, r2);
+        Assert.Same(AwsRegion.USEast1, usEast1);
+        Assert.Same(AwsRegion.USEast2, usEast2);
 
-        Assert.True(r1 != r2);
+        Assert.True(usEast1 != usEast2);
 
-        Assert.Equal("us-east-1", r1.ToString());
-        Assert.Equal("us-east-2", r2.ToString());
+        Assert.Equal("us-east-1", usEast1.ToString());
+        Assert.Equal("us-east-2", usEast2.ToString());
+
+        Assert.Equal("us-east-1"u8.ToArray(), usEast1.Utf8Name.ToArray());
     }
 
     [Fact]
@@ -41,7 +43,7 @@ public class AwsRegionTests
     }
 
     [Fact]
-    public void B()
+    public void AreSame()
     {
         Assert.Same(AwsRegion.USEast1,      AwsRegion.Get("us-east-1"));
         Assert.Same(AwsRegion.USEast2,      AwsRegion.Get("us-east-2"));
