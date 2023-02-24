@@ -8,7 +8,7 @@ public class CopyObjectRequestTests
         var request = new CopyObjectRequest(
             host   : "s3.amazon.com",
             source : new S3ObjectLocation("sourceBucket", "video.mp4"),
-            target : new S3ObjectLocation("targetBucket", "video.mp4")
+            destination : new S3ObjectLocation("targetBucket", "video.mp4")
         );
 
         Assert.Equal(new Uri("https://s3.amazon.com/targetBucket/video.mp4"), request.RequestUri);
@@ -23,7 +23,7 @@ public class CopyObjectRequestTests
         var request = new CopyObjectRequest(
             host   : "s3.amazon.com",
             source : new S3ObjectLocation("sourceBucket", "video.mp4"),
-            target : new S3ObjectLocation("targetBucket", "video.mp4")
+            destination : new S3ObjectLocation("targetBucket", "video.mp4")
         );
 
         request.MetadataDirective = MetadataDirectiveValue.Replace;
@@ -44,7 +44,7 @@ public class CopyObjectRequestTests
         var request = new CopyObjectRequest(
             host: "s3.amazon.com",
             source: new S3ObjectLocation("sourceBucket", "video.mp4"),
-            target: new S3ObjectLocation("targetBucket", "video.mp4")
+            destination: new S3ObjectLocation("targetBucket", "video.mp4")
         );
 
         request.MetadataDirective = MetadataDirectiveValue.Copy;
