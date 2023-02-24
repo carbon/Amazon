@@ -127,7 +127,8 @@ public sealed class KmsClient : AwsClient
                 "AccessDeniedException"       => new AccessDeniedException(error, response.StatusCode),
                 "ServiceUnavailableException" => new ServiceUnavailableException(), // TODO: Provide the message
                 "KeyUnavailableException"     => new KeyUnavailableException(error, response.StatusCode),
-                _ => new KmsException(error, response.StatusCode)
+                "ValidationException"         => new KmsValidationException(error, response.StatusCode),
+                _                             => new KmsException(error, response.StatusCode)
             };
         }
         else

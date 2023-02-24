@@ -9,6 +9,6 @@ public sealed class KmsError
     [JsonPropertyName("__type")]
     public string Type { get; init; }
 
-    [JsonPropertyName("Message")]
+    [JsonPropertyName("message")]
     public string Message { get; init; }
 }
