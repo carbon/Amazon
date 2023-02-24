@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using Carbon.Messaging;
+﻿using Carbon.Messaging;
 
 namespace Amazon.Sns;
 
@@ -13,8 +10,8 @@ public sealed class SnsTopic
     public SnsTopic(AwsRegion region, string accountId, string topicName, IAwsCredential credential)
     {
         ArgumentNullException.ThrowIfNull(region);
-        ArgumentNullException.ThrowIfNull(accountId);
-        ArgumentNullException.ThrowIfNull(topicName);
+        ArgumentException.ThrowIfNullOrEmpty(accountId);
+        ArgumentException.ThrowIfNullOrEmpty(topicName);
 
         _arn    = $"arn:aws:sns:{region}:{accountId}:{topicName}";
         _client = new SnsClient(region, credential);

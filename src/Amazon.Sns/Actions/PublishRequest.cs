@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Amazon.Sns;
+﻿namespace Amazon.Sns;
 
 public sealed class PublishRequest
 {
