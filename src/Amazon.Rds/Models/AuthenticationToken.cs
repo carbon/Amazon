@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Amazon.Rds;
+﻿namespace Amazon.Rds;
 
 public sealed class AuthenticationToken
 {
