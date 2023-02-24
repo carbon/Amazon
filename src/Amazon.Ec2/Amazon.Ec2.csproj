@@ -3,10 +3,9 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Ec2</AssemblyName>
     <TargetFramework>net7.0</TargetFramework>
-    <Version>0.25.0</Version>
+    <Version>0.29.0</Version>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>11</LangVersion>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 

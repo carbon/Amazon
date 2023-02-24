@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Sns</AssemblyName>
-    <Version>0.23.1</Version>
+    <Version>0.24.0</Version>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>11</LangVersion>
     
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
