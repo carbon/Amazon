@@ -70,20 +70,20 @@ public sealed class SendMessageRequest
 
                 ref MessageAttribute attr = ref MessageAttributes[i];
 
-                string prefix = string.Create(CultureInfo.InvariantCulture, $"MessageAttribute.{number}.");
+                string prefix = string.Create(CultureInfo.InvariantCulture, $"MessageAttribute.{number}");
 
-                parameters.Add(new(prefix + "Name", attr.Name));
+                parameters.Add(new($"{prefix}.Name", attr.Name));
 
                 if (attr.Value.DataType is MessageAttributeDataType.Binary)
                 {
-                    parameters.Add(new(prefix + "Value.BinaryValue", attr.Value.Value));
+                    parameters.Add(new($"{prefix}.Value.BinaryValue", attr.Value.Value));
                 }
                 else
                 {
-                    parameters.Add(new(prefix + "Value.StringValue", attr.Value.Value));
+                    parameters.Add(new($"{prefix}.Value.StringValue", attr.Value.Value));
                 }
 
-                parameters.Add(new(prefix + "Value.DataType", attr.Value.DataType.Canonicalize()));
+                parameters.Add(new($"{prefix}.Value.DataType", attr.Value.DataType.Canonicalize()));
             }
         }
 

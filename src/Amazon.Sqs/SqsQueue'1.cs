@@ -39,7 +39,7 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
     {
         // Blocks until we recieve a message
 
-        var request = new RecieveMessagesRequest(take, lockTime, waitTime: TimeSpan.FromSeconds(20));
+        var request = new ReceiveMessagesRequest(take, lockTime, waitTime: TimeSpan.FromSeconds(20));
 
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -58,7 +58,7 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
         TimeSpan? lockTime, 
         CancellationToken cancellationToken)
     {
-        var request = new RecieveMessagesRequest(take, lockTime);
+        var request = new ReceiveMessagesRequest(take, lockTime);
 
         var result = await _client.ReceiveMessagesAsync(_url, request, cancellationToken).ConfigureAwait(false);
 

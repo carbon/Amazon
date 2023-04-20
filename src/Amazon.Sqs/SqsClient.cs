@@ -57,7 +57,7 @@ public sealed class SqsClient : AwsClient
         // Max payload = 256KB (262,144 bytes)
 
         var parameters = new List<KeyValuePair<string, string>>((messages.Count * 2) + 2) {
-            new ("Action", "SendMessageBatch")
+            new("Action", "SendMessageBatch")
         };
 
         for (int i = 0; i < messages.Count; i++)
@@ -65,11 +65,11 @@ public sealed class SqsClient : AwsClient
             int number = i + 1;
 
             string message = messages[i];
-            string prefix = string.Create(CultureInfo.InvariantCulture, $"SendMessageBatchRequestEntry.{number}.");
+            string prefix = string.Create(CultureInfo.InvariantCulture, $"SendMessageBatchRequestEntry.{number}");
 
-            parameters.Add(new (prefix + "Id", i.ToString(CultureInfo.InvariantCulture)));  // .Id				Required
-            parameters.Add(new (prefix + "MessageBody", message));                          // .MessageBody		Required
-                                                                                            // .DelaySeconds	Optional, Max 900(15min)
+            parameters.Add(new($"{prefix}.Id", i.ToString(CultureInfo.InvariantCulture)));  // Id				Required
+            parameters.Add(new($"{prefix}.MessageBody", message));                          // MessageBody		Required
+                                                                                            // DelaySeconds	Optional, Max 900(15min)
         }
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
@@ -96,7 +96,7 @@ public sealed class SqsClient : AwsClient
 
     public async Task<SqsMessage[]> ReceiveMessagesAsync(
         Uri queueUrl,
-        RecieveMessagesRequest request, 
+        ReceiveMessagesRequest request, 
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -144,12 +144,12 @@ public sealed class SqsClient : AwsClient
         ArgumentNullException.ThrowIfNull(recieptHandles);
 
         if (recieptHandles.Length > 10)
-            throw new ArgumentException("Must contain 10 or fewer items.", nameof(recieptHandles));
+            throw new ArgumentException("Must contain 10 or fewer items", nameof(recieptHandles));
 
         // Max payload = 64KB (65,536 bytes)
 
         var parameters = new List<KeyValuePair<string, string>>((recieptHandles.Length * 2) + 2) {
-            new ("Action", "DeleteMessageBatch")
+            new("Action", "DeleteMessageBatch")
         };
 
         for (int i = 0; i < recieptHandles.Length; i++)
@@ -158,8 +158,8 @@ public sealed class SqsClient : AwsClient
             string handle = recieptHandles[i];
             string prefix = string.Create(CultureInfo.InvariantCulture, $"DeleteMessageBatchRequestEntry.{number}.");
 
-            parameters.Add(new (prefix + "Id", i.ToString(CultureInfo.InvariantCulture))); // DeleteMessageBatchRequestEntry.n.Id
-            parameters.Add(new (prefix + "ReceiptHandle", handle));                        // DeleteMessageBatchRequestEntry.n.ReceiptHandle
+            parameters.Add(new(prefix + "Id", i.ToString(CultureInfo.InvariantCulture))); // DeleteMessageBatchRequestEntry.n.Id
+            parameters.Add(new(prefix + "ReceiptHandle", handle));                        // DeleteMessageBatchRequestEntry.n.ReceiptHandle
         }
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
@@ -177,7 +177,7 @@ public sealed class SqsClient : AwsClient
 
     private static FormUrlEncodedContent GetPostContent(List<KeyValuePair<string, string>> parameters)
     {
-        parameters.Add(new ("Version", Version));
+        parameters.Add(new("Version", Version));
 
         return new FormUrlEncodedContent(parameters!);
     }

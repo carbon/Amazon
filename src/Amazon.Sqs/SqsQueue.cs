@@ -35,7 +35,7 @@ public sealed class SqsQueue : IMessageQueue<string>
     {
         // Blocks until we recieve a message
 
-        var request = new RecieveMessagesRequest(take, lockTime, TimeSpan.FromSeconds(20));
+        var request = new ReceiveMessagesRequest(take, lockTime, TimeSpan.FromSeconds(20));
 
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -55,7 +55,7 @@ public sealed class SqsQueue : IMessageQueue<string>
         TimeSpan? lockTime,
         CancellationToken cancellationToken = default)
     {
-        var request = new RecieveMessagesRequest(take, lockTime);
+        var request = new ReceiveMessagesRequest(take, lockTime);
 
         int retryCount = 0;
         Exception lastError;
