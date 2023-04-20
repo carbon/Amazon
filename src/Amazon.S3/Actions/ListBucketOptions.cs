@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace Amazon.S3;
 
@@ -48,7 +47,7 @@ public sealed class ListBucketOptions
         {
             if (Get("max-keys") is string maxKeys)
             {
-                return int.Parse(maxKeys, CultureInfo.InvariantCulture);
+                return int.Parse(maxKeys, NumberStyles.None, CultureInfo.InvariantCulture);
             }
 
             return null;

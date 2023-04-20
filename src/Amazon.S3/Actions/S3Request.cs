@@ -6,6 +6,35 @@ namespace Amazon.S3;
 
 public abstract class S3Request : HttpRequestMessage
 {
+    protected S3Request(
+        HttpMethod method,
+        string host,
+        string bucketName,
+        string? objectName)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(host);
+        ArgumentException.ThrowIfNullOrEmpty(bucketName);
+
+        BucketName = bucketName;
+        ObjectName = objectName;
+
+        var urlBuilder = new ValueStringBuilder(stackalloc char[256]);
+
+        urlBuilder.Append("https://");
+        urlBuilder.Append(host);
+        urlBuilder.Append('/');
+        urlBuilder.Append(bucketName);
+
+        if (objectName is not null)
+        {
+            urlBuilder.Append('/');
+            urlBuilder.Append(objectName);
+        }
+
+        RequestUri = new Uri(urlBuilder.ToString());
+        Method = method;
+    }
+
     internal S3Request(
         HttpMethod method,
         string host,
@@ -14,15 +43,15 @@ public abstract class S3Request : HttpRequestMessage
         string? versionId = null,
         S3ActionName actionName = default)
     {
-        ArgumentNullException.ThrowIfNull(host);
-        ArgumentNullException.ThrowIfNull(bucketName);
+        ArgumentException.ThrowIfNullOrEmpty(host);
+        ArgumentException.ThrowIfNullOrEmpty(bucketName);
 
         BucketName = bucketName;
         ObjectName = objectName;
 
         // https://{bucket}.s3.amazonaws.com/{key}
 
-        var urlBuilder = new ValueStringBuilder(256);
+        var urlBuilder = new ValueStringBuilder(stackalloc char[256]);
 
         urlBuilder.Append("https://");
         urlBuilder.Append(host);

@@ -8,7 +8,7 @@ internal static class HashHelper
 {
     public static byte[] ComputeMD5Hash(ReadOnlySpan<char> text)
     {
-        byte[] rentedBuffer = ArrayPool<byte>.Shared.Rent(text.Length * 4);
+        byte[] rentedBuffer = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(text.Length));
 
         int bufferLength = Encoding.UTF8.GetBytes(text, rentedBuffer);
 

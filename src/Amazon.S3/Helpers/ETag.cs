@@ -16,7 +16,7 @@ public readonly struct ETag
             return null;
         }
 
-        // Generally the ETAG is the MD5 of the object -- hexidecimal encoded and wrapped in quootes.
+        // Generally the ETAG is the MD5 of the object -- hexadecimal encoded and wrapped in quotes.
         // If the object was uploaded using multipart upload then this is the MD5 all of the upload-part-md5s.
 
         // Multipart uploads also contain a dash
