@@ -21,7 +21,7 @@ public static class QuotedPrintable
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        if (text.IndexOf(' ') > 0)
+        if (text.Contains(' '))
         {
             text = text.Replace(" ", string.Empty);
         }
