@@ -17,3 +17,4 @@ dotnet pack ./src/Amazon.CodeBuild        -c Release -o ./release/Amazon.CodeBui
 dotnet pack ./src/Amazon.Rds              -c Release -o ./release/Amazon.Rds
 dotnet pack ./src/Amazon.Route53          -c Release -o ./release/Amazon.Route53
 dotnet pack ./src/Amazon.Ses.Extensions   -c Release -o ./release/Amazon.Ses.Extensions
+dotnet pack ./src/Wasabi                  -c Release -o ./release/Wasabi
