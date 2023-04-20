@@ -25,7 +25,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
     public S3Bucket(string bucketName, S3Client client)
     {
-        ArgumentNullException.ThrowIfNull(bucketName);
+        ArgumentException.ThrowIfNullOrEmpty(bucketName);
         ArgumentNullException.ThrowIfNull(client);
 
         _bucketName = bucketName;
@@ -39,6 +39,38 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         _client.WithTimeout(timeout);
 
         return this;
+    }
+
+    public async IAsyncEnumerable<IBlob> ScanAsync(string? prefix, int take = 1_000_000_000)
+    {
+        string? continuationToken = null;
+        int count = 0;
+
+        do
+        {
+            var request = new ListBucketOptions {
+                Prefix = prefix,
+                ContinuationToken = continuationToken,
+                MaxKeys = take
+            };
+
+            var result = await _client.ListBucketAsync(_bucketName, request).ConfigureAwait(false);
+
+            foreach (var item in result.Items)
+            {
+                yield return item;
+
+                count++;
+
+                if (count >= take)
+                {
+                    yield break;
+                }
+            }
+
+            continuationToken = result.NextContinuationToken;
+
+        } while (continuationToken is { Length: > 0 });
     }
 
     public Task<IReadOnlyList<IBlob>> ListAsync(string? prefix = null)
@@ -225,7 +257,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
             var request = new CopyObjectRequest(
                 host   : _client.Host,
                 source : sourceLocation,
-                target : new S3ObjectLocation(_bucketName, destinationKey)
+                destination : new S3ObjectLocation(_bucketName, destinationKey)
             );
 
             if (metadata is not null)
@@ -253,9 +285,9 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
     private static readonly PutBlobOptions defaultPutOptions = new ();
 
-    public Task PutAsync(IBlob blob, CancellationToken cancelationToken = default)
+    public Task PutAsync(IBlob blob, CancellationToken cancellationToken = default)
     {
-        return PutAsync(blob, defaultPutOptions, cancelationToken);
+        return PutAsync(blob, defaultPutOptions, cancellationToken);
     }
 
     public async Task PutAsync(
@@ -279,7 +311,6 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         if (stream.CanSeek && stream.Position != 0)
             throw new ArgumentException($"Invalid position. Expected 0. Was {stream.Position}", nameof(blob));
 
-
         int retryCount = 0;
         Exception lastException;
 
@@ -300,7 +331,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
             request.SetStream(stream, sha256Hash);
 
-            // Server side encrpytion
+            // Server side encryption
             if (options.EncryptionKey is not null)
             {
                 request.SetCustomerEncryptionKey(new ServerSideEncryptionKey(options.EncryptionKey));
@@ -321,7 +352,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
             }
             catch (HttpRequestException httpException) when (httpException.InnerException is IOException)
             {
-                // Amazon may force close the connection before recieving the entire response.
+                // Amazon may force close the connection before receiving the entire response.
                 // Broken pipe | The response ended prematurely
                 lastException = httpException;
             }
@@ -444,7 +475,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
             }
             catch (HttpRequestException httpException) // Broken pipe
             {
-                // Amazon may force close the connection before recieving the entire response.
+                // Amazon may force close the connection before receiving the entire response.
                 // See: https://github.com/dotnet/runtime/issues/57186
 
                 lastException = httpException;
