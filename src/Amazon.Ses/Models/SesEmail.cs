@@ -29,11 +29,11 @@ public sealed class SesEmail
 
     public SesContent? Text { get; set; }
 
-    public List<KeyValuePair<string, string>> ToParams()
+    public List<KeyValuePair<string, string>> ToParameters()
     {
-        var result = new List<KeyValuePair<string, string>>(10);
-
-        result.Add(new ("Source", Source));        
+        var result = new List<KeyValuePair<string, string>>(16) {
+            new("Source", Source)
+        };
 
         SetContent("Message.Subject", Subject, result);
 
@@ -126,11 +126,11 @@ public sealed class SesEmail
     {
         if (content is null) return;
 
-        dic.Add(new (prefix + ".Data", content.Data));
+        dic.Add(new($"{prefix}.Data", content.Data));
 
         if (content.Charset is not null)
         {
-            dic.Add(new (prefix + ".Charset", content.Charset));
+            dic.Add(new($"{prefix}.Charset", content.Charset));
         }
     }
 

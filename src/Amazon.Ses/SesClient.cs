@@ -30,7 +30,7 @@ public sealed class SesClient : AwsClient
     {
         var request = new SesRequest("SendEmail");
 
-        foreach (var pair in message.ToParams())
+        foreach (var pair in message.ToParameters())
         {
             request.Add(pair);
         }

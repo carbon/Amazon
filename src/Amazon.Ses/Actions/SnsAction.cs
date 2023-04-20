@@ -11,7 +11,7 @@ public sealed class SnsAction
     }
 
     // UTF-8 | Base64
-    public string? Encoding { get; set; }
+    public string? Encoding { get; init; }
 
-    public required string TopicArn { get; set; }
+    public required string TopicArn { get; init; }
 }
