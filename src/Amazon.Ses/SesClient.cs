@@ -32,7 +32,7 @@ public sealed class SesClient : AwsClient
 
         foreach (var pair in message.ToParams())
         {
-            request.Add(pair.Key, pair.Value);
+            request.Add(pair);
         }
 
         var text = await SendWithRetryPolicy(request, retryPolicy).ConfigureAwait(false);
@@ -46,7 +46,7 @@ public sealed class SesClient : AwsClient
 
         foreach (var pair in request.ToParams())
         {
-            data.Add(pair.Key, pair.Value);
+            data.Add(pair);
         }
 
         var text = await SendWithRetryPolicy(data, retryPolicy).ConfigureAwait(false);
@@ -104,7 +104,7 @@ public sealed class SesClient : AwsClient
 
     private Task<string> PostAsync(SesRequest request)
     {
-        request.Parameters.Add("Version", Version);
+        request.Parameters.Add(new("Version", Version));
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Content = new FormUrlEncodedContent(request.Parameters!)

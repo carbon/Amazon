@@ -4,6 +4,6 @@ public sealed class SesRequest : AwsRequest
 {
     public SesRequest(string action)
     {
-        Parameters.Add("Action", action);
+        Parameters.Add(new("Action", action));
     }
 }

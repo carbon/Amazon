@@ -7,29 +7,34 @@ public class AwsRequest : IEnumerable<KeyValuePair<string, string>>
 {
     public AwsRequest()
     {
-        Parameters = new Dictionary<string, string>();
+        Parameters = new List<KeyValuePair<string, string>>(4);
     }
 
     public AwsRequest(KeyValuePair<string, string>[] parameters)
     {
-        Parameters = new Dictionary<string, string>(parameters.Length);
+        Parameters = new List<KeyValuePair<string, string>>(parameters.Length);
 
         foreach (var parameter in parameters)
         {
-            Parameters.Add(parameter.Key, parameter.Value);
+            Parameters.Add(parameter);
         }
     }
 
-    public Dictionary<string, string> Parameters { get; }
+    public List<KeyValuePair<string, string>> Parameters { get; }
 
     public void Add(string name, string value)
     {
-        Parameters.Add(name, value);
+        Parameters.Add(new (name, value));
+    }
+
+    public void Add(KeyValuePair<string, string> item)
+    {
+        Parameters.Add(item);
     }
 
     public void Add(string name, int value)
     {
-        Parameters.Add(name, value.ToString(CultureInfo.InvariantCulture));
+        Parameters.Add(new (name, value.ToString(CultureInfo.InvariantCulture)));
     }
 
     // IEnumerable

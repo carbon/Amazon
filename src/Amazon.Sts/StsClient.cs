@@ -96,7 +96,7 @@ public sealed class StsClient : AwsClient
 
     private static FormUrlEncodedContent GetPostContent(List<KeyValuePair<string, string>> parameters)
     {
-        parameters.Add(new ("Version", Version));
+        parameters.Add(new("Version", Version));
 
         return new FormUrlEncodedContent(parameters);
     }

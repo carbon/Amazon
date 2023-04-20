@@ -5,7 +5,7 @@ namespace Amazon.Helpers;
 
 public static class DictionaryExtensions
 {
-    public static string ToPostData(this Dictionary<string, string> nvc)
+    public static string ToPostData(this List<KeyValuePair<string, string>> nvc)
     {
         if (nvc is null || nvc.Count is 0)
         {
@@ -15,7 +15,7 @@ public static class DictionaryExtensions
         return ToPostData(nvc, null);
     }
 
-    public static string ToQueryString(this Dictionary<string, string> nvc)
+    public static string ToQueryString(this List<KeyValuePair<string, string>> nvc)
     {
         if (nvc is null || nvc.Count is 0)
         {
@@ -25,7 +25,7 @@ public static class DictionaryExtensions
         return nvc.ToPostData(prefix: '?');
     }
 
-    private static string ToPostData(this Dictionary<string, string> nvc, char? prefix)
+    private static string ToPostData(this List<KeyValuePair<string, string>> nvc, char? prefix)
     {
         var sb = new ValueStringBuilder(nvc.Count * 24);
 
@@ -34,7 +34,7 @@ public static class DictionaryExtensions
             sb.Append(prefix.Value);
         }
 
-        foreach (string key in nvc.Keys)
+        foreach (var (key, value) in nvc)
         {
             if (string.IsNullOrEmpty(key)) continue;
 
@@ -45,7 +45,7 @@ public static class DictionaryExtensions
 
             sb.Append(key);
             sb.Append('=');
-            sb.Append(UrlEncoder.Default.Encode(nvc[key]));
+            sb.Append(UrlEncoder.Default.Encode(value));
         }
 
         return sb.ToString();
