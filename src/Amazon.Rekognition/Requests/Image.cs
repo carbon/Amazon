@@ -8,7 +8,7 @@ public sealed class Image
     {
         if (blob.Length > 5_242_880)
         {
-            throw new ArgumentOutOfRangeException(nameof(blob), blob.Length, "Must be less than 5242880 bytes");
+            throw new ArgumentOutOfRangeException(nameof(blob), blob.Length, "Must be less than 5,242,880 bytes");
         }
 
         Bytes = blob;

@@ -1,8 +1,17 @@
-﻿namespace Amazon.Rekognition;
+﻿using System.Text.Json.Serialization;
 
-public class Beard
+namespace Amazon.Rekognition;
+
+public sealed class Beard
 {
-    public double Confidence { get; set; }
+    [JsonConstructor]
+    public Beard(int confidence, bool value)
+    {
+        Confidence = confidence;
+        Value = value;
+    }
 
-    public bool Value { get; set; }
+    public double Confidence { get; }
+
+    public bool Value { get; }
 }

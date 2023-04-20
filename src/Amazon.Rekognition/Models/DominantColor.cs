@@ -1,4 +1,6 @@
-﻿namespace Amazon.Rekognition;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Rekognition;
 
 public class DominantColor
 {
@@ -15,4 +17,6 @@ public class DominantColor
     public int Red { get; set; }
 
     public string SimplifiedColor { get; set; }
+
+    internal (int, int, int) GetRGB() => (Red, Green, Blue);
 }

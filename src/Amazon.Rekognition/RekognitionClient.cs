@@ -1,13 +1,12 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading;
 
 namespace Amazon.Rekognition;
 
 public sealed class RekognitionClient : AwsClient
 {
-    public static readonly string Version = "2016-06-27";
+    public const string Version = "2016-06-27";
 
     public RekognitionClient(AwsRegion region, IAwsCredential credential)
         : base(AwsService.Rekognition, region, credential)

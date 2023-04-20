@@ -8,9 +8,11 @@ public class FaceDetail
 
     public BoundingBox BoundingBox { get; set; }
 
+    public List<Landmark>? Landmarks { get; set; }
+
     public float Confidence { get; set; }
 
-    public Emotion[] Emotions { get; set; }
+    public Emotion[]? Emotions { get; set; }
 
     public Eyeglasses? Eyeglasses { get; set; }
 
@@ -18,5 +20,7 @@ public class FaceDetail
 
     public Smile? Smile { get; set; }
 
-    public Pose Pose { get; set; }
+    public Pose? Pose { get; set; }
+
+    public ImageQuality? Quality { get; set; }
 }

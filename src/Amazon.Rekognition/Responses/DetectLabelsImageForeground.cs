@@ -2,7 +2,9 @@
 
 public sealed class DetectLabelsImageForeground
 {
-    public DetectLabelsImageForeground(DominantColor[] dominantColors, DetectLabelsImageQuality quality)
+    public DetectLabelsImageForeground(
+        DominantColor[] dominantColors,
+        DetectLabelsImageQuality quality)
     {
         DominantColors = dominantColors;
         Quality = quality;

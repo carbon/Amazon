@@ -1,7 +1,10 @@
-﻿namespace Amazon.Rekognition;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Rekognition;
 
 public sealed class Pose
 {
+    [JsonConstructor]
     public Pose(double pitch, double roll, double yaw)
     {
         Pitch = pitch;

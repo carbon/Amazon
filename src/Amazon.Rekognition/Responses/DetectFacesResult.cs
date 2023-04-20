@@ -2,7 +2,7 @@
 
 public sealed class DetectFacesResult
 {
-    public FaceDetail FaceDetails { get; set; }
+    public required FaceDetail FaceDetails { get; set; }
 
     public OrientationCorrection OrientationCorrection { get; set; }
 }
