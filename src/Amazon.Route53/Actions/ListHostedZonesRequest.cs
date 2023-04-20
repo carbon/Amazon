@@ -1,14 +1,12 @@
-﻿#nullable disable
-
-namespace Amazon.Route53;
+﻿namespace Amazon.Route53;
 
 public sealed class ListHostedZonesRequest
 {
-    public string DelegationSetId { get; set; }
+    public string? DelegationSetId { get; set; }
 
-    public string Marker { get; set; }
+    public string? Marker { get; set; }
 
-    public int MaxItems { get; set; }
+    public int? MaxItems { get; set; }
 }
 
 

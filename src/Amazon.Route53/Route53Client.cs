@@ -15,9 +15,11 @@ public sealed class Route53Client : AwsClient
     {
     }
 
-    public Task<ChangeResourceRecordSetsResponse> ChangeResourceRecordSetsAsync(string hostedZoneId, ChangeResourceRecordSetsRequest request)
+    public Task<ChangeResourceRecordSetsResponse> ChangeResourceRecordSetsAsync(
+        string hostedZoneId,
+        ChangeResourceRecordSetsRequest request)
     {
-        ArgumentNullException.ThrowIfNull(hostedZoneId);
+        ArgumentException.ThrowIfNullOrEmpty(hostedZoneId);
         ArgumentNullException.ThrowIfNull(request);
 
         return PostXmlAsync<ChangeResourceRecordSetsRequest, ChangeResourceRecordSetsResponse>(
@@ -45,7 +47,7 @@ public sealed class Route53Client : AwsClient
     private async Task<TResult> GetAsync<TResult>(string path)
         where TResult: notnull
     {
-        string url = baseUrl + Version + path;
+        string url = $"{baseUrl}{Version}{path}";
 
         var responseText = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url)).ConfigureAwait(false);
 
@@ -56,7 +58,7 @@ public sealed class Route53Client : AwsClient
         where T: notnull
         where TResult: notnull
     {
-        string url = baseUrl + Version + path;
+        string url = $"{baseUrl}{Version}{path}";
 
         var request = new HttpRequestMessage(HttpMethod.Post, url) {
             Content = new ByteArrayContent(Route53Serializer<T>.SerializeToUtf8Bytes(data)) {

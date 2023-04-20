@@ -26,27 +26,26 @@ public sealed class ListResourceRecordSetsRequest
 
     public string ToQueryString()
     {
-        var dic = new Dictionary<string, string>();
-
+        var dic = new List<KeyValuePair<string, string>>(4);
 
         if (Identifier != null)
         {
-            dic.Add("identifier", Identifier);
+            dic.Add(new("identifier", Identifier));
         }
 
-        if (MaxItems != null)
+        if (MaxItems.HasValue)
         {
-            dic.Add("maxitems", MaxItems.Value.ToString());
+            dic.Add(new("maxitems", MaxItems.Value.ToString()));
         }
 
         if (Name != null)
         {
-            dic.Add("name", Name);
+            dic.Add(new("name", Name));
         }
 
         if (Type.HasValue)
         {
-            dic.Add("type", Type.Value.ToString());
+            dic.Add(new("type", Type.Value.ToString()));
         }
 
         return dic.ToQueryString();

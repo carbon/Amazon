@@ -16,12 +16,12 @@ public sealed class ListGeoLocationsRequest
 
     public string ToQueryString()
     {
-        var items = new Dictionary<string, string>();
+        var items = new List<KeyValuePair<string, string>>(4);
 
-        if (MaxItems != null)           items.Add("maxitems", MaxItems.Value.ToString(CultureInfo.InvariantCulture));
-        if (StartContinentCode != null) items.Add("startcontinentcode", StartContinentCode);
-        if (StartCountryCode != null)   items.Add("startcountrycode", StartCountryCode);
-        if (StartSubdivision != null)   items.Add("startsubdivision", StartSubdivision);
+        if (MaxItems != null)           items.Add(new("maxitems", MaxItems.Value.ToString(CultureInfo.InvariantCulture)));
+        if (StartContinentCode != null) items.Add(new("startcontinentcode", StartContinentCode));
+        if (StartCountryCode != null)   items.Add(new("startcountrycode", StartCountryCode));
+        if (StartSubdivision != null)   items.Add(new("startsubdivision", StartSubdivision));
 
         return items.ToQueryString();
     }
