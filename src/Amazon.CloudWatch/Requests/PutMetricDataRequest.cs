@@ -22,11 +22,11 @@ public sealed class PutMetricDataRequest : List<MetricDatum>
             var datum = this[i];
             int number = i + 1;
 
-            var prefix = string.Create(CultureInfo.InvariantCulture, $"MetricData.member.{number}.");
+            var prefix = string.Create(CultureInfo.InvariantCulture, $"MetricData.member.{number}");
 
-            parameters.Add(new(prefix + "MetricName", datum.MetricName));
-            parameters.Add(new(prefix + "Unit", datum.Unit));
-            parameters.Add(new(prefix + "Value", datum.Value.ToString()));
+            parameters.Add(new($"{prefix}.MetricName", datum.MetricName));
+            parameters.Add(new($"{prefix}.Unit",       datum.Unit));
+            parameters.Add(new($"{prefix}.Value",      datum.Value.ToString()));
 
             if (datum.Dimensions != null)
             {
@@ -34,10 +34,10 @@ public sealed class PutMetricDataRequest : List<MetricDatum>
                 {
                     var dimension = datum.Dimensions[i2];
 
-                    var prefix2 = string.Create(CultureInfo.InvariantCulture, $"{prefix}Dimensions.member.{i2 + 1}.");
+                    var prefix2 = string.Create(CultureInfo.InvariantCulture, $"{prefix}Dimensions.member.{i2 + 1}");
 
-                    parameters.Add(new(prefix2 + "Name", dimension.Name));
-                    parameters.Add(new(prefix2 + "Value", dimension.Name));
+                    parameters.Add(new($"{prefix2}.Name", dimension.Name));
+                    parameters.Add(new($"{prefix2}.Value", dimension.Name));
                 }
             }
         }

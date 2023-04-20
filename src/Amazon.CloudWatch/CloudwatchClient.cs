@@ -29,16 +29,15 @@ public sealed class CloudWatchClient : AwsClient
     public async Task EnableAlarmActionsAsync() { }
     */
 
-    public async Task<GetMetricStatatisticsResponse> GetMetricStatisticsAsync(GetMetricStatisticsRequest request)
+    public async Task<GetMetricStatisticsResponse> GetMetricStatisticsAsync(GetMetricStatisticsRequest request)
     {
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-        {
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Content = GetPostContent(request.ToParameters())
         };
 
         var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
-        return GetMetricStatatisticsResponse.Deserialize(responseText);
+        return GetMetricStatisticsResponse.Deserialize(responseText);
     }
 
     public async Task<List<Metric>> ListMetricsAsyncAsync(ListMetricsRequest request)

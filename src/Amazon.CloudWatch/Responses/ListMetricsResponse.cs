@@ -12,9 +12,9 @@ public static class ListMetricsResponse
     {
         var metrics = new List<Metric>();
 
-        var rooteEl = XElement.Parse(xmlText); // ListMetricsResponse
+        var rootEl = XElement.Parse(xmlText); // ListMetricsResponse
 
-        var listMetricsResultEl = rooteEl.Element(NS + "ListMetricsResult");
+        var listMetricsResultEl = rootEl.Element(NS + "ListMetricsResult");
         var metricsEl = listMetricsResultEl.Element(NS + "Metrics");
 
         foreach (var metricEl in metricsEl.Elements()) // member...

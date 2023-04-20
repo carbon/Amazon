@@ -21,7 +21,7 @@ public sealed class DataPoint
 
     public string Unit { get; set; }
 
-    internal static DataPoint FromXml(XNamespace ns, XElement el)
+    internal static DataPoint FromXElement(XNamespace ns, XElement el)
     {
         var metric = new DataPoint
         {
