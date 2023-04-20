@@ -29,6 +29,8 @@ public sealed class EncryptRequest : KmsRequest
         GrantTokens = grantTokens;
     }
 
+    public EncryptionAlgorithm? EncryptionAlgorithm { get; init; }
+
     /// <summary>
     /// An encryption context is a key/value pair that you can pass to 
     /// AWS KMS when you call the Encrypt function.
@@ -40,7 +42,6 @@ public sealed class EncryptRequest : KmsRequest
     /// Decryption will only succeed if the value you pass for decryption
     /// is exactly the same as the value you passed during encryption
     /// and the ciphertext has not been tampered with. 
-    /// The encryption context is logged by using CloudTrail.
     /// </summary>
     public IReadOnlyDictionary<string, string>? EncryptionContext { get; }
 
@@ -49,30 +50,7 @@ public sealed class EncryptRequest : KmsRequest
 
     public string KeyId { get; }
 
+    // EncryptionAlgorithm
+
     public byte[] Plaintext { get; }
 }
-
-/*
-{
-   "EncryptionContext": 
-    {
-        "string" : "string"
-    },
-    "GrantTokens": [
-        "string"
-    ],
-    "KeyId": "string",
-    "Plaintext": blob
-}
-*/
-
-/*
-A unique identifier for the customer master key. 
-This value can be a globally unique identifier, a fully specified ARN to either an alias or a key,
-or an alias name prefixed by "alias/".
-
-Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
-Alias ARN Example - arn:aws:kms:us-east-1:123456789012:alias/MyAliasName
-Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
-Alias Name Example - alias/MyAliasName
-*/
