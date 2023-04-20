@@ -1,24 +1,22 @@
-﻿#nullable disable
+﻿namespace Amazon.CloudWatch;
 
-namespace Amazon.CloudWatch;
-
-public class ListMetricsRequest
+public sealed class ListMetricsRequest
 {
-    public string MetricName { get; set; }
+    public string? MetricName { get; set; }
 
-    public string Namespace { get; set; }
+    public string? Namespace { get; set; }
 
-    public string NextToken { get; set; }
+    public string? NextToken { get; set; }
 
-    public AwsRequest ToParams()
+    internal List<KeyValuePair<string, string>> ToParameters()
     {
-        var parameters = new AwsRequest {
-            { "Action", "ListMetrics" }
+        var parameters = new List<KeyValuePair<string, string>>(5) {
+            new("Action", "ListMetrics")
         };
 
-        if (MetricName != null) parameters.Add("MetricName", MetricName);
-        if (Namespace != null)  parameters.Add("Namespace", Namespace);
-        if (NextToken != null)  parameters.Add("NextToken", NextToken);
+        if (MetricName != null) parameters.Add(new("MetricName", MetricName));
+        if (Namespace != null)  parameters.Add(new("Namespace", Namespace));
+        if (NextToken != null)  parameters.Add(new("NextToken", NextToken));
 
         return parameters;
     }

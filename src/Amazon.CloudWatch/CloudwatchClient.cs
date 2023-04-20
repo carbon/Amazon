@@ -22,7 +22,7 @@ public sealed class CloudWatchClient : AwsClient
 
     public async Task DescribeAlarmsAsync() { }
 
-    public async Task DesribeAlarmsForMetricAsync() { }
+    public async Task DescribeAlarmsForMetricAsync() { }
 
     public async Task DisableAlarmActions() { }
 
@@ -33,7 +33,7 @@ public sealed class CloudWatchClient : AwsClient
     {
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
         {
-            Content = GetPostContent(request.ToParams())
+            Content = GetPostContent(request.ToParameters())
         };
 
         var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
@@ -43,9 +43,8 @@ public sealed class CloudWatchClient : AwsClient
 
     public async Task<List<Metric>> ListMetricsAsyncAsync(ListMetricsRequest request)
     {
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
-        {
-            Content = GetPostContent(request.ToParams())
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
+            Content = GetPostContent(request.ToParameters())
         };
 
         var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
@@ -63,7 +62,7 @@ public sealed class CloudWatchClient : AwsClient
     {
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
         {
-            Content = GetPostContent(request.ToParams())
+            Content = GetPostContent(request.ToParameters())
         };
 
         await SendAsync(httpRequest).ConfigureAwait(false);
@@ -79,11 +78,11 @@ public sealed class CloudWatchClient : AwsClient
 
     #region Helpers
 
-    private static FormUrlEncodedContent GetPostContent(AwsRequest request)
+    private static FormUrlEncodedContent GetPostContent(List<KeyValuePair<string, string>> nvc)
     {
-        request.Add("Version", Version);
+        nvc.Add(new("Version", Version));
 
-        return new FormUrlEncodedContent(request.Parameters!);
+        return new FormUrlEncodedContent(nvc);
     }
 
     protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)

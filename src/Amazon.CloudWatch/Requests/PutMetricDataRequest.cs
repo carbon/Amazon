@@ -6,15 +6,15 @@ public sealed class PutMetricDataRequest : List<MetricDatum>
 {
     public required string Namespace { get; init; }
 
-    public AwsRequest ToParams()
+    internal List<KeyValuePair<string, string>> ToParameters()
     {
-        var parameters = new AwsRequest {
-            { "Action", "PutMetricData" }
+        var parameters = new List<KeyValuePair<string,string>> {
+            new("Action", "PutMetricData")
         };
 
         if (Namespace != null)
         {
-            parameters.Add("Namespace", Namespace);
+            parameters.Add(new("Namespace", Namespace));
         }
 
         for (int i = 0; i < Count; i++)
@@ -24,9 +24,9 @@ public sealed class PutMetricDataRequest : List<MetricDatum>
 
             var prefix = string.Create(CultureInfo.InvariantCulture, $"MetricData.member.{number}.");
 
-            parameters.Add(prefix + "MetricName", datum.MetricName);
-            parameters.Add(prefix + "Unit", datum.Unit);
-            parameters.Add(prefix + "Value", datum.Value.ToString());
+            parameters.Add(new(prefix + "MetricName", datum.MetricName));
+            parameters.Add(new(prefix + "Unit", datum.Unit));
+            parameters.Add(new(prefix + "Value", datum.Value.ToString()));
 
             if (datum.Dimensions != null)
             {
@@ -36,8 +36,8 @@ public sealed class PutMetricDataRequest : List<MetricDatum>
 
                     var prefix2 = string.Create(CultureInfo.InvariantCulture, $"{prefix}Dimensions.member.{i2 + 1}.");
 
-                    parameters.Add(prefix2 + "Name", dimension.Name);
-                    parameters.Add(prefix2 + "Value", dimension.Name);
+                    parameters.Add(new(prefix2 + "Name", dimension.Name));
+                    parameters.Add(new(prefix2 + "Value", dimension.Name));
                 }
             }
         }

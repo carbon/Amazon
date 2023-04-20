@@ -36,22 +36,22 @@ public sealed class GetMetricStatisticsRequest
     /// </summary>
     public TimeSpan Period { get; set; } = TimeSpan.FromSeconds(60);
 
-    public AwsRequest ToParams()
+    internal List<KeyValuePair<string, string>> ToParameters()
     {
-        var parameters = new AwsRequest {
-            { "Action"     , "GetMetricStatistics" },
+        var parameters = new List<KeyValuePair<string, string>> {
+            new ("Action", "GetMetricStatistics"),
 
-            // Required paramaeters
-            { "Namespace"  , Namespace },
-            { "MetricName" , MetricName },
-            { "StartTime"  , StartTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture) },
-            { "EndTime"    , EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture) },
-            { "Period"     , (int)Period.TotalSeconds }
+            // Required parameters
+            new ("Namespace",  Namespace),
+            new ("MetricName", MetricName),
+            new ("StartTime",  StartTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)),
+            new ("EndTime",    EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)),
+            new ("Period",     ((int)Period.TotalSeconds).ToString(CultureInfo.InvariantCulture))
         };
 
         if (Unit != null)
         {
-            parameters.Add("Unit", Unit);
+            parameters.Add(new ("Unit", Unit));
         }
 
         if (Dimensions != null)
@@ -63,8 +63,8 @@ public sealed class GetMetricStatisticsRequest
 
                 string prefix = string.Create(CultureInfo.InvariantCulture, $"Dimensions.member.{number}.");
 
-                parameters.Add(prefix + "Name", dimension.Name);
-                parameters.Add(prefix + "Value", dimension.Value);
+                parameters.Add(new(prefix + "Name", dimension.Name));
+                parameters.Add(new(prefix + "Value", dimension.Value));
             }
         }
 
@@ -75,7 +75,7 @@ public sealed class GetMetricStatisticsRequest
                 var stat = Statistics[i];
                 int number = (i + 1);
 
-                parameters.Add(string.Create(CultureInfo.InvariantCulture, $"Statistics.member.{number}"), stat.Name);
+                parameters.Add(new (string.Create(CultureInfo.InvariantCulture, $"Statistics.member.{number}"), stat.Name));
             }
         }
 

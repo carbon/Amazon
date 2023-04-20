@@ -6,10 +6,10 @@ public sealed class PutMetricAlarmRequest
 
     public bool? ActionsEnabled { get; init; }
 
-    public AwsRequest ToParams()
+    internal List<KeyValuePair<string, string>> ToParameters()
     {
-        var parameters = new AwsRequest {
-            { "Action", "PutMetricAlarm" }
+        var parameters = new List<KeyValuePair<string, string>> {
+            new ("Action", "PutMetricAlarm")
         };
 
         // TODO
