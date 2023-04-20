@@ -127,9 +127,9 @@ public class DbValueTests
     public void DbMap5()
     {
         var ips = new List<IPAddress> {
-                IPAddress.Parse("192.168.1.1"),
-                IPAddress.Parse("192.168.1.2")
-            };
+            IPAddress.Parse("192.168.1.1"),
+            IPAddress.Parse("192.168.1.2")
+        };
 
         var value = new DbValue(AttributeCollection.FromObject(new Machine {
             Id = 1,
@@ -316,7 +316,7 @@ public class DbValueTests
     [Fact]
     public void DbMap1()
     {
-        var dbValue = Parse("""{"M":{"a":{"N":"1"},"b":{"S":"boat"},"c":{"BOOL":true}}}""");
+        var dbValue = Deserialize("""{"M":{"a":{"N":"1"},"b":{"S":"boat"},"c":{"BOOL":true}}}""");
 
         Assert.Equal(DbValueType.M, dbValue.Kind);
 
@@ -331,7 +331,7 @@ public class DbValueTests
         Assert.Equal(DbValueType.BOOL, c.Kind);
     }
 
-    private static DbValue Parse(string text)
+    private static DbValue Deserialize(ReadOnlySpan<char> text)
     {
         return JsonSerializer.Deserialize<DbValue>(text);
     }
