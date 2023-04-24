@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Net.Http;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -9,7 +9,7 @@ public sealed class DynamoDbManagementClient : AwsClient
 {
     private const string TargetPrefix = "DynamoDB_20120810";
 
-    private static readonly JsonSerializerOptions serializerOptions = new()
+    private static readonly JsonSerializerOptions s_serializerOptions = new()
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
@@ -20,39 +20,39 @@ public sealed class DynamoDbManagementClient : AwsClient
         _httpClient.Timeout = TimeSpan.FromSeconds(10);
     }
 
-    public async Task<CreateTableResult> CreateTableAsync(CreateTableRequest request)
+    public Task<CreateTableResult> CreateTableAsync(CreateTableRequest request)
     {
-        return await HandleRequestAsync<CreateTableRequest, CreateTableResult>("CreateTable", request).ConfigureAwait(false);
+        return HandleRequestAsync<CreateTableRequest, CreateTableResult>("CreateTable", request);
     }
 
-    public async Task<DeleteTableResult> DeleteTableAsync(string tableName)
+    public Task<DeleteTableResult> DeleteTableAsync(string tableName)
     {
-        return await HandleRequestAsync<TableRequest, DeleteTableResult>("DeleteTable", new TableRequest(tableName)).ConfigureAwait(false);
+        return HandleRequestAsync<TableRequest, DeleteTableResult>("DeleteTable", new TableRequest(tableName));
     }
 
-    public async Task<DescribeTableResult> DescribeTableAsync(string tableName)
+    public Task<DescribeTableResult> DescribeTableAsync(string tableName)
     {
-        return await HandleRequestAsync<TableRequest, DescribeTableResult>("DescribeTable", new TableRequest(tableName)).ConfigureAwait(false);
+        return HandleRequestAsync<TableRequest, DescribeTableResult>("DescribeTable", new TableRequest(tableName));
     }
 
-    public async Task<DescribeTimeToLiveResult> DescribeTimeToLiveAsync(string tableName)
+    public Task<DescribeTimeToLiveResult> DescribeTimeToLiveAsync(string tableName)
     {
-        return await HandleRequestAsync<TableRequest, DescribeTimeToLiveResult>("DescribeTimeToLive", new TableRequest(tableName)).ConfigureAwait(false);
+        return HandleRequestAsync<TableRequest, DescribeTimeToLiveResult>("DescribeTimeToLive", new TableRequest(tableName));
     }
 
-    public async Task<ListTablesResult> ListTablesAsync(ListTablesRequest request)
+    public Task<ListTablesResult> ListTablesAsync(ListTablesRequest request)
     {
-        return await HandleRequestAsync<ListTablesRequest, ListTablesResult>("ListTables", request).ConfigureAwait(false);
+        return HandleRequestAsync<ListTablesRequest, ListTablesResult>("ListTables", request);
     }
 
-    public async Task<UpdateTableResult> UpdateTableAsync(UpdateTableRequest request)
+    public Task<UpdateTableResult> UpdateTableAsync(UpdateTableRequest request)
     {
-        return await HandleRequestAsync<UpdateTableRequest, UpdateTableResult>("UpdateTable", request).ConfigureAwait(false);
+        return HandleRequestAsync<UpdateTableRequest, UpdateTableResult>("UpdateTable", request);
     }
 
-    public async Task<UpdateTimeToLiveResult> UpdateTimeToLiveAsync(UpdateTimeToLiveRequest request)
+    public Task<UpdateTimeToLiveResult> UpdateTimeToLiveAsync(UpdateTimeToLiveRequest request)
     {
-        return await HandleRequestAsync<UpdateTimeToLiveRequest, UpdateTimeToLiveResult>("UpdateTimeToLive", request).ConfigureAwait(false);
+        return HandleRequestAsync<UpdateTimeToLiveRequest, UpdateTimeToLiveResult>("UpdateTimeToLive", request);
     }
 
     #region Helpers
@@ -70,9 +70,10 @@ public sealed class DynamoDbManagementClient : AwsClient
             throw await DynamoDbException.FromResponseAsync(response).ConfigureAwait(false);
         }
 
-        using Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-        return (await JsonSerializer.DeserializeAsync<TResult>(stream, serializerOptions).ConfigureAwait(false))!;
+        var result = await response.Content.ReadFromJsonAsync<TResult>(s_serializerOptions).ConfigureAwait(false);
+
+        return result!;
     }
 
     private HttpRequestMessage Setup(string action, byte[]? utf8Json)

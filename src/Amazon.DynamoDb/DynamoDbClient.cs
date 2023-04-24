@@ -12,8 +12,7 @@ public sealed class DynamoDbClient : AwsClient
 {
     private const string TargetPrefix = "DynamoDB_20120810";
 
-    private static readonly JsonSerializerOptions s_serializerOptions = new()
-    {
+    private static readonly JsonSerializerOptions s_jso = new() {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
@@ -238,7 +237,7 @@ public sealed class DynamoDbClient : AwsClient
             throw await DynamoDbException.FromResponseAsync(response).ConfigureAwait(false);
         }
 
-        var result = await response.Content.ReadFromJsonAsync<TResult>(s_serializerOptions).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync<TResult>(s_jso).ConfigureAwait(false);
 
         return result!;
     }
