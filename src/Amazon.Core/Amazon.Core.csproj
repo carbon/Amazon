@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Core</AssemblyName>
     <TargetFramework>net7.0</TargetFramework>
-    <Version>0.29.1</Version>
+    <Version>0.30.0</Version>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

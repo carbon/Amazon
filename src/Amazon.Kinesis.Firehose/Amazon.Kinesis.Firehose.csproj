@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kinesis.Firehose</AssemblyName>
-    <Version>0.12.0</Version>
+    <Version>0.13.0</Version>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <IncludeSymbols>true</IncludeSymbols>
