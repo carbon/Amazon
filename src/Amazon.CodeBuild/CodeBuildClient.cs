@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -83,7 +84,7 @@ public sealed class CodeBuildClient : AwsClient
 
     #region Helpers
 
-    private static readonly JsonSerializerOptions jso = new() {
+    private static readonly JsonSerializerOptions s_jso = new() {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
@@ -109,9 +110,8 @@ public sealed class CodeBuildClient : AwsClient
             return new T();
         }
 
-        using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-        var result = await JsonSerializer.DeserializeAsync<T>(responseStream, jso).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync<T>(s_jso).ConfigureAwait(false);
 
         return result!;
     }
@@ -122,7 +122,7 @@ public sealed class CodeBuildClient : AwsClient
 
         var actionName = request.GetType().Name.Replace("Request", string.Empty);
 
-        byte[] json = JsonSerializer.SerializeToUtf8Bytes(request, jso);
+        byte[] json = JsonSerializer.SerializeToUtf8Bytes(request, s_jso);
 
         // 2016-10-06
         // X-Amz-Target: CodeBuild_20161006.StopBuild
