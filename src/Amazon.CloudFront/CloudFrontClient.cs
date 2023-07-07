@@ -2,59 +2,57 @@
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Amazon.CloudFront
+namespace Amazon.CloudFront;
+
+public sealed class CloudFrontClient : AwsClient
 {
-    public sealed class CloudFrontClient : AwsClient
+    private const string version = "2015-04-17";
+
+    private readonly string baseUrl;
+
+    public CloudFrontClient(AwsCredential credentials)
+        : base(AwsService.CloudFront, AwsRegion.USEast1, credentials)
     {
-        private const string version = "2015-04-17";
+        baseUrl = Endpoint + version;
+    }
 
-        private readonly string baseUrl;
+    public async Task<string> CreateInvalidationBatch(string distributionId, InvalidationBatch batch)
+    {
+        var requestUri = $"{baseUrl}/distribution/{distributionId}/invalidation";
 
-        public CloudFrontClient(AwsCredential credentials)
-            : base(AwsService.Cloudfront, AwsRegion.USEast1, credentials)
-        {
-            baseUrl = Endpoint + version;
-        }
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri) {
+            Content = new StringContent(batch.ToXml().ToString(), Encoding.UTF8, "text/xml")
+        };
 
-        public async Task<string> CreateInvalidationBatch(string distributionId, InvalidationBatch batch)
-        {
-            var requestUri = $"{baseUrl}/distribution/{distributionId}/invalidation";
+        return await SendAsync(httpRequest).ConfigureAwait(false);
+    }
 
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri) {
-                Content = new StringContent(batch.ToXml().ToString(), Encoding.UTF8, "text/xml")
-            };
+    public async Task<string> CreateDistribution(DistributionConfig request)
+    {
+        var requestUri = baseUrl + "/distribution";
 
-            return await SendAsync(httpRequest).ConfigureAwait(false);
-        }
+        var body = @"<?xml version=""1.0"" encoding=""UTF-8""?>\n" + request.ToXml().ToString();
 
-        public async Task<string> CreateDistribution(DistributionConfig request)
-        {
-            var requestUri = baseUrl + "/distribution";
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri) {
+            Content = new StringContent(body, Encoding.UTF8, "text/xml")
+        };
 
-            var body = @"<?xml version=""1.0"" encoding=""UTF-8""?>\n" + request.ToXml().ToString();
+        return await SendAsync(httpRequest).ConfigureAwait(false);
+    }
 
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri)
-            {
-                Content = new StringContent(body, Encoding.UTF8, "text/xml")
-            };
+    public async Task<string> PutDistribution(string id, DistributionConfig request)
+    {
+        var requestUri = $"{baseUrl}/distribution/{id}/config";
 
-            return await SendAsync(httpRequest).ConfigureAwait(false);
-        }
+        var httpRequest = new HttpRequestMessage(HttpMethod.Put, requestUri) {
+            Content = new StringContent(
+                content: @"<?xml version=""1.0"" encoding=""UTF-8""?>\n" + request.ToXml().ToString(),
+                encoding: Encoding.UTF8,
+                mediaType: "text/xml"
+            )
+        };
 
-        public async Task<string> PutDistribution(string id, DistributionConfig request)
-        {
-            var requestUri = $"{baseUrl}/distribution/{id}/config";
-
-            var httpRequest = new HttpRequestMessage(HttpMethod.Put, requestUri) {
-                Content = new StringContent(
-                    content: @"<?xml version=""1.0"" encoding=""UTF-8""?>\n" + request.ToXml().ToString(),
-                    encoding: Encoding.UTF8,
-                    mediaType: "text/xml"
-                )
-            };
-
-            return await SendAsync(httpRequest).ConfigureAwait(false);
-        }
+        return await SendAsync(httpRequest).ConfigureAwait(false);
     }
 }
 
