@@ -4,14 +4,10 @@ using System.Text.Json.Serialization;
 
 namespace Amazon.Rekognition;
 
-public sealed class RekognitionClient : AwsClient
+public sealed class RekognitionClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Rekognition, region, credential)
 {
     public const string Version = "2016-06-27";
-
-    public RekognitionClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.Rekognition, region, credential)
-    {
-    }
 
     // public async Task CompareFacesAsync()
 
@@ -165,7 +161,6 @@ public sealed class RekognitionClient : AwsClient
         return result!;
     }
 
-
     protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
     {
         string xmlText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -173,15 +168,14 @@ public sealed class RekognitionClient : AwsClient
         throw new Exception(xmlText);
     }
 
-    private static readonly JsonSerializerOptions jso = new()
-    {
+    private static readonly JsonSerializerOptions s_jso = new() {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
     private HttpRequestMessage GetRequestMessage<T>(string action, T request)
         where T : notnull
     {
-        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, jso);
+        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, s_jso);
 
         return new HttpRequestMessage(HttpMethod.Post, Endpoint)
         {

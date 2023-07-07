@@ -2,18 +2,12 @@
 
 namespace Amazon.Rekognition;
 
-public readonly struct Point
+[method: JsonConstructor]
+public readonly struct Point(double x, double y)
 {
-    [JsonConstructor]
-    public Point(double x, double y)
-    {
-        X = x;
-        Y = y;
-    }
-
     [JsonPropertyName("X")]
-    public double X { get; }
+    public double X { get; } = x;
 
     [JsonPropertyName("Y")]
-    public double Y { get; }
+    public double Y { get; } = y;
 }

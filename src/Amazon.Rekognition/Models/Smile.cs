@@ -2,16 +2,10 @@
 
 namespace Amazon.Rekognition;
 
-public sealed class Smile
+[method: JsonConstructor]
+public sealed class Smile(bool value, double confidence)
 {
-    [JsonConstructor]
-    public Smile(bool value, double confidence)
-    {
-        Value = value;
-        Confidence = confidence;
-    }
+    public bool Value { get; } = value;
 
-    public bool Value { get; }
-
-    public double Confidence { get; }
+    public double Confidence { get; } = confidence;
 }

@@ -1,16 +1,10 @@
 ﻿namespace Amazon.Rekognition;
 
-public sealed class DetectLabelsImageForeground
+public sealed class DetectLabelsImageForeground(
+    DominantColor[] dominantColors,
+    DetectLabelsImageQuality quality)
 {
-    public DetectLabelsImageForeground(
-        DominantColor[] dominantColors,
-        DetectLabelsImageQuality quality)
-    {
-        DominantColors = dominantColors;
-        Quality = quality;
-    }
+    public DominantColor[] DominantColors { get; } = dominantColors;
 
-    public DominantColor[] DominantColors { get; }
-
-    public DetectLabelsImageQuality Quality { get; }
+    public DetectLabelsImageQuality Quality { get; } = quality;
 }

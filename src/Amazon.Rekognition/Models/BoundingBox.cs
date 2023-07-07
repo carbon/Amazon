@@ -2,22 +2,14 @@
 
 namespace Amazon.Rekognition;
 
-public readonly struct BoundingBox
+[method: JsonConstructor]
+public readonly struct BoundingBox(double height, double width, double top, double left)
 {
-    [JsonConstructor]
-    public BoundingBox(double height, double width, double top, double left)
-    {
-        Height = height;
-        Width = width;
-        Top = top;
-        Left = left;
-    }
+    public double Height { get; } = height;
 
-    public double Height { get; }
+    public double Width { get; } = width;
 
-    public double Width { get; }
+    public double Top { get; } = top;
 
-    public double Top { get; }
-
-    public double Left { get; }
+    public double Left { get; } = left;
 }
