@@ -72,8 +72,7 @@ public sealed class KmsClient : AwsClient
 
     #region Helpers
 
-    private static readonly JsonSerializerOptions jso = new()
-    {
+    private static readonly JsonSerializerOptions jso = new() {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 

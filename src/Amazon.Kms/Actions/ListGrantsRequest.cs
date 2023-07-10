@@ -16,7 +16,7 @@ public sealed class ListGrantsRequest : KmsRequest
 
     public required string KeyId { get; init; }
 
-    public int Limit { get; init; }
+    public int? Limit { get; init; }
 
     public string? Marker { get; init; }
 }
