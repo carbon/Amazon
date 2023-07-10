@@ -30,14 +30,11 @@ public static class S3Helper
 
     private static readonly HttpMethod Move = new ("MOVE");
 
-    private static HttpMethod GetHttpMethod(string name)
+    private static HttpMethod GetHttpMethod(string name) => name switch
     {
-        return name switch
-        {
-            "GET"  => HttpMethod.Get,
-            "POST" => HttpMethod.Post,
-            "MOVE" => Move,                     // Used by Wasabi
-            _      => new HttpMethod(name)
-        };
-    }
+        "GET"  => HttpMethod.Get,
+        "POST" => HttpMethod.Post,
+        "MOVE" => Move,                     // Used by Wasabi
+        _      => new HttpMethod(name)
+    };
 }
