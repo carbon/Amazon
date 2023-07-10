@@ -17,7 +17,7 @@ public static class SignerV4
     private const string algorithmName     = "AWS4-HMAC-SHA256";
     private const string isoDateTimeFormat = "yyyyMMddTHHmmssZ";  // ISO8601
 
-    private static readonly StringListPool listPool = new();
+    private static readonly StringListPool s_listPool = new();
 
     [SkipLocalsInit]
     internal static string GetStringToSign(
@@ -279,7 +279,7 @@ public static class SignerV4
         /*
         queryString = Action=action
         queryString += &X-Amz-Algorithm=algorithm
-        queryString += &X-Amz-Credential= urlencode(access_key_ID + '/' + credential_scope)
+        queryString += &X-Amz-Credential=urlencode({accessKeyId}/{credentialScope})
         queryString += &X-Amz-Date=date
         queryString += &X-Amz-Expires=timeout interval
         queryString += &X-Amz-SignedHeaders=signed_headers
@@ -327,7 +327,7 @@ public static class SignerV4
 
         ComputeSigningKey(credential.SecretAccessKey, scope, signingKey);
 
-        var signedHeaderNames = listPool.Rent();
+        var signedHeaderNames = s_listPool.Rent();
 
         string stringToSign = GetStringToSign(request, scope, signedHeaderNames);
 
@@ -346,7 +346,7 @@ public static class SignerV4
 
         request.Headers.TryAddWithoutValidation("Authorization", sb.ToString());
 
-        listPool.Return(signedHeaderNames);
+        s_listPool.Return(signedHeaderNames);
     }
 
     public static string CanonicalizeQueryString(Uri uri)
