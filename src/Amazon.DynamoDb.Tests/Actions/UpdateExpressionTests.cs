@@ -13,9 +13,9 @@ public class UpdateExpressionTests
 
         var values = new AttributeCollection();
 
-        var expression = new UpdateExpression(new[] {
+        var expression = new UpdateExpression([
             Change.Replace("locked", locked)
-        }, attributeNames, values);
+        ], attributeNames, values);
 
         Assert.Equal("SET locked = :v0", expression.ToString());
 
@@ -28,10 +28,10 @@ public class UpdateExpressionTests
         var attrNames = new Dictionary<string, string>();
         var attrValues = new AttributeCollection();
 
-        var expression = new UpdateExpression(new[] {
+        var expression = new UpdateExpression([
             Change.Add("list", new[] { "A", "B", "C" }),
             Change.Remove("deleted")
-        }, attrNames, attrValues);
+        ], attrNames, attrValues);
 
         Assert.Equal(
             """
@@ -46,11 +46,11 @@ public class UpdateExpressionTests
     [Fact]
     public void UpdateTest3()
     {
-        var expression = new UpdateExpression(new[] {
+        var expression = new UpdateExpression([
             Change.Replace("deleted", new DateTime(2015, 01, 01)),
             Change.Replace("colors", new [] { "red", "yellow", "blue" }),
             Change.Replace("version", 1)
-        }, new Dictionary<string, string>(), new AttributeCollection());
+        ], new(), new AttributeCollection());
 
         Assert.Equal("SET deleted = :v0, colors = :v1, version = :v2", expression.ToString());
     }
@@ -58,13 +58,13 @@ public class UpdateExpressionTests
     [Fact]
     public void UpdateTest4()
     {
-        var expression = new UpdateExpression(new[] {
+        var expression = new UpdateExpression([
             Change.Replace("deleted", new DateTime(2015, 01, 01)),
             Change.Replace("colors", new [] { "red", "yellow", "blue" }),
             Change.Remove("deleted"),
             Change.Add("version", 1),
             Change.Replace("modified", DateTime.UtcNow)
-        }, new Dictionary<string, string>(), new AttributeCollection());
+        ], new(), new AttributeCollection());
 
         Assert.Equal(
             """

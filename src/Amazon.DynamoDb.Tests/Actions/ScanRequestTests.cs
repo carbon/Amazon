@@ -7,7 +7,7 @@ public class ScanRequestTests
     [Fact]
     public void Test1()
     {
-        var request = new ScanRequest("Libraries", new[] { Expression.Lt("id", 10) });
+        var request = new ScanRequest("Libraries", [ Expression.Lt("id", 10) ]);
 
         Assert.Equal("""
             {
@@ -19,6 +19,6 @@ public class ScanRequestTests
                 }
               }
             }
-            """, request.ToSystemTextJsonIndented());
+            """, request.ToIndentedJsonString());
     }
 }

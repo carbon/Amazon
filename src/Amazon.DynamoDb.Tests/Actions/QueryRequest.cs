@@ -24,7 +24,7 @@ public class QueryRequestTests
               },
               "Limit": 1
             }
-            """, request.ToSystemTextJsonIndented());
+            """, request.ToIndentedJsonString());
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public class QueryRequestTests
               },
               "FilterExpression": "contains(participantIds, :v1)"
             }
-            """, query.ToSystemTextJsonIndented());
+            """, query.ToIndentedJsonString());
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class QueryRequestTests
               },
               "Limit": 1
             }
-            """, request.ToSystemTextJsonIndented());
+            """, request.ToIndentedJsonString());
     }
 
     [Fact]
@@ -109,7 +109,7 @@ public class QueryRequestTests
               "ProjectionExpression": "#name,version",
               "Limit": 1
             }
-            """, request.ToSystemTextJsonIndented());
+            """, request.ToIndentedJsonString());
     }
 
     [Fact]
@@ -140,6 +140,6 @@ public class QueryRequestTests
               },
               "Limit": 1
             }
-            """, request.ToSystemTextJsonIndented());
+            """, request.ToIndentedJsonString());
     }
 }

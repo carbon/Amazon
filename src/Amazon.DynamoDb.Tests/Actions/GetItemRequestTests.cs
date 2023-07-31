@@ -22,7 +22,7 @@ public class GetItemRequestTests
                 }
               }
             }
-            """, x2.ToSystemTextJsonIndented());
+            """, x2.ToIndentedJsonString());
     }
 
     [Fact]
@@ -52,6 +52,6 @@ public class GetItemRequestTests
               "ConsistentRead": true,
               "ReturnConsumedCapacity": "TOTAL"
             }
-            """, x2.ToSystemTextJsonIndented());
+            """, x2.ToIndentedJsonString());
     }
 }

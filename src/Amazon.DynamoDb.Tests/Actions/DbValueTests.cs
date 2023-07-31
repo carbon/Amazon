@@ -5,9 +5,14 @@ using Carbon.Data.Sequences;
 
 namespace Amazon.DynamoDb.Models.Tests;
 
-
 public class DbValueTests
 {
+    private static readonly int[] s_1_2_3i32    = [1, 2, 3];
+    private static readonly long[] s_1_2_3i64   = [1L, 2L, 3L];
+    private static readonly float[] s_1_2_3f32  = [1f, 2f, 3f];
+    private static readonly double[] s_1_2_3f64 = [1d, 2d, 3d];
+    private static readonly decimal[] s_1_2_3m  = [1m, 2m, 3m];
+
     [Fact]
     public void EnumTest()
     {
@@ -36,7 +41,7 @@ public class DbValueTests
         Assert.Equal(DbValueType.B, value.Kind);
         Assert.Equal("dmFsdWU=", Convert.ToBase64String(value.ToBinary()));
 
-        Assert.Equal("""{"B":"dmFsdWU="}""", value.ToSystemTextJson());
+        Assert.Equal("""{"B":"dmFsdWU="}""", value.ToJsonString());
     }
 
     [Fact]
@@ -59,46 +64,47 @@ public class DbValueTests
         Assert.Equal(DbValueType.N, new DbValue((object)123m).Kind);
 
         Assert.Equal(DbValueType.SS, new DbValue(new[] { "a", "b", "c" }).Kind);
-        Assert.Equal(DbValueType.NS, new DbValue(new[] { 1, 2, 3 }).Kind);
-        Assert.Equal(DbValueType.NS, new DbValue(new[] { 1L, 2L, 3L }).Kind);
-        Assert.Equal(DbValueType.NS, new DbValue(new[] { 1f, 2f, 3f }).Kind);
-        Assert.Equal(DbValueType.NS, new DbValue(new[] { 1d, 2d, 3d }).Kind);
+        Assert.Equal(DbValueType.NS, new DbValue(s_1_2_3i32).Kind);
+        Assert.Equal(DbValueType.NS, new DbValue(s_1_2_3i64).Kind);
+        Assert.Equal(DbValueType.NS, new DbValue(s_1_2_3f32).Kind);
+        Assert.Equal(DbValueType.NS, new DbValue(s_1_2_3f64).Kind);
     }
 
     [Fact]
     public void SetConversions()
     {
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int16>()));
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int32>()));
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<Int64>()));
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<float>()));
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToSet<double>()));
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1m, 2m, 3m }).ToSet<decimal>()));
-        Assert.Equal("a,b,c", string.Join(',', new DbValue(new[] { "a", "b", "c" }).ToStringSet()));
+        string[] a_b_c = ["a", "b", "c"];
+
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3i32).ToSet<Int16>()));
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3i32).ToSet<Int32>()));
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3i32).ToSet<Int64>()));
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3i32).ToSet<float>()));
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3i32).ToSet<double>()));
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3m).ToSet<decimal>()));
+        Assert.Equal("a,b,c", string.Join(',', new DbValue(a_b_c).ToStringSet()));
     }
 
     [Fact]
     public void ArrayConversions()
     {
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int16>()));
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int32>()));
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<Int64>()));
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<float>()));
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1m, 2m, 3m }).ToArray<decimal>()));
-        Assert.Equal("1,2,3", string.Join(',', new DbValue(new[] { 1, 2, 3 }).ToArray<double>()));
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3i32).ToArray<Int16>()));
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3i32).ToArray<Int32>()));
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3i32).ToArray<Int64>()));
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3i32).ToArray<float>()));
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3m).ToArray<decimal>()));
+        Assert.Equal("1,2,3", string.Join(',', new DbValue(s_1_2_3i32).ToArray<double>()));
     }
 
     [Fact]
-    public void DbList()
+    public void CanDeserializeNumericLists()
     {
         var value = JsonSerializer.Deserialize<DbValue>("""{ "L": [ { "N": "1" }, { "N":"2" } ] }""");
 
         Assert.Equal(DbValueType.L, value.Kind);
 
-        Assert.Equal(new[] { "1", "2" }, value.ToArray<string>());
-
-        Assert.Equal(new[] { 1, 2 }, value.ToArray<int>());
-        Assert.Equal(new[] { 1L, 2L }, value.ToArray<long>());
+        Assert.Equal([ "1", "2" ], value.ToArray<string>());
+        Assert.Equal([ 1, 2 ],     value.ToArray<int>());
+        Assert.Equal([ 1L, 2L ],   value.ToArray<long>());
     }
 
     [Fact]
@@ -120,7 +126,7 @@ public class DbValueTests
                 }
               }
             }
-            """, value.ToSystemTextJsonIndented());
+            """, value.ToIndentedJsonString());
     }
 
     [Fact]
@@ -155,7 +161,7 @@ public class DbValueTests
                 }
               }
             }
-            """, value.ToSystemTextJsonIndented());
+            """, value.ToIndentedJsonString());
     }
 
     [Fact]
@@ -185,7 +191,7 @@ public class DbValueTests
                 }
               }
             }
-            """, value.ToSystemTextJsonIndented());
+            """, value.ToIndentedJsonString());
 
         Assert.Equal("""
             {
@@ -200,9 +206,9 @@ public class DbValueTests
                 }
               }
             }
-            """, value.ToSystemTextJsonIndented());
+            """, value.ToIndentedJsonString());
 
-        var a = JsonSerializer.Deserialize<AttributeCollection>(value.ToSystemTextJson()).As<Hi>();
+        var a = JsonSerializer.Deserialize<AttributeCollection>(value.ToJsonString()).As<Hi>();
 
         Assert.Equal(1, a.A.A);
         Assert.Equal("boat", a.A.B);
@@ -225,9 +231,9 @@ public class DbValueTests
                 "B": "ZKWQKAIkHUiA4MGBMfFiGg=="
               }
             }
-            """, value.ToSystemTextJsonIndented());
+            """, value.ToIndentedJsonString());
 
-        var a = JsonSerializer.Deserialize<AttributeCollection>(value.ToSystemTextJson()).As<Entity>();
+        var a = JsonSerializer.Deserialize<AttributeCollection>(value.ToJsonString()).As<Entity>();
 
         Assert.Equal(id, a.Id);
     }
@@ -238,14 +244,14 @@ public class DbValueTests
         var meta = new Meta
         {
             Name = "faces",
-            Annotations = new[] {
-                    new Annotation {
-                        Id = 1,
-                        Confidence = 1f,
-                        Description = "dog",
-                        Position = new Position { X = 1, Y = 2, Z = 3 }
-                    }
+            Annotations = [
+                new Annotation {
+                    Id = 1,
+                    Confidence = 1f,
+                    Description = "dog",
+                    Position = new Position { X = 1, Y = 2, Z = 3 }
                 }
+            ]
         };
 
         var value = AttributeCollection.FromObject(meta);
@@ -294,7 +300,7 @@ public class DbValueTests
             }
             """;
 
-        Assert.Equal(json, value.ToSystemTextJsonIndented());
+        Assert.Equal(json, value.ToIndentedJsonString());
 
         var a = JsonSerializer.Deserialize<AttributeCollection>(json);
         var m = a.As<Meta>();
@@ -310,7 +316,7 @@ public class DbValueTests
 
         Assert.Equal(DbValueType.L, value.Kind);
 
-        Assert.Equal(new[] { 1.1f, 7.543f }, value.ToArray<float>());
+        Assert.Equal([ 1.1f, 7.543f ], value.ToArray<float>());
     }
 
     [Fact]

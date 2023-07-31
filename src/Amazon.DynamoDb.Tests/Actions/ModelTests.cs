@@ -42,7 +42,7 @@ public class ModelTests
                 "N": "3"
               }
             }
-            """, x.ToSystemTextJsonIndented());
+            """, x.ToIndentedJsonString());
     }
 
     [Fact]
@@ -70,6 +70,6 @@ public class ModelTests
                 "S": "Amazing"
               }
             }
-            """, x.ToSystemTextJsonIndented());
+            """, x.ToIndentedJsonString());
     }
 }

@@ -128,7 +128,7 @@ public class ExpressionTests
     public void Expression9()
     {
         var de = new DynamoQueryExpression(
-            new[] { "name", "version" },
+            [ "name", "version" ],
             new Expression[] {
                 Eq("name", "sortable"),
                 Between("version", "1.0", "2.0")

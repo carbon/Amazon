@@ -39,10 +39,9 @@ public class AttributeCollectionTests
         var item = new AttributeCollection {
             { "Transformation", "resize:500x500.jpeg" },
             { "Duration", 30000 },
-            { "Created", new DateTimeOffset(created).ToUnixTimeSeconds() }
+            { "Created", new DateTimeOffset(created).ToUnixTimeSeconds() },
+            { "Hash", new DbValue("FHX8PLDaGoI2hSlwjI1yFvqWTcQ=", DbValueType.B) }
         };
-
-        item.Add("Hash", new DbValue("FHX8PLDaGoI2hSlwjI1yFvqWTcQ=", DbValueType.B));
 
         var media = item.As<Media>();
 
@@ -78,14 +77,13 @@ public class AttributeCollectionTests
     public void Db_Item1()
     {
         var item = new AttributeCollection {
-            { "A", "alphabet" }
+            { "A", "alphabet" },
+            { "B", "bananas" },
+            { "C", "candy" },
+            { "One", 1 },
+            { "Two", 2 },
+            { "Three", 3 }
         };
-
-        item.Add("B", "bananas");
-        item.Add("C", "candy");
-        item.Add("One", 1);
-        item.Add("Two", 2);
-        item.Add("Three", 3);
 
         var jsonText = """{"A":{"S":"alphabet"},"B":{"S":"bananas"},"C":{"S":"candy"},"One":{"N":"1"},"Two":{"N":"2"},"Three":{"N":"3"}}""";
 
@@ -94,9 +92,9 @@ public class AttributeCollectionTests
         Assert.Equal("candy", item.GetString("C"));
         Assert.Null(item.GetString("D"));
 
-        Assert.Equal(jsonText, item.ToSystemTextJson());
+        Assert.Equal(jsonText, item.ToJsonString());
 
-        Assert.Equal(jsonText, JsonSerializer.Deserialize<AttributeCollection>(jsonText).ToSystemTextJson());
+        Assert.Equal(jsonText, JsonSerializer.Deserialize<AttributeCollection>(jsonText).ToJsonString());
     }
 
     [Fact]
@@ -113,12 +111,11 @@ public class AttributeCollectionTests
     public void Db_Item3()
     {
         var item = new AttributeCollection {
-            { "colors", new[] { "red", "blue", "green" } }
+            { "colors",     new[] { "red", "blue", "green" } },
+            { "containedIn", new DbValue(new[] { 1, 2, 3 }) }
         };
 
-        item.Add("containedIn", new DbValue(new[] { 1, 2, 3 }));
-
-        var jsonText = item.ToSystemTextJson();
+        var jsonText = item.ToJsonString();
 
         item = JsonSerializer.Deserialize<AttributeCollection>(jsonText);
 
@@ -147,6 +144,6 @@ public class AttributeCollectionTests
                 "BOOL": true
               }
             }
-            """, item.ToSystemTextJsonIndented());
+            """, item.ToIndentedJsonString());
     }
 }

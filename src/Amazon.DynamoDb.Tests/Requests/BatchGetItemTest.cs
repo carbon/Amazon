@@ -20,7 +20,7 @@ public class BatchGetItemRequestTests
 
         var expected = """{"RequestItems":{"Table1":{"Keys":[{"id":{"N":"1"}},{"id":{"N":"2"}}]},"Table2":{"Keys":[{"id":{"N":"3"}},{"id":{"N":"4"}}]}}}""";
 
-        Assert.Equal(expected, request.ToSystemTextJson());
+        Assert.Equal(expected, request.ToJsonString());
     }
 
     [Fact]
@@ -33,6 +33,6 @@ public class BatchGetItemRequestTests
 
         var expected = """{"RequestItems":{"Table1":{"Keys":[{"id":{"N":"1"}},{"id":{"N":"2"}}]},"Table2":{"Keys":[{"id":{"N":"3"}},{"id":{"N":"4"}}]}}}""";
 
-        Assert.Equal(expected, request.ToSystemTextJson());
+        Assert.Equal(expected, request.ToJsonString());
     }
 }

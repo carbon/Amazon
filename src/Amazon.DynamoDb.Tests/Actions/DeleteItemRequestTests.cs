@@ -22,6 +22,6 @@ public class DeleteItemRequestTests
                 }
               }
             }
-            """, x2.ToSystemTextJsonIndented());
+            """, x2.ToIndentedJsonString());
     }
 }

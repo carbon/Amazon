@@ -9,7 +9,7 @@ public class PutItemRequestTests
 
         Assert.Equal("Accounts", item.TableName);
 
-        Assert.Equal("""{"TableName":"Accounts","Item":{"id":{"N":"1"}}}""", item.ToSystemTextJson());
+        Assert.Equal("""{"TableName":"Accounts","Item":{"id":{"N":"1"}}}""", item.ToJsonString());
     }
 
     [Fact]
@@ -17,7 +17,7 @@ public class PutItemRequestTests
     {
         var item = new PutItemRequest("Accounts", new AttributeCollection { { "id", 1 } }) { ReturnValues = ReturnValues.UPDATED_NEW };
 
-        Assert.Equal("""{"TableName":"Accounts","Item":{"id":{"N":"1"}},"ReturnValues":"UPDATED_NEW"}""", item.ToSystemTextJson());
+        Assert.Equal("""{"TableName":"Accounts","Item":{"id":{"N":"1"}},"ReturnValues":"UPDATED_NEW"}""", item.ToJsonString());
     }
 
 
@@ -26,6 +26,6 @@ public class PutItemRequestTests
     {
         var item = new PutItemRequest("Accounts", new AttributeCollection { { "id", 1 } }) { ReturnValues = ReturnValues.UPDATED_OLD };
 
-        Assert.Equal("""{"TableName":"Accounts","Item":{"id":{"N":"1"}},"ReturnValues":"UPDATED_OLD"}""", item.ToSystemTextJson());
+        Assert.Equal("""{"TableName":"Accounts","Item":{"id":{"N":"1"}},"ReturnValues":"UPDATED_OLD"}""", item.ToJsonString());
     }
 }
