@@ -1,14 +1,20 @@
-﻿namespace Amazon.Rekognition;
+﻿using System.Text.Json.Serialization;
 
-public sealed class DetectLabelsRequest
+namespace Amazon.Rekognition;
+
+public sealed class DetectLabelsRequest : IRekognitionRequest
 {
-    public Feature[]? Features { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Feature[]? Features { get; init; }
 
-    public required Image Image { get; set; }
+    public required Image Image { get; init; }
 
-    public int? MaxLabels { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public int? MaxLabels { get; init; }
 
-    public double? MinConfidence { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public double? MinConfidence { get; init; }
 
-    public DetectLabelSettings? Settings { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public DetectLabelSettings? Settings { get; init; }
 }

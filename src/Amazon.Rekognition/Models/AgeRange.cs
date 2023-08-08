@@ -2,16 +2,10 @@
 
 namespace Amazon.Rekognition;
 
-public sealed class AgeRange
+[method: JsonConstructor]
+public sealed class AgeRange(int high, int low)
 {
-    [JsonConstructor]
-    public AgeRange(int high, int low)
-    {
-        High = high;
-        Low = low;
-    }
+    public int High { get; } = high;
 
-    public int High { get; }
-
-    public int Low { get; }
+    public int Low { get; } = low;
 }

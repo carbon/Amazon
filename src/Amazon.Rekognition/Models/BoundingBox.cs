@@ -3,7 +3,11 @@
 namespace Amazon.Rekognition;
 
 [method: JsonConstructor]
-public readonly struct BoundingBox(double height, double width, double top, double left)
+public readonly struct BoundingBox(
+    double height,
+    double width,
+    double top,
+    double left)
 {
     public double Height { get; } = height;
 

@@ -1,8 +1,12 @@
-﻿namespace Amazon.Rekognition;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Rekognition;
 
 public sealed class DetectLabelSettings
 {
-    public GeneralLabelsSettings? GeneralLabels { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public GeneralLabelsSettings? GeneralLabels { get; init; }
 
-    public DetectLabelsImagePropertiesSettings? ImageProperties { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public DetectLabelsImagePropertiesSettings? ImageProperties { get; init; }
 }

@@ -2,13 +2,8 @@
 
 namespace Amazon.Rekognition;
 
-public readonly struct LabelCategory
+[method: JsonConstructor]
+public readonly struct LabelCategory(string name)
 {
-    [JsonConstructor]
-    public LabelCategory(string name)
-    {
-        Name = name;
-    }
-
-    public string Name { get; }
+    public string Name { get; } = name;
 }

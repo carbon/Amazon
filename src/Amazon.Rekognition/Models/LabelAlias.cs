@@ -2,13 +2,8 @@
 
 namespace Amazon.Rekognition;
 
-public readonly struct LabelAlias
+[method: JsonConstructor]
+public readonly struct LabelAlias(string name)
 {
-    [JsonConstructor]
-    public LabelAlias(string name)
-    {
-        Name = name;
-    }
-
-    public string Name { get; }
+    public string Name { get; } = name;
 }

@@ -20,8 +20,10 @@ public sealed class Image
     }
 
     [JsonPropertyName("Bytes")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public byte[]? Bytes { get; }
 
     [JsonPropertyName("S3Object")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public S3Object? S3Object { get; }
 }

@@ -2,13 +2,8 @@
 
 namespace Amazon.Rekognition;
 
-public readonly struct Parent
+[method: JsonConstructor]
+public readonly struct Parent(string name)
 {
-    [JsonConstructor]
-    public Parent(string name)
-    {
-        Name = name;
-    }
-
-    public string Name { get; }
+    public string Name { get; } = name;
 }

@@ -1,8 +1,13 @@
-﻿namespace Amazon.Rekognition;
+﻿using System.Text.Json.Serialization;
 
-public sealed class ImageQuality
+namespace Amazon.Rekognition;
+
+[method:JsonConstructor]
+public sealed class ImageQuality(double brightness, double sharpness)
 {
-    public double Brightness { get; set; }
+    [JsonPropertyName("Brightness")]
+    public double Brightness { get; } = brightness;
 
-    public double Sharpness { get; set; }
+    [JsonPropertyName("Sharpness")]
+    public double Sharpness { get; } = sharpness;
 }
