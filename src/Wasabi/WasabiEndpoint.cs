@@ -2,17 +2,11 @@
 
 namespace Wasabi;
 
-public sealed class WasabiEndpoint
+public sealed class WasabiEndpoint(string host, AwsRegion region)
 {
-    public WasabiEndpoint(string host, AwsRegion region)
-    {
-        Host = host;
-        Region = region;
-    }
+    public string Host { get; } = host;
 
-    public string Host { get; }
-
-    public AwsRegion Region { get; }
+    public AwsRegion Region { get; } = region;
 
     public static readonly WasabiEndpoint USEast1      = new("s3.us-east-1.wasabisys.com",      AwsRegion.USEast1);      // N.Virginia
     public static readonly WasabiEndpoint USEast2      = new("s3.us-east-2.wasabisys.com",      AwsRegion.USEast2);      // N.Virginia
