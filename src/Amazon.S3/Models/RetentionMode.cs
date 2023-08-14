@@ -3,5 +3,5 @@
 public enum RetentionMode
 {
     Compliance = 1,
-    Goverance = 2
+    Governance = 2
 }
