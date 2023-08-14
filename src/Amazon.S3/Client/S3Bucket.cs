@@ -43,6 +43,11 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
     public async IAsyncEnumerable<IBlob> ScanAsync(string? prefix, int take = 1_000_000_000)
     {
+        if (take <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(take), take, "Must be > 0");
+        }
+
         string? continuationToken = null;
         int count = 0;
 
@@ -51,7 +56,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
             var request = new ListBucketOptions {
                 Prefix = prefix,
                 ContinuationToken = continuationToken,
-                MaxKeys = take
+                MaxKeys = Math.Min(take, 1_000), // Max 1000
             };
 
             var result = await _client.ListBucketAsync(_bucketName, request).ConfigureAwait(false);
@@ -75,10 +80,10 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
     public Task<IReadOnlyList<IBlob>> ListAsync(string? prefix = null)
     {
-        return ListAsync(prefix, null, 1000);
+        return ListAsync(prefix, null, take: 1_000);
     }
 
-    public async Task<IReadOnlyList<IBlob>> ListAsync(string? prefix, string? continuationToken, int take = 1000)
+    public async Task<IReadOnlyList<IBlob>> ListAsync(string? prefix, string? continuationToken, int take = 1_000)
     {
         var request = new ListBucketOptions {
             Prefix = prefix,
