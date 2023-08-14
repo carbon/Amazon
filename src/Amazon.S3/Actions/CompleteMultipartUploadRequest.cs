@@ -24,16 +24,9 @@ public sealed class CompleteMultipartUploadRequest : S3Request
     }
 }
 
-public sealed class CompleteMultipartUpload
+public sealed class CompleteMultipartUpload(IUploadBlock[] parts)
 {
-    public CompleteMultipartUpload(IUploadBlock[] parts)
-    {
-        ArgumentNullException.ThrowIfNull(parts);
-
-        Parts = parts;
-    }
-
-    public IUploadBlock[] Parts { get; }
+    public IUploadBlock[] Parts { get; } = parts ?? throw new ArgumentNullException(nameof(parts));
 
     public string ToXmlString()
     {
