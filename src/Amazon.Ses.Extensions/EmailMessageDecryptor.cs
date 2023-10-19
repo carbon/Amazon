@@ -7,15 +7,8 @@ using Amazon.S3;
 
 namespace Amazon.Ses;
 
-public sealed class EmailMessageDecryptor
+public sealed class EmailMessageDecryptor(KmsClient kms)
 {
-    private readonly KmsClient _kms;
-
-    public EmailMessageDecryptor(KmsClient kms)
-    {
-        _kms = kms;
-    }
-
     public async Task<byte[]> DecryptAsync(S3Object encryptedBlob)
     {
         ArgumentNullException.ThrowIfNull(encryptedBlob);
@@ -39,9 +32,9 @@ public sealed class EmailMessageDecryptor
             throw new Exception($"x-amz-tag-len must be 128 bits. Was {tagLength}");
         }
 
-        if (contentLength > 10_000_000)
+        if (contentLength > 25_000_000)
         {
-            throw new Exception("> 10MB");
+            throw new Exception($"> 25MB. Was {contentLength}");
         }
 
         string kmsCmkId = encryptionContext["kms_cmk_id"];
@@ -51,7 +44,7 @@ public sealed class EmailMessageDecryptor
         var tag        = blobBytes[^16..];
         var ciphertext = blobBytes[0..^16];
 
-        var decryptResult = await _kms.DecryptAsync(new DecryptRequest(kmsCmkId, envelopeKey, encryptionContext));
+        var decryptResult = await kms.DecryptAsync(new DecryptRequest(kmsCmkId, envelopeKey, encryptionContext));
        
         using var aes = new AesGcm(decryptResult.Plaintext);
 
