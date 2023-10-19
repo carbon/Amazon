@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>12</LangVersion>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <Nullable>enable</Nullable>
+    <ArtifactsPath>$(MSBuildThisFileDirectory)/../artifacts</ArtifactsPath>
+  </PropertyGroup>
+</Project>

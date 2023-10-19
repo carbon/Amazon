@@ -4,11 +4,9 @@
     <AssemblyName>Amazon.S3</AssemblyName>
     <TargetFramework>net7.0</TargetFramework>
     <Version>0.31.0</Version>
-    <Nullable>enable</Nullable>
     <NoWarn>IDE0057</NoWarn>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <LangVersion>preview</LangVersion>
       
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
