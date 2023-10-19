@@ -5,7 +5,7 @@ public class DeleteObjectBatchRequestTests
     [Fact]
     public void CanConstruct()
     {
-        var batch = new DeleteBatch(new[] { "a", "b" });
+        var batch = new DeleteBatch([ "a", "b" ]);
 
         var request = new DeleteObjectsRequest("s3.amazon.com", "bucket", batch);
 

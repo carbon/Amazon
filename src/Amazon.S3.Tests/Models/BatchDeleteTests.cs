@@ -7,7 +7,7 @@ public class BatchDeleteTests
     [Fact]
     public void CanSerialize_Silent()
     {
-        var batch = new DeleteBatch(new[] { "1", "2" }, quite: true);
+        var batch = new DeleteBatch([ "1", "2" ], quite: true);
 
         Assert.Equal(
             """
@@ -27,7 +27,7 @@ public class BatchDeleteTests
     [Fact]
     public void CanSerialize()
     {
-        var batch = new DeleteBatch(new[] { "1", "2" });
+        var batch = new DeleteBatch([ "1", "2" ]);
 
         Assert.Equal(
             """

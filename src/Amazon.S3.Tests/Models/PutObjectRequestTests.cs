@@ -30,7 +30,7 @@ public class PutObjectRequestTests
 
         request.SetStorageClass(StorageClass.Standard);
 
-        var ms = new MemoryStream(new byte[] { 1, 234, 41 });
+        var ms = new MemoryStream([ 1, 234, 41 ]);
 
         request.SetStream(ms, "application/blob");
 

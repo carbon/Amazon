@@ -111,8 +111,8 @@ public class AttributeCollectionTests
     public void Db_Item3()
     {
         var item = new AttributeCollection {
-            { "colors",     new[] { "red", "blue", "green" } },
-            { "containedIn", new DbValue(new[] { 1, 2, 3 }) }
+            { "colors",     (string[])["red", "blue", "green"] },
+            { "containedIn", new DbValue((int[])[1, 2, 3]) }
         };
 
         var jsonText = item.ToJsonString();

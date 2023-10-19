@@ -5,11 +5,11 @@ public class CompleteMultipartUploadTests
     [Fact]
     public void CanSerialize()
     {
-        var g = new CompleteMultipartUpload(new UploadPartResult[] {
-            new ("uploadId", 1, "eTag1"),
-            new ("uploadId", 2, "eTag2"),
-            new ("uploadId", 3, "eTag3")}
-        );
+        var g = new CompleteMultipartUpload([
+            new UploadPartResult("uploadId", 1, "eTag1"),
+            new UploadPartResult("uploadId", 2, "eTag2"),
+            new UploadPartResult("uploadId", 3, "eTag3")
+        ]);
 
         Assert.Equal(
             """

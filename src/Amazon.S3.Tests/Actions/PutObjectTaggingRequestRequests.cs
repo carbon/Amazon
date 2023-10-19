@@ -7,10 +7,10 @@ public class PutObjectTaggingRequestRequests
     [Fact]
     public void CanConstruct()
     {
-        var request = new PutObjectTaggingRequest("s3.amazon.com", "bucket-name", "object-name", null, new KeyValuePair<string, string>[] {
-            new ("a", "1"),
-            new ("b", "2")
-        });
+        var request = new PutObjectTaggingRequest("s3.amazon.com", "bucket-name", "object-name", null, [
+            new("a", "1"),
+            new("b", "2")
+        ]);
 
         Assert.Equal(HttpMethod.Put, request.Method);
         Assert.Equal("/bucket-name/object-name?tagging", request.RequestUri.PathAndQuery);
@@ -20,10 +20,10 @@ public class PutObjectTaggingRequestRequests
     [Fact]
     public async Task CanConstructWithVersion()
     {
-        var request = new PutObjectTaggingRequest("s3.amazon.com", "bucket-name", "object-name", "1", new KeyValuePair<string, string>[] {
-            new ("a", "1"),
-            new ("b", "2")
-        });
+        var request = new PutObjectTaggingRequest("s3.amazon.com", "bucket-name", "object-name", "1", [
+            new("a", "1"),
+            new("b", "2")
+        ]);
 
         Assert.Equal("/bucket-name/object-name?tagging&versionId=1", request.RequestUri.PathAndQuery);
 

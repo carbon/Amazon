@@ -13,7 +13,7 @@ public sealed class InitiateMultipartUploadRequest : S3Request
         ArgumentException.ThrowIfNullOrEmpty(key);
 
         CompletionOption = HttpCompletionOption.ResponseContentRead;
-        Content = new ByteArrayContent(Array.Empty<byte>());
+        Content = new ByteArrayContent([]);
     }
 
     public InitiateMultipartUploadRequest(

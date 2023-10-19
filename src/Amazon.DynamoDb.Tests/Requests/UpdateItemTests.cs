@@ -9,7 +9,7 @@ public class UpdateItemRequestTests
     {
         var date = DateTimeOffset.FromUnixTimeSeconds(1497282355);
 
-        var request = new UpdateItemRequest("Entities", Key<Entity>.FromValues(new object[] { 1 }).ToDictionary(x => x.Key, y => new DbValue(y.Value)), [
+        var request = new UpdateItemRequest("Entities", Key<Entity>.FromValues([1]).ToDictionary(x => x.Key, y => new DbValue(y.Value)), [
             Change.Replace("locked", date)
         ]);
 

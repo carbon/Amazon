@@ -29,7 +29,7 @@ public class UpdateExpressionTests
         var attrValues = new AttributeCollection();
 
         var expression = new UpdateExpression([
-            Change.Add("list", new[] { "A", "B", "C" }),
+            Change.Add("list", (string[])["A", "B", "C"]),
             Change.Remove("deleted")
         ], attrNames, attrValues);
 
@@ -48,7 +48,7 @@ public class UpdateExpressionTests
     {
         var expression = new UpdateExpression([
             Change.Replace("deleted", new DateTime(2015, 01, 01)),
-            Change.Replace("colors", new [] { "red", "yellow", "blue" }),
+            Change.Replace("colors", (string[])["red", "yellow", "blue"]),
             Change.Replace("version", 1)
         ], new(), new AttributeCollection());
 
@@ -60,7 +60,7 @@ public class UpdateExpressionTests
     {
         var expression = new UpdateExpression([
             Change.Replace("deleted", new DateTime(2015, 01, 01)),
-            Change.Replace("colors", new [] { "red", "yellow", "blue" }),
+            Change.Replace("colors", (string[])["red", "yellow", "blue"]),
             Change.Remove("deleted"),
             Change.Add("version", 1),
             Change.Replace("modified", DateTime.UtcNow)

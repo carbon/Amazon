@@ -5,18 +5,16 @@ public class BatchWriteRequestTests
     [Fact]
     public void CanSerialize()
     {
-        var batches = new TableRequests[]
-        {
-            new TableRequests("A", new List<ItemRequest> {
+        TableRequests[] batches = [
+            new TableRequests("A", [
                 new PutRequest(new AttributeCollection { { "id", 1 } }),
                 new DeleteRequest(new AttributeCollection { { "id", 2 } }),
-            }),
-
-            new TableRequests("B", new List<ItemRequest> {
+            ]),
+            new TableRequests("B", [
                 new DeleteRequest(new AttributeCollection { { "id", 1 } }),
                 new DeleteRequest(new AttributeCollection { { "id", 2 } }),
-            })
-        };
+            ])
+        ];
 
 
         var q = new Dictionary<string, object>(batches.Length);

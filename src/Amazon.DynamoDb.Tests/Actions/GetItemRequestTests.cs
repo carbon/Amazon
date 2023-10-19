@@ -28,10 +28,10 @@ public class GetItemRequestTests
     [Fact]
     public void B()
     {
-        var key = new RecordKey(new KeyValuePair<string, object>[] {
+        var key = new RecordKey([
             new ("primary", 1),
             new ("secondary", "2")
-        });
+        ]);
 
         var x2 = new GetItemRequest("Products", key) {
             ConsistentRead = true,

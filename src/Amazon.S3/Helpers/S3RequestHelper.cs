@@ -18,7 +18,7 @@ internal static class S3RequestExtensions
                     request.Content!.Headers.ContentEncoding.Add(item.Value);
                     break;
                 case "Content-Type":
-                    request.Content ??= new ByteArrayContent(Array.Empty<byte>());
+                    request.Content ??= new ByteArrayContent([]);
                     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(item.Value);
 
                     break;
