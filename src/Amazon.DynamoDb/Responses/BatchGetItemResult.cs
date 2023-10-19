@@ -19,7 +19,7 @@ public sealed class BatchGetItemResult
 
     public static BatchGetItemResult FromJsonElement(in JsonElement json)
     {
-        IReadOnlyList<TableItemCollection> responses = Array.Empty<TableItemCollection>();
+        IReadOnlyList<TableItemCollection>? responses = null;
         ConsumedCapacity[]? consumedCapacity = null;
 
         foreach (var property in json.EnumerateObject())
@@ -51,16 +51,11 @@ public sealed class BatchGetItemResult
 
         // TODO: UnprocessedKeys
 
-        return new BatchGetItemResult(responses, consumedCapacity);
+        return new BatchGetItemResult(responses ?? [], consumedCapacity);
     }
 }
 
-public sealed class TableItemCollection : Collection<AttributeCollection>
+public sealed class TableItemCollection(string name) : Collection<AttributeCollection>
 {
-    public TableItemCollection(string name)
-    {
-        Name = name;
-    }
-
-    public string Name { get; }
+    public string Name { get; } = name;
 }

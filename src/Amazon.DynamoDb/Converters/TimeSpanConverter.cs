@@ -5,7 +5,7 @@ namespace Amazon.DynamoDb;
 
 internal sealed class TimeSpanConverter : IDbValueConverter
 {
-    public DbValue FromObject(object value, IMember member)
+    public DbValue FromObject(object value, IMember? member)
     {
         var time = (TimeSpan)value;
         var precision = (TimePrecision)(member?.Precision ?? 3);
@@ -17,9 +17,9 @@ internal sealed class TimeSpanConverter : IDbValueConverter
         };
     }
 
-    public object ToObject(DbValue item, IMember member)
+    public object ToObject(DbValue item, IMember? member)
     {
-        var precision = (TimePrecision)(member.Precision ?? 3);
+        var precision = (TimePrecision)(member?.Precision ?? 3);
 
         return precision switch
         {

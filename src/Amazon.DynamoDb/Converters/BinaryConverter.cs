@@ -4,7 +4,7 @@ namespace Amazon.DynamoDb;
 
 internal sealed class BinaryConverter : IDbValueConverter
 {
-    public DbValue FromObject(object value, IMember member)
+    public DbValue FromObject(object value, IMember? member)
     {
         byte[] data = (byte[])value;
 
@@ -13,5 +13,5 @@ internal sealed class BinaryConverter : IDbValueConverter
             : DbValue.Empty;
     }
 
-    public object ToObject(DbValue item, IMember member) => item.ToBinary();
+    public object ToObject(DbValue item, IMember? member) => item.ToBinary();
 }

@@ -4,7 +4,7 @@ namespace Amazon.DynamoDb;
 
 internal sealed class StringConverter : IDbValueConverter
 {
-    public DbValue FromObject(object value, IMember member)
+    public DbValue FromObject(object value, IMember? member)
     {
         string text = (string)value;
 
@@ -13,7 +13,7 @@ internal sealed class StringConverter : IDbValueConverter
         return new DbValue(text);
     }
 
-    public object ToObject(DbValue item, IMember member)
+    public object ToObject(DbValue item, IMember? member)
     {
         return item.ToString();
     }

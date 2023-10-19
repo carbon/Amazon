@@ -5,7 +5,7 @@ namespace Amazon.DynamoDb;
 
 internal sealed class DateTimeOffsetConverter : IDbValueConverter
 {
-    public DbValue FromObject(object value, IMember member)
+    public DbValue FromObject(object value, IMember? member)
     {
         var date = (DateTimeOffset)value;
 
@@ -18,7 +18,7 @@ internal sealed class DateTimeOffsetConverter : IDbValueConverter
         };
     }
 
-    public object ToObject(DbValue item, IMember member)
+    public object ToObject(DbValue item, IMember? member)
     {
         var precision = (TimePrecision)(member?.Precision ?? 0);
 

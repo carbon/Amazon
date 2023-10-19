@@ -1,11 +1,10 @@
 ﻿using Carbon.Data;
 
-namespace Amazon.DynamoDb
-{
-    internal sealed class SingleConverter : IDbValueConverter
-    {
-        public DbValue FromObject(object value, IMember member) => new DbValue((Single)value);
+namespace Amazon.DynamoDb;
 
-        public object ToObject(DbValue item, IMember member) => item.ToSingle();
-    }
+internal sealed class SingleConverter : IDbValueConverter
+{
+    public DbValue FromObject(object value, IMember? member) => new DbValue((float)value);
+
+    public object ToObject(DbValue item, IMember? member) => item.ToSingle();
 }
