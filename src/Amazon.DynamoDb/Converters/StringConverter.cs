@@ -1,6 +1,6 @@
 ﻿using Carbon.Data;
 
-namespace Amazon.DynamoDb;
+namespace Amazon.DynamoDb.Converters;
 
 internal sealed class StringConverter : IDbValueConverter
 {

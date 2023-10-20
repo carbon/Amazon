@@ -1,4 +1,4 @@
-﻿namespace Amazon.DynamoDb;
+﻿namespace Amazon.DynamoDb.Converters;
 
 internal sealed class UriConverter : DbTypeConverter<Uri>
 {

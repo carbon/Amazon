@@ -1,6 +1,6 @@
 ﻿using Carbon.Data;
 
-namespace Amazon.DynamoDb;
+namespace Amazon.DynamoDb.Converters;
 
 internal sealed class EnumConverter : IDbValueConverter
 {
@@ -8,12 +8,12 @@ internal sealed class EnumConverter : IDbValueConverter
 
     // ulong?
 
-    public DbValue FromObject(object value, IMember? member)
+    public DbValue FromObject(object value, IMember? member = null)
     {
         return new DbValue(Convert.ToInt32(value));
     }
 
-    public object ToObject(DbValue item, IMember? member)
+    public object ToObject(DbValue item, IMember? member = null)
     {
         return item.Kind is DbValueType.S
             ? Enum.Parse(member!.Type, item.ToString())

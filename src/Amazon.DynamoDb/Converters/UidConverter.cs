@@ -1,6 +1,6 @@
 ﻿using Carbon.Data.Sequences;
 
-namespace Amazon.DynamoDb;
+namespace Amazon.DynamoDb.Converters;
 
 internal sealed class UidConverter : DbTypeConverter<Uid>
 {

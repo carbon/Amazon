@@ -1,7 +1,7 @@
 ﻿using Carbon.Data;
 using Carbon.Data.Annotations;
 
-namespace Amazon.DynamoDb;
+namespace Amazon.DynamoDb.Converters;
 
 internal sealed class TimeSpanConverter : IDbValueConverter
 {

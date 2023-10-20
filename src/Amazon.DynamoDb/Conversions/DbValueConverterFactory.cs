@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
+using Amazon.DynamoDb.Converters;
+
 using Carbon.Data;
 
 namespace Amazon.DynamoDb;
 
 public sealed class DbValueConverterFactory
 {
-    private static readonly Dictionary<Type, IDbValueConverter> converters = new();
+    private static readonly Dictionary<Type, IDbValueConverter> _converters = new(32);
 
     static DbValueConverterFactory()
     {
@@ -53,7 +55,7 @@ public sealed class DbValueConverterFactory
     {
         var details = TypeDetails.Get(type);
 
-        if (details.IsEnum) return new EnumConverter();
+        if (details.IsEnum) return EnumConverter.Default;
 
         if (!TryGet(details.NonNullType, out IDbValueConverter? converter))
         {
@@ -69,21 +71,21 @@ public sealed class DbValueConverterFactory
 
         if (details.IsEnum)
         {
-            converter = new EnumConverter();
+            converter = EnumConverter.Default;
 
             return true;
         }
 
-        return converters.TryGetValue(details.NonNullType, out converter);
+        return _converters.TryGetValue(details.NonNullType, out converter);
     }
 
     public static void Add<T>(DbTypeConverter<T> converter)
     {
-        converters.Add(typeof(T), converter);
+        _converters.Add(typeof(T), converter);
     }
 
     internal static void Add<T>(IDbValueConverter converter)
     {
-        converters.Add(typeof(T), converter);
+        _converters.Add(typeof(T), converter);
     }
 }
