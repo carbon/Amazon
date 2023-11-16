@@ -13,6 +13,7 @@ public class SendMessageRequestTests
             messageAttributes: new() {
                 { "my_attribute_name_1", new("my_attribute_value_1") },
                 { "my_attribute_name_2", new("my_attribute_value_2") },
+                { "id", 3 }
             }
         );
 
@@ -28,6 +29,10 @@ public class SendMessageRequestTests
                 "my_attribute_name_2": {
                   "DataType": "String",
                   "StringValue": "my_attribute_value_2"
+                },
+                "id": {
+                  "DataType": "Number",
+                  "StringValue": "3"
                 }
               },
               "MessageBody": "This is a test message"

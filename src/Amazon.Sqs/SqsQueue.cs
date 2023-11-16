@@ -10,7 +10,7 @@ namespace Amazon.Sqs;
 public sealed class SqsQueue : IMessageQueue<string>
 {
     private readonly SqsClient _client;
-    private readonly Uri _url;
+    private readonly string _queueUrl;
 
     private static readonly TimeSpan s_defaultWaitTime = TimeSpan.FromSeconds(20);
 
@@ -26,7 +26,7 @@ public sealed class SqsQueue : IMessageQueue<string>
         ArgumentException.ThrowIfNullOrEmpty(queueName);
 
         _client = new SqsClient(region, credential);
-        _url = new Uri($"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}");
+        _queueUrl = $"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}";
     }
 
     public async Task<IReadOnlyList<IQueueMessage<string>>> PollAsync(
@@ -36,7 +36,11 @@ public sealed class SqsQueue : IMessageQueue<string>
     {
         // Blocks until we receive a message
 
-        var request = new ReceiveMessageRequest(queueUrl: _url.OriginalString, take, null, visibilityTimeout: lockTime, s_defaultWaitTime);
+        var request = new ReceiveMessageRequest(
+            queueUrl            : _queueUrl,
+            maxNumberOfMessages : take, 
+            visibilityTimeout   : lockTime, 
+            waitTime            : s_defaultWaitTime);
 
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -57,7 +61,7 @@ public sealed class SqsQueue : IMessageQueue<string>
         CancellationToken cancellationToken = default)
     {
         var request = new ReceiveMessageRequest(
-            queueUrl            : _url.OriginalString,
+            queueUrl            : _queueUrl,
             maxNumberOfMessages : take, 
             visibilityTimeout   : lockTime
         );
@@ -101,14 +105,14 @@ public sealed class SqsQueue : IMessageQueue<string>
                 bodyValues[i] = batch[i].Body;
             }
 
-            await _client.SendMessageBatchAsync(new SendMessageBatchRequest(_url.OriginalString, bodyValues)).ConfigureAwait(false);
+            await _client.SendMessageBatchAsync(new SendMessageBatchRequest(_queueUrl, bodyValues)).ConfigureAwait(false);
         }
     }
 
     public async Task UpdateMessageVisibilityAsync(string receiptHandle, TimeSpan visibilityTimeout)
     {
         await _client.ChangeMessageVisibilityAsync(new(
-            queueUrl          : _url.OriginalString,
+            queueUrl          : _queueUrl,
             receiptHandle     : receiptHandle,
             visibilityTimeout : visibilityTimeout
         )).ConfigureAwait(false);
@@ -126,7 +130,7 @@ public sealed class SqsQueue : IMessageQueue<string>
         int retryCount = 0;
         Exception lastError;
 
-        var request = new DeleteMessageBatchRequest(_url.OriginalString, receiptHandles);
+        var request = new DeleteMessageBatchRequest(_queueUrl, receiptHandles);
 
         do
         {

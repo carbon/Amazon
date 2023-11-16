@@ -18,40 +18,34 @@ public sealed class SqsMessage : IQueueMessage<string>
     }
 
     [JsonPropertyName("MessageId")]
-    public string MessageId { get; set; }
+    public string MessageId { get; init; }
 
     [JsonPropertyName("ReceiptHandle")]
-    public string ReceiptHandle { get; set; }
+    public string ReceiptHandle { get; init; }
 
     [JsonPropertyName("Body")]
-    public string Body { get; set; }
+    public string Body { get; init; }
 
 #nullable enable
 
     [JsonPropertyName("MD5OfBody")]
-    public string? MD5OfBody { get; set; }
+    public string? MD5OfBody { get; init; }
 
     [JsonPropertyName("MD5OfMessageAttributes")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? MD5OfMessageAttributes { get; set; }
+    public string? MD5OfMessageAttributes { get; init; }
 
     [JsonPropertyName("SequenceNumber")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string SequenceNumber { get; set; }
+    public string SequenceNumber { get; init; }
 
     [JsonPropertyName("Attributes")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public Dictionary<string, string> Attributes { get; set; }
+    public Dictionary<string, string> Attributes { get; init; }
 
-    [JsonPropertyName("MessageAttribute")]
+    [JsonPropertyName("MessageAttributes")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public Dictionary<string, MessageAttributeValue> MessageAttributes { get; set; }
-
-    [JsonIgnore]
-    public DateTime Created { get; set; }
-
-    [JsonIgnore]
-    public DateTime Expires { get; set; }
+    public Dictionary<string, MessageAttributeValue> MessageAttributes { get; init; }
   
     #region IQueueMessage<string>
 

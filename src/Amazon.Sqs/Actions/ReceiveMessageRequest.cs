@@ -10,6 +10,7 @@ public sealed class ReceiveMessageRequest : SqsRequest
         string queueUrl,
         int maxNumberOfMessages = 1,
         string[]? attributeNames = null,
+        string[]? messageAttributeNames = null,
         TimeSpan? visibilityTimeout = null,
         TimeSpan? waitTime = null)
     {
@@ -33,6 +34,7 @@ public sealed class ReceiveMessageRequest : SqsRequest
         QueueUrl = queueUrl;
         AttributeNames = attributeNames;
         MaxNumberOfMessages = maxNumberOfMessages;
+        MessageAttributeNames = messageAttributeNames;
 
         if (visibilityTimeout.HasValue)
         {
@@ -47,30 +49,30 @@ public sealed class ReceiveMessageRequest : SqsRequest
 
     [JsonPropertyName("AttributeNames")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string[]? AttributeNames { get; set; }
+    public string[]? AttributeNames { get; init; }
 
     [JsonPropertyName("QueueUrl")]
     public string QueueUrl { get; }
 
     [JsonPropertyName("MaxNumberOfMessages")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public int? MaxNumberOfMessages { get; set; }
+    public int? MaxNumberOfMessages { get; init; }
 
     [JsonPropertyName("MessageAttributeNames")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string[]? MessageAttributeNames { get; set; }
+    public string[]? MessageAttributeNames { get; init; }
 
     [JsonPropertyName("ReceiveRequestAttemptId")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string? ReceiveRequestAttemptId { get; set; }
+    public string? ReceiveRequestAttemptId { get; init; }
 
     [JsonPropertyName("VisibilityTimeout")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public int? VisibilityTimeout { get; set; }
+    public int? VisibilityTimeout { get; init; }
 
     [JsonPropertyName("WaitTimeSeconds")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public int? WaitTimeSeconds { get; set; }
+    public int? WaitTimeSeconds { get; init; }
 }
 
 // https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ReceiveMessage.html

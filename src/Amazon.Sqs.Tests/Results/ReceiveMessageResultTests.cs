@@ -45,6 +45,12 @@ public class ReceiveMessageResultTests
                     "ApproximateReceiveCount": "1",
                     "SentTimestamp": "1677112427387"
                   },
+                  "MessageAttributes": {
+                    "id": {
+                      "DataType":"Number",
+                      "StringValue":"1"
+                    }
+                  },
                   "Body": "This is a test message",
                   "MD5OfBody": "fafb00f5732ab283681e124bf8747ed1",
                   "MessageId": "219f8380-5770-4cc2-8c3e-5c715e145f5e",
@@ -53,6 +59,7 @@ public class ReceiveMessageResultTests
               ]
             }
             """u8, SqsSerializerContext.Default.ReceiveMessageResult);
+
 
         Assert.NotNull(result);
 
@@ -64,5 +71,9 @@ public class ReceiveMessageResultTests
         Assert.Equal("fafb00f5732ab283681e124bf8747ed1", message.MD5OfBody);
         Assert.Equal("219f8380-5770-4cc2-8c3e-5c715e145f5e", message.MessageId);
         Assert.StartsWith("AQEBaZ+j5q", message.ReceiptHandle);
+
+        Assert.Single(message.MessageAttributes);
+        Assert.Equal(MessageAttributeDataType.Number, message.MessageAttributes["id"].DataType);
+        Assert.Equal("1", message.MessageAttributes["id"].StringValue);
     }
 }
