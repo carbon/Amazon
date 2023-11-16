@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using Amazon.Kms.Serialization;
+
 namespace Amazon.Kms.Tests;
 
 public class EncryptRequestTests
@@ -24,6 +26,12 @@ public class EncryptRequestTests
               "KeyId": "1",
               "Plaintext": "YXBwbGVzYXVjZQ=="
             }
-            """, JsonSerializer.Serialize(request, JSO.Default));
+            """, JsonSerializer.Serialize(request, JSO.Indented));
+
+
+        Assert.Equal(
+            """
+            {"EncryptionContext":{"user":"1"},"KeyId":"1","Plaintext":"YXBwbGVzYXVjZQ=="}
+            """, JsonSerializer.Serialize(request, KmsSerializerContext.Default.EncryptRequest));
     }
 }

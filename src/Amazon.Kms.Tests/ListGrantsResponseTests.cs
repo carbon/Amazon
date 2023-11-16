@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using Amazon.Kms.Serialization;
+
 namespace Amazon.Kms.Tests;
 
 public class ListGrantsResponseTests
@@ -10,28 +12,29 @@ public class ListGrantsResponseTests
         var result = JsonSerializer.Deserialize<ListGrantsResponse>(
             """
             {
-                "Grants": [
-                    {
-                        "KeyId": "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
-                        "CreationDate": 1572216195.0,
-                        "GrantId": "abcde1237f76e4ba7987489ac329fbfba6ad343d6f7075dbd1ef191f0120514",
-                        "Constraints": {
-                            "EncryptionContextSubset": {
-                                "Department": "IT"
-                            }
-                        },
-                        "RetiringPrincipal": "arn:aws:iam::111122223333:role/adminRole",
-                        "Name": "",
-                        "IssuingAccount": "arn:aws:iam::111122223333:root",
-                        "GranteePrincipal": "arn:aws:iam::111122223333:user/exampleUser",
-                        "Operations": [
-                            "Decrypt"
-                        ]
+              "Grants": [
+                {
+                  "KeyId": "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+                  "CreationDate": 1572216195.0,
+                  "GrantId": "abcde1237f76e4ba7987489ac329fbfba6ad343d6f7075dbd1ef191f0120514",
+                  "Constraints": {
+                    "EncryptionContextSubset": {
+                      "Department": "IT"
                     }
-                ]
+                  },
+                  "RetiringPrincipal": "arn:aws:iam::111122223333:role/adminRole",
+                  "Name": "",
+                  "IssuingAccount": "arn:aws:iam::111122223333:root",
+                  "GranteePrincipal": "arn:aws:iam::111122223333:user/exampleUser",
+                  "Operations": [
+                    "Decrypt"
+                  ]
+                }
+              ]
             }
             """);
 
+        Assert.NotNull(result);
         Assert.Single(result.Grants);
 
         Grant grant = result.Grants[0];
@@ -40,14 +43,14 @@ public class ListGrantsResponseTests
 
         Assert.Equal("arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab", grant.KeyId);
         Assert.Equal("abcde1237f76e4ba7987489ac329fbfba6ad343d6f7075dbd1ef191f0120514", grant.GrantId);
-        Assert.Equal("IT", grant.Constraints.EncryptionContextSubset["Department"]);
-        Assert.Equal(new[] { "Decrypt" }, grant.Operations);
+        Assert.Equal("IT", grant.Constraints.EncryptionContextSubset!["Department"]);
+        Assert.Equal(["Decrypt"], grant.Operations.AsSpan());
     }
 
     [Fact]
     public void Parse2()
     {
-        var result = JsonSerializer.Deserialize<ListGrantsResponse>(
+        ListGrantsResponse? result = JsonSerializer.Deserialize(
             """
             {
               "Grants": [
@@ -109,8 +112,9 @@ public class ListGrantsResponseTests
               ],
               "Truncated": false
             }
-            """);
+            """u8, KmsSerializerContext.Default.ListGrantsResponse);
 
+        Assert.NotNull(result);
         Assert.Equal("name", result.Grants[3].Name);
         Assert.Equal("Encrypt,ReEncryptFrom,ReEncryptTo", string.Join(",", result.Grants[3].Operations));
         Assert.Equal("91ad875e49b04a9d1f3bdeb84d821f9db6ea95e1098813f6d47f0c65fbe2a172", result.Grants[0].GrantId);

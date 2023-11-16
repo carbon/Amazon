@@ -32,6 +32,6 @@ public class DecryptRequestTests
               "KeyId": "abc",
               "CiphertextBlob": "dGVzdA=="
             }
-            """, JsonSerializer.Serialize(request, JSO.Default));
+            """, JsonSerializer.Serialize(request, JSO.Indented));
     }
 }

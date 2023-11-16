@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using Amazon.Kms.Serialization;
+
 namespace Amazon.Kms.Tests;
 
 public class CreateGrantTests
@@ -7,11 +9,10 @@ public class CreateGrantTests
     [Fact]
     public void CanSerialize()
     {
-        var request = new CreateGrantRequest
-        {
+        var request = new CreateGrantRequest {
             KeyId = "key",
             GranteePrincipal = "principle",
-            Operations = new[] { KmsOperations.Decrypt },
+            Operations = [KmsOperations.Decrypt],
             Constraints = new GrantConstraints {
                 EncryptionContextEquals = new Dictionary<string, string> {
                     { "vault", "master" }
@@ -33,6 +34,12 @@ public class CreateGrantTests
                 }
               }
             }
-            """, JsonSerializer.Serialize(request, JSO.Default));
+            """, JsonSerializer.Serialize(request, JSO.Indented));
+
+
+        Assert.Equal(
+            """
+            {"KeyId":"key","GranteePrincipal":"principle","Operations":["Decrypt"],"Constraints":{"EncryptionContextEquals":{"vault":"master"}}}
+            """, JsonSerializer.Serialize(request, KmsSerializerContext.Default.CreateGrantRequest));
     }
 }

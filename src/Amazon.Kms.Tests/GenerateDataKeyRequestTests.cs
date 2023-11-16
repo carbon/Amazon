@@ -20,7 +20,7 @@ public class GenerateDataKeyRequestTests
               "KeySpec": "AES_128",
               "NumberOfBytes": 128
             }
-            """, JsonSerializer.Serialize(request, JSO.Default));
+            """, JsonSerializer.Serialize(request, JSO.Indented));
     }
 
     [Fact]
@@ -37,6 +37,6 @@ public class GenerateDataKeyRequestTests
               "KeyId": "1",
               "KeySpec": "AES_128"
             }
-            """, JsonSerializer.Serialize(request, JSO.Default));
+            """, JsonSerializer.Serialize(request, JSO.Indented));
     }
 }
