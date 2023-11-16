@@ -1,13 +1,6 @@
 ﻿namespace Amazon.CodeBuild;
 
-public sealed class BatchGetProjectsRequest : ICodeBuildRequest
+public sealed class BatchGetProjectsRequest(params string[] names) : ICodeBuildRequest
 {
-    public BatchGetProjectsRequest(params string[] names)
-    {
-        ArgumentNullException.ThrowIfNull(names);
-
-        Names = names;
-    }
-
-    public string[] Names { get; }
+    public string[] Names { get; } = names ?? throw new ArgumentNullException(nameof(names));
 }

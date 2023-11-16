@@ -1,5 +1,7 @@
 ﻿#nullable disable
 
+using System.Text.Json.Serialization;
+
 namespace Amazon.CodeBuild;
 
 public sealed class BuildPhase
@@ -14,5 +16,6 @@ public sealed class BuildPhase
 
     public string PhaseStatus { get; init; }
 
+    [JsonPropertyName("phaseType")]
     public string PhaseType { get; init; }
 }

@@ -8,12 +8,10 @@ using Amazon.Exceptions;
 
 namespace Amazon.CodeBuild;
 
-public sealed class CodeBuildClient : AwsClient
+public sealed class CodeBuildClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.CodeBuild, region, credential)
 {
     public const string Version = "2016-10-06";
-
-    public CodeBuildClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.CodeBuild, region, credential) { }
 
     #region Builds
 
