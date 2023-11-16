@@ -78,7 +78,7 @@ public sealed class SesEmail
 #pragma warning disable CS0618 // Type or member is obsolete
         else if (message.ReplyTo != null)
         {
-            doc.ReplyTo = new[] { SesHelper.EncodeMailAddress(message.ReplyTo) };
+            doc.ReplyTo = [ SesHelper.EncodeMailAddress(message.ReplyTo) ];
         }
 #pragma warning restore CS0618
 

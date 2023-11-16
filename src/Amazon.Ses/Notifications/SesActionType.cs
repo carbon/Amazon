@@ -2,7 +2,7 @@
 
 namespace Amazon.Ses;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<SesActionType>))]
 public enum SesActionType
 {
     S3       = 1,

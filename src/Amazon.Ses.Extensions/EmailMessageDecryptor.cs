@@ -25,11 +25,11 @@ public sealed class EmailMessageDecryptor(KmsClient kms)
         byte[] envelopeKey = Convert.FromBase64String(encryptedBlob.Properties["x-amz-meta-x-amz-key-v2"]);
         byte[] envelopeIV  = Convert.FromBase64String(encryptedBlob.Properties["x-amz-meta-x-amz-iv"]);
         long contentLength = long.Parse(encryptedBlob.Properties["x-amz-meta-x-amz-unencrypted-content-length"], NumberStyles.None, CultureInfo.InvariantCulture);
-        int tagLength      = int.Parse(encryptedBlob.Properties["x-amz-meta-x-amz-tag-len"], NumberStyles.None, CultureInfo.InvariantCulture);
+        int tagLengthInBits = int.Parse(encryptedBlob.Properties["x-amz-meta-x-amz-tag-len"], NumberStyles.None, CultureInfo.InvariantCulture);
 
-        if (tagLength != 128)
+        if (tagLengthInBits != 128)
         {
-            throw new Exception($"x-amz-tag-len must be 128 bits. Was {tagLength}");
+            throw new Exception($"x-amz-tag-len must be 128 bits. Was {tagLengthInBits}");
         }
 
         if (contentLength > 25_000_000)
@@ -46,7 +46,7 @@ public sealed class EmailMessageDecryptor(KmsClient kms)
 
         var decryptResult = await kms.DecryptAsync(new DecryptRequest(kmsCmkId, envelopeKey, encryptionContext));
        
-        using var aes = new AesGcm(decryptResult.Plaintext);
+        using var aes = new AesGcm(decryptResult.Plaintext, tagLengthInBits / 8);
 
         var message = new byte[contentLength];
 

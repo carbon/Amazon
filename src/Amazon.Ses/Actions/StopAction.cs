@@ -1,14 +1,8 @@
 ﻿namespace Amazon.Ses;
 
-public sealed class StopAction
+public sealed class StopAction(string scope, string? topicArn)
 {
-    public StopAction(string scope, string? topicArn)
-    {
-        Scope = scope;
-        TopicArn = topicArn;
-    }
+    public string Scope { get; } = scope;
 
-    public string Scope { get; }
-
-    public string? TopicArn { get; }
+    public string? TopicArn { get; } = topicArn;
 }

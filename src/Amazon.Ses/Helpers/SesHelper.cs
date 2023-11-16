@@ -15,7 +15,7 @@ public static class SesHelper
 
     internal static string[] EncodeMailAddressCollection(MailAddressCollection collection)
     {
-        if (collection.Count == 0) return Array.Empty<string>();
+        if (collection.Count is 0) return [];
 
         var addresses = new string[collection.Count];
 

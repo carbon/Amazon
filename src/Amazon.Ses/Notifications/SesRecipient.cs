@@ -4,16 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Amazon.Ses;
 
-public readonly struct SesRecipient
+[method: JsonConstructor]
+public readonly struct SesRecipient(string emailAddress)
 {
-    [JsonConstructor]
-    public SesRecipient(string emailAddress)
-    {
-        ArgumentNullException.ThrowIfNull(emailAddress);
-
-        EmailAddress = emailAddress;
-    }
-
     [JsonPropertyName("emailAddress")]
-    public string EmailAddress { get; }
+    public string EmailAddress { get; } = emailAddress ?? throw new ArgumentNullException(nameof(emailAddress));
 }

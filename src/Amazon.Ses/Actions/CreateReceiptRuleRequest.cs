@@ -1,17 +1,13 @@
 ﻿namespace Amazon.Ses;
 
-public sealed class CreateReceiptRuleRequest
+public sealed class CreateReceiptRuleRequest(
+    ReceiptRule rule,
+    string ruleSetName,
+    string? after = null)
 {
-    public CreateReceiptRuleRequest(ReceiptRule rule, string ruleSetName, string? after = null)
-    {
-        Rule = rule;
-        RuleSetName = ruleSetName;
-        After = after;
-    }
+    public ReceiptRule Rule { get; } = rule;
 
-    public ReceiptRule Rule { get; }
+    public string RuleSetName { get; } = ruleSetName;
 
-    public string RuleSetName { get; }
-
-    public string? After { get; }
+    public string? After { get; } = after;
 }

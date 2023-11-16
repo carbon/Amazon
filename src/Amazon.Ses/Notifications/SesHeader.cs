@@ -4,18 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace Amazon.Ses;
 
-public readonly struct SesHeader
+[method: JsonConstructor]
+public readonly struct SesHeader(string name, string value)
 {
-    [JsonConstructor]
-    public SesHeader(string name, string value)
-    {
-        Name = name;
-        Value = value;
-    }
-
     [JsonPropertyName("name")]
-    public string Name { get; }
+    public string Name { get; } = name;
 
     [JsonPropertyName("value")]
-    public string Value { get; }
+    public string Value { get; } = value;
 }

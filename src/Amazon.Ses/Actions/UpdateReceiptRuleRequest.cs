@@ -1,14 +1,10 @@
 ﻿namespace Amazon.Ses;
 
-public sealed class UpdateReceiptRuleRequest
+public sealed class UpdateReceiptRuleRequest(
+    ReceiptRule rule,
+    string ruleSetName)
 {
-    public UpdateReceiptRuleRequest(ReceiptRule rule, string ruleSetName)
-    {
-        Rule = rule;
-        RuleSetName = ruleSetName;
-    }
+    public ReceiptRule Rule { get; } = rule;
 
-    public ReceiptRule Rule { get; }
-
-    public string RuleSetName { get; }
+    public string RuleSetName { get; } = ruleSetName;
 }

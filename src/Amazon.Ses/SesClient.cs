@@ -5,21 +5,18 @@ using Amazon.Scheduling;
 
 namespace Amazon.Ses;
 
-public sealed class SesClient : AwsClient
+public sealed class SesClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Ses, region, credential)
 {
     public const string Version = "2010-12-01";
 
     public const string Namespace = "http://ses.amazonaws.com/doc/2010-12-01/";
 
-    private static readonly ExponentialBackoffRetryPolicy retryPolicy = new (
+    private static readonly ExponentialBackoffRetryPolicy retryPolicy = new(
         initialDelay : TimeSpan.FromSeconds(1),
         maxDelay     : TimeSpan.FromSeconds(10),
         maxRetries   : 5
     );
-
-    public SesClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.Ses, region, credential)
-    { }
 
     public Task<SendEmailResult> SendEmailAsync(MailMessage message)
     {

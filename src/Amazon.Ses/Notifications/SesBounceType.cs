@@ -2,7 +2,7 @@
 
 namespace Amazon.Ses;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<SesBounceType>))]
 public enum SesBounceType
 {
     Undetermined = 1,
