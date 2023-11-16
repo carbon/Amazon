@@ -1,39 +1,44 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Globalization;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.Sqs;
 
-public sealed class ChangeMessageVisibilityRequest
+public sealed class ChangeMessageVisibilityRequest : SqsRequest
 {
-    public ChangeMessageVisibilityRequest(string receiptHandle, TimeSpan visibilityTimeout)
+    public ChangeMessageVisibilityRequest(
+        string queueUrl,
+        string receiptHandle,
+        TimeSpan visibilityTimeout)
+        : this(queueUrl, receiptHandle, (int)visibilityTimeout.TotalSeconds) { }
+
+    public ChangeMessageVisibilityRequest(
+       string queueUrl,
+       string receiptHandle,
+       int visibilityTimeout)
     {
+        ArgumentException.ThrowIfNullOrEmpty(queueUrl);
         ArgumentException.ThrowIfNullOrEmpty(receiptHandle);
 
-        if (visibilityTimeout < TimeSpan.Zero)
+        if (visibilityTimeout < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(visibilityTimeout), visibilityTimeout, "Must be greater than 0");
         }
 
-        if (visibilityTimeout > TimeSpan.FromHours(12))
+        if (visibilityTimeout > 43_200)
         {
             throw new ArgumentOutOfRangeException(nameof(visibilityTimeout), visibilityTimeout, "Must be less than 12 hours");
         }
 
+        QueueUrl = queueUrl;
         ReceiptHandle = receiptHandle;
-        VisibilityTimeout = (int)visibilityTimeout.TotalSeconds;
+        VisibilityTimeout = visibilityTimeout;
     }
 
+    [JsonPropertyName("QueueUrl")]
+    public string QueueUrl { get; }
+
+    [JsonPropertyName("ReceiptHandle")]
     public string ReceiptHandle { get; }
-        
-    [Range(0, 43_200)]
+    
+    [JsonPropertyName("VisibilityTimeout")] // in seconds
     public int VisibilityTimeout { get; }
-
-    internal List<KeyValuePair<string, string>> ToParams()
-    {
-        return new(4) {
-            new ("Action",            "ChangeMessageVisibility"),
-            new ("ReceiptHandle",     ReceiptHandle),
-            new ("VisibilityTimeout", VisibilityTimeout.ToString(CultureInfo.InvariantCulture))
-        };
-    }
 }

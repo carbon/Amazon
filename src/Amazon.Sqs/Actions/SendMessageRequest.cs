@@ -1,92 +1,58 @@
-﻿using System.Globalization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Amazon.Sqs;
 
-public sealed class SendMessageRequest
+public sealed class SendMessageRequest : SqsRequest
 {
-    public SendMessageRequest(string body)
+    public SendMessageRequest(
+        string queueUrl,
+        string messageBody,
+        Dictionary<string, MessageAttributeValue>? messageAttributes = null,
+        TimeSpan? delay = null,
+        string? messageDeduplicationId = null,
+        string? messageGroupId = null)
     {
-        ArgumentException.ThrowIfNullOrEmpty(body);
+        ArgumentException.ThrowIfNullOrEmpty(messageBody);
 
-        MessageBody = body;
-    }
-
-    public SendMessageRequest(string body, string messageDeduplicationId, string messageGroupId)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(body);
-
-        MessageBody = body;
+        QueueUrl = queueUrl;
+        MessageBody = messageBody;
+        MessageAttributes = messageAttributes;
         MessageDeduplicationId = messageDeduplicationId;
         MessageGroupId = messageGroupId;
+
+        if (delay != null)
+        {
+            DelaySeconds = (int)delay.Value.TotalSeconds;
+        }
     }
 
-    public string MessageBody { get; }
-
-    // 128 characters
-    public string? MessageDeduplicationId { get; }
-
-    // Required for FIFO queues
-    public string? MessageGroupId { get; }
+    [JsonPropertyName("QueueUrl")]
+    public string QueueUrl { get; }
 
     /// <summary>
     /// The number of seconds (0 to 900 - 15 minutes) to delay a specific message. 
     /// Messages with a positive DelaySeconds value become available for processing after the delay time is finished. 
     /// If you don't specify a value, the default value for the queue applies.
     /// </summary>
-    public TimeSpan? Delay { get; set; }
+    [JsonPropertyName("DelaySeconds")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [Range(0, 900)]
+    public int? DelaySeconds { get; }
 
-    public MessageAttribute[]? MessageAttributes { get; set; }
+    [JsonPropertyName("MessageAttributes")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Dictionary<string, MessageAttributeValue>? MessageAttributes { get; }
 
-    internal List<KeyValuePair<string, string>> GetParameters()
-    {
-        var parameters = new List<KeyValuePair<string, string>>(4) {
-            new ("Action", "SendMessage"),
-            new ("MessageBody", MessageBody)
-        };
+    [JsonPropertyName("MessageBody")]
+    public string MessageBody { get; }
 
-        // Defaults to the queue visibility timeout
-        if (Delay.HasValue)
-        {
-            int delaySeconds = (int)Delay.Value.TotalSeconds;
+    [JsonPropertyName("MessageDeduplicationId")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? MessageDeduplicationId { get; }
 
-            parameters.Add(new("DelaySeconds", delaySeconds.ToString(CultureInfo.InvariantCulture)));
-        }
-
-        if (MessageDeduplicationId is not null)
-        {
-            parameters.Add(new("MessageDeduplicationId", MessageDeduplicationId));
-        }
-
-        if (MessageGroupId is not null)
-        {
-            parameters.Add(new("MessageGroupId", MessageGroupId));
-        }
-
-        if (MessageAttributes is { Length: > 0 })
-        {
-            for (int i = 0; i < MessageAttributes.Length; i++)
-            {
-                int number = i + 1;
-
-                ref MessageAttribute attr = ref MessageAttributes[i];
-
-                string prefix = string.Create(CultureInfo.InvariantCulture, $"MessageAttribute.{number}");
-
-                parameters.Add(new($"{prefix}.Name", attr.Name));
-
-                if (attr.Value.DataType is MessageAttributeDataType.Binary)
-                {
-                    parameters.Add(new($"{prefix}.Value.BinaryValue", attr.Value.Value));
-                }
-                else
-                {
-                    parameters.Add(new($"{prefix}.Value.StringValue", attr.Value.Value));
-                }
-
-                parameters.Add(new($"{prefix}.Value.DataType", attr.Value.DataType.Canonicalize()));
-            }
-        }
-
-        return parameters;
-    }
+    // Required for FIFO queues
+    [JsonPropertyName("MessageGroupId")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? MessageGroupId { get; }
 }

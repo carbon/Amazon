@@ -1,186 +1,142 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 
 using Amazon.Exceptions;
 using Amazon.Sqs.Exceptions;
-using Amazon.Sqs.Models;
+using Amazon.Sqs.Serialization;
 
 using Carbon.Messaging;
 
 namespace Amazon.Sqs;
 
-public sealed class SqsClient : AwsClient
+public sealed class SqsClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Sqs, region, credential)
 {
-    public const string Version = "2012-11-05";
-
-    public const string NS = "http://queue.amazonaws.com/doc/2012-11-05/";
-
-    public SqsClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.Sqs, region, credential)
-    { }
-
-    public async Task<CreateQueueResult> CreateQueueAsync(string queueName, int defaultVisibilityTimeout = 30)
+    public Task<CreateQueueResult> CreateQueueAsync(CreateQueueRequest request)
     {
-        ArgumentNullException.ThrowIfNull(queueName);
+        var requestMessage = ConstructPostRequest("CreateQueue", request, SqsSerializerContext.Default.CreateQueueRequest);
 
-        var parameters = new List<KeyValuePair<string, string>>(4) {
-            new ("Action", "CreateQueue"),
-            new ("QueueName", queueName),
-            new ("DefaultVisibilityTimeout", defaultVisibilityTimeout.ToString(CultureInfo.InvariantCulture)) /* in seconds */
-        };
-
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
-            Content = GetPostContent(parameters)
-        };
-
-        var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-
-        return CreateQueueResponse.Deserialize(responseText).CreateQueueResult;
+        return SendAsync(requestMessage, SqsSerializerContext.Default.CreateQueueResult);
     }
 
-    /*
-    public Task DeleteQueueAsync(string queueName)
+    public Task<GetQueueAttributesResult> GetQueueAttributesAsync(GetQueueAttributesRequest request)
     {
-        throw new NotImplementedException();
-    }
-    */
+        var requestMessage = ConstructPostRequest("GetQueueAttributes", request, SqsSerializerContext.Default.GetQueueAttributesRequest);
 
-    public async Task<SendMessageBatchResultEntry[]> SendMessageBatchAsync(Uri queueUrl, IReadOnlyList<string> messages)
-    {
-        ArgumentNullException.ThrowIfNull(messages);
-
-        if (messages.Count > 10)
-            throw new ArgumentException("Must be 10 or fewer", nameof(messages));
-
-        // Max payload = 256KB (262,144 bytes)
-
-        var parameters = new List<KeyValuePair<string, string>>((messages.Count * 2) + 2) {
-            new("Action", "SendMessageBatch")
-        };
-
-        for (int i = 0; i < messages.Count; i++)
-        {
-            int number = i + 1;
-
-            string message = messages[i];
-            string prefix = string.Create(CultureInfo.InvariantCulture, $"SendMessageBatchRequestEntry.{number}");
-
-            parameters.Add(new($"{prefix}.Id", i.ToString(CultureInfo.InvariantCulture)));  // Id				Required
-            parameters.Add(new($"{prefix}.MessageBody", message));                          // MessageBody		Required
-                                                                                            // DelaySeconds	Optional, Max 900(15min)
-        }
-
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
-            Content = GetPostContent(parameters)
-        };
-
-        string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-
-        return SendMessageBatchResponse.Deserialize(responseText).SendMessageBatchResult.Items;
+        return SendAsync(requestMessage, SqsSerializerContext.Default.GetQueueAttributesResult);
     }
 
-    public async Task<SendMessageResult> SendMessageAsync(Uri queueUrl, SendMessageRequest request)
+    public async Task DeleteQueueAsync(DeleteQueueRequest request)
     {
-        ArgumentNullException.ThrowIfNull(request);
+        var requestMessage = ConstructPostRequest("DeleteQueue", request, SqsSerializerContext.Default.DeleteQueueRequest);
 
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
-            Content = GetPostContent(request.GetParameters())
-        };
-
-        var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-
-        return SendMessageResponse.Deserialize(responseText).SendMessageResult;
+        await SendAsync(requestMessage).ConfigureAwait(false);
     }
 
-    public async Task<SqsMessage[]> ReceiveMessagesAsync(
-        Uri queueUrl,
-        ReceiveMessagesRequest request, 
+
+    public async Task PurgeQueueAsync(PurgeQueueRequest request)
+    {
+        var requestMessage = ConstructPostRequest("PurgeQueue", request, SqsSerializerContext.Default.PurgeQueueRequest);
+
+        await SendAsync(requestMessage).ConfigureAwait(false);
+    }
+
+    public Task<SendMessageBatchResult> SendMessageBatchAsync(SendMessageBatchRequest request)
+    {
+        var requestMessage = ConstructPostRequest("SendMessageBatch", request, SqsSerializerContext.Default.SendMessageBatchRequest);
+
+        return SendAsync(requestMessage, SqsSerializerContext.Default.SendMessageBatchResult);
+    }
+
+    public Task<SendMessageResult> SendMessageAsync(SendMessageRequest request)
+    {
+        var requestMessage = ConstructPostRequest("SendMessage", request, SqsSerializerContext.Default.SendMessageRequest);
+
+        return SendAsync(requestMessage, SqsSerializerContext.Default.SendMessageResult);
+    }
+
+    public Task<ReceiveMessageResult> ReceiveMessagesAsync(ReceiveMessageRequest request, CancellationToken cancellationToken = default)
+    {
+        var requestMessage = ConstructPostRequest("ReceiveMessage", request, SqsSerializerContext.Default.ReceiveMessageRequest);
+
+        return SendAsync(requestMessage, SqsSerializerContext.Default.ReceiveMessageResult, cancellationToken);
+    }
+
+    public async Task DeleteMessageAsync(DeleteMessageRequest request)
+    {
+        // empty 200 response on success
+
+        var requestMessage = ConstructPostRequest("DeleteMessage", request, SqsSerializerContext.Default.DeleteMessageRequest);
+
+        await SendAsync(requestMessage).ConfigureAwait(false);
+    }
+
+    public async Task ChangeMessageVisibilityAsync(ChangeMessageVisibilityRequest request)
+    {
+        // empty 200 response on success
+
+        var requestMessage = ConstructPostRequest("ChangeMessageVisibility", request, SqsSerializerContext.Default.ChangeMessageVisibilityRequest);
+
+        await SendAsync(requestMessage).ConfigureAwait(false);
+    }
+
+    public async Task<ChangeMessageVisibilityBatchResult> ChangeMessageVisibilityBatchAsync(ChangeMessageVisibilityBatchRequest request)
+    {
+        var requestMessage = ConstructPostRequest("ChangeMessageVisibilityBatch", request, SqsSerializerContext.Default.ChangeMessageVisibilityBatchRequest);
+
+        return await SendAsync(requestMessage, SqsSerializerContext.Default.ChangeMessageVisibilityBatchResult).ConfigureAwait(false);
+    }
+
+    public Task<DeleteMessageBatchResult> DeleteMessageBatchAsync(DeleteMessageBatchRequest request)
+    {
+        var requestMessage = ConstructPostRequest("DeleteMessageBatch", request, SqsSerializerContext.Default.DeleteMessageBatchRequest);
+
+        return SendAsync(requestMessage, SqsSerializerContext.Default.DeleteMessageBatchResult);
+    }
+
+    // https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-making-api-requests-json.html
+
+    private static readonly MediaTypeHeaderValue s_mediaType_xAmzJson1_0 = new("application/x-amz-json-1.0");
+
+    internal HttpRequestMessage ConstructPostRequest<TRequest>(
+        [ConstantExpected] string action,
+        TRequest request,
+        JsonTypeInfo<TRequest> jsonTypeInfo)
+        where TRequest : SqsRequest
+    {
+        return new HttpRequestMessage(HttpMethod.Post, Endpoint) {
+            Headers = {
+                { "X-Amz-Target", $"AmazonSQS.{action}" },
+            },
+            Content = JsonContent.Create(request, jsonTypeInfo, mediaType: s_mediaType_xAmzJson1_0)
+        };
+    }
+
+    private async Task<TResult> SendAsync<TResult>(
+        HttpRequestMessage request,
+        JsonTypeInfo<TResult> jsonTypeInfo,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(request);
+        await SignAsync(request).ConfigureAwait(false);
 
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
-            Content = GetPostContent(request.GetParameters())
-        };
+        using HttpResponseMessage response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-        string responseText = await SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
-
-        var response = ReceiveMessageResponse.Deserialize(responseText);
-
-        return response.ReceiveMessageResult.Items ?? Array.Empty<SqsMessage>();
-    }
-
-    public async Task<string> DeleteMessageAsync(Uri queueUrl, string recieptHandle)
-    {
-        ArgumentNullException.ThrowIfNull(recieptHandle);
-
-        var parameters = new List<KeyValuePair<string, string>>(3) {
-            new ("Action", "DeleteMessage"),
-            new ("ReceiptHandle", recieptHandle)
-        };
-
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
-            Content = GetPostContent(parameters)
-        };
-
-        return await SendAsync(httpRequest).ConfigureAwait(false);
-    }
-
-    public async Task<string> ChangeMessageVisibilityAsync(Uri queueUrl, ChangeMessageVisibilityRequest request)
-    {
-        ArgumentNullException.ThrowIfNull(request);
-
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
-            Content = GetPostContent(request.ToParams())
-        };
-
-        return await SendAsync(httpRequest).ConfigureAwait(false);
-    }
-
-    public async Task<DeleteMessageBatchResultEntry[]> DeleteMessageBatchAsync(Uri queueUrl, string[] recieptHandles)
-    {
-        ArgumentNullException.ThrowIfNull(recieptHandles);
-
-        if (recieptHandles.Length > 10)
-            throw new ArgumentException("Must contain 10 or fewer items", nameof(recieptHandles));
-
-        // Max payload = 64KB (65,536 bytes)
-
-        var parameters = new List<KeyValuePair<string, string>>((recieptHandles.Length * 2) + 2) {
-            new("Action", "DeleteMessageBatch")
-        };
-
-        for (int i = 0; i < recieptHandles.Length; i++)
+        if (!response.IsSuccessStatusCode)
         {
-            int number    = i + 1;
-            string handle = recieptHandles[i];
-            string prefix = string.Create(CultureInfo.InvariantCulture, $"DeleteMessageBatchRequestEntry.{number}.");
-
-            parameters.Add(new(prefix + "Id", i.ToString(CultureInfo.InvariantCulture))); // DeleteMessageBatchRequestEntry.n.Id
-            parameters.Add(new(prefix + "ReceiptHandle", handle));                        // DeleteMessageBatchRequestEntry.n.ReceiptHandle
+            throw await GetExceptionAsync(response).ConfigureAwait(false);
         }
 
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, queueUrl) {
-            Content = GetPostContent(parameters)
-        };
+        var result = await response.Content.ReadFromJsonAsync(jsonTypeInfo, cancellationToken).ConfigureAwait(false);
 
-        string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
-
-        // Because the batch request can result in a combination of successful and unsuccessful actions, 
-        // you should check for batch errors even when the call returns an HTTP status code of 200.
-        return DeleteMessageBatchResponse.Deserialize(responseText).DeleteMessageBatchResult.Items;
+        return result!;
     }
 
     #region Helpers
-
-    private static FormUrlEncodedContent GetPostContent(List<KeyValuePair<string, string>> parameters)
-    {
-        parameters.Add(new("Version", Version));
-
-        return new FormUrlEncodedContent(parameters!);
-    }
 
     protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
     {
@@ -189,34 +145,21 @@ public sealed class SqsClient : AwsClient
             return new ServiceUnavailableException();
         }
 
-        string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
         try
         {
-            var errorResponse = ErrorResponse.Deserialize(responseText);
+            var errorResult = await response.Content.ReadFromJsonAsync<ErrorResult>().ConfigureAwait(false);
 
-            return new SqsException(errorResponse.Error);
+            return new SqsException(errorResult!);
         }
         catch
-        { }
+        {
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        return new QueueException($"{response.StatusCode}/{responseText}");
+            return new QueueException($"status = {response.StatusCode}. response = {responseText}");
+        }
     }
 
     #endregion
 }
 
 // http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/Welcome.html
-
-/*
-<?xml version="1.0"?>
-<ErrorResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/">
-	<Error>
-		<Type>Sender</Type>
-		<Code>SignatureDoesNotMatch</Code>
-		<Message>Credential should be scoped to correct service: 'sqs'. </Message>
-		<Detail/>
-	</Error>
-	<RequestId>a805c8c5-1bef-5b1b-a9cf-86ded9669a8c</RequestId>
-</ErrorResponse>
-*/

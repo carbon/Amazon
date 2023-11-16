@@ -13,9 +13,9 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
     where T : notnull, new()
 {
     private readonly SqsClient _client;
-    private readonly Uri _url;
+    private readonly string _queueUrl;
 
-    private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
+    private static readonly RetryPolicy s_retryPolicy = RetryPolicy.ExponentialBackoff(
         initialDelay : TimeSpan.FromSeconds(0.5),
         maxDelay     : TimeSpan.FromSeconds(3),
         maxRetries   : 4
@@ -23,11 +23,11 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
 
     public SqsQueue(AwsRegion region, string accountId, string queueName, IAwsCredential credential)
     {
-        ArgumentNullException.ThrowIfNull(accountId);
-        ArgumentNullException.ThrowIfNull(queueName);
+        ArgumentException.ThrowIfNullOrEmpty(accountId);
+        ArgumentException.ThrowIfNullOrEmpty(queueName);
 
-        _client = new SqsClient(region, credential);
-        _url = new Uri($"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}");
+        _client   = new SqsClient(region, credential);
+        _queueUrl = $"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}";
     }
 
     // TODO: Overload with serializer (Default to JSON)
@@ -37,74 +37,65 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
         TimeSpan? lockTime,
         CancellationToken cancellationToken = default)
     {
-        // Blocks until we recieve a message
+        // Blocks until we receive a message
 
-        var request = new ReceiveMessagesRequest(take, lockTime, waitTime: TimeSpan.FromSeconds(20));
+        var request = new ReceiveMessageRequest(
+            queueUrl            : _queueUrl,
+            maxNumberOfMessages : take,
+            visibilityTimeout   : lockTime, 
+            waitTime            : TimeSpan.FromSeconds(20)
+        );
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            var result = await _client.ReceiveMessagesAsync(_url, request, cancellationToken).ConfigureAwait(false);
+            var result = await _client.ReceiveMessagesAsync(request, cancellationToken).ConfigureAwait(false);
 
-            if (result.Length == 0) continue;
+            var messages = result.Messages;
 
-            return Convert(result);
+            if (messages.Length is 0) continue;
+
+            return Convert(messages);
         }
 
-        return Array.Empty<IQueueMessage<T>>();
+        return [];
     }
 
     public async Task<IReadOnlyList<IQueueMessage<T>>> GetAsync(
         int take,
         TimeSpan? lockTime, 
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
-        var request = new ReceiveMessagesRequest(take, lockTime);
+        var result = await _client.ReceiveMessagesAsync(new(
+            queueUrl            : _queueUrl,
+            maxNumberOfMessages : take,
+            visibilityTimeout   : lockTime
+        ), cancellationToken).ConfigureAwait(false);
 
-        var result = await _client.ReceiveMessagesAsync(_url, request, cancellationToken).ConfigureAwait(false);
-
-        return Convert(result);
-    }
-
-    private static IQueueMessage<T>[] Convert(SqsMessage[] messages)
-    {
-        if (messages.Length == 0)
-        {
-            return Array.Empty<IQueueMessage<T>>();
-        }
-
-        var result = new IQueueMessage<T>[messages.Length];
-
-        for (int i = 0; i < messages.Length; i++)
-        {
-            result[i] = new JsonEncodedMessage<T>(messages[i]);
-        }
-
-        return result;
+        return Convert(result.Messages);
     }
 
     public async Task<string> PutAsync(T message, TimeSpan? delay = null)
     {
-        string text = JsonSerializer.Serialize(message, jso);
+        string text = JsonSerializer.Serialize(message, s_jso);
 
-        var request = new SendMessageRequest(text) {
-            Delay = delay
-        };
-
-        var result = await _client.SendMessageAsync(_url, request).ConfigureAwait(false);
+        var result = await _client.SendMessageAsync(new(
+            queueUrl    : _queueUrl,
+            messageBody : text,
+            delay       : delay
+        )).ConfigureAwait(false);
 
         return result.MessageId;
     }
 
-    private static readonly JsonSerializerOptions jso = new () {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    private static readonly JsonSerializerOptions s_jso = new () {
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
     public async Task PutAsync(params IMessage<T>[] messages)
     {
         ArgumentNullException.ThrowIfNull(messages);
 
-        if (messages.Length == 0) return;
+        if (messages.Length is 0) return;
 
         // Max payload = 256KB (262,144 bytes)
 
@@ -116,18 +107,20 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
 
             for (int i = 0; i < batch.Length; i++)
             {
-                messageBatch[i] = JsonSerializer.Serialize(batch[i].Body, jso);
+                messageBatch[i] = JsonSerializer.Serialize(batch[i].Body, s_jso);
             }
 
-            await _client.SendMessageBatchAsync(_url, messageBatch).ConfigureAwait(false);
+            await _client.SendMessageBatchAsync(new SendMessageBatchRequest(_queueUrl, messageBatch)).ConfigureAwait(false);
         }
     }
 
     public async Task UpdateMessageVisibilityAsync(string receiptHandle, TimeSpan duration)
     {
-        var request = new ChangeMessageVisibilityRequest(receiptHandle, duration);
-
-        await _client.ChangeMessageVisibilityAsync(_url, request).ConfigureAwait(false);
+        await _client.ChangeMessageVisibilityAsync(new(
+            queueUrl          : _queueUrl,
+            receiptHandle     : receiptHandle,
+            visibilityTimeout : duration)
+        ).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(params IQueueMessage<T>[] messages)
@@ -146,26 +139,45 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
         var retryCount = 0;
         Exception lastError;
 
+        var request = new DeleteMessageBatchRequest(_queueUrl, handles);
+
         do
         {
             try
             {
-                await _client.DeleteMessageBatchAsync(_url, handles).ConfigureAwait(false);
+                await _client.DeleteMessageBatchAsync(request).ConfigureAwait(false);
 
                 return;
             }
-            catch (Exception ex) when (retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
+            catch (Exception ex) when (s_retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
             {
                 lastError = ex;
             }
 
             retryCount++;
 
-            await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+            await Task.Delay(s_retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
         }
 
-        while (retryPolicy.ShouldRetry(retryCount));
+        while (s_retryPolicy.ShouldRetry(retryCount));
 
         throw lastError;
+    }
+
+    private static JsonEncodedMessage<T>[] Convert(ReadOnlySpan<SqsMessage> messages)
+    {
+        if (messages.IsEmpty)
+        {
+            return [];
+        }
+
+        var result = new JsonEncodedMessage<T>[messages.Length];
+
+        for (int i = 0; i < messages.Length; i++)
+        {
+            result[i] = new JsonEncodedMessage<T>(messages[i]);
+        }
+
+        return result;
     }
 }

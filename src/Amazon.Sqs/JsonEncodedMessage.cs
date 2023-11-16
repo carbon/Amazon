@@ -8,9 +8,8 @@ namespace Amazon.Sqs;
 public sealed class JsonEncodedMessage<T> : IQueueMessage<T>
     where T : notnull
 {
-    private static readonly JsonSerializerOptions jso = new() {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    private static readonly JsonSerializerOptions s_jso = new() {
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
     private readonly SqsMessage _model;
@@ -19,7 +18,7 @@ public sealed class JsonEncodedMessage<T> : IQueueMessage<T>
     {
         _model = model;
 
-        Body = JsonSerializer.Deserialize<T>(model.Body, jso)!;
+        Body = JsonSerializer.Deserialize<T>(model.Body, s_jso)!;
     }
 
     public static JsonEncodedMessage<T> Create(SqsMessage message)

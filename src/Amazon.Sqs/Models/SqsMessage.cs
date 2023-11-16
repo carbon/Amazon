@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-using System.Xml.Serialization;
+using System.Text.Json.Serialization;
 
 using Carbon.Messaging;
 
@@ -17,41 +17,42 @@ public sealed class SqsMessage : IQueueMessage<string>
         Body = body;
     }
 
-    [XmlElement("MessageId")]
+    [JsonPropertyName("MessageId")]
     public string MessageId { get; set; }
 
-    [XmlElement("ReceiptHandle")]
+    [JsonPropertyName("ReceiptHandle")]
     public string ReceiptHandle { get; set; }
 
-    [XmlElement("Body")]
+    [JsonPropertyName("Body")]
     public string Body { get; set; }
 
-    [XmlElement("SequenceNumber")]
+    [JsonPropertyName("MD5OfBody")]
+    public string MD5OfBody { get; set; }
+
+#nullable enable
+
+    [JsonPropertyName("MD5OfMessageAttributes")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? MD5OfMessageAttributes { get; set; }
+
+    [JsonPropertyName("SequenceNumber")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string SequenceNumber { get; set; }
 
-    // SentTimestamp
-    // SenderId
-    // ...
-    [XmlElement("Attribute")]
-    public SqsSystemMessageAttribute[] Attributes { get; set; }
+    [JsonPropertyName("Attributes")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Dictionary<string, string> Attributes { get; set; }
 
-    [XmlElement("MessageAttribute")]
-    public SqsMessageAttribute[] MessageAttributes { get; set; }
+    [JsonPropertyName("MessageAttribute")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Dictionary<string, MessageAttributeValue> MessageAttributes { get; set; }
 
+    [JsonIgnore]
     public DateTime Created { get; set; }
 
+    [JsonIgnore]
     public DateTime Expires { get; set; }
-
-    // ApproximateReceiveCount
-    // ApproximateFirstReceiveTimestamp
-    // MessageDedublicationId
-    // MessageGroupId
-    // SenderId
-    // SentTimestamp
-    // SequenceNumber
-
-    // TODO: Attributes
-
+  
     #region IQueueMessage<string>
 
     string IQueueMessage<string>.Id => MessageId;
@@ -60,3 +61,13 @@ public sealed class SqsMessage : IQueueMessage<string>
 
     #endregion
 }
+
+/*
+ApproximateReceiveCount
+ApproximateFirstReceiveTimestamp
+MessageDeduplicationId
+MessageGroupId
+SenderId
+SentTimestamp
+SequenceNumber
+*/

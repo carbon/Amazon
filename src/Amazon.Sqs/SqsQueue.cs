@@ -12,7 +12,9 @@ public sealed class SqsQueue : IMessageQueue<string>
     private readonly SqsClient _client;
     private readonly Uri _url;
 
-    private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
+    private static readonly TimeSpan s_defaultWaitTime = TimeSpan.FromSeconds(20);
+
+    private static readonly RetryPolicy s_retryPolicy = RetryPolicy.ExponentialBackoff(
         initialDelay : TimeSpan.FromMilliseconds(500),
         maxDelay     : TimeSpan.FromSeconds(5),
         maxRetries   : 3
@@ -20,9 +22,8 @@ public sealed class SqsQueue : IMessageQueue<string>
 
     public SqsQueue(AwsRegion region, string accountId, string queueName, IAwsCredential credential)
     {
-        ArgumentNullException.ThrowIfNull(region);
-        ArgumentNullException.ThrowIfNull(accountId);
-        ArgumentNullException.ThrowIfNull(queueName);
+        ArgumentException.ThrowIfNullOrEmpty(accountId);
+        ArgumentException.ThrowIfNullOrEmpty(queueName);
 
         _client = new SqsClient(region, credential);
         _url = new Uri($"https://sqs.{region}.amazonaws.com/{accountId}/{queueName}");
@@ -33,21 +34,21 @@ public sealed class SqsQueue : IMessageQueue<string>
         TimeSpan? lockTime,
         CancellationToken cancellationToken = default)
     {
-        // Blocks until we recieve a message
+        // Blocks until we receive a message
 
-        var request = new ReceiveMessagesRequest(take, lockTime, TimeSpan.FromSeconds(20));
+        var request = new ReceiveMessageRequest(queueUrl: _url.OriginalString, take, null, visibilityTimeout: lockTime, s_defaultWaitTime);
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            SqsMessage[] result = await _client.ReceiveMessagesAsync(_url, request, cancellationToken).ConfigureAwait(false);
+            var result = await _client.ReceiveMessagesAsync(request, cancellationToken).ConfigureAwait(false);
 
-            if (result.Length > 0)
+            if (result.Messages.Length > 0)
             {
-                return result;
+                return result.Messages;
             }
         }
 
-        return Array.Empty<IQueueMessage<string>>();
+        return [];
     }
 
     public async Task<IReadOnlyList<IQueueMessage<string>>> GetAsync(
@@ -55,7 +56,11 @@ public sealed class SqsQueue : IMessageQueue<string>
         TimeSpan? lockTime,
         CancellationToken cancellationToken = default)
     {
-        var request = new ReceiveMessagesRequest(take, lockTime);
+        var request = new ReceiveMessageRequest(
+            queueUrl            : _url.OriginalString,
+            maxNumberOfMessages : take, 
+            visibilityTimeout   : lockTime
+        );
 
         int retryCount = 0;
         Exception lastError;
@@ -64,18 +69,20 @@ public sealed class SqsQueue : IMessageQueue<string>
         {
             try
             {
-                return await _client.ReceiveMessagesAsync(_url, request, cancellationToken).ConfigureAwait(false);
+                var result = await _client.ReceiveMessagesAsync(request, cancellationToken).ConfigureAwait(false);
+
+                return result.Messages;
             }
-            catch (Exception ex) when (retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
+            catch (Exception ex) when (s_retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
             {
                 lastError = ex;
             }
 
             retryCount++;
 
-            await Task.Delay(retryPolicy.GetDelay(retryCount), cancellationToken).ConfigureAwait(false);
+            await Task.Delay(s_retryPolicy.GetDelay(retryCount), cancellationToken).ConfigureAwait(false);
         }
-        while (retryPolicy.ShouldRetry(retryCount));
+        while (s_retryPolicy.ShouldRetry(retryCount));
 
         throw lastError;
     }
@@ -94,15 +101,17 @@ public sealed class SqsQueue : IMessageQueue<string>
                 bodyValues[i] = batch[i].Body;
             }
 
-            await _client.SendMessageBatchAsync(_url, bodyValues).ConfigureAwait(false);
+            await _client.SendMessageBatchAsync(new SendMessageBatchRequest(_url.OriginalString, bodyValues)).ConfigureAwait(false);
         }
     }
 
     public async Task UpdateMessageVisibilityAsync(string receiptHandle, TimeSpan visibilityTimeout)
     {
-        var request = new ChangeMessageVisibilityRequest(receiptHandle, visibilityTimeout);
-
-        await _client.ChangeMessageVisibilityAsync(_url, request).ConfigureAwait(false);
+        await _client.ChangeMessageVisibilityAsync(new(
+            queueUrl          : _url.OriginalString,
+            receiptHandle     : receiptHandle,
+            visibilityTimeout : visibilityTimeout
+        )).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(params IQueueMessage<string>[] messages)
@@ -117,24 +126,26 @@ public sealed class SqsQueue : IMessageQueue<string>
         int retryCount = 0;
         Exception lastError;
 
+        var request = new DeleteMessageBatchRequest(_url.OriginalString, receiptHandles);
+
         do
         {
             try
             {
-                await _client.DeleteMessageBatchAsync(_url, receiptHandles).ConfigureAwait(false);
+                await _client.DeleteMessageBatchAsync(request).ConfigureAwait(false);
 
                 return;
             }
-            catch (Exception ex) when (retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
+            catch (Exception ex) when (s_retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
             {
                 lastError = ex;
             }
 
             retryCount++;
 
-            await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+            await Task.Delay(s_retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
         }
-        while (retryPolicy.ShouldRetry(retryCount));
+        while (s_retryPolicy.ShouldRetry(retryCount));
 
         throw lastError;
     }

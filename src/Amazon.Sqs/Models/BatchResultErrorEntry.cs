@@ -1,14 +1,23 @@
-﻿#nullable disable
+﻿using System.Text.Json.Serialization;
 
-namespace Amazon.Sqs.Models;
+namespace Amazon.Sqs;
 
-public sealed class BatchResultErrorEntry
+[method:JsonConstructor]
+public sealed class BatchResultErrorEntry(
+    string code,
+    string id,
+    bool senderFault,
+    string? message)
 {
-    public string Code { get; init; }
+    [JsonPropertyName("Code")]
+    public string Code { get; } = code;
 
-    public string Id { get; init; }
+    [JsonPropertyName("Id")]
+    public string Id { get; } = id;
 
-    public string Message { get; init; }
+    [JsonPropertyName("SenderFault")]
+    public bool SenderFault { get; } = senderFault;
 
-    public bool SenderFault { get; init; }
+    [JsonPropertyName("Message")]
+    public string? Message { get; } = message;
 }

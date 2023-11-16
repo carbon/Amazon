@@ -4,15 +4,12 @@ using Carbon.Messaging;
 
 namespace Amazon.Sqs.Exceptions;
 
-public sealed class SqsException : QueueException, IException
+public sealed class SqsException(ErrorResult error) 
+    : QueueException(error.Message), IException
 {
-    public SqsException(SqsError error)
-        : base(error.Message)
-    {
-        Error = error;
-    }
+    public ErrorResult Error { get; } = error;
 
-    public SqsError Error { get; }
+    public string Type => Error.Type;
 
     public bool IsTransient => false;
 }
