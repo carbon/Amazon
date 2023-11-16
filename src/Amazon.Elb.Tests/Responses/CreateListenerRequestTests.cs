@@ -7,9 +7,9 @@ public class CreateListenerRequestTests
     {
         var request = new CreateListenerRequest {
             LoadBalancerArn = "arn",
-            Protocal = Protocol.TLS
+            Protocol = Protocol.TLS
         };
 
-        Assert.Equal("Action=CreateListener&LoadBalancerArn=arn&Protocal=TLS", Serializer.Serialize(request));
+        Assert.Equal("Action=CreateListener&LoadBalancerArn=arn&Protocol=TLS", Serializer.Serialize(request));
     }
 }
