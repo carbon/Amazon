@@ -81,9 +81,9 @@ public class DescribeInstancesTypesResponseTests
 
         Assert.True(instance.FreeTierEligible);
 
-        Assert.Equal(new[] { "i386", "x86_64" }, instance.ProcessorInfo.SupportedArchitectures);
-        Assert.Equal(new[] { "ebs" },            instance.SupportedRootDeviceTypes);
-        Assert.Equal(new[] { "on-demand" },      instance.SupportedUsageClasses);
+        Assert.Equal(["i386", "x86_64"], instance.ProcessorInfo.SupportedArchitectures.AsSpan());
+        Assert.Equal(["ebs"],            instance.SupportedRootDeviceTypes.AsSpan());
+        Assert.Equal(["on-demand"],      instance.SupportedUsageClasses.AsSpan());
 
         // Memory
         Assert.Equal(627, instance.MemoryInfo.SizeInMiB);
@@ -96,16 +96,15 @@ public class DescribeInstancesTypesResponseTests
         Assert.Equal(2, instance.NetworkInfo.MaximumNetworkInterfaces);
         Assert.Equal("Very Low", instance.NetworkInfo.NetworkPerformance);
 
-
         Assert.Null(instance.GpuInfo);
 
         // vCPU
         Assert.Equal(1, instance.VCpuInfo.DefaultCores);
         Assert.Equal(1, instance.VCpuInfo.DefaultThreadsPerCore);
         Assert.Equal(1, instance.VCpuInfo.DefaultVCpus);
-        Assert.Equal(new[] { 1 }, instance.VCpuInfo.ValidThreadsPerCore);
+        Assert.Equal([1], instance.VCpuInfo.ValidThreadsPerCore.AsSpan());
 
         Assert.Null(instance.ProcessorInfo.SustainedClockSpeedInGhz);
-        Assert.Equal(new[] { "i386", "x86_64" }, instance.ProcessorInfo.SupportedArchitectures);
+        Assert.Equal(["i386", "x86_64"], instance.ProcessorInfo.SupportedArchitectures.AsSpan());
     }
 }

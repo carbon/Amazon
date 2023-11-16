@@ -5,7 +5,7 @@ public class DescribeVolumesRequestTests
     [Fact]
     public void CanSerialize()
     {
-        var request = new DescribeVolumesRequest(new[] { "a", "b", "c" });
+        var request = new DescribeVolumesRequest(["a", "b", "c"]);
 
         Assert.Equal("Action=DescribeVolumes&VolumeId.1=a&VolumeId.2=b&VolumeId.3=c", request.Serialize());
     }

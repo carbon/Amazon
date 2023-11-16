@@ -5,7 +5,7 @@ public class RebootInstancesRequestTests
     [Fact]
     public void CanSerialize()
     {
-        var request = new RebootInstancesRequest(new[] { "i-1234567890abcdef0" }) {
+        var request = new RebootInstancesRequest("i-1234567890abcdef0") {
             DryRun = true
         };
 

@@ -5,7 +5,7 @@ public class TerminateInstancesRequestTests
     [Fact]
     public void CanSerialize()
     {
-        var request = new TerminateInstancesRequest(new[] { "a", "b", "c" });
+        var request = new TerminateInstancesRequest(["a", "b", "c"]);
 
         Assert.Equal("Action=TerminateInstances&InstanceId.1=a&InstanceId.2=b&InstanceId.3=c", request.Serialize());
 

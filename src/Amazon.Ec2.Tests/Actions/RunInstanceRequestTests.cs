@@ -5,22 +5,24 @@ public class RunInstanceRequestTests
     [Fact]
     public void CanConstruct()
     {
-        var request = new RunInstancesRequest(null, null, 1, 100);
+        var request = new RunInstancesRequest("image-id", "instance-type", 1, 100);
 
-        Assert.Equal(1,   request.MinCount);
-        Assert.Equal(100, request.MaxCount);
+        Assert.Equal("image-id",      request.ImageId);
+        Assert.Equal("instance-type", request.InstanceType);
+        Assert.Equal(1,               request.MinCount);
+        Assert.Equal(100,             request.MaxCount);
     }
 
     [Fact]
     public void ThrowsWhenMaxCountGreaterThan100()
     {
-        Assert.Throws<ArgumentException>(() => new RunInstancesRequest(null, null, 1, 101));
+        Assert.Throws<ArgumentException>(() => new RunInstancesRequest("", "", 1, 101));
     }
 
     [Fact]
     public void ThrowsWhenMinCountLessThan1()
     {
-        Assert.Throws<ArgumentException>(() => new RunInstancesRequest(null, null, 0, 100));
+        Assert.Throws<ArgumentException>(() => new RunInstancesRequest("", "", 0, 100));
     }
 
     [Fact]
@@ -33,13 +35,13 @@ public class RunInstanceRequestTests
             MinCount = 1,
             MaxCount = 3,
             Placement = new Placement(availabilityZone: "us-east-1a"),
-            BlockDeviceMappings = new[] {
+            BlockDeviceMappings = [
                 new BlockDeviceMapping {
                     DeviceName = "dev1",
                     Ebs = new EbsBlockDevice(volumeSize: 100)
                 }
-            },
-            SecurityGroupIds = new[] { "sg1", "sg2", "sg3" },
+            ],
+            SecurityGroupIds = ["sg1", "sg2", "sg3"],
             SubnetId = "subnet-1"
         };
 
@@ -64,7 +66,7 @@ public class RunInstanceRequestTests
     {
         var request = new RunInstancesRequest(
             imageId          : "ami1",
-            instanceType     : null,
+            instanceType     : null!,
             minCount         : 3,
             maxCount         : 20,
             metadataOptions : InstanceMetadataOptionsRequest.RequireHttpToken
@@ -79,9 +81,9 @@ public class RunInstanceRequestTests
         var request = new RunInstancesRequest {
             MinCount = 1,
             MaxCount = 2,
-            TagSpecifications = new[] {
-                new TagSpecification("instance", new[] { new Tag("webserver", "production") })
-            }
+            TagSpecifications = [
+                new TagSpecification("instance", [ new Tag("webserver", "production") ])
+            ]
         };
 
         Assert.Equal("Action=RunInstances&MaxCount=2&MinCount=1&TagSpecification.1.Tag.1.Key=webserver&TagSpecification.1.Tag.1.Value=production&TagSpecification.1.ResourceType=instance", request.Serialize());
