@@ -53,23 +53,23 @@ public sealed class ReceiveMessageRequest : SqsRequest
     public string QueueUrl { get; }
 
     [JsonPropertyName("MaxNumberOfMessages")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int? MaxNumberOfMessages { get; set; }
 
     [JsonPropertyName("MessageAttributeNames")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public string[]? MessageAttributeNames { get; set; }
 
     [JsonPropertyName("ReceiveRequestAttemptId")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public string? ReceiveRequestAttemptId { get; set; }
 
     [JsonPropertyName("VisibilityTimeout")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int? VisibilityTimeout { get; set; }
 
     [JsonPropertyName("WaitTimeSeconds")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int? WaitTimeSeconds { get; set; }
 }
 

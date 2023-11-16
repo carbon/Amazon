@@ -36,7 +36,7 @@ public sealed class SendMessageRequest : SqsRequest
     /// If you don't specify a value, the default value for the queue applies.
     /// </summary>
     [JsonPropertyName("DelaySeconds")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [Range(0, 900)]
     public int? DelaySeconds { get; }
 

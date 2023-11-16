@@ -26,10 +26,10 @@ public sealed class SqsMessage : IQueueMessage<string>
     [JsonPropertyName("Body")]
     public string Body { get; set; }
 
-    [JsonPropertyName("MD5OfBody")]
-    public string MD5OfBody { get; set; }
-
 #nullable enable
+
+    [JsonPropertyName("MD5OfBody")]
+    public string? MD5OfBody { get; set; }
 
     [JsonPropertyName("MD5OfMessageAttributes")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -61,13 +61,3 @@ public sealed class SqsMessage : IQueueMessage<string>
 
     #endregion
 }
-
-/*
-ApproximateReceiveCount
-ApproximateFirstReceiveTimestamp
-MessageDeduplicationId
-MessageGroupId
-SenderId
-SentTimestamp
-SequenceNumber
-*/

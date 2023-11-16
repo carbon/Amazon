@@ -2,9 +2,8 @@
 
 namespace Amazon.Sqs;
 
-[method: JsonConstructor]
-public sealed class GetQueueAttributesResult(Dictionary<string, string> attributes)
+public sealed class GetQueueAttributesResult
 {
     [JsonPropertyName("Attributes")]
-    public Dictionary<string, string> Attributes { get; } = attributes;
+    public required Dictionary<string, string> Attributes { get; init; }
 }

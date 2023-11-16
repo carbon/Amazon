@@ -1,12 +1,9 @@
-﻿#nullable disable
-
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.Sqs;
 
-[method: JsonConstructor]
-public readonly struct DeleteMessageBatchResultEntry(string id)
+public readonly struct DeleteMessageBatchResultEntry
 {
     [JsonPropertyName("Id")]
-    public string Id { get; } = id;
+    public required string Id { get; init; } 
 }

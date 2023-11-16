@@ -2,22 +2,17 @@
 
 namespace Amazon.Sqs;
 
-[method:JsonConstructor]
-public sealed class BatchResultErrorEntry(
-    string code,
-    string id,
-    bool senderFault,
-    string? message)
+public sealed class BatchResultErrorEntry
 {
     [JsonPropertyName("Code")]
-    public string Code { get; } = code;
+    public required string Code { get; init; }
 
     [JsonPropertyName("Id")]
-    public string Id { get; } = id;
+    public required string Id { get; init; }
 
     [JsonPropertyName("SenderFault")]
-    public bool SenderFault { get; } = senderFault;
+    public required bool SenderFault { get; init; }
 
     [JsonPropertyName("Message")]
-    public string? Message { get; } = message;
+    public string? Message { get; init; }
 }
