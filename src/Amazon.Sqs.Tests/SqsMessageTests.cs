@@ -5,9 +5,8 @@ public class SqsMessageTests
     [Fact]
     public void TypedMessageTests()
     {
-        var m = new SqsMessage
-        {
-            Body = """{ "position": 1, "text": "hello" }"""
+        var m = new SqsMessage {
+            Body = """{ "Position": 1, "Text": "hello" }"""
         };
 
         var b = JsonEncodedMessage<SampleMessage>.Create(m);
@@ -21,5 +20,5 @@ public class SampleMessage
 {
     public int Position { get; set; }
 
-    public string Text { get; set; }
+    public required string Text { get; set; }
 }
