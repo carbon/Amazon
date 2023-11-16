@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2;
 

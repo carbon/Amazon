@@ -1,47 +1,42 @@
-﻿#nullable enable
-
-using System.Net.Http;
+﻿using System.Net.Http;
 
 using Amazon.Ec2.Exceptions;
 using Amazon.Ec2.Responses;
 
 namespace Amazon.Ec2;
 
-public sealed class Ec2Client : AwsClient
+public sealed class Ec2Client(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Ec2, region, credential)
 {
     public const string Version = "2016-11-15";
     public const string Namespace = "http://ec2.amazonaws.com/doc/2016-11-15/";
-
-    public Ec2Client(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.Ec2, region, credential)
-    { }
 
     #region Shortcuts
 
     public async Task<Image?> DescribeImageAsync(string imageId)
     {
-        var result = await DescribeImagesAsync(new DescribeImagesRequest(imageIds: new[] { imageId }));
+        var result = await DescribeImagesAsync(new DescribeImagesRequest([imageId]));
 
         return result.Images.Length > 0 ? result.Images[0] : null;
     }
 
     public async Task<Subnet?> DescribeSubnetAsync(string subnetId)
     {
-        var result = await DescribeSubnetsAsync(new DescribeSubnetsRequest(new[] { subnetId }));
+        var result = await DescribeSubnetsAsync(new DescribeSubnetsRequest([subnetId]));
 
         return result.Subnets.Length > 0 ? result.Subnets[0] : null;
     }
 
     public async Task<NetworkInterface?> DescribeNetworkInterfaceAsync(string networkInterfaceId)
     {
-        var result = await DescribeNetworkInterfacesAsync(new DescribeNetworkInterfacesRequest(new[] { networkInterfaceId }));
+        var result = await DescribeNetworkInterfacesAsync(new DescribeNetworkInterfacesRequest([networkInterfaceId]));
 
         return result.NetworkInterfaces.Length > 0 ? result.NetworkInterfaces[0] : null;
     }
 
     public async Task<Instance?> DescribeInstanceAsync(string instanceId)
     {
-        var result = await DescribeInstancesAsync(new DescribeInstancesRequest(new[] { instanceId }));
+        var result = await DescribeInstancesAsync(new DescribeInstancesRequest([instanceId]));
 
         return result.Instances.Count > 0 ? result.Instances[0] : null;
     }
@@ -55,14 +50,14 @@ public sealed class Ec2Client : AwsClient
    
     public async Task<Volume?> DescribeVolumeAsync(string volumeId)
     {
-        var result = await DescribeVolumesAsync(new DescribeVolumesRequest(new[] { volumeId }));
+        var result = await DescribeVolumesAsync(new DescribeVolumesRequest([volumeId]));
 
         return result.Volumes.Length > 0 ? result.Volumes[0] : null;
     }
 
     public async Task<Vpc?> DescribeVpcAsync(string vpcId)
     {
-        var result = await DescribeVpcsAsync(new DescribeVpcsRequest(new[] { vpcId }));
+        var result = await DescribeVpcsAsync(new DescribeVpcsRequest([vpcId]));
 
         return result.Vpcs.Length > 0 ? result.Vpcs[0] : null;
     }

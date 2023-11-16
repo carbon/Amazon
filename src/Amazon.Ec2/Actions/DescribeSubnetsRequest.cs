@@ -1,13 +1,8 @@
 ﻿namespace Amazon.Ec2;
 
-public sealed class DescribeSubnetsRequest : DescribeRequest, IEc2Request
+public sealed class DescribeSubnetsRequest(params string[] subnetIds) : DescribeRequest, IEc2Request
 {
-    public DescribeSubnetsRequest(params string[] subnetIds)
-    {
-        SubnetIds = subnetIds;
-    }
-
-    public string[] SubnetIds { get; }
+    public string[] SubnetIds { get; } = subnetIds;
 
     List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {

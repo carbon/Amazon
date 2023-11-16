@@ -2,14 +2,9 @@
 
 namespace Amazon.Ec2;
 
-public sealed class DescribeInstancesResponse : IEc2Response
+public sealed class DescribeInstancesResponse(List<Instance> instances) : IEc2Response
 {
-    public DescribeInstancesResponse(List<Instance> instances)
-    {
-        Instances = instances;
-    }
-
-    public IReadOnlyList<Instance> Instances { get; }
+    public IReadOnlyList<Instance> Instances { get; } = instances;
 
     public static DescribeInstancesResponse Deserialize(string text)
     {
