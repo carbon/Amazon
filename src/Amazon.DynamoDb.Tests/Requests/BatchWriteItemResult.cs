@@ -7,7 +7,7 @@ public class DynamoBatchTests
     [Fact]
     public void BatchRequestTest1()
     {
-        var requests = new List<ItemRequest> {
+        ItemRequest[] requests = [
             new PutRequest(new AttributeCollection {
                 { "title", "awesomeness" },
                 { "ownerId", 1 }
@@ -16,7 +16,7 @@ public class DynamoBatchTests
                 { "title", "notawesome" },
                 { "ownerId", 2 }
             })
-        };
+        ];
 
         var tableBatch = new TableRequests("Posts", requests).SerializeList();
 
@@ -57,7 +57,7 @@ public class DynamoBatchTests
         using var doc = JsonDocument.Parse(
             """
             {
-             "UnprocessedItems":  { 
+             "UnprocessedItems":  {
             	"Slugs": [ 
             		{ 
             			"PutRequest": { "Item": { "name": { "S": "apples" }, "ownerId": { "N": "1" }, "type": { "N": "1" } } } 

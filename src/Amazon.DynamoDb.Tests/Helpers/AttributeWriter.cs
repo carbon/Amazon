@@ -4,22 +4,17 @@ namespace Amazon.DynamoDb.Models;
 
 using static DbValueType;
 
-public readonly ref struct AttributeWriter
+public readonly ref struct AttributeWriter(TextWriter writer)
 {
-    private readonly TextWriter writer;
-
-    public AttributeWriter(TextWriter writer)
-    {
-        this.writer = writer;
-    }
+    private readonly TextWriter _writer = writer;
 
     public void WriteProperty(string name, in DbValue value)
     {
-        writer.Write('"');
-        JavaScriptEncoder.Default.Encode(writer, name);
-        writer.Write('"');
+        _writer.Write('"');
+        JavaScriptEncoder.Default.Encode(_writer, name);
+        _writer.Write('"');
 
-        writer.Write(':');
+        _writer.Write(':');
 
         WriteDbValue(value);
     }
@@ -45,91 +40,91 @@ public readonly ref struct AttributeWriter
     {
         int i = 0;
 
-        writer.Write(@"{""M"":{");
+        _writer.Write(@"{""M"":{");
 
         foreach (var property in map)
         {
-            if (i != 0) writer.Write(',');
+            if (i != 0) _writer.Write(',');
 
             WriteProperty(property.Key, property.Value);
 
             i++;
         }
 
-        writer.Write("}}");
+        _writer.Write("}}");
     }
 
     private void WriteList(DbValue[] values)
     {
         // { "L":[] }
-        writer.Write(@"{""L"":[");
+        _writer.Write(@"{""L"":[");
 
         for (int i = 0; i < values.Length; i++)
         {
-            if (i != 0) writer.Write(',');
+            if (i != 0) _writer.Write(',');
 
             ref DbValue value = ref values[i];
 
             WriteDbValue(value);
         }
 
-        writer.Write("]}");
+        _writer.Write("]}");
     }
 
     private void WriteSet(string type, IEnumerable<object> values)
     {
         // { "SS":[] }
-        writer.Write("{\"");
-        writer.Write(type);
-        writer.Write(@""":[");
+        _writer.Write("{\"");
+        _writer.Write(type);
+        _writer.Write(@""":[");
 
         int i = 0;
 
         foreach (var value in values)
         {
-            if (i != 0) writer.Write(',');
+            if (i != 0) _writer.Write(',');
 
-            writer.Write('"');
+            _writer.Write('"');
 
             if (type is "S")
             {
-                JavaScriptEncoder.Default.Encode(writer, value.ToString());
+                JavaScriptEncoder.Default.Encode(_writer, value.ToString()!);
             }
             else
             {
-                writer.Write(value.ToString());
+                _writer.Write(value.ToString());
             }
 
-            writer.Write('"');
+            _writer.Write('"');
 
             i++;
         }
 
-        writer.Write("]}");
+        _writer.Write("]}");
     }
 
     private void WriteBool(bool value)
     {
-        writer.Write("{\"BOOL\":");
-        writer.Write(value ? "true" : "false");
-        writer.Write('}');
+        _writer.Write("{\"BOOL\":");
+        _writer.Write(value ? "true" : "false");
+        _writer.Write('}');
     }
 
     private void WriteString(string value)
     {
-        writer.Write("{\"S\":");
-        writer.Write('"');
-        JavaScriptEncoder.Default.Encode(writer, value);
-        writer.Write('"');
-        writer.Write('}');
+        _writer.Write("{\"S\":");
+        _writer.Write('"');
+        JavaScriptEncoder.Default.Encode(_writer, value);
+        _writer.Write('"');
+        _writer.Write('}');
     }
 
     private void WriteValue(string type, string value)
     {
-        writer.Write("{\"");
-        writer.Write(type);
-        writer.Write("\":\"");
-        writer.Write(value);
-        writer.Write("\"}");
+        _writer.Write("{\"");
+        _writer.Write(type);
+        _writer.Write("\":\"");
+        _writer.Write(value);
+        _writer.Write("\"}");
     }
 }

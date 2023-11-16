@@ -5,12 +5,12 @@ namespace Amazon.DynamoDb;
 
 internal static class DynamoTestHelper
 {
-    public static readonly JsonSerializerOptions IndentedSerializerOptions = new () {
+    public static readonly JsonSerializerOptions IndentedSerializerOptions = new() {
         WriteIndented = true,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    public static readonly JsonSerializerOptions SerializerOptions = new () {
+    public static readonly JsonSerializerOptions SerializerOptions = new() {
         WriteIndented = false,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };

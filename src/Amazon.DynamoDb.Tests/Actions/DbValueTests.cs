@@ -48,7 +48,7 @@ public class DbValueTests
     public void DbValueTypes()
     {
         Assert.Equal(DbValueType.B, new DbValue("abc"u8.ToArray()).Kind);
-        Assert.Equal(DbValueType.S, new DbValue("hellow").Kind);
+        Assert.Equal(DbValueType.S, new DbValue("hello").Kind);
         Assert.Equal(DbValueType.N, new DbValue((short)123).Kind);
         Assert.Equal(DbValueType.N, new DbValue(123).Kind);
         Assert.Equal(DbValueType.N, new DbValue(123L).Kind);
@@ -63,7 +63,7 @@ public class DbValueTests
         Assert.Equal(DbValueType.N, new DbValue((object)123f).Kind);
         Assert.Equal(DbValueType.N, new DbValue((object)123m).Kind);
 
-        Assert.Equal(DbValueType.SS, new DbValue(new[] { "a", "b", "c" }).Kind);
+        Assert.Equal(DbValueType.SS, new DbValue((string[])["a", "b", "c"]).Kind);
         Assert.Equal(DbValueType.NS, new DbValue(s_1_2_3i32).Kind);
         Assert.Equal(DbValueType.NS, new DbValue(s_1_2_3i64).Kind);
         Assert.Equal(DbValueType.NS, new DbValue(s_1_2_3f32).Kind);
@@ -102,9 +102,9 @@ public class DbValueTests
 
         Assert.Equal(DbValueType.L, value.Kind);
 
-        Assert.Equal([ "1", "2" ], value.ToArray<string>());
-        Assert.Equal([ 1, 2 ],     value.ToArray<int>());
-        Assert.Equal([ 1L, 2L ],   value.ToArray<long>());
+        Assert.Equal([ "1", "2" ], value.ToArray<string>().AsSpan());
+        Assert.Equal([ 1, 2 ],     value.ToArray<int>().AsSpan());
+        Assert.Equal([ 1L, 2L ],   value.ToArray<long>().AsSpan());
     }
 
     [Fact]
@@ -167,18 +167,15 @@ public class DbValueTests
     [Fact]
     public void DbMap2()
     {
-        var value = AttributeCollection.FromObject(new Hi
-        {
-            A =
-            new Nested
-            {
+        var value = AttributeCollection.FromObject(new Hi {
+            A = new Nested {
                 A = 1,
                 B = "boat"
             }
         });
 
-
-        Assert.Equal("""
+        Assert.Equal(
+            """
             {
               "a": {
                 "M": {
@@ -193,7 +190,8 @@ public class DbValueTests
             }
             """, value.ToIndentedJsonString());
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             {
               "a": {
                 "M": {
@@ -219,8 +217,7 @@ public class DbValueTests
     {
         var id = Uid.Deserialize(Convert.FromBase64String("ZKWQKAIkHUiA4MGBMfFiGg=="));
 
-        var value = AttributeCollection.FromObject(new Entity
-        {
+        var value = AttributeCollection.FromObject(new Entity {
             Id = id
         });
 
@@ -256,7 +253,8 @@ public class DbValueTests
 
         var value = AttributeCollection.FromObject(meta);
 
-        string json = """
+        string json = 
+            """
             {
               "name": {
                 "S": "faces"
@@ -312,11 +310,15 @@ public class DbValueTests
     [Fact]
     public void DbList2()
     {
-        var value = JsonSerializer.Deserialize<DbValue>("""{ "L": [ { "N": "1.1" }, { "N":"7.543" } ] }""");
+        var value = JsonSerializer.Deserialize<DbValue>(
+            """
+            { "L": [ { "N": "1.1" }, { "N":"7.543" } ] }
+            """
+        );
 
         Assert.Equal(DbValueType.L, value.Kind);
 
-        Assert.Equal([ 1.1f, 7.543f ], value.ToArray<float>());
+        Assert.Equal([ 1.1f, 7.543f ], value.ToArray<float>().AsSpan());
     }
 
     [Fact]

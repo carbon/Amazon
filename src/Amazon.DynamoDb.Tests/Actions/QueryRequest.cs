@@ -90,7 +90,7 @@ public class QueryRequestTests
                 [":v1"] = new DbValue(1)
             },
             Limit = 1
-        }.Include("name", "version");
+        }.Include(["name", "version"]);
 
 
         Assert.Equal(
