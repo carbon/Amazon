@@ -65,7 +65,7 @@ public static class S3ClientExtensions
                 {
                     completedTaskSource.SetResult();
                 }
-            });
+            }, cancellationToken);
         }
 
         if (exception != null)

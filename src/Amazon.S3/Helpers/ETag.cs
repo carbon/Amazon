@@ -1,13 +1,8 @@
 ﻿namespace Amazon.S3;
 
-public readonly struct ETag
+public readonly struct ETag(string value)
 {
-    public ETag(string value)
-    {
-        Value = value;
-    }
-
-    public string Value { get; }
+    public string Value { get; } = value;
 
     public readonly byte[]? AsMD5()
     {
