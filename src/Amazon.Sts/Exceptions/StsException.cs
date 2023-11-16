@@ -4,8 +4,7 @@ using Amazon.Exceptions;
 
 namespace Amazon.Sts.Exceptions;
 
-public sealed class StsException : AwsException
+public sealed class StsException(string message, HttpStatusCode statusCode) 
+    : AwsException(message, statusCode)
 {
-    public StsException(string message, HttpStatusCode statusCode)
-        : base(message, statusCode) { }
 }

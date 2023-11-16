@@ -9,9 +9,9 @@ internal static class StsRequestHelper
     {
         using var doc = JsonSerializer.SerializeToDocument(instance);
 
-        var parameters = new List<KeyValuePair<string, string>>(4);
-
-        parameters.Add(new("Action", instance.Action));
+        var parameters = new List<KeyValuePair<string, string>>(4) {
+            new("Action", instance.Action)
+        };
 
         foreach (var member in doc.RootElement.EnumerateObject())
         {
