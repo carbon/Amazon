@@ -2,20 +2,16 @@
 
 namespace Amazon.CloudWatch;
 
-public sealed class Metric
+public sealed class Metric(
+    string @namespace,
+    string name,
+    List<Dimension> dimensions)
 {
-    public Metric(string ns, string name, List<Dimension> dimensions)
-    {
-        Namespace = ns;
-        MetricName = name;
-        Dimensions = dimensions;
-    }
+    public string Namespace { get; } = @namespace;
 
-    public string Namespace { get; }
+    public string MetricName { get; } = name;
 
-    public string MetricName { get; }
-
-    public List<Dimension> Dimensions { get; }
+    public List<Dimension> Dimensions { get; } = dimensions;
 
     internal static Metric FromXml(XNamespace ns, XElement el)
     {
@@ -33,7 +29,7 @@ public sealed class Metric
         }
 
         return new Metric(
-            ns         : el.Element(ns + "Namespace")!.Value,
+            @namespace : el.Element(ns + "Namespace")!.Value,
             name       : el.Element(ns + "MetricName")!.Value,
             dimensions : dimensions
         );

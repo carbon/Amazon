@@ -5,15 +5,12 @@ namespace Amazon.CloudWatch;
 
 // http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/Welcome.html
 
-public sealed class CloudWatchClient : AwsClient
+public sealed class CloudWatchClient(AwsRegion region, IAwsCredential credentials) 
+    : AwsClient(AwsService.Monitoring, region, credentials)
 {
     public const string Version = "2010-08-01";
 
     public static readonly XNamespace NS = "http://monitoring.amazonaws.com/doc/2010-08-01/";
-
-    public CloudWatchClient(AwsRegion region, IAwsCredential credentials)
-        : base(AwsService.Monitoring, region, credentials)
-    { }
 
     /*
     public async Task DeleteAlarmsAsync() { }

@@ -8,9 +8,9 @@ namespace Amazon.CloudWatch;
 
 public sealed class GetMetricStatisticsResponse
 {
-    public string Label { get; set; }
+    public required string Label { get; set; }
 
-    public List<DataPoint> Datapoints { get; } = new();
+    public List<DataPoint> Datapoints { get; } = [];
 
     public static GetMetricStatisticsResponse Deserialize(string xmlText)
     {
