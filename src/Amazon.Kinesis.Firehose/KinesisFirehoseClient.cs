@@ -6,14 +6,12 @@ using Amazon.Exceptions;
 
 namespace Amazon.Kinesis.Firehose;
 
-public sealed class KinesisFirehoseClient : AwsClient
+public sealed class KinesisFirehoseClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.KinesisFirehose, region, credential)
 {
     const string Version = "20150804";
     const string TargetPrefix = $"Firehose_{Version}";
 
-    public KinesisFirehoseClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.KinesisFirehose, region, credential) { }
-        
     public DeliveryStream GetStream(string name)
     {
         return new DeliveryStream(name, this);
@@ -71,14 +69,14 @@ public sealed class KinesisFirehoseClient : AwsClient
         throw new AwsException(responseText, response.StatusCode);
     }
 
-    private static readonly JsonSerializerOptions jso = new () {
+    private static readonly JsonSerializerOptions s_jso = new () {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
     private HttpRequestMessage GetRequestMessage<T>(string action, T data)
         where T: notnull
     {
-        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(data, jso);
+        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(data, s_jso);
 
         return new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Headers = {

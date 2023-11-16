@@ -2,7 +2,7 @@
 
 namespace Amazon.Kinesis;
 
-public sealed class DescribeStreamResult : KinesisResponse
+public sealed class DescribeStreamResult : KinesisResult
 {
     public StreamDescription StreamDescription { get; init; }
 }

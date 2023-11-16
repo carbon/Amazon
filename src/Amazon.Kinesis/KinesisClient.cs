@@ -1,30 +1,26 @@
-﻿using System.Net.Http;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Amazon.Kinesis.Serialization;
+
 namespace Amazon.Kinesis;
 
-public sealed class KinesisClient : AwsClient
+public sealed class KinesisClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Kinesis, region, credential)
 {
-    private const string TargetPrefix = "Kinesis_" + Version;
+    private const string TargetPrefix = $"Kinesis_{Version}";
     private const string Version = "20131202";
-
-    public KinesisClient(IAwsCredential credential)
-        : base(AwsService.Kinesis, AwsRegion.USEast1, credential)
-    { }
-
-    public KinesisClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.Kinesis, region, credential)
-    { }
 
     public KinesisStream GetStream(string name)
     {
         return new KinesisStream(name, this);
     }
 
-    public Task<KinesisResponse> MergeShardsAsync(MergeShardsRequest request)
+    public Task<KinesisResult> MergeShardsAsync(MergeShardsRequest request)
     {
-        return SendAsync<MergeShardsRequest, KinesisResponse>("MergeShards", request);
+        return SendAsync<MergeShardsRequest, KinesisResult>("MergeShards", request);
     }
 
     public Task<PutRecordResult> PutRecordAsync(Record record)
@@ -46,21 +42,21 @@ public sealed class KinesisClient : AwsClient
         return SendAsync<DescribeStreamRequest, DescribeStreamResult>("DescribeStream", request);
     }
 
-    public Task<GetShardIteratorResponse> GetShardIteratorAsync(GetShardIteratorRequest request)
+    public Task<GetShardIteratorResult> GetShardIteratorAsync(GetShardIteratorRequest request)
     {
-        return SendAsync<GetShardIteratorRequest, GetShardIteratorResponse>("GetShardIterator", request);
+        return SendAsync<GetShardIteratorRequest, GetShardIteratorResult>("GetShardIterator", request);
     }
 
-    public Task<GetRecordsResponse> GetRecordsAsync(GetRecordsRequest request)
+    public Task<GetRecordsResult> GetRecordsAsync(GetRecordsRequest request)
     {
-        return SendAsync<GetRecordsRequest, GetRecordsResponse>("GetRecords", request);
+        return SendAsync<GetRecordsRequest, GetRecordsResult>("GetRecords", request);
     }
 
     #region Helpers
 
-    private async Task<TResult> SendAsync<TRequest, TResult>(string action, TRequest request)
+    private async Task<TResult> SendAsync<TRequest, TResult>([ConstantExpected] string action, TRequest request)
         where TRequest : KinesisRequest
-        where TResult : KinesisResponse
+        where TResult : KinesisResult
     {
         var message = GetRequestMessage(action, request);
 
@@ -73,22 +69,21 @@ public sealed class KinesisClient : AwsClient
     {
         string xmlText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        var error = JsonSerializer.Deserialize<ErrorResult>(xmlText)!;
+        var error = JsonSerializer.Deserialize<ErrorResult>(xmlText, KinesisSerializerContext.Default.ErrorResult)!;
 
         error.Text = xmlText;
 
         return new KinesisException(error, response.StatusCode);
     }
 
-    private static readonly JsonSerializerOptions jso = new()
-    {
+    private static readonly JsonSerializerOptions s_jso = new() {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
     private HttpRequestMessage GetRequestMessage<T>(string action, T request)
         where T : notnull, KinesisRequest
     {
-        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, jso);
+        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, s_jso);
 
         return new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Headers = {

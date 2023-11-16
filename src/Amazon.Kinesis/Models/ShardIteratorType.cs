@@ -2,7 +2,7 @@
 
 namespace Amazon.Kinesis;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<ShardIteratorType>))]
 public enum ShardIteratorType
 {
     /// <summary>

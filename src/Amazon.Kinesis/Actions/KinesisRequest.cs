@@ -2,4 +2,4 @@
 
 public abstract class KinesisRequest { }
 
-public abstract class KinesisResponse { }
+public abstract class KinesisResult { }

@@ -5,15 +5,10 @@ using Amazon.Scheduling;
 
 namespace Amazon.Kinesis;
 
-public sealed class KinesisException : AwsException, IException
+public sealed class KinesisException(ErrorResult error, HttpStatusCode statusCode)
+    : AwsException(error.Type ?? error.Text, statusCode), IException
 {
-    private readonly ErrorResult _error;
-
-    public KinesisException(ErrorResult error, HttpStatusCode statusCode)
-        : base(error.Type ?? error.Text, statusCode)
-    {
-        _error = error;
-    }
+    private readonly ErrorResult _error = error;
 
     public string Type => _error.Type;
 

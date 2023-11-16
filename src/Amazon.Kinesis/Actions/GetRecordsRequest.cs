@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kinesis;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Kinesis;
 
 public sealed class GetRecordsRequest : KinesisRequest
 {
@@ -13,8 +15,10 @@ public sealed class GetRecordsRequest : KinesisRequest
         Limit = limit;
     }
 
+    [JsonPropertyName("Limit")]
     public int? Limit { get; }
 
+    [JsonPropertyName("ShardIterator")]
     public string ShardIterator { get; }
 }
 

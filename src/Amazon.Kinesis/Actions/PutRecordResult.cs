@@ -1,17 +1,10 @@
-﻿#nullable disable
+﻿namespace Amazon.Kinesis;
 
-namespace Amazon.Kinesis;
-
-public sealed class PutRecordResult : KinesisResponse
+public sealed class PutRecordResult : KinesisResult
 {
-    public string SequenceNumber { get; init; }
+    public string? EncryptionType { get; init; }
 
-    public string ShardId { get; init; }
-}
+    public required string SequenceNumber { get; init; }
 
-/*
-{
-  "SequenceNumber" : "string",
-  "ShardId"        : "string"
+    public required string ShardId { get; init; }
 }
-*/

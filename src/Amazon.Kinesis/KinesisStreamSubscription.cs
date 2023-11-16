@@ -6,7 +6,7 @@ namespace Amazon.Kinesis;
 
 public sealed class KinesisStreamSubscription : IDisposable
 {
-    private readonly CancellationTokenSource cts = new ();
+    private readonly CancellationTokenSource cts = new();
 
     private readonly KinesisStream _stream;
     private readonly IShard _shard;
