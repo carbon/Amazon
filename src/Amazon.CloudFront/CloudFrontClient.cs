@@ -8,17 +8,17 @@ public sealed class CloudFrontClient : AwsClient
 {
     private const string version = "2015-04-17";
 
-    private readonly string baseUrl;
+    private readonly string _baseUrl;
 
-    public CloudFrontClient(AwsCredential credentials)
-        : base(AwsService.CloudFront, AwsRegion.USEast1, credentials)
+    public CloudFrontClient(AwsRegion region, IAwsCredential credentials)
+        : base(AwsService.CloudFront, region, credentials)
     {
-        baseUrl = Endpoint + version;
+        _baseUrl = Endpoint + version;
     }
 
     public async Task<string> CreateInvalidationBatch(string distributionId, InvalidationBatch batch)
     {
-        var requestUri = $"{baseUrl}/distribution/{distributionId}/invalidation";
+        var requestUri = $"{_baseUrl}/distribution/{distributionId}/invalidation";
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri) {
             Content = new StringContent(batch.ToXml().ToString(), Encoding.UTF8, "text/xml")
@@ -29,7 +29,7 @@ public sealed class CloudFrontClient : AwsClient
 
     public async Task<string> CreateDistribution(DistributionConfig request)
     {
-        var requestUri = baseUrl + "/distribution";
+        var requestUri = $"{_baseUrl}/distribution";
 
         var body = @"<?xml version=""1.0"" encoding=""UTF-8""?>\n" + request.ToXml().ToString();
 
@@ -42,7 +42,7 @@ public sealed class CloudFrontClient : AwsClient
 
     public async Task<string> PutDistribution(string id, DistributionConfig request)
     {
-        var requestUri = $"{baseUrl}/distribution/{id}/config";
+        var requestUri = $"{_baseUrl}/distribution/{id}/config";
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Put, requestUri) {
             Content = new StringContent(

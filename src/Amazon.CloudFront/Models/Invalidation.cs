@@ -1,4 +1,6 @@
-﻿namespace Amazon.CloudFront;
+﻿#nullable disable
+
+namespace Amazon.CloudFront;
 
 public class Invalidation
 {

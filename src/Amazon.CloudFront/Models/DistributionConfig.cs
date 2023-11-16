@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿#nullable disable
+
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Amazon.CloudFront;
@@ -6,11 +8,6 @@ namespace Amazon.CloudFront;
 [XmlRoot(Namespace = "http://cloudfront.amazonaws.com/doc/2010-11-01/")]
 public sealed class DistributionConfig
 {
-    public DistributionConfig()
-    {
-        this.Enabled = "true";
-    }
-
     [XmlElement]
     public CustomOrigin CustomOrigin { get; set; }
 
@@ -32,7 +29,7 @@ public sealed class DistributionConfig
     // [StringLength(128)]
     public string Comment { get; set; }
 
-    public string Enabled { get; set; }
+    public string Enabled { get; set; } = "true";
 
     public XDocument ToXml()
     {

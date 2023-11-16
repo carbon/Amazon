@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -10,7 +12,7 @@ public sealed class InvalidationBatch
 	{
 		ArgumentNullException.ThrowIfNull(paths);
 
-		if (paths.Count == 0) 
+		if (paths.Count is 0) 
 			throw new ArgumentException("May not be empty", nameof(paths));
 
 		Paths = paths;
