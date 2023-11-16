@@ -5,15 +5,11 @@ using Amazon.Route53.Exceptions;
 
 namespace Amazon.Route53;
 
-public sealed class Route53Client : AwsClient
+public sealed class Route53Client(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Route53, region, credential)
 {
     public const string Namespace = "https://route53.amazonaws.com/doc/2013-04-01/";
     public const string Version = "2013-04-01";
-
-    public Route53Client(IAwsCredential credential)
-        : base(AwsService.Route53, AwsRegion.USEast1, credential)
-    {
-    }
 
     public Task<ChangeResourceRecordSetsResponse> ChangeResourceRecordSetsAsync(
         string hostedZoneId,

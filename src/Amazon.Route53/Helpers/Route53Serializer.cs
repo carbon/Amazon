@@ -7,14 +7,14 @@ namespace Amazon.Route53;
 public static class Route53Serializer<T>
     where T : notnull
 {
-    private static readonly XmlSerializer serializer = new(typeof(T), Route53Client.Namespace);
+    private static readonly XmlSerializer s_serializer = new(typeof(T), Route53Client.Namespace);
 
     public static byte[] SerializeToUtf8Bytes(T instance)
     {
         using var stream = new MemoryStream();
         using var writer = new StreamWriter(stream, Encoding.UTF8);
 
-        serializer.Serialize(writer, instance, XmlSerializerNamespacesCache.Get());
+        s_serializer.Serialize(writer, instance, XmlSerializerNamespacesCache.Get());
 
         return stream.ToArray();
     }
@@ -23,6 +23,6 @@ public static class Route53Serializer<T>
     {
         using var reader = new StringReader(xmlText);
 
-        return (T)serializer.Deserialize(reader)!;
+        return (T)s_serializer.Deserialize(reader)!;
     }
 }
