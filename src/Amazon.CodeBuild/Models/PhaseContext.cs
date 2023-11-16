@@ -1,10 +1,12 @@
-﻿#nullable disable
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.CodeBuild;
 
 public sealed class PhaseContext
 {
-    public string Message { get; init; }
+    [JsonPropertyName("message")]
+    public string? Message { get; init; }
 
-    public string StatusCode { get; init; }
+    [JsonPropertyName("statusCode")]
+    public string? StatusCode { get; init; }
 }

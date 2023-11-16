@@ -1,22 +1,30 @@
-﻿#nullable disable
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.CodeBuild;
 
 public sealed class ProjectArtifacts
 {
-    public string Location { get; init; }
+    [JsonPropertyName("type")]
+    public required ProjectArtifactsType Type { get; init; }
 
-    public string Name { get; init; }
+    [JsonPropertyName("artifactIdentifier")]
+    public string? ArtifactIdentifier { get; set; }
 
-    // NONE | BUILD_ID
-    public string NamespaceType { get; init; }
+    [JsonPropertyName("encryptionDisabled")]
+    public bool? EncryptionDisabled { get; set; }
 
-    public string Packaging { get; init; }
+    [JsonPropertyName("location")]
+    public string? Location { get; init; }
 
-    public string Path { get; init; }
+    [JsonPropertyName("name")]
+    public string? Name { get; init; }
 
-    [Required]
-    public string Type { get; init; }
+    [JsonPropertyName("namespaceType")]
+    public ProjectArtifactsNamespaceType? NamespaceType { get; init; }
+
+    [JsonPropertyName("packaging")]
+    public ProjectArtifactsPackagingType? Packaging { get; init; }
+
+    [JsonPropertyName("path")]
+    public string? Path { get; init; }
 }

@@ -2,7 +2,7 @@
 
 namespace Amazon.CodeBuild;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<ProjectSourceType>))]
 public enum ProjectSourceType
 {
     BITBUCKET,

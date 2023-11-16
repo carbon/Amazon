@@ -1,12 +1,18 @@
-﻿#nullable disable
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.CodeBuild;
 
 public sealed class LogsLocation
 {
-    public string DeepLink { get; init; }
+    [JsonPropertyName("deepLink")]
+    public string? DeepLink { get; init; }
 
-    public string GroupName { get; init; }
+    [JsonPropertyName("groupName")]
+    public string? GroupName { get; init; }
 
-    public string StreamName { get; init; }
+    /// <summary>
+    /// The name of the CloudWatch Logs stream for the build logs.
+    /// </summary>
+    [JsonPropertyName("streamName")]
+    public string? StreamName { get; init; }
 }

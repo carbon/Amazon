@@ -1,21 +1,27 @@
-﻿#nullable disable
-
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.CodeBuild;
 
 public sealed class BuildPhase
 {
-    public PhaseContext[] Contexts { get; init; }
+    [JsonPropertyName("contexts")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public PhaseContext[]? Contexts { get; init; }
 
-    public long DurationInSeconds { get; init; }
+    [JsonPropertyName("durationInSeconds")]
+    public int DurationInSeconds { get; init; }
 
+    [JsonPropertyName("startTime")]
     public Timestamp StartTime { get; init; }
 
+    [JsonPropertyName("endTime")]
     public Timestamp? EndTime { get; init; }
 
-    public string PhaseStatus { get; init; }
+    [JsonPropertyName("phaseStatus")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public PhaseStatus PhaseStatus { get; init; }
 
     [JsonPropertyName("phaseType")]
-    public string PhaseType { get; init; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public PhaseType PhaseType { get; init; }
 }

@@ -1,10 +1,12 @@
-﻿namespace Amazon.CodeBuild;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.CodeBuild;
 
 public sealed class ListBuildsForProjectRequest : ICodeBuildRequest
 {
     public ListBuildsForProjectRequest(
         string projectName,
-        string? sortOrder = null,
+        SortOrder? sortOrder = null,
         string? nextToken = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(projectName);
@@ -14,10 +16,12 @@ public sealed class ListBuildsForProjectRequest : ICodeBuildRequest
         NextToken = nextToken;
     }
 
+    [JsonPropertyName("projectName")]
     public string ProjectName { get; }
 
-    // ASCENDING | DESCENDING
-    public string? SortOrder { get; }
+    [JsonPropertyName("sortOrder")]
+    public SortOrder? SortOrder { get; }
 
+    [JsonPropertyName("nextToken")]
     public string? NextToken { get; }
 }

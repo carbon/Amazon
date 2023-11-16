@@ -1,4 +1,6 @@
-﻿namespace Amazon.CodeBuild;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.CodeBuild;
 
 public sealed class DeleteProjectRequest : ICodeBuildRequest
 {
@@ -9,5 +11,6 @@ public sealed class DeleteProjectRequest : ICodeBuildRequest
         Name = name;
     }
 
+    [JsonPropertyName("name")]
     public string Name { get; }
 }

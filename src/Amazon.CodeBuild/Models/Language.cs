@@ -1,5 +1,8 @@
-﻿namespace Amazon.CodeBuild;
+﻿using System.Text.Json.Serialization;
 
+namespace Amazon.CodeBuild;
+
+[JsonConverter(typeof(JsonStringEnumConverter<Language>))]
 public enum Language
 {
     JAVA,

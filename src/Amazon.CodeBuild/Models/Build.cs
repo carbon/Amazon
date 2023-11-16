@@ -46,7 +46,7 @@ public sealed class Build
     [JsonPropertyName("projectName")]
     public string ProjectName { get; init; }
 
-    // Any version identifier for the version of the source code to be built.
+    [JsonPropertyName("sourceVersion")]
     public string SourceVersion { get; init; }
 
     [JsonPropertyName("startTime")]

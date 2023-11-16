@@ -1,28 +1,46 @@
 ﻿#nullable disable
 
+using System.Text.Json.Serialization;
+
 namespace Amazon.CodeBuild;
 
 public class Project
 {
-    public string Name { get; init; }
-
+    [JsonPropertyName("arn")]
     public string Arn { get; init; }
 
-    public ProjectArtifacts[] Artifacts { get; init; }
+    [JsonPropertyName("artifacts")]
+    public ProjectArtifacts Artifacts { get; init; }
 
-    public string Description { get; init; }
+    [JsonPropertyName("name")]
+    public string Name { get; init; }
 
-    public string EncryptionKey { get; init; }
+#nullable enable
 
-    public ProjectEnvironment Environment { get; init; }
+    [JsonPropertyName("description")]
+    public string? Description { get; init; }
 
+    [JsonPropertyName("encryptionKey")]
+    public string? EncryptionKey { get; init; }
+
+    [JsonPropertyName("environment")]
+    public ProjectEnvironment? Environment { get; init; }
+
+    [JsonPropertyName("created")]
     public Timestamp Created { get; init; }
 
+    [JsonPropertyName("lastModified")]
     public Timestamp LastModified { get; init; }
 
-    public string ServiceRole { get; init; }
-    
-    public Tag[] Tags { get; init; }
+    [JsonPropertyName("serviceRole")]
+    public string? ServiceRole { get; init; }
 
+    [JsonPropertyName("tags")]
+    public Tag[]? Tags { get; init; }
+
+    [JsonPropertyName("timeoutInMinutes")]
     public int TimeoutInMinutes { get; init; }
+
+    [JsonPropertyName("webhook")]
+    public Webhook? Webhook { get; set; }
 }

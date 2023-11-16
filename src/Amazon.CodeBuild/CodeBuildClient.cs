@@ -1,9 +1,10 @@
-﻿using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
+using Amazon.CodeBuild.Serialization;
 using Amazon.Exceptions;
 
 namespace Amazon.CodeBuild;
@@ -15,67 +16,69 @@ public sealed class CodeBuildClient(AwsRegion region, IAwsCredential credential)
 
     #region Builds
 
-    public Task<BatchGetBuildsResponse> BatchGetBuildsAsync(BatchGetBuildsRequest request)
+    public Task<BatchGetBuildsResult> BatchGetBuildsAsync(BatchGetBuildsRequest request)
     {
-        return SendAsync<BatchGetBuildsResponse>(request);
+        return SendAsync(request, CodeBuildSerializerContext.Default.BatchGetBuildsResult);
     }
 
-    public Task<ListBuildsResponse> ListBuildsAsync(ListBuildsRequest request)
+    public Task<ListBuildsResult> ListBuildsAsync(ListBuildsRequest request)
     {
-        return SendAsync<ListBuildsResponse>(request);
+        return SendAsync(request, CodeBuildSerializerContext.Default.ListBuildsResult);
     }
 
-    public Task<ListBuildsForProjectResponse> ListBuildsForProjectAsync(ListBuildsForProjectRequest request)
+    public Task<ListBuildsForProjectResult> ListBuildsForProjectAsync(ListBuildsForProjectRequest request)
     {
-        return SendAsync<ListBuildsForProjectResponse>(request);
+        return SendAsync(request, CodeBuildSerializerContext.Default.ListBuildsForProjectResult);
     }
 
-    public Task<StartBuildResponse> StartBuildAsync(StartBuildRequest request)
+    public Task<StartBuildResult> StartBuildAsync(StartBuildRequest request)
     {
-        return SendAsync<StartBuildResponse>(request);
+        return SendAsync(request, CodeBuildSerializerContext.Default.StartBuildResult);
     }
 
-    public Task<StopBuildResponse> StopBuildAsync(StopBuildRequest request)
+    public Task<StopBuildResult> StopBuildAsync(StopBuildRequest request)
     {
-        return SendAsync<StopBuildResponse>(request);
+        return SendAsync(request, CodeBuildSerializerContext.Default.StopBuildResult);
     }
 
     #endregion
 
     #region Environments
 
-    public Task<ListCuratedEnvironmentImagesResponse> ListCuratedEnvironmentImagesAsync(ListCuratedEnvironmentImagesRequest request)
+    public Task<ListCuratedEnvironmentImagesResult> ListCuratedEnvironmentImagesAsync(ListCuratedEnvironmentImagesRequest request)
     {
-        return SendAsync<ListCuratedEnvironmentImagesResponse>(request);
+        return SendAsync(request, CodeBuildSerializerContext.Default.ListCuratedEnvironmentImagesResult);
     }
 
     #endregion
 
     #region Projects
 
-    public Task<BatchGetProjectsResponse> BatchGetProjectsAsync(BatchGetProjectsRequest request)
+    public Task<BatchGetProjectsResult> BatchGetProjectsAsync(BatchGetProjectsRequest request)
     {
-        return SendAsync<BatchGetProjectsResponse>(request);
+        return SendAsync(request, CodeBuildSerializerContext.Default.BatchGetProjectsResult);
     }
 
-    public Task<DeleteProjectResponse> DeleteProjectAsync(DeleteProjectRequest request)
+    public Task DeleteProjectAsync(DeleteProjectRequest request)
     {
-        return SendAsync<DeleteProjectResponse>(request);
+        // If the action is successful, the service sends back an HTTP 200 response with an empty HTTP body.
+
+        return SendAsync(request);
     }
 
-    public Task<CreateProjectResponse> CreateProjectAsync(CreateProjectRequest request)
+    public Task<CreateProjectResult> CreateProjectAsync(CreateProjectRequest request)
     {
-        return SendAsync<CreateProjectResponse>(request);
+        return SendAsync(request, CodeBuildSerializerContext.Default.CreateProjectResult);
     }
 
-    public Task<ListProjectsResponse> ListProjectsAsync(ListProjectsRequest request)
+    public Task<ListProjectsResult> ListProjectsAsync(ListProjectsRequest request)
     {
-        return SendAsync<ListProjectsResponse>(request);
+        return SendAsync(request, CodeBuildSerializerContext.Default.ListProjectsResult);
     }
 
-    public Task<UpdateProjectResponse> UpdateProjectAsync(UpdateProjectRequest request)
+    public Task<UpdateProjectResult> UpdateProjectAsync(UpdateProjectRequest request)
     {
-        return SendAsync<UpdateProjectResponse>(request);
+        return SendAsync(request, CodeBuildSerializerContext.Default.UpdateProjectResult);
     }
 
     #endregion
@@ -83,12 +86,26 @@ public sealed class CodeBuildClient(AwsRegion region, IAwsCredential credential)
     #region Helpers
 
     private static readonly JsonSerializerOptions s_jso = new() {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
-    private async Task<T> SendAsync<T>(ICodeBuildRequest request)
-        where T : notnull, new()
+    private async Task SendAsync(ICodeBuildRequest request)
+    {
+        var httpRequest = GetRequestMessage(Endpoint, request);
+
+        await SignAsync(httpRequest).ConfigureAwait(false);
+
+        using var response = await _httpClient.SendAsync(httpRequest).ConfigureAwait(false);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            throw new AwsException($"{response.StatusCode} -> {responseText}", response.StatusCode);
+        }
+    }
+
+    private async Task<T> SendAsync<T>(ICodeBuildRequest request, JsonTypeInfo<T> resultTypeInfo)
     {
         var httpRequest = GetRequestMessage(Endpoint, request);
 
@@ -103,18 +120,12 @@ public sealed class CodeBuildClient(AwsRegion region, IAwsCredential credential)
             throw new AwsException($"{response.StatusCode} -> {responseText}", response.StatusCode);         
         }
 
-        if (response.StatusCode is HttpStatusCode.NoContent || response.Content.Headers.ContentLength is 0)
-        {
-            return new T();
-        }
-
-
-        var result = await response.Content.ReadFromJsonAsync<T>(s_jso).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync(resultTypeInfo).ConfigureAwait(false);
 
         return result!;
     }
 
-    public static HttpRequestMessage GetRequestMessage(string endpoint, object request)
+    internal static HttpRequestMessage GetRequestMessage(string endpoint, object request)
     {
         ArgumentNullException.ThrowIfNull(request);
 
