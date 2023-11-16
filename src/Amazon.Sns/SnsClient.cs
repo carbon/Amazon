@@ -2,13 +2,10 @@
 
 namespace Amazon.Sns;
 
-public sealed class SnsClient : AwsClient
+public sealed class SnsClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Sns, region, credential)
 {
     public const string Version = "2010-03-31";
-
-    public SnsClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.Sns, region, credential)
-    { }
 
     public async Task<string> PublishAsync(PublishRequest request)
     {
@@ -23,9 +20,9 @@ public sealed class SnsClient : AwsClient
 
     private static FormUrlEncodedContent GetFormContent(List<KeyValuePair<string, string>> parameters)
     {
-        parameters.Add(new ("Version", Version));
+        parameters.Add(new("Version", Version));
 
-        return new FormUrlEncodedContent(parameters!);
+        return new FormUrlEncodedContent(parameters);
     }
 
     #endregion
