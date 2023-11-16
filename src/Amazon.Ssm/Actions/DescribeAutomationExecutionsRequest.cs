@@ -9,15 +9,9 @@ public sealed class DescribeAutomationExecutionsRequest
     public string? NextToken { get; set; }
 }
 
-public sealed class AutomationExecutionFilter
+public sealed class AutomationExecutionFilter(string key, string[] values)
 {
-    public AutomationExecutionFilter(string key, string[] values)
-    {
-        Key = key;
-        Values = values;
-    }
+    public string Key { get; } = key;
 
-    public string Key { get; }
-
-    public string[] Values { get; }
+    public string[] Values { get; } = values;
 }

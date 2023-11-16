@@ -6,13 +6,10 @@ using Amazon.Exceptions;
 
 namespace Amazon.Ssm;
 
-public sealed class SsmClient : AwsClient
+public sealed class SsmClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Ssm, region, credential)
 {
     public const string Version = "2014-11-06";
-
-    public SsmClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.Ssm, region, credential)
-    { }
 
     #region Activations
 
@@ -482,13 +479,15 @@ public sealed class SsmClient : AwsClient
             : new T();
     }
 
-    private static readonly JsonSerializerOptions jso = new () { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+    private static readonly JsonSerializerOptions s_jso = new () {
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
 
     private static HttpRequestMessage GetRequestMessage(string endpoint, object request)
     {
         string actionName = request.GetType().Name.Replace("Request", "");
 
-        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, jso);
+        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, s_jso);
 
         return new HttpRequestMessage(HttpMethod.Post, endpoint) {
             Headers = {

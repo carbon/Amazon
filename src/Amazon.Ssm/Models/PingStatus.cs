@@ -2,7 +2,7 @@
 
 namespace Amazon.Ssm;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<PingStatus>))]
 public enum PingStatus
 {
     Online,

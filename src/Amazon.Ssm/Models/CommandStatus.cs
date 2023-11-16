@@ -2,7 +2,7 @@
 
 namespace Amazon.Ssm;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<CommandStatus>))]
 public enum CommandStatus
 {
     Pending,
