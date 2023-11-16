@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using Amazon.Metadata.Serialization;
+
 namespace Amazon.Metadata.Tests;
 
 public sealed class InstanceIdentityTests
@@ -9,7 +11,7 @@ public sealed class InstanceIdentityTests
     {
         // FROM: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-identity-documents.html
 
-        var result = JsonSerializer.Deserialize<InstanceIdentity>(
+        var result = JsonSerializer.Deserialize(
             """
             {
                 "devpayProductCodes" : null,
@@ -28,14 +30,15 @@ public sealed class InstanceIdentityTests
                 "ramdiskId" : null,
                 "region" : "us-west-2"
             }
-            """u8);
-        
+            """u8, MetadataSerializerContext.Default.InstanceIdentity);
+
+        Assert.NotNull(result);
         Assert.Equal("i-1234567890abcdef0", result.InstanceId);
-        Assert.Equal("t2.micro",            result.InstanceType);
-        Assert.Equal("123456789012",        result.AccountId);
-        Assert.Equal("ami-5fb8c835",        result.ImageId);
-        Assert.Equal("10.158.112.84",       result.PrivateIp);
-        Assert.Equal("us-west-2",           result.Region);
+        Assert.Equal("t2.micro", result.InstanceType);
+        Assert.Equal("123456789012", result.AccountId);
+        Assert.Equal("ami-5fb8c835", result.ImageId);
+        Assert.Equal("10.158.112.84", result.PrivateIp);
+        Assert.Equal("us-west-2", result.Region);
 
         Assert.Null(result.KernelId);
         Assert.Null(result.RamdiskId);
