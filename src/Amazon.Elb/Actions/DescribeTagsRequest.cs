@@ -1,13 +1,8 @@
 ﻿namespace Amazon.Elb;
 
-public sealed class DescribeTagsRequest : IElbRequest
+public sealed class DescribeTagsRequest(string[] resourceArns) : IElbRequest
 {
-    public DescribeTagsRequest(string[] resourceArns)
-    {
-        ResourceArns = resourceArns;
-    }
-
     public string Action => "DescribeTags";
 
-    public string[] ResourceArns { get; }
+    public string[] ResourceArns { get; } = resourceArns;
 }

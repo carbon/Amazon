@@ -2,17 +2,11 @@
 
 namespace Amazon.Elb;
 
-public sealed class InstanceModelMember
+public sealed class InstanceModelMember(string name, PropertyInfo property)
 {
-    public InstanceModelMember(string name, PropertyInfo property)
-    {
-        Name = name;
-        Property = property;
-    }
+    public string Name { get; init; } = name;
 
-    public string Name { get; init; }
-
-    public PropertyInfo Property { get; }
+    public PropertyInfo Property { get; } = property;
 
     public object? GetValue(object instance)
     {

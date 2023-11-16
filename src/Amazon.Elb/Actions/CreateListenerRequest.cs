@@ -10,12 +10,12 @@ public sealed class CreateListenerRequest : IElbRequest
 
     public Certificate[]? Certificates { get; init; }
 
-    public List<Action> DefaultActions { get; } = new();
+    public List<Action> DefaultActions { get; } = [];
 
     [Range(1, 65535)]
     public ushort? Port { get; init; }
 
-    public required Protocol Protocal { get; init; }
+    public required Protocol Protocol { get; init; }
 
     public string? SslPolicy { get; init; }
 

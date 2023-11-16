@@ -2,13 +2,11 @@
 
 namespace Amazon.Elb;
 
-public sealed class ElbClient : AwsClient
+public sealed class ElbClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Elb, region, credential)
 {
     public const string Namespace = "http://elasticloadbalancing.amazonaws.com/doc/2015-12-01/";
     public const string Version = "2015-12-01";
-
-    public ElbClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.Elb, region, credential) { }
 
     #region Tags
 
