@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Lambda</AssemblyName>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.19.0</Version>
+    <Version>0.20.0</Version>
     
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>

@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kinesis.Firehose</AssemblyName>
-    <Version>0.13.0</Version>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Version>0.14.0</Version>
+    <TargetFramework>net8.0</TargetFramework>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	  
