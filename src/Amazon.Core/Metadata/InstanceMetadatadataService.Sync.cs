@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 
+using Amazon.Metadata.Serialization;
+
 namespace Amazon.Metadata;
 
 public sealed partial class InstanceMetadataService
@@ -38,7 +40,7 @@ public sealed partial class InstanceMetadataService
 
                 using var responseStream = response.Content.ReadAsStream();
 
-                return JsonSerializer.Deserialize(responseStream, IamJsonContext.Default.IamSecurityCredentials)!;
+                return JsonSerializer.Deserialize(responseStream, MetadataSerializerContext.Default.IamSecurityCredentials)!;
             }
             catch (Exception ex)
             {

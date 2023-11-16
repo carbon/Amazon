@@ -1,14 +1,18 @@
 ﻿using System.Globalization;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
+
+using Amazon.Exceptions;
+using Amazon.Metadata.Serialization;
 
 namespace Amazon.Metadata;
 
 public sealed partial class InstanceMetadataService
 {
-    private const string host = "169.254.169.254";
-    private const string baseMetadataUri = $"http://{host}/latest/meta-data";
+    private const string ip4Host = "169.254.169.254";
+    private const string baseMetadataUri = $"http://{ip4Host}/latest/meta-data";
     private static readonly TimeSpan _1hour = TimeSpan.FromHours(1);
 
     public static readonly InstanceMetadataService Instance = new();
@@ -32,7 +36,7 @@ public sealed partial class InstanceMetadataService
         byte[]? value = await GetByteArrayOrDefaultAsync($"{baseMetadataUri}/spot/instance-action").ConfigureAwait(false);
 
         return value is { Length: > 0 }
-            ? JsonSerializer.Deserialize<InstanceAction>(value)
+            ? JsonSerializer.Deserialize(value, MetadataSerializerContext.Default.InstanceAction)
             : null;
     }
 
@@ -50,12 +54,12 @@ public sealed partial class InstanceMetadataService
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception($"Invalid response getting /iam/security-credentials. StatusCode = {response.StatusCode}");
+                    throw new AwsException($"Invalid response getting /iam/security-credentials. StatusCode = {response.StatusCode}", response.StatusCode);
                 }
 
-                byte[] responseBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+                var result = await response.Content.ReadFromJsonAsync(MetadataSerializerContext.Default.IamSecurityCredentials).ConfigureAwait(false);
 
-                return JsonSerializer.Deserialize(responseBytes, IamJsonContext.Default.IamSecurityCredentials)!;
+                return result!;
             }
             catch (Exception ex)
             {
@@ -68,11 +72,11 @@ public sealed partial class InstanceMetadataService
 
     public async Task<InstanceIdentity> GetInstanceIdentityAsync()
     {
-        using var response = await GetAsync($"http://{host}/latest/dynamic/instance-identity/document").ConfigureAwait(false);
+        using var response = await GetAsync($"http://{ip4Host}/latest/dynamic/instance-identity/document").ConfigureAwait(false);
 
-        using var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync(MetadataSerializerContext.Default.InstanceIdentity).ConfigureAwait(false);
 
-        return (await JsonSerializer.DeserializeAsync<InstanceIdentity>(responseStream).ConfigureAwait(false))!;
+        return result!;
     }
 
     // us-east-1a
@@ -130,7 +134,7 @@ public sealed partial class InstanceMetadataService
 
         int lifetimeInSeconds = (int)lifetime.TotalSeconds;
 
-        var request = new HttpRequestMessage(HttpMethod.Put, $"http://{host}/latest/api/token") {
+        var request = new HttpRequestMessage(HttpMethod.Put, $"http://{ip4Host}/latest/api/token") {
             Headers = {
                 { "X-aws-ec2-metadata-token-ttl-seconds", lifetimeInSeconds.ToString(CultureInfo.InvariantCulture) }
             }
@@ -143,7 +147,7 @@ public sealed partial class InstanceMetadataService
         return new MetadataToken(responseText, expires: DateTime.UtcNow + lifetime);
     }
 
-    private async Task<MetadataToken> GetTokenAsync()
+    private async ValueTask<MetadataToken> GetTokenAsync()
     {
         var _5minutesFromNow = DateTime.UtcNow.AddMinutes(5);
 
