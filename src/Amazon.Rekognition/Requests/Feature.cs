@@ -2,7 +2,7 @@
 
 namespace Amazon.Rekognition;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<Feature>))]
 public enum Feature
 {
     GENERAL_LABELS = 1,

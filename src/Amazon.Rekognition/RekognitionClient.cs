@@ -1,14 +1,12 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Amazon.Rekognition;
 
 public sealed class RekognitionClient(AwsRegion region, IAwsCredential credential) 
     : AwsClient(AwsService.Rekognition, region, credential)
 {
-    public const string Version = "2016-06-27";
-
     // public async Task CompareFacesAsync()
 
     // public async Task CopyProjectVersionAsync()
@@ -138,11 +136,13 @@ public sealed class RekognitionClient(AwsRegion region, IAwsCredential credentia
 
     // public async Task UpdateStreamProcessorAsync()
 
-
     #region Helpers
 
-    private async Task<TResult> SendAsync<TRequest, TResult>(string action, TRequest request, CancellationToken cancellationToken = default)
-        where TRequest: notnull
+    private async Task<TResult> SendAsync<TRequest, TResult>(
+        string action,
+        TRequest request,
+        CancellationToken cancellationToken = default)
+        where TRequest: IRekognitionRequest
         where TResult: notnull
     {
         var message = GetRequestMessage(action, request);
@@ -163,30 +163,20 @@ public sealed class RekognitionClient(AwsRegion region, IAwsCredential credentia
 
     protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
     {
-        string xmlText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        string text = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        throw new Exception(xmlText);
+        throw new Exception(text);
     }
 
-    private static readonly JsonSerializerOptions s_jso = new() {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-    };
+    private static readonly MediaTypeHeaderValue s_mediaType_xAmzJson1_1 = new("application/x-amz-json-1.1");
 
     private HttpRequestMessage GetRequestMessage<T>(string action, T request)
-        where T : notnull
+        where T : IRekognitionRequest
     {
-        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, s_jso);
-
-        return new HttpRequestMessage(HttpMethod.Post, Endpoint)
-        {
+        return new HttpRequestMessage(HttpMethod.Post, Endpoint) {
+            Content = JsonContent.Create(request, s_mediaType_xAmzJson1_1, JsonSerializerOptions.Default),
             Headers = {
                 { "x-amz-target", $"RekognitionService.{action}" }
-            },
-            Content = new ByteArrayContent(jsonBytes)
-            {
-                Headers = {
-                    { "Content-Type", "application/x-amz-json-1.1" }
-                }
             }
         };
     }

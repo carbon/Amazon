@@ -2,9 +2,9 @@
 
 public sealed class PersonDetail
 {
-    public BoundingBox BoundingBox { get; set; }
+    public BoundingBox BoundingBox { get; init; }
 
-    public FaceDetail Face { get; set; }
+    public FaceDetail? Face { get; init; }
 
-    public long Index { get; set; }
+    public long Index { get; init; }
 }

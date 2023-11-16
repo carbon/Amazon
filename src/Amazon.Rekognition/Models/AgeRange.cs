@@ -1,11 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Amazon.Rekognition;
 
-namespace Amazon.Rekognition;
-
-[method: JsonConstructor]
-public sealed class AgeRange(int high, int low)
+public sealed class AgeRange
 {
-    public int High { get; } = high;
+    public int High { get; init; }
 
-    public int Low { get; } = low;
+    public int Low { get; init; }
 }

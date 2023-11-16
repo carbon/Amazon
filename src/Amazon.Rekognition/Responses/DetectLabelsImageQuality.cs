@@ -1,13 +1,10 @@
 ﻿namespace Amazon.Rekognition;
 
-public sealed class DetectLabelsImageQuality(
-    double brightness,
-    double contrast,
-    double sharpness)
+public sealed class DetectLabelsImageQuality
 {
-    public double Brightness { get; } = brightness;
+    public double Brightness { get; init; }
 
-    public double Contrast { get; } = contrast;
+    public double Contrast { get; init; }
 
-    public double Sharpness { get; } = sharpness;
+    public double Sharpness { get; init; }
 }

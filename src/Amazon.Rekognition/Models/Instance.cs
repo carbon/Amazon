@@ -2,9 +2,9 @@
 
 public sealed class Instance
 {
-    public BoundingBox BoundingBox { get; set; }
+    public BoundingBox BoundingBox { get; init; }
 
-    public double Confidence { get; set; }
+    public double Confidence { get; init; }
 
-    public DominantColor[]? DominantColors {get; set; }
+    public DominantColor[]? DominantColors {get; init; }
 }

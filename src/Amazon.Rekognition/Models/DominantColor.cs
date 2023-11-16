@@ -4,19 +4,19 @@ namespace Amazon.Rekognition;
 
 public struct DominantColor
 {
-    public int Red { get; set; }
+    public int Red { get; init; }
 
-    public int Green { get; set; }
+    public int Green { get; init; }
 
-    public int Blue { get; set; }
+    public int Blue { get; init; }
 
-    public string CSSColor { get; set; }
+    public string CSSColor { get; init; }
 
-    public string HexCode { get; set; }
+    public string HexCode { get; init; }
 
-    public double PixelPercent { get; set; }
+    public double PixelPercent { get; init; }
 
-    public string SimplifiedColor { get; set; }
+    public string SimplifiedColor { get; init; }
 
-    internal (int, int, int) GetRGB() => (Red, Green, Blue);
+    internal readonly (int, int, int) GetRGB() => (Red, Green, Blue);
 }

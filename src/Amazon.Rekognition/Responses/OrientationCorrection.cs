@@ -2,7 +2,7 @@
 
 namespace Amazon.Rekognition;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<OrientationCorrection>))]
 public enum OrientationCorrection
 {
     ROTATE_0,

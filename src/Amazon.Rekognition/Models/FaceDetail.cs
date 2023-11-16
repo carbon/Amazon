@@ -2,25 +2,25 @@
 
 public class FaceDetail
 {
-    public AgeRange? AgeRange { get; set; }
+    public AgeRange? AgeRange { get; init; }
 
-    public Beard? Beard { get; set; }
+    public Beard? Beard { get; init; }
 
-    public BoundingBox BoundingBox { get; set; }
+    public BoundingBox BoundingBox { get; init; }
 
-    public List<Landmark>? Landmarks { get; set; }
+    public List<Landmark>? Landmarks { get; init; }
 
-    public float Confidence { get; set; }
+    public float Confidence { get; init; }
 
-    public Emotion[]? Emotions { get; set; }
+    public Emotion[]? Emotions { get; init; }
 
-    public Eyeglasses? Eyeglasses { get; set; }
+    public Eyeglasses? Eyeglasses { get; init; }
 
-    public Sunglasses? Sunglasses { get; set; }
+    public Sunglasses? Sunglasses { get; init; }
 
-    public Smile? Smile { get; set; }
+    public Smile? Smile { get; init; }
 
-    public Pose? Pose { get; set; }
+    public Pose? Pose { get; init; }
 
-    public ImageQuality? Quality { get; set; }
+    public ImageQuality? Quality { get; init; }
 }
