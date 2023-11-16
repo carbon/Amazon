@@ -63,7 +63,7 @@ public static class SignerV4
 
     internal static string GetCanonicalRequest(HttpRequestMessage request)
     {
-        return GetCanonicalRequest(request, new List<string>());
+        return GetCanonicalRequest(request, []);
     }
 
     [SkipLocalsInit]
@@ -244,7 +244,7 @@ public static class SignerV4
 
         SortedDictionary<string, string> queryParameters = requestUri.Query is { Length: > 0 } queryString
             ? ParseQueryString(queryString)
-            : new SortedDictionary<string, string>();
+            : [];
       
         // 16 chars
         string timestamp = date.ToString(format: isoDateTimeFormat, CultureInfo.InvariantCulture);
@@ -412,7 +412,7 @@ public static class SignerV4
     {
         if (query.IsEmpty)
         {
-            return new SortedDictionary<string, string>();
+            return [];
         }
 
         var dictionary = new SortedDictionary<string, string>();

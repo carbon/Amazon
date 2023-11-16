@@ -31,11 +31,7 @@ public readonly struct CredentialScope : ISpanFormattable
 
     internal void FormatDateTo(Span<byte> utf8Destination)
     {
-        Span<char> formattedDateChars = stackalloc char[8];
-
-        Date.TryFormat(formattedDateChars, out _, dateFormat, CultureInfo.InvariantCulture);
-
-        Encoding.ASCII.GetBytes(formattedDateChars, utf8Destination);
+        Date.TryFormat(utf8Destination, out _, dateFormat, CultureInfo.InvariantCulture);
     }
 
     internal void FormatDateTo(Span<char> utf16Destination)

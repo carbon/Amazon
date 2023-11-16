@@ -1,14 +1,8 @@
 ﻿namespace Amazon.Metadata;
 
-internal sealed class MetadataToken
+internal sealed class MetadataToken(string value, DateTime expires)
 {
-    public MetadataToken(string value, DateTime expires)
-    {
-        Value = value;
-        Expires = expires;
-    }
+    public string Value { get; } = value ?? throw new ArgumentNullException(nameof(value));
 
-    public string Value { get; }
-
-    public DateTime Expires { get; }
+    public DateTime Expires { get; } = expires;
 }

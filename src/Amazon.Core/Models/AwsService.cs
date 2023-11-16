@@ -18,7 +18,7 @@ public sealed class AwsService : IEquatable<AwsService>
     public override string ToString() => Name;
 
     public static readonly AwsService CloudFront       = new("cloudfront");
-    public static readonly AwsService CloudwatchEvents = new("events");
+    public static readonly AwsService CloudWatchEvents = new("events");
     public static readonly AwsService CodeBuild        = new("codebuild");
     public static readonly AwsService DynamoDb         = new("dynamodb");
     public static readonly AwsService Ec2              = new("ec2");

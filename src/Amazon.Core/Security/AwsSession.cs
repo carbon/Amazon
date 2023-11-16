@@ -1,30 +1,21 @@
 ﻿namespace Amazon;
 
-public sealed class AwsSession : IAwsCredential
+public sealed class AwsSession(
+    string sessionToken,
+    string secretAccessKey,
+    DateTime expiration,
+    string accessKeyId,
+    string? securityToken = null) : IAwsCredential
 {
-    public AwsSession(
-        string sessionToken,
-        string secretAccessKey,
-        DateTime expiration,
-        string accessKeyId,
-        string? securityToken = null)
-    {
-        SessionToken = sessionToken;
-        SecretAccessKey = secretAccessKey;
-        Expiration = expiration;
-        AccessKeyId = accessKeyId;
-        SecurityToken = securityToken;
-    }
+    public string SessionToken { get; } = sessionToken;
 
-    public string SessionToken { get; }
+    public string SecretAccessKey { get; } = secretAccessKey;
 
-    public string SecretAccessKey { get; }
+    public string? SecurityToken { get; } = securityToken;
 
-    public string? SecurityToken { get; }
+    public string AccessKeyId { get; } = accessKeyId;
 
-    public string AccessKeyId { get; }
-
-    public DateTime Expiration { get; }
+    public DateTime Expiration { get; } = expiration;
 
     public bool ShouldRenew => false;
 

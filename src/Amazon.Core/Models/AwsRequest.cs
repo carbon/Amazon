@@ -10,14 +10,11 @@ public class AwsRequest : IEnumerable<KeyValuePair<string, string>>
         Parameters = new List<KeyValuePair<string, string>>(4);
     }
 
-    public AwsRequest(KeyValuePair<string, string>[] parameters)
+    public AwsRequest(ReadOnlySpan<KeyValuePair<string, string>> parameters)
     {
         Parameters = new List<KeyValuePair<string, string>>(parameters.Length);
 
-        foreach (var parameter in parameters)
-        {
-            Parameters.Add(parameter);
-        }
+        Parameters.AddRange(parameters);
     }
 
     public List<KeyValuePair<string, string>> Parameters { get; }
@@ -37,6 +34,11 @@ public class AwsRequest : IEnumerable<KeyValuePair<string, string>>
         Parameters.Add(new (name, value.ToString(CultureInfo.InvariantCulture)));
     }
 
+    public void AddRange(ReadOnlySpan<KeyValuePair<string, string>> values)
+    {
+        Parameters.AddRange(values);
+    }
+   
     // IEnumerable
 
     public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => Parameters.GetEnumerator();

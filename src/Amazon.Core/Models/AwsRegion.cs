@@ -73,7 +73,7 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
     public static readonly AwsRegion APSouth2     = new("ap-south-2");     // Hyderabad      | 2022-11-21
     public static readonly AwsRegion APSouthEast4 = new("ap-southeast-4"); // Melbourne (AU) | 2023-01-23
 
-    public static readonly AwsRegion[] All = new [] {
+    public static readonly AwsRegion[] All = [
         USEast1,
         EUWest1,
         USWest1,     
@@ -100,7 +100,7 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
         EUSouth2,
         APSouth2,
         APSouthEast4
-    };
+    ];
         
     public static AwsRegion Get(string name) => name switch
     {

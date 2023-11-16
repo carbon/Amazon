@@ -1,17 +1,13 @@
 ﻿namespace Amazon.Scheduling;
 
-public sealed class ExponentialBackoffRetryPolicy : RetryPolicy
+public sealed class ExponentialBackoffRetryPolicy(
+    TimeSpan initialDelay,
+    TimeSpan maxDelay,
+    int maxRetries = 3) : RetryPolicy
 {
-    private readonly TimeSpan _initialDelay;
-    private readonly TimeSpan _maxDelay;
-    private readonly int _maxRetries;
-
-    public ExponentialBackoffRetryPolicy(TimeSpan initialDelay, TimeSpan maxDelay, int maxRetries = 3)
-    {
-        _initialDelay = initialDelay;
-        _maxDelay = maxDelay;
-        _maxRetries = maxRetries;
-    }
+    private readonly TimeSpan _initialDelay = initialDelay;
+    private readonly TimeSpan _maxDelay = maxDelay;
+    private readonly int _maxRetries = maxRetries;
 
     public override bool ShouldRetry(int retryCount) => _maxRetries is -1 || _maxRetries > retryCount;
 
