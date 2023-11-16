@@ -1,21 +1,19 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 
 namespace Amazon.Iam;
 
-public sealed class IamClient : AwsClient
+public sealed class IamClient(AwsRegion region, AwsCredential credential) 
+    : AwsClient(AwsService.Iam, region, credential)
 {
     public const string Version = "2010-05-08";
 
-    public IamClient(AwsCredential credential)
-        : base(AwsService.Iam, AwsRegion.USEast1, credential)
-    { }
-
     public async Task CreateAccessKeyAsync(string userName)
     {
-        var parameters = new AwsRequest {
-            { "Action", "CreateAccessKey" },
-            { "UserName", userName }
-        };
+        List<KeyValuePair<string, string>> parameters = [
+            new("Action", "CreateAccessKey"),
+            new("UserName", userName)
+        ];
 
         await SendAsync(parameters).ConfigureAwait(false);
     }
@@ -24,34 +22,34 @@ public sealed class IamClient : AwsClient
     {
         ArgumentNullException.ThrowIfNull(userName);
 
-        var parameters = new AwsRequest {
-            { "Action", "CreateUser" },
-            { "UserName", userName }
-        };
+        List<KeyValuePair<string, string>> parameters = [
+            new("Action", "CreateUser"),
+            new("UserName", userName)
+        ];
 
         await SendAsync(parameters).ConfigureAwait(false);
     }
 
     public async Task PutUserPolicyAsync(string userName, string policyName, string policyDocument)
     {
-        var parameters = new AwsRequest {
-            { "Action", "PutUserPolicy" },
-            { "UserName", userName },
-            { "PolicyName", policyName },
-            { "PolicyDocument", policyDocument }
-        };
+        List<KeyValuePair<string, string>> parameters = [
+            new("Action", "PutUserPolicy"),
+            new("UserName", userName),
+            new("PolicyName", policyName),
+            new("PolicyDocument", policyDocument)
+        ];
 
         await SendAsync(parameters).ConfigureAwait(false);
     }
 
     #region Helpers
 
-    private Task<string> SendAsync(AwsRequest request)
+    private Task<string> SendAsync(List<KeyValuePair<string, string>> parameters)
     {
-        request.Add("Version", Version);
+        parameters.Add(new ("Version", Version));
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
-            Content = new FormUrlEncodedContent(request.Parameters!)
+            Content = new FormUrlEncodedContent(parameters)
         };
 
         return SendAsync(httpRequest);

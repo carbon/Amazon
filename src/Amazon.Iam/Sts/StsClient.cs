@@ -5,13 +5,10 @@ using Amazon.Sts.Models;
 
 namespace Amazon.Sts;
 
-public sealed class StsClient : AwsClient
+public sealed class StsClient(AwsRegion region, AwsCredential credential)
+    : AwsClient(AwsService.Sts, region, credential)
 {
     public const string Version = "2011-06-15";
-
-    public StsClient(AwsCredential credential)
-        : base(AwsService.Sts, AwsRegion.USEast1, credential)
-    { }
 
     public async Task<AwsSession> GetSessionTokenAsync(TimeSpan duration)
     {
