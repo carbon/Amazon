@@ -7,9 +7,16 @@ public class PutRecordBatchResultTests
     [Fact]
     public void CanDeserialize()
     {
-        var text = """{"FailedPutCount":0,"RequestResponses":[{"RecordId":"r1"},{"RecordId":"r2"}]}""";
-
-        var result = JsonSerializer.Deserialize<PutRecordBatchResult>(text);
+        var result = JsonSerializer.Deserialize<PutRecordBatchResult>(
+            """
+            {
+              "FailedPutCount": 0,
+              "RequestResponses": [
+                { "RecordId": "r1" },
+                { "RecordId": "r2" }
+              ]
+            }
+            """);
 
         Assert.Equal("r1", result.RequestResponses[0].RecordId);
         Assert.Equal("r2", result.RequestResponses[1].RecordId);

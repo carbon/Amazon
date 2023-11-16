@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using Amazon.Kinesis.Serialization;
+
 namespace Amazon.Kinesis.Tests;
 
 public class DescribeStreamResultTests
@@ -7,7 +9,7 @@ public class DescribeStreamResultTests
     [Fact]
     public void CanDeserialize()
     {
-        var result = JsonSerializer.Deserialize<DescribeStreamResult>(
+        DescribeStreamResult? result = JsonSerializer.Deserialize(
             """
             {
                 "StreamDescription": {
@@ -39,8 +41,9 @@ public class DescribeStreamResultTests
                 "StreamStatus": "ACTIVE"
                 }
             }
-            """);
+            """, KinesisSerializerContext.Default.DescribeStreamResult);
 
+        Assert.NotNull(result);
         Assert.False(result.StreamDescription.HasMoreShards);
         Assert.Equal("shardId-000000000000", result.StreamDescription.Shards[0].ShardId);
         Assert.Equal("1", result.StreamDescription.Shards[0].HashKeyRange.EndingHashKey);

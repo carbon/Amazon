@@ -4,6 +4,8 @@ namespace Amazon.Kinesis.Firehose;
 
 public class PutRecordRequestTests
 {
+    private static JsonSerializerOptions _indented = new() { WriteIndented = true };
+
     [Fact]
     public void CanSerialize()
     {
@@ -17,6 +19,6 @@ public class PutRecordRequestTests
                 "Data": "aGVsbG8="
               }
             }
-            """, JsonSerializer.Serialize(putRecord, new JsonSerializerOptions { WriteIndented = true }));
+            """, JsonSerializer.Serialize(putRecord, _indented));
     }
 }
