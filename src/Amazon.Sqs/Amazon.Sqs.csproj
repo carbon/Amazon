@@ -3,15 +3,14 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Sqs</AssemblyName>
     <Version>0.30.0</Version>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net8.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>IDE0090</NoWarn>
-	<IncludeSymbols>true</IncludeSymbols>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	  
     <!-- Package Details-->
-    <Authors>iamcarbon</Authors>
+    <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern library for Amazon's Simple Queue Service</Description>
     

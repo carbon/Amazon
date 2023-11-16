@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Iam</AssemblyName>
     <Version>0.14.0</Version>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

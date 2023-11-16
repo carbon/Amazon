@@ -87,7 +87,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wasabi", "Wasabi\Wasabi.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Rekognition", "Amazon.Rekognition\Amazon.Rekognition.csproj", "{52AD8A4C-F995-4926-9570-67F153852F61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Rekognition.Tests", "Amazon.Rekognition.Tests\Amazon.Rekognition.Tests.csproj", "{19D75638-C1A5-4327-9E15-5845CD02FD2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Rekognition.Tests", "Amazon.Rekognition.Tests\Amazon.Rekognition.Tests.csproj", "{19D75638-C1A5-4327-9E15-5845CD02FD2A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{17AB817F-04F3-4975-A15D-77C24089F5CD}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

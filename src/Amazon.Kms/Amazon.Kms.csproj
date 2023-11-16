@@ -3,14 +3,13 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Kms</AssemblyName>
     <Version>0.30.0</Version>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net8.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
     <!-- Package Details-->
-    <Authors>iamcarbon</Authors>
+    <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern .NET Standard library for Amazon's Key Management Service.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

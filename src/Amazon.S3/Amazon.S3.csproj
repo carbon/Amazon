@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.S3</AssemblyName>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Version>0.31.0</Version>
     <NoWarn>IDE0057</NoWarn>
     <IncludeSymbols>true</IncludeSymbols>

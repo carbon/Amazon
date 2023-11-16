@@ -2,15 +2,14 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Elb</AssemblyName>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Version>0.30.0</Version>
-    <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-	<IncludeSymbols>true</IncludeSymbols>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	  
     <!-- Package Details-->
-    <Authors>iamcarbon</Authors>
+    <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>
     <Description>A modern .NET Standard library for managing Elastic Load Balancers.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

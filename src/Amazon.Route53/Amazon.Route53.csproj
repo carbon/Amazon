@@ -3,8 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Route53</AssemblyName>
     <Version>0.12.0</Version>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net8.0</TargetFramework>
     <TreatWarningAsErrors>true</TreatWarningAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
