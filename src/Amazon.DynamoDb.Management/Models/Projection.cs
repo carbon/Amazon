@@ -8,7 +8,7 @@ public sealed class Projection
 
     public Projection(string[] nonKeyAttributes, ProjectionType type)
     {
-        NonKeyAttributes = nonKeyAttributes ?? Array.Empty<string>();
+        NonKeyAttributes = nonKeyAttributes ?? [];
         ProjectionType = type;
     }
 

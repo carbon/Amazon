@@ -9,7 +9,7 @@ public sealed class UpdateTableRequest
 {
     public UpdateTableRequest(string tableName)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentNullException.ThrowIfNullOrEmpty(tableName);
 
         TableName = tableName;
     }

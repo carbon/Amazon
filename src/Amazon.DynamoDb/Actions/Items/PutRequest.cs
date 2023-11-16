@@ -2,13 +2,8 @@
 
 namespace Amazon.DynamoDb;
 
-public sealed class PutRequest : ItemRequest
+[method: JsonConstructor]
+public sealed class PutRequest(AttributeCollection item) : ItemRequest
 {
-    [JsonConstructor]
-    public PutRequest(AttributeCollection item)
-    {
-        Item = item;
-    }
-
-    public AttributeCollection Item { get; }
+    public AttributeCollection Item { get; } = item;
 }

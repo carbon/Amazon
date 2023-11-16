@@ -14,16 +14,9 @@ public sealed class TransactGetItemRequest
     public ReturnConsumedCapacity? ReturnConsumedCapacity { get; init; }
 }
 
-public sealed class TransactGetItem
+public sealed class TransactGetItem(Get get)
 {
-    public TransactGetItem(Get get)
-    {
-        ArgumentNullException.ThrowIfNull(get);
-
-        Get = get;
-    }
-
-    public Get Get { get; }
+    public Get Get { get; } = get ?? throw new ArgumentNullException(nameof(get));
 }
 
 public sealed class Get

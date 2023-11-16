@@ -16,7 +16,7 @@ public class DynamoTable<T, TKey>
     private readonly string _tableName;
     private readonly DynamoDbClient _client;
 
-    private static readonly DatasetInfo metadata = DatasetInfo.Get<T>();
+    private static readonly DatasetInfo s_metadata = DatasetInfo.Get<T>();
 
     // TODO: Histogram of consumed capacity
 
@@ -30,11 +30,11 @@ public class DynamoTable<T, TKey>
     { }
 
     public DynamoTable(IAwsCredential credential)
-        : this(metadata.Name, new DynamoDbClient(AwsRegion.USEast1, credential))
+        : this(s_metadata.Name, new DynamoDbClient(AwsRegion.USEast1, credential))
     { }
 
     public DynamoTable(DynamoDbClient client)
-        : this(metadata.Name, client)
+        : this(s_metadata.Name, client)
     { }
 
     public DynamoTable(string tableName, DynamoDbClient client)
@@ -49,7 +49,7 @@ public class DynamoTable<T, TKey>
         // [ ] validate the key properties
     }
 
-    public IKeyInfo PrimaryKey => metadata.PrimaryKey;
+    public IKeyInfo PrimaryKey => s_metadata.PrimaryKey;
 
     public async Task<bool> ExistsAsync(TKey keyValue)
     {
@@ -107,7 +107,7 @@ public class DynamoTable<T, TKey>
 
                 if (result.Item is null) return null;
 
-                return result.Item.As<T>(metadata);
+                return result.Item.As<T>(s_metadata);
             }
             catch (DynamoDbException ex) when (ex.IsTransient)
             {
@@ -127,9 +127,9 @@ public class DynamoTable<T, TKey>
 
     public async Task<IReadOnlyList<T>> FindAllAsync(params Dictionary<string, DbValue>[] keys)
     {
-        if (keys is null || keys.Length == 0)
+        if (keys is null || keys.Length is 0)
         {
-            return Array.Empty<T>();
+            return [];
         }
 
         var request = new BatchGetItemRequest(new TableKeys(_tableName, keys));
@@ -142,7 +142,7 @@ public class DynamoTable<T, TKey>
 
         for (int i = 0; i < items.Length; i++)
         {
-            items[i] = r0[i].As<T>(metadata);
+            items[i] = r0[i].As<T>(s_metadata);
         }
 
         return items;
@@ -246,7 +246,7 @@ public class DynamoTable<T, TKey>
 
             foreach (AttributeCollection item in result.Items)
             {
-                yield return item.As<T>(metadata);
+                yield return item.As<T>(s_metadata);
             }
         }
         while (result.LastEvaluatedKey is not null);
@@ -284,7 +284,7 @@ public class DynamoTable<T, TKey>
 
     public Task<PutItemResult> PutAsync(T entity)
     {
-        var request = new PutItemRequest(_tableName, AttributeCollection.FromObject(entity, metadata));
+        var request = new PutItemRequest(_tableName, AttributeCollection.FromObject(entity, s_metadata));
 
         return _client.PutItemUsingRetryPolicyAsync(request, retryPolicy);
     }
@@ -292,7 +292,7 @@ public class DynamoTable<T, TKey>
     // Conditional put
     public Task<PutItemResult> PutAsync(T entity, params Expression[] conditions)
     {
-        var request = new PutItemRequest(_tableName, AttributeCollection.FromObject(entity, metadata));
+        var request = new PutItemRequest(_tableName, AttributeCollection.FromObject(entity, s_metadata));
 
         if (conditions is not null)
         {
@@ -429,7 +429,7 @@ public class DynamoTable<T, TKey>
         // Up to 25 items put or delete operations, with the request size not exceeding 1 MB.
 
         var putRequests = entities
-            .Select(e => (ItemRequest)new PutRequest(AttributeCollection.FromObject(e, metadata)))
+            .Select(e => (ItemRequest)new PutRequest(AttributeCollection.FromObject(e, s_metadata)))
             .ToList();
 
         var tableBatch = new TableRequests(_tableName, putRequests);

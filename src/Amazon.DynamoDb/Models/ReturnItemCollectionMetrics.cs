@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<ReturnItemCollectionMetrics>))]
 public enum ReturnItemCollectionMetrics
 {
     SIZE = 1,

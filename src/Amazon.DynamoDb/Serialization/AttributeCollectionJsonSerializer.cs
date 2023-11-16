@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb.Serialization;
 
-internal static class AttributeCollectionJsonSerializer
+internal sealed class AttributeCollectionJsonSerializer
 {
     public static AttributeCollection Read(ref Utf8JsonReader reader)
     {

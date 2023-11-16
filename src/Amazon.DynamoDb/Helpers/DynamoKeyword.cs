@@ -1,9 +1,10 @@
-﻿namespace Amazon.DynamoDb;
+﻿using System.Collections.Frozen;
+
+namespace Amazon.DynamoDb;
 
 public static class DynamoKeyword
 {
-    private static readonly HashSet<string> ReservedKeywords = new(StringComparer.OrdinalIgnoreCase)
-    {
+    private static readonly FrozenSet<string> ReservedKeywords = FrozenSet.ToFrozenSet([
         "ABORT",
         "ABSOLUTE",
         "ACTION",
@@ -577,7 +578,7 @@ public static class DynamoKeyword
         "WRITE",
         "YEAR",
         "ZONE",
-    };
+    ], StringComparer.OrdinalIgnoreCase);
 
     public static bool IsReserved(string name)
     {

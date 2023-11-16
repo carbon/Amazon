@@ -1,15 +1,8 @@
 ﻿namespace Amazon.DynamoDb.Transactions;
 
-public sealed class TransactWriteItemsRequest
+public sealed class TransactWriteItemsRequest(params TransactWriteItem[] transactItems)
 {
-    public TransactWriteItemsRequest(params TransactWriteItem[] transactItems)
-    {
-        ArgumentNullException.ThrowIfNull(transactItems);
-
-        TransactItems = transactItems;
-    }
-
-    public required TransactWriteItem[] TransactItems { get; init; }
+    public required TransactWriteItem[] TransactItems { get; init; } = transactItems;
 
     public string? ClientRequestToken { get; init; }
 

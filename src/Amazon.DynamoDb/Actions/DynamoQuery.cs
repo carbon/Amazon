@@ -88,7 +88,7 @@ public sealed class DynamoQuery
         {
             var attributeNames = ExpressionAttributeNames ?? new Dictionary<string, string>();
 
-            ExpressionAttributeValues ??= new AttributeCollection();
+            ExpressionAttributeValues ??= new();
 
             _filter = new DynamoExpression(attributeNames, ExpressionAttributeValues);
         }
@@ -99,7 +99,7 @@ public sealed class DynamoQuery
 
         }
 
-        this.FilterExpression = _filter.Text;
+        FilterExpression = _filter.Text;
 
         if (_filter.HasAttributeNames && ExpressionAttributeNames is null)
         {
@@ -116,15 +116,18 @@ public sealed class DynamoQuery
         return this;
     }
 
-    public DynamoQuery Include(params string[] values)
+    public DynamoQuery Include(ReadOnlySpan<string> values)
     {
         ExpressionAttributeNames ??= new();
 
-        var sb = StringBuilderCache.Aquire();
+        var sb = StringBuilderCache.Acquire();
 
         foreach (string value in values)
         {
-            if (sb.Length > 0) sb.Append(',');
+            if (sb.Length > 0)
+            {
+                sb.Append(',');
+            }
 
             sb.WriteName(value, ExpressionAttributeNames);
         }

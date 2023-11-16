@@ -52,13 +52,13 @@ public sealed class TableRequests
             {
                 if (property.NameEquals("PutRequest"u8))
                 {
-                    var putRequest = JsonSerializer.Deserialize(property.Value, DynamoDbSerializationContext.Default.PutRequest);
+                    var putRequest = property.Value.Deserialize(DynamoDbSerializationContext.Default.PutRequest);
 
                     requests.Add(putRequest!);
                 }
                 else if (property.NameEquals("DeleteRequest"u8))
                 {
-                    var deleteRequest = JsonSerializer.Deserialize(property.Value, DynamoDbSerializationContext.Default.DeleteRequest);
+                    var deleteRequest = property.Value.Deserialize(DynamoDbSerializationContext.Default.DeleteRequest);
 
                     requests.Add(deleteRequest!);
                 }

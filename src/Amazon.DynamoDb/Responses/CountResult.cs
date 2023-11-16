@@ -2,14 +2,9 @@
 
 namespace Amazon.DynamoDb;
 
-public sealed class CountResult
+[method: JsonConstructor]
+public sealed class CountResult(int count)
 {
-    [JsonConstructor]
-    public CountResult(int count)
-    {
-        Count = count;
-    }
-
     [JsonPropertyName("Count")]
-    public int Count { get; }
+    public int Count { get; } = count;
 }

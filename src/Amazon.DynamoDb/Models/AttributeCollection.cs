@@ -20,7 +20,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
 
     public AttributeCollection()
     {
-        _items = new Dictionary<string, DbValue>();
+        _items = [];
     }
 
     #region Add Helpers
@@ -116,7 +116,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
 
     public static AttributeCollection FromJsonElement(in JsonElement json)
     {
-        return JsonSerializer.Deserialize(json, DynamoDbSerializationContext.Default.AttributeCollection)!;
+        return json.Deserialize(DynamoDbSerializationContext.Default.AttributeCollection)!;
     }
 
     public DbValue this[string key]

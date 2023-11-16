@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
 
+using Amazon.DynamoDb.Converters;
 using Amazon.DynamoDb.Serialization;
 
 namespace Amazon.DynamoDb;
@@ -44,7 +45,7 @@ public readonly struct DbValue : IConvertible
     public DbValue(IEnumerable<DbValue> values) : this(values, DbValueType.L) { }
 
     public DbValue(ISet<string>[] values) : this(values, DbValueType.SS) { }
-	public DbValue(ISet<Int32>[] values)  : this(values, DbValueType.NS) { }
+	public DbValue(ISet<int>[] values)    : this(values, DbValueType.NS) { }
 
     public DbValue(AttributeCollection map)
     {
@@ -65,7 +66,7 @@ public readonly struct DbValue : IConvertible
 		if (type.IsEnum)
 		{
 			_kind = DbValueType.N;
-			_value = EnumConverter.Default.FromObject(value, null!).Value;
+			_value = EnumConverter.Default.FromObject(value).Value;
  
 			return;
 		}
@@ -254,7 +255,7 @@ public readonly struct DbValue : IConvertible
 
 	public readonly bool ToBoolean()
 	{
-        if (_kind == DbValueType.N)
+        if (_kind is DbValueType.N)
         {
             return ToInt() is 1;
         }

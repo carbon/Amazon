@@ -100,7 +100,7 @@ internal static class DbValueJsonSerializer
                 rentedStringList.Add(reader.GetString()!);
             }
 
-            return rentedStringList.ToArray();
+            return [.. rentedStringList];
         }
         finally
         {
@@ -131,7 +131,7 @@ internal static class DbValueJsonSerializer
                 rentedDbValueList.Add(Read(ref reader));
             }
 
-            return rentedDbValueList.ToArray();
+            return [.. rentedDbValueList];
         }
         finally
         {

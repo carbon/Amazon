@@ -56,7 +56,7 @@ public sealed class DynamoQueryExpression
 
     public Dictionary<string, string> AttributeNames { get; } = new();
 
-    public AttributeCollection AttributeValues { get; } = new AttributeCollection();
+    public AttributeCollection AttributeValues { get; } = [];
 
     public DynamoExpression KeyExpression { get; }
 

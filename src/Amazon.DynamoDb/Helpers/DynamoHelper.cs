@@ -11,10 +11,7 @@ internal static class DynamoExtensions
         {
             string key = "#" + name;
 
-            if (!map.ContainsKey(key))
-            {
-                map.Add(key, name);
-            }
+            map.TryAdd(key, name);
 
             sb.Append(key);
         }

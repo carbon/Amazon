@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Amazon.DynamoDb.Serialization;
 using Amazon.DynamoDb.Transactions;
 using Amazon.Scheduling;
 
@@ -42,7 +43,9 @@ public sealed class DynamoDbClient : AwsClient
 
     public async Task<BatchGetItemResult> BatchGetItemAsync(BatchGetItemRequest request)
     {
-        var httpRequest = Setup("BatchGetItem", JsonSerializer.SerializeToUtf8Bytes(request));
+        byte[] utf8JsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, DynamoDbSerializationContext.Default.BatchGetItemRequest);
+
+        var httpRequest = Setup("BatchGetItem", utf8JsonBytes);
 
         var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 

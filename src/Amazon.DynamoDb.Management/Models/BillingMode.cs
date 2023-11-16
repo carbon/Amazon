@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb.Models;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<BillingMode>))]
 public enum BillingMode
 {
     PROVISIONED = 1,

@@ -4,7 +4,7 @@ public sealed class DeleteGlobalSecondaryIndexAction
 {
     public DeleteGlobalSecondaryIndexAction(string indexName)
     {
-        ArgumentNullException.ThrowIfNull(indexName);
+        ArgumentException.ThrowIfNullOrEmpty(indexName);
 
         IndexName = indexName;
     }

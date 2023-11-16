@@ -1,19 +1,17 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text.Json;
 
+using Amazon.DynamoDb.Serialization;
+
 namespace Amazon.DynamoDb;
 
-public sealed class BatchGetItemResult
+public sealed class BatchGetItemResult(
+    IReadOnlyList<TableItemCollection> responses,
+    ConsumedCapacity[]? consumedCapacity = null)
 {
-    public BatchGetItemResult(IReadOnlyList<TableItemCollection> responses, ConsumedCapacity[]? consumedCapacity = null)
-    {
-        Responses = responses;
-        ConsumedCapacity = consumedCapacity;
-    }
+    public ConsumedCapacity[]? ConsumedCapacity { get; } = consumedCapacity;
 
-    public ConsumedCapacity[]? ConsumedCapacity { get; }
-
-    public IReadOnlyList<TableItemCollection> Responses { get; }
+    public IReadOnlyList<TableItemCollection> Responses { get; } = responses;
 
     public IReadOnlyList<TableKeys>? UnprocessedKeys { get; init; }
 
@@ -26,7 +24,7 @@ public sealed class BatchGetItemResult
         {
             if (property.NameEquals("ConsumedCapacity"u8))
             {
-                consumedCapacity = JsonSerializer.Deserialize<ConsumedCapacity[]>(property.Value);
+                consumedCapacity = property.Value.Deserialize(DynamoDbSerializationContext.Default.ConsumedCapacityArray);
             }
 
             else if (property.NameEquals("Responses"u8))

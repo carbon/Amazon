@@ -35,7 +35,7 @@ public sealed class DynamoExpression
 
     public string Text => sb.ToString();
 
-    public void AddRange(Expression[] expressions)
+    public void AddRange(ReadOnlySpan<Expression> expressions)
     {
         foreach (Expression expression in expressions)
         {
@@ -159,6 +159,15 @@ public sealed class DynamoExpression
     #endregion
 
     public static DynamoExpression Conjunction(params Expression[] expressions)
+    {
+        var result = new DynamoExpression();
+
+        result.AddRange(expressions);
+
+        return result;
+    }
+
+    public static DynamoExpression Conjunction(ReadOnlySpan<Expression> expressions)
     {
         var result = new DynamoExpression();
 

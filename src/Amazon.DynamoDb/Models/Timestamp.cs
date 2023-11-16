@@ -5,14 +5,9 @@ using Amazon.DynamoDb.Serialization;
 namespace Amazon.DynamoDb;
 
 [JsonConverter(typeof(TimestampConverter))]
-public readonly struct Timestamp
+public readonly struct Timestamp(double value)
 {
-    public Timestamp(double value)
-    {
-        Value = value;
-    }
-
-    public double Value { get; }
+    public double Value { get; } = value;
 
     public static implicit operator DateTime(Timestamp timestamp)
     {

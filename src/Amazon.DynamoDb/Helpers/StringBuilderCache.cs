@@ -7,13 +7,13 @@ internal static class StringBuilderCache
     [ThreadStatic]
     static StringBuilder? cachedInstance;
 
-    public static StringBuilder Aquire()
+    public static StringBuilder Acquire()
     {
         var sb = cachedInstance;
 
         if (sb is null)
         {
-            return new StringBuilder(100);
+            return new StringBuilder(128);
         }
 
         sb.Length = 0;

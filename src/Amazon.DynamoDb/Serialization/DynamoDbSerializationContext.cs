@@ -8,6 +8,7 @@ namespace Amazon.DynamoDb.Serialization;
 [JsonSerializable(typeof(PutRequest))]
 [JsonSerializable(typeof(DeleteRequest))]
 [JsonSerializable(typeof(BatchGetItemRequest))]
+[JsonSerializable(typeof(ConsumedCapacity[]))]
 public partial class DynamoDbSerializationContext : JsonSerializerContext
 {
 }

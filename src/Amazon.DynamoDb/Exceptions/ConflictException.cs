@@ -2,8 +2,7 @@
 
 namespace Amazon.DynamoDb;
 
-public sealed class ConflictException : DynamoDbException
+public sealed class ConflictException(string message, HttpStatusCode statusCode) 
+    : DynamoDbException(message, type: "ConditionalCheckFailedException", statusCode: statusCode)
 {
-    public ConflictException(string message, HttpStatusCode statusCode)
-        : base(message, type: "ConditionalCheckFailedException", statusCode: statusCode) { }
 }

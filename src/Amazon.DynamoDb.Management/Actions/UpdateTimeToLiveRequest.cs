@@ -1,6 +1,4 @@
-﻿using System;
-
-using Amazon.DynamoDb.Models;
+﻿using Amazon.DynamoDb.Models;
 
 namespace Amazon.DynamoDb;
 
@@ -11,7 +9,7 @@ public sealed class UpdateTimeToLiveRequest
         string attributeName,
         bool enabled)
     {
-        ArgumentNullException.ThrowIfNull(tableName);
+        ArgumentException.ThrowIfNullOrEmpty(tableName);
 
         TableName = tableName;
         TimeToLiveSpecification = new TimeToLiveSpecification(attributeName, enabled);

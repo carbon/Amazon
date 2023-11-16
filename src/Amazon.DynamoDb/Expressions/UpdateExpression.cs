@@ -119,7 +119,7 @@ public sealed class UpdateExpression
        | DELETE delete-action , ...  
        */
 
-        var sb = StringBuilderCache.Aquire();
+        var sb = StringBuilderCache.Acquire();
 
         AppendSet(sb, set);
         AppendSet(sb, remove);

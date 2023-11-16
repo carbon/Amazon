@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb.Models;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<KeyType>))]
 public enum KeyType
 {
     HASH = 1,

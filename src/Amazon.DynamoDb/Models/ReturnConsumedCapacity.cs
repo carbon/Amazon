@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<ReturnConsumedCapacity>))]
 public enum ReturnConsumedCapacity
 {
     INDEXES = 1,
