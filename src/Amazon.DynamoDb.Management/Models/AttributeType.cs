@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb.Models;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<AttributeType>))]
 public enum AttributeType
 {
     Unknown = 0,

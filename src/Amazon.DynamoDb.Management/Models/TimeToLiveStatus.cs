@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb.Models;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<TimeToLiveStatus>))]
 public enum TimeToLiveStatus
 {
     ENABLING = 1,

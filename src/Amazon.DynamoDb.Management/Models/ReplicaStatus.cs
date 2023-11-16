@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb.Models;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<ReplicaStatus>))]
 public enum ReplicaStatus
 {
     CREATING = 1,

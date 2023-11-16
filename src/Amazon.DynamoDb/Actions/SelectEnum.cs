@@ -2,7 +2,7 @@
 
 namespace Amazon.DynamoDb;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<SelectEnum>))]
 public enum SelectEnum
 {
     Unknown = 0,

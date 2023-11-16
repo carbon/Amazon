@@ -2,7 +2,7 @@
 
 namespace Amazon.Kinesis.Firehose;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<DeliveryStreamType>))]
 public enum DeliveryStreamType
 {
     DirectPut             = 1,
