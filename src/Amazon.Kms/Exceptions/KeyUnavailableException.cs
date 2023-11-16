@@ -4,10 +4,8 @@ using Amazon.Scheduling;
 
 namespace Amazon.Kms.Exceptions;
 
-public sealed class KeyUnavailableException : KmsException, IException
+public sealed class KeyUnavailableException(KmsError error, HttpStatusCode statusCode) 
+    : KmsException(error, statusCode), IException
 {
-    public KeyUnavailableException(KmsError error, HttpStatusCode statusCode)
-        : base(error, statusCode) { }
-
     public bool IsTransient => true;
 }

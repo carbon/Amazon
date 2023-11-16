@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kms;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Kms;
 
 public sealed class CreateGrantRequest : KmsRequest
 {
@@ -14,17 +16,21 @@ public sealed class CreateGrantRequest : KmsRequest
     /// If you need to mitigate this delay, a grant token is a type of identifier that is 
     /// designed to let the permissions in the grant take effect immediately.
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string[]? GrantTokens { get; init; }
 
     /// <summary>
     /// A friendly name for identifying the grant. 
     /// Use this value to prevent unintended creation of duplicate grants when retrying this request.
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Name { get; init; }
 
     public required string[] Operations { get; init; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public GrantConstraints? Constraints { get; init; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? RetiringPrincipal { get; init; }
 }

@@ -2,7 +2,7 @@
 
 namespace Amazon.Kms;
 
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<KeySpec>))]
 public enum KeySpec
 {
     AES_256 = 1,

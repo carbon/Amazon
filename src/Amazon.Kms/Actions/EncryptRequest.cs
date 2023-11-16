@@ -29,6 +29,7 @@ public sealed class EncryptRequest : KmsRequest
         GrantTokens = grantTokens;
     }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public EncryptionAlgorithm? EncryptionAlgorithm { get; init; }
 
     /// <summary>
@@ -43,6 +44,7 @@ public sealed class EncryptRequest : KmsRequest
     /// is exactly the same as the value you passed during encryption
     /// and the ciphertext has not been tampered with. 
     /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IReadOnlyDictionary<string, string>? EncryptionContext { get; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

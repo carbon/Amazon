@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kms;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Kms;
 
 public sealed class DecryptRequest : KmsRequest
 {
@@ -27,7 +29,9 @@ public sealed class DecryptRequest : KmsRequest
     // [MaxSize(6144)]
     public byte[] CiphertextBlob { get; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IReadOnlyDictionary<string, string>? EncryptionContext { get; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string[]? GrantTokens { get; }
 }

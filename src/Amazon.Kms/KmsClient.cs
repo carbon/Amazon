@@ -7,16 +7,14 @@ using System.Text.Json.Serialization;
 
 using Amazon.Exceptions;
 using Amazon.Kms.Exceptions;
+using Amazon.Kms.Serialization;
 
 namespace Amazon.Kms;
 
-public sealed class KmsClient : AwsClient
+public sealed class KmsClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Kms, region, credential)
 {
     public const string Version = "2014-11-01";
-
-    public KmsClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.Kms, region, credential)
-    { }
 
     #region Aliases
 
@@ -72,7 +70,7 @@ public sealed class KmsClient : AwsClient
 
     #region Helpers
 
-    private static readonly JsonSerializerOptions jso = new() {
+    private static readonly JsonSerializerOptions s_jso = new() {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
 
@@ -80,7 +78,7 @@ public sealed class KmsClient : AwsClient
         where TRequest : KmsRequest
         where TResult : KmsResponse
     {
-        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, jso);
+        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, s_jso);
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
         {
@@ -119,7 +117,7 @@ public sealed class KmsClient : AwsClient
 
         if (responseText.Length > 0 && responseText[0] is (byte)'{')
         {
-            var error = JsonSerializer.Deserialize<KmsError>(responseText)!;
+            KmsError error = JsonSerializer.Deserialize(responseText, KmsSerializerContext.Default.KmsError)!;
 
             return error.Type switch
             {
