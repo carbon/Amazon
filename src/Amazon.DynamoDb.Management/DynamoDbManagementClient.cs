@@ -1,18 +1,12 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Amazon.DynamoDb;
 
 public sealed class DynamoDbManagementClient : AwsClient
 {
     private const string TargetPrefix = "DynamoDB_20120810";
-
-    private static readonly JsonSerializerOptions s_serializerOptions = new()
-    {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-    };
 
     public DynamoDbManagementClient(AwsRegion region, IAwsCredential credential)
         : base(AwsService.DynamoDb, region, credential)
@@ -70,8 +64,7 @@ public sealed class DynamoDbManagementClient : AwsClient
             throw await DynamoDbException.FromResponseAsync(response).ConfigureAwait(false);
         }
 
-
-        var result = await response.Content.ReadFromJsonAsync<TResult>(s_serializerOptions).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync<TResult>(JsonSerializerOptions.Default).ConfigureAwait(false);
 
         return result!;
     }

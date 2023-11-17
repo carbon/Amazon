@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 using Amazon.DynamoDb.Serialization;
 
@@ -15,7 +14,7 @@ public sealed class BatchGetItemResult(
 
     public IReadOnlyList<TableKeys>? UnprocessedKeys { get; init; }
 
-    public static BatchGetItemResult FromJsonElement(in JsonElement json)
+    public static BatchGetItemResult Deserialize(in JsonElement json)
     {
         IReadOnlyList<TableItemCollection>? responses = null;
         ConsumedCapacity[]? consumedCapacity = null;
@@ -37,7 +36,7 @@ public sealed class BatchGetItemResult(
 
                     foreach (JsonElement itemEl in tableEl.Value.EnumerateArray())
                     {
-                        table.Add(AttributeCollection.FromJsonElement(itemEl));
+                        table.Add(AttributeCollection.Deserialize(itemEl));
                     }
 
                     collections.Add(table);
@@ -51,9 +50,4 @@ public sealed class BatchGetItemResult(
 
         return new BatchGetItemResult(responses ?? [], consumedCapacity);
     }
-}
-
-public sealed class TableItemCollection(string name) : Collection<AttributeCollection>
-{
-    public string Name { get; } = name;
 }

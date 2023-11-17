@@ -13,10 +13,6 @@ public sealed class DynamoDbClient : AwsClient
 {
     private const string TargetPrefix = "DynamoDB_20120810";
 
-    private static readonly JsonSerializerOptions s_jso = new() {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-    };
-
     public DynamoDbClient(AwsRegion region, IAwsCredential credential)
         : base(AwsService.DynamoDb, region, credential)
     {
@@ -49,7 +45,7 @@ public sealed class DynamoDbClient : AwsClient
 
         var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
-        return BatchGetItemResult.FromJsonElement(json);
+        return BatchGetItemResult.Deserialize(json);
     }
 
     public Task<DeleteItemResult> DeleteItemAsync(DeleteItemRequest request)
@@ -85,7 +81,7 @@ public sealed class DynamoDbClient : AwsClient
 
         var json = await SendAndReadJsonElementAsync(httpRequest).ConfigureAwait(false);
 
-        return BatchWriteItemResult.FromJsonElement(json);
+        return BatchWriteItemResult.Deserialize(json);
     }
 
     public async Task<PutItemResult> PutItemAsync(PutItemRequest request)
@@ -240,7 +236,7 @@ public sealed class DynamoDbClient : AwsClient
             throw await DynamoDbException.FromResponseAsync(response).ConfigureAwait(false);
         }
 
-        var result = await response.Content.ReadFromJsonAsync<TResult>(s_jso).ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync<TResult>(JsonSerializerOptions.Default).ConfigureAwait(false);
 
         return result!;
     }

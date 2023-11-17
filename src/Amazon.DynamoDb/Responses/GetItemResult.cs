@@ -2,9 +2,7 @@
 
 public sealed class GetItemResult : IConsumedResources
 {
-#nullable disable
-    public AttributeCollection Item { get; init; }
-#nullable enable
+    public required AttributeCollection Item { get; init; }
 
     public ConsumedCapacity? ConsumedCapacity { get; init; }
 }

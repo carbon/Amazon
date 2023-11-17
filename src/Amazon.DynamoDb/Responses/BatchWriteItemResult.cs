@@ -1,28 +1,19 @@
-﻿#nullable disable
-
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace Amazon.DynamoDb;
 
-public sealed class BatchWriteItemResult // : IConsumedResources
+public sealed class BatchWriteItemResult(List<TableRequests> unprocessedItems) // : IConsumedResources
 {
-    public BatchWriteItemResult() { }
-
-    public BatchWriteItemResult(List<TableRequests> unprocessedItems)
-    {
-        UnprocessedItems = unprocessedItems;
-    }
-
     // public ConsumedCapacity[] ConsumedCapacity { get; init; }
 
-    public List<TableRequests> UnprocessedItems { get; init; }
+    public List<TableRequests> UnprocessedItems { get; } = unprocessedItems;
 
-    public static BatchWriteItemResult FromJsonElement(in JsonElement json)
+    public static BatchWriteItemResult Deserialize(in JsonElement json)
     {
         var unprocessed = new List<TableRequests>();
 
         /*
-        if (json.TryGetValue("ConsumedCapacity", out var consumedCapacityEl)) // Array
+        if (json.TryGetValue(nameof(ConsumedCapacity), out var consumedCapacityEl)) // Array
         {
             foreach (var el in consumedCapacityNode.EnumerateArray())
             {

@@ -81,7 +81,7 @@ public class BatchGetItemResultTests
             }
             """);
 
-        var result = BatchGetItemResult.FromJsonElement(doc.RootElement);
+        var result = BatchGetItemResult.Deserialize(doc.RootElement);
 
         Assert.Equal(2, result.Responses.Count);
         Assert.Equal(3, result.Responses[0].Count);

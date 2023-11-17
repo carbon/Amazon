@@ -26,4 +26,4 @@ public sealed class TransactionConsumedCapacity
 
         public float WriteCapacityUnits { get; init; }
     }
-}    
+}

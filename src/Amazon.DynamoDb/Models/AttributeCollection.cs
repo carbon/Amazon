@@ -114,7 +114,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
         _items[name] = value;
     }
 
-    public static AttributeCollection FromJsonElement(in JsonElement json)
+    public static AttributeCollection Deserialize(in JsonElement json)
     {
         return json.Deserialize(DynamoDbSerializationContext.Default.AttributeCollection)!;
     }

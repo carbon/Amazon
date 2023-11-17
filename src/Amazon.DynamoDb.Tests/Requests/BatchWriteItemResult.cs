@@ -73,7 +73,7 @@ public class DynamoBatchTests
             }
             """);
 
-        var result = BatchWriteItemResult.FromJsonElement(doc.RootElement);
+        var result = BatchWriteItemResult.Deserialize(doc.RootElement);
 
         Assert.Single(result.UnprocessedItems);
         Assert.Equal(3, result.UnprocessedItems[0].Requests.Count);

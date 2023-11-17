@@ -7,4 +7,8 @@ public readonly struct ConsumedCapacity
     public string TableName { get; init; }
 
     public float CapacityUnits { get; init; }
+
+    // GlobalSecondaryIndexes
+    // LocalSecondaryIndexes
+    // Table
 }
