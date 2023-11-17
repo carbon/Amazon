@@ -25,6 +25,6 @@ public sealed class Ec2Exception : AwsException
             return errors[0].Message;
         }
 
-        return "Multiple errors occured processing the request. See inner Errors[] for details.";
+        return "Multiple errors occurred processing the request. See inner Errors[] for details.";
     }
 }

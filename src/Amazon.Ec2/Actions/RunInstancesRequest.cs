@@ -21,7 +21,7 @@ public sealed class RunInstancesRequest : IEc2Request
         InstanceMetadataOptionsRequest? metadataOptions = null,
         string[]? securityGroupIds = null)
     {
-        Ensure.AtLeast(minCount, 1);
+        ArgumentOutOfRangeException.ThrowIfLessThan(minCount, 1);
         Ensure.ValueBetween(maxCount, 1, 100);
 
         ImageId = imageId;
@@ -116,6 +116,6 @@ public sealed class RunInstancesRequest : IEc2Request
 
     List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
-        return Ec2RequestHelper.ToParams("RunInstances", this);
+        return Ec2RequestSerializer.ToParams("RunInstances", this);
     }
 }

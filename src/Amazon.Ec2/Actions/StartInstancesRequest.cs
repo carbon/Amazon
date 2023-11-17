@@ -18,6 +18,6 @@ public sealed class StartInstancesRequest : IEc2Request
 
     List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
-        return Ec2RequestHelper.ToParams("StartInstances", this);
+        return Ec2RequestSerializer.ToParams("StartInstances", this);
     }
 }

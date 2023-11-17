@@ -19,6 +19,6 @@ public sealed class TerminateInstancesRequest : IEc2Request
 
     List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
-        return Ec2RequestHelper.ToParams("TerminateInstances", this);
+        return Ec2RequestSerializer.ToParams("TerminateInstances", this);
     }
 }

@@ -20,6 +20,6 @@ public sealed class StopInstancesRequest : IEc2Request
 
     List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
-        return Ec2RequestHelper.ToParams("StopInstances", this);
+        return Ec2RequestSerializer.ToParams("StopInstances", this);
     }
 }

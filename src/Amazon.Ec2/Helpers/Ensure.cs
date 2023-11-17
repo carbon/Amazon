@@ -6,7 +6,7 @@ namespace Amazon.Ec2;
 
 internal static class Ensure
 {
-    public static void ValueBetween(int argument, int min, int max, [CallerArgumentExpression("argument")] string? paramName = null)
+    public static void ValueBetween(int argument, int min, int max, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
     {
         if (argument < min || argument > max)
         {
@@ -14,15 +14,7 @@ internal static class Ensure
         }
     }
 
-    public static void AtLeast(int argument, int value, [CallerArgumentExpression("argument")] string? paramName = null)
-    {
-        if (argument < value)
-        {
-            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, $"Must be at least {value}. Was {argument}."), paramName);
-        }
-    }
-
-    public static void NotEmpty<T>([NotNull] T[]? argument, [CallerArgumentExpression("argument")] string? paramName = null)
+    public static void NotEmpty<T>([NotNull] T[]? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
     {
         if (argument is null)
         {

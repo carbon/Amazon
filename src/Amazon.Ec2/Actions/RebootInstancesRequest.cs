@@ -18,6 +18,6 @@ public sealed class RebootInstancesRequest : IEc2Request
 
      List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
-        return Ec2RequestHelper.ToParams("RebootInstances", this);
+        return Ec2RequestSerializer.ToParams("RebootInstances", this);
     }
 }
