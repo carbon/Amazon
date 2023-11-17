@@ -2,12 +2,11 @@
 
 namespace Amazon.Rekognition;
 
-[method:JsonConstructor]
-public sealed class ImageQuality(double brightness, double sharpness)
+public sealed class ImageQuality
 {
     [JsonPropertyName("Brightness")]
-    public double Brightness { get; } = brightness;
+    public double Brightness { get; init; }
 
     [JsonPropertyName("Sharpness")]
-    public double Sharpness { get; } = sharpness;
+    public double Sharpness { get; init; }
 }

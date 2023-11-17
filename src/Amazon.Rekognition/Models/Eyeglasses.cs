@@ -1,11 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Amazon.Rekognition;
 
-namespace Amazon.Rekognition;
-
-[method: JsonConstructor]
-public sealed class Eyeglasses(bool value, double confidence)
+public sealed class Eyeglasses
 {
-    public bool Value { get; } = value;
+    public bool Value { get; init; }
 
-    public double Confidence { get; } = confidence;
+    public double Confidence { get; init; }
 }

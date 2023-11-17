@@ -2,7 +2,7 @@
 
 namespace Amazon.Rekognition;
 
-public struct DominantColor
+public readonly struct DominantColor
 {
     public int Red { get; init; }
 
@@ -18,5 +18,5 @@ public struct DominantColor
 
     public string SimplifiedColor { get; init; }
 
-    internal readonly (int, int, int) GetRGB() => (Red, Green, Blue);
+    internal (int, int, int) GetRGB() => (Red, Green, Blue);
 }
