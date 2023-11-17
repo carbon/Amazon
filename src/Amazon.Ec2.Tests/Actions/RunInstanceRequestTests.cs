@@ -22,7 +22,7 @@ public class RunInstanceRequestTests
     [Fact]
     public void ThrowsWhenMinCountLessThan1()
     {
-        Assert.Throws<ArgumentException>(() => new RunInstancesRequest("", "", 0, 100));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new RunInstancesRequest("", "", 0, 100));
     }
 
     [Fact]

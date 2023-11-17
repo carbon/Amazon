@@ -1,4 +1,4 @@
-﻿namespace Amazon.Ec2.Tests;
+﻿namespace Amazon.Ec2.Responses.Tests;
 
 public class StopInstancesResponseTest
 {

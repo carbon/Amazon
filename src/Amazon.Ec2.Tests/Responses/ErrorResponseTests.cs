@@ -1,9 +1,8 @@
 ﻿using System.Net;
 
 using Amazon.Ec2.Exceptions;
-using Amazon.Ec2.Responses;
 
-namespace Amazon.Ec2.Tests.Responses;
+namespace Amazon.Ec2.Responses.Tests;
 
 public class ErrorResponseTests
 {
