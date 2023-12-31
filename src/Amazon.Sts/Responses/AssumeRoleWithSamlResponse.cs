@@ -1,11 +1,9 @@
-﻿#nullable disable
-
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Sts;
 
 public sealed class AssumeRoleWithSamlResponse : IStsResponse
 {
     [XmlElement] 
-    public AssumeRoleResult AssumeRoleResult { get; set; }
+    public required AssumeRoleResult AssumeRoleResult { get; init; }
 }

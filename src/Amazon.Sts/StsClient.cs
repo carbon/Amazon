@@ -1,21 +1,16 @@
 ﻿using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 using Amazon.Sts.Exceptions;
 using Amazon.Sts.Serialization;
 
 namespace Amazon.Sts;
 
-public sealed class StsClient : AwsClient
+public sealed class StsClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Sts, region, credential)
 {
     public const string Version = "2011-06-15";
     public const string Namespace = "https://sts.amazonaws.com/doc/2011-06-15/";
-
-    public StsClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.Sts, region, credential)
-    {
-    }
 
     public Task<AssumeRoleResponse> AssumeRoleAsync(AssumeRoleRequest request)
     {

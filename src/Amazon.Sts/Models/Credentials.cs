@@ -1,22 +1,20 @@
-﻿#nullable disable
-
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Sts;
 
 public sealed class Credentials
 {
     [XmlElement]
-    public string SessionToken { get; init; }
+    public required string AccessKeyId { get; init; }
 
     [XmlElement]
-    public string SecretAccessKey { get; init; }
+    public required string SecretAccessKey { get; init; }
 
     [XmlElement]
-    public DateTime Expiration { get; init; }
+    public required DateTime Expiration { get; init; }
 
     [XmlElement]
-    public string AccessKeyId { get; init; }
+    public required string SessionToken { get; init; }
 
     public TimeSpan ExpiresIn => Expiration - DateTime.UtcNow;
 }

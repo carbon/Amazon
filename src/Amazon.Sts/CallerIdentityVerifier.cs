@@ -1,6 +1,5 @@
 ﻿using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 using Amazon.Sts.Exceptions;
 using Amazon.Sts.Serialization;
@@ -12,7 +11,8 @@ public sealed class CallerIdentityVerifier
     private readonly HttpClient _httpClient = new () {
         DefaultRequestHeaders = {
             { "User-Agent", "Carbon/4" }
-        }
+        },
+        Timeout = TimeSpan.FromSeconds(30)
     };
                 
     public async Task<GetCallerIdentityResult> VerifyCallerIdentityAsync(CallerIdentityVerificationParameters token)

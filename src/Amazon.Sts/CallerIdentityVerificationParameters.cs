@@ -1,14 +1,14 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace Amazon.Sts;
 
 public sealed class CallerIdentityVerificationParameters
 {
-#nullable disable
     public CallerIdentityVerificationParameters() { }
-#nullable enable
 
+    [SetsRequiredMembers]
     public CallerIdentityVerificationParameters(string url, IReadOnlyDictionary<string, string> headers, string body)
     {
         ArgumentException.ThrowIfNullOrEmpty(url);
@@ -21,16 +21,16 @@ public sealed class CallerIdentityVerificationParameters
     }
 
     [JsonPropertyName("url")]
-    public string Url { get; set; }
+    public required string Url { get; init; }
 
     // includes the Authentication Header
 
     [JsonPropertyName("headers")]
-    public IReadOnlyDictionary<string, string> Headers { get; set; }
+    public required IReadOnlyDictionary<string, string> Headers { get; init; }
 
-    // Always POST
+    // application/x-www-form-urlencoded encoded
     [JsonPropertyName("body")]
-    public string Body { get; set; }
+    public required string Body { get; init; }
 
     public TimeSpan GetAge()
     {

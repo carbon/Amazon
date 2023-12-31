@@ -5,18 +5,16 @@ namespace Amazon.Sts;
 public sealed class AssumeRoleResult
 {
     [XmlElement]
-    public string? Issuer { get; init; }
+    public required Credentials Credentials { get; init; }
 
+    [XmlElement]
+    public required AssumedRoleUser AssumedRoleUser { get; init; }
+
+    /// <summary>
+    /// The source identity specified by the principal that is calling the AssumeRole operation.
+    /// </summary>
     [XmlElement]
     public string? SourceIdentity { get; init; }
-
-#nullable disable
-
-    [XmlElement]
-    public Credentials Credentials { get; init; }
-
-    [XmlElement]
-    public AssumedRoleUser AssumedRoleUser { get; init; }
 
     [XmlElement]
     public int PackedPolicySize { get; init; }
