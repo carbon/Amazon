@@ -1,5 +1,7 @@
 ﻿#nullable disable
 
+using System.Text.Json.Serialization;
+
 namespace Amazon.Kms;
 
 public sealed class Grant
@@ -18,6 +20,7 @@ public sealed class Grant
 
     public string Name { get; init; }
 
+    [JsonPropertyName("Operations")]
     public string[] Operations { get; init; }
 
     // UnixTime seconds

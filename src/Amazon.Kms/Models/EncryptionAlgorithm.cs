@@ -1,5 +1,8 @@
-﻿namespace Amazon.Kms;
+﻿using System.Text.Json.Serialization;
 
+namespace Amazon.Kms;
+
+[JsonConverter(typeof(JsonStringEnumConverter<EncryptionAlgorithm>))]
 public enum EncryptionAlgorithm
 {
     SYMMETRIC_DEFAULT  = 1,

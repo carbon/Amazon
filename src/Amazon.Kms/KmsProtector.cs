@@ -23,7 +23,7 @@ public sealed class KmsProtector
     {
         var request = new EncryptRequest(_keyId, plaintext, GetEncryptionContext(aad));
 
-        EncryptResponse result = await _client.EncryptAsync(request).ConfigureAwait(false);
+        EncryptResult result = await _client.EncryptAsync(request).ConfigureAwait(false);
 
         return result.CiphertextBlob;
     }
@@ -39,7 +39,7 @@ public sealed class KmsProtector
         return result.Plaintext;
     }
 
-    public async Task<GenerateDataKeyResponse> GenerateKeyAsync(
+    public async Task<GenerateDataKeyResult> GenerateKeyAsync(
         IEnumerable<KeyValuePair<string, string>>? context = null)
     {
         var result = await _client.GenerateDataKeyAsync(new GenerateDataKeyRequest(

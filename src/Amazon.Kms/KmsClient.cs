@@ -18,52 +18,52 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
 
     #region Aliases
 
-    public Task<CreateAliasResponse> CreateAliasAsync(CreateAliasRequest request)
+    public Task<CreateAliasResult> CreateAliasAsync(CreateAliasRequest request)
     {
-        return SendAsync<CreateAliasRequest, CreateAliasResponse>("CreateAlias", request);
+        return SendAsync<CreateAliasRequest, CreateAliasResult>("CreateAlias", request);
     }
 
     #endregion
 
     #region Grants
 
-    public Task<CreateGrantResponse> CreateGrantAsync(CreateGrantRequest request)
+    public Task<CreateGrantResult> CreateGrantAsync(CreateGrantRequest request)
     {
-        return SendAsync<CreateGrantRequest, CreateGrantResponse>("CreateGrant", request);
+        return SendAsync<CreateGrantRequest, CreateGrantResult>("CreateGrant", request);
     }
 
-    public Task<RetireGrantResponse> RetireGrantAsync(RetireGrantRequest request)
+    public Task RetireGrantAsync(RetireGrantRequest request)
     {
-        return SendAsync<RetireGrantRequest, RetireGrantResponse>("RetireGrant", request);
+        return SendAsync("RetireGrant", request);
     }
 
-    public Task<ListGrantsResponse> ListGrantsAsync(ListGrantsRequest request)
+    public Task<ListGrantsResult> ListGrantsAsync(ListGrantsRequest request)
     {
-        return SendAsync<ListGrantsRequest, ListGrantsResponse>("ListGrants", request);
+        return SendAsync<ListGrantsRequest, ListGrantsResult>("ListGrants", request);
     }
 
     #endregion
 
-    public Task<EncryptResponse> EncryptAsync(EncryptRequest request)
+    public Task<EncryptResult> EncryptAsync(EncryptRequest request)
     {
-        return SendAsync<EncryptRequest, EncryptResponse>("Encrypt", request);
+        return SendAsync<EncryptRequest, EncryptResult>("Encrypt", request);
     }
 
-    public Task<DecryptResponse> DecryptAsync(DecryptRequest request)
+    public Task<DecryptResult> DecryptAsync(DecryptRequest request)
     {
-        return SendAsync<DecryptRequest, DecryptResponse>("Decrypt", request);
+        return SendAsync<DecryptRequest, DecryptResult>("Decrypt", request);
     }
 
     #region Data Keys
 
-    public Task<GenerateDataKeyResponse> GenerateDataKeyAsync(GenerateDataKeyRequest request)
+    public Task<GenerateDataKeyResult> GenerateDataKeyAsync(GenerateDataKeyRequest request)
     {
-        return SendAsync<GenerateDataKeyRequest, GenerateDataKeyResponse>("GenerateDataKey", request);
+        return SendAsync<GenerateDataKeyRequest, GenerateDataKeyResult>("GenerateDataKey", request);
     }
 
-    public Task<GenerateDataKeyResponse> GenerateDataKeyWithoutPlaintextAsync(GenerateDataKeyRequest request)
+    public Task<GenerateDataKeyResult> GenerateDataKeyWithoutPlaintextAsync(GenerateDataKeyRequest request)
     {
-        return SendAsync<GenerateDataKeyRequest, GenerateDataKeyResponse>("GenerateDataKeyWithoutPlaintext", request);
+        return SendAsync<GenerateDataKeyRequest, GenerateDataKeyResult>("GenerateDataKeyWithoutPlaintext", request);
     }
 
     #endregion
@@ -76,7 +76,7 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
 
     private async Task<TResult> SendAsync<TRequest, TResult>(string action, TRequest request)
         where TRequest : KmsRequest
-        where TResult : KmsResponse
+        where TResult : KmsResult
     {
         byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, s_jso);
 
@@ -111,13 +111,39 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
         return result!;
     }
 
+    private async Task SendAsync<TRequest>(string action, TRequest request)
+      where TRequest : KmsRequest
+    {
+        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, s_jso);
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
+            Headers = {
+                { "x-amz-target", $"TrentService.{action}" }
+            },
+            Content = new ByteArrayContent(jsonBytes) {
+                Headers = {
+                    { "Content-Type", "application/x-amz-json-1.1" }
+                }
+            }
+        };
+
+        await SignAsync(httpRequest).ConfigureAwait(false);
+
+        using var response = await _httpClient.SendAsync(httpRequest).ConfigureAwait(false);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await GetExceptionFromResponseAsync(response).ConfigureAwait(false);
+        }
+    }
+
     private static async Task<Exception> GetExceptionFromResponseAsync(HttpResponseMessage response)
     {
-        byte[] responseText = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+        byte[] responseBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
-        if (responseText.Length > 0 && responseText[0] is (byte)'{')
+        if (responseBytes.Length > 0 && responseBytes[0] is (byte)'{')
         {
-            KmsError error = JsonSerializer.Deserialize(responseText, KmsSerializerContext.Default.KmsError)!;
+            KmsError error = JsonSerializer.Deserialize(responseBytes, KmsSerializerContext.Default.KmsError)!;
 
             return error.Type switch
             {
@@ -130,7 +156,7 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
         }
         else
         {
-            throw new AwsException(Encoding.UTF8.GetString(responseText), response.StatusCode);
+            throw new AwsException(Encoding.UTF8.GetString(responseBytes), response.StatusCode);
         }
     }
 

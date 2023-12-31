@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kms;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Kms;
 
 public sealed class RetireGrantRequest : KmsRequest
 {
@@ -18,9 +20,12 @@ public sealed class RetireGrantRequest : KmsRequest
         GrantId = grantId;
     }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? GrantId { get; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? GrantToken { get; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? KeyId { get; }
 }

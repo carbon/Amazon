@@ -4,6 +4,7 @@ namespace Amazon.Kms;
 
 public sealed class CreateGrantRequest : KmsRequest
 {
+    [JsonPropertyName("KeyId")]
     public required string KeyId { get; init; }
 
     /// <summary>
