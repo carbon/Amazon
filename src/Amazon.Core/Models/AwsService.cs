@@ -2,16 +2,11 @@
 
 namespace Amazon;
 
-public sealed class AwsService : IEquatable<AwsService>
+public sealed class AwsService(string name) : IEquatable<AwsService>
 {
     private byte[]? _utf8Bytes;
 
-    private AwsService(string name)
-    {
-        Name = name;
-    }
-
-    public string Name { get; }
+    public string Name { get; } = name ?? throw new ArgumentNullException(nameof(name));
 
     internal ReadOnlySpan<byte> Utf8Name => _utf8Bytes ??= Encoding.ASCII.GetBytes(Name);
 
@@ -30,7 +25,7 @@ public sealed class AwsService : IEquatable<AwsService>
     public static readonly AwsService KinesisFirehose  = new("firehose");
     public static readonly AwsService Kms              = new("kms");
     public static readonly AwsService Lambda           = new("lambda");
-    public static readonly AwsService Monitoring       = new("monitoring"); // Cloudwatch monitoring
+    public static readonly AwsService Monitoring       = new("monitoring"); // CloudWatch monitoring
     public static readonly AwsService OpenSearch       = new("es");
     public static readonly AwsService Rekognition      = new("rekognition");
     public static readonly AwsService Route53          = new("route53");
