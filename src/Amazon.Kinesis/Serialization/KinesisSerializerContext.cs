@@ -6,6 +6,7 @@ namespace Amazon.Kinesis.Serialization;
 [JsonSerializable(typeof(DescribeStreamResult))]
 [JsonSerializable(typeof(PutRecordsRequest))]
 [JsonSerializable(typeof(PutRecordsResult))]
+[JsonSerializable(typeof(PutRecordRequest))]
 [JsonSerializable(typeof(PutRecordResult))]
 [JsonSerializable(typeof(GetRecordsRequest))]
 [JsonSerializable(typeof(GetRecordsResult))]

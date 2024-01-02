@@ -23,15 +23,13 @@ public sealed class KinesisClient(AwsRegion region, IAwsCredential credential)
         return SendAsync("MergeShards", request, KSC.Default.MergeShardsRequest);
     }
 
-    public Task<PutRecordResult> PutRecordAsync(Record record)
+    public Task<PutRecordResult> PutRecordAsync(PutRecordRequest request)
     {
-        return SendAsync("PutRecord", record, KSC.Default.Record, KSC.Default.PutRecordResult);
+        return SendAsync("PutRecord", request, KSC.Default.PutRecordRequest, KSC.Default.PutRecordResult);
     }
 
-    public Task<PutRecordsResult> PutRecordsAsync(string streamName, Record[] records)
+    public Task<PutRecordsResult> PutRecordsAsync(PutRecordsRequest request)
     {
-        var request = new PutRecordsRequest(streamName, records);
-
         // TODO: retry failures?
 
         return SendAsync("PutRecords", request, KSC.Default.PutRecordsRequest, KSC.Default.PutRecordsResult);

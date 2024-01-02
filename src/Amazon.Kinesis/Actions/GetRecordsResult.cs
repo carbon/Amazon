@@ -1,48 +1,15 @@
-﻿using System.Collections;
-using System.Text.Json.Serialization;
-
-using Carbon.Data.Streams;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.Kinesis;
 
-public sealed class GetRecordsResult : KinesisResult, IRecordList
+public sealed class GetRecordsResult : KinesisResult
 {
+    [JsonPropertyName("MillisBehindLatest")]
+    public int MillisBehindLatest { get; init; }
+
     [JsonPropertyName("NextShardIterator")]
     public string? NextShardIterator { get; init; }
 
     [JsonPropertyName("Records")]
-    public List<Record> Records { get; } = [];
-
-    #region IRecordList
-
-    int IRecordList.Count => Records.Count;
-
-    IIterator? IRecordList.NextIterator
-    {
-        get
-        {
-            if (NextShardIterator is null) return null;
-
-            return new KinesisIterator(NextShardIterator);
-        }
-    }
-
-    IEnumerator<IRecord> IEnumerable<IRecord>.GetEnumerator() => Records.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => Records.GetEnumerator();
-
-    #endregion
+    public required List<Record> Records { get; init; }
 }
-
-/*
-{
-    "NextShardIterator": "string",
-    "Records": [
-        {
-            "Data": "blob",
-            "PartitionKey": "string",
-            "SequenceNumber": "string"
-        }
-    ]
-}
-*/

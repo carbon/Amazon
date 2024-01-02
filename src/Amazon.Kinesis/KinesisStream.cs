@@ -27,7 +27,8 @@ public sealed class KinesisStream : IStream
 
     public Task PutAsync(byte[] data, string partitionKey)
     {
-        var record = new Record(Name, data) {
+        var record = new PutRecordRequest(data) {
+            StreamName = Name,
             PartitionKey = partitionKey
         };
 
@@ -71,9 +72,12 @@ public sealed class KinesisStream : IStream
     {
         var request = new GetRecordsRequest(iterator.Value, take);
 
-        return retryPolicy.ExecuteAsync<IRecordList>(async () => 
-            await _client.GetRecordsAsync(request).ConfigureAwait(false)
-        );
+        return retryPolicy.ExecuteAsync<IRecordList>(async () => {
+            var result = await _client.GetRecordsAsync(request).ConfigureAwait(false);
+
+            return new KinesisRecordList(result.Records, result.NextShardIterator != null ? new KinesisIterator(result.NextShardIterator) : null);
+        });
+       
     }
 
     public IDisposable Subscribe(IShard shard, IObserver<IRecord> observer)

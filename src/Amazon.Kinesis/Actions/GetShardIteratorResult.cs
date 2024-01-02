@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-using Carbon.Data.Streams;
+﻿using Carbon.Data.Streams;
 
 namespace Amazon.Kinesis;
 

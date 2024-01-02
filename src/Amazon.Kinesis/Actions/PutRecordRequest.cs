@@ -1,17 +1,34 @@
-﻿namespace Amazon.Kinesis;
+﻿using System.Text.Json.Serialization;
 
-public sealed class PutRecordsRequest : KinesisRequest
+namespace Amazon.Kinesis;
+
+public sealed class PutRecordRequest : KinesisRequest
 {
-    public PutRecordsRequest(string streamName, Record[] records)
+    public PutRecordRequest(byte[] data)
     {
-        ArgumentException.ThrowIfNullOrEmpty(streamName);
-        ArgumentNullException.ThrowIfNull(records);
+        if (data.Length > 1_048_576)
+        {
+            throw new ArgumentException("Must be 1,048,576 or fewer bytes", nameof(data));
+        }
 
-        StreamName = streamName;
-        Records = records;
+        Data = data;
     }
 
-    public string StreamName { get; }
+    public byte[] Data { get; }
 
-    public Record[] Records { get; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? ExplicitHashKey { get; set; }
+
+    [JsonPropertyName("PartitionKey")]
+    public required string PartitionKey { get; set; }
+
+    [JsonPropertyName("SequenceNumberForOrdering")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? SequenceNumberForOrdering { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? StreamARN { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? StreamName { get; init; }
 }
