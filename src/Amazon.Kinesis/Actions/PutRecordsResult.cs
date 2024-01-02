@@ -4,7 +4,7 @@ namespace Amazon.Kinesis;
 
 public sealed class PutRecordsResult : KinesisResult
 {
-    public required string EncryptionType { get; init; }
+    public string? EncryptionType { get; init; }
 
     public int FailedRecordCount { get; init; }
 

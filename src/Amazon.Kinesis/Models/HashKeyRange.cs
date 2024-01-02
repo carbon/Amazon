@@ -1,10 +1,13 @@
-﻿#nullable disable
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.Kinesis;
 
-public sealed class HashKeyRange
+[method:JsonConstructor]
+public readonly struct HashKeyRange(
+    string startingHashKey,
+    string endingHashKey)
 {
-    public string StartingHashKey { get; init; }
+    public string StartingHashKey { get; } = startingHashKey;
 
-    public string EndingHashKey { get; init; }
+    public string EndingHashKey { get; } = endingHashKey;
 }

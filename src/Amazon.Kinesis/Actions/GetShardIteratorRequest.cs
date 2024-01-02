@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kinesis;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Kinesis;
 
 public class GetShardIteratorRequest : KinesisRequest
 {
@@ -21,6 +23,7 @@ public class GetShardIteratorRequest : KinesisRequest
 
     public ShardIteratorType ShardIteratorType { get; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? StartingSequenceNumber { get; }
 
     public string StreamName { get; }

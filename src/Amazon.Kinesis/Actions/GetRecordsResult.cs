@@ -8,10 +8,10 @@ namespace Amazon.Kinesis;
 public sealed class GetRecordsResult : KinesisResult, IRecordList
 {
     [JsonPropertyName("NextShardIterator")]
-    public required string NextShardIterator { get; set; }
+    public string? NextShardIterator { get; init; }
 
     [JsonPropertyName("Records")]
-    public required List<Record> Records { get; set; }
+    public List<Record> Records { get; } = [];
 
     #region IRecordList
 

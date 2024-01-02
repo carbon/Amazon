@@ -1,4 +1,5 @@
-﻿#nullable disable
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 using Carbon.Data.Streams;
 
@@ -8,29 +9,28 @@ public sealed class Record : KinesisRequest, IRecord
 {
     public Record() { }
 
+    [SetsRequiredMembers]
     public Record(string streamName, byte[] data)
     {
+        if (data.Length > 1048576)
+        {
+            throw new ArgumentException("Must be 1048576 or fewer bytes", nameof(data));
+        }
+
         StreamName = streamName;
         Data = data;
     }
 
-    public byte[] Data { get; set; }
+    public required byte[] Data { get; set; }
 
-    public string ExplicitHashKey { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? ExplicitHashKey { get; set; }
 
-    public string PartitionKey { get; set; }
+    public string? PartitionKey { get; set; }
 
-    public string SequenceNumberForOrdering { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? SequenceNumberForOrdering { get; set; }
 
-    public string StreamName { get; init; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? StreamName { get; init; }
 }
-
-/*
-{
-    "Data": "blob",
-    "ExplicitHashKey": "string",
-    "PartitionKey": "string",
-    "SequenceNumberForOrdering": "string",
-    "StreamName": "string"
-}
-*/

@@ -6,7 +6,6 @@ namespace Amazon.Kinesis;
 
 public sealed class GetShardIteratorResult : KinesisResult, IIterator
 {
-    [JsonPropertyName("ShardIterator")]
     public required string ShardIterator { get; init; }
 
     // IIterator

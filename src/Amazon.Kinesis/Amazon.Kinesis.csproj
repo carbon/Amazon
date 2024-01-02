@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kinesis</AssemblyName>
-    <Version>0.25.0</Version>
+    <Version>0.26.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsTrimmable>true</IsTrimmable>
     
     <!-- Package Details-->
     <Authors>Jason Nelson</Authors>

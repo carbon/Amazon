@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Amazon.Kinesis;
 
@@ -14,8 +15,10 @@ public sealed class DescribeStreamRequest : KinesisRequest
         StreamName = streamName;
     }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? ExclusiveStartShardId { get; init; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? Limit { get; init; }
 
     public required string StreamName { get; init; }

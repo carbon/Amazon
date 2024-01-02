@@ -11,8 +11,10 @@ public sealed class MergeShardsRequest : KinesisRequest
     public required string ShardToMerge { get; init; }
 
     [JsonPropertyName("StreamARN")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? StreamArn { get; init; }
 
     [JsonPropertyName("StreamName")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? StreamName { get; init; }
 }

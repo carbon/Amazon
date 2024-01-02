@@ -1,10 +1,11 @@
-﻿#nullable disable
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.Kinesis;
 
-public sealed class SequenceNumberRange
+[method:JsonConstructor]
+public readonly struct SequenceNumberRange(string startingSequenceNumber, string? endingSequenceNumber = null)
 {
-    public string StartingSequenceNumber { get; init; }
+    public string StartingSequenceNumber { get; } = startingSequenceNumber;
 
-    public string EndingSequenceNumber { get; init; }
+    public string? EndingSequenceNumber { get; } = endingSequenceNumber;
 }

@@ -16,15 +16,9 @@ public sealed class GetRecordsRequest : KinesisRequest
     }
 
     [JsonPropertyName("Limit")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? Limit { get; }
 
     [JsonPropertyName("ShardIterator")]
     public string ShardIterator { get; }
 }
-
-/*
-{
-    "Limit": "number",
-    "ShardIterator": "string"
-}
-*/

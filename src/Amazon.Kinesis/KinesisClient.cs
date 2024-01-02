@@ -1,9 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Net.Http;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
-using Amazon.Kinesis.Serialization;
+using KSC = Amazon.Kinesis.Serialization.KinesisSerializerContext;
 
 namespace Amazon.Kinesis;
 
@@ -18,14 +18,14 @@ public sealed class KinesisClient(AwsRegion region, IAwsCredential credential)
         return new KinesisStream(name, this);
     }
 
-    public Task<KinesisResult> MergeShardsAsync(MergeShardsRequest request)
+    public Task MergeShardsAsync(MergeShardsRequest request)
     {
-        return SendAsync<MergeShardsRequest, KinesisResult>("MergeShards", request);
+        return SendAsync("MergeShards", request, KSC.Default.MergeShardsRequest);
     }
 
     public Task<PutRecordResult> PutRecordAsync(Record record)
     {
-        return SendAsync<Record, PutRecordResult>("PutRecord", record);
+        return SendAsync("PutRecord", record, KSC.Default.Record, KSC.Default.PutRecordResult);
     }
 
     public Task<PutRecordsResult> PutRecordsAsync(string streamName, Record[] records)
@@ -34,56 +34,74 @@ public sealed class KinesisClient(AwsRegion region, IAwsCredential credential)
 
         // TODO: retry failures?
 
-        return SendAsync<PutRecordsRequest, PutRecordsResult>("PutRecords", request);
+        return SendAsync("PutRecords", request, KSC.Default.PutRecordsRequest, KSC.Default.PutRecordsResult);
     }
 
     public Task<DescribeStreamResult> DescribeStreamAsync(DescribeStreamRequest request)
     {
-        return SendAsync<DescribeStreamRequest, DescribeStreamResult>("DescribeStream", request);
+        return SendAsync("DescribeStream", request, KSC.Default.DescribeStreamRequest, KSC.Default.DescribeStreamResult);
     }
 
     public Task<GetShardIteratorResult> GetShardIteratorAsync(GetShardIteratorRequest request)
     {
-        return SendAsync<GetShardIteratorRequest, GetShardIteratorResult>("GetShardIterator", request);
+        return SendAsync("GetShardIterator", request, KSC.Default.GetShardIteratorRequest, KSC.Default.GetShardIteratorResult);
     }
 
     public Task<GetRecordsResult> GetRecordsAsync(GetRecordsRequest request)
     {
-        return SendAsync<GetRecordsRequest, GetRecordsResult>("GetRecords", request);
+        return SendAsync("GetRecords", request, KSC.Default.GetRecordsRequest, KSC.Default.GetRecordsResult);
     }
 
     #region Helpers
 
-    private async Task<TResult> SendAsync<TRequest, TResult>([ConstantExpected] string action, TRequest request)
+    private async Task<TResult> SendAsync<TRequest, TResult>(
+        string action, 
+        TRequest request,
+        JsonTypeInfo<TRequest> requestTypeInfo,
+        JsonTypeInfo<TResult> resultTypeInfo)
         where TRequest : KinesisRequest
         where TResult : KinesisResult
     {
-        var message = GetRequestMessage(action, request);
+        var requestMessage = GetRequestMessage(action, request, requestTypeInfo);
 
-        string responseText = await SendAsync(message).ConfigureAwait(false);
+        await SignAsync(requestMessage).ConfigureAwait(false);
 
-        return JsonSerializer.Deserialize<TResult>(responseText)!;
+        using HttpResponseMessage response = await _httpClient.SendAsync(requestMessage).ConfigureAwait(false);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await GetExceptionAsync(response).ConfigureAwait(false);
+        }
+
+        var result = await response.Content.ReadFromJsonAsync(resultTypeInfo).ConfigureAwait(false);
+
+        return result!;
     }
+
+    private async Task SendAsync<TRequest>(string action, TRequest request, JsonTypeInfo<TRequest> requestTypeInfo)
+       where TRequest : KinesisRequest
+    {
+        var message = GetRequestMessage(action, request, requestTypeInfo);
+
+        _ = await SendAsync(message).ConfigureAwait(false);
+    }
+
 
     protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
     {
         string xmlText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        var error = JsonSerializer.Deserialize<ErrorResult>(xmlText, KinesisSerializerContext.Default.ErrorResult)!;
+        ErrorResult error = JsonSerializer.Deserialize(xmlText, KSC.Default.ErrorResult)!;
 
         error.Text = xmlText;
 
         return new KinesisException(error, response.StatusCode);
     }
 
-    private static readonly JsonSerializerOptions s_jso = new() {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-    };
-
-    private HttpRequestMessage GetRequestMessage<T>(string action, T request)
+    private HttpRequestMessage GetRequestMessage<T>(string action, T request, JsonTypeInfo<T> requestTypeInfo)
         where T : notnull, KinesisRequest
     {
-        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, s_jso);
+        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, requestTypeInfo);
 
         return new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Headers = {
