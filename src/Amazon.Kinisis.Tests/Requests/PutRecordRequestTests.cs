@@ -4,7 +4,7 @@ namespace Amazon.Kinesis.Firehose;
 
 public class PutRecordRequestTests
 {
-    private static JsonSerializerOptions _indented = new() { WriteIndented = true };
+    private static readonly JsonSerializerOptions _indented = new() { WriteIndented = true };
 
     [Fact]
     public void CanSerialize()
