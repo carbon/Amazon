@@ -152,10 +152,9 @@ public sealed class InstanceTypeInfo
     [XmlElement("vCpuInfo")]
     public VCpuInfo VCpuInfo { get; init; }
 
-    private static readonly XmlSerializer serializer = new(
+    private static readonly XmlSerializer s_serializer = new(
         typeof(InstanceTypeInfo),
-        new XmlRootAttribute
-        {
+        new XmlRootAttribute {
             ElementName = "item",
             Namespace = Ec2Client.Namespace
         }
@@ -163,7 +162,7 @@ public sealed class InstanceTypeInfo
 
     public static InstanceTypeInfo Deserialize(XElement element)
     {
-        return (InstanceTypeInfo)serializer.Deserialize(element.CreateReader());
+        return (InstanceTypeInfo)s_serializer.Deserialize(element.CreateReader());
     }
 
 }
