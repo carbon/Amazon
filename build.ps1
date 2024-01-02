@@ -1,3 +1,4 @@
+dotnet pack ./src/Amazon.Bedrock          -c Release -o ./release/Amazon.Bedrock
 dotnet pack ./src/Amazon.Core             -c Release -o ./release/Amazon.Core
 dotnet pack ./src/Amazon.CloudWatch       -c Release -o ./release/Amazon.CloudWatch
 dotnet pack ./src/Amazon.CodeBuild        -c Release -o ./release/Amazon.CodeBuild
