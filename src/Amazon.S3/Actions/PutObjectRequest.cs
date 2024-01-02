@@ -106,11 +106,7 @@ public class PutObjectRequest : S3Request
     public void SetStream(Stream stream, long length, string contentType = "application/octet-stream")
     {
         ArgumentNullException.ThrowIfNull(stream);
-
-        if (length <= 0)
-        {
-            throw new ArgumentException("Must be greater than 0.", nameof(length));
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(length);
 
         Content = new StreamContent(stream) {
             Headers = {

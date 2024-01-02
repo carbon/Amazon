@@ -7,13 +7,13 @@ namespace Amazon.S3;
 internal static class S3Serializer<T>
     where T : class
 {
-    private static readonly XmlSerializer serializer = new(typeof(T));
+    private static readonly XmlSerializer s_serializer = new(typeof(T));
 
     public static T Deserialize(string xmlText)
     {
         using var reader = new StringReader(xmlText);
 
-        return (T)serializer.Deserialize(reader)!;
+        return (T)s_serializer.Deserialize(reader)!;
     }
 
     public static bool TryDeserialize(string xmlText, [NotNullWhen(true)] out T? result)
@@ -22,7 +22,7 @@ internal static class S3Serializer<T>
         {
             using var reader = new StringReader(xmlText);
 
-            result = (T)serializer.Deserialize(reader)!;
+            result = (T)s_serializer.Deserialize(reader)!;
 
             return true;
         }

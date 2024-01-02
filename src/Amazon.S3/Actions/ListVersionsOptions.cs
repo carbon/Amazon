@@ -4,7 +4,7 @@ namespace Amazon.S3;
 
 public sealed class ListVersionsOptions
 {
-    private readonly Dictionary<string, string> items = new();
+    private readonly Dictionary<string, string> _items = [];
 
     public string? Delimiter
     {
@@ -55,7 +55,7 @@ public sealed class ListVersionsOptions
 
     private string? Get(string name)
     {
-        items.TryGetValue(name, out string? value);
+        _items.TryGetValue(name, out string? value);
 
         return value;
     }
@@ -64,14 +64,13 @@ public sealed class ListVersionsOptions
     {
         if (value is null)
         {
-            items.Remove(name);
+            _items.Remove(name);
         }
         else
         {
-            items[name] = value;
+            _items[name] = value;
         }
     }
 
-    internal Dictionary<string, string> Items => items;
-
+    internal Dictionary<string, string> Items => _items;
 }

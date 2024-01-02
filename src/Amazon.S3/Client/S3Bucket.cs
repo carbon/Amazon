@@ -43,10 +43,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
 
     public async IAsyncEnumerable<IBlob> ScanAsync(string? prefix, int take = 1_000_000_000)
     {
-        if (take <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(take), take, "Must be > 0");
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(take);
 
         string? continuationToken = null;
         int count = 0;
@@ -288,11 +285,11 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         throw new S3Exception($"Error copying '{sourceLocation}' to '{destinationKey}'", lastException, lastException.HttpStatusCode);
     }
 
-    private static readonly PutBlobOptions defaultPutOptions = new ();
+    private static readonly PutBlobOptions s_defaultPutOptions = new();
 
     public Task PutAsync(IBlob blob, CancellationToken cancellationToken = default)
     {
-        return PutAsync(blob, defaultPutOptions, cancellationToken);
+        return PutAsync(blob, s_defaultPutOptions, cancellationToken);
     }
 
     public async Task PutAsync(
