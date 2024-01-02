@@ -20,7 +20,7 @@ public class DynamoTable<T, TKey>
 
     // TODO: Histogram of consumed capacity
 
-    private static readonly RetryPolicy retryPolicy = RetryPolicy.ExponentialBackoff(
+    private static readonly RetryPolicy s_retryPolicy = RetryPolicy.ExponentialBackoff(
         initialDelay : TimeSpan.FromMilliseconds(100),
         maxDelay     : TimeSpan.FromSeconds(3),
         maxRetries   : 5);
@@ -96,7 +96,7 @@ public class DynamoTable<T, TKey>
         {
             if (retryCount > 0)
             {
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                await Task.Delay(s_retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
 
             try
@@ -116,7 +116,7 @@ public class DynamoTable<T, TKey>
 
             retryCount++;
         }
-        while (retryPolicy.ShouldRetry(retryCount));
+        while (s_retryPolicy.ShouldRetry(retryCount));
 
         var key = string.Join(',', request.Key.Select(static k => k.Value));
 
@@ -166,7 +166,7 @@ public class DynamoTable<T, TKey>
     {
         query.TableName = _tableName;
 
-        var result = await _client.QueryAsync(query, retryPolicy).ConfigureAwait(false);
+        var result = await _client.QueryAsync(query, s_retryPolicy).ConfigureAwait(false);
 
         return new QueryResult<T>(result);
     }
@@ -183,7 +183,7 @@ public class DynamoTable<T, TKey>
 
         do
         {
-            a = await _client.QueryAsync(query, retryPolicy).ConfigureAwait(false);
+            a = await _client.QueryAsync(query, s_retryPolicy).ConfigureAwait(false);
 
             foreach (AttributeCollection item in a.Items)
             {
@@ -286,7 +286,7 @@ public class DynamoTable<T, TKey>
     {
         var request = new PutItemRequest(_tableName, AttributeCollection.FromObject(entity, s_metadata));
 
-        return _client.PutItemUsingRetryPolicyAsync(request, retryPolicy);
+        return _client.PutItemUsingRetryPolicyAsync(request, s_retryPolicy);
     }
 
     // Conditional put
@@ -299,7 +299,7 @@ public class DynamoTable<T, TKey>
             request.SetConditions(conditions);
         }
 
-        return _client.PutItemUsingRetryPolicyAsync(request, retryPolicy);
+        return _client.PutItemUsingRetryPolicyAsync(request, s_retryPolicy);
     }
 
     const int maxBatchSize = 25;
@@ -320,7 +320,7 @@ public class DynamoTable<T, TKey>
     {
         var request = new UpdateItemRequest(_tableName, Key<T>.FromTuple(key).ToDictionary(), changes);
 
-        return await _client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy).ConfigureAwait(false);
+        return await _client.UpdateItemUsingRetryPolicyAsync(request, s_retryPolicy).ConfigureAwait(false);
     }
 
     public Task<UpdateItemResult> PatchAsync(
@@ -331,14 +331,14 @@ public class DynamoTable<T, TKey>
     {
         var request = new UpdateItemRequest(_tableName, Key<T>.FromTuple(key).ToDictionary(), changes, conditions, returnValues);
 
-        return _client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
+        return _client.UpdateItemUsingRetryPolicyAsync(request, s_retryPolicy);
     }
 
     public Task<UpdateItemResult> PatchAsync(TKey key, Change[] changes, ReturnValues returnValues)
     {
         var request = new UpdateItemRequest(_tableName, Key<T>.FromTuple(key).ToDictionary(), changes, returnValues: returnValues);
 
-        return _client.UpdateItemUsingRetryPolicyAsync(request, retryPolicy);
+        return _client.UpdateItemUsingRetryPolicyAsync(request, s_retryPolicy);
     }
 
     public Task<DeleteItemResult> DeleteAsync(T record)
@@ -403,7 +403,7 @@ public class DynamoTable<T, TKey>
         {
             if (retryCount > 0)
             {
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                await Task.Delay(s_retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
 
             try
@@ -417,7 +417,7 @@ public class DynamoTable<T, TKey>
 
             retryCount++;
         }
-        while (retryPolicy.ShouldRetry(retryCount));
+        while (s_retryPolicy.ShouldRetry(retryCount));
 
         throw lastError;
     }
@@ -454,7 +454,7 @@ public class DynamoTable<T, TKey>
         {
             if (retryCount > 0)
             {
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                await Task.Delay(s_retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
 
             try
@@ -483,7 +483,7 @@ public class DynamoTable<T, TKey>
 
             retryCount++;
 
-        } while (retryPolicy.ShouldRetry(retryCount));
+        } while (s_retryPolicy.ShouldRetry(retryCount));
 
         throw lastError;
     }

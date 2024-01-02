@@ -88,7 +88,7 @@ public sealed class DynamoQuery
         {
             var attributeNames = ExpressionAttributeNames ?? new Dictionary<string, string>();
 
-            ExpressionAttributeValues ??= new();
+            ExpressionAttributeValues ??= [];
 
             _filter = new DynamoExpression(attributeNames, ExpressionAttributeValues);
         }
@@ -118,7 +118,7 @@ public sealed class DynamoQuery
 
     public DynamoQuery Include(ReadOnlySpan<string> values)
     {
-        ExpressionAttributeNames ??= new();
+        ExpressionAttributeNames ??= [];
 
         var sb = StringBuilderCache.Acquire();
 

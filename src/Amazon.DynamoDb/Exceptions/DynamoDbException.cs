@@ -36,15 +36,10 @@ public class DynamoDbException : AwsException, IException
 
         foreach (var property in json.EnumerateObject())
         {
-            if (property.NameEquals("message"u8))
+            if (property.NameEquals("message"u8) || property.NameEquals("Message"u8))
             {
                 message = property.Value.GetString()!;
             }
-            else if (property.NameEquals("Message"u8))
-            {
-                message = property.Value.GetString()!;
-            }
-
             else if (property.NameEquals("__type"u8) && property.Value.ValueKind is JsonValueKind.String)
             {
                 type = property.Value.GetString()!;
