@@ -17,8 +17,6 @@ public static class SignerV4
     private const string algorithmName     = "AWS4-HMAC-SHA256";
     private const string isoDateTimeFormat = "yyyyMMddTHHmmssZ";  // ISO8601
 
-    private static readonly StringListPool s_listPool = new();
-
     [SkipLocalsInit]
     internal static string GetStringToSign(
         HttpRequestMessage request,
@@ -293,7 +291,7 @@ public static class SignerV4
         if (!requestUri.IsDefaultPort)
         {
             urlBuilder.Append(':');
-            urlBuilder.Append(requestUri.Port.ToString(CultureInfo.InvariantCulture));
+            urlBuilder.AppendSpanFormattable(requestUri.Port);
         }
 
         urlBuilder.Append(requestUri.AbsolutePath);
@@ -327,7 +325,7 @@ public static class SignerV4
 
         ComputeSigningKey(credential.SecretAccessKey, scope, signingKey);
 
-        var signedHeaderNames = s_listPool.Rent();
+        var signedHeaderNames = StringListPool.Default.Rent();
 
         string stringToSign = GetStringToSign(request, scope, signedHeaderNames);
 
@@ -344,9 +342,9 @@ public static class SignerV4
         sb.Append(",Signature=");
         ComputeAndWriteHMACSHA256Hex(signingKey, stringToSign, sb.AppendSpan(64)); // signature
 
-        request.Headers.TryAddWithoutValidation("Authorization", sb.ToString());
+        StringListPool.Default.Return(signedHeaderNames);
 
-        s_listPool.Return(signedHeaderNames);
+        request.Headers.TryAddWithoutValidation("Authorization", sb.ToString());        
     }
 
     public static string CanonicalizeQueryString(Uri uri)
