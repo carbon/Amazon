@@ -6,7 +6,7 @@ public class CallerIdentityVerificationParametersTests
 {
     private static CallerIdentityVerificationParameters GetMock()
     {
-        return  new CallerIdentityVerificationParameters
+        return new CallerIdentityVerificationParameters
         {
             Body = "body",
             Headers = new Dictionary<string, string>
@@ -24,10 +24,11 @@ public class CallerIdentityVerificationParametersTests
         var a = GetMock();
 
         Assert.Equal("""{"url":"url","headers":{"a":"1","b":"2"},"body":"body"}""", JsonSerializer.Serialize(a));       
-        Assert.Equal("""{"url":"url","headers":{"a":"1","b":"2"},"body":"body"}""", JsonSerializer.Serialize(a, StsJsonContext.Default.CallerIdentityVerificationParameters));
+        Assert.Equal("""{"url":"url","headers":{"a":"1","b":"2"},"body":"body"}""", JsonSerializer.Serialize(a, StsSerializerContext.Default.CallerIdentityVerificationParameters));
 
         var b = JsonSerializer.Deserialize<CallerIdentityVerificationParameters>(JsonSerializer.Serialize(a));
 
+        Assert.NotNull(b);
         Assert.Equal("body", b.Body);
         Assert.Equal("url", b.Url);
 
@@ -42,11 +43,13 @@ public class CallerIdentityVerificationParametersTests
     {
         var a = GetMock();
 
-        
-        Assert.Equal("""{"url":"url","headers":{"a":"1","b":"2"},"body":"body"}""", JsonSerializer.Serialize(a, StsJsonContext.Default.CallerIdentityVerificationParameters));
+        var json = """{"url":"url","headers":{"a":"1","b":"2"},"body":"body"}""";
 
-        var b = JsonSerializer.Deserialize(JsonSerializer.Serialize(a), StsJsonContext.Default.CallerIdentityVerificationParameters);
+        Assert.Equal(json, JsonSerializer.Serialize(a, StsSerializerContext.Default.CallerIdentityVerificationParameters));
 
+        var b = JsonSerializer.Deserialize(json, StsSerializerContext.Default.CallerIdentityVerificationParameters);
+
+        Assert.NotNull(b);
         Assert.Equal("body", b.Body);
         Assert.Equal("url", b.Url);
 

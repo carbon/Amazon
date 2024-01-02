@@ -3,6 +3,6 @@
 namespace Amazon.Sts.Tests;
 
 [JsonSerializable(typeof(CallerIdentityVerificationParameters))]
-public partial class StsJsonContext : JsonSerializerContext
+public partial class StsSerializerContext : JsonSerializerContext
 {
 }
