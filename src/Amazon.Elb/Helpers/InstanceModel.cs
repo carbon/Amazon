@@ -4,22 +4,17 @@ using System.Runtime.Serialization;
 
 namespace Amazon.Elb;
 
-internal sealed class InstanceModel
+internal sealed class InstanceModel(List<InstanceModelMember> members)
 {
-    private static readonly ConcurrentDictionary<Type, InstanceModel> models = new();
+    private static readonly ConcurrentDictionary<Type, InstanceModel> s_models = new();
 
-    private readonly List<InstanceModelMember> _members;
-
-    public InstanceModel(List<InstanceModelMember> members)
-    {
-        _members = members;
-    }
+    private readonly List<InstanceModelMember> _members = members;
 
     public IReadOnlyList<InstanceModelMember> Members => _members;
 
     public static InstanceModel Get(Type type)
     {
-        if (models.TryGetValue(type, out var result))
+        if (s_models.TryGetValue(type, out var result))
         {
             return result;
         }
@@ -42,7 +37,7 @@ internal sealed class InstanceModel
 
         result = new InstanceModel(members);
 
-        models.TryAdd(type, result);
+        s_models.TryAdd(type, result);
 
         return result;
     }
