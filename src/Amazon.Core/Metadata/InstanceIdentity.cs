@@ -33,10 +33,10 @@ public sealed class InstanceIdentity
 #nullable enable
 
     [JsonPropertyName("kernelId")]
-    public string? KernelId { get; set; }
+    public string? KernelId { get; init; }
 
     [JsonPropertyName("ramdiskId")]
-    public string? RamdiskId { get; set; }
+    public string? RamdiskId { get; init; }
 
     public static Task<InstanceIdentity> GetAsync()
     {
