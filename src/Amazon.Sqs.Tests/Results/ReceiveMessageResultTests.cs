@@ -7,6 +7,24 @@ namespace Amazon.Sqs.Results.Tests;
 public class ReceiveMessageResultTests
 {
     [Fact]
+    public void CanDeserializeEmptyMessagesResult()
+    {
+        ReceiveMessageResult? result = JsonSerializer.Deserialize("""{"Messages":[]}"""u8, SqsSerializerContext.Default.ReceiveMessageResult);
+
+        Assert.NotNull(result);
+        Assert.Empty(result.Messages!);
+    }
+
+    [Fact]
+    public void CanDeserializeMissingMessagesResult()
+    {
+        ReceiveMessageResult? result = JsonSerializer.Deserialize("""{}"""u8, SqsSerializerContext.Default.ReceiveMessageResult);
+
+        Assert.NotNull(result);
+        Assert.Null(result.Messages);
+    }
+
+    [Fact]
     public void CanDeserialize()
     {
         ReceiveMessageResult? result = JsonSerializer.Deserialize(
@@ -24,6 +42,7 @@ public class ReceiveMessageResultTests
             """u8, SqsSerializerContext.Default.ReceiveMessageResult);
 
         Assert.NotNull(result);
+        Assert.NotNull(result.Messages);
 
         Assert.Single(result.Messages);
 
@@ -62,6 +81,7 @@ public class ReceiveMessageResultTests
 
 
         Assert.NotNull(result);
+        Assert.NotNull(result.Messages);
 
         var message = result.Messages[0];
 
