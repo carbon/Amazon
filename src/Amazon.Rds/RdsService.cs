@@ -5,19 +5,10 @@ using Amazon.Security;
 
 namespace Amazon.Rds;
 
-public sealed class RdsService
+public sealed class RdsService(AwsRegion region, IAwsCredential credential)
 {
-    private readonly AwsRegion _region;
-    private readonly IAwsCredential _credential;
-
-    public RdsService(AwsRegion region, IAwsCredential credential)
-    {
-        ArgumentNullException.ThrowIfNull(region);
-        ArgumentNullException.ThrowIfNull(credential);
-
-        _region = region;
-        _credential = credential;
-    }
+    private readonly AwsRegion _region = region ?? throw new ArgumentNullException(nameof(region));
+    private readonly IAwsCredential _credential = credential ?? throw new ArgumentNullException(nameof(credential));
 
     public async Task<AuthenticationToken> GetAuthenticationTokenAsync(GetAuthenticationTokenRequest request)
     {
