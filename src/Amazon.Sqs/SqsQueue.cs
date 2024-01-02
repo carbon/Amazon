@@ -46,9 +46,9 @@ public sealed class SqsQueue : IMessageQueue<string>
         {
             var result = await _client.ReceiveMessagesAsync(request, cancellationToken).ConfigureAwait(false);
 
-            if (result.Messages.Length > 0)
+            if (result.Messages is { Length: > 0 } messages)
             {
-                return result.Messages;
+                return messages;
             }
         }
 
@@ -75,7 +75,7 @@ public sealed class SqsQueue : IMessageQueue<string>
             {
                 var result = await _client.ReceiveMessagesAsync(request, cancellationToken).ConfigureAwait(false);
 
-                return result.Messages;
+                return result.Messages ?? [];
             }
             catch (Exception ex) when (s_retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
             {

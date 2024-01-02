@@ -130,7 +130,7 @@ public sealed class SqsClient(AwsRegion region, IAwsCredential credential)
         {
             throw await GetExceptionAsync(response).ConfigureAwait(false);
         }
-
+              
         var result = await response.Content.ReadFromJsonAsync(jsonTypeInfo, cancellationToken).ConfigureAwait(false);
 
         return result!;

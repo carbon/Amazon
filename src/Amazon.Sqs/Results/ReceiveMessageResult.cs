@@ -5,5 +5,5 @@ namespace Amazon.Sqs;
 public sealed class ReceiveMessageResult
 {
     [JsonPropertyName("Messages")]
-    public required SqsMessage[] Messages { get; init; }
+    public SqsMessage[]? Messages { get; init; }
 }

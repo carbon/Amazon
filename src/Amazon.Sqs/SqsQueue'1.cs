@@ -50,11 +50,10 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
         {
             var result = await _client.ReceiveMessagesAsync(request, cancellationToken).ConfigureAwait(false);
 
-            var messages = result.Messages;
-
-            if (messages.Length is 0) continue;
-
-            return Convert(messages);
+            if (result.Messages is { Length: > 0 } messages)
+            {
+                return Convert(messages);
+            }
         }
 
         return [];
