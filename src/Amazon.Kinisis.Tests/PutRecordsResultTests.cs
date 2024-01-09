@@ -28,7 +28,7 @@ public class PutRecordsResultTests
                     }
                 ]
             }
-            """, KinesisSerializerContext.Default.PutRecordsResult);
+            """u8, KinesisSerializerContext.Default.PutRecordsResult);
 
         Assert.NotNull(result);
         Assert.Equal(3, result.Records.Count);
