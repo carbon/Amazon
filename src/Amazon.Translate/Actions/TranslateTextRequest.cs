@@ -1,14 +1,17 @@
-﻿#nullable disable
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.Translate;
 
 public sealed class TranslateTextRequest
 {
-    public string SourceLanguageCode { get; init; }
+    public required string SourceLanguageCode { get; init; }
 
-    public string TargetLanguageCode { get; init; }
+    public required string TargetLanguageCode { get; init; }
 
-    public string[] TerminologyNames { get; init; }
+    public string[]? TerminologyNames { get; init; }
 
-    public string Text { get; init; }
+    public required string Text { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public TranslationSettings? Settings { get; init; }
 }

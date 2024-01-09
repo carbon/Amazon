@@ -1,10 +1,12 @@
-﻿#nullable disable
-
-namespace Amazon.Translate;
+﻿namespace Amazon.Translate;
 
 public sealed class AppliedTerminology
 {
-    public string Name { get; init; }
+    public required string Name { get; init; }
 
-    public Term[] Terms { get; init; }
+    public required Term[] Terms { get; init; }
+}
+
+public sealed class TranslationSettings
+{
 }

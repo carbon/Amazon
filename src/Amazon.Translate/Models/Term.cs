@@ -1,10 +1,8 @@
-﻿#nullable disable
-
-namespace Amazon.Translate;
+﻿namespace Amazon.Translate;
 
 public sealed class Term
 {
-    public string SourceText { get; init; }
+    public string? SourceText { get; init; }
 
-    public string TargetText { get; init; }
+    public string? TargetText { get; init; }
 }
