@@ -10,7 +10,6 @@ public sealed class KinesisRecordList(List<Record> records, KinesisIterator? nes
 
     public int Count => _records.Count;
 
-
     public IIterator? NextIterator { get; } = nestIterator;
 
     IEnumerator<IRecord> IEnumerable<IRecord>.GetEnumerator() => _records.GetEnumerator();

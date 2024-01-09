@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using Carbon.Data.Streams;
+﻿using Carbon.Data.Streams;
 
 namespace Amazon.Kinesis;
 
@@ -15,15 +13,15 @@ public sealed class Shard : IShard
         ShardId = id;
     }
 
-    public string AdjacentParentShardId { get; init; }
+    public string? AdjacentParentShardId { get; init; }
 
-    public string ParentShardId { get; init; }
+    public string? ParentShardId { get; init; }
 
-    public HashKeyRange HashKeyRange { get; init; }
+    public required HashKeyRange HashKeyRange { get; init; }
 
-    public SequenceNumberRange SequenceNumberRange { get; init; }
+    public required SequenceNumberRange SequenceNumberRange { get; init; }
 
-    public string ShardId { get; init; }
+    public required string ShardId { get; init; }
 
     // IShard
 
