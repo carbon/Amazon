@@ -36,7 +36,6 @@ public sealed class AwsService(string name) : IEquatable<AwsService>
     public static readonly AwsService Sns              = new("sns");
     public static readonly AwsService Sts              = new("sts");
     public static readonly AwsService Sqs              = new("sqs");
-    public static readonly AwsService Translate        = new("translate");
     public static readonly AwsService Waf              = new("waf");
 
     public bool Equals(AwsService? other)

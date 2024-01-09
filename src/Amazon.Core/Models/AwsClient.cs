@@ -31,7 +31,7 @@ public abstract class AwsClient
         })
         {
             DefaultRequestHeaders = {
-                { "User-Agent", "Carbon/3.0" }
+                { "User-Agent", "Carbon/4.0" }
             }
         };
     }

@@ -12,9 +12,7 @@ public class AwsRequest : IEnumerable<KeyValuePair<string, string>>
 
     public AwsRequest(ReadOnlySpan<KeyValuePair<string, string>> parameters)
     {
-        Parameters = new List<KeyValuePair<string, string>>(parameters.Length);
-
-        Parameters.AddRange(parameters);
+        Parameters = [.. parameters];
     }
 
     public List<KeyValuePair<string, string>> Parameters { get; }

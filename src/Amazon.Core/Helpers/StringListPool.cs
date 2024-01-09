@@ -9,6 +9,8 @@ namespace Amazon.Helpers;
 
 internal sealed class StringListPool
 {
+    public static readonly StringListPool Default = new();
+
     private struct Element
     {
         internal List<string>? Value;
