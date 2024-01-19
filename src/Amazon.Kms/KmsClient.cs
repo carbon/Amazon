@@ -37,6 +37,11 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
         return SendAsync("RetireGrant", request, KmsSerializerContext.Default.RetireGrantRequest);
     }
 
+    public Task RevokeGrantAsync(RevokeGrantRequest request)
+    {
+        return SendAsync("RevokeGrant", request, KmsSerializerContext.Default.RevokeGrantRequest);
+    }
+
     public Task<ListGrantsResult> ListGrantsAsync(ListGrantsRequest request)
     {
         return SendAsync("ListGrants", request, KmsSerializerContext.Default.ListGrantsRequest, KmsSerializerContext.Default.ListGrantsResult);
@@ -161,6 +166,7 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
                 "ServiceUnavailableException" => new ServiceUnavailableException(), // TODO: Provide the message
                 "KeyUnavailableException"     => new KeyUnavailableException(error, response.StatusCode),
                 "ValidationException"         => new KmsValidationException(error, response.StatusCode),
+                "DryRunOperationException"    => new DryRunOperationException(error),
                 _                             => new KmsException(error, response.StatusCode)
             };
         }
