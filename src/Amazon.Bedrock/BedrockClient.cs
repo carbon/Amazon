@@ -1,11 +1,37 @@
 ﻿using System.Net.Http.Json;
+using System.Net.Mime;
 
 namespace Amazon.Bedrock;
 
 public class BedrockClient(AwsRegion region, IAwsCredential credential) 
-    : AwsClient(AwsService.Bedrock, region, credential)
+    : AwsClient(new AwsService("bedrock"), region, credential)
 {
     public const string Version = "2022-01-01";
+
+
+
+    public async Task<ListFoundationalModelsResult> ListFoundationalModelsAsync()
+    {
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"https://bedrock.{Region.Name}.amazonaws.com/foundation-models") {
+            Headers = {
+                { "Accept", "application/json" }
+            }
+        };
+
+        await SignAsync(httpRequest).ConfigureAwait(false);
+
+        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest).ConfigureAwait(false);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await GetExceptionAsync(response).ConfigureAwait(false);
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<ListFoundationalModelsResult>();
+
+        return result;
+    }
 
     // runtime.
 
@@ -17,7 +43,7 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, $"https://bedrock-runtime.{Region.Name}.amazonaws.com/model/{modelId}/invoke") {
             Headers = {
-                { "Accept", "application/json" }
+                { "Accept", MediaTypeNames.Application.Json }
             },
             Content = content
         };
@@ -58,6 +84,5 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
         }
 
         return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
     }
 }
