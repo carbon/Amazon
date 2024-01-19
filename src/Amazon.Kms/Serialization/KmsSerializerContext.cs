@@ -18,6 +18,11 @@ namespace Amazon.Kms.Serialization;
 [JsonSerializable(typeof(ListGrantsResult))]
 [JsonSerializable(typeof(KmsError))]
 [JsonSerializable(typeof(RetireGrantRequest))]
+[JsonSerializable(typeof(SignRequest))]
+[JsonSerializable(typeof(SignResult))]
+[JsonSerializable(typeof(VerifyRequest))]
+[JsonSerializable(typeof(VerifyResult))]
+
 public partial class KmsSerializerContext : JsonSerializerContext
 {
 }

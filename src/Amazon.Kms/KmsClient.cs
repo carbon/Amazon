@@ -44,14 +44,24 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
 
     #endregion
 
+    public Task<DecryptResult> DecryptAsync(DecryptRequest request)
+    {
+        return SendAsync("Decrypt", request, KmsSerializerContext.Default.DecryptRequest, KmsSerializerContext.Default.DecryptResult);
+    }
+
     public Task<EncryptResult> EncryptAsync(EncryptRequest request)
     {
         return SendAsync("Encrypt", request, KmsSerializerContext.Default.EncryptRequest, KmsSerializerContext.Default.EncryptResult);
     }
 
-    public Task<DecryptResult> DecryptAsync(DecryptRequest request)
+    public Task<SignResult> SignAsync(SignRequest request)
     {
-        return SendAsync("Decrypt", request, KmsSerializerContext.Default.DecryptRequest, KmsSerializerContext.Default.DecryptResult);
+        return SendAsync("Sign", request, KmsSerializerContext.Default.SignRequest, KmsSerializerContext.Default.SignResult);
+    }
+
+    public Task<VerifyResult> VerifyAsync(VerifyRequest request)
+    {
+        return SendAsync("Verify", request, KmsSerializerContext.Default.VerifyRequest, KmsSerializerContext.Default.VerifyResult);
     }
 
     #region Data Keys
