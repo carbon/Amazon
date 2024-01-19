@@ -5,7 +5,9 @@ using Amazon.Kms.Exceptions;
 namespace Amazon.Kms.Serialization;
 
 [JsonSerializable(typeof(CreateAliasRequest))]
+[JsonSerializable(typeof(CreateAliasResult))]
 [JsonSerializable(typeof(CreateGrantRequest))]
+[JsonSerializable(typeof(CreateGrantResult))]
 [JsonSerializable(typeof(DecryptRequest))]
 [JsonSerializable(typeof(DecryptResult))]
 [JsonSerializable(typeof(EncryptRequest))]
@@ -15,6 +17,7 @@ namespace Amazon.Kms.Serialization;
 [JsonSerializable(typeof(ListGrantsRequest))]
 [JsonSerializable(typeof(ListGrantsResult))]
 [JsonSerializable(typeof(KmsError))]
+[JsonSerializable(typeof(RetireGrantRequest))]
 public partial class KmsSerializerContext : JsonSerializerContext
 {
 }

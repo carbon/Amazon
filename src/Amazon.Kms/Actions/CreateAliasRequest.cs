@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Amazon.Kms;
+﻿namespace Amazon.Kms;
 
 public sealed class CreateAliasRequest : KmsRequest
 {
@@ -13,9 +11,7 @@ public sealed class CreateAliasRequest : KmsRequest
         AliasName = aliasName;
     }
 
-    [JsonPropertyName("TargetKeyId")]
     public string TargetKeyId { get; }
 
-    [JsonPropertyName("AliasName")]
     public string AliasName { get; }
 }

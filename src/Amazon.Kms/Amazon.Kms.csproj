@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kms</AssemblyName>
-    <Version>0.31.0</Version>
+    <Version>0.32.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-
+    <IsTrimmable>true</IsTrimmable>
+	  
     <!-- Package Details-->
     <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>

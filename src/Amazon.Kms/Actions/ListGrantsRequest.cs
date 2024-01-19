@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Amazon.Kms;
 
@@ -16,7 +17,9 @@ public sealed class ListGrantsRequest : KmsRequest
 
     public required string KeyId { get; init; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int? Limit { get; init; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public string? Marker { get; init; }
 }

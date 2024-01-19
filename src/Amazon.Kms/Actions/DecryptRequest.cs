@@ -18,6 +18,11 @@ public sealed class DecryptRequest : KmsRequest
             throw new ArgumentException("Must not be empty", nameof(ciphertext));
         }
 
+        if (ciphertext.Length > 6_144)
+        {
+            throw new ArgumentException($"Must be 6,144 or fewer bytes. Was {ciphertext.Length} bytes.", nameof(ciphertext));
+        }
+
         KeyId = keyId;
         CiphertextBlob = ciphertext;
         EncryptionContext = context;
@@ -26,12 +31,17 @@ public sealed class DecryptRequest : KmsRequest
 
     public string KeyId { get; }
 
-    // [MaxSize(6144)]
     public byte[] CiphertextBlob { get; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public EncryptionAlgorithm? EncryptionAlgorithm { get; init; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IReadOnlyDictionary<string, string>? EncryptionContext { get; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string[]? GrantTokens { get; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public RecipientInfo[]? Recipient { get; }
 }

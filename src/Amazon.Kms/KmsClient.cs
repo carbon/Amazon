@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 using Amazon.Exceptions;
 using Amazon.Kms.Exceptions;
@@ -20,7 +20,7 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
 
     public Task<CreateAliasResult> CreateAliasAsync(CreateAliasRequest request)
     {
-        return SendAsync<CreateAliasRequest, CreateAliasResult>("CreateAlias", request);
+        return SendAsync("CreateAlias", request, KmsSerializerContext.Default.CreateAliasRequest, KmsSerializerContext.Default.CreateAliasResult);
     }
 
     #endregion
@@ -29,56 +29,56 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
 
     public Task<CreateGrantResult> CreateGrantAsync(CreateGrantRequest request)
     {
-        return SendAsync<CreateGrantRequest, CreateGrantResult>("CreateGrant", request);
+        return SendAsync("CreateGrant", request, KmsSerializerContext.Default.CreateGrantRequest, KmsSerializerContext.Default.CreateGrantResult);
     }
 
     public Task RetireGrantAsync(RetireGrantRequest request)
     {
-        return SendAsync("RetireGrant", request);
+        return SendAsync("RetireGrant", request, KmsSerializerContext.Default.RetireGrantRequest);
     }
 
     public Task<ListGrantsResult> ListGrantsAsync(ListGrantsRequest request)
     {
-        return SendAsync<ListGrantsRequest, ListGrantsResult>("ListGrants", request);
+        return SendAsync("ListGrants", request, KmsSerializerContext.Default.ListGrantsRequest, KmsSerializerContext.Default.ListGrantsResult);
     }
 
     #endregion
 
     public Task<EncryptResult> EncryptAsync(EncryptRequest request)
     {
-        return SendAsync<EncryptRequest, EncryptResult>("Encrypt", request);
+        return SendAsync("Encrypt", request, KmsSerializerContext.Default.EncryptRequest, KmsSerializerContext.Default.EncryptResult);
     }
 
     public Task<DecryptResult> DecryptAsync(DecryptRequest request)
     {
-        return SendAsync<DecryptRequest, DecryptResult>("Decrypt", request);
+        return SendAsync("Decrypt", request, KmsSerializerContext.Default.DecryptRequest, KmsSerializerContext.Default.DecryptResult);
     }
 
     #region Data Keys
 
     public Task<GenerateDataKeyResult> GenerateDataKeyAsync(GenerateDataKeyRequest request)
     {
-        return SendAsync<GenerateDataKeyRequest, GenerateDataKeyResult>("GenerateDataKey", request);
+        return SendAsync("GenerateDataKey", request, KmsSerializerContext.Default.GenerateDataKeyRequest, KmsSerializerContext.Default.GenerateDataKeyResult);
     }
 
     public Task<GenerateDataKeyResult> GenerateDataKeyWithoutPlaintextAsync(GenerateDataKeyRequest request)
     {
-        return SendAsync<GenerateDataKeyRequest, GenerateDataKeyResult>("GenerateDataKeyWithoutPlaintext", request);
+        return SendAsync("GenerateDataKeyWithoutPlaintext", request, KmsSerializerContext.Default.GenerateDataKeyRequest, KmsSerializerContext.Default.GenerateDataKeyResult);
     }
 
     #endregion
 
     #region Helpers
 
-    private static readonly JsonSerializerOptions s_jso = new() {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-    };
-
-    private async Task<TResult> SendAsync<TRequest, TResult>(string action, TRequest request)
+    private async Task<TResult> SendAsync<TRequest, TResult>(
+        string action,
+        TRequest request,
+        JsonTypeInfo<TRequest> requestJsonType,
+        JsonTypeInfo<TResult> resultJsonType)
         where TRequest : KmsRequest
         where TResult : KmsResult
     {
-        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, s_jso);
+        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, requestJsonType);
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint)
         {
@@ -106,15 +106,15 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
             return null!;
         }
 
-        var result = await response.Content.ReadFromJsonAsync<TResult>().ConfigureAwait(false);
+        var result = await response.Content.ReadFromJsonAsync(resultJsonType).ConfigureAwait(false);
 
         return result!;
     }
 
-    private async Task SendAsync<TRequest>(string action, TRequest request)
+    private async Task SendAsync<TRequest>(string action, TRequest request, JsonTypeInfo<TRequest> jsonRequestType)
       where TRequest : KmsRequest
     {
-        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, s_jso);
+        byte[] jsonBytes = JsonSerializer.SerializeToUtf8Bytes(request, jsonRequestType);
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Headers = {
