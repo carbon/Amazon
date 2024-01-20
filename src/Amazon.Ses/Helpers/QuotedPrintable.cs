@@ -4,11 +4,12 @@ using System.Text;
 
 namespace Amazon.Ses;
 
+// RFC 2047.
 public static class QuotedPrintable
 {
     public static string Encode(string text)
     {
-        // RFC 2047.
+        // TODO: handle > 76 length
 
         string encoded = EncodeContent(text);
 
@@ -31,8 +32,6 @@ public static class QuotedPrintable
         return a.Name!;
     }
 
-    // Based on https://stackoverflow.com/questions/11793734/code-for-encode-decode-quotedprintable
-
     private static string EncodeContent(string value)
     {
         if (string.IsNullOrEmpty(value))
@@ -40,40 +39,60 @@ public static class QuotedPrintable
             return value;
         }
 
-        byte[] rentedBuffer = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(value.Length));
+        int maxByteCount = Encoding.UTF8.GetMaxByteCount(value.Length);
+        byte[]? rentedBuffer = null;
 
-        ReadOnlySpan<byte> bytes = rentedBuffer.AsSpan(0, Encoding.UTF8.GetBytes(value, rentedBuffer));
+        Span<byte> buffer = maxByteCount < 128
+            ? stackalloc byte[128]
+            : (rentedBuffer = ArrayPool<byte>.Shared.Rent(maxByteCount));
 
-        var sb = new StringBuilder();
+        ReadOnlySpan<byte> bytes = buffer[..Encoding.UTF8.GetBytes(value, buffer)];
 
-        foreach (byte v in bytes)
+        var sb = new ValueStringBuilder(bytes.Length * 2);
+
+        for (int i = 0; i < bytes.Length; i++)
         {
-            // The following are not required to be encoded:
-            // - Tab (ASCII 9)
-            // - Space (ASCII 32)
-            // - Characters 33 to 126, except for the equal sign (61).
+            var b = bytes[i];
 
-            if ((v == 9) || ((v >= 32) && (v <= 60)) || ((v >= 62) && (v <= 126)))
+            if (b is 32) // ' '
             {
-                sb.Append(Convert.ToChar(v));
+                // spaces can either be encoded as either:
+                // =20 (the hexadecimal value of the space character in ASCII)
+                // an underscore (_)
+
+                if (i == bytes.Length - 1)
+                {
+                    // if a space appears at the end of a line, it must be encoded as =20 to prevent it from being trimmed or misinterpreted.
+                    sb.Append("=20");
+                }
+                else
+                {
+                    sb.Append('_');
+                }
+            }           
+            else if ((b < 33 || b > 126 || b == '=' || b == '?'))
+            {
+                sb.Append('=');
+                sb.Append(ToHexChar((b >> 4) & 0xF));
+                sb.Append(ToHexChar(b & 0xF));
             }
             else
             {
-                sb.Append($"={v:X2}");
+                sb.Append(Convert.ToChar(b));
             }
         }
 
-        ArrayPool<byte>.Shared.Return(rentedBuffer);
-
-        char lastChar = sb[^1];
-
-        if (char.IsWhiteSpace(lastChar))
+        if (rentedBuffer != null)
         {
-            sb.Remove(sb.Length - 1, 1);
-            sb.Append('=');
-            sb.Append(((int)lastChar).ToString("X2"));
+            ArrayPool<byte>.Shared.Return(rentedBuffer);
         }
 
         return sb.ToString();
+    }
+
+    private static char ToHexChar(int value)
+    {
+        if (value < 10) return (char)('0' + value);
+        return (char)('A' + (value - 10));
     }
 }
