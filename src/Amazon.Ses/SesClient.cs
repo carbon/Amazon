@@ -12,7 +12,7 @@ public sealed class SesClient(AwsRegion region, IAwsCredential credential)
 
     public const string Namespace = "http://ses.amazonaws.com/doc/2010-12-01/";
 
-    private static readonly ExponentialBackoffRetryPolicy retryPolicy = new(
+    private static readonly ExponentialBackoffRetryPolicy s_retryPolicy = new(
         initialDelay : TimeSpan.FromSeconds(1),
         maxDelay     : TimeSpan.FromSeconds(10),
         maxRetries   : 5
@@ -32,7 +32,7 @@ public sealed class SesClient(AwsRegion region, IAwsCredential credential)
             request.Add(pair);
         }
 
-        var text = await SendWithRetryPolicy(request, retryPolicy).ConfigureAwait(false);
+        var text = await SendWithRetryPolicy(request, s_retryPolicy).ConfigureAwait(false);
 
         return SendEmailResponse.Deserialize(text).SendEmailResult;
     }
@@ -46,7 +46,7 @@ public sealed class SesClient(AwsRegion region, IAwsCredential credential)
             data.Add(pair);
         }
 
-        var text = await SendWithRetryPolicy(data, retryPolicy).ConfigureAwait(false);
+        var text = await SendWithRetryPolicy(data, s_retryPolicy).ConfigureAwait(false);
 
         return SendRawEmailResponse.Deserialize(text).SendRawEmailResult;
     }

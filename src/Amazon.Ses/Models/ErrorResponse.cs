@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ses;
 
@@ -8,7 +6,7 @@ namespace Amazon.Ses;
 public sealed class ErrorResponse
 {
     [XmlElement]
-    public SesError Error { get; init; }
+    public required SesError Error { get; init; }
 
     public static ErrorResponse Deserialize(string text)
     {

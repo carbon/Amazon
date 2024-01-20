@@ -5,12 +5,12 @@ namespace Amazon.Ses;
 
 internal static class SesSerializer<T>
 {
-    private static readonly XmlSerializer serializer = new(typeof(T));
+    private static readonly XmlSerializer s_serializer = new(typeof(T));
 
     public static T Deserialize(string xmlText)
     {
         using var reader = new StringReader(xmlText);
 
-        return (T)serializer.Deserialize(reader)!;
+        return (T)s_serializer.Deserialize(reader)!;
     }
 }

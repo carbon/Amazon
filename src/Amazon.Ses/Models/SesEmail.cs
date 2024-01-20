@@ -8,7 +8,11 @@ namespace Amazon.Ses;
 
 public sealed class SesEmail
 {
-    public string Source { get; set; }
+    /// <summary>
+    /// The email address that is sending the email. 
+    /// This email address must be either individually verified with Amazon SES, or from a domain that has been verified with Amazon SES. 
+    /// </summary>
+    public required string Source { get; set; }
 
     public string[] ReplyTo { get; set; }
 
@@ -19,11 +23,7 @@ public sealed class SesEmail
 
     public string[]? Cc { get; set; }
 
-#nullable disable
-
-    public SesContent Subject { get; set; }
-
-#nullable enable
+    public required SesContent Subject { get; set; }
 
     public SesContent? Html { get; set; }
 
@@ -65,7 +65,7 @@ public sealed class SesEmail
 
         var doc = new SesEmail {
             Source = SesHelper.EncodeMailAddress(message.From!),
-            To = message.To.Select(r => SesHelper.EncodeMailAddress(r)).ToArray(),
+            To = message.To.Select(SesHelper.EncodeMailAddress).ToArray(),
             Subject = new SesContent(message.Subject, CharsetType.UTF8)
         };
 
