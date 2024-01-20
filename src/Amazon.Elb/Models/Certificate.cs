@@ -1,4 +1,4 @@
-﻿#nullable disable
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Amazon.Elb;
 
@@ -6,8 +6,7 @@ public sealed class Certificate
 {
     public Certificate() { }
 
-#nullable enable
-
+    [SetsRequiredMembers]
     public Certificate(string arn)
     {
         ArgumentException.ThrowIfNullOrEmpty(arn);
@@ -15,5 +14,5 @@ public sealed class Certificate
         CertificateArn = arn;
     }
 
-    public string CertificateArn { get; init; }
+    public required string CertificateArn { get; init; }
 }

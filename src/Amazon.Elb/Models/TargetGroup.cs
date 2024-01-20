@@ -55,6 +55,7 @@ public sealed class TargetGroup
     [XmlElement]
     public string TargetGroupName { get; init; }
 
+    // instance | ip | lambda | alb
     [XmlElement]
     public string TargetType { get; init; }
 

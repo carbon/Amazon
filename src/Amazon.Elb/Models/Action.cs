@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Amazon.Elb;
 
@@ -15,8 +13,8 @@ public sealed class Action
         Type = type;
     }
 
-    public string TargetGroupArn { get; init; }
+    public string? TargetGroupArn { get; init; }
 
-    // forward
+    // forward | authenticate-oidc | authenticate-cognito | redirect | fixed-response
     public required string Type { get; init; }
 }
