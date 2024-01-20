@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using Amazon.Ses.Serialization;
+
 namespace Amazon.Ses.Tests;
 
 public class ReceivedNotificationTests
@@ -7,7 +9,7 @@ public class ReceivedNotificationTests
     [Fact]
     public void CanDeserialize()
     {
-        var response = JsonSerializer.Deserialize<SesNotification>(
+        var notification = JsonSerializer.Deserialize(
             """
             {
               "notificationType":"Received",
@@ -111,35 +113,37 @@ public class ReceivedNotificationTests
               },
               "content":"Return-Path: <61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com>\r\nReceived: from a9-183.smtp-out.amazonses.com (a9-183.smtp-out.amazonses.com [54.240.9.183])\r\n by inbound-smtp.us-east-1.amazonaws.com with SMTP id d6iitobk75ur44p8kdnnp7g2n800\r\n for recipient@example.com;\r\n Fri, 11 Sep 2015 20:32:33 +0000 (UTC)\r\nDKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;\r\n\ts=ug7nbtf4gccmlpwj322ax3p6ow6yfsug; d=amazonses.com; t=1442003552;\r\n\th=From:To:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Date:Message-ID:Feedback-ID;\r\n\tbh=DWr3IOmYWoXCA9ARqGC/UaODfghffiwFNRIb2Mckyt4=;\r\n\tb=p4ukUDSFqhqiub+zPR0DW1kp7oJZakrzupr6LBe6sUuvqpBkig56UzUwc29rFbJF\r\n\thlX3Ov7DeYVNoN38stqwsF8ivcajXpQsXRC1cW9z8x875J041rClAjV7EGbLmudVpPX\r\n\t4hHst1XPyX5wmgdHIhmUuh8oZKpVqGi6bHGzzf7g=\r\nFrom: sender@example.com\r\nTo: recipient@example.com\r\nSubject: Example subject\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 7bit\r\nDate: Fri, 11 Sep 2015 20:32:32 +0000\r\nMessage-ID: <61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com>\r\nX-SES-Outgoing: 2015.09.11-54.240.9.183\r\nFeedback-ID: 1.us-east-1.Krv2FKpFdWV+KUYw3Qd6wcpPJ4Sv/pOPpEPSHn2u2o4=:AmazonSES\r\n\r\nExample content\r\n"
             }
-            """);
+            """, SesSerializerContext.Default.SesNotification);
 
-        Assert.Equal(SesNotificationType.Received, response.NotificationType);
+        Assert.NotNull(notification);
+        Assert.Equal(SesNotificationType.Received, notification.NotificationType);
 
-        Assert.Equal(222, response.Receipt.ProcessingTimeMillis);
+        Assert.NotNull(notification.Receipt);
+        Assert.Equal(222, notification.Receipt.ProcessingTimeMillis);
 
-        Assert.Equal("PASS", response.Receipt.SpamVerdict.Status);
-        Assert.Equal("PASS", response.Receipt.VirusVerdict.Status);
-        Assert.Equal("PASS", response.Receipt.SpfVerdict.Status);
-        Assert.Equal("PASS", response.Receipt.DkimVerdict.Status);
+        Assert.Equal("PASS", notification.Receipt.SpamVerdict.Status);
+        Assert.Equal("PASS", notification.Receipt.VirusVerdict.Status);
+        Assert.Equal("PASS", notification.Receipt.SpfVerdict.Status);
+        Assert.Equal("PASS", notification.Receipt.DkimVerdict.Status);
 
-        Assert.Equal(SesActionType.SNS, response.Receipt.Action.Type);
-        Assert.Equal("arn:aws:sns:us-east-1:012345678912:example-topic", response.Receipt.Action.TopicArn);
+        Assert.Equal(SesActionType.SNS, notification.Receipt.Action.Type);
+        Assert.Equal("arn:aws:sns:us-east-1:012345678912:example-topic", notification.Receipt.Action.TopicArn);
 
-        Assert.False(response.Mail.HeadersTruncated.Value);
+        Assert.False(notification.Mail.HeadersTruncated.Value);
 
-        Assert.Equal("61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com", response.Mail.Source);
-        Assert.Equal(13, response.Mail.Headers.Length);
+        Assert.Equal("61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com", notification.Mail.Source);
+        Assert.Equal(13, notification.Mail.Headers.Length);
 
-        Assert.Equal("Return-Path", response.Mail.Headers[0].Name);
-        Assert.Equal("<0000014fbe1c09cf-7cb9f704-7531-4e53-89a1-5fa9744f5eb6-000000@amazonses.com>", response.Mail.Headers[0].Value);
+        Assert.Equal("Return-Path", notification.Mail.Headers[0].Name);
+        Assert.Equal("<0000014fbe1c09cf-7cb9f704-7531-4e53-89a1-5fa9744f5eb6-000000@amazonses.com>", notification.Mail.Headers[0].Value);
 
-        Assert.Equal("Return-Path: <61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com>\r\nReceived: from a9-183.smtp-out.amazonses.com (a9-183.smtp-out.amazonses.com [54.240.9.183])\r\n by inbound-smtp.us-east-1.amazonaws.com with SMTP id d6iitobk75ur44p8kdnnp7g2n800\r\n for recipient@example.com;\r\n Fri, 11 Sep 2015 20:32:33 +0000 (UTC)\r\nDKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;\r\n\ts=ug7nbtf4gccmlpwj322ax3p6ow6yfsug; d=amazonses.com; t=1442003552;\r\n\th=From:To:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Date:Message-ID:Feedback-ID;\r\n\tbh=DWr3IOmYWoXCA9ARqGC/UaODfghffiwFNRIb2Mckyt4=;\r\n\tb=p4ukUDSFqhqiub+zPR0DW1kp7oJZakrzupr6LBe6sUuvqpBkig56UzUwc29rFbJF\r\n\thlX3Ov7DeYVNoN38stqwsF8ivcajXpQsXRC1cW9z8x875J041rClAjV7EGbLmudVpPX\r\n\t4hHst1XPyX5wmgdHIhmUuh8oZKpVqGi6bHGzzf7g=\r\nFrom: sender@example.com\r\nTo: recipient@example.com\r\nSubject: Example subject\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 7bit\r\nDate: Fri, 11 Sep 2015 20:32:32 +0000\r\nMessage-ID: <61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com>\r\nX-SES-Outgoing: 2015.09.11-54.240.9.183\r\nFeedback-ID: 1.us-east-1.Krv2FKpFdWV+KUYw3Qd6wcpPJ4Sv/pOPpEPSHn2u2o4=:AmazonSES\r\n\r\nExample content\r\n", response.Content);
+        Assert.Equal("Return-Path: <61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com>\r\nReceived: from a9-183.smtp-out.amazonses.com (a9-183.smtp-out.amazonses.com [54.240.9.183])\r\n by inbound-smtp.us-east-1.amazonaws.com with SMTP id d6iitobk75ur44p8kdnnp7g2n800\r\n for recipient@example.com;\r\n Fri, 11 Sep 2015 20:32:33 +0000 (UTC)\r\nDKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;\r\n\ts=ug7nbtf4gccmlpwj322ax3p6ow6yfsug; d=amazonses.com; t=1442003552;\r\n\th=From:To:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Date:Message-ID:Feedback-ID;\r\n\tbh=DWr3IOmYWoXCA9ARqGC/UaODfghffiwFNRIb2Mckyt4=;\r\n\tb=p4ukUDSFqhqiub+zPR0DW1kp7oJZakrzupr6LBe6sUuvqpBkig56UzUwc29rFbJF\r\n\thlX3Ov7DeYVNoN38stqwsF8ivcajXpQsXRC1cW9z8x875J041rClAjV7EGbLmudVpPX\r\n\t4hHst1XPyX5wmgdHIhmUuh8oZKpVqGi6bHGzzf7g=\r\nFrom: sender@example.com\r\nTo: recipient@example.com\r\nSubject: Example subject\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 7bit\r\nDate: Fri, 11 Sep 2015 20:32:32 +0000\r\nMessage-ID: <61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com>\r\nX-SES-Outgoing: 2015.09.11-54.240.9.183\r\nFeedback-ID: 1.us-east-1.Krv2FKpFdWV+KUYw3Qd6wcpPJ4Sv/pOPpEPSHn2u2o4=:AmazonSES\r\n\r\nExample content\r\n", notification.Content);
 
-        Assert.Equal("0000014fbe1c09cf-7cb9f704-7531-4e53-89a1-5fa9744f5eb6-000000@amazonses.com", response.Mail.CommonHeaders.ReturnPath);
-        Assert.Equal("sender@example.com", response.Mail.CommonHeaders.From[0]);
-        Assert.Equal("Fri, 11 Sep 2015 20:32:32 +0000", response.Mail.CommonHeaders.Date);
-        Assert.Equal("recipient@example.com", response.Mail.CommonHeaders.To[0]);
-        Assert.Equal("<61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com>", response.Mail.CommonHeaders.MessageId);
-        Assert.Equal("Example subject", response.Mail.CommonHeaders.Subject);
+        Assert.Equal("0000014fbe1c09cf-7cb9f704-7531-4e53-89a1-5fa9744f5eb6-000000@amazonses.com", notification.Mail.CommonHeaders.ReturnPath);
+        Assert.Equal("sender@example.com", notification.Mail.CommonHeaders.From[0]);
+        Assert.Equal("Fri, 11 Sep 2015 20:32:32 +0000", notification.Mail.CommonHeaders.Date);
+        Assert.Equal("recipient@example.com", notification.Mail.CommonHeaders.To[0]);
+        Assert.Equal("<61967230-7A45-4A9D-BEC9-87CBCF2211C9@example.com>", notification.Mail.CommonHeaders.MessageId);
+        Assert.Equal("Example subject", notification.Mail.CommonHeaders.Subject);
     }
 }

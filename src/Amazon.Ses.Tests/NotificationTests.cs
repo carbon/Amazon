@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using Amazon.Ses.Serialization;
+
 namespace Amazon.Ses.Tests;
 
 public class NotificationTests
@@ -7,7 +9,7 @@ public class NotificationTests
     [Fact]
     public void CanDeserializeComplaint()
     {
-        var notification = JsonSerializer.Deserialize<SesNotification>(
+        SesNotification? notification = JsonSerializer.Deserialize(
             """
             {
                 "notificationType":"Complaint",
@@ -32,10 +34,13 @@ public class NotificationTests
                     ]
                 }
             }
-            """);
+            """, SesSerializerContext.Default.SesNotification);
 
+        Assert.NotNull(notification);
         var complaint = notification.Complaint;
         var mail = notification.Mail;
+
+        Assert.NotNull(complaint);
 
         Assert.Equal(SesNotificationType.Complaint,                                  notification.NotificationType);
         Assert.Equal(2012,                                                           complaint.Timestamp.Year);
@@ -53,15 +58,19 @@ public class NotificationTests
     }
 
     [Fact]
-    public void ParseBounce()
+    public void CanDeserializeBounce()
     {
         var text = """{"notificationType":"Bounce","bounce":{"bounceSubType":"Suppressed","bounceType":"Permanent","bouncedRecipients":[{"action":"failed","diagnosticCode":"Amazon SES has suppressed sending to this address because it has a recent history of bouncing as an invalid address. For more information about how to remove an address from the suppression list, see the Amazon SES Developer Guide: http://docs.aws.amazon.com/ses/latest/DeveloperGuide/remove-from-suppressionlist.html","status":"5.1.1","emailAddress":"hi@simulator.amazonses.com"}],"reportingMTA":"dns; amazonses.com","timestamp":"2014-01-14T07:24:56.332Z","feedbackId":"000001438fa38a49-f7cb046b-7cec-11e3-b22a-31634d3963ed-000000"},"mail":{"timestamp":"2014-01-14T07:24:53.000Z","destination":["hi@simulator.amazonses.com"],"messageId":"000001438fa37fa1-08180675-1d15-4bfc-b388-3b71a75f5a31-000000","source":"hello@carbonmade.com"}}""";
 
-        var notification = JsonSerializer.Deserialize<SesNotification>(text);
+        SesNotification? notification = JsonSerializer.Deserialize(text, SesSerializerContext.Default.SesNotification);
+
+        Assert.NotNull(notification);
 
         var mail = notification.Mail;
 
         Assert.Equal(SesNotificationType.Bounce, notification.NotificationType);
+
+        Assert.NotNull(notification.Bounce);
 
         Assert.Equal(SesBounceType.Permanent, notification.Bounce.BounceType);
         Assert.Equal(SesBounceSubtype.Suppressed, notification.Bounce.BounceSubType);
@@ -75,9 +84,9 @@ public class NotificationTests
     }
 
     [Fact]
-    public void ParseDelivery()
+    public void CanDeserializeDelivery()
     {
-        var notification = JsonSerializer.Deserialize<SesNotification>(
+        SesNotification? notification = JsonSerializer.Deserialize(
             """
             {
               "notificationType":"Delivery",
@@ -92,19 +101,24 @@ public class NotificationTests
               "delivery":{
                 "timestamp":"2014-05-28T22:41:01.184Z",
                 "recipients":["success@simulator.amazonses.com"],
-                "processingTimeMillis":1546,     
+                "processingTimeMillis":1546,
                 "reportingMTA":"a8-70.smtp-out.amazonses.com",
                 "smtpResponse":"250 ok:  Message 64111812 accepted"
               }
             }
-            """);
+            """, SesSerializerContext.Default.SesNotification);
 
+        Assert.NotNull(notification);
         Assert.Equal(SesNotificationType.Delivery, notification.NotificationType);
 
         var delivery = notification.Delivery;
 
+        Assert.NotNull(delivery);
+
+        Assert.NotNull(delivery.Recipients);
         Assert.Equal("success@simulator.amazonses.com", delivery.Recipients[0]);
         Assert.Equal(1546, delivery.ProcessingTimeMillis);
+        Assert.Equal("a8-70.smtp-out.amazonses.com", delivery.ReportingMTA);
         Assert.Equal("250 ok:  Message 64111812 accepted", delivery.SmtpResponse);
     }
 }
