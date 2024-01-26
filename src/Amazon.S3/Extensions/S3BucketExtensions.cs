@@ -17,10 +17,7 @@ public static class S3BucketExtensions
 
         options ??= S3DownloadOptions.Default;
 
-        if (options.MaxThreadCount <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(options.MaxThreadCount), options.MaxThreadCount, "Must be > 0");
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(options.MaxThreadCount);
 
         if (options.MaxThreadCount > 1)
         {

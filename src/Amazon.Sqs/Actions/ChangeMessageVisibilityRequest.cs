@@ -17,11 +17,7 @@ public sealed class ChangeMessageVisibilityRequest : SqsRequest
     {
         ArgumentException.ThrowIfNullOrEmpty(queueUrl);
         ArgumentException.ThrowIfNullOrEmpty(receiptHandle);
-
-        if (visibilityTimeout < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(visibilityTimeout), visibilityTimeout, "Must be greater than 0");
-        }
+        ArgumentOutOfRangeException.ThrowIfNegative(visibilityTimeout);
 
         if (visibilityTimeout > 43_200)
         {
