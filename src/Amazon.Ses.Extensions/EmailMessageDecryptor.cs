@@ -32,9 +32,10 @@ public sealed class EmailMessageDecryptor(KmsClient kms)
             throw new Exception($"x-amz-tag-len must be 128 bits. Was {tagLengthInBits}");
         }
 
-        if (contentLength > 25_000_000)
+        // https://aws.amazon.com/about-aws/whats-new/2021/09/amazon-ses-emails-message-40mb/
+        if (contentLength > 40_000_000)
         {
-            throw new Exception($"> 25MB. Was {contentLength}");
+            throw new Exception($"> 40MB. Was {contentLength}");
         }
 
         string kmsCmkId = encryptionContext["kms_cmk_id"];
