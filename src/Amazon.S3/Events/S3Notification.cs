@@ -1,13 +1,11 @@
-﻿#nullable disable
-
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.S3.Events;
 
 public sealed class S3Notification
 {
     [JsonPropertyName("Records")]
-    public S3Event[] Records { get; init; }
+    public required S3Event[] Records { get; init; }
 }
 
 // https://docs.aws.amazon.com/AmazonS3/latest/dev/notification-content-structure.html
