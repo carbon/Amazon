@@ -5,7 +5,7 @@ public class AwsRegionTests
     [Fact]
     public void Enum()
     {
-        Assert.Equal(26, AwsRegion.All.Length);
+        Assert.Equal(27, AwsRegion.All.Length);
 
         foreach (var region in AwsRegion.All)
         {
@@ -32,7 +32,7 @@ public class AwsRegionTests
         Assert.Equal("us-east-1", usEast1.ToString());
         Assert.Equal("us-east-2", usEast2.ToString());
 
-        Assert.Equal("us-east-1"u8.ToArray(), usEast1.Utf8Name.ToArray());
+        Assert.Equal("us-east-1"u8, usEast1.Utf8Name);
     }
 
     [Fact]
