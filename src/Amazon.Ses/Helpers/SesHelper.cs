@@ -16,6 +16,23 @@ public static class SesHelper
         return Ascii.IsValid(email.User);
     }
 
+    public static string DecodeMailAddress(string address)
+    {
+        try
+        {
+            if (address.StartsWith("=?UTF", StringComparison.OrdinalIgnoreCase))
+            {
+                return new MailAddress(QuotedPrintable.Decode(address)).Address.ToLowerInvariant();
+            }
+
+            return new MailAddress(address).Address.ToLowerInvariant();
+        }
+        catch
+        {
+            throw new Exception($"error parsing email - '{address}'");
+        }
+    }
+
     public static string EncodeMailAddress(MailAddress email)
     {
         var result = new ValueStringBuilder(128);
