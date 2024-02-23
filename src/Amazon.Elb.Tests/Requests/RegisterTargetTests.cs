@@ -7,10 +7,10 @@ public class RegisterTargetTests
     {
         var registerTargets = new RegisterTargetsRequest {
             TargetGroupArn = "arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067",
-            Targets = new[] {
+            Targets = [
                 new TargetDescription { Id = "i-80c8dd94", Port = 1 },
                 new TargetDescription { Id = "i-ceddcd4d" }
-            }
+            ]
         };
 
         Assert.Equal("Action=RegisterTargets&TargetGroupArn=arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067&Targets.member.1.Id=i-80c8dd94&Targets.member.1.Port=1&Targets.member.2.Id=i-ceddcd4d", Serializer.Serialize(registerTargets));
@@ -21,10 +21,10 @@ public class RegisterTargetTests
     {
         var registerTargets = new RegisterTargetsRequest(
             targetGroupArn : "target-arn",
-            targets         : new[] {
+            targets         : [
                 new TargetDescription("i-80c8dd94", 1),
                 new TargetDescription("i-ceddcd4d")
-            }
+            ]
         );
 
         Assert.Equal("Action=RegisterTargets&TargetGroupArn=target-arn&Targets.member.1.Id=i-80c8dd94&Targets.member.1.Port=1&Targets.member.2.Id=i-ceddcd4d", Serializer.Serialize(registerTargets));
