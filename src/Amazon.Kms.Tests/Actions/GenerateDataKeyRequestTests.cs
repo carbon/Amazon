@@ -36,4 +36,29 @@ public class GenerateDataKeyRequestTests
 
         Assert.Equal("""{"KeyId":"1","KeySpec":"AES_128"}"""u8, JsonSerializer.SerializeToUtf8Bytes(request, KmsSerializerContext.Default.GenerateDataKeyRequest));
     }
+
+    [Fact]
+    public void CanSerializeNumberOfBytes()
+    {
+        var request = new GenerateDataKeyRequest {
+            KeyId = "1",
+            NumberOfBytes = 128
+        };
+
+        Assert.Equal("""{"KeyId":"1","NumberOfBytes":128}"""u8, JsonSerializer.SerializeToUtf8Bytes(request, KmsSerializerContext.Default.GenerateDataKeyRequest));
+    }
+
+    [Fact]
+    public void CanSerialize2()
+    {
+        var request = new GenerateDataKeyRequest {
+            KeyId = "1",
+            KeySpec = KeySpec.AES_128,
+            EncryptionContext = new Dictionary<string, string> {
+                { "a", "b" }
+            }
+        };
+
+        Assert.Equal("""{"KeyId":"1","EncryptionContext":{"a":"b"},"KeySpec":"AES_128"}"""u8, JsonSerializer.SerializeToUtf8Bytes(request, KmsSerializerContext.Default.GenerateDataKeyRequest));
+    }
 }

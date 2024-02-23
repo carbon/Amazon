@@ -33,4 +33,21 @@ public class DecryptRequestTests
             {"KeyId":"abc","CiphertextBlob":"dGVzdA=="}
             """, JsonSerializer.Serialize(request, KmsSerializerContext.Default.DecryptRequest));
     }
+
+    [Fact]
+    public void CanSerialize2()
+    {
+        var ciphertext = "test"u8.ToArray();
+        var request = new DecryptRequest("abc", ciphertext, null) {
+            EncryptionAlgorithm = EncryptionAlgorithm.RSAES_OAEP_SHA_256 
+        };
+
+        Assert.Equal("abc", request.KeyId);
+        Assert.Equal(ciphertext, request.CiphertextBlob);
+
+        Assert.Equal(
+            """
+            {"KeyId":"abc","CiphertextBlob":"dGVzdA==","EncryptionAlgorithm":"RSAES_OAEP_SHA_256"}
+            """, JsonSerializer.Serialize(request, KmsSerializerContext.Default.DecryptRequest));
+    }
 }
