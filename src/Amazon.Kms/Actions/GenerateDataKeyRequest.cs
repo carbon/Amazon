@@ -20,7 +20,6 @@ public sealed class GenerateDataKeyRequest : KmsRequest
         EncryptionContext = encryptionContext;
     }
 
-    [JsonPropertyName("KeyId")]
     public required string KeyId { get; init; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -29,9 +28,15 @@ public sealed class GenerateDataKeyRequest : KmsRequest
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string[]? GrantTokens { get; init; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public KeySpec? KeySpec { get; init; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int? NumberOfBytes { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public RecipientInfo? Recipient { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool DryRun { get; init; }
 }

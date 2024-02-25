@@ -6,19 +6,22 @@ public sealed class RetireGrantRequest : KmsRequest
 {
     public RetireGrantRequest(string grantToken)
     {
-        ArgumentException.ThrowIfNullOrEmpty(grantToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(grantToken);
 
         GrantToken = grantToken;
     }
 
     public RetireGrantRequest(string keyId, string grantId)
     {
-        ArgumentException.ThrowIfNullOrEmpty(keyId);
-        ArgumentException.ThrowIfNullOrEmpty(grantId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(keyId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(grantId);
 
         KeyId = keyId;
         GrantId = grantId;
     }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? KeyId { get; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? GrantId { get; }
@@ -26,6 +29,6 @@ public sealed class RetireGrantRequest : KmsRequest
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? GrantToken { get; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? KeyId { get; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool DryRun { get; init; }
 }
