@@ -1,4 +1,6 @@
-﻿namespace Amazon.S3.Actions.Tests;
+﻿using System.Net.Mime;
+
+namespace Amazon.S3.Actions.Tests;
 
 public class InitiateMultipartUploadRequestTests
 {
@@ -6,7 +8,7 @@ public class InitiateMultipartUploadRequestTests
     public void CanConstruct()
     {
         var request = new InitiateMultipartUploadRequest("s3.aws.com", "bucket-name", "object-key") {
-            ContentType = "application/json"
+            ContentType = MediaTypeNames.Application.Json
         };
 
         Assert.Equal("/bucket-name/object-key?uploads", request.RequestUri.PathAndQuery);

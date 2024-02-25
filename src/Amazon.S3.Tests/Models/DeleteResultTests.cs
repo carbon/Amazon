@@ -20,6 +20,9 @@ public class DeleteResultTests
             </DeleteResult>
             """);
 
+        Assert.NotNull(result.Deleted);
+        Assert.NotNull(result.Errors);
+
         Assert.Single(result.Deleted);
         Assert.Single(result.Errors);
 

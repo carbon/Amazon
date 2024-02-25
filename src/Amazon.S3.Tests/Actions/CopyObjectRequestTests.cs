@@ -6,8 +6,8 @@ public class CopyObjectRequestTests
     public void CanConstruct()
     {
         var request = new CopyObjectRequest(
-            host   : "s3.amazon.com",
-            source : new S3ObjectLocation("sourceBucket", "video.mp4"),
+            host        : "s3.amazon.com",
+            source      : new S3ObjectLocation("sourceBucket", "video.mp4"),
             destination : new S3ObjectLocation("targetBucket", "video.mp4")
         );
 
@@ -21,8 +21,8 @@ public class CopyObjectRequestTests
     public void CanSetMetdataDirective_Replace()
     {
         var request = new CopyObjectRequest(
-            host   : "s3.amazon.com",
-            source : new S3ObjectLocation("sourceBucket", "video.mp4"),
+            host        : "s3.amazon.com",
+            source      : new S3ObjectLocation("sourceBucket", "video.mp4"),
             destination : new S3ObjectLocation("targetBucket", "video.mp4")
         );
 

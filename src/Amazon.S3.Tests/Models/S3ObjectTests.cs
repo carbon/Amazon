@@ -26,7 +26,7 @@ public class S3ObjectTests
     }
 
     [Fact]
-    public void CanDispose()
+    public async Task CanDispose()
     {
         var response = GetMockResponse();
 
@@ -34,7 +34,7 @@ public class S3ObjectTests
 
         blob.Dispose();
 
-        Assert.ThrowsAsync<ObjectDisposedException>(async () => await blob.OpenAsync());
+        await Assert.ThrowsAsync<ObjectDisposedException>(async () => { await blob.OpenAsync(); });
     }
 
     private static HttpResponseMessage GetMockResponse()
