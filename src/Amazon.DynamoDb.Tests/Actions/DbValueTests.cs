@@ -36,7 +36,7 @@ public class DbValueTests
     [Fact]
     public void BinaryTests()
     {
-        var value = JsonSerializer.Deserialize<DbValue>("""{"B":"dmFsdWU="}""");
+        var value = JsonSerializer.Deserialize<DbValue>("""{"B":"dmFsdWU="}"""u8);
 
         Assert.Equal(DbValueType.B, value.Kind);
         Assert.Equal("dmFsdWU=", Convert.ToBase64String(value.ToBinary()));
@@ -98,7 +98,7 @@ public class DbValueTests
     [Fact]
     public void CanDeserializeNumericLists()
     {
-        var value = JsonSerializer.Deserialize<DbValue>("""{ "L": [ { "N": "1" }, { "N":"2" } ] }""");
+        var value = JsonSerializer.Deserialize<DbValue>("""{ "L": [ { "N": "1" }, { "N":"2" } ] }"""u8);
 
         Assert.Equal(DbValueType.L, value.Kind);
 
@@ -132,14 +132,12 @@ public class DbValueTests
     [Fact]
     public void DbMap5()
     {
-        var ips = new List<IPAddress> {
-            IPAddress.Parse("192.168.1.1"),
-            IPAddress.Parse("192.168.1.2")
-        };
-
         var value = new DbValue(AttributeCollection.FromObject(new Machine {
             Id = 1,
-            Ips = ips
+            Ips = [
+                IPAddress.Parse("192.168.1.1"),
+                IPAddress.Parse("192.168.1.2")
+            ]
         }));
 
         Assert.Equal(
@@ -312,9 +310,13 @@ public class DbValueTests
     {
         var value = JsonSerializer.Deserialize<DbValue>(
             """
-            { "L": [ { "N": "1.1" }, { "N":"7.543" } ] }
-            """
-        );
+            { 
+              "L": [ 
+                { "N": "1.1" },
+                { "N":"7.543" }
+              ]
+            }
+            """u8);
 
         Assert.Equal(DbValueType.L, value.Kind);
 
@@ -324,7 +326,7 @@ public class DbValueTests
     [Fact]
     public void DbMap1()
     {
-        var dbValue = Deserialize("""{"M":{"a":{"N":"1"},"b":{"S":"boat"},"c":{"BOOL":true}}}""");
+        var dbValue = Deserialize("""{"M":{"a":{"N":"1"},"b":{"S":"boat"},"c":{"BOOL":true}}}"""u8);
 
         Assert.Equal(DbValueType.M, dbValue.Kind);
 
@@ -339,7 +341,7 @@ public class DbValueTests
         Assert.Equal(DbValueType.BOOL, c.Kind);
     }
 
-    private static DbValue Deserialize(ReadOnlySpan<char> text)
+    private static DbValue Deserialize(ReadOnlySpan<byte> text)
     {
         return JsonSerializer.Deserialize<DbValue>(text);
     }

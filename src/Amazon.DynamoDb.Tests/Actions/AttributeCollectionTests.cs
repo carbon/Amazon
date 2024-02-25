@@ -100,7 +100,7 @@ public class AttributeCollectionTests
     [Fact]
     public void Db_Item2()
     {
-        var item = JsonSerializer.Deserialize<AttributeCollection>("""{"hitCount":{"N":"225"},"date":{"S":"2011-05-31T00:00:00Z"},"siteId":{"N":"221051"}}""");
+        var item = JsonSerializer.Deserialize<AttributeCollection>("""{"hitCount":{"N":"225"},"date":{"S":"2011-05-31T00:00:00Z"},"siteId":{"N":"221051"}}"""u8);
 
         Assert.Equal("225", item["hitCount"].Value);
         Assert.Equal("2011-05-31T00:00:00Z", item["date"].Value);
@@ -130,7 +130,7 @@ public class AttributeCollectionTests
     [Fact]
     public void Db_Item4()
     {
-        var item = JsonSerializer.Deserialize<AttributeCollection>("""{"Boolean":{"BOOL":true}}""");
+        var item = JsonSerializer.Deserialize<AttributeCollection>("""{"Boolean":{"BOOL":true}}"""u8);
 
         Assert.Equal(DbValueType.BOOL, item["Boolean"].Kind);
         Assert.True((bool)item["Boolean"].Value);
