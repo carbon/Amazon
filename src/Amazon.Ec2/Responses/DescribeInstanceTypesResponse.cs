@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Ec2;
 
@@ -8,14 +6,14 @@ namespace Amazon.Ec2;
 public sealed class DescribeInstanceTypesResponse
 {
     [XmlElement("requestId")]
-    public string RequestId { get; init; }
+    public required string RequestId { get; init; }
 
     [XmlElement("nextToken")]
-    public string NextToken { get; init; }
+    public string? NextToken { get; init; }
 
     [XmlArray("instanceTypeSet")]
     [XmlArrayItem("item")]
-    public InstanceTypeInfo[] InstanceTypes { get; init; }
+    public required InstanceTypeInfo[] InstanceTypes { get; init; }
 
     public static DescribeInstanceTypesResponse Deserialize(string text)
     {
