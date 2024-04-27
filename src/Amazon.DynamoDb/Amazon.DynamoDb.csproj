@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.DynamoDb</AssemblyName>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.31.0</Version>
+    <Version>0.31.1</Version>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="Carbon.Data" Version="2.12.0" />
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="8.0.4" />
   </ItemGroup>
 
 </Project>
