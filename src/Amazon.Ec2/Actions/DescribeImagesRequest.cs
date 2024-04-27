@@ -13,8 +13,8 @@ public sealed class DescribeImagesRequest : DescribeRequest, IEc2Request
 
     public string[]? ImageIds { get; }
 
-    public List<string> OwnerIds { get; } = [];
-
+    public string[]? OwnerIds { get; init; }
+    
     List<KeyValuePair<string, string>> IEc2Request.ToParams()
     {
         var parameters = GetParameters("DescribeImages");

@@ -6,7 +6,7 @@ namespace Amazon.Ec2;
 
 public sealed class Image
 {
-    // i386 | x86_64
+    // i386 | x86_64 | arm64 | x86_64_mac | arm64_mac
     [XmlElement("architecture")]
     public string Architecture { get; init; }
 
@@ -22,11 +22,15 @@ public sealed class Image
     [XmlElement("imageLocation")]
     public string ImageLocation { get; init; }
 
+    // amazon | aws-marketplace
     [XmlElement("imageOwnerAlias")]
     public string ImageOwnerAlias { get; init; }
 
+    /// <summary>
+    /// The ID of the AWS account that owns the image.
+    /// </summary>
     [XmlElement("imageOwnerId")]
-    public long ImageOwnerId { get; init; }
+    public string ImageOwnerId { get; init; }
 
     // pending | available | invalid | deregistered | transient | failed | error
     [XmlElement("imageState")]
@@ -39,22 +43,28 @@ public sealed class Image
     [XmlElement("isPublic")]
     public bool IsPublic { get; init; }
 
+#nullable enable
     [XmlElement("kernelId")]
-    public string KernelId { get; init; }
+    public string? KernelId { get; init; }
+#nullable disable
 
     [XmlElement("name")]
     public string Name { get; init; }
 
+#nullable enable
     // Windows | blank
     [XmlElement("platform")]
-    public string Platform { get; init; }
+    public string? Platform { get; init; }
+#nullable disable
 
     // ovm | xen
     [XmlElement("hypervisor")]
     public string Hypervisor { get; init; }
 
+#nullable enable
     [XmlElement("ramDiskId")]
-    public string RamDiskId { get; init; }
+    public string? RamDiskId { get; init; }
+#nullable disable
 
     // ebs | instance-store
     [XmlElement("rootDeviceType")]
@@ -66,4 +76,7 @@ public sealed class Image
     // hvm | paravirtual
     [XmlElement("virtualizationType")]
     public string VirtualizationType { get; init; }
+
+    [XmlElement("creationDate")]
+    public DateTime? CreationDate { get; init; }
 }
