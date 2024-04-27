@@ -4,13 +4,11 @@ using Amazon.DynamoDb.Serialization;
 
 namespace Amazon.DynamoDb;
 
-public sealed class BatchGetItemResult(
-    IReadOnlyList<TableItemCollection> responses,
-    ConsumedCapacity[]? consumedCapacity = null)
+public sealed class BatchGetItemResult
 {
-    public ConsumedCapacity[]? ConsumedCapacity { get; } = consumedCapacity;
+    public required IReadOnlyList<TableItemCollection> Responses { get; init; }
 
-    public IReadOnlyList<TableItemCollection> Responses { get; } = responses;
+    public ConsumedCapacity[]? ConsumedCapacity { get; init; }
 
     public IReadOnlyList<TableKeys>? UnprocessedKeys { get; init; }
 
@@ -46,8 +44,12 @@ public sealed class BatchGetItemResult(
             }
         }
 
-        // TODO: UnprocessedKeys
+        // TODO:
+        // UnprocessedKeys
 
-        return new BatchGetItemResult(responses ?? [], consumedCapacity);
+        return new BatchGetItemResult {
+            Responses = responses ?? [],
+            ConsumedCapacity = consumedCapacity
+        };
     }
 }

@@ -14,7 +14,7 @@ public sealed class DynamoExpression
     private int expressionCount = 0;
 
     public DynamoExpression()
-        : this(new Dictionary<string, string>(), new AttributeCollection())
+        : this([], new AttributeCollection())
     { }
 
     public DynamoExpression(
@@ -50,21 +50,28 @@ public sealed class DynamoExpression
             sb.Append(" and ");
         }
 
-        WritePrimary(expression);
+        WritePrimaryExpression(expression);
 
         expressionCount++;
     }
 
     #region Writers
 
-    private void WritePrimary(Expression expression)
+    private void WritePrimaryExpression(Expression expression)
     {
         switch (expression)
         {
-            case BinaryExpression binary: WriteBinaryExpression(binary); break;
-            case BetweenExpression between: WriteBetweenExpression(between); break;
-            case FunctionExpression func: WriteFunctionExpression(func); break;
-            default: throw new Exception($"Invalid primary expression. Was {expression.Kind}");
+            case BinaryExpression binaryExpression:
+                WriteBinaryExpression(binaryExpression);
+                break;
+            case BetweenExpression betweenExpression:
+                WriteBetweenExpression(betweenExpression); 
+                break;
+            case FunctionExpression functionExpression:
+                WriteFunctionExpression(functionExpression);
+                break;
+            default: 
+                throw new Exception($"Invalid primary expression. Was {expression.Kind}");
         }
     }
 
@@ -94,11 +101,21 @@ public sealed class DynamoExpression
     {
         switch (e)
         {
-            case Symbol symbol: WriteName(symbol.Name); break;
-            case BinaryExpression binary: WriteBinaryExpression(binary); break;
-            case Constant constant: WriteValue(constant); break;
-            case FunctionExpression func: WriteFunctionExpression(func); break;
-            case BetweenExpression between: WriteBetweenExpression(between); break;
+            case Symbol symbolExpression: 
+                WriteName(symbolExpression.Name); 
+                break;
+            case BinaryExpression binaryExpression:
+                WriteBinaryExpression(binaryExpression); 
+                break;
+            case Constant constant: 
+                WriteValue(constant); 
+                break;
+            case FunctionExpression functionExpression: 
+                WriteFunctionExpression(functionExpression);
+                break;
+            case BetweenExpression betweenExpression: 
+                WriteBetweenExpression(betweenExpression); 
+                break;
             default:
                 throw new Exception($"Invalid expression. Was {e.Kind}");
         }

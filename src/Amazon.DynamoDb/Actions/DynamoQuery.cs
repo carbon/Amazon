@@ -86,7 +86,7 @@ public sealed class DynamoQuery
     {
         if (_filter is null)
         {
-            var attributeNames = ExpressionAttributeNames ?? new Dictionary<string, string>();
+            var attributeNames = ExpressionAttributeNames ?? [];
 
             ExpressionAttributeValues ??= [];
 
@@ -96,7 +96,6 @@ public sealed class DynamoQuery
         foreach (Expression condition in conditions)
         {
             _filter.Add(condition);
-
         }
 
         FilterExpression = _filter.Text;

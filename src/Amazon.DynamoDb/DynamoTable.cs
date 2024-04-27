@@ -122,7 +122,7 @@ public class DynamoTable<T, TKey>
 
         var errorMessage = $"Unrecoverable exception getting '{key}' from '{_tableName}'";
 
-        throw new Exception(errorMessage, lastException);
+        throw new DynamoDbException(errorMessage, lastException);
     }
 
     public async Task<IReadOnlyList<T>> FindAllAsync(params Dictionary<string, DbValue>[] keys)
