@@ -1,7 +1,8 @@
 ﻿using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Xml.Linq;
+
+using Amazon.S3.Helpers;
 
 namespace Amazon.S3;
 
@@ -28,23 +29,30 @@ public sealed class PutObjectTaggingRequest : S3Request
         CompletionOption = HttpCompletionOption.ResponseContentRead;
     }
 
-    private static string ToXmlString(IEnumerable<KeyValuePair<string, string>> tagset)
+    private static string ToXmlString(IEnumerable<KeyValuePair<string, string>> tagSet)
     {
-        var root = new XElement("Tagging");
+        var writer = new XmlStringBuilder();
 
-        var tagSet = new XElement("TagSet");
-
-        foreach (var tag in tagset)
+        writer.WriteTagStart("Tagging");
         {
-            tagSet.Add(new XElement("Tag",
-                new XElement("Key", tag.Key),
-                new XElement("Value", tag.Value)
-            ));
+            writer.WriteTagStart("TagSet");
+            {
+                foreach (var tag in tagSet)
+                {
+                    writer.WriteTagStart("Tag");
+                    {
+                        writer.WriteTag("Key", tag.Key);
+                        writer.WriteTag("Value", tag.Value);
+                    }
+
+                    writer.WriteTagEnd("Tag");
+                }
+            }
+            writer.WriteTagEnd("TagSet");
         }
+        writer.WriteTagEnd("Tagging");
 
-        root.Add(tagSet);
-
-        return root.ToString(SaveOptions.DisableFormatting);
+        return writer.ToString();
     }
 }
 

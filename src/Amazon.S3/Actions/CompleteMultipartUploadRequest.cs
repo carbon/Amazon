@@ -1,6 +1,8 @@
+using System.Globalization;
 using System.Net.Http;
 using System.Text;
-using System.Xml.Linq;
+
+using Amazon.S3.Helpers;
 
 using Carbon.Storage;
 
@@ -30,17 +32,23 @@ public sealed class CompleteMultipartUpload(IUploadBlock[] parts)
 
     public string ToXmlString()
     {
-        var root = new XElement("CompleteMultipartUpload");
+        var sb = new XmlStringBuilder(true);
 
-        foreach (var part in Parts)
+        sb.WriteTagStart("CompleteMultipartUpload");
         {
-            root.Add(new XElement("Part",
-                new XElement("PartNumber", part.Number),
-                new XElement("ETag", part.BlockId)
-            ));
+            foreach (var part in Parts)
+            {
+                sb.WriteTagStart("Part");
+                {
+                    sb.WriteTag("PartNumber", part.Number.ToString(CultureInfo.InvariantCulture));
+                    sb.WriteTag("ETag", part.BlockId);
+                }
+                sb.WriteTagEnd("Part");
+            }
         }
+        sb.WriteTagEnd("CompleteMultipartUpload");
 
-        return root.ToString();
+        return sb.ToString();
     }
 }
 

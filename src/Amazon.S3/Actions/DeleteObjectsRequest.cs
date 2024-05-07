@@ -1,7 +1,8 @@
 ﻿using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Xml.Linq;
+
+using Amazon.S3.Helpers;
 
 namespace Amazon.S3;
 
@@ -43,25 +44,30 @@ public sealed class DeleteBatch
 
     public bool Quite { get; }
 
-    public string ToXmlString(SaveOptions options = SaveOptions.DisableFormatting)
+    public string ToXmlString(bool pretty = false)
     {
-        var root = new XElement("Delete");
+        using var sb = new XmlStringBuilder(pretty);
+
+        sb.WriteTagStart("Delete");
 
         if (Quite)
         {
-            root.Add(new XElement("Quiet", true));
+            sb.WriteTag("Quiet", "true");
         }
 
-        foreach (string key in _keys)
+        foreach (var key in _keys)
         {
-            root.Add(new XElement("Object",
-                new XElement("Key", key)
-            ));
+            sb.WriteTagStart("Object");
+            sb.WriteTag("Key", key);
+            sb.WriteTagEnd("Object");
         }
 
-        return root.ToString(options);
+        sb.WriteTagEnd("Delete");
+
+        return sb.ToString();
     }
 }
+
 
 /*
 <?xml version="1.0" encoding="UTF-8"?>
