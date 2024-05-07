@@ -178,7 +178,7 @@ public static class SignerV4
         Span<byte> kSecret = stackalloc byte[secretAccessKey.Length + 4];
 
         s_AWS4.CopyTo(kSecret);
-        Encoding.ASCII.GetBytes(secretAccessKey, kSecret.Slice(4));
+        Ascii.FromUtf16(secretAccessKey, kSecret.Slice(4), out _);
 
         Span<byte> formattedDateBytes = stackalloc byte[8];
 
