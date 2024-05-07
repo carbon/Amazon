@@ -54,7 +54,7 @@ public abstract class AwsClient
 
     public AwsRegion Region { get; }
 
-    protected async Task<string> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
+    protected async Task<byte[]> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
     {
         await SignAsync(request).ConfigureAwait(false);
 
@@ -65,7 +65,7 @@ public abstract class AwsClient
             throw await GetExceptionAsync(response).ConfigureAwait(false);
         }
 
-        return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        return await response.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
     }
 
     protected async ValueTask SignAsync(HttpRequestMessage request)
