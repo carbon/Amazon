@@ -196,9 +196,9 @@ public sealed class ElbClient(AwsRegion region, IAwsCredential credential)
             Content = GetPostContent(parameters)
         };
 
-        var responseText = await base.SendAsync(httpRequest).ConfigureAwait(false);
+        var responseBytes = await base.SendAsync(httpRequest).ConfigureAwait(false);
 
-        return ElbSerializer<TResult>.DeserializeXml(responseText);
+        return ElbSerializer<TResult>.DeserializeXml(responseBytes);
     }
 
     private static FormUrlEncodedContent GetPostContent(List<KeyValuePair<string, string>> parameters)
