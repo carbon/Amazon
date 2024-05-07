@@ -17,7 +17,7 @@ public sealed class SnsTopic
         _client = new SnsClient(region, credential);
     }
 
-    public Task<string> PublishAsync(string message)
+    public Task<byte[]> PublishAsync(string message)
     {
         // Max payload = 256KB (262,144 bytes)
 

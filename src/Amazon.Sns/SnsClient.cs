@@ -7,7 +7,7 @@ public sealed class SnsClient(AwsRegion region, IAwsCredential credential)
 {
     public const string Version = "2010-03-31";
 
-    public async Task<string> PublishAsync(PublishRequest request)
+    public async Task<byte[]> PublishAsync(PublishRequest request)
     {
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Content = GetFormContent(request.ToParams())
