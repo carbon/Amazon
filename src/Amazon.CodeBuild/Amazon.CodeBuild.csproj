@@ -7,11 +7,12 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	  
+    <IsTrimmable>true</IsTrimmable>
+
     <!-- Package Details-->
     <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern .NET Standard library for AWS CodeBuild.</Description>
+    <Description>A modern .NET library for AWS CodeBuild.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;codebuild</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>

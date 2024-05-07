@@ -20,8 +20,10 @@ public sealed class ListBuildsForProjectRequest : ICodeBuildRequest
     public string ProjectName { get; }
 
     [JsonPropertyName("sortOrder")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public SortOrder? SortOrder { get; }
 
     [JsonPropertyName("nextToken")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? NextToken { get; }
 }
