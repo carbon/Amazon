@@ -14,15 +14,13 @@ public sealed class CompleteMultipartUploadResult
     public string Bucket { get; init; }
 
     [XmlElement]
-    public string Key { get; init; }
+    public required string Key { get; init; }
 
+    /// <summary>
+    /// The entity tag is an opaque string. The entity tag may or may not be an MD5 digest of the object data.
+    /// </summary>
     [XmlElement]
-    public string ETag { get; init; }
-
-    public static CompleteMultipartUploadResult Deserialize(string xmlText)
-    {
-        return S3Serializer<CompleteMultipartUploadResult>.Deserialize(xmlText);
-    }
+    public required string ETag { get; init; }
 }
 
 /*

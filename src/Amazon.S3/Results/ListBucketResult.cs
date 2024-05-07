@@ -37,9 +37,4 @@ public sealed class ListBucketResult
 
     [XmlElement("Contents")]
     public ListBucketObject[] Items { get; init; }
-
-    public static ListBucketResult Deserialize(string xmlText)
-    {
-        return S3Serializer<ListBucketResult>.Deserialize(xmlText);
-    }
 }

@@ -25,12 +25,12 @@ public sealed class S3Error
     // RangeRequested
     // ActualObjectSize
 
-    public static S3Error Deserialize(string xmlText)
+    public static S3Error Deserialize(byte[] xmlText)
     {
         return S3Serializer<S3Error>.Deserialize(xmlText);
     }
 
-    internal static bool TryDeserialize(string xmlText, out S3Error error)
+    internal static bool TryDeserialize(byte[] xmlText, out S3Error error)
     {
         return S3Serializer<S3Error>.TryDeserialize(xmlText, out error);
     }

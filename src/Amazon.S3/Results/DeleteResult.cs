@@ -11,12 +11,8 @@ public sealed class DeleteResult
     [XmlElement("Error")]
     public DeleteResultError[]? Errors { get; init; }
 
+    [XmlIgnore]
     public bool HasErrors => Errors is { Length: > 0 };
-
-    public static DeleteResult Deserialize(string xmlText)
-    {
-        return S3Serializer<DeleteResult>.Deserialize(xmlText);
-    }
 }
 
 #nullable disable

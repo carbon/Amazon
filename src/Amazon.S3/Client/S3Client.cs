@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 
 using Carbon.Storage;
@@ -39,18 +40,18 @@ public class S3Client : AwsClient
     {
         var request = new ListBucketRequest(Host, bucketName, options);
 
-        string responseText = await SendAsync(request).ConfigureAwait(false);
+        byte[] responseBytes = await SendAsync(request).ConfigureAwait(false);
 
-        return ListBucketResult.Deserialize(responseText);
+        return S3Serializer<ListBucketResult>.Deserialize(responseBytes);
     }
 
     public async Task<ListVersionsResult> ListObjectVersionsAsync(string bucketName, ListVersionsOptions options)
     {
         var request = new ListVersionsRequest(Host, bucketName, options);
 
-        string responseText = await SendAsync(request).ConfigureAwait(false);
+        byte[] responseBytes = await SendAsync(request).ConfigureAwait(false);
 
-        return ListVersionsResult.Deserialize(responseText);
+        return S3Serializer<ListVersionsResult>.Deserialize(responseBytes);
     }
 
     #region Multipart Uploads
@@ -62,7 +63,7 @@ public class S3Client : AwsClient
 
     public async Task<InitiateMultipartUploadResult> InitiateMultipartUploadAsync(InitiateMultipartUploadRequest request)
     {
-        string responseText = await SendAsync(request).ConfigureAwait(false);
+        byte[] responseText = await SendAsync(request).ConfigureAwait(false);
 
         return InitiateMultipartUploadResult.Deserialize(responseText);
     }
@@ -80,9 +81,9 @@ public class S3Client : AwsClient
 
     public async Task<CompleteMultipartUploadResult> CompleteMultipartUploadAsync(CompleteMultipartUploadRequest request)
     {
-        string responseText = await SendAsync(request).ConfigureAwait(false);
+        byte[] responseBytes = await SendAsync(request).ConfigureAwait(false);
 
-        return S3Serializer<CompleteMultipartUploadResult>.Deserialize(responseText);
+        return S3Serializer<CompleteMultipartUploadResult>.Deserialize(responseBytes);
     }
 
     #endregion
@@ -101,9 +102,9 @@ public class S3Client : AwsClient
 
     public async Task<CopyObjectResult> CopyObjectAsync(CopyObjectRequest request)
     {
-        string responseText = await SendAsync(request).ConfigureAwait(false);
+        byte[] responseBytes = await SendAsync(request).ConfigureAwait(false);
 
-        return CopyObjectResult.Deserialize(responseText);
+        return S3Serializer<CopyObjectResult>.Deserialize(responseBytes);
     }
 
     public async Task<DeleteObjectResult> DeleteObjectAsync(DeleteObjectRequest request, CancellationToken cancellationToken = default)
@@ -124,9 +125,9 @@ public class S3Client : AwsClient
 
     public async Task<DeleteResult> DeleteObjectsAsync(DeleteObjectsRequest request)
     {
-        var responseText = await SendAsync(request).ConfigureAwait(false);
+        var responseBytes = await SendAsync(request).ConfigureAwait(false);
 
-        return DeleteResult.Deserialize(responseText);
+        return S3Serializer<DeleteResult>.Deserialize(responseBytes);
     }
 
     public async Task<RestoreObjectResult> RestoreObjectAsync(RestoreObjectRequest request, CancellationToken cancellationToken = default)
@@ -196,23 +197,23 @@ public class S3Client : AwsClient
             throw StorageException.NotFound(key);
         }
 
-        string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        byte[] responseBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
         // Wasabi returns a non-standard ErrorResponse
-        if (responseText.Contains("<ErrorResponse"))
+        if (responseBytes.AsSpan().IndexOf("<ErrorResponse"u8) > -1)
         {
-            if (S3Serializer<S3ErrorResponse>.TryDeserialize(responseText, out var wasabiError))
+            if (S3Serializer<S3ErrorResponse>.TryDeserialize(responseBytes, out var wasabiError))
             {
                 throw new S3Exception(wasabiError.Error, response.StatusCode);
             }
         }
 
-        else if (responseText.Contains("<Error>") && S3Error.TryDeserialize(responseText, out var error))
+        else if (responseBytes.AsSpan().IndexOf("<Error>"u8) > -1 && S3Error.TryDeserialize(responseBytes, out var error))
         {
             throw new S3Exception(error, response.StatusCode);
         }
 
-        throw new S3Exception($"Unexpected S3 error. {response.StatusCode}:{responseText}", response.StatusCode);
+        throw new S3Exception($"Unexpected S3 error. status = {response.StatusCode} | {Encoding.UTF8.GetString(responseBytes)}", response.StatusCode);
     }
 
     #endregion
