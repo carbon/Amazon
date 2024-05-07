@@ -84,7 +84,7 @@ public sealed class StsClient(AwsRegion region, IAwsCredential credential)
             Content = GetPostContent(StsRequestHelper.ToParams(request))
         };
 
-        string responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+        byte[] responseText = await SendAsync(httpRequest).ConfigureAwait(false);
 
         return StsXmlSerializer<TResponse>.Deserialize(responseText);
     }

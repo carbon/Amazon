@@ -44,14 +44,14 @@ public sealed class CallerIdentityVerifier
 
         using HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
 
-        string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        byte[] responseBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new StsException(responseText, response.StatusCode);
+            throw new StsException(Encoding.UTF8.GetString(responseBytes), response.StatusCode);
         }
 
-        return StsXmlSerializer<GetCallerIdentityResponse>.Deserialize(responseText).GetCallerIdentityResult;
+        return StsXmlSerializer<GetCallerIdentityResponse>.Deserialize(responseBytes).GetCallerIdentityResult;
     }
 }
 
