@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Iam</AssemblyName>
-    <Version>0.15.0</Version>
+    <Version>0.16.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
@@ -11,7 +11,7 @@
     <!-- Package Details-->
     <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern .NET Standard library for the IAM service.</Description>
+    <Description>A .NET library for the IAM service.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;iam</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>

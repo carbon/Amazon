@@ -44,9 +44,9 @@ public sealed class IamClient(AwsRegion region, AwsCredential credential)
 
     #region Helpers
 
-    private Task<string> SendAsync(List<KeyValuePair<string, string>> parameters)
+    private Task<byte[]> SendAsync(List<KeyValuePair<string, string>> parameters)
     {
-        parameters.Add(new ("Version", Version));
+        parameters.Add(new("Version", Version));
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Content = new FormUrlEncodedContent(parameters)

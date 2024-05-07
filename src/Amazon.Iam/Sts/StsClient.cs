@@ -24,8 +24,8 @@ public sealed class StsClient(AwsRegion region, AwsCredential credential)
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
-        var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+        byte[] responseBytes = await SendAsync(httpRequest).ConfigureAwait(false);
 
-        return GetSessionTokenResponse.Deserialize(responseText);
+        return GetSessionTokenResponse.Deserialize(responseBytes);
     }
 }

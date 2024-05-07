@@ -1,12 +1,13 @@
-﻿using System.Xml.Linq;
+﻿using System.Text;
+using System.Xml.Linq;
 
 namespace Amazon.Sts.Models;
 
 public sealed class GetSessionTokenResponse
 {
-    public static AwsSession Deserialize(string text)
+    public static AwsSession Deserialize(ReadOnlySpan<byte> text)
     {
-        XElement rootEl = XElement.Parse(text); // GetSessionTokenResponse
+        XElement rootEl = XElement.Parse(Encoding.UTF8.GetString(text)); // GetSessionTokenResponse
 
         var ns = rootEl.Name.Namespace;
 
