@@ -5,7 +5,7 @@ public class ListObjectVersionsTests
     [Fact]
     public void Parse()
     {
-        var result = ListVersionsResult.Deserialize(
+        var result = S3Serializer<ListVersionsResult>.Deserialize(
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <ListVersionsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
@@ -75,7 +75,7 @@ public class ListObjectVersionsTests
                     </Owner>
                  </Version>
             </ListVersionsResult>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("bucket", result.Name);
         Assert.Equal("my", result.Prefix);

@@ -14,7 +14,7 @@ public class S3ErrorTests
               <Resource>/mybucket/myfoto.jpg</Resource> 
               <RequestId>4442587FB7D0A2F9</RequestId>
             </Error>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("NoSuchKey", error.Code);
         Assert.Equal("The resource you requested does not exist", error.Message);
@@ -35,7 +35,7 @@ public class S3ErrorTests
                 <ExpectedDigest>d41d8cd98f00b204e9800998ecf8427e</ExpectedDigest>
                 <HostId>3oDR1WldBiVFbMm4EKHrDb4W1haIG5Z8uXYwLuSc/Z1/YWupOApcCtnwmneoAYN4</HostId>
             </Error>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("BadDigest", error.Code);
         Assert.Equal("The Content-MD5 you specified did not match what we received.", error.Message);
@@ -57,7 +57,7 @@ public class S3ErrorTests
               <RequestId>QQRDR31F3YKX4763</RequestId>
               <HostId>udJqRzAlgPy4n2ia+yPm3OmLVEeV8bLq4HK2ExFSRp2F34G0mZ+SuG6FoG9d53XSpPrIWbCxaQ8=</HostId>
             </Error>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("InvalidRange", error.Code);
         Assert.Equal("The requested range is not satisfiable", error.Message);
@@ -78,7 +78,7 @@ public class S3ErrorTests
                 <Message>Maximum number of server active requests exceeded</Message>
               </Error>
             </ErrorResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("TemporarilyUnavailable", response.Error.Code);
         Assert.Equal("Maximum number of server active requests exceeded", response.Error.Message);

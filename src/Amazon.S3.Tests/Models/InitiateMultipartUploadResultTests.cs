@@ -12,7 +12,7 @@ public class InitiateMultipartUploadResultTests
               <Key>example-object</Key>
               <UploadId>VXBsb2FkIElEIGZvciA2aWWpbmcncyBteS1tb3ZpZS5tMnRzIHVwbG9hZA</UploadId>
             </InitiateMultipartUploadResult>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("example-bucket", result.Bucket);
         Assert.Equal("example-object", result.Key);

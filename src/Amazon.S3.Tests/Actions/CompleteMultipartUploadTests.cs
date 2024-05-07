@@ -27,6 +27,6 @@ public class CompleteMultipartUploadTests
                 <ETag>eTag3</ETag>
               </Part>
             </CompleteMultipartUpload>
-            """, g.ToXmlString());
+            """, g.ToXmlString(), ignoreLineEndingDifferences: true);
     }
 }

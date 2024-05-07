@@ -21,7 +21,7 @@ public class BatchDeleteTests
               </Object>
             </Delete>
             """,
-      actual: batch.ToXmlString(SaveOptions.None));
+      actual: batch.ToXmlString(true), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -39,7 +39,14 @@ public class BatchDeleteTests
                 <Key>2</Key>
               </Object>
             </Delete>
-            """,
-      actual: batch.ToXmlString(SaveOptions.None));
+            """, batch.ToXmlString(true), ignoreLineEndingDifferences: true);
+    }
+
+    [Fact]
+    public void CanSerializeWithoutFormatting()
+    {
+        var batch = new DeleteBatch(["1"]);
+
+        Assert.Equal("<Delete><Object><Key>1</Key></Object></Delete>", batch.ToXmlString());
     }
 }

@@ -18,7 +18,7 @@ public class CopyObjectRequestTests
     }
 
     [Fact]
-    public void CanSetMetdataDirective_Replace()
+    public void CanSetMetadataDirective_Replace()
     {
         var request = new CopyObjectRequest(
             host        : "s3.amazon.com",
@@ -39,7 +39,7 @@ public class CopyObjectRequestTests
     }
 
     [Fact]
-    public void CanSetMetdataDirective_Copy()
+    public void CanSetMetadataDirective_Copy()
     {
         var request = new CopyObjectRequest(
             host: "s3.amazon.com",

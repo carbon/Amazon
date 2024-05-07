@@ -6,9 +6,9 @@ internal static class S3Serializer<T>
 {
     private static readonly XmlSerializer s_serializer = new(typeof(T));
 
-    public static T Deserialize(string xml)
+    public static T Deserialize(byte[] xml)
     {
-        using var reader = new StringReader(xml);
+        using var reader = new MemoryStream(xml);
 
         return (T)s_serializer.Deserialize(reader)!;
     }

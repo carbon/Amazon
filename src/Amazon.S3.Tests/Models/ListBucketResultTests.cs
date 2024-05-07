@@ -7,7 +7,7 @@ public class ListBucketResultTests
     [Fact]
     public void CanDeserialize()
     {
-        var result = ListBucketResult.Deserialize(
+        var result = S3Serializer<ListBucketResult>.Deserialize(
             """
             <?xml version="1.0" encoding="UTF-8"?>
             <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
@@ -39,7 +39,7 @@ public class ListBucketResultTests
             		<StorageClass>STANDARD</StorageClass>
             	</Contents>
             </ListBucketResult>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("carbon", result.Name);
         Assert.Equal("1", result.Prefix);
@@ -57,7 +57,7 @@ public class ListBucketResultTests
     [Fact]
     public void Test()
     {
-        var result = ListBucketResult.Deserialize(
+        var result = S3Serializer<ListBucketResult>.Deserialize(
             """
             <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
                 <Name>carbon</Name>
@@ -87,7 +87,7 @@ public class ListBucketResultTests
                     <StorageClass>STANDARD</StorageClass>
                 </Contents>
             </ListBucketResult>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("carbon", result.Name);
         Assert.Equal("1", result.Prefix);
@@ -105,7 +105,7 @@ public class ListBucketResultTests
     {
         // example via https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjectsV2.html
 
-        var result = ListBucketResult.Deserialize(
+        var result = S3Serializer<ListBucketResult>.Deserialize(
             """
             <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
               <Name>quotes</Name>
@@ -122,7 +122,7 @@ public class ListBucketResultTests
                 <StorageClass>REDUCED_REDUNDANCY</StorageClass>
               </Contents>
             </ListBucketResult>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("quotes",           result.Name);
         Assert.Equal("E",                result.Prefix);
