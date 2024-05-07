@@ -8,13 +8,11 @@ public abstract class DescribeRequest
 
     public string? NextToken { get; set; }
 
-    public List<Filter> Filters { get; } = new();
+    public List<Filter> Filters { get; } = [];
 
-    protected void AddIds(List<KeyValuePair<string, string>> parameters, string prefix, IReadOnlyList<string>? ids)
+    protected void AddIds(List<KeyValuePair<string, string>> parameters, string prefix, ReadOnlySpan<string> ids)
     {
-        if (ids is null) return;
-
-        for (int i = 0; i < ids.Count; i++)
+        for (int i = 0; i < ids.Length; i++)
         {
             int number = i + 1;
 

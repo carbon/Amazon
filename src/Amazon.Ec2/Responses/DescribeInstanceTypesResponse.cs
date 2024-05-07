@@ -14,9 +14,4 @@ public sealed class DescribeInstanceTypesResponse
     [XmlArray("instanceTypeSet")]
     [XmlArrayItem("item")]
     public required InstanceTypeInfo[] InstanceTypes { get; init; }
-
-    public static DescribeInstanceTypesResponse Deserialize(string text)
-    {
-        return Ec2Serializer<DescribeInstanceTypesResponse>.Deserialize(text);
-    }
 }
