@@ -45,9 +45,9 @@ public sealed class Route53Client(AwsRegion region, IAwsCredential credential)
     {
         string url = $"{baseUrl}{Version}{path}";
 
-        var responseText = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url)).ConfigureAwait(false);
+        byte[] responseBytes = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url)).ConfigureAwait(false);
 
-        return Route53Serializer<TResult>.DeserializeXml(responseText);
+        return Route53Serializer<TResult>.DeserializeXml(responseBytes);
     }
 
     private async Task<TResult> PostXmlAsync<T, TResult>(string path, T data)
@@ -64,9 +64,9 @@ public sealed class Route53Client(AwsRegion region, IAwsCredential credential)
             }
         };
 
-        string responseText = await SendAsync(request).ConfigureAwait(false);
+        byte[] responseBytes = await SendAsync(request).ConfigureAwait(false);
 
-        return Route53Serializer<TResult>.DeserializeXml(responseText);
+        return Route53Serializer<TResult>.DeserializeXml(responseBytes);
     }
 
     protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
