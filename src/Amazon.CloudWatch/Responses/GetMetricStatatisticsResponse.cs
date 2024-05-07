@@ -1,34 +1,25 @@
-﻿#nullable disable
+﻿using System.Xml.Serialization;
 
-using System.Xml.Linq;
-
-using static Amazon.CloudWatch.CloudWatchClient;
+using Amazon.CloudWatch.Serialization;
 
 namespace Amazon.CloudWatch;
 
 public sealed class GetMetricStatisticsResponse
 {
+    public required GetMetricStatisticsResult GetMetricStatisticsResult { get; init; }
+
+    public static GetMetricStatisticsResponse Deserialize(byte[] xmlText)
+    {
+        return CloudWatchSerializer<GetMetricStatisticsResponse>.DeserializeXml(xmlText);
+    }
+}
+
+public sealed class GetMetricStatisticsResult
+{
+    [XmlElement]
     public required string Label { get; set; }
 
-    public List<DataPoint> Datapoints { get; } = [];
-
-    public static GetMetricStatisticsResponse Deserialize(string xmlText)
-    {
-        var rootEl = XElement.Parse(xmlText); // ListMetricsResponse
-
-        var resultEl = rootEl.Element(NS + "GetMetricStatisticsResult");
-
-        var datapointsEl = resultEl.Element(NS + "Datapoints");
-
-        var result = new GetMetricStatisticsResponse {
-            Label = resultEl.Element(NS + "Label").Value
-        };
-
-        foreach (var point in datapointsEl.Elements())
-        {
-            result.Datapoints.Add(DataPoint.FromXElement(NS, point));
-        }
-
-        return result;
-    }
+    [XmlArray]
+    [XmlArrayItem("member")]
+    public required List<DataPoint> Datapoints { get; init; }
 }

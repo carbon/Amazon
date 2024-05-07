@@ -1,39 +1,18 @@
-﻿using System.Xml.Linq;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.CloudWatch;
 
-public sealed class Metric(
-    string @namespace,
-    string name,
-    List<Dimension> dimensions)
+public sealed class Metric
 {
-    public string Namespace { get; } = @namespace;
+    [XmlElement]
+    public required string Namespace { get; init; }
 
-    public string MetricName { get; } = name;
+    [XmlElement]
+    public required string MetricName { get; init; }
 
-    public List<Dimension> Dimensions { get; } = dimensions;
-
-    internal static Metric FromXml(XNamespace ns, XElement el)
-    {
-        var dimensions = new List<Dimension>();
-
-        if (el.Element(ns + "Dimensions") is XElement dimensionsEl)
-        {
-            foreach (var dimensionEl in dimensionsEl.Elements())
-            {
-                dimensions.Add(new Dimension(
-                    name  : dimensionEl.Element(ns + "Name")!.Value,
-                    value : dimensionEl.Element(ns + "Value")!.Value
-                ));
-            }
-        }
-
-        return new Metric(
-            @namespace : el.Element(ns + "Namespace")!.Value,
-            name       : el.Element(ns + "MetricName")!.Value,
-            dimensions : dimensions
-        );
-    }
+    [XmlArray]
+    [XmlArrayItem("member")]
+    public required List<Dimension> Dimensions { get; init; }
 }
 
 /*
@@ -42,8 +21,8 @@ public sealed class Metric(
     <MetricName>BackendConnectionErrors</MetricName>
     <Dimensions>
         <member>
-        <Name>Namespace</Name>
-        <Value>AWS</Value>
+          <Name>Namespace</Name>
+          <Value>AWS</Value>
         </member>
     </Dimensions>
 </member>

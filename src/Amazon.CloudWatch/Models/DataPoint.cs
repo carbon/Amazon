@@ -1,8 +1,5 @@
 ﻿#nullable disable
 
-using System.Globalization;
-using System.Xml.Linq;
-
 namespace Amazon.CloudWatch;
 
 public sealed class DataPoint
@@ -20,27 +17,4 @@ public sealed class DataPoint
     public DateTime Timestamp { get; set; }
 
     public string Unit { get; set; }
-
-    internal static DataPoint FromXElement(XNamespace ns, XElement el)
-    {
-        var metric = new DataPoint
-        {
-            Timestamp = DateTime.Parse(el.Element(ns + "Timestamp").Value, null, DateTimeStyles.AdjustToUniversal)
-        };
-
-        foreach (var child in el.Elements())
-        {
-            switch (child.Name.LocalName)
-            {
-                case "Average"      : metric.Average     = double.Parse(child.Value, CultureInfo.InvariantCulture); break;
-                case "Maximum"      : metric.Maximum     = double.Parse(child.Value, CultureInfo.InvariantCulture); break;
-                case "Minimum"      : metric.Minimum     = double.Parse(child.Value, CultureInfo.InvariantCulture); break;
-                case "SampleCount"  : metric.SampleCount = double.Parse(child.Value, CultureInfo.InvariantCulture); break;
-                case "Sum"          : metric.Sum         = double.Parse(child.Value, CultureInfo.InvariantCulture); break;
-                case "Unit"         : metric.Unit        = child.Value;                                             break;
-            }
-        }
-
-        return metric;
-    }
 }

@@ -1,32 +1,31 @@
 ﻿#nullable disable
 
-using System.Xml.Linq;
+using System.Xml.Serialization;
 
-using static Amazon.CloudWatch.CloudWatchClient;
+using Amazon.CloudWatch.Serialization;
 
 namespace Amazon.CloudWatch;
 
-public static class ListMetricsResponse
+public class ListMetricsResponse
 {
-    public static List<Metric> Parse(string xmlText)
+    [XmlElement]
+    public ListMetricsResult ListMetricsResult { get; init; }
+
+    public static List<Metric> Parse(byte[] xmlText)
     {
-        var metrics = new List<Metric>();
+        var response = CloudWatchSerializer<ListMetricsResponse>.DeserializeXml(xmlText);
 
-        var rootEl = XElement.Parse(xmlText); // ListMetricsResponse
-
-        var listMetricsResultEl = rootEl.Element(NS + "ListMetricsResult");
-        var metricsEl = listMetricsResultEl.Element(NS + "Metrics");
-
-        foreach (var metricEl in metricsEl.Elements()) // member...
-        {
-            var metric = Metric.FromXml(NS, metricEl);
-
-            metrics.Add(metric);
-        }
-
-        return metrics;
+        return response.ListMetricsResult.Metrics;
     }
 }
+
+public sealed class ListMetricsResult
+{
+    [XmlArray]
+    [XmlArrayItem("member")]
+    public List<Metric> Metrics { get; set; }
+}
+
 
 /*
 <ListMetricsResponse xmlns=""http://monitoring.amazonaws.com/doc/2010-08-01/"">

@@ -1,14 +1,12 @@
-﻿namespace Amazon.CloudWatch;
+﻿using System.Xml.Serialization;
+
+namespace Amazon.CloudWatch;
 
 public readonly struct Dimension
 {
-    public Dimension(string name, string value)
-    {
-        Name = name;
-        Value = value;
-    }
+    [XmlElement]
+    public required string Name { get; init; }
 
-    public string Name { get; }
-
-    public string Value { get; }
+    [XmlElement]
+    public required string Value { get; init; }
 }

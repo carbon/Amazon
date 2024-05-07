@@ -1,5 +1,4 @@
 ﻿using System.Net.Http;
-using System.Xml.Linq;
 
 namespace Amazon.CloudWatch;
 
@@ -10,7 +9,7 @@ public sealed class CloudWatchClient(AwsRegion region, IAwsCredential credential
 {
     public const string Version = "2010-08-01";
 
-    public static readonly XNamespace NS = "http://monitoring.amazonaws.com/doc/2010-08-01/";
+    public static readonly string NS = "http://monitoring.amazonaws.com/doc/2010-08-01/";
 
     /*
     public async Task DeleteAlarmsAsync() { }
