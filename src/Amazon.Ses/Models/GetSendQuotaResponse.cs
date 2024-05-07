@@ -10,9 +10,9 @@ public sealed class GetSendQuotaResponse
     [XmlElement]
     public GetSendQuotaResult GetSendQuotaResult { get; init; }
 
-    public static GetSendQuotaResponse Deserialize(string text)
+    public static GetSendQuotaResponse Deserialize(byte[] xmlText)
     {
-        return SesSerializer<GetSendQuotaResponse>.Deserialize(text);
+        return SesSerializer<GetSendQuotaResponse>.Deserialize(xmlText);
     }
 }
 

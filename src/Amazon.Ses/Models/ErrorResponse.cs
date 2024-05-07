@@ -8,9 +8,9 @@ public sealed class ErrorResponse
     [XmlElement]
     public required SesError Error { get; init; }
 
-    public static ErrorResponse Deserialize(string text)
+    public static ErrorResponse Deserialize(byte[] xmlText)
     {
-        return SesSerializer<ErrorResponse>.Deserialize(text);
+        return SesSerializer<ErrorResponse>.Deserialize(xmlText);
     }
 }
 

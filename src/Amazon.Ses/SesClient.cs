@@ -32,9 +32,9 @@ public sealed class SesClient(AwsRegion region, IAwsCredential credential)
             request.Add(pair);
         }
 
-        var text = await SendWithRetryPolicy(request, s_retryPolicy).ConfigureAwait(false);
+        byte[] responseBytes = await SendWithRetryPolicy(request, s_retryPolicy).ConfigureAwait(false);
 
-        return SendEmailResponse.Deserialize(text).SendEmailResult;
+        return SendEmailResponse.Deserialize(responseBytes).SendEmailResult;
     }
 
     public async Task<SendRawEmailResult> SendRawEmailAsync(SendRawEmailRequest request)
@@ -46,23 +46,23 @@ public sealed class SesClient(AwsRegion region, IAwsCredential credential)
             data.Add(pair);
         }
 
-        var text = await SendWithRetryPolicy(data, s_retryPolicy).ConfigureAwait(false);
+        byte[] responseBytes = await SendWithRetryPolicy(data, s_retryPolicy).ConfigureAwait(false);
 
-        return SendRawEmailResponse.Deserialize(text).SendRawEmailResult;
+        return SendRawEmailResponse.Deserialize(responseBytes).SendRawEmailResult;
     }
 
     public async Task<GetSendQuotaResult> GetSendQuotaAsync()
     {
         var request = new SesRequest("GetSendQuota");
 
-        var text = await PostAsync(request).ConfigureAwait(false);
+        byte[] responseBytes = await PostAsync(request).ConfigureAwait(false);
 
-        return GetSendQuotaResponse.Deserialize(text).GetSendQuotaResult;
+        return GetSendQuotaResponse.Deserialize(responseBytes).GetSendQuotaResult;
     }
 
     #region Helpers
 
-    private async Task<string> SendWithRetryPolicy(SesRequest request, RetryPolicy retryPolicy)
+    private async Task<byte[]> SendWithRetryPolicy(SesRequest request, RetryPolicy retryPolicy)
     {
         var retryCount = 0;
         Exception lastException;
@@ -92,14 +92,14 @@ public sealed class SesClient(AwsRegion region, IAwsCredential credential)
 
     protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
     {
-        var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        var responseBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
-        var errorResponse = ErrorResponse.Deserialize(responseText);
+        var errorResponse = ErrorResponse.Deserialize(responseBytes);
 
         return new SesException(errorResponse.Error, response.StatusCode);
     }
 
-    private Task<string> PostAsync(SesRequest request)
+    private Task<byte[]> PostAsync(SesRequest request)
     {
         request.Parameters.Add(new("Version", Version));
 

@@ -32,6 +32,57 @@ public static class QuotedPrintable
         return a.Name!;
     }
 
+    public static int GetEncodedCharCount(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return 0;
+        }
+
+        int maxByteCount = Encoding.UTF8.GetMaxByteCount(value.Length);
+        byte[]? rentedBuffer = null;
+
+        int count = 0;
+
+        Span<byte> buffer = maxByteCount < 128
+            ? stackalloc byte[128]
+            : (rentedBuffer = ArrayPool<byte>.Shared.Rent(maxByteCount));
+
+        ReadOnlySpan<byte> bytes = buffer[..Encoding.UTF8.GetBytes(value, buffer)];
+
+        for (int i = 0; i < bytes.Length; i++)
+        {
+            var b = bytes[i];
+
+            if (b is 32) // ' '
+            {
+                if (i == bytes.Length - 1)
+                {
+                    count += 3;
+                }
+                else
+                {
+                    count += 1;
+                }
+            }
+            else if ((b < 33 || b > 126 || b == '=' || b == '?'))
+            {
+                count += 3;
+            }
+            else
+            {
+                count += 1;
+            }
+        }
+
+        if (rentedBuffer != null)
+        {
+            ArrayPool<byte>.Shared.Return(rentedBuffer);
+        }
+
+        return count;
+    }
+
     private static string EncodeContent(string value)
     {
         if (string.IsNullOrEmpty(value))
