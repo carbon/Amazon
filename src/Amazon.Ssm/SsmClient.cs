@@ -472,10 +472,10 @@ public sealed class SsmClient(AwsRegion region, IAwsCredential credential)
     private async Task<T> SendAsync<T>(ISsmRequest request)
         where T : new()
     {
-        string responseText = await SendAsync(GetRequestMessage(Endpoint, request)).ConfigureAwait(false);
+        byte[] responseBytes = await SendAsync(GetRequestMessage(Endpoint, request)).ConfigureAwait(false);
 
-        return responseText.Length > 0
-            ? JsonSerializer.Deserialize<T>(responseText)!
+        return responseBytes.Length > 0
+            ? JsonSerializer.Deserialize<T>(responseBytes)!
             : new T();
     }
 

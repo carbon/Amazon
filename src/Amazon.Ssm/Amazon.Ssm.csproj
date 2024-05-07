@@ -4,7 +4,7 @@
     <AssemblyName>Amazon.Ssm</AssemblyName>
     <Version>0.20.0</Version>
     <TargetFramework>net8.0</TargetFramework>
-    
+
     <!-- Package Details-->
     <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>
