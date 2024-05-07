@@ -1,20 +1,19 @@
-﻿#nullable disable
-
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.Route53;
 
 public sealed class HealthCheckConfig
 {
-    public string IPAddress { get; init; }
+    // HTTP | HTTPS | HTTP_STR_MATCH | HTTPS_STR_MATCH | TCP | CALCULATED | CLOUDWATCH_METRIC | RECOVERY_CONTROL
+    public required string Type { get; init; }
+
+    public string? IPAddress { get; init; }
 
     public int Port { get; init; }
 
-    public string Http { get; init; }
+    public string? ResourcePath { get; init; }
 
-    public string ResourcePath { get; init; }
-
-    public string FullyQualifiedDomainName { get; init; }
+    public string? FullyQualifiedDomainName { get; init; }
 
     public int RequestInterval { get; init; }
 
@@ -26,7 +25,7 @@ public sealed class HealthCheckConfig
 
     [XmlArray]
     [XmlArrayItem("Region")]
-    public string[] Regions { get; init; }
+    public string[]? Regions { get; init; }
 
     public bool Inverted { get; init; }
 }

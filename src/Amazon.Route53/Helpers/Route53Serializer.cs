@@ -8,11 +8,11 @@ public static class Route53Serializer<T>
     where T : notnull
 {
     private static readonly XmlSerializer s_serializer = new(typeof(T), Route53Client.Namespace);
-
+    private static readonly UTF8Encoding _encoding = new(encoderShouldEmitUTF8Identifier: false);
     public static byte[] SerializeToUtf8Bytes(T instance)
     {
         using var stream = new MemoryStream();
-        using var writer = new StreamWriter(stream, Encoding.UTF8);
+        using var writer = new StreamWriter(stream, _encoding);
 
         s_serializer.Serialize(writer, instance, XmlSerializerNamespacesCache.Get());
 

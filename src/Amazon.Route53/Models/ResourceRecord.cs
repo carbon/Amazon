@@ -1,15 +1,21 @@
-﻿namespace Amazon.Route53;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Amazon.Route53;
 
 public sealed class ResourceRecord
 {
-#nullable disable
     public ResourceRecord() { }
-#nullable enable
 
+    [SetsRequiredMembers]
     public ResourceRecord(string value)
     {
+        if (value.Length > 4000)
+        {
+            throw new ArgumentException("Must not exceed 4000 characters", nameof(value));
+        }
+
         Value = value;
     }
 
-    public string Value { get; init; }
+    public required string Value { get; init; }
 }

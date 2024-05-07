@@ -1,12 +1,7 @@
 ﻿namespace Amazon.Route53;
 
-public sealed class GetChangeRequest
+public sealed class GetChangeRequest(string id)
 {
-    public GetChangeRequest(string id)
-    {
-        Id = id;
-    }
-
     // Max Length = 32
-    public string Id { get; }
+    public string Id { get; } = id;
 }

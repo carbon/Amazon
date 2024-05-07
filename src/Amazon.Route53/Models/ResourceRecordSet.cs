@@ -1,6 +1,5 @@
-﻿#nullable disable
-
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 
 namespace Amazon.Route53;
@@ -9,7 +8,7 @@ public sealed class ResourceRecordSet
 {
     public ResourceRecordSet() { }
 
-#nullable enable
+    [SetsRequiredMembers]
     public ResourceRecordSet(ResourceRecordType type, string name, params ResourceRecord[] resourceRecords)
     {
         ArgumentNullException.ThrowIfNull(name);
@@ -31,13 +30,14 @@ public sealed class ResourceRecordSet
     [DefaultValue(false)]
     public bool MultiValueAnswer { get; init; }
 
-    public string Name { get; init; }
+    public required string Name { get; init; }
 
     public string? Region { get; init; }
 
+    // null for aliases
     [XmlArray("ResourceRecords")]
     [XmlArrayItem("ResourceRecord")]
-    public ResourceRecord[] ResourceRecords { get; init; }
+    public ResourceRecord[]? ResourceRecords { get; init; }
 
     public string? SetIdentifier { get; init; }
 
@@ -46,6 +46,7 @@ public sealed class ResourceRecordSet
     [DefaultValue(0)]
     public int TTL { get; init; }
 
+    // A | AAAA | MX | NAPTR | PTR | SPF | SRV | TXT| CAA
     public ResourceRecordType Type { get; init; }
 
     [DefaultValue(0)] // 0 & 255
