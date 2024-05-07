@@ -1,12 +1,14 @@
 ﻿using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
+
+using Amazon.CloudFront.Serialization;
 
 namespace Amazon.CloudFront;
 
 public sealed class CloudFrontClient : AwsClient
 {
-    private const string version = "2015-04-17";
+    private const string version = "2020-05-31";
+    internal const string Namespace = "http://cloudfront.amazonaws.com/doc/2020-05-31/";
 
     private readonly string _baseUrl;
 
@@ -16,40 +18,52 @@ public sealed class CloudFrontClient : AwsClient
         _baseUrl = Endpoint + version;
     }
 
-    public async Task<string> CreateInvalidationBatch(string distributionId, InvalidationBatch batch)
+    public async Task<byte[]> CreateInvalidationBatch(string distributionId, InvalidationBatch batch)
     {
         var requestUri = $"{_baseUrl}/distribution/{distributionId}/invalidation";
 
+        var bytes = CloudFrontSerializer<InvalidationBatch>.SerializeToUtf8Bytes(batch);
+
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri) {
-            Content = new StringContent(batch.ToXml().ToString(), Encoding.UTF8, "text/xml")
+            Content = new ByteArrayContent(bytes) {
+                Headers = {
+                    {  "Content-Type", "text/xml" }
+                }
+            }
         };
 
         return await SendAsync(httpRequest).ConfigureAwait(false);
     }
 
-    public async Task<string> CreateDistribution(DistributionConfig request)
+    public async Task<byte[]> CreateDistribution(DistributionConfig request)
     {
         var requestUri = $"{_baseUrl}/distribution";
 
-        var body = @"<?xml version=""1.0"" encoding=""UTF-8""?>\n" + request.ToXml().ToString();
-
+        var bytes = CloudFrontSerializer<DistributionConfig>.SerializeToUtf8Bytes(request);
+       
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri) {
-            Content = new StringContent(body, Encoding.UTF8, "text/xml")
+            Content = new ByteArrayContent(bytes) {
+                Headers = {
+                    {  "Content-Type", "text/xml" }
+                }
+            }
         };
 
         return await SendAsync(httpRequest).ConfigureAwait(false);
     }
 
-    public async Task<string> PutDistribution(string id, DistributionConfig request)
+    public async Task<byte[]> PutDistribution(string id, DistributionConfig request)
     {
         var requestUri = $"{_baseUrl}/distribution/{id}/config";
 
-        var httpRequest = new HttpRequestMessage(HttpMethod.Put, requestUri) {
-            Content = new StringContent(
-                content: @"<?xml version=""1.0"" encoding=""UTF-8""?>\n" + request.ToXml().ToString(),
-                encoding: Encoding.UTF8,
-                mediaType: "text/xml"
-            )
+        var bytes = CloudFrontSerializer<DistributionConfig>.SerializeToUtf8Bytes(request);
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri) {
+            Content = new ByteArrayContent(bytes) {
+                Headers = {
+                    {  "Content-Type", "text/xml" }
+                }
+            }
         };
 
         return await SendAsync(httpRequest).ConfigureAwait(false);

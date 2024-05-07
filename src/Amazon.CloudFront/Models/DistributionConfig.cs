@@ -1,11 +1,10 @@
 ﻿#nullable disable
 
-using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Amazon.CloudFront;
 
-[XmlRoot(Namespace = "http://cloudfront.amazonaws.com/doc/2010-11-01/")]
+[XmlRoot(Namespace = CloudFrontClient.Namespace)]
 public sealed class DistributionConfig
 {
     [XmlElement]
@@ -27,28 +26,11 @@ public sealed class DistributionConfig
     public string CName { get; set; }
 
     // [StringLength(128)]
+    [XmlElement]
     public string Comment { get; set; }
 
+    [XmlElement]
     public string Enabled { get; set; } = "true";
-
-    public XDocument ToXml()
-    {
-        var serializer = new XmlSerializer(typeof(DistributionConfig));
-
-        var namespaces = new XmlSerializerNamespaces();
-
-        //  Add lib namespace with empty prefix 
-        namespaces.Add("", "http://cloudfront.amazonaws.com/doc/2010-11-01/");
-
-        var doc = new XDocument();
-
-        using (var xw = doc.CreateWriter())
-        {
-            serializer.Serialize(xw, this, namespaces);
-        }
-
-        return doc;
-    }
 }
 
 

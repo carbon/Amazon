@@ -4,7 +4,7 @@ public class Distribution
 {
 }
 
-// <Distribution xmlns="http://cloudfront.amazonaws.com/doc/2010-11-01/">
+// <Distribution xmlns="http://cloudfront.amazonaws.com/doc/2020-05-31/">
 //   <Id>E15LGT32PHVF4E</Id><Status>InProgress</Status>
 //   <LastModifiedTime>2011-02-28T21:08:01.073Z</LastModifiedTime>
 //   <InProgressInvalidationBatches>0</InProgressInvalidationBatches>

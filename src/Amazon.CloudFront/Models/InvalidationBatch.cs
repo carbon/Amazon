@@ -1,48 +1,37 @@
-﻿#nullable disable
-
-using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Xml.Serialization;
 
 namespace Amazon.CloudFront;
 
+[XmlRoot(Namespace = CloudFrontClient.Namespace)]
 public sealed class InvalidationBatch
 {
-	public InvalidationBatch(IList<string> paths)
-	{
-		ArgumentNullException.ThrowIfNull(paths);
+	[XmlElement]
+	public required Paths Paths { get; init; }
 
-		if (paths.Count is 0) 
-			throw new ArgumentException("May not be empty", nameof(paths));
+    /// <summary>
+    /// A value that you specify to uniquely identify an invalidation request. 
+    /// </summary>
+    [XmlElement]
+	public required string CallerReference { get; init; }
+}
 
-		Paths = paths;
-	}
-
-	public IList<string> Paths { get; }
-
-	public string CallerReference { get; set; }
-
-	public XElement ToXml()
-	{
-		var root = new XElement("InvalidationBatch");
-
-		foreach (var path in Paths)
-		{
-			root.Add(new XElement("Path", path));
-		}
-
-		root.Add(new XElement("CallerReference", CallerReference));
-
-		return root;
-	}
+public sealed class Paths
+{
+    [XmlArray("Items")]
+    [XmlArrayItem("Path")]
+    public required string[] Items { get; init; }
+        
+    public required int Quantity { get; set; }
 }
 
 /*
-<InvalidationBatch>
-   <Path>/image1.jpg</Path>
-   <Path>/image2.jpg</Path>
-   <Path>/videos/movie.flv</Path>
-   <Path>/sound%20track.mp3</Path>				
-   <CallerReference>my-batch</CallerReference>
+<InvalidationBatch xmlns="http://cloudfront.amazonaws.com/doc/2020-05-31/">
+<Paths>
+    <Items>
+        <Path>string</Path>
+    </Items>
+    <Quantity>integer</Quantity>
+</Paths>
+<CallerReference>caller-reference</CallerReference>
 </InvalidationBatch>
 */
