@@ -1,4 +1,7 @@
 ﻿using System.Net.Http;
+using System.Text;
+
+using Amazon.Elb.Exceptions;
 
 namespace Amazon.Elb;
 
@@ -199,6 +202,27 @@ public sealed class ElbClient(AwsRegion region, IAwsCredential credential)
         var responseBytes = await base.SendAsync(httpRequest).ConfigureAwait(false);
 
         return ElbSerializer<TResult>.DeserializeXml(responseBytes);
+    }
+
+    protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
+    {
+        var responseBytes = await response.Content.ReadAsByteArrayAsync();
+
+        ErrorResponse? errorResponse = null;
+
+        try
+        {
+            errorResponse = ElbSerializer<ErrorResponse>.DeserializeXml(responseBytes);
+
+        }
+        catch { }
+
+        if (errorResponse?.Error != null)
+        {
+            return new ElbException(errorResponse.Error, response.StatusCode);
+        }
+
+        throw new Exception(Encoding.UTF8.GetString(responseBytes));
     }
 
     private static FormUrlEncodedContent GetPostContent(List<KeyValuePair<string, string>> parameters)
