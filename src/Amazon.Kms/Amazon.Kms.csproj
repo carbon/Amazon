@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kms</AssemblyName>
-    <Version>0.32.0</Version>
+    <Version>0.33.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
@@ -12,7 +12,7 @@
     <!-- Package Details-->
     <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern .NET Standard library for Amazon's Key Management Service.</Description>
+    <Description>A .NET library for Amazon's Key Management Service.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;kms;netstandard</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>

@@ -2,15 +2,16 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Rds</AssemblyName>
-    <Version>0.19.0</Version>
+    <Version>0.20.0</Version>
     <TargetFramework>net8.0</TargetFramework>
+    <IsTrimmable>true</IsTrimmable>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
       
     <!-- Package Details-->
     <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern .NET Standard library for Amazon RDS.</Description>
+    <Description>A .NET library for Amazon RDS.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>carbon;aws;rds</PackageTags>
   </PropertyGroup>

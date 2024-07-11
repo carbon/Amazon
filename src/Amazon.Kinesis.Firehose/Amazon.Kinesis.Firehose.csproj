@@ -4,13 +4,14 @@
     <AssemblyName>Amazon.Kinesis.Firehose</AssemblyName>
     <Version>0.14.0</Version>
     <TargetFramework>net8.0</TargetFramework>
+    <IsTrimmable>true</IsTrimmable>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	  
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern .NET Standard library for Kinesis Firehose.</Description>
+    <Description>A .NET library for Kinesis Firehose.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;kinesis;firehose;netstandard</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>

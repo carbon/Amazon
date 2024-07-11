@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Ec2</AssemblyName>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.31.0</Version>
+    <Version>0.33.0</Version>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -11,11 +11,10 @@
     <!-- Package Details-->
     <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A simple library for Amazon's EC2 service.</Description>
+    <Description>A .NET library for Amazon's EC2 service.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;ec2</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
-      
   </PropertyGroup>
 
   <ItemGroup>
