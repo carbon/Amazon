@@ -103,16 +103,16 @@ public class DescribeInstancesResponseTests
                                             <ipOwnerId>amazon</ipOwnerId>
                                         </association>
                                         <privateIpAddressesSet>
-                                            <item>
-                                                <privateIpAddress>192.168.1.88</privateIpAddress>
-                                                <privateDnsName>ip-192-168-1-88.eu-west-1.compute.internal</privateDnsName>
-                                                <primary>true</primary>
-                                                <association>
-                                                <publicIp>54.194.252.215</publicIp>
-                                                <publicDnsName>ec2-54-194-252-215.eu-west-1.compute.amazonaws.com</publicDnsName>
-                                                <ipOwnerId>amazon</ipOwnerId>
-                                                </association>
-                                            </item>
+                                          <item>
+                                            <privateIpAddress>192.168.1.88</privateIpAddress>
+                                            <privateDnsName>ip-192-168-1-88.eu-west-1.compute.internal</privateDnsName>
+                                            <primary>true</primary>
+                                            <association>
+                                              <publicIp>54.194.252.215</publicIp>
+                                              <publicDnsName>ec2-54-194-252-215.eu-west-1.compute.amazonaws.com</publicDnsName>
+                                              <ipOwnerId>amazon</ipOwnerId>
+                                            </association>
+                                          </item>
                                         </privateIpAddressesSet>
                                     </item>
                                 </networkInterfaceSet>

@@ -5,7 +5,7 @@ public class DescribeInstancesTypesResponseTests
     [Fact]
     public void CanDeserialize()
     {
-        var response = DescribeInstanceTypesResponse.Deserialize(
+        var response = Ec2Serializer<DescribeInstanceTypesResponse>.Deserialize(
             """
             <DescribeInstanceTypesResponse xmlns="http://ec2.amazonaws.com/doc/2016-11-15/">
                 <requestId>a</requestId>
@@ -17,8 +17,8 @@ public class DescribeInstancesTypesResponseTests
                         <currentGeneration>false</currentGeneration>
                         <dedicatedHostsSupported>false</dedicatedHostsSupported>
                         <ebsInfo>
-                            <ebsOptimizedSupport>unsupported</ebsOptimizedSupport>
-                            <encryptionSupport>unsupported</encryptionSupport>
+                          <ebsOptimizedSupport>unsupported</ebsOptimizedSupport>
+                          <encryptionSupport>unsupported</encryptionSupport>
                         </ebsInfo>
                         <freeTierEligible>true</freeTierEligible>
                         <hibernationSupported>false</hibernationSupported>
@@ -26,33 +26,33 @@ public class DescribeInstancesTypesResponseTests
                         <instanceStorageSupported>false</instanceStorageSupported>
                         <instanceType>t1.micro</instanceType>
                         <memoryInfo>
-                            <sizeInMiB>627</sizeInMiB>
+                          <sizeInMiB>627</sizeInMiB>
                         </memoryInfo>
                         <networkInfo>
-                            <enaSupport>unsupported</enaSupport>
-                            <ipv4AddressesPerInterface>2</ipv4AddressesPerInterface>
-                            <ipv6AddressesPerInterface>0</ipv6AddressesPerInterface>
-                            <ipv6Supported>false</ipv6Supported>
-                            <maximumNetworkInterfaces>2</maximumNetworkInterfaces>
-                            <networkPerformance>Very Low</networkPerformance>
+                          <enaSupport>unsupported</enaSupport>
+                          <ipv4AddressesPerInterface>2</ipv4AddressesPerInterface>
+                          <ipv6AddressesPerInterface>0</ipv6AddressesPerInterface>
+                          <ipv6Supported>false</ipv6Supported>
+                          <maximumNetworkInterfaces>2</maximumNetworkInterfaces>
+                          <networkPerformance>Very Low</networkPerformance>
                         </networkInfo>
                         <placementGroupInfo>
-                            <supportedStrategies>
-                                <item>partition</item>
-                                <item>spread</item>
-                            </supportedStrategies>
+                          <supportedStrategies>
+                            <item>partition</item>
+                            <item>spread</item>
+                          </supportedStrategies>
                         </placementGroupInfo>
                         <processorInfo>
-                            <supportedArchitectures>
-                                <item>i386</item>
-                                <item>x86_64</item>
-                            </supportedArchitectures>
+                          <supportedArchitectures>
+                            <item>i386</item>
+                            <item>x86_64</item>
+                          </supportedArchitectures>
                         </processorInfo>
                         <supportedRootDeviceTypes>
-                            <item>ebs</item>
+                          <item>ebs</item>
                         </supportedRootDeviceTypes>
                         <supportedUsageClasses>
-                            <item>on-demand</item>
+                          <item>on-demand</item>
                         </supportedUsageClasses>
                         <vCpuInfo>
                             <defaultCores>1</defaultCores>
@@ -68,7 +68,7 @@ public class DescribeInstancesTypesResponseTests
                     </item>
                 </instanceTypeSet>
             </DescribeInstanceTypesResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("a", response.RequestId);
 

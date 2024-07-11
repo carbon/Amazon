@@ -55,7 +55,7 @@ public class DescribeSecurityGroupsResponseTest
                     </item>
                 </securityGroupInfo>
             </DescribeSecurityGroupsResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Single(response.SecurityGroups);
 

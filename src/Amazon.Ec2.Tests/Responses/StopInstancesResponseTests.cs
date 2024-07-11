@@ -23,7 +23,7 @@ public class StopInstancesResponseTest
                 </item>
               </instancesSet>
             </StopInstancesResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("i-1234567890abcdef0", response.Instances[0].InstanceId);
 

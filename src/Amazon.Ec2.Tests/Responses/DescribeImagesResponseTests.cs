@@ -43,13 +43,13 @@ public class DescribeImagesResponseTests
                 </item>
               </imagesSet>
             </DescribeImagesResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Single(response.Images);
 
         var image = response.Images[0];
 
-        Assert.Equal(123456789012, image.ImageOwnerId);
+        Assert.Equal("123456789012", image.ImageOwnerId);
         Assert.Equal("amazon", image.ImageOwnerAlias);
         Assert.Equal("ami-1a2b3c4d", image.ImageId);
         Assert.Equal("i386", image.Architecture);

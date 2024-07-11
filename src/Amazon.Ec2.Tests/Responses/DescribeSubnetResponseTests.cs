@@ -45,7 +45,7 @@ public class DescribeSubnetResponseTests
                 </item>
               </subnetSet>
             </DescribeSubnetsResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Equal(2, response.Subnets.Length);
 

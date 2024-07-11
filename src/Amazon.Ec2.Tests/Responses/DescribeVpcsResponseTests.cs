@@ -30,7 +30,7 @@ public class DescribeVpcsResponseTests
                 </item>
               </vpcSet>
             </DescribeVpcsResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Single(response.Vpcs);
 

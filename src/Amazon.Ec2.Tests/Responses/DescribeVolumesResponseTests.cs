@@ -34,7 +34,7 @@ public class DescribeVolumesResponseTests
                   </item>
                </volumeSet>
             </DescribeVolumesResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Single(response.Volumes);
 

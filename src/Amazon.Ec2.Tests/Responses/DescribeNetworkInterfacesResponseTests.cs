@@ -103,7 +103,7 @@ public class DescribeNetworkInterfacesResponseTests
                    </item>
                  </networkInterfaceSet>
             </DescribeNetworkInterfacesResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Equal(2, response.NetworkInterfaces.Length);
 
