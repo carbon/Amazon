@@ -8,7 +8,7 @@ namespace Amazon.CloudWatch.Serialization;
 public static class CloudWatchSerializer<T>
     where T : notnull
 {
-    private static readonly XmlSerializer s_serializer = new(typeof(T), CloudWatchClient.NS);
+    private static readonly XmlSerializer s_serializer = new(typeof(T), CloudWatchClient.Namespace);
 
     public static byte[] SerializeToUtf8Bytes(T instance)
     {

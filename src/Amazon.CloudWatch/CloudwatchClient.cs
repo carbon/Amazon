@@ -9,7 +9,14 @@ public sealed class CloudWatchClient(AwsRegion region, IAwsCredential credential
 {
     public const string Version = "2010-08-01";
 
-    public static readonly string NS = "http://monitoring.amazonaws.com/doc/2010-08-01/";
+    public static readonly string Namespace = "http://monitoring.amazonaws.com/doc/2010-08-01/";
+
+    #region Logs
+
+    #endregion
+
+
+    #region Metrics
 
     /*
     public async Task DeleteAlarmsAsync() { }
@@ -70,6 +77,8 @@ public sealed class CloudWatchClient(AwsRegion region, IAwsCredential credential
     {
     }
     */
+
+    #endregion
 
     #region Helpers
 
