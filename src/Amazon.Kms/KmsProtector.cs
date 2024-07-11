@@ -39,16 +39,14 @@ public sealed class KmsProtector
         return result.Plaintext;
     }
 
-    public async Task<GenerateDataKeyResult> GenerateKeyAsync(
+    public Task<GenerateDataKeyResult> GenerateKeyAsync(
         IEnumerable<KeyValuePair<string, string>>? context = null)
     {
-        var result = await _client.GenerateDataKeyAsync(new GenerateDataKeyRequest(
+        return _client.GenerateDataKeyAsync(new GenerateDataKeyRequest(
            keyId             : _keyId,
            keySpec           : KeySpec.AES_256,
            encryptionContext : GetEncryptionContext(context)
-       )).ConfigureAwait(false);
-
-        return result;
+        ));
     }
 
     public async Task RetireGrantAsync(string grantId)

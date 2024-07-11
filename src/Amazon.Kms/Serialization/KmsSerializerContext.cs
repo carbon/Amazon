@@ -23,7 +23,6 @@ namespace Amazon.Kms.Serialization;
 [JsonSerializable(typeof(SignResult))]
 [JsonSerializable(typeof(VerifyRequest))]
 [JsonSerializable(typeof(VerifyResult))]
-
 public partial class KmsSerializerContext : JsonSerializerContext
 {
 }
