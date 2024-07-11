@@ -31,12 +31,14 @@ public class GetHealthCheckResponseTests
                   <HealthCheckVersion>2</HealthCheckVersion>
                </HealthCheck>
             </GetHealthCheckResponse>
-            """);
+            """u8.ToArray());
 
-        var hcc = result.HealthCheck.HealthCheckConfig;
+        var healthCheck = result.HealthCheck;
+        var hcc = healthCheck.HealthCheckConfig;
 
-        Assert.Equal("abcdef11-2222-3333-4444-555555fedcba", result.HealthCheck.Id);
-        Assert.Equal(2, result.HealthCheck.HealthCheckVersion);
+        Assert.Equal("abcdef11-2222-3333-4444-555555fedcba", healthCheck.Id);
+        Assert.Equal(2,                                      healthCheck.HealthCheckVersion);
+        Assert.Equal("example.com 192.0.2.17",               healthCheck.CallerReference);
 
         Assert.Equal("192.0.2.17",                       hcc.IPAddress);
         Assert.Equal(80,                                 hcc.Port);

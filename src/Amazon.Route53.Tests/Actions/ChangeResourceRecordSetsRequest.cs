@@ -9,28 +9,31 @@ public class ChangeResourceRecordSetsRequestTests
     [Fact]
     public void CanSerialize()
     {
-        var request = new ChangeResourceRecordSetsRequest(new[] {
+        var request = new ChangeResourceRecordSetsRequest([
             new ResourceRecordSetChange {
                 Action = ChangeAction.CREATE,
                 ResourceRecordSet = new ResourceRecordSet {
                     Type = ResourceRecordType.CNAME,
                     AliasTarget = new AliasTarget {
-                        DNSName = "bananas"
+                        DNSName = "bananas",
+                        HostedZoneId = "zone-id",
                     },
-                    GeoLocation = new GeoLocation("NA"),
+                    GeoLocation = new GeoLocation {
+                        ContinentCode = ContinentCode.NA
+                    },
                     HealthCheckId = "1",
                     Name = "name",
                     TTL = 600,
                     SetIdentifier = "set-id"
                 }
             }
-        });
+        ]);
 
         byte[] bytes = Route53Serializer<ChangeResourceRecordSetsRequest>.SerializeToUtf8Bytes(request);
 
-        Assert.Equal(Flatten(
+        Assert.Equal(
             """
-            ﻿<?xml version="1.0" encoding="utf-8"?>
+            <?xml version="1.0" encoding="utf-8"?>
             <ChangeResourceRecordSetsRequest xmlns="https://route53.amazonaws.com/doc/2013-04-01/">
               <ChangeBatch>
                 <Changes>
@@ -40,6 +43,7 @@ public class ChangeResourceRecordSetsRequestTests
                       <AliasTarget>
                         <DNSName>bananas</DNSName>
                         <EvaluateTargetHealth>false</EvaluateTargetHealth>
+                        <HostedZoneId>zone-id</HostedZoneId>
                       </AliasTarget>
                       <GeoLocation>
                         <ContinentCode>NA</ContinentCode>
@@ -54,30 +58,33 @@ public class ChangeResourceRecordSetsRequestTests
                 </Changes>
               </ChangeBatch>
             </ChangeResourceRecordSetsRequest>
-            """), Encoding.UTF8.GetString(bytes));
+            """u8, bytes);
     }
 
     [Fact]
     public void CanSerialize2()
     {
-        var request = new ChangeResourceRecordSetsRequest(new[] {
+        var request = new ChangeResourceRecordSetsRequest([
             new ResourceRecordSetChange {
                 Action = ChangeAction.CREATE,
                 ResourceRecordSet = new ResourceRecordSet {
+                    Name = "test",
                     Failover = Failover.SECONDARY,
                     TTL = 600,
                     Type = ResourceRecordType.NS
                 }
             }
-        });
+        ]);
 
         byte[] bytes = Route53Serializer<ChangeResourceRecordSetsRequest>.SerializeToUtf8Bytes(request);
 
-        Assert.Equal("0be4fa0293ad2ede7dc2fcb61c7f92922ef70f4addcd4d02abc707deb43184bf", SignerV4.ComputeSHA256(new ByteArrayContent(bytes)));
+        var signature = SignerV4.ComputeSHA256(new ByteArrayContent(bytes));
 
-        Assert.Equal(Flatten(
+        Assert.Equal("979b47c4014193033e9987a21c0d1b87ac1a48bac681a154ec94f8cbb42c3bc3", signature);
+
+        Assert.Equal(
             """
-            ﻿<?xml version="1.0" encoding="utf-8"?>
+            <?xml version="1.0" encoding="utf-8"?>
             <ChangeResourceRecordSetsRequest xmlns="https://route53.amazonaws.com/doc/2013-04-01/">
               <ChangeBatch>
                 <Changes>
@@ -85,6 +92,7 @@ public class ChangeResourceRecordSetsRequestTests
                     <Action>CREATE</Action>
                     <ResourceRecordSet>
                       <Failover>SECONDARY</Failover>
+                      <Name>test</Name>
                       <TTL>600</TTL>
                       <Type>NS</Type>
                     </ResourceRecordSet>
@@ -92,16 +100,17 @@ public class ChangeResourceRecordSetsRequestTests
                 </Changes>
               </ChangeBatch>
             </ChangeResourceRecordSetsRequest>
-            """), Encoding.UTF8.GetString(bytes), ignoreWhiteSpaceDifferences: true);
+            """u8, bytes);
     }
 
     [Fact]
     public void Serialize3()
     {
-        var request = new ChangeResourceRecordSetsRequest(new[] {
+        var request = new ChangeResourceRecordSetsRequest([
             new ResourceRecordSetChange {
                 Action = ChangeAction.CREATE,
                 ResourceRecordSet = new ResourceRecordSet {
+                    Name = "test",
                     Failover = Failover.SECONDARY,
                     TTL = 600,
                     Type = ResourceRecordType.NS
@@ -111,24 +120,25 @@ public class ChangeResourceRecordSetsRequestTests
             new ResourceRecordSetChange {
                 Action = ChangeAction.UPSERT,
                 ResourceRecordSet = new ResourceRecordSet {
+                    Name = "test",
                     Failover = Failover.SECONDARY,
                     TTL = 30,
                     Weight = 255,
                     Type = ResourceRecordType.TXT,
-                    ResourceRecords = new[] {
+                    ResourceRecords = [
                         new ResourceRecord("a"),
                         new ResourceRecord("b"),
                         new ResourceRecord("c")
-                    }
+                    ]
                 }
             }
-        });
+        ]);
 
         byte[] bytes = Route53Serializer<ChangeResourceRecordSetsRequest>.SerializeToUtf8Bytes(request);
 
-        Assert.Equal(Flatten(
+        Assert.Equal(
             """
-            ﻿<?xml version="1.0" encoding="utf-8"?>
+            <?xml version="1.0" encoding="utf-8"?>
             <ChangeResourceRecordSetsRequest xmlns="https://route53.amazonaws.com/doc/2013-04-01/">
               <ChangeBatch>
                 <Changes>
@@ -136,6 +146,7 @@ public class ChangeResourceRecordSetsRequestTests
                     <Action>CREATE</Action>
                     <ResourceRecordSet>
                       <Failover>SECONDARY</Failover>
+                      <Name>test</Name>
                       <TTL>600</TTL>
                       <Type>NS</Type>
                     </ResourceRecordSet>
@@ -152,6 +163,7 @@ public class ChangeResourceRecordSetsRequestTests
                     <Action>UPSERT</Action>
                     <ResourceRecordSet>
                       <Failover>SECONDARY</Failover>
+                      <Name>test</Name>
                       <ResourceRecords>
                         <ResourceRecord>
                           <Value>a</Value>
@@ -171,11 +183,6 @@ public class ChangeResourceRecordSetsRequestTests
                 </Changes>
               </ChangeBatch>
             </ChangeResourceRecordSetsRequest>
-            """), Encoding.UTF8.GetString(bytes), ignoreWhiteSpaceDifferences: true);
-    }
-
-    public static string Flatten(string xml)
-    {
-        return xml.ReplaceLineEndings(string.Empty).Replace("  ", string.Empty);
+            """u8, bytes);
     }
 }

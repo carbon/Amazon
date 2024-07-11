@@ -14,7 +14,7 @@ public class GetChangeResponseTests
                     <SubmittedAt>2017-03-10T01:36:41.958Z</SubmittedAt>
                 </ChangeInfo>
             </GetChangeResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("1", result.ChangeInfo.Id);
         Assert.Equal("INSYNC", result.ChangeInfo.Status);

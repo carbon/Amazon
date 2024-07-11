@@ -28,7 +28,7 @@ public class GetHostedZoneResponseTests
                     </NameServers>
                 </DelegationSet>
             </GetHostedZoneResponse>
-            """);
+            """u8.ToArray());
 
         var hostedZone = response.HostedZone;
 
@@ -36,6 +36,8 @@ public class GetHostedZoneResponseTests
         Assert.Equal("example.com.",                  hostedZone.Name);
         Assert.Equal("2017-03-01T11:22:14Z",          hostedZone.CallerReference);
         Assert.Equal(17,                              hostedZone.ResourceRecordSetCount);
+
+        Assert.NotNull(hostedZone.Config);
         Assert.Equal("This is my first hosted zone.", hostedZone.Config.Comment);
         Assert.False(hostedZone.Config.PrivateZone);
 

@@ -17,7 +17,7 @@ public class TestDnsAnswerResponseTests
                 <ResponseCode>NOERROR</ResponseCode>
                 <Protocol>UDP</Protocol>
             </TestDnsAnswerResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("A", result.RecordType);
         Assert.Equal("UDP", result.Protocol);
