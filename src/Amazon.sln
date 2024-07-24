@@ -100,7 +100,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Bedrock.Tests", "Ama
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Sns.Tests", "Amazon.Sns.Tests\Amazon.Sns.Tests.csproj", "{D435F5FD-D485-4266-8067-92A351C20EF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.CloudFront.Tests", "Amazon.CloudFront.Tests\Amazon.CloudFront.Tests.csproj", "{6F1AE5D6-BA01-4379-83CD-E7A1AE1F83EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudFront.Tests", "Amazon.CloudFront.Tests\Amazon.CloudFront.Tests.csproj", "{6F1AE5D6-BA01-4379-83CD-E7A1AE1F83EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Transcribe", "Amazon.Transcribe\Amazon.Transcribe.csproj", "{829C9688-9E6B-4093-ABB4-075125C77115}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -292,6 +294,10 @@ Global
 		{6F1AE5D6-BA01-4379-83CD-E7A1AE1F83EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F1AE5D6-BA01-4379-83CD-E7A1AE1F83EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F1AE5D6-BA01-4379-83CD-E7A1AE1F83EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{829C9688-9E6B-4093-ABB4-075125C77115}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{829C9688-9E6B-4093-ABB4-075125C77115}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{829C9688-9E6B-4093-ABB4-075125C77115}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{829C9688-9E6B-4093-ABB4-075125C77115}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
