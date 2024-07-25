@@ -8,4 +8,8 @@
     <NoWarn>IDE0130</NoWarn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Amazon.Core\Amazon.Core.csproj" />
+  </ItemGroup>
+
 </Project>
