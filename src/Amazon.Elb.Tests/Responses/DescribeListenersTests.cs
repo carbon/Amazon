@@ -1,4 +1,6 @@
-﻿namespace Amazon.Elb.Tests;
+﻿using System.Text;
+
+namespace Amazon.Elb.Tests;
 
 public class DescribeListenersTests
 {
@@ -6,7 +8,7 @@ public class DescribeListenersTests
     public void CanDeserialize()
     {
         var response = ElbSerializer<DescribeListenersResponse>.DeserializeXml(
-            $"""
+            Encoding.UTF8.GetBytes($"""
             <DescribeListenersResponse xmlns="{ElbClient.Namespace}">
               <DescribeListenersResult> 
                 <Listeners> 
@@ -28,7 +30,7 @@ public class DescribeListenersTests
                 <RequestId>18e470d3-f39c-11e5-a53c-67205c0d10fd</RequestId> 
               </ResponseMetadata>
             </DescribeListenersResponse>
-            """);
+            """));
 
         var listeners = response.DescribeListenersResult.Listeners;
 

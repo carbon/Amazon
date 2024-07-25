@@ -36,8 +36,7 @@ public class DescribeTargetGroupsResponseTests
                 <RequestId>70092c0e-f3a9-11e5-ae48-cff02092876b</RequestId> 
               </ResponseMetadata> 
             </DescribeTargetGroupsResponse>
-            """);
-
+            """u8.ToArray());
 
         Assert.Single(response.DescribeTargetGroupsResult.TargetGroups);
 

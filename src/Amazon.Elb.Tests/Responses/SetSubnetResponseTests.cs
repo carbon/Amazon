@@ -24,7 +24,7 @@ public class SetSubnetResponseTests
                 <RequestId>c1a80803-f3ab-11e5-b673-8d4a8a9e6f48</RequestId> 
               </ResponseMetadata> 
             </SetSubnetsResponse>
-            """);
+            """u8.ToArray());
 
         var result = response.SetSubnetsResult;
 

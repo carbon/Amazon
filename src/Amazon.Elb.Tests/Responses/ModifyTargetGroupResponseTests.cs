@@ -37,7 +37,7 @@ public class ModifyTargetGroupResponseTests
                 <RequestId>8525b334-f466-11e5-aa04-33bf366f62e2</RequestId> 
               </ResponseMetadata> 
             </ModifyTargetGroupResponse>
-            """);
+            """u8.ToArray());
 
         var tg_0 = response.ModifyTargetGroupResult.TargetGroups[0];
 

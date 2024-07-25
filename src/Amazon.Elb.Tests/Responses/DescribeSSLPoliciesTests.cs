@@ -1,12 +1,15 @@
-﻿namespace Amazon.Elb.Tests;
+﻿using System.Text;
+
+namespace Amazon.Elb.Tests;
 
 public class DescribeSSLPoliciesTests
 {
     [Fact]
     public void CanDeserialize()
     {
-        var response = ElbSerializer<DescribeSSLPoliciesResponse>.DeserializeXml($"""
-            <DescribeSSLPoliciesResponse xmlns="{ElbClient.Namespace}">
+        var response = ElbSerializer<DescribeSSLPoliciesResponse>.DeserializeXml(
+            """
+            <DescribeSSLPoliciesResponse xmlns="http://elasticloadbalancing.amazonaws.com/doc/2015-12-01/">
               <DescribeSSLPoliciesResult> 
                 <SslPolicies> 
                   <member> 
@@ -41,7 +44,7 @@ public class DescribeSSLPoliciesTests
                 <RequestId>a78c9aee-f2aa-11e5-8a24-ffe2bf8623ae</RequestId> 
               </ResponseMetadata>
             </DescribeSSLPoliciesResponse>
-            """);
+            """u8.ToArray());
 
         var policies = response.DescribeSSLPoliciesResult.SslPolicies;
 

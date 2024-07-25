@@ -38,7 +38,7 @@ public class CreateRuleResponseTests
                     <RequestId>c5478c83-f397-11e5-bb98-57195a6eb84a</RequestId> 
                 </ResponseMetadata>
             </CreateRuleResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Single(response.CreateRuleResult.Rules);
 
