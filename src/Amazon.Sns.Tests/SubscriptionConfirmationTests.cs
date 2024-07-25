@@ -21,7 +21,7 @@ public class SubscriptionConfirmationTests
               "Signature" : "EXAMPLEpH+...",
               "SigningCertURL" : "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-f3ecfb7224c7233fe7bb5f59f96de52f.pem"
             }
-            """);
+            """u8);
 
         var confirmation = (SubscriptionConfirmation)notification!;
 
@@ -49,8 +49,7 @@ public class SubscriptionConfirmationTests
               "Signature" : "EXAMPLEpH+...",
               "SigningCertURL" : "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-f3ecfb7224c7233fe7bb5f59f96de52f.pem"
             }
-            """);
-
+            """u8);
 
         Assert.NotNull(confirmation);
         Assert.Equal("165545c9-2a5c-472c-8df2-7ff2be2b3b1b", confirmation.MessageId);

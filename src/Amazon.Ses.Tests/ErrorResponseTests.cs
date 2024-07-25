@@ -15,7 +15,7 @@ public class ErrorResponseTests
               </Error>
               <RequestId>0de719f7-7cde-11e3-8c9d-5942f9840c3a</RequestId>
             </ErrorResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Equal("Sender", response.Error.Type);
         Assert.Equal("InvalidParameterValue", response.Error.Code);
