@@ -1,13 +1,8 @@
 ﻿namespace Amazon.Elb;
 
-public sealed class DescribeTargetGroupAttributesRequest : IElbRequest
+public sealed class DescribeTargetGroupAttributesRequest(string targetGroupArn) : IElbRequest
 {
     public string Action => "DescribeTargetGroupAttributes";
 
-    public DescribeTargetGroupAttributesRequest(string targetGroupArn)
-    {
-        TargetGroupArn = targetGroupArn;
-    }
-
-    public string TargetGroupArn { get; }
+    public string TargetGroupArn { get; } = targetGroupArn ?? throw new ArgumentNullException(nameof(targetGroupArn));
 }
