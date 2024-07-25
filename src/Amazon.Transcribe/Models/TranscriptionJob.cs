@@ -74,5 +74,6 @@ public class TranscriptionJob
     public string? TranscriptionJobName { get; set; }
 
     [JsonPropertyName("TranscriptionJobStatus")]
-    public string? TranscriptionJobStatus { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public TranscriptionJobStatus TranscriptionJobStatus { get; set; }
 }

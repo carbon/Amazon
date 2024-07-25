@@ -1,66 +1,99 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Amazon.Transcribe;
 
-public class StartTranscriptionJobRequest
+public sealed class StartTranscriptionJobRequest
 {
     [JsonPropertyName("ContentRedaction")]
-    public ContentRedaction ContentRedaction { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ContentRedaction? ContentRedaction { get; set; }
 
     [JsonPropertyName("IdentifyLanguage")]
-    public bool IdentifyLanguage { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? IdentifyLanguage { get; set; }
 
+    /// <summary>
+    /// Enables automatic multi-language identification in your transcription job request.
+    /// Use this parameter if your media file contains more than one language. If your media contains only one language, use IdentifyLanguage instead.
+    /// </summary>
     [JsonPropertyName("IdentifyMultipleLanguages")]
-    public bool IdentifyMultipleLanguages { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? IdentifyMultipleLanguages { get; set; }
 
     [JsonPropertyName("JobExecutionSettings")]
-    public JobExecutionSettings JobExecutionSettings { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public JobExecutionSettings? JobExecutionSettings { get; set; }
 
+    /// <summary>
+    /// A map of plain text, non-secret key:value pairs, known as encryption context pairs, that provide an added layer of security for your data. 
+    /// </summary>
     [JsonPropertyName("KMSEncryptionContext")]
-    public Dictionary<string, string> KMSEncryptionContext { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Dictionary<string, string>? KMSEncryptionContext { get; set; }
 
+    /// <summary>
+    /// The language code that represents the language spoken in the input media file.
+    /// </summary>
     [JsonPropertyName("LanguageCode")]
-    public string LanguageCode { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? LanguageCode { get; set; }
 
     [JsonPropertyName("LanguageIdSettings")]
-    public Dictionary<string, LanguageIdSetting> LanguageIdSettings { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Dictionary<string, LanguageIdSetting>? LanguageIdSettings { get; set; }
 
     [JsonPropertyName("LanguageOptions")]
-    public List<string> LanguageOptions { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<string>? LanguageOptions { get; set; }
 
     [JsonPropertyName("Media")]
-    public Media Media { get; set; }
+    public required Media Media { get; init; }
 
+    /// <summary>
+    /// mp3 | mp4 | wav | flac | ogg | amr | webm | m4a
+    /// </summary>
     [JsonPropertyName("MediaFormat")]
-    public string MediaFormat { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? MediaFormat { get; set; }
 
+    /// <summary>
+    /// The sample rate, in hertz, of the audio track in your input media file.
+    /// </summary>
     [JsonPropertyName("MediaSampleRateHertz")]
-    public int MediaSampleRateHertz { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public int? MediaSampleRateHertz { get; set; }
 
     [JsonPropertyName("ModelSettings")]
-    public ModelSettings ModelSettings { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ModelSettings? ModelSettings { get; set; }
 
     [JsonPropertyName("OutputBucketName")]
-    public string OutputBucketName { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? OutputBucketName { get; set; }
 
     [JsonPropertyName("OutputEncryptionKMSKeyId")]
-    public string OutputEncryptionKMSKeyId { get; set; }
+    public string? OutputEncryptionKMSKeyId { get; set; }
 
     [JsonPropertyName("OutputKey")]
-    public string OutputKey { get; set; }
+    public string? OutputKey { get; set; }
 
     [JsonPropertyName("Settings")]
-    public Settings Settings { get; set; }
+    public Settings? Settings { get; set; }
 
     [JsonPropertyName("Subtitles")]
-    public Subtitles Subtitles { get; set; }
+    public Subtitles? Subtitles { get; set; }
 
     [JsonPropertyName("Tags")]
-    public List<Tag> Tags { get; set; }
+    public List<Tag>? Tags { get; set; }
 
     [JsonPropertyName("ToxicityDetection")]
-    public List<ToxicityDetection> ToxicityDetection { get; set; }
+    public List<ToxicityDetection>? ToxicityDetection { get; set; }
 
+    /// <summary>
+    /// A unique name, chosen by you, for your transcription job. The name that you specify is also used as the default name of your transcription output file.
+    /// </summary>
     [JsonPropertyName("TranscriptionJobName")]
-    public string TranscriptionJobName { get; set; }
+    [StringLength(200)]
+    public required string TranscriptionJobName { get; set; }
 }
