@@ -2,16 +2,11 @@
 
 namespace Amazon.Lambda;
 
-public class InvokeResult
+public class InvokeResult(byte[] responseBytes)
 {
-    public InvokeResult(string responseText)
-    {
-        ResponseText = responseText;
-    }
-
     public string LogResult { get; set; }
 
-    public string ResponseText { get; }
+    public byte[] ResponseBytes { get; } = responseBytes;
 }
 
 /*

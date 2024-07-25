@@ -4,13 +4,10 @@ using System.Text.Json;
 
 namespace Amazon.Lambda;
 
-public sealed class LambdaClient : AwsClient
+public sealed class LambdaClient(AwsRegion region, IAwsCredential credential) 
+    : AwsClient(AwsService.Lambda, region, credential)
 {
     public const string Version = "2015-03-31";
-
-    public LambdaClient(AwsRegion region, IAwsCredential credential)
-        : base(AwsService.Lambda, region, credential)
-    { }
 
     // lambda:InvokeFunction
 
@@ -34,14 +31,14 @@ public sealed class LambdaClient : AwsClient
             httpRequest.Headers.Add("X-Amz-Invocation-Type", message.InvocationType.Value.ToString());
         }
 
-        if (message.LogType != null)
+        if (message.LogType is LogType logType)
         {
-            httpRequest.Headers.Add("X-Amz-Log-Type", message.LogType.Value.ToString());
+            httpRequest.Headers.Add("X-Amz-Log-Type", logType.ToString());
         }
 
-        var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+        var responseBytes = await SendAsync(httpRequest).ConfigureAwait(false);
 
-        return new InvokeResult(responseText);
+        return new InvokeResult(responseBytes);
     }
 }
 
