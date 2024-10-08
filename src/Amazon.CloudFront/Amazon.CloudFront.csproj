@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Cloudfront</AssemblyName>
     <TargetFramework>net8.0</TargetFramework>
-    <VersionPrefix>0.0.1</VersionPrefix>
+    <VersionPrefix>0.0.2</VersionPrefix>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
