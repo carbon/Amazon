@@ -1,8 +1,9 @@
 <Project>
   <PropertyGroup>
-    <LangVersion>12</LangVersion>
+    <LangVersion>13</LangVersion>
     <UseArtifactsOutput>true</UseArtifactsOutput>
     <Nullable>enable</Nullable>
     <ArtifactsPath>$(MSBuildThisFileDirectory)/../artifacts</ArtifactsPath>
+    <NoWarn>IDE0130</NoWarn>
   </PropertyGroup>
 </Project>
