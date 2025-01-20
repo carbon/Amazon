@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Ses.Tests", "Amazon.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Kinesis.Tests", "Amazon.Kinisis.Tests\Amazon.Kinesis.Tests.csproj", "{19535B26-2740-4986-A194-CB52A428FFCF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Cloudwatch.Tests", "Amazon.Cloudwatch.Tests\Amazon.Cloudwatch.Tests.csproj", "{FBCD6BE3-74B4-46B8-A382-80532FB55427}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch.Tests", "Amazon.Cloudwatch.Tests\Amazon.CloudWatch.Tests.csproj", "{FBCD6BE3-74B4-46B8-A382-80532FB55427}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudWatch", "Amazon.CloudWatch\Amazon.CloudWatch.csproj", "{35A881ED-E219-4607-A268-CBC6026B6BA8}"
 EndProject
@@ -103,6 +103,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CloudFront.Tests", "Amazon.CloudFront.Tests\Amazon.CloudFront.Tests.csproj", "{6F1AE5D6-BA01-4379-83CD-E7A1AE1F83EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Transcribe", "Amazon.Transcribe\Amazon.Transcribe.csproj", "{829C9688-9E6B-4093-ABB4-075125C77115}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Comprehend", "Amazon.Comprehend\Amazon.Comprehend.csproj", "{05F38582-2CE9-438B-8DC1-8CE2115B924D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Cryptography", "Amazon.Cryptography\Amazon.Cryptography.csproj", "{22FB5F8A-827E-42EE-8C1E-50E06BE5FFD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.Cryptography.Tests", "Amazon.Cryptography.Tests\Amazon.Cryptography.Tests.csproj", "{12A37A8F-A020-4071-896F-95E50761A354}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -298,6 +304,18 @@ Global
 		{829C9688-9E6B-4093-ABB4-075125C77115}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{829C9688-9E6B-4093-ABB4-075125C77115}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{829C9688-9E6B-4093-ABB4-075125C77115}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05F38582-2CE9-438B-8DC1-8CE2115B924D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05F38582-2CE9-438B-8DC1-8CE2115B924D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05F38582-2CE9-438B-8DC1-8CE2115B924D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05F38582-2CE9-438B-8DC1-8CE2115B924D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22FB5F8A-827E-42EE-8C1E-50E06BE5FFD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22FB5F8A-827E-42EE-8C1E-50E06BE5FFD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22FB5F8A-827E-42EE-8C1E-50E06BE5FFD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22FB5F8A-827E-42EE-8C1E-50E06BE5FFD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12A37A8F-A020-4071-896F-95E50761A354}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12A37A8F-A020-4071-896F-95E50761A354}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12A37A8F-A020-4071-896F-95E50761A354}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12A37A8F-A020-4071-896F-95E50761A354}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -323,6 +341,7 @@ Global
 		{27B8F926-5EB5-426A-AADC-D2CE983F60FA} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 		{D435F5FD-D485-4266-8067-92A351C20EF5} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 		{6F1AE5D6-BA01-4379-83CD-E7A1AE1F83EB} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
+		{12A37A8F-A020-4071-896F-95E50761A354} = {D94F35A3-A44D-4AC4-BBED-C578D86572CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C538AC86-7240-43BC-9265-FC69CA3DB932}
