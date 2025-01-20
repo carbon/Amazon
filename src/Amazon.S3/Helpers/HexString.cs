@@ -6,6 +6,9 @@ internal static class HexString
 
     public static string FromBytes(this ReadOnlySpan<byte> bytes)
     {
+#if NET9_0_OR_GREATER
+        return Convert.ToHexStringLower(bytes);
+#else
         Span<char> buffer = bytes.Length < 128
             ? stackalloc char[bytes.Length * 2]
             : new char[bytes.Length * 2];
@@ -24,5 +27,6 @@ internal static class HexString
         }
 
         return new string(buffer);
+#endif
     }
 }
