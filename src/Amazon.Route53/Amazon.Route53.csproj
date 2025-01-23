@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Route53</AssemblyName>
-    <Version>0.14.0</Version>
-    <TargetFramework>net8.0</TargetFramework>
+    <Version>0.15.0</Version>
+    <TargetFramework>net9.0</TargetFramework>
     <TreatWarningAsErrors>true</TreatWarningAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

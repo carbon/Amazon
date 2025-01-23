@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ses.Extensions</AssemblyName>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.6.0</Version>
+    <TargetFramework>net9.0</TargetFramework>
+    <Version>0.7.0</Version>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsTrimmble>true</IsTrimmble>
 
@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MimeKitLite" Version="4.5.0" />
+    <PackageReference Include="MimeKitLite" Version="4.9.0" />
   </ItemGroup>
 
   <ItemGroup>

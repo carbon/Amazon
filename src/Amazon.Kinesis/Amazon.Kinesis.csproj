@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Kinesis</AssemblyName>
-    <Version>0.26.0</Version>
-    <TargetFramework>net8.0</TargetFramework>
+    <Version>0.28.0</Version>
+    <TargetFramework>net9.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsTrimmable>true</IsTrimmable>
     
     <!-- Package Details-->
     <Authors>Jason Nelson</Authors>
     <Copyright>© Jason Nelson</Copyright>
-    <Description>A modern .NET Standard library for Amazon Kinesis.</Description>
+    <Description>A .NET library for Amazon Kinesis.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>aws;kinesis</PackageTags>
     <RepositoryUrl>https://github.com/carbon/Amazon</RepositoryUrl>
