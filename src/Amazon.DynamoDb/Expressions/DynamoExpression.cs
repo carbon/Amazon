@@ -14,7 +14,7 @@ public sealed class DynamoExpression
     private int expressionCount = 0;
 
     public DynamoExpression()
-        : this([], new AttributeCollection())
+        : this([], [])
     { }
 
     public DynamoExpression(

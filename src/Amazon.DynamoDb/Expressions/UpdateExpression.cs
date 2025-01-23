@@ -33,7 +33,7 @@ public sealed class UpdateExpression
             However, each section keyword can appear only once. 
             */
 
-            if (change.Operation == DataOperation.Remove)
+            if (change.Operation is DataOperation.Remove)
             {
                 // REMOVE (attributes)
                 // e.g. REMOVE Title, RelatedItems[2], Pictures.RearView
