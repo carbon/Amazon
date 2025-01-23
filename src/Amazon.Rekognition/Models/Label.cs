@@ -14,7 +14,7 @@ public sealed class Label
 
     public double Confidence { get; init; }
 
-    public string Name { get; init; }
+    public required string Name { get; init; }
 
     public Parent[]? Parents { get; init; }
 }
