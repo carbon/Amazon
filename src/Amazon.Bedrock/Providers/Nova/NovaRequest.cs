@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
+using Amazon.Bedrock.Models;
+
 namespace Amazon.Nova;
 
 public sealed class NovaRequest
@@ -9,7 +11,7 @@ public sealed class NovaRequest
 
     [JsonPropertyName("system")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public NovaContent[]? System { get; init; }
+    public ContentBlock[]? System { get; init; }
 
     [JsonPropertyName("messages")]
     public required NovaMessage[] Messages { get; init; }

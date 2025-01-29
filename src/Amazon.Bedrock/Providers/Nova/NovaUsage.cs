@@ -5,17 +5,17 @@ namespace Amazon.Nova;
 public sealed class NovaUsage
 {
     [JsonPropertyName("inputTokens")]
-    public int InputTokens { get; set; }
+    public int InputTokens { get; init; }
 
     [JsonPropertyName("outputTokens")]
-    public int OutputTokens { get; set; }
+    public int OutputTokens { get; init; }
 
     [JsonPropertyName("totalTokens")]
-    public int TotalTokens { get; set; }
+    public int TotalTokens { get; init; }
 
     [JsonPropertyName("cacheReadInputTokenCount")]
-    public int? CacheReadInputTokenCount { get; set; }
+    public int? CacheReadInputTokenCount { get; init; }
 
     [JsonPropertyName("cacheWriteInputTokenCount")]
-    public int? CacheOutputInputTokenCount { get; set; }
+    public int? CacheOutputInputTokenCount { get; init; }
 }

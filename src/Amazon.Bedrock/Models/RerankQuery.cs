@@ -12,6 +12,9 @@ public sealed class RerankQuery
 
     public static implicit operator RerankQuery(string text)
     {
-        return new RerankQuery { TextQuery = text, Type = RerankQueryType.Text };
+        return new RerankQuery {
+            TextQuery = text,
+            Type = RerankQueryType.Text
+        };
     }
 }

@@ -1,5 +1,6 @@
-﻿namespace Amazon.Bedrock.Models;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Bedrock.Models;
 
 public sealed class ContentBlock
 {

@@ -2,12 +2,11 @@
 
 namespace Amazon.Bedrock.Models;
 
-public class DocumentBlock
+public sealed class DocumentBlock
 {
     [JsonPropertyName("format")]
     public required string Format { get; init; }
 
-    // docs only
     [JsonPropertyName("name")]
     public required string Name { get; init; }
 

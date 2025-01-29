@@ -4,11 +4,11 @@ using Amazon.Bedrock.Models;
 
 namespace Amazon.Nova;
 
-public sealed class NovaMessage(Role role, params NovaContent[] content)
+public sealed class NovaMessage(Role role, params ContentBlock[] content)
 {
     [JsonPropertyName("role")]
     public Role Role { get; } = role;
 
     [JsonPropertyName("content")]
-    public NovaContent[] Content { get; } = content;
+    public ContentBlock[] Content { get; } = content;
 }
