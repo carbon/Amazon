@@ -15,7 +15,6 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
 
     public async Task<ListFoundationalModelsResult> ListFoundationalModelsAsync()
     {
-
         var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"https://bedrock.{Region.Name}.amazonaws.com/foundation-models") {
             Headers = {
                 { "Accept", MediaTypeNames.Application.Json }
@@ -89,6 +88,30 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
         return result!;
     }
 
+    public async Task<RerankResult> RerankAsync(RerankRequest request)
+    {
+        var content = JsonContent.Create(request);
+
+        content.Headers.ContentType!.CharSet = null; // otherwise, throws
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, $"https://bedrock-agent-runtime.{Region.Name}.amazonaws.com/rerank") {
+            Content = content
+        };
+
+        await SignAsync(httpRequest).ConfigureAwait(false);
+
+        using HttpResponseMessage response = await _httpClient.SendAsync(httpRequest).ConfigureAwait(false);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw await GetExceptionAsync(response).ConfigureAwait(false);
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<RerankResult>().ConfigureAwait(false);
+
+        return result!;
+    }
+
     public async Task<string> InvokeModelAsync(string modelId, HttpContent content, string accept = "application/json")
     {
         content.Headers.ContentType!.CharSet = null; // otherwise, throws
@@ -122,6 +145,7 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
         if (response.Content.Headers.ContentType?.MediaType is MediaTypeNames.Application.Json)
         {
             // {"message":"The system encountered an unexpected error during processing. Try your request again."}
+            // {"message":"You are not authorized to invoke the Rerank operation."}
 
             if (JsonSerializer.Deserialize<Error>(responseBytes) is Error { Message: string errorMessage })
             {
