@@ -5,6 +5,7 @@ using System.Text.Json;
 
 using Amazon.Bedrock.Actions;
 using Amazon.Bedrock.Exceptions;
+using Amazon.Bedrock.Serialization;
 
 namespace Amazon.Bedrock;
 
@@ -66,7 +67,7 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
 
     public async Task<ConverseResult> ConverseAsync(string modelId, ConverseRequest request)
     {
-        var content = JsonContent.Create(request);
+        var content = JsonContent.Create(request, BedrockJsonSerializerContent.Default.ConverseRequest);
 
         content.Headers.ContentType!.CharSet = null; // otherwise, throws
 
@@ -90,7 +91,7 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
 
     public async Task<RerankResult> RerankAsync(RerankRequest request)
     {
-        var content = JsonContent.Create(request);
+        var content = JsonContent.Create(request, BedrockJsonSerializerContent.Default.RerankRequest);
 
         content.Headers.ContentType!.CharSet = null; // otherwise, throws
 
@@ -124,7 +125,6 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
         };
 
         // https://bedrock-runtime.us-east-1.amazonaws.com/model/amazon.titan-text-express-v1/invoke
-
 
         await SignAsync(request).ConfigureAwait(false);
 
