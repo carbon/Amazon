@@ -1,18 +1,20 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace Amazon.CodeBuild.Tests;
+using Amazon.CodeBuild.Serialization;
 
-public class BatchGetBuildsResponseTests
+namespace Amazon.CodeBuild.Results.Tests;
+
+public class BatchGetBuildsResultTests
 {
     [Fact]
     public void CanDeserialize()
     {
-        var response = JsonSerializer.Deserialize<BatchGetBuildsResponse>(
+        BatchGetBuildsResult? result = JsonSerializer.Deserialize(
             """
             {
               "builds": [
                 {
-                  "arn": "x",
+                  "arn": "arn",
                   "artifacts": {
                     "location": "x"
                   },
@@ -125,24 +127,29 @@ public class BatchGetBuildsResponseTests
               ],
               "buildsNotFound": [ ]
             }
-            """u8);
+            """u8, CodeBuildSerializerContext.Default.BatchGetBuildsResult);
 
-        Assert.NotNull(response);
-        Assert.Single(response.Builds);
+        Assert.NotNull(result);
+        Assert.Single(result.Builds);
 
-        var build = response.Builds[0];
+        var build = result.Builds[0];
 
-        var lastPhase = build.Phases[^1];
+        Assert.Equal("arn", build.Arn);
 
-        Assert.Equal(10, build.Phases.Length);
-
-        Assert.NotNull(build.Environment?.EnvironmentVariables);
-
+        // Environment
         Assert.Equal("microsoft/dotnet:1.1.1-sdk", build.Environment.Image);
+        Assert.NotNull(build.Environment.EnvironmentVariables);
         Assert.Single(build.Environment.EnvironmentVariables);
+        Assert.Equal(ProjectEnvironmentType.LINUX_CONTAINER, build.Environment.Type);
 
         Assert.Equal("project-name", build.ProjectName);
-        Assert.Equal("COMPLETED", lastPhase.PhaseType);
-        Assert.Equal(ProjectEnvironmentType.LINUX_CONTAINER, build.Environment.Type);
+
+        // Phases -
+        Assert.Equal(10, build.Phases.Length);
+
+        Assert.Equal(PhaseStatus.SUCCEEDED, build.Phases[0].PhaseStatus);
+        Assert.Equal(PhaseType.SUBMITTED, build.Phases[0].PhaseType);
+
+        Assert.Equal(PhaseType.COMPLETED, build.Phases[^1].PhaseType);
     }
 }

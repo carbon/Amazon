@@ -1,4 +1,6 @@
-﻿namespace Amazon.CodeBuild.Tests;
+﻿using Amazon.CodeBuild.Serialization;
+
+namespace Amazon.CodeBuild.Tests;
 
 public class StartBuildRequestTests
 {
@@ -7,9 +9,9 @@ public class StartBuildRequestTests
     {
         var request = new StartBuildRequest("carbon");
 
-        var result = CodeBuildClient.GetRequestMessage("https://test/", request);
+        var result = CodeBuildClient.GetRequestMessage("https://test/", request, CodeBuildSerializerContext.Default.StartBuildRequest);
 
         Assert.NotNull(result.Content);
-        Assert.Equal("""{"projectName":"carbon"}""", await result.Content.ReadAsStringAsync());
+        Assert.Equal("""{"projectName":"carbon"}"""u8.ToArray(), await result.Content.ReadAsByteArrayAsync());
     }
 }

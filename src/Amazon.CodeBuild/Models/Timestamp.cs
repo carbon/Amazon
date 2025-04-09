@@ -11,11 +11,11 @@ public readonly struct Timestamp(double value)
 
     public static implicit operator DateTime(Timestamp timestamp)
     {
-        return DateTime.UnixEpoch.AddSeconds(timestamp.Value);
+        return DateTime.UnixEpoch.AddMilliseconds(timestamp.Value * 1000);
     }
 
     public static implicit operator DateTimeOffset(Timestamp timestamp)
     {
-        return DateTimeOffset.UnixEpoch.AddSeconds(timestamp.Value);
+        return DateTimeOffset.UnixEpoch.AddMilliseconds(timestamp.Value * 1000);
     }
 }

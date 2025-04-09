@@ -1,4 +1,6 @@
-﻿namespace Amazon.CodeBuild.Tests;
+﻿using Amazon.CodeBuild.Serialization;
+
+namespace Amazon.CodeBuild.Tests;
 
 public class StopBuildRequestTests
 {
@@ -7,10 +9,10 @@ public class StopBuildRequestTests
     {
         var request = new StopBuildRequest("build-id");
 
-        var result = CodeBuildClient.GetRequestMessage("https://test/", request);
+        var result = CodeBuildClient.GetRequestMessage("https://test/", request, CodeBuildSerializerContext.Default.StopBuildRequest);
 
         Assert.NotNull(result.Content);
-        Assert.Equal("""{"id":"build-id"}""", await result.Content.ReadAsStringAsync());
+        Assert.Equal("""{"id":"build-id"}"""u8.ToArray(), await result.Content.ReadAsByteArrayAsync());
 
         Assert.Equal("application/x-amz-json-1.1; charset=utf-8", result.Content.Headers.NonValidated["Content-Type"].ToString());
     }
