@@ -4,6 +4,10 @@ namespace Amazon.Bedrock.Models;
 
 public sealed class ContentBlock
 {
+    [JsonPropertyName("cachePoint")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public CachePointBlock? CachePoint { get; init; }
+
     [JsonPropertyName("text")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Text { get; init; }
@@ -19,6 +23,10 @@ public sealed class ContentBlock
     [JsonPropertyName("video")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public VideoBlock? Video { get; init; }
+
+    [JsonPropertyName("reasoningContent")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ReasoningContentBlock? ReasoningContent { get; init; }
 
     public static implicit operator ContentBlock(string text)
     {
