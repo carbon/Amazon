@@ -1,10 +1,10 @@
 ﻿namespace Amazon.S3;
 
-public sealed class PutObjectResult(string eTag, string? versionId)
+public sealed class PutObjectResult
 {
-    public string ETag { get; } = eTag;
+    public required string ETag { get; init; }
 
-    public string? VersionId { get; } = versionId;
+    public string? VersionId { get; init; }
 }
 
 // NOTES: 

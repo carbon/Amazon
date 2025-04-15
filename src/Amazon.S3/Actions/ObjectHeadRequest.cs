@@ -2,11 +2,9 @@
 
 namespace Amazon.S3;
 
-public sealed class ObjectHeadRequest : S3Request
+public sealed class ObjectHeadRequest(string host, string bucketName, string key) 
+    : S3Request(HttpMethod.Head, host, bucketName, key)
 {
-    public ObjectHeadRequest(string host, string bucketName, string key)
-        : base(HttpMethod.Head, host, bucketName, key) { }
-
     internal void SetCustomerEncryptionKey(in ServerSideEncryptionKey key)
     {
         Headers.Add(S3HeaderNames.ServerSideEncryptionCustomerAlgorithm, key.Algorithm);

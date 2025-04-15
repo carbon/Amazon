@@ -2,8 +2,6 @@
 using System.Net.Http;
 using System.Text.Encodings.Web;
 
-using Amazon.Helpers;
-
 namespace Amazon.S3;
 
 public class PutObjectRequest : S3Request
@@ -43,21 +41,21 @@ public class PutObjectRequest : S3Request
                 writer.Write('&');
             }
 
-            KeyValuePair<string, string> tag = tags[i];
+            var (key, value) = tags[i];
 
-            if (tag.Key.Length > 128)
+            if (key.Length > 128)
             {
-                throw new ArgumentException($"Tag key > 128 chars. Was {tag.Key}");
+                throw new ArgumentException($"Tag key > 128 chars. Was '{key}'");
             }
 
-            if (tag.Value.Length > 256)
+            if (value.Length > 256)
             {
-                throw new ArgumentException($"Tag value > 256 chars. Was {tag.Value}");
+                throw new ArgumentException($"Tag value > 256 chars. Was '{value}'");
             }
 
-            UrlEncoder.Default.Encode(writer, tag.Key);
+            UrlEncoder.Default.Encode(writer, key);
             writer.Write('=');
-            UrlEncoder.Default.Encode(writer, tag.Value);
+            UrlEncoder.Default.Encode(writer, value);
         }
 
         Headers.Add(S3HeaderNames.Tagging, writer.ToString());
@@ -98,7 +96,7 @@ public class PutObjectRequest : S3Request
         Content.Headers.ContentLength = stream.Length;
 
         Headers.TryAddWithoutValidation(S3HeaderNames.ContentSha256, sha256Hash is not null
-            ? HexString.FromBytes(sha256Hash)
+            ? Convert.ToHexStringLower(sha256Hash)
             : "UNSIGNED-PAYLOAD"
         );
     }
@@ -119,7 +117,7 @@ public class PutObjectRequest : S3Request
         // TODO: Support chunked streaming...
 
         Headers.TryAddWithoutValidation(S3HeaderNames.ContentSha256, stream.CanSeek
-            ? HexString.FromBytes(StreamHelper.ComputeSHA256(stream))
+            ? Convert.ToHexStringLower(StreamHelper.ComputeSHA256(stream))
             : "UNSIGNED-PAYLOAD");
     }
 }

@@ -5,7 +5,7 @@ namespace Amazon.S3.Helpers;
 internal ref struct XmlStringBuilder(bool pretty)
 {
     private ValueStringBuilder _sb = new(1024);
-    private bool _pretty = pretty;
+    private readonly bool _pretty = pretty;
     private int _level = 0;
 
     public void WriteTagStart(string tag)
@@ -23,7 +23,7 @@ internal ref struct XmlStringBuilder(bool pretty)
         _level++;
     }
 
-    public void WriteTag(string tag, string value)
+    public void WriteTag(string tag, ReadOnlySpan<char> value)
     {
         if (_sb.Length > 0 && _pretty)
         {

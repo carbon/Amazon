@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -94,10 +94,10 @@ public class S3Client : AwsClient
 
         string? versionId = response.Headers.GetValueOrDefault(S3HeaderNames.VersionId);
 
-        return new PutObjectResult(
-            eTag      : response.Headers.ETag!.Tag!,
-            versionId : versionId
-        );
+        return new PutObjectResult {
+            ETag      = response.Headers.ETag!.Tag!,
+            VersionId = versionId
+        };
     }
 
     public async Task<CopyObjectResult> CopyObjectAsync(CopyObjectRequest request)
