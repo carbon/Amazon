@@ -113,10 +113,10 @@ public static class SignerV4
             return;
         }
 
-        var splitter = new StringSplitter(path, '/');
-
-        while (splitter.TryGetNext(out var segment))
+        foreach (var segmentRange in path.Split('/'))
         {
+            var segment = path[segmentRange];
+
             if (segment.IsEmpty) continue;
 
             output.Append('/');
@@ -420,10 +420,10 @@ public static class SignerV4
             query = query.Slice(1);
         }
 
-        var splitter = new StringSplitter(query, '&');
-
-        while (splitter.TryGetNext(out ReadOnlySpan<char> segment))
+        foreach (var segmentRange in query.Split('&'))
         {
+            var segment = query[segmentRange];
+
             if (segment.IsEmpty) continue;
 
             int equalIndex = segment.IndexOf('=');
@@ -540,7 +540,7 @@ public static class SignerV4
 
             SHA256.HashData(source, sha256);
 
-            return HexString.FromBytes(sha256);
+            return Convert.ToHexStringLower(sha256);
         }
         else
         {
