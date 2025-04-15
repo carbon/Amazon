@@ -1,0 +1,57 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Amazon.Bedrock.Tests/Amazon.Bedrock.Tests.csproj" />
+    <Project Path="Amazon.CloudFront.Tests/Amazon.CloudFront.Tests.csproj" />
+    <Project Path="Amazon.Cloudwatch.Tests/Amazon.CloudWatch.Tests.csproj" />
+    <Project Path="Amazon.CodeBuild.Tests/Amazon.CodeBuild.Tests.csproj" />
+    <Project Path="Amazon.Cryptography.Tests/Amazon.Cryptography.Tests.csproj" />
+    <Project Path="Amazon.DynamoDb.Tests/Amazon.DynamoDb.Tests.csproj" />
+    <Project Path="Amazon.Ec2.Tests/Amazon.Ec2.Tests.csproj" />
+    <Project Path="Amazon.Elb.Tests/Amazon.Elb.Tests.csproj" />
+    <Project Path="Amazon.Kinisis.Tests/Amazon.Kinesis.Tests.csproj" />
+    <Project Path="Amazon.Kms.Tests/Amazon.Kms.Tests.csproj" />
+    <Project Path="Amazon.Lambda.Tests/Amazon.Lambda.Tests.csproj" />
+    <Project Path="Amazon.Rds.Tests/Amazon.Rds.Tests.csproj" />
+    <Project Path="Amazon.Rekognition.Tests/Amazon.Rekognition.Tests.csproj" />
+    <Project Path="Amazon.Route53.Tests/Amazon.Route53.Tests.csproj" />
+    <Project Path="Amazon.S3.Tests/Amazon.S3.Tests.csproj" />
+    <Project Path="Amazon.Ses.Tests/Amazon.Ses.Tests.csproj" />
+    <Project Path="Amazon.Sns.Tests/Amazon.Sns.Tests.csproj" />
+    <Project Path="Amazon.Sqs.Tests/Amazon.Sqs.Tests.csproj" />
+    <Project Path="Amazon.Ssm.Tests/Amazon.Ssm.Tests.csproj" />
+    <Project Path="Amazon.Sts.Tests/Amazon.Sts.Tests.csproj" />
+    <Project Path="Amazon.Tests/Amazon.Core.Tests.csproj" />
+  </Folder>
+  <Project Path="Amazon.Bedrock/Amazon.Bedrock.csproj" />
+  <Project Path="Amazon.Cloudfront/Amazon.CloudFront.csproj" />
+  <Project Path="Amazon.CloudWatch/Amazon.CloudWatch.csproj" />
+  <Project Path="Amazon.CodeBuild/Amazon.CodeBuild.csproj" />
+  <Project Path="Amazon.Comprehend/Amazon.Comprehend.csproj" />
+  <Project Path="Amazon.Core/Amazon.Core.csproj" />
+  <Project Path="Amazon.Cryptography/Amazon.Cryptography.csproj" />
+  <Project Path="Amazon.DynamoDb.Management/Amazon.DynamoDb.Management.csproj" />
+  <Project Path="Amazon.DynamoDb/Amazon.DynamoDb.csproj" />
+  <Project Path="Amazon.Ec2/Amazon.Ec2.csproj" />
+  <Project Path="Amazon.Elb/Amazon.Elb.csproj" />
+  <Project Path="Amazon.Iam/Amazon.Iam.csproj" />
+  <Project Path="Amazon.Kinesis.Firehose/Amazon.Kinesis.Firehose.csproj" />
+  <Project Path="Amazon.Kinesis/Amazon.Kinesis.csproj" />
+  <Project Path="Amazon.Kms/Amazon.Kms.csproj" />
+  <Project Path="Amazon.Lambda/Amazon.Lambda.csproj" />
+  <Project Path="Amazon.Rds/Amazon.Rds.csproj" />
+  <Project Path="Amazon.Rekognition/Amazon.Rekognition.csproj" />
+  <Project Path="Amazon.Route53/Amazon.Route53.csproj" />
+  <Project Path="Amazon.S3/Amazon.S3.csproj" />
+  <Project Path="Amazon.Ses.Extensions/Amazon.Ses.Extensions.csproj" />
+  <Project Path="Amazon.Ses/Amazon.Ses.csproj" />
+  <Project Path="Amazon.Sns/Amazon.Sns.csproj" />
+  <Project Path="Amazon.Sqs/Amazon.Sqs.csproj" />
+  <Project Path="Amazon.Ssm/Amazon.Ssm.csproj" />
+  <Project Path="Amazon.Sts/Amazon.Sts.csproj" />
+  <Project Path="Amazon.Transcribe/Amazon.Transcribe.csproj" />
+  <Project Path="Amazon.Translate/Amazon.Translate.csproj" />
+  <Project Path="Wasabi/Wasabi.csproj" />
+</Solution>
