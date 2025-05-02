@@ -6,8 +6,12 @@ public static class FoundationalModals
 {
     public static class Anthropic
     {
-        public static readonly FoundationModel ClaudeV3_Sonnet     = new("anthropic.claude-3-sonnet-20240229-v1:0");
-        public static readonly FoundationModel ClaudeV3_Haiku      = new("anthropic.claude-3-haiku-20240307-v1:0");
+        public static readonly FoundationModel ClaudeV3_5_Haiku = new("anthropic.claude-3-5-haiku-20241022-v1:0") {
+            InferenceProfile = "us.anthropic.claude-3-5-haiku-20241022-v1:0",
+            Regions = [AwsRegion.USEast1, AwsRegion.USEast2, AwsRegion.USWest2],
+            MaxInputTokenCount = 200_000
+        }; 
+        
         public static readonly FoundationModel ClaudeV3_5_SonnetV1 = new("anthropic.claude-3-5-sonnet-20240620-v1:0");
         public static readonly FoundationModel ClaudeV3_5_SonnetV2 = new("anthropic.claude-3-5-sonnet-20241022-v2:0") {
             InferenceProfile = "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
@@ -15,8 +19,8 @@ public static class FoundationalModals
             MaxInputTokenCount = 200_000 
         };
 
-        public static readonly FoundationModel ClaudeV3_5_Haiku = new("anthropic.claude-3-5-haiku-20241022-v1:0") { 
-            InferenceProfile = "us.anthropic.claude-3-5-haiku-20241022-v1:0",
+        public static readonly FoundationModel ClaudeV3_7_Sonnet = new("anthropic.claude-3-7-sonnet-20250219-v1:0") {
+            InferenceProfile = "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
             Regions = [AwsRegion.USEast1, AwsRegion.USEast2, AwsRegion.USWest2],
             MaxInputTokenCount = 200_000
         };
