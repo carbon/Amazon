@@ -128,7 +128,7 @@ public static class SignerV4
             }
             else
             {
-                output.Append(Uri.EscapeDataString(segment.ToString()));
+                output.Append(Uri.EscapeDataString(segment));
             }
         }
     }
@@ -192,7 +192,7 @@ public static class SignerV4
 
     public static byte[] ComputeSigningKey(string secretAccessKey, in CredentialScope scope)
     {
-        var signingKey = GC.AllocateUninitializedArray<byte>(32);
+        var signingKey = new byte[32];
 
         ComputeSigningKey(secretAccessKey, scope, signingKey);
 
