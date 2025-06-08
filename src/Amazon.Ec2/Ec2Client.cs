@@ -102,9 +102,9 @@ public sealed class Ec2Client(AwsRegion region, IAwsCredential credential)
 
     public async Task<DescribeInstanceTypesResponse> DescribeInstanceTypesAsync(DescribeInstanceTypesRequest request)
     {
-        string responseText = await SendAsync(request).ConfigureAwait(false);
+        byte[] responseBytes = await SendAsync(request).ConfigureAwait(false);
 
-        return DescribeInstanceTypesResponse.Deserialize(responseText);
+        return Ec2Serializer<DescribeInstanceTypesResponse>.Deserialize(responseBytes);
     }
 
     #endregion
@@ -114,6 +114,29 @@ public sealed class Ec2Client(AwsRegion region, IAwsCredential credential)
     public Task<DescribeImagesResponse> DescribeImagesAsync(DescribeImagesRequest request)
     {
         return SendAsync<DescribeImagesResponse>(request);
+    }
+
+    public async Task<List<Image>> DescribeAllImagesAsync(DescribeImagesRequest request)
+    {
+        request.MaxResults = 1000;
+
+        var images = new List<Image>();
+        int requestCount = 0;
+        DescribeImagesResponse response;
+
+        do
+        {
+            response = await SendAsync<DescribeImagesResponse>(request);
+
+            requestCount++;
+
+            images.AddRange(response.Images);
+
+            request.NextToken = response.NextToken;
+        }
+        while (response.NextToken != null && requestCount < 20);
+
+        return images;
     }
 
     #endregion
@@ -156,7 +179,7 @@ public sealed class Ec2Client(AwsRegion region, IAwsCredential credential)
 
     #region API Helpers
 
-    private async Task<string> SendAsync(IEc2Request request)
+    private async Task<byte[]> SendAsync(IEc2Request request)
     {
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
             Content = GetPostContent(request.ToParams())
@@ -172,7 +195,7 @@ public sealed class Ec2Client(AwsRegion region, IAwsCredential credential)
             Content = GetPostContent(request.ToParams())
         };
 
-        string responseXml = await SendAsync(httpRequest).ConfigureAwait(false);
+        byte[] responseXml = await SendAsync(httpRequest).ConfigureAwait(false);
 
         return Ec2Serializer<TResponse>.Deserialize(responseXml);
     }
