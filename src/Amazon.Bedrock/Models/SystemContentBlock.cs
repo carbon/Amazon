@@ -16,4 +16,9 @@ public sealed class SystemContentBlock
     {
         return new SystemContentBlock { Text = text };
     }
+
+    public static implicit operator SystemContentBlock(CachePointBlock cachePoint)
+    {
+        return new SystemContentBlock { CachePoint = cachePoint };
+    }
 }

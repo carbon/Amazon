@@ -4,6 +4,12 @@ namespace Amazon.Bedrock.Models;
 
 public readonly struct TokenUsage
 {
+    [JsonPropertyName("cacheReadInputTokens")]
+    public int? CacheReadInputTokens { get; init; }
+
+    [JsonPropertyName("cacheWriteInputTokens")]
+    public int? CacheWriteInputTokens { get; init; }
+
     [JsonPropertyName("inputTokens")]
     public required int InputTokens { get; init; }
 
