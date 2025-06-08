@@ -13,6 +13,7 @@ public static class FoundationalModals
         }; 
         
         public static readonly FoundationModel ClaudeV3_5_SonnetV1 = new("anthropic.claude-3-5-sonnet-20240620-v1:0");
+
         public static readonly FoundationModel ClaudeV3_5_SonnetV2 = new("anthropic.claude-3-5-sonnet-20241022-v2:0") {
             InferenceProfile = "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
             Regions = [AwsRegion.USEast1, AwsRegion.USWest2],
@@ -21,6 +22,12 @@ public static class FoundationalModals
 
         public static readonly FoundationModel ClaudeV3_7_Sonnet = new("anthropic.claude-3-7-sonnet-20250219-v1:0") {
             InferenceProfile = "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+            Regions = [AwsRegion.USEast1, AwsRegion.USEast2, AwsRegion.USWest2],
+            MaxInputTokenCount = 200_000
+        };
+
+        public static readonly FoundationModel ClaudeSonnet_4 = new("anthropic.claude-sonnet-4-20250514-v1:0") {
+            InferenceProfile = "us.anthropic.claude-sonnet-4-20250514-v1:0",
             Regions = [AwsRegion.USEast1, AwsRegion.USEast2, AwsRegion.USWest2],
             MaxInputTokenCount = 200_000
         };
@@ -43,12 +50,12 @@ public static class FoundationalModals
             Regions = [AwsRegion.USEast1, AwsRegion.USEast2, AwsRegion.USWest2]
         }; // Image, Video, Text
 
-        public static readonly RerankModelInfo        RerankV1           = new("amazon.rerank-v1:0");
-        public static readonly EmbeddingModelInfo     TitanEmbedImageV1  = new("amazon.titan-embed-image-v1", [256, 384, 1024]);
-        public static readonly FoundationModel        TitanTextLiteV1    = new("amazon.titan-text-lite-v1")    { MaxInputTokenCount = 4000 };
-        public static readonly FoundationModel        TitanTextExpressV1 = new("amazon.titan-text-express-v1") { MaxInputTokenCount = 8000 };
-        public static readonly EmbeddingModelInfo     TitanEmbedTextV1   = new("amazon.titan-embed-text-v1",   [1536]);
-        public static readonly EmbeddingModelInfo     TitanEmbedTextV2   = new("amazon.titan-embed-text-v2:0", [256, 512, 1024]) { MaxInputTokenCount = 8192 };
+        public static readonly RerankModelInfo    RerankV1           = new("amazon.rerank-v1:0");
+        public static readonly EmbeddingModelInfo TitanEmbedImageV1  = new("amazon.titan-embed-image-v1", [256, 384, 1024]);
+        public static readonly FoundationModel    TitanTextLiteV1    = new("amazon.titan-text-lite-v1")    { MaxInputTokenCount = 4000 };
+        public static readonly FoundationModel    TitanTextExpressV1 = new("amazon.titan-text-express-v1") { MaxInputTokenCount = 8000 };
+        public static readonly EmbeddingModelInfo TitanEmbedTextV1   = new("amazon.titan-embed-text-v1",   [1536]);
+        public static readonly EmbeddingModelInfo TitanEmbedTextV2   = new("amazon.titan-embed-text-v2:0", [256, 512, 1024]) { MaxInputTokenCount = 8192 };
     }
 
     public static class Cohere
