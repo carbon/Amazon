@@ -1,4 +1,4 @@
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text;
 using System.Text.Encodings.Web;
 
@@ -94,7 +94,7 @@ public abstract class S3Request : HttpRequestMessage
 
         BucketName = bucketName;
 
-        var urlBuilder = new ValueStringBuilder(256);
+        var urlBuilder = new ValueStringBuilder(stackalloc char[256]);
 
         urlBuilder.Append("https://");
         urlBuilder.Append(host);

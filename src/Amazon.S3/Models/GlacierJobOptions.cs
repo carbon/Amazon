@@ -1,6 +1,6 @@
 ﻿namespace Amazon.S3;
 
-public sealed class GlacierJobOptions(GlacierJobTier tier)
+public sealed class GlacierJobOptions
 {
-    public GlacierJobTier Tier { get; } = tier;
+    public GlacierJobTier Tier { get; init; }
 }

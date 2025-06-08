@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Text.Encodings.Web;
 
 namespace Amazon.S3;
@@ -32,13 +33,13 @@ public class PutObjectRequest : S3Request
 
         // The tag-set for the object. The tag-set must be encoded as URL Query parameters. (For example, "Key1=Value1")
 
-        using var writer = new StringWriter();
+        using var writer = new ValueStringBuilder(stackalloc char[256]);
 
         for (int i = 0; i < tags.Count; i++)
         {
             if (i > 0)
             {
-                writer.Write('&');
+                writer.Append('&');
             }
 
             var (key, value) = tags[i];
@@ -53,9 +54,9 @@ public class PutObjectRequest : S3Request
                 throw new ArgumentException($"Tag value > 256 chars. Was '{value}'");
             }
 
-            UrlEncoder.Default.Encode(writer, key);
-            writer.Write('=');
-            UrlEncoder.Default.Encode(writer, value);
+            writer.Append(UrlEncoder.Default.Encode(key));
+            writer.Append('=');
+            writer.Append(UrlEncoder.Default.Encode(value));
         }
 
         Headers.Add(S3HeaderNames.Tagging, writer.ToString());
