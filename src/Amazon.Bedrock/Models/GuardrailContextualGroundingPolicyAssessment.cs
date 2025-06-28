@@ -5,5 +5,5 @@ namespace Amazon.Bedrock.Models;
 public sealed class GuardrailContextualGroundingPolicyAssessment
 {
     [JsonPropertyName("filters")]
-    public List<GuardrailContextualGroundingFilter>? Filters { get; set; }
+    public List<GuardrailContextualGroundingFilter>? Filters { get; init; }
 }

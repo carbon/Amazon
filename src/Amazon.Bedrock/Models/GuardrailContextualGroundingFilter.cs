@@ -6,15 +6,15 @@ public sealed class GuardrailContextualGroundingFilter
 {
     // BLOCKED | NONE
     [JsonPropertyName("action")]
-    public required string Action { get; set; }
+    public required string Action { get; init; }
 
     [JsonPropertyName("score")]
-    public required double Score { get; set; }
+    public required double Score { get; init; }
 
     [JsonPropertyName("threshold")]
-    public required double Threshold { get; set; }
+    public required double Threshold { get; init; }
 
     // GROUNDING | RELEVANCE
     [JsonPropertyName("type")]
-    public required string Type { get; set; }
+    public required string Type { get; init; }
 }

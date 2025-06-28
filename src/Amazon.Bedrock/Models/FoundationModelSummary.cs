@@ -20,7 +20,7 @@ public sealed class FoundationModelSummary
     public FoundationModelLifecycle? ModelLifecycle { get; init; }
 
     [JsonPropertyName("providerName")]
-    public string? ProviderName { get; set; }
+    public string? ProviderName { get; init; }
 
     [JsonPropertyName("modelName")]
     public string? ModelName { get; init; }

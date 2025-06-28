@@ -5,11 +5,10 @@ public class GuardrailPiiEntityFilter
 {
     // ANONYMIZED | BLOCKED
     [JsonPropertyName("action")]
-    public required string Action { get; set; }
+    public required string Action { get; init; }
 
     [JsonPropertyName("match")]
-    public required string Match { get; set; }
-
+    public required string Match { get; init; }
 
     // | ADDRESS
     // | AGE
@@ -43,5 +42,5 @@ public class GuardrailPiiEntityFilter
     // | US_SOCIAL_SECURITY_NUMBER
     // | VEHICLE_IDENTIFICATION_NUMBER
     [JsonPropertyName("type")]
-    public required string Type { get; set; }
+    public required string Type { get; init; }
 }

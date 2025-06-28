@@ -5,20 +5,20 @@ namespace Amazon.Bedrock.Models;
 public sealed class GuardrailAssessment
 {
     [JsonPropertyName("contentPolicy")]
-    public GuardrailContentPolicyAssessment? ContentPolicy { get; set; }
+    public GuardrailContentPolicyAssessment? ContentPolicy { get; init; }
 
     [JsonPropertyName("contextualGroundingPolicy")]
-    public GuardrailContextualGroundingPolicyAssessment? ContextualGroundingPolicy { get; set; }
+    public GuardrailContextualGroundingPolicyAssessment? ContextualGroundingPolicy { get; init; }
 
     [JsonPropertyName("invocationMetrics")]
-    public GuardrailInvocationMetrics? InvocationMetrics { get; set; }
+    public GuardrailInvocationMetrics? InvocationMetrics { get; init; }
 
     [JsonPropertyName("sensitiveInformationPolicy")]
-    public GuardrailSensitiveInformationPolicyAssessment? SensitiveInformationPolicy { get; set; }
+    public GuardrailSensitiveInformationPolicyAssessment? SensitiveInformationPolicy { get; init; }
 
     [JsonPropertyName("topicPolicy")]
-    public GuardrailTopicPolicyAssessment? TopicPolicy { get; set; }
+    public GuardrailTopicPolicyAssessment? TopicPolicy { get; init; }
 
     [JsonPropertyName("wordPolicy")]
-    public GuardrailWordPolicyAssessment? WordPolicy { get; set; }
+    public GuardrailWordPolicyAssessment? WordPolicy { get; init; }
 }

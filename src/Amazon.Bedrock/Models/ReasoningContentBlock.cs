@@ -6,9 +6,9 @@ public class ReasoningContentBlock
 {
     [JsonPropertyName("reasoningText")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ReasoningTextBlock? ReasoningText { get; set; }
+    public ReasoningTextBlock? ReasoningText { get; init; }
 
     [JsonPropertyName("redactedContent")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? RedactedContent { get; set; }
+    public string? RedactedContent { get; init; }
 }
