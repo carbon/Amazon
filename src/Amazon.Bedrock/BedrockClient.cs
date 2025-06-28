@@ -1,7 +1,5 @@
 ﻿using System.Net.Http.Json;
 using System.Net.Mime;
-using System.Text;
-using System.Text.Json;
 
 using Amazon.Bedrock.Actions;
 using Amazon.Bedrock.Exceptions;
@@ -28,7 +26,7 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
 
         if (!response.IsSuccessStatusCode)
         {
-            throw await GetExceptionAsync(response).ConfigureAwait(false);
+            throw await BedrockException.FromHttpResponseAsync(response).ConfigureAwait(false);
         }
 
         var result = await response.Content.ReadFromJsonAsync<ListFoundationalModelsResult>();
@@ -57,7 +55,7 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
 
         if (!response.IsSuccessStatusCode)
         {
-            throw await GetExceptionAsync(response).ConfigureAwait(false);
+            throw await BedrockException.FromHttpResponseAsync(response).ConfigureAwait(false);
         }
 
         var text = await response.Content.ReadAsStringAsync();
@@ -81,7 +79,7 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
 
         if (!response.IsSuccessStatusCode)
         {
-            throw await GetExceptionAsync(response).ConfigureAwait(false);
+            throw await BedrockException.FromHttpResponseAsync(response).ConfigureAwait(false);
         }
 
         var result = await response.Content.ReadFromJsonAsync<ConverseResult>().ConfigureAwait(false);
@@ -105,7 +103,7 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
 
         if (!response.IsSuccessStatusCode)
         {
-            throw await GetExceptionAsync(response).ConfigureAwait(false);
+            throw await BedrockException.FromHttpResponseAsync(response).ConfigureAwait(false);
         }
 
         var result = await response.Content.ReadFromJsonAsync<RerankResult>().ConfigureAwait(false);
@@ -124,36 +122,15 @@ public class BedrockClient(AwsRegion region, IAwsCredential credential)
             Content = content
         };
 
-        // https://bedrock-runtime.us-east-1.amazonaws.com/model/amazon.titan-text-express-v1/invoke
-
         await SignAsync(request).ConfigureAwait(false);
 
         using HttpResponseMessage response = await _httpClient.SendAsync(request).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
-            throw await GetExceptionAsync(response).ConfigureAwait(false);
+            throw await BedrockException.FromHttpResponseAsync(response).ConfigureAwait(false);
         }
 
         return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-    }
-
-    protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
-    {
-        byte[] responseBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
-
-        if (response.Content.Headers.ContentType?.MediaType is MediaTypeNames.Application.Json)
-        {
-            // {"message":"The system encountered an unexpected error during processing. Try your request again."}
-            // {"message":"You are not authorized to invoke the Rerank operation."}
-
-            if (JsonSerializer.Deserialize<Error>(responseBytes) is Error { Message: string errorMessage })
-            {
-                return new BedrockException(errorMessage, response.StatusCode);
-            }
-        }
-        
-
-        return new BedrockException(Encoding.UTF8.GetString(responseBytes), response.StatusCode);
     }
 }
