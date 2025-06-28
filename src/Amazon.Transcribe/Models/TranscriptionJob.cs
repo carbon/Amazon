@@ -4,76 +4,79 @@ namespace Amazon.Transcribe;
 
 public class TranscriptionJob
 {
+    /// <summary>
+    /// The date and time the specified transcription job finished processing.
+    /// </summary>
     [JsonPropertyName("CompletionTime")]
-    public double CompletionTime { get; set; }
+    public DateTimeOffset? CompletionTime { get; init; }
 
     [JsonPropertyName("ContentRedaction")]
-    public ContentRedaction? ContentRedaction { get; set; }
+    public ContentRedaction? ContentRedaction { get; init; }
 
     [JsonPropertyName("CreationTime")]
-    public double CreationTime { get; set; }
+    public double CreationTime { get; init; }
 
     [JsonPropertyName("FailureReason")]
-    public string? FailureReason { get; set; }
+    public string? FailureReason { get; init; }
 
     [JsonPropertyName("IdentifiedLanguageScore")]
-    public double IdentifiedLanguageScore { get; set; }
+    public double? IdentifiedLanguageScore { get; init; }
 
     [JsonPropertyName("IdentifyLanguage")]
-    public bool IdentifyLanguage { get; set; }
+    public bool? IdentifyLanguage { get; init; }
 
     [JsonPropertyName("IdentifyMultipleLanguages")]
-    public bool IdentifyMultipleLanguages { get; set; }
+    public bool? IdentifyMultipleLanguages { get; init; }
 
     [JsonPropertyName("JobExecutionSettings")]
-    public JobExecutionSettings? JobExecutionSettings { get; set; }
+    public JobExecutionSettings? JobExecutionSettings { get; init; }
 
     [JsonPropertyName("LanguageCode")]
-    public string? LanguageCode { get; set; }
+    public string? LanguageCode { get; init; }
 
     [JsonPropertyName("LanguageCodes")]
-    public List<LanguageCodeItem> LanguageCodes { get; set; }
+    public List<LanguageCodeItem>? LanguageCodes { get; init; }
 
     [JsonPropertyName("LanguageIdSettings")]
-    public Dictionary<string, LanguageIdSetting> LanguageIdSettings { get; set; }
+    public Dictionary<string, LanguageIdSetting>? LanguageIdSettings { get; init; }
 
     [JsonPropertyName("LanguageOptions")]
-    public List<string> LanguageOptions { get; set; }
+    public List<string>? LanguageOptions { get; init; }
 
     [JsonPropertyName("Media")]
-    public Media Media { get; set; }
+    public Media Media { get; init; }
 
     [JsonPropertyName("MediaFormat")]
-    public string MediaFormat { get; set; }
+    public string MediaFormat { get; init; }
 
     [JsonPropertyName("MediaSampleRateHertz")]
-    public int MediaSampleRateHertz { get; set; }
+    public int MediaSampleRateHertz { get; init; }
 
     [JsonPropertyName("ModelSettings")]
-    public ModelSettings? ModelSettings { get; set; }
+    public ModelSettings? ModelSettings { get; init; }
 
     [JsonPropertyName("Settings")]
-    public Settings? Settings { get; set; }
+    public Settings? Settings { get; init; }
 
     [JsonPropertyName("StartTime")]
-    public double StartTime { get; set; }
+    public DateTimeOffset? StartTime { get; init; }
 
     [JsonPropertyName("Subtitles")]
-    public Subtitles? Subtitles { get; set; }
+    public Subtitles? Subtitles { get; init; }
 
     [JsonPropertyName("Tags")]
-    public List<Tag>? Tags { get; set; }
+    public List<Tag>? Tags { get; init; }
 
     [JsonPropertyName("ToxicityDetection")]
-    public List<ToxicityDetection>? ToxicityDetection { get; set; }
+    public List<ToxicityDetection>? ToxicityDetection { get; init; }
 
     [JsonPropertyName("Transcript")]
-    public Transcript? Transcript { get; set; }
+    public Transcript? Transcript { get; init; }
 
     [JsonPropertyName("TranscriptionJobName")]
-    public string? TranscriptionJobName { get; set; }
+    public string? TranscriptionJobName { get; init; }
 
     [JsonPropertyName("TranscriptionJobStatus")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public TranscriptionJobStatus TranscriptionJobStatus { get; set; }
+    public TranscriptionJobStatus TranscriptionJobStatus { get; init; }
 }
