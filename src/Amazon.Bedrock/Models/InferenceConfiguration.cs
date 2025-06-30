@@ -9,12 +9,14 @@ public sealed class InferenceConfiguration
     /// The maximum number of tokens to allow in the generated response. The default value is the maximum allowed value for the model that you are using.
     /// </summary>
     [JsonPropertyName("maxTokens")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? MaxTokens { get; init; }
 
     /// <summary>
     /// A list of stop sequences. A stop sequence is a sequence of characters that causes the model to stop generating the response.
     /// </summary>
     [JsonPropertyName("stopSequences")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<string>? StopSequences { get; init; }
 
     /// <summary>
@@ -22,6 +24,7 @@ public sealed class InferenceConfiguration
     /// A lower value makes the model more likely to choose higher-probability options, while a higher value makes the model more likely to choose lower-probability options.
     /// </summary>
     [JsonPropertyName("temperature")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [Range(0, 1)]
     public double? Temperature { get; init; }
 
@@ -30,6 +33,7 @@ public sealed class InferenceConfiguration
     /// For example, if you choose a value of 0.8 for topP, the model selects from the top 80% of the probability distribution of tokens that could be next in the sequence.
     /// </summary>
     [JsonPropertyName("topP")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [Range(0, 1)]
     public double? TopP { get; init; }
 }

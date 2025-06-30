@@ -7,5 +7,5 @@ namespace Amazon.Bedrock;
 public sealed class Error
 {
     [JsonPropertyName("message")]
-    public string Message { get; set; }
+    public string Message { get; init; }
 }

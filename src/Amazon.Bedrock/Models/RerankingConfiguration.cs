@@ -11,7 +11,6 @@ public sealed class RerankingConfiguration
     [JsonPropertyName("type")]
     public required string Type { get; init; }
 
-
     public static implicit operator RerankingConfiguration(BedrockRerankingConfiguration configuration)
     {
         return new RerankingConfiguration {
