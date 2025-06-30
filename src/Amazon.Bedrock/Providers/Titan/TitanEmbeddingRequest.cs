@@ -6,7 +6,7 @@ public sealed class TitanG1MultimodalEmbeddingRequest
 {
     [JsonPropertyName("inputText")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? InputText { get; set; }
+    public string? InputText { get; init; }
 
     // PNG | JPEG
     // max = 5MB
@@ -15,13 +15,13 @@ public sealed class TitanG1MultimodalEmbeddingRequest
     // min aspect ratio 0.25, 4
     [JsonPropertyName("inputImage")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public byte[]? InputImage { get; set; }
+    public byte[]? InputImage { get; init; }
 
 
     // [256, 384, 1024]
     [JsonPropertyName("embeddingConfig")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public TitanEmbeddingModelConfig? EmbeddingConfig { get; set; }
+    public TitanEmbeddingModelConfig? EmbeddingConfig { get; init; }
 }
 
 // https://docs.aws.amazon.com/bedrock/latest/userguide/titan-multiemb-models.html

@@ -6,9 +6,9 @@ namespace Amazon.Bedrock.Models;
 public sealed class BedrockRerankingModelConfiguration
 {
     [JsonPropertyName("modelArn")]
-    public required string ModelArn { get; set; }
+    public required string ModelArn { get; init; }
 
     [JsonPropertyName("additionalModelRequestFields")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public JsonElement? AdditionalModelRequestFields { get; set; }
+    public JsonElement? AdditionalModelRequestFields { get; init; }
 }

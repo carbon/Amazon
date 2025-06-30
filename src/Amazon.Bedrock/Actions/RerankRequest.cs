@@ -23,26 +23,23 @@ public class RerankRequest
     public required IReadOnlyList<RerankSource> Sources { get; init; }
 }
 
-
 public class RerankResult
 {
     [JsonPropertyName("nextToken")]
-    public string? NextToken { get; set; }
+    public string? NextToken { get; init; }
 
     [JsonPropertyName("results")]
-    public required RerankResultItem[] Results { get; set; }
+    public required RerankResultItem[] Results { get; init; }
 }
 
-
-
-public class RerankResultItem
+public sealed class RerankResultItem
 {
     [JsonPropertyName("index")]
-    public required int Index { get; set; }
+    public required int Index { get; init; }
 
     [JsonPropertyName("relevanceScore")]
-    public required float RelevanceScore { get; set; }
+    public required float RelevanceScore { get; init; }
 
     [JsonPropertyName("document")]
-    public RerankDocument? Document { get; set; }
+    public RerankDocument? Document { get; init; }
 }

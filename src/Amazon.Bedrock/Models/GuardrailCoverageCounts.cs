@@ -2,11 +2,11 @@
 
 namespace Amazon.Bedrock.Models;
 
-public class GuardrailCoverageCounts
+public sealed class GuardrailCoverageCounts
 {
     [JsonPropertyName("guarded")]
-    public int Guarded { get; set; }
+    public int Guarded { get; init; }
 
     [JsonPropertyName("total")]
-    public int Total { get; set; }
+    public int Total { get; init; }
 }

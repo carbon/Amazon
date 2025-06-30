@@ -2,8 +2,8 @@
 
 using System.Text.Json.Serialization;
 
-public class PromptRouterTrace
+public sealed class PromptRouterTrace
 {
     [JsonPropertyName("invokedModelId")]
-    public string InvokedModelId { get; set; }
+    public string InvokedModelId { get; init; }
 }

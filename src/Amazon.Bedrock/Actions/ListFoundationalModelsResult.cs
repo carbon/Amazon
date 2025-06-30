@@ -2,7 +2,7 @@
 
 namespace Amazon.Bedrock;
 
-public class ListFoundationalModelsResult
+public sealed class ListFoundationalModelsResult
 {
     [JsonPropertyName("modelSummaries")]
     public required FoundationModelSummary[] ModelSummaries { get; init; }

@@ -5,15 +5,15 @@ namespace Amazon.Bedrock;
 public sealed class ListFoundationalModelsRequest
 {
     [JsonPropertyName("byCustomizationType")]
-    public string? ByCustomizationType { get; set; }
+    public string? ByCustomizationType { get; init; }
 
     [JsonPropertyName("byInferenceType")]
-    public string? ByInferenceType { get; set; }
+    public string? ByInferenceType { get; init; }
 
     [JsonPropertyName("byOutputModality")]
-    public string? ByOutputModality { get; set; }
+    public string? ByOutputModality { get; init; }
 
     [JsonPropertyName("byProvider")]
-    public string? ByProvider { get; set; }
+    public string? ByProvider { get; init; }
 
 }
