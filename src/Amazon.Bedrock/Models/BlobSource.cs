@@ -10,6 +10,8 @@ public sealed class BlobSource
     [SetsRequiredMembers]
     public BlobSource(byte[] bytes)
     {
+        ArgumentNullException.ThrowIfNull(bytes);
+
         Bytes = bytes;
     }
 
@@ -18,4 +20,9 @@ public sealed class BlobSource
 
     // s3Location { uri, bucketOwner }
     // e.g. s3://my-bucket/object-key
+
+    public static implicit operator BlobSource(byte[] bytes)
+    {
+        return new BlobSource(bytes);
+    }
 }
