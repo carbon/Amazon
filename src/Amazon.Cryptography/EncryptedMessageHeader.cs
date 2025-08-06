@@ -10,7 +10,7 @@ public readonly struct EncryptedMessageHeader
 
     public required byte[] MessageId { get; init; }
 
-    public required AlgorithmId AlgorithmId { get; init; }
+    public required AlgorithmSuiteId AlgorithmId { get; init; }
 
     public required EncryptionContext EncryptionContext { get; init; }
 
@@ -63,7 +63,7 @@ public readonly struct EncryptedMessageHeader
             throw new InvalidOperationException($"Invalid format version: {version}");
         }
 
-        var algorithmId = (AlgorithmId)reader.ReadUInt16();
+        var algorithmId = (AlgorithmSuiteId)reader.ReadUInt16();
         var messageId = reader.ReadBytes(32).ToArray();
 
         ushort encryptionContextLength = reader.ReadUInt16();
