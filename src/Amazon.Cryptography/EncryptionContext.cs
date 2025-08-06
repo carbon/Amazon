@@ -46,13 +46,13 @@ public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String
             BinaryPrimitives.WriteUInt16BigEndian(destination.Slice(position, 2), (ushort)entry.Key.Length);
             position += 2;
 
-            entry.Key.CopyTo(destination.Slice(position));
+            entry.Key.CopyTo(destination[position..]);
             position += entry.Key.Length;
 
             BinaryPrimitives.WriteUInt16BigEndian(destination.Slice(position, 2), (ushort)entry.Value.Length);
             position += 2;
 
-            entry.Value.CopyTo(destination.Slice(position));
+            entry.Value.CopyTo(destination[position..]);
             position += entry.Value.Length;
         }
     }
@@ -77,7 +77,7 @@ public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String
     {
         if (data.IsEmpty)
         {
-            return new EncryptionContext();
+            return [];
         }
 
         var reader = new BufferReader(data);

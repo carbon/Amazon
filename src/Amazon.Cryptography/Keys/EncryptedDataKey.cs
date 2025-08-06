@@ -22,12 +22,12 @@ public readonly struct EncryptedDataKey : IEquatable<EncryptedDataKey>
 
     public required byte[] Ciphertext { get; init; }
 
-    public static EncryptedDataKey Read(ref BufferReader reader)
+    internal static EncryptedDataKey Read(ref BufferReader reader)
     {
         return new EncryptedDataKey {
             ProviderId = reader.ReadUtf8String(),
             ProviderInfo = reader.ReadUtf8String(),
-            Ciphertext = reader.ReadBytes().ToArray()
+            Ciphertext = reader.ReadUInt16PrefixedBytes().ToArray()
         };
     }
 
@@ -44,5 +44,19 @@ public readonly struct EncryptedDataKey : IEquatable<EncryptedDataKey>
         writer.WriteUtf8Bytes(ProviderInfo);
         writer.WriteUInt16((ushort)Ciphertext.Length);
         writer.Write(Ciphertext);
+    }
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return obj is EncryptedDataKey other && Equals(other);
+    }
+    public static bool operator ==(EncryptedDataKey left, EncryptedDataKey right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(EncryptedDataKey left, EncryptedDataKey right)
+    {
+        return !left.Equals(right);
     }
 }

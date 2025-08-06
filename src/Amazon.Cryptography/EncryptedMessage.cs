@@ -1,5 +1,7 @@
 ﻿using System.Buffers;
 
+using Amazon.Cryptography.Buffers;
+
 namespace Amazon.Cryptography;
 
 public sealed class EncryptedMessage

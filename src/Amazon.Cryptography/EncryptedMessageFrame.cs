@@ -1,5 +1,7 @@
 ﻿using System.Buffers;
 
+using Amazon.Cryptography.Buffers;
+
 namespace Amazon.Cryptography;
 
 public sealed class EncryptedMessageFrame
@@ -18,7 +20,7 @@ public sealed class EncryptedMessageFrame
 
     public bool IsFinal { get; init; }
 
-    public static EncryptedMessageFrame Read(int defaultFrameLength, ref BufferReader reader)
+    internal static EncryptedMessageFrame Read(int defaultFrameLength, ref BufferReader reader)
     {
         var sequenceNumber = reader.ReadUInt32();
         bool isFinal = sequenceNumber is uint.MaxValue; // FFFFFFFF

@@ -1,7 +1,7 @@
 ﻿using System.Buffers;
 using System.Buffers.Binary;
 
-namespace Amazon.Cryptography;
+namespace Amazon.Cryptography.Buffers;
 
 internal static class IBufferWriterExtensions
 {

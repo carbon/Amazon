@@ -1,8 +1,8 @@
 ﻿using System.Buffers.Binary;
 
-namespace Amazon.Cryptography;
+namespace Amazon.Cryptography.Buffer;
 
-public ref struct BufferReader
+internal ref struct BufferReader
 {
     private ReadOnlySpan<byte> _span;
     private int _position;
@@ -39,7 +39,7 @@ public ref struct BufferReader
         return value;
     }
 
-    public ReadOnlySpan<byte> ReadBytes()
+    public ReadOnlySpan<byte> ReadUInt16PrefixedBytes()
     {
         var length = ReadUInt16();
 
@@ -53,5 +53,5 @@ public ref struct BufferReader
         return value;
     }
 
-    public bool IsEof => _span.Length == _position;
+    public readonly bool IsEof => _span.Length == _position;
 }
