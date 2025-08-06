@@ -2,7 +2,7 @@
 
 public sealed class ElasticsearchDestinationConfiguration
 {
-    public BufferingHints? BuferingHints { get; init; }
+    public BufferingHints? BufferingHints { get; init; }
 
     public CloudWatchLoggingOptions? CloudWatchLoggingOptions { get; init; }
 
