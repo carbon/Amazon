@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Amazon.Cloudfront</AssemblyName>
+    <AssemblyName>Amazon.CloudFront</AssemblyName>
     <TargetFramework>net9.0</TargetFramework>
     <VersionPrefix>0.0.2</VersionPrefix>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

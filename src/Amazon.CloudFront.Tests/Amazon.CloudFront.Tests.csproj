@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Amazon.Cloudfront\Amazon.CloudFront.csproj" />
+    <ProjectReference Include="..\Amazon.CloudFront\Amazon.CloudFront.csproj" />
   </ItemGroup>
 
   <ItemGroup>

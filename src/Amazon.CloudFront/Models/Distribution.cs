@@ -1,4 +1,4 @@
-﻿namespace Amazon.Cloudfront.Models;
+﻿namespace Amazon.CloudFront.Models;
 
 public class Distribution
 {
