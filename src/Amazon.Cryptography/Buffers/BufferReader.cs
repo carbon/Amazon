@@ -1,6 +1,6 @@
 ﻿using System.Buffers.Binary;
 
-namespace Amazon.Cryptography.Buffer;
+namespace Amazon.Cryptography.Buffers;
 
 internal ref struct BufferReader
 {

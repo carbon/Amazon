@@ -1,6 +1,8 @@
 ﻿using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 
+using Amazon.Cryptography.Buffers;
+
 namespace Amazon.Cryptography;
 
 public readonly struct EncryptedDataKey : IEquatable<EncryptedDataKey>

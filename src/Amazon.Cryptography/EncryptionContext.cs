@@ -1,6 +1,8 @@
 ﻿using System.Buffers;
 using System.Buffers.Binary;
 
+using Amazon.Cryptography.Buffers;
+
 namespace Amazon.Cryptography;
 
 public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String>

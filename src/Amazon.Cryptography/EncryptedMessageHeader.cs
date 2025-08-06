@@ -1,6 +1,7 @@
 ﻿using System.Buffers;
 
 using Amazon.Cryptography.Algorithms;
+using Amazon.Cryptography.Buffers;
 
 namespace Amazon.Cryptography;
 
