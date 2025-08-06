@@ -26,7 +26,7 @@
     <Project Path="Amazon.Tests/Amazon.Core.Tests.csproj" />
   </Folder>
   <Project Path="Amazon.Bedrock/Amazon.Bedrock.csproj" />
-  <Project Path="Amazon.Cloudfront/Amazon.CloudFront.csproj" />
+  <Project Path="Amazon.CloudFront/Amazon.CloudFront.csproj" />
   <Project Path="Amazon.CloudWatch/Amazon.CloudWatch.csproj" />
   <Project Path="Amazon.CodeBuild/Amazon.CodeBuild.csproj" />
   <Project Path="Amazon.Comprehend/Amazon.Comprehend.csproj" />
