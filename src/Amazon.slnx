@@ -5,7 +5,7 @@
   <Folder Name="/Tests/">
     <Project Path="Amazon.Bedrock.Tests/Amazon.Bedrock.Tests.csproj" />
     <Project Path="Amazon.CloudFront.Tests/Amazon.CloudFront.Tests.csproj" />
-    <Project Path="Amazon.Cloudwatch.Tests/Amazon.CloudWatch.Tests.csproj" />
+    <Project Path="Amazon.CloudWatch.Tests/Amazon.CloudWatch.Tests.csproj" />
     <Project Path="Amazon.CodeBuild.Tests/Amazon.CodeBuild.Tests.csproj" />
     <Project Path="Amazon.Cryptography.Tests/Amazon.Cryptography.Tests.csproj" />
     <Project Path="Amazon.DynamoDb.Tests/Amazon.DynamoDb.Tests.csproj" />
