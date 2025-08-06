@@ -10,7 +10,9 @@ namespace Amazon.Bedrock.Exceptions;
 public class BedrockException(string message, HttpStatusCode httpStatusCode) 
     : AwsException(message, httpStatusCode)
 {
-    public bool WasThrottled => Message.Contains("Too many");
+    public bool WasThrottled => HttpStatusCode is HttpStatusCode.TooManyRequests || Message.Contains("Too many");
+
+    public bool IsTransient => WasThrottled || HttpStatusCode is HttpStatusCode.InternalServerError or HttpStatusCode.ServiceUnavailable;
 
     internal static async Task<BedrockException> FromHttpResponseAsync(HttpResponseMessage response)
     {
@@ -27,3 +29,6 @@ public class BedrockException(string message, HttpStatusCode httpStatusCode)
         return new BedrockException(Encoding.UTF8.GetString(responseBytes), response.StatusCode);
     }
 }
+
+// Documentation -
+// https://docs.aws.amazon.com/bedrock/latest/userguide/troubleshooting-api-error-codes.html
