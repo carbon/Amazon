@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json;
 
 using Xunit;
@@ -10,12 +9,45 @@ public class CommandTests
     [Fact]
     public void ParseCommand()
     {
-        var text = """{ "CommandId":"id","Comment":"","CompletedCount":0,"DocumentName":"update_app4","ErrorCount":0,"ExpiresAfter":1.494832672676E9,"InstanceIds":[],"MaxConcurrency":"50","MaxErrors":"0","NotificationConfig":{"NotificationArn":"","NotificationEvents":[],"NotificationType":""},"OutputS3BucketName":"","OutputS3KeyPrefix":"","Parameters":{"appName":["platform"]},"RequestedDateTime":1.494825472676E9,"ServiceRole":"","Status":"Pending","StatusDetails":"Pending","TargetCount":0,"Targets":[{"Key":"tag: envId","Values":["1"]}]}""";
+        var command = JsonSerializer.Deserialize<Command>(
+            """
+            {
+              "CommandId": "id",
+              "Comment": "",
+              "CompletedCount": 0,
+              "DocumentName": "update_app4",
+              "ErrorCount":0,
+              "ExpiresAfter":1.494832672676E9,
+              "InstanceIds":[],
+              "MaxConcurrency": "50",
+              "MaxErrors": "0",
+              "NotificationConfig": {
+                "NotificationArn": "",
+                "NotificationEvents": [],
+                "NotificationType": ""
+              },
+              "OutputS3BucketName": "",
+              "OutputS3KeyPrefix": "",
+              "Parameters": {
+                "appName": [ "platform" ]
+              },
+              "RequestedDateTime": 1.494825472676E9,
+              "ServiceRole": "",
+              "Status": "Pending",
+              "StatusDetails": "Pending",
+              "TargetCount": 0,
+              "Targets": [
+                {
+                  "Key": "tag: envId",
+                  "Values": ["1"]
+                }
+              ]
+            }
+            """);
 
-        var command = JsonSerializer.Deserialize<Command>(text);
+        Assert.NotNull(command);
 
         Assert.Equal("id", command.CommandId);
-
         Assert.Equal("update_app4", command.DocumentName);
         
         Assert.Empty(command.Comment);
@@ -32,8 +64,9 @@ public class CommandTests
     [Theory]
     public void ParseStatus(string text, CommandStatus status)
     {
-        var command = JsonSerializer.Deserialize<Command>(@$"{{ ""Status"":""{text}"" }}");
+        var command = JsonSerializer.Deserialize<Command>($$"""{ "Status":"{{text}}" }""");
 
+        Assert.NotNull(command);
         Assert.Equal(status, command.Status);
         Assert.Null(command.RequestedDateTime);
     }
