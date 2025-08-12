@@ -3,9 +3,9 @@
 public class GetMetricStatsTests
 {
     [Fact]
-    public void A()
+    public void CanDeserialize()
     {        
-        var result = GetMetricStatatisticsResponse.Deserialize(
+        var response = GetMetricStatisticsResponse.Deserialize(
             """
             <GetMetricStatisticsResponse xmlns="http://monitoring.amazonaws.com/doc/2010-08-01/">
               <GetMetricStatisticsResult>
@@ -77,15 +77,15 @@ public class GetMetricStatsTests
                 <RequestId>ef302b1f-a147-11e6-acab-872d798a60c5</RequestId>
               </ResponseMetadata>
             </GetMetricStatisticsResponse>
-            """);
+            """u8.ToArray());
+
+        var result = response.GetMetricStatisticsResult;
 
         Assert.Equal(3.895104895104895d, result.Datapoints[0].Average.Value);
         Assert.Equal(12, result.Datapoints.Count);
         Assert.Equal("HealthyHostCount", result.Label);
 
-        var date = new DateTime(2016, 11, 02, 12, 01, 00, DateTimeKind.Utc);
-
-        Assert.Equal(date, result.Datapoints[0].Timestamp);
+        Assert.Equal(new DateTime(2016, 11, 02, 12, 01, 00, DateTimeKind.Utc), result.Datapoints[0].Timestamp);
         Assert.Equal(3.895104895104895, result.Datapoints[0].Average.Value);
     }
 }

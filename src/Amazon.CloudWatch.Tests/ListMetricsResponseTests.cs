@@ -126,7 +126,7 @@ public class ListMetricsResponseTests
                 <RequestId>c919ffb2-a13d-11e6-994f-1d1bb7ed25dd</RequestId>
               </ResponseMetadata>
             </ListMetricsResponse>
-            """);
+            """u8.ToArray());
 
         Assert.Equal(11, result.Count);
 
