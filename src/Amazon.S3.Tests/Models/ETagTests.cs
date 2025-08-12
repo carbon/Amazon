@@ -1,6 +1,4 @@
-﻿using Carbon.Data.Encodings;
-
-namespace Amazon.S3.Models.Tests;
+﻿namespace Amazon.S3.Models.Tests;
 
 public class ETagTests
 {
@@ -11,6 +9,6 @@ public class ETagTests
 
         Assert.Equal(16, eTag.AsMD5().Length);
 
-        Assert.Equal("5d41402abc4b2a76b9719d911017c592", HexString.FromBytes(eTag.AsMD5()));
+        Assert.Equal("5d41402abc4b2a76b9719d911017c592", Convert.ToHexStringLower(eTag.AsMD5()));
     }
 }
