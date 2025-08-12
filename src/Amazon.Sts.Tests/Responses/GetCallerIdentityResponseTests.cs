@@ -19,7 +19,7 @@ public class GetCallerIdentityResponseTests
                 <RequestId>01234567-89ab-cdef-0123-456789abcdef</RequestId>
               </ResponseMetadata>
             </GetCallerIdentityResponse>
-            """);
+            """u8.ToArray());
 
         var result = response.GetCallerIdentityResult;
 

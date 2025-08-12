@@ -34,7 +34,7 @@ public class AssumeRoleResponseTests
                 <RequestId>c6104cbe-af31-11e0-8154-cbc7ccf896c7</RequestId>
               </ResponseMetadata>
             </AssumeRoleResponse>
-            """);
+            """u8.ToArray());
 
         var result = response.AssumeRoleResult;
 

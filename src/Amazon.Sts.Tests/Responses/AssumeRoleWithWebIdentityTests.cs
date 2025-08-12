@@ -31,7 +31,7 @@ public class AssumeRoleWithWebIdentityTests
                 <RequestId>ad4156e9-bce1-11e2-82e6-6b6efEXAMPLE</RequestId>
               </ResponseMetadata>
             </AssumeRoleWithWebIdentityResponse>
-            """);
+            """u8.ToArray());
 
         var result = response.AssumeRoleWithWebIdentityResult;
 
