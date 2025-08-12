@@ -34,7 +34,7 @@ public readonly struct EncryptedMessageHeader
         writer.Write(MessageId);
 
         writer.WriteUInt16(EncryptionContext.GetLength());
-        EncryptionContext.WriteTo(writer);
+        EncryptionContext.Serialize(writer);
 
         writer.WriteUInt16((ushort)EncryptedDataKeys.Length);
 
@@ -69,7 +69,7 @@ public readonly struct EncryptedMessageHeader
 
         ushort encryptionContextLength = reader.ReadUInt16();
 
-        var encryptionContext = EncryptionContext.Parse(reader.ReadBytes(encryptionContextLength));
+        var encryptionContext = EncryptionContext.Deserialize(reader.ReadBytes(encryptionContextLength));
         var encryptedDataKeys = ReadEncryptedDataKeys(ref reader);
         var contentType = reader.ReadByte();
         var frameLength = reader.ReadUInt32();

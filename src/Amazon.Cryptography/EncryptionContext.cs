@@ -22,16 +22,16 @@ public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String
         return (ushort)length;
     }
 
-    public byte[] ToArray()
+    public byte[] Serialize()
     {
         byte[] result = new byte[GetLength()];
 
-        WriteTo(result);
+        Serialize(result);
 
         return result;
     }
 
-    public void WriteTo(Span<byte> destination)
+    public void Serialize(Span<byte> destination)
     {
         if (Count is 0)
         {
@@ -59,7 +59,7 @@ public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String
         }
     }
 
-    public void WriteTo(IBufferWriter<byte> writer)
+    public void Serialize(IBufferWriter<byte> writer)
     {
         if (Count is 0)
         {
@@ -75,7 +75,7 @@ public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String
         }        
     }
 
-    public static EncryptionContext Parse(ReadOnlySpan<byte> data)
+    public static EncryptionContext Deserialize(ReadOnlySpan<byte> data)
     {
         if (data.IsEmpty)
         {
