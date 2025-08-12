@@ -2,18 +2,10 @@
 using System.Text;
 using System.Text.Encodings.Web;
 
-using Carbon.Data.Encodings;
-
 namespace Amazon.Security.Tests;
 
 public class SignerTests
 {
-    [Fact]
-    public void Encode()
-    {
-        Assert.Equal("abc%3D34", UrlEncoder.Default.Encode("abc=34"));
-    }
-
     [Theory]
     [InlineData("/")]
     [InlineData("/fruit/apple")]
@@ -25,7 +17,7 @@ public class SignerTests
     }
 
     [Fact]
-    public void UnicodeCanicalUri()
+    public void UnicodeCanonicalizeUri()
     {
         Assert.Equal("/%E1%88%B4", SignerV4.CanonicalizeUri("ሴ"));
         Assert.Equal("/frame%3A11", SignerV4.CanonicalizeUri("/frame:11"));
@@ -39,7 +31,7 @@ public class SignerTests
     }
 
     [Fact]
-    public void CanonicizeQueryStrings()
+    public void CanonicalizeQueryStrings()
     {
         string a1000 = "".PadLeft(1000, 'a');
 
@@ -60,7 +52,7 @@ public class SignerTests
 
         byte[] key = SignerV4.ComputeSigningKey("wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY", scope);
 
-        Assert.Equal("f4780e2d9f65fa895f9c67b32ce1baf0b0d8a43505a000a1a9e090d414db404d", HexString.FromBytes(key));
+        Assert.Equal("f4780e2d9f65fa895f9c67b32ce1baf0b0d8a43505a000a1a9e090d414db404d", Convert.ToHexStringLower(key));
     }
 
     [Fact]
@@ -74,7 +66,7 @@ public class SignerTests
 
         byte[] key = SignerV4.ComputeSigningKey("wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLE123", scope);
 
-        Assert.Equal("06e1b996efb4c3080f04cfd3fb6e8151b1b89ec05a3d0dc7886ecd08f7b2d240", HexString.FromBytes(key));
+        Assert.Equal("06e1b996efb4c3080f04cfd3fb6e8151b1b89ec05a3d0dc7886ecd08f7b2d240", Convert.ToHexStringLower(key));
     }
 
     [Fact]
@@ -99,7 +91,7 @@ public class SignerTests
     }
 
     [Fact]
-    public void CanonlizeRequest()
+    public void CanonicalizeRequest()
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "http://dynamodb.us-east-1.amazonaws.com/")
         {
@@ -112,16 +104,19 @@ public class SignerTests
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "s3.us-east-1.amazonaws.com";
 
-        Assert.Equal("""
+        var signedHeaderNames = new List<string>();
+
+        Assert.Equal(
+            """
             host:s3.us-east-1.amazonaws.com
             x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
             x-amz-date:2012-02-17
-            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
+            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, signedHeaderNames));
 
         Assert.Equal("host;x-amz-content-sha256;x-amz-date", string.Join(';', signedHeaderNames));
 
-
-        Assert.Equal("""
+        Assert.Equal(
+            """
             POST
             /
 
@@ -134,9 +129,8 @@ public class SignerTests
             """.ReplaceLineEndings("\n"), SignerV4.GetCanonicalRequest(request));
     }
 
-
     [Fact]
-    public void CanonlizeRequest_MixedCase_OutOfOrder()
+    public void CanonicalizeRequest_MixedCase_OutOfOrder()
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "http://dynamodb.us-east-1.amazonaws.com/") {
             Headers = {
@@ -149,17 +143,21 @@ public class SignerTests
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "s3.us-east-1.amazonaws.com";
 
-        Assert.Equal("""
+        var signedHeaderNames = new List<string>();
+
+        Assert.Equal(
+            """
             host:s3.us-east-1.amazonaws.com
             x-amz-a:out-of-order
             x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
             x-amz-date:2012-02-17
-            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
+            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, signedHeaderNames));
 
         Assert.Equal("host;x-amz-a;x-amz-content-sha256;x-amz-date", string.Join(';', signedHeaderNames));
 
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             POST
             /
 
@@ -174,7 +172,7 @@ public class SignerTests
     }
 
     [Fact]
-    public void CanonlizeRequestUnicode()
+    public void CanonicalizeRequestUnicode()
     {
         var request = new HttpRequestMessage(HttpMethod.Get, "http://example.amazonaws.com/ሴ") {
             Headers = {
@@ -185,7 +183,8 @@ public class SignerTests
         request.Headers.Date = new DateTimeOffset(2015, 08, 30, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "example.amazonaws.com";
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             GET
             /%E1%88%B4
 
@@ -208,7 +207,7 @@ public class SignerTests
     }
 
     [Fact]
-    public void CanonlizeRequestUnsafeUrl()
+    public void CanonicalizeRequestUnsafeUrl()
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "http://s3.us-east-1.amazonaws.com/frame:1") {
             Headers = {
@@ -262,7 +261,7 @@ public class SignerTests
     }
 
     [Fact]
-    public void CanonlizeRequest_s3()
+    public void CanonicalizeRequest_s3()
     {
         var request = new HttpRequestMessage(HttpMethod.Put, "http://s3.amazonaws.com/fruits/bananas") {
             Headers = {
@@ -274,14 +273,16 @@ public class SignerTests
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "s3.us-east-1.amazonaws.com";
 
+        var signedHeaderNames = new List<string>(3);
+
         Assert.Equal(
             """
             host:s3.us-east-1.amazonaws.com
             x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
             x-amz-date:2012-02-17
-            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
+            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, signedHeaderNames));
 
-        Assert.Equal("host;x-amz-content-sha256;x-amz-date", string.Join(';', signedHeaderNames));
+        Assert.Equal(["host", "x-amz-content-sha256", "x-amz-date"], signedHeaderNames);
 
         Assert.Equal(
             """
@@ -296,9 +297,55 @@ public class SignerTests
             e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
             """.ReplaceLineEndings("\n"), SignerV4.GetCanonicalRequest(request));
     }
+    
+    [Fact]
+    public void CanonicalizeRequestWithContentType()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Put, "http://s3.amazonaws.com/text")
+        {
+            Headers = {
+                { "x-amz-date", "2012-02-17" },
+                { "x-amz-content-sha256", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785" }
+            },
+            Content = new ByteArrayContent("hello"u8.ToArray()) {
+                Headers = {
+                    ContentType = new("text/plain")
+                }
+            }
+        };
+
+        request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
+        request.Headers.Host = "s3.us-east-1.amazonaws.com";
+
+        var signedHeaderNames = new List<string>();
+
+        Assert.Equal(
+            """
+            content-type:text/plain
+            host:s3.us-east-1.amazonaws.com
+            x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            x-amz-date:2012-02-17
+            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, signedHeaderNames));
+
+        Assert.Equal("content-type;host;x-amz-content-sha256;x-amz-date", string.Join(';', signedHeaderNames));
+
+        Assert.Equal(
+            """
+            PUT
+            /text
+
+            content-type:text/plain
+            host:s3.us-east-1.amazonaws.com
+            x-amz-content-sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            x-amz-date:2012-02-17
+
+            content-type;host;x-amz-content-sha256;x-amz-date
+            e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b785
+            """.ReplaceLineEndings("\n"), SignerV4.GetCanonicalRequest(request, []));
+    }    
 
     [Fact]
-    public void CanonlizeRequestWithContentMD5()
+    public void CanonicalizeRequestWithContentMD5()
     {
         string textContent = "hello";
 
@@ -313,14 +360,17 @@ public class SignerTests
         request.Headers.Date = new DateTimeOffset(2012, 02, 17, 18, 31, 22, TimeSpan.Zero);
         request.Headers.Host = "s3.amazonaws.com";
 
+        var signedHeaderNames = new List<string>();
+
         Assert.Equal(
             """
             content-md5:XUFAKrxLKna5cZ2REBfFkg==
+            content-type:text/plain; charset=utf-8
             date:Fri, 17 Feb 2012 18:31:22 GMT
             host:s3.amazonaws.com
-            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, out var signedHeaderNames));
+            """.ReplaceLineEndings("\n"), SignerV4.CanonicalizeHeaders(request, signedHeaderNames));
 
-        Assert.Equal("content-md5;date;host", string.Join(';', signedHeaderNames));
+        Assert.Equal(["content-md5", "content-type", "date", "host"], signedHeaderNames);
     }
 
     [Fact]
@@ -338,7 +388,7 @@ public class SignerTests
 
         var signedUrl = request.RequestUri.ToString();
 
-        Assert.Equal("https://carbon.db:3010/?Action=connect&DBUser=carbon&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=carbon%2F20160101%2Fus-east-1%2Frds-db%2Faws4_request&X-Amz-Date=20160101T000000Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=7c7f54b5f2ae7de227c96b59680f1a443562785addb8c62c0f674b052c3ebfae", signedUrl.ToString());
+        Assert.Equal("https://carbon.db:3010/?Action=connect&DBUser=carbon&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=carbon%2F20160101%2Fus-east-1%2Frds-db%2Faws4_request&X-Amz-Date=20160101T000000Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=7c7f54b5f2ae7de227c96b59680f1a443562785addb8c62c0f674b052c3ebfae", signedUrl);
     }
 
     [Fact]
@@ -370,9 +420,9 @@ public class SignerTests
 
         SignerV4.Presign(key, scope, dateTime, TimeSpan.FromMinutes(15), request);
 
-        var signedUrl = request.RequestUri.ToString();
+        var signedUrl = request.RequestUri?.ToString();
 
-        Assert.Equal("https://carbon.db:3036/?Action=connect&DBUser=carbon&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=carbon%2F20160101%2Fus-east-1%2Frds-db%2Faws4_request&X-Amz-Date=20160101T000000Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=bb05008e5d99cfcd759e45c8bc3442a98e144d630602b5556abc42105615e139", signedUrl.ToString());
+        Assert.Equal("https://carbon.db:3036/?Action=connect&DBUser=carbon&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=carbon%2F20160101%2Fus-east-1%2Frds-db%2Faws4_request&X-Amz-Date=20160101T000000Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=bb05008e5d99cfcd759e45c8bc3442a98e144d630602b5556abc42105615e139", signedUrl);
     }
 
     [Fact]
@@ -403,7 +453,7 @@ public class SignerTests
             2012-02-17
             20120215/us-east-1/dynamodb/aws4_request
             70fdf1d6922246b48d56d3e0c1f7cc0d5dfc79acf421cf066e2033ba0025af40
-            """.ReplaceLineEndings("\n"), SignerV4.GetStringToSign(dynamoScope, request));
+            """.ReplaceLineEndings("\n"), SignerV4.GetStringToSign(request, dynamoScope, []));
 
         Assert.Equal("AWS4-HMAC-SHA256 Credential=carbon/20120215/us-east-1/dynamodb/aws4_request,SignedHeaders=host;x-amz-content-sha256;x-amz-date;x-amz-security-token;x-amz-target,Signature=26b5130264847f3848c1649ebf97feebbbede1f23b0ac2b55e539d2c50d25594", auth);
     }
@@ -432,8 +482,7 @@ public class SignerTests
     [Fact]
     public void SignWithContent()
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, "http://dynamodb.us-east-1.amazonaws.com/?a=1")
-        {
+        var request = new HttpRequestMessage(HttpMethod.Post, "http://dynamodb.us-east-1.amazonaws.com/?a=1") {
             Content = new StringContent("HELLO", Encoding.UTF8, "application/text")
         };
 
@@ -450,16 +499,15 @@ public class SignerTests
 
         var auth = request.Headers.GetValues("Authorization").First();
 
-        Assert.Equal("AWS4-HMAC-SHA256 Credential=/20120215/us-east-1/dynamodb/aws4_request,SignedHeaders=host;x-amz-date;x-amz-security-token;x-amz-target,Signature=d3b5f4611dbfe8ba5577df24f9f39ffe25a4133ec12cf088391747119ee4c30a", auth);
+        Assert.Equal("AWS4-HMAC-SHA256 Credential=/20120215/us-east-1/dynamodb/aws4_request,SignedHeaders=content-type;host;x-amz-date;x-amz-security-token;x-amz-target,Signature=ab4afa3f7907b0483aeb9925631d66df0c32a75a7bd6c555fb467a830372986e", auth);
     }
 
-    private static readonly CredentialScope dynamoScope = new(
+    private readonly CredentialScope dynamoScope = new(
         date    : new DateOnly(2012, 02, 15),
         region  : AwsRegion.USEast1,
         service : AwsService.DynamoDb
     );
-
-    /*
+       
     [Fact]
     public void HashPayload()
     {
@@ -469,5 +517,4 @@ public class SignerTests
 
         Assert.Equal("14a1b0cf5748461c63d3a5fee5e42ed623422b7b4fa62a58a57258f1a195cff8", SignerV4.GetPayloadHash(request));
     }
-    */
 }

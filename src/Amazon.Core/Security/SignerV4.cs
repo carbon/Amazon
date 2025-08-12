@@ -157,7 +157,7 @@ public static class SignerV4
 
     // HexEncode(Hash(Payload))
     // If the payload is empty, use an empty string
-    private static string GetPayloadHash(HttpRequestMessage request)
+    internal static string GetPayloadHash(HttpRequestMessage request)
     {
         return request.Headers.NonValidated.TryGetValues(XAmzHeaderNames.ContentSHA256, out var contentSha256Header)
             ? contentSha256Header.ToString()
