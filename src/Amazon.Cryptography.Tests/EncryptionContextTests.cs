@@ -13,11 +13,11 @@ public class EncryptionContextTests
 
         var writer = new ArrayBufferWriter<byte>();
 
-        context.WriteTo(writer);
+        context.Serialize(writer);
 
         Assert.Equal("AAEACWFjY291bnRJZAABMQ==", Convert.ToBase64String(writer.WrittenSpan));
 
-        var b = EncryptionContext.Parse(writer.WrittenSpan);
+        var b = EncryptionContext.Deserialize(writer.WrittenSpan);
 
         Assert.Single(context);
         Assert.Equal("accountId", context.GetAt(0).Key);
