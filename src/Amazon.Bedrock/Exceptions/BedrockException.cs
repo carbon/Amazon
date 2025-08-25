@@ -10,9 +10,9 @@ namespace Amazon.Bedrock.Exceptions;
 public class BedrockException(string message, HttpStatusCode httpStatusCode) 
     : AwsException(message, httpStatusCode)
 {
-    public bool WasThrottled => HttpStatusCode is HttpStatusCode.TooManyRequests || Message.Contains("Too many");
+    public bool WasThrottled => HttpStatusCode is HttpStatusCode.TooManyRequests;
 
-    public bool IsTransient => WasThrottled || HttpStatusCode is HttpStatusCode.InternalServerError or HttpStatusCode.ServiceUnavailable;
+    public bool IsTransient => HttpStatusCode is HttpStatusCode.TooManyRequests or HttpStatusCode.InternalServerError or HttpStatusCode.ServiceUnavailable;
 
     internal static async Task<BedrockException> FromHttpResponseAsync(HttpResponseMessage response)
     {
