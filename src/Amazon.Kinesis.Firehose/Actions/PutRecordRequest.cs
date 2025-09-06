@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kinesis.Firehose;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Kinesis.Firehose;
 
 public sealed class PutRecordRequest
 {
@@ -10,7 +12,9 @@ public sealed class PutRecordRequest
         Record = record;
     }
 
+    [JsonPropertyName("DeliveryStreamName")]
     public string DeliveryStreamName { get; }
 
+    [JsonPropertyName("Record")]
     public Record Record { get; }
 }

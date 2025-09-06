@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kinesis.Firehose;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Kinesis.Firehose;
 
 public sealed class DeleteDeliveryStreamRequest
 {
@@ -9,7 +11,10 @@ public sealed class DeleteDeliveryStreamRequest
         DeliveryStreamName = deliveryStreamName;
     }
 
+    [JsonPropertyName("AllowForceDelete")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? AllowForceDelete { get; init; }
 
+    [JsonPropertyName("DeliveryStreamName")]
     public required string DeliveryStreamName { get; init; }
 }

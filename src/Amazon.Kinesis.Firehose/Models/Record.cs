@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kinesis.Firehose;
+﻿using System.Text.Json.Serialization;
+
+namespace Amazon.Kinesis.Firehose;
 
 public readonly struct Record
 {
@@ -19,6 +21,7 @@ public readonly struct Record
         Data = data;
     }
 
+    [JsonPropertyName("Data")]
     public byte[] Data { get; }
 }
 

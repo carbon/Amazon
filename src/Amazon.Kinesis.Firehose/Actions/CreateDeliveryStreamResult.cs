@@ -1,8 +1,9 @@
-﻿#nullable disable
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.Kinesis.Firehose;
 
 public sealed class CreateDeliveryStreamResult
 {
-    public string DeliveryStreamARN { get; init; }
+    [JsonPropertyName("DeliveryStreamARN")]
+    public required string DeliveryStreamARN { get; init; }
 }

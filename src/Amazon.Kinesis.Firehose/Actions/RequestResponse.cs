@@ -1,12 +1,15 @@
-﻿#nullable disable
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.Kinesis.Firehose;
 
 public sealed class RequestResponse
 {
-    public string ErrorCode { get; init; }
+    [JsonPropertyName("ErrorCode")]
+    public string? ErrorCode { get; init; }
 
-    public string ErrorMessage { get; init; }
+    [JsonPropertyName("ErrorMessage")]
+    public string? ErrorMessage { get; init; }
 
-    public string RecordId { get; init; }
+    [JsonPropertyName("RecordId")]
+    public required string RecordId { get; init; }
 }
