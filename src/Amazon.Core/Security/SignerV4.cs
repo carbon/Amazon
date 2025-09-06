@@ -564,13 +564,13 @@ public static class SignerV4
 
         ArrayPool<byte>.Shared.Return(rentedBuffer);
 
-        HexString.DecodeBytesTo(hash, destination);
+        Convert.TryToHexStringLower(hash, destination.Slice(0, 64), out _);
     }
 
     [SkipLocalsInit]
     private static void SHA256_Hex(ReadOnlySpan<char> data, Span<char> destination)
     {
-        byte[] rentedBuffer = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(data.Length));
+        byte[] rentedBuffer = ArrayPool<byte>.Shared.Rent(data.Length * 4);
 
         int encodedByteCount = Encoding.UTF8.GetBytes(data, rentedBuffer);
 
@@ -580,7 +580,7 @@ public static class SignerV4
 
         ArrayPool<byte>.Shared.Return(rentedBuffer);
 
-        HexString.DecodeBytesTo(hash, destination);
+        Convert.TryToHexStringLower(hash, destination.Slice(0, 64), out _);
     }
 
     #endregion
