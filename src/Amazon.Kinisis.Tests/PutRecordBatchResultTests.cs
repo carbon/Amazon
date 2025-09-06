@@ -18,6 +18,7 @@ public class PutRecordBatchResultTests
             }
             """u8);
 
+        Assert.NotNull(result);
         Assert.Equal("r1", result.RequestResponses[0].RecordId);
         Assert.Equal("r2", result.RequestResponses[1].RecordId);
 

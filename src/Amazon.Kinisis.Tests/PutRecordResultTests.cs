@@ -13,8 +13,9 @@ public class PutRecordResultTests
                 "Encrypted": false,
                 "RecordId": "id"
             }
-            """);
+            """u8);
 
+        Assert.NotNull(result);
         Assert.False(result.Encrypted);
         Assert.Equal("id", result.RecordId);
     }

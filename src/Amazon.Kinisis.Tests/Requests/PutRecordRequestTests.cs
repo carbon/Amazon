@@ -1,11 +1,7 @@
-﻿using System.Text.Json;
-
-namespace Amazon.Kinesis.Firehose;
+﻿namespace Amazon.Kinesis.Firehose;
 
 public class PutRecordRequestTests
 {
-    private static readonly JsonSerializerOptions _indented = new() { WriteIndented = true };
-
     [Fact]
     public void CanSerialize()
     {
@@ -19,6 +15,6 @@ public class PutRecordRequestTests
                 "Data": "aGVsbG8="
               }
             }
-            """, JsonSerializer.Serialize(putRecord, _indented));
+            """, putRecord.ToIndentedJsonString());
     }
 }
