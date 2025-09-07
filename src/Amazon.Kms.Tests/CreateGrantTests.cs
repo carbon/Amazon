@@ -34,12 +34,11 @@ public class CreateGrantTests
                 }
               }
             }
-            """, JsonSerializer.Serialize(request, JSO.Indented));
-
+            """, JsonSerializer.Serialize(request, JSO.Indented), ignoreLineEndingDifferences: true);
 
         Assert.Equal(
             """
             {"KeyId":"key","GranteePrincipal":"principle","Operations":["Decrypt"],"Constraints":{"EncryptionContextEquals":{"vault":"master"}}}
-            """, JsonSerializer.Serialize(request, KmsSerializerContext.Default.CreateGrantRequest));
+            """u8, JsonSerializer.SerializeToUtf8Bytes(request, KmsSerializerContext.Default.CreateGrantRequest));
     }
 }
