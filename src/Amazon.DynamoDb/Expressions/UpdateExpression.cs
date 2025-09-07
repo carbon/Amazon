@@ -135,7 +135,7 @@ public sealed class UpdateExpression
 
         if (sb.Length > 0)
         {
-            sb.AppendLine(); // \n ?
+            sb.Append('\n');
         }
 
         sb.Append(segment);

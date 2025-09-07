@@ -28,7 +28,7 @@ public class UpdateItemRequestTests
             Change.Remove("deleted")
         ]);
 
-        var expect = """{"TableName":"Entities","Key":{"id":{"N":"1"}},"ExpressionAttributeValues":{":v0":{"N":"1497282355"}},"UpdateExpression":"SET locked = :v0\r\nREMOVE deleted"}""";
+        var expect = """{"TableName":"Entities","Key":{"id":{"N":"1"}},"ExpressionAttributeValues":{":v0":{"N":"1497282355"}},"UpdateExpression":"SET locked = :v0\nREMOVE deleted"}""";
 
         Assert.Equal(expect, request.ToJsonString());
     }

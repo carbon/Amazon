@@ -37,7 +37,7 @@ public class UpdateExpressionTests
             """
             REMOVE deleted
             ADD #list :v0
-            """, expression.ToString(), ignoreLineEndingDifferences: true);
+            """.ReplaceLineEndings("\n"), expression.ToString());
 
         Assert.Single(attrNames);
         Assert.Equal("list", attrNames["#list"]);
@@ -71,6 +71,6 @@ public class UpdateExpressionTests
             SET deleted = :v0, colors = :v1, modified = :v3
             REMOVE deleted
             ADD version :v2
-            """, expression.ToString(), ignoreLineEndingDifferences: true);
+            """.ReplaceLineEndings("\n"), expression.ToString());
     }
 }
