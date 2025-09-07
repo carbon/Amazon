@@ -2,7 +2,7 @@
 
 namespace Amazon.Bedrock.Models;
 
-public class ReasoningTextBlock
+public sealed class ReasoningTextBlock
 {
     [JsonPropertyName("text")]
     public required string Text { get; init; }

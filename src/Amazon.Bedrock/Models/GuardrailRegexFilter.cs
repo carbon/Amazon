@@ -1,9 +1,12 @@
-﻿namespace Amazon.Bedrock.Models;
+﻿#nullable disable
+
+namespace Amazon.Bedrock.Models;
 
 using System.Text.Json.Serialization;
 
-public class RegexMatch
+public class GuardrailRegexFilter
 {
+    // BLOCKED | ANONYMIZED
     [JsonPropertyName("action")]
     public string Action { get; init; }
 

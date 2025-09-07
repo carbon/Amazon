@@ -1,7 +1,8 @@
-﻿namespace Amazon.Bedrock.Models;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-public class VideoBlock
+namespace Amazon.Bedrock.Models;
+
+public sealed class VideoBlock
 {
     // "mkv" | "mov" | "mp4" | "webm" | "three_gp" | "flv" | "mpeg" | "mpg" | "wmv"
     [JsonPropertyName("format")]

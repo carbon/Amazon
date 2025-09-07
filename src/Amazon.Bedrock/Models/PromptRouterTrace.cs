@@ -1,6 +1,8 @@
-﻿namespace Amazon.Bedrock.Models;
+﻿#nullable disable
 
 using System.Text.Json.Serialization;
+
+namespace Amazon.Bedrock.Models;
 
 public sealed class PromptRouterTrace
 {

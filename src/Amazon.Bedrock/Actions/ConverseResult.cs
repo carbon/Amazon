@@ -28,10 +28,3 @@ public class ConverseResult
     [JsonPropertyName("usage")]
     public TokenUsage Usage { get; init; }
 }
-
-
-public class ConverseOutput
-{
-    [JsonPropertyName("message")]
-    public Message Message { get; init; }
-}

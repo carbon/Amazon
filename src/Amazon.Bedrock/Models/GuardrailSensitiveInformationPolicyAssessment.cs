@@ -8,5 +8,5 @@ public class GuardrailSensitiveInformationPolicyAssessment
     public required List<GuardrailPiiEntityFilter> PiiEntities { get; init; }
 
     [JsonPropertyName("regexes")]
-    public required List<RegexMatch> Regexes { get; init; }
+    public required List<GuardrailRegexFilter> Regexes { get; init; }
 }
