@@ -33,6 +33,7 @@ internal static class RouteSerializerOptions
 {
     public static readonly XmlWriterSettings Settings = new() {
         Encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false),
+        NewLineChars = "\n",
         Indent = true
     };
 

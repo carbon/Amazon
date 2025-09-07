@@ -58,7 +58,7 @@ public class ChangeResourceRecordSetsRequestTests
                 </Changes>
               </ChangeBatch>
             </ChangeResourceRecordSetsRequest>
-            """u8, bytes);
+            """.ReplaceLineEndings("\n"), Encoding.UTF8.GetString(bytes));
     }
 
     [Fact]
@@ -78,10 +78,6 @@ public class ChangeResourceRecordSetsRequestTests
 
         byte[] bytes = Route53Serializer<ChangeResourceRecordSetsRequest>.SerializeToUtf8Bytes(request);
 
-        var signature = SignerV4.ComputeSHA256(new ByteArrayContent(bytes));
-
-        Assert.Equal("979b47c4014193033e9987a21c0d1b87ac1a48bac681a154ec94f8cbb42c3bc3", signature);
-
         Assert.Equal(
             """
             <?xml version="1.0" encoding="utf-8"?>
@@ -100,7 +96,11 @@ public class ChangeResourceRecordSetsRequestTests
                 </Changes>
               </ChangeBatch>
             </ChangeResourceRecordSetsRequest>
-            """u8, bytes);
+            """.ReplaceLineEndings("\n"), Encoding.UTF8.GetString(bytes));
+
+        var signature = SignerV4.ComputeSHA256(new ByteArrayContent(bytes));
+
+        Assert.Equal("07af9af48e804e4f87e95a8134fd5ec28deead45311af7187466732c14c0be89", signature);
     }
 
     [Fact]
@@ -183,6 +183,6 @@ public class ChangeResourceRecordSetsRequestTests
                 </Changes>
               </ChangeBatch>
             </ChangeResourceRecordSetsRequest>
-            """u8, bytes);
+            """.ReplaceLineEndings("\n"), Encoding.UTF8.GetString(bytes));
     }
 }
