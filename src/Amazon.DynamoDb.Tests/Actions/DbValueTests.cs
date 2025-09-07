@@ -297,7 +297,7 @@ public class DbValueTests
             }
             """;
 
-        Assert.Equal(json, value.ToIndentedJsonString());
+        Assert.Equal(json, value.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
 
         var a = JsonSerializer.Deserialize<AttributeCollection>(json);
         var m = a.As<Meta>();

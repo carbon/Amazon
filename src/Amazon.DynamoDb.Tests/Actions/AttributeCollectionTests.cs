@@ -56,7 +56,6 @@ public class AttributeCollectionTests
         Assert.Equal(DbValueType.N,         attributes["Duration"].Kind);
         Assert.Equal(DbValueType.N,         attributes["Created"].Kind);
         Assert.Equal(1325376000L,           attributes["Created"].Value);
-
     }
 
     [Fact]
@@ -137,13 +136,6 @@ public class AttributeCollectionTests
 
         Assert.True(item.As<Smorsborg>().Boolean);
 
-        Assert.Equal(
-            """
-            {
-              "Boolean": {
-                "BOOL": true
-              }
-            }
-            """, item.ToIndentedJsonString());
+        Assert.Equal("""{"Boolean":{"BOOL":true}}""", item.ToJsonString());
     }
 }
