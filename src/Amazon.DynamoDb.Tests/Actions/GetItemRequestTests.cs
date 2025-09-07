@@ -7,13 +7,15 @@ namespace Amazon.DynamoDb.Tests;
 public class GetItemRequestTests
 {
     [Fact]
-    public void A()
+    public void CanSerialize()
     {
-        var key = RecordKey.Create<Fruit>("banana");
+        var request = new GetItemRequest(
+            tableName : "Fruits", 
+            key       : RecordKey.Create<Fruit>("banana")
+        );
 
-        var x2 = new GetItemRequest("Fruits", key);
-
-        Assert.Equal("""
+        Assert.Equal(
+            """
             {
               "TableName": "Fruits",
               "Key": {
@@ -22,23 +24,24 @@ public class GetItemRequestTests
                 }
               }
             }
-            """, x2.ToIndentedJsonString());
+            """, request.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
-    public void B()
+    public void CanSerializeComplex()
     {
         var key = new RecordKey([
             new ("primary", 1),
             new ("secondary", "2")
         ]);
 
-        var x2 = new GetItemRequest("Products", key) {
+        var request = new GetItemRequest("Products", key) {
             ConsistentRead = true,
             ReturnConsumedCapacity = ReturnConsumedCapacity.TOTAL
         };
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             {
               "TableName": "Products",
               "Key": {
@@ -52,6 +55,6 @@ public class GetItemRequestTests
               "ConsistentRead": true,
               "ReturnConsumedCapacity": "TOTAL"
             }
-            """, x2.ToIndentedJsonString());
+            """, request.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 }

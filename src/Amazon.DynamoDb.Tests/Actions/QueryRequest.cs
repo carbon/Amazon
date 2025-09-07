@@ -5,7 +5,7 @@ namespace Amazon.DynamoDb.Tests;
 public class QueryRequestTests
 {
     [Fact]
-    public void QueryRequestTest1()
+    public void CanSerialize1()
     {
         var request = new DynamoQuery(Expression.Eq("id", 1)) {
             TableName = "Libraries",
@@ -24,11 +24,11 @@ public class QueryRequestTests
               },
               "Limit": 1
             }
-            """, request.ToIndentedJsonString());
+            """, request.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
-    public void QueryRequestTest5()
+    public void CanSerialize2()
     {
         var query = new DynamoQuery(Expression.Eq("userId", 1))
             .Filter(Expression.Contains("participantIds", Expression.Constant(2)));
@@ -50,11 +50,11 @@ public class QueryRequestTests
               },
               "FilterExpression": "contains(participantIds, :v1)"
             }
-            """, query.ToIndentedJsonString());
+            """, query.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
-    public void QueryRequestTest2()
+    public void CanSerialize3()
     {
         var request = new DynamoQuery {
             TableName = "Libraries",
@@ -65,8 +65,8 @@ public class QueryRequestTests
             Limit = 1
         };
 
-
-        Assert.Equal("""
+        Assert.Equal(
+            """
             {
               "TableName": "Libraries",
               "KeyConditionExpression": "id = :v1",
@@ -77,11 +77,11 @@ public class QueryRequestTests
               },
               "Limit": 1
             }
-            """, request.ToIndentedJsonString());
+            """, request.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
-    public void QueryRequestTest4()
+    public void CanSerialize4()
     {
         var request = new DynamoQuery {
             TableName = "Libraries",
@@ -109,7 +109,7 @@ public class QueryRequestTests
               "ProjectionExpression": "#name,version",
               "Limit": 1
             }
-            """, request.ToIndentedJsonString());
+            """, request.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -140,6 +140,6 @@ public class QueryRequestTests
               },
               "Limit": 1
             }
-            """, request.ToIndentedJsonString());
+            """, request.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 }

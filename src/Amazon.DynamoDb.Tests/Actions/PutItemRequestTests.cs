@@ -15,7 +15,9 @@ public class PutItemRequestTests
     [Fact]
     public void A()
     {
-        var item = new PutItemRequest("Accounts", new AttributeCollection { { "id", 1 } }) { ReturnValues = ReturnValues.UPDATED_NEW };
+        var item = new PutItemRequest("Accounts", new AttributeCollection { { "id", 1 } }) {
+            ReturnValues = ReturnValues.UPDATED_NEW
+        };
 
         Assert.Equal("""{"TableName":"Accounts","Item":{"id":{"N":"1"}},"ReturnValues":"UPDATED_NEW"}""", item.ToJsonString());
     }
@@ -24,7 +26,9 @@ public class PutItemRequestTests
     [Fact]
     public void B()
     {
-        var item = new PutItemRequest("Accounts", new AttributeCollection { { "id", 1 } }) { ReturnValues = ReturnValues.UPDATED_OLD };
+        var item = new PutItemRequest("Accounts", new AttributeCollection { { "id", 1 } }) {
+            ReturnValues = ReturnValues.UPDATED_OLD
+        };
 
         Assert.Equal("""{"TableName":"Accounts","Item":{"id":{"N":"1"}},"ReturnValues":"UPDATED_OLD"}""", item.ToJsonString());
     }

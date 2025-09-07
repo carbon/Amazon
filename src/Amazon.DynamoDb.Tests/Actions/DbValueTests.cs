@@ -108,14 +108,15 @@ public class DbValueTests
     }
 
     [Fact]
-    public void DbMap()
+    public void CanSerializeDbMap()
     {
         var value = new DbValue(new AttributeCollection {
             { "a", 1 },
             { "b", "boat" }
         });
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             {
               "M": {
                 "a": {
@@ -126,7 +127,7 @@ public class DbValueTests
                 }
               }
             }
-            """, value.ToIndentedJsonString());
+            """, value.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -159,7 +160,7 @@ public class DbValueTests
                 }
               }
             }
-            """, value.ToIndentedJsonString());
+            """, value.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
@@ -186,7 +187,7 @@ public class DbValueTests
                 }
               }
             }
-            """, value.ToIndentedJsonString());
+            """, value.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
 
         Assert.Equal(
             """
@@ -202,7 +203,7 @@ public class DbValueTests
                 }
               }
             }
-            """, value.ToIndentedJsonString());
+            """, value.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
 
         var a = JsonSerializer.Deserialize<AttributeCollection>(value.ToJsonString()).As<Hi>();
 
@@ -226,7 +227,7 @@ public class DbValueTests
                 "B": "ZKWQKAIkHUiA4MGBMfFiGg=="
               }
             }
-            """, value.ToIndentedJsonString());
+            """, value.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
 
         var a = JsonSerializer.Deserialize<AttributeCollection>(value.ToJsonString()).As<Entity>();
 
@@ -320,7 +321,7 @@ public class DbValueTests
 
         Assert.Equal(DbValueType.L, value.Kind);
 
-        Assert.Equal([ 1.1f, 7.543f ], value.ToArray<float>().AsSpan());
+        Assert.Equal([1.1f, 7.543f], value.ToArray<float>().AsSpan());
     }
 
     [Fact]

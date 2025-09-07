@@ -37,7 +37,7 @@ public class UpdateExpressionTests
             """
             REMOVE deleted
             ADD #list :v0
-            """, expression.ToString());
+            """, expression.ToString(), ignoreLineEndingDifferences: true);
 
         Assert.Single(attrNames);
         Assert.Equal("list", attrNames["#list"]);
@@ -50,7 +50,7 @@ public class UpdateExpressionTests
             Change.Replace("deleted", new DateTime(2015, 01, 01)),
             Change.Replace("colors", (string[])["red", "yellow", "blue"]),
             Change.Replace("version", 1)
-        ], new(), new AttributeCollection());
+        ], [], []);
 
         Assert.Equal("SET deleted = :v0, colors = :v1, version = :v2", expression.ToString());
     }
@@ -64,13 +64,13 @@ public class UpdateExpressionTests
             Change.Remove("deleted"),
             Change.Add("version", 1),
             Change.Replace("modified", DateTime.UtcNow)
-        ], new(), new AttributeCollection());
+        ], [], []);
 
         Assert.Equal(
             """
             SET deleted = :v0, colors = :v1, modified = :v3
             REMOVE deleted
             ADD version :v2
-            """, expression.ToString());
+            """, expression.ToString(), ignoreLineEndingDifferences: true);
     }
 }

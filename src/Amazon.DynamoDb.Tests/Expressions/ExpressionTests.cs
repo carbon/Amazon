@@ -128,11 +128,11 @@ public class ExpressionTests
     public void Expression9()
     {
         var de = new DynamoQueryExpression(
-            [ "name", "version" ],
-            new Expression[] {
+            keyNames: ["name", "version"],
+            expressions: [
                 Eq("name", "sortable"),
                 Between("version", "1.0", "2.0")
-            });
+            ]);
 
         Assert.Equal("#name = :v0 and version between :v1 and :v2", de.KeyExpression.Text);
 

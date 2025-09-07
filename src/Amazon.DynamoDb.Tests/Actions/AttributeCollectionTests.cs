@@ -5,7 +5,7 @@ namespace Amazon.DynamoDb.Models.Tests;
 public class AttributeCollectionTests
 {
     [Fact]
-    public void DbItem_Enum_Test()
+    public void CanDeserializeNumericEnums()
     {
         var item = new AttributeCollection {
             { "Type", 1 }
@@ -111,8 +111,8 @@ public class AttributeCollectionTests
     public void Db_Item3()
     {
         var item = new AttributeCollection {
-            { "colors",     (string[])["red", "blue", "green"] },
-            { "containedIn", new DbValue((int[])[1, 2, 3]) }
+            { "colors",     ["red", "blue", "green"] },
+            { "containedIn", new DbValue([1, 2, 3]) }
         };
 
         var jsonText = item.ToJsonString();

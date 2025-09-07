@@ -30,7 +30,8 @@ public class ModelTests
 
         var x = AttributeCollection.FromObject(point);
 
-        Assert.Equal("""
+        Assert.Equal(
+            """
             {
               "1": {
                 "N": "1"
@@ -42,23 +43,21 @@ public class ModelTests
                 "N": "3"
               }
             }
-            """, x.ToIndentedJsonString());
+            """, x.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]
     public void TestColumns()
     {
-        var orange = new Fruit
-        {
+        var x = AttributeCollection.FromObject(new Fruit {
             Name = "orange",
             Calories = 50,
             Description = "Amazing",
             IsHealthy = true
-        };
+        });
 
-        var x = AttributeCollection.FromObject(orange);
-
-        Assert.Equal("""
+        Assert.Equal(
+            """
             {
               "name": {
                 "S": "orange"
@@ -70,6 +69,6 @@ public class ModelTests
                 "S": "Amazing"
               }
             }
-            """, x.ToIndentedJsonString());
+            """, x.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 }

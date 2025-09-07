@@ -48,7 +48,7 @@ public class DynamoBatchTests
                 }
               }
             ]
-            """, tableBatch.ToIndentedJsonString());
+            """, tableBatch.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 
     [Fact]

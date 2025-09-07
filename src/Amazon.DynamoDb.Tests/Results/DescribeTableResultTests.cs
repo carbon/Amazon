@@ -71,7 +71,7 @@ public class DescribeTableResultTests
                     "TableStatus": "ACTIVE"
                 }
             }
-            """);
+            """u8);
 
         var table = result.Table;
         var keySchema = table.KeySchema;
