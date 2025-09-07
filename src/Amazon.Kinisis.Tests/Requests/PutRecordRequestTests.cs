@@ -15,6 +15,6 @@ public class PutRecordRequestTests
                 "Data": "aGVsbG8="
               }
             }
-            """, putRecord.ToIndentedJsonString());
+            """, putRecord.ToIndentedJsonString(), ignoreLineEndingDifferences: true);
     }
 }
