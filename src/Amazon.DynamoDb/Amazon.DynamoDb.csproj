@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="Carbon.Data" Version="2.18.0" />
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="9.0.10" />
   </ItemGroup>
 
 </Project>
