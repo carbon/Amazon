@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.CodeBuild</AssemblyName>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Version>0.34.0</Version>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
