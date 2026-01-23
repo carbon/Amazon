@@ -4,16 +4,10 @@ using Amazon.Exceptions;
 
 namespace Amazon.Ses;
 
-public sealed class SesException(SesError error, HttpStatusCode statusCode)
-    : AwsException(error.Message, statusCode)
+public sealed class SesException(string message, HttpStatusCode statusCode)
+    : AwsException(message, statusCode)
 {
-    private readonly SesError _error = error;
-
-    public string Type => _error.Type;
-
-    public string Code => _error.Code;
-
-    public bool IsTransient => HttpStatusCode is HttpStatusCode.InternalServerError or HttpStatusCode.ServiceUnavailable || Code is "Throttling";
+    public bool IsTransient => HttpStatusCode is HttpStatusCode.InternalServerError or HttpStatusCode.ServiceUnavailable; // || Code is "Throttling";
 }
 
 // CODES -- 

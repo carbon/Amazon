@@ -1,17 +1,9 @@
-﻿#nullable disable
-
-using System.Xml.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Amazon.Ses;
 
 public sealed class SesError
 {
-    [XmlElement]
-    public string Type { get; init; }
-
-    [XmlElement]
-    public string Code { get; init; }
-
-    [XmlElement]
-    public string Message { get; init; }
+    [JsonPropertyName("message")]
+    public required string? Message { get; init; }
 }

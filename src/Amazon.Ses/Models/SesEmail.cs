@@ -120,7 +120,7 @@ public sealed class SesEmail
         }
 
         return doc;
-    }   
+    }
 
     private static void SetContent(string prefix, SesContent content, List<KeyValuePair<string, string>> dic)
     {

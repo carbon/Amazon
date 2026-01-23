@@ -1,21 +1,21 @@
-﻿using System.Net.Http;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Mail;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using Amazon.Scheduling;
 
 namespace Amazon.Ses;
 
-public sealed class SesClient(AwsRegion region, IAwsCredential credential) 
-    : AwsClient(AwsService.Ses, region, credential)
+public sealed class SesClient(AwsRegion region, IAwsCredential credential)
+    : AwsClient(new("ses"), region, credential)
 {
-    public const string Version = "2010-12-01";
-
-    public const string Namespace = "http://ses.amazonaws.com/doc/2010-12-01/";
-
     private static readonly ExponentialBackoffRetryPolicy s_retryPolicy = new(
-        initialDelay : TimeSpan.FromSeconds(1),
-        maxDelay     : TimeSpan.FromSeconds(10),
-        maxRetries   : 5
+        initialDelay: TimeSpan.FromSeconds(1),
+        maxDelay: TimeSpan.FromSeconds(10),
+        maxRetries: 5
     );
 
     public Task<SendEmailResult> SendEmailAsync(MailMessage message)
@@ -23,46 +23,24 @@ public sealed class SesClient(AwsRegion region, IAwsCredential credential)
         return SendEmailAsync(SesEmail.FromMailMessage(message));
     }
 
-    public async Task<SendEmailResult> SendEmailAsync(SesEmail message)
+    public Task<SendEmailResult> SendEmailAsync(SesEmail message)
     {
-        var request = new SesRequest("SendEmail");
-
-        foreach (var pair in message.ToParameters())
-        {
-            request.Add(pair);
-        }
-
-        byte[] responseBytes = await SendWithRetryPolicy(request, s_retryPolicy).ConfigureAwait(false);
-
-        return SendEmailResponse.Deserialize(responseBytes).SendEmailResult;
+        return SendEmailAsync(SendEmailRequest.FromSesEmail(message));
     }
 
-    public async Task<SendRawEmailResult> SendRawEmailAsync(SendRawEmailRequest request)
+    public async Task<SendEmailResult> SendEmailAsync(SendEmailRequest request)
     {
-        var data = new SesRequest("SendRawEmail");
+        // https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_SendEmail.html
 
-        foreach (var pair in request.ToParams())
-        {
-            data.Add(pair);
-        }
-
-        byte[] responseBytes = await SendWithRetryPolicy(data, s_retryPolicy).ConfigureAwait(false);
-
-        return SendRawEmailResponse.Deserialize(responseBytes).SendRawEmailResult;
+        return await PostAsync<SendEmailRequest, SendEmailResult>("SendEmail", "/v2/email/outbound-emails", request);
     }
 
-    public async Task<GetSendQuotaResult> GetSendQuotaAsync()
+    public async Task<GetAccountResult> GetAccountAsync()
     {
-        var request = new SesRequest("GetSendQuota");
-
-        byte[] responseBytes = await PostAsync(request).ConfigureAwait(false);
-
-        return GetSendQuotaResponse.Deserialize(responseBytes).GetSendQuotaResult;
+        return await GetAsync<GetAccountResult>("GetAccount", "/v2/email/account");
     }
 
-    #region Helpers
-
-    private async Task<byte[]> SendWithRetryPolicy(SesRequest request, RetryPolicy retryPolicy)
+    private async Task<TResult> PostAsync<T, TResult>([ConstantExpected] string actionName, string path, T request)
     {
         var retryCount = 0;
         Exception lastException;
@@ -71,12 +49,27 @@ public sealed class SesClient(AwsRegion region, IAwsCredential credential)
         {
             if (retryCount > 0)
             {
-                await Task.Delay(retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+                await Task.Delay(s_retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
 
             try
             {
-                return await PostAsync(request).ConfigureAwait(false);
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, $"https://email.{Region.Name}.amazonaws.com" + path) {
+                    Headers = {
+                        { "x-amz-target", "SESv2." + actionName }
+                    },
+                    Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(request)) {
+                        Headers = {
+                            { "Content-Type", "application/json" }
+                        }
+                    }
+                };
+
+                var result = await base.SendAsync(httpRequest);
+
+                return JsonSerializer.Deserialize<TResult>(result)!;
+
+
             }
             catch (SesException ex) when (ex.IsTransient)
             {
@@ -85,30 +78,42 @@ public sealed class SesClient(AwsRegion region, IAwsCredential credential)
 
             retryCount++;
         }
-        while (retryPolicy.ShouldRetry(retryCount));
+        while (s_retryPolicy.ShouldRetry(retryCount));
 
-        throw lastException;
+        throw lastException;       
+    }
+
+    private async Task<TResult> GetAsync<TResult>([ConstantExpected] string actionName, string path)
+    {        
+        var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"https://email.{Region.Name}.amazonaws.com" + path) {
+            Headers = {
+                { "x-amz-target", "SESv2." + actionName }
+            }
+        };
+
+        var result = await base.SendAsync(httpRequest);
+
+        return JsonSerializer.Deserialize<TResult>(result)!;
     }
 
     protected override async Task<Exception> GetExceptionAsync(HttpResponseMessage response)
     {
-        var responseBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+        using (response)
+        {
+            var text = await response.Content.ReadAsStringAsync();
 
-        var errorResponse = ErrorResponse.Deserialize(responseBytes);
+            if (response.Content.Headers.GetValues("Content-Type").FirstOrDefault() is "application/json")
+            {
+                var error = JsonSerializer.Deserialize<SesError>(text);
 
-        return new SesException(errorResponse.Error, response.StatusCode);
+                throw new SesException(error?.Message ?? "Something went wrong", response.StatusCode);
+            }
+            else
+            {
+                throw new SesException(text, response.StatusCode);
+            }
+        }
     }
-
-    private Task<byte[]> PostAsync(SesRequest request)
-    {
-        request.Parameters.Add(new("Version", Version));
-
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
-            Content = new FormUrlEncodedContent(request.Parameters!)
-        };
-
-        return base.SendAsync(httpRequest);
-    }
-
-    #endregion
 }
+
+// https://docs.aws.amazon.com/ses/latest/APIReference-V2/Welcome.html
