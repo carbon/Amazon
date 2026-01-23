@@ -26,9 +26,21 @@ public static class FoundationalModals
             MaxInputTokenCount = 200_000
         };
 
-        public static readonly FoundationModel ClaudeSonnet_4 = new("anthropic.claude-sonnet-4-20250514-v1:0") {
+        public static readonly FoundationModel ClaudeSonnet_4 = new("anthropic.claude-sonnet-4-20250514-v1:0", InferenceProfileRegionFlags.US) {
             InferenceProfile = "us.anthropic.claude-sonnet-4-20250514-v1:0",
             Regions = [AwsRegion.USEast1, AwsRegion.USEast2, AwsRegion.USWest2],
+            MaxInputTokenCount = 200_000
+        };
+
+        public static readonly FoundationModel ClaudeSonnet_4_5 = new("claude-sonnet-4-5-20250929-v1:0", InferenceProfileRegionFlags.Global | InferenceProfileRegionFlags.US) {
+            InferenceProfile = "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+            Regions = [AwsRegion.USEast1, AwsRegion.USEast2, AwsRegion.USWest1, AwsRegion.USWest2],
+            MaxInputTokenCount = 200_000
+        };
+
+        public static readonly FoundationModel ClaudeHaiku_4_5 = new("anthropic.claude-haiku-4-5-20251001-v1:0", InferenceProfileRegionFlags.Global | InferenceProfileRegionFlags.EU | InferenceProfileRegionFlags.US) {
+            InferenceProfile = "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+            Regions = [AwsRegion.USEast1, AwsRegion.USEast2, AwsRegion.USWest1, AwsRegion.USWest2],
             MaxInputTokenCount = 200_000
         };
     }
@@ -50,6 +62,11 @@ public static class FoundationalModals
             Regions = [AwsRegion.USEast1, AwsRegion.USEast2, AwsRegion.USWest2]
         }; // Image, Video, Text
 
+        public static readonly FoundationModel Nova2MultimodalEmbeddings = new("amazon.nova-2-multimodal-embeddings-v1:0", InferenceProfileRegionFlags.Global | InferenceProfileRegionFlags.US) {
+            InferenceProfile = "amazon.nova-2-multimodal-embeddings-v1:0",
+            Regions = [AwsRegion.USEast1, AwsRegion.USEast2, AwsRegion.USWest2]
+        }; // Image, Video, Text
+
         public static readonly RerankModelInfo    RerankV1           = new("amazon.rerank-v1:0");
         public static readonly EmbeddingModelInfo TitanEmbedImageV1  = new("amazon.titan-embed-image-v1", [256, 384, 1024]);
         public static readonly FoundationModel    TitanTextLiteV1    = new("amazon.titan-text-lite-v1")    { MaxInputTokenCount = 4000 };
@@ -61,8 +78,13 @@ public static class FoundationalModals
     public static class Cohere
     {
         public static readonly RerankModelInfo    RerankV3_5          = new("cohere.rerank-v3-5:0");
-        public static readonly EmbeddingModelInfo EmbedEnglishV3      = new("cohere.embed-english-v3", [1024]);
+        public static readonly EmbeddingModelInfo EmbedEnglishV3      = new("cohere.embed-english-v3",      [1024]);
         public static readonly EmbeddingModelInfo EmbedMultilingualV3 = new("cohere.embed-multilingual-v3", [1024]);
+
+        public static readonly EmbeddingModelInfo EmbedV4 = new("cohere.embed-v4:0", [256, 512, 1024, 1536]) {
+            InferenceProfile = "us.cohere.embed-v4:0",
+            Regions = [AwsRegion.USEast1, AwsRegion.USEast2, AwsRegion.USWest1, AwsRegion.USWest2],
+        };
     }
 
     public static class Meta
@@ -79,7 +101,8 @@ public static class FoundationalModals
     }
 }
 
-public sealed class FoundationModel(string id) : ModelInfo(id) { }
+public sealed class FoundationModel(string id, InferenceProfileRegionFlags inferenceProfileRegionFlags = default) 
+    : ModelInfo(id, inferenceProfileRegionFlags) { }
 
 public sealed class EmbeddingModelInfo(string id, int[] dimensionCount) : ModelInfo(id)
 {
@@ -92,4 +115,4 @@ public sealed class RerankModelInfo(string id) : ModelInfo(id)
 }
 
 
-// https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids-arns.html
+// https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html
