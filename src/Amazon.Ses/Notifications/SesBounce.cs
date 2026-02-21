@@ -20,4 +20,7 @@ public sealed class SesBounce
 
     [JsonPropertyName("reportingMTA")]
     public string ReportingMta { get; init; }
+
+    [JsonPropertyName("feedbackId")]
+    public string FeedbackId { get; init; }
 }

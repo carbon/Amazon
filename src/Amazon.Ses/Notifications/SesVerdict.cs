@@ -2,9 +2,8 @@
 
 namespace Amazon.Ses;
 
-[method: JsonConstructor]
-public readonly struct SesVerdict(string status)
+public readonly struct SesVerdict
 {
     [JsonPropertyName("status")]
-    public string Status { get; } = status;
+    public required string Status { get; init; }
 }
