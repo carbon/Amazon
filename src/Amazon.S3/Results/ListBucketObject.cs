@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -32,7 +33,7 @@ public sealed class ListBucketObject : IBlob
 
     DateTime IBlob.Modified => LastModified;
 
-    IReadOnlyDictionary<string, string> IBlob.Properties => BlobProperties.Empty;
+    IReadOnlyDictionary<string, string> IBlob.Properties => ReadOnlyDictionary<string, string>.Empty;
 
     ValueTask<Stream> IBlob.OpenAsync()
     {

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.S3</AssemblyName>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.35.0</Version>
+    <Version>0.35.1</Version>
     <NoWarn>$(NoWarn),IDE0057</NoWarn>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Carbon.Storage" Version="3.15.0" />
+    <PackageReference Include="Carbon.Storage" Version="3.16.0" />
   </ItemGroup>
   
 </Project>
