@@ -65,4 +65,30 @@ public class InstanceRoleCredentialTests
         
         Assert.False(credential.ShouldRenew);
     }
+
+    [Fact]
+    public void IsExpiredWhenExpirationIsInThePast()
+    {
+        var credential = new InstanceRoleCredential("role-name", new IamSecurityCredentials {
+            AccessKeyId = "access-key-id",
+            SecretAccessKey = "secret-access-key",
+            Code = "Success",
+            Expiration = DateTime.UtcNow.AddMinutes(-1)
+        });
+
+        Assert.True(credential.IsExpired);
+    }
+
+    [Fact]
+    public void IsNotExpiredWhenExpirationIsInTheFuture()
+    {
+        var credential = new InstanceRoleCredential("role-name", new IamSecurityCredentials {
+            AccessKeyId = "access-key-id",
+            SecretAccessKey = "secret-access-key",
+            Code = "Success",
+            Expiration = DateTime.UtcNow.AddMinutes(1)
+        });
+
+        Assert.False(credential.IsExpired);
+    }
 }

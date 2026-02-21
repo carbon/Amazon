@@ -51,7 +51,7 @@ public sealed class InstanceRoleCredential : IAwsCredential
 
     public TimeSpan ExpiresIn => Expires - DateTime.UtcNow;
 
-    public bool IsExpired => DateTime.UtcNow < Expires;
+    public bool IsExpired => DateTime.UtcNow >= Expires;
 
     // AWS Recommendation:
     // - refresh 5 minutes before expiration
