@@ -10,9 +10,10 @@ public enum SesBounceSubtype
     NoEmail                  = 3,
     Suppressed               = 4,
     MailboxFull              = 5,
-    MessageToolarge          = 6,
+    MessageTooLarge          = 6,
     ContentRejected          = 7,
     AttachmentRejected       = 8,
     OnAccountSuppressionList = 9,
-    UnsubscribedRecipient    = 10
+    UnsubscribedRecipient    = 10,
+    CustomTimeoutExceeded    = 11
 }
