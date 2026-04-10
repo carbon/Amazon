@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 
@@ -37,7 +38,6 @@ public sealed class SqsClient(AwsRegion region, IAwsCredential credential)
 
         await SendAsync(requestMessage).ConfigureAwait(false);
     }
-
 
     public async Task PurgeQueueAsync(PurgeQueueRequest request)
     {
@@ -147,7 +147,7 @@ public sealed class SqsClient(AwsRegion region, IAwsCredential credential)
 
         try
         {
-            var errorResult = await response.Content.ReadFromJsonAsync<ErrorResult>().ConfigureAwait(false);
+            var errorResult = await response.Content.ReadFromJsonAsync<ErrorResult>(JsonSerializerOptions.Default).ConfigureAwait(false);
 
             return new SqsException(errorResult!);
         }
