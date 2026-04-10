@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Lambda</AssemblyName>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Version>0.20.0</Version>
     
     <!-- Package Details-->

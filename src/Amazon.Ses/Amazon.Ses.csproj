@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <AssemblyName>Amazon.Ses</AssemblyName>
-    <TargetFramework>net9.0</TargetFramework>
-    <Version>0.34.0</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.36.3</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <NoWarn>IDE0057</NoWarn>
+    <NoWarn>IDE0057;IDE0130</NoWarn>
 	  
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>

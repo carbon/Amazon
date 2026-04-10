@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Kinesis</AssemblyName>
     <Version>0.28.0</Version>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsTrimmable>true</IsTrimmable>
     

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Sts</AssemblyName>
     <Version>0.23.0</Version>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     
     <!-- Package Details-->
