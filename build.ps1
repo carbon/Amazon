@@ -13,6 +13,7 @@ dotnet pack ./src/Amazon.Rekognition      -c Release -o ./release/Amazon.Rekogni
 dotnet pack ./src/Amazon.Rds              -c Release -o ./release/Amazon.Rds
 dotnet pack ./src/Amazon.Route53          -c Release -o ./release/Amazon.Route53
 dotnet pack ./src/Amazon.S3               -c Release -o ./release/Amazon.S3
+dotnet pack ./src/Amazon.S3.Vectors       -c Release -o ./release/Amazon.S3.Vectors
 dotnet pack ./src/Amazon.Ses              -c Release -o ./release/Amazon.Ses
 dotnet pack ./src/Amazon.Ses.Extensions   -c Release -o ./release/Amazon.Ses.Extensions
 dotnet pack ./src/Amazon.Sns              -c Release -o ./release/Amazon.Sns

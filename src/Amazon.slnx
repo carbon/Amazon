@@ -44,6 +44,7 @@
   <Project Path="Amazon.Rds/Amazon.Rds.csproj" />
   <Project Path="Amazon.Rekognition/Amazon.Rekognition.csproj" />
   <Project Path="Amazon.Route53/Amazon.Route53.csproj" />
+  <Project Path="Amazon.S3.Vectors/Amazon.S3.Vectors.csproj" Id="33ed8022-fe0c-46ee-9a02-669d868d24f8" />
   <Project Path="Amazon.S3/Amazon.S3.csproj" />
   <Project Path="Amazon.Ses.Extensions/Amazon.Ses.Extensions.csproj" />
   <Project Path="Amazon.Ses/Amazon.Ses.csproj" />
