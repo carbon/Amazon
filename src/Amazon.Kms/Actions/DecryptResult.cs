@@ -13,4 +13,7 @@ public sealed class DecryptResult : KmsResult
     public byte[] Plaintext { get; init; }
 
     public byte[] CiphertextForRecipient { get; init; }
+
+    // Omitted when the request specified a Recipient
+    public string KeyMaterialId { get; init; }
 }
