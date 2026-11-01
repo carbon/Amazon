@@ -12,7 +12,7 @@ public sealed class Metric
 
     [XmlArray]
     [XmlArrayItem("member")]
-    public required List<Dimension> Dimensions { get; init; }
+    public List<Dimension> Dimensions { get; init; } = [];
 }
 
 /*
