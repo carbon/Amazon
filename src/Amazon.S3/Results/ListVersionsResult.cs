@@ -32,5 +32,11 @@ public sealed class ListVersionsResult
 #nullable disable
 
     [XmlElement("Version")]
-    public ObjectVersion[] Versions { get; init; }
+    public ObjectVersion[] Versions
+    {
+        get => _versions ?? []; // Null when the response has no Version elements
+        init => _versions = value;
+    }
+
+    private readonly ObjectVersion[] _versions;
 }

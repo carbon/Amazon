@@ -11,18 +11,45 @@ public sealed class RestoreObjectRequest : S3Request
     {
         ArgumentNullException.ThrowIfNull(key);
 
+        SetContent();
+
+        CompletionOption = HttpCompletionOption.ResponseContentRead;
+    }
+
+    public GlacierJobTier Tier
+    {
+        get => _tier;
+        init
+        {
+            _tier = value;
+
+            SetContent();
+        }
+    }
+
+    public int Days
+    {
+        get => _days;
+        init
+        {
+            _days = value;
+
+            SetContent();
+        }
+    }
+
+    private readonly GlacierJobTier _tier = GlacierJobTier.Standard;
+    private readonly int _days = 7; // Default to 7
+
+    // Initializers run after the constructor, so the content is rebuilt whenever they change a value
+    private void SetContent()
+    {
         string xmlText = GetXmlString();
 
         Content = new StringContent(xmlText, Encoding.UTF8, "text/xml");
 
         Content.Headers.ContentMD5 = HashHelper.ComputeMD5Hash(xmlText);
-
-        CompletionOption = HttpCompletionOption.ResponseContentRead;
     }
-
-    public GlacierJobTier Tier { get; init; } = GlacierJobTier.Standard;
-
-    public int Days { get; init; } = 7; // Default to 7
 
     public string GetXmlString()
     {

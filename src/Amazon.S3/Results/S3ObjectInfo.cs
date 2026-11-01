@@ -99,7 +99,7 @@ public sealed class S3ObjectInfo : IBlob
         );
     }
 
-    public string? ContentType => Properties?["Content-Type"];
+    public string? ContentType => Properties?.GetValueOrDefault("Content-Type");
 
     public string? VersionId
     {
@@ -111,7 +111,8 @@ public sealed class S3ObjectInfo : IBlob
         }
     }
 
-    public string? StorageClass => Properties?[S3HeaderNames.StorageClass];
+    // Omitted by S3 for STANDARD objects
+    public string? StorageClass => Properties?.GetValueOrDefault(S3HeaderNames.StorageClass);
 
     #endregion
 }

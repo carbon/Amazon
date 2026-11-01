@@ -24,16 +24,13 @@ public static class S3ClientExtensions
     {
         options ??= S3DownloadOptions.Default;
 
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(options.MaxThreadCount);
+
         var metadata = await s3Client.GetObjectHeadAsync(new ObjectHeadRequest(s3Client.Host, bucketName, objectKey), cancellationToken);
 
         long total = metadata.ContentLength;
 
         var ranges = GetRanges(total, options.ChunkSize);
-        Exception? exception = null;
-
-        var completedTaskSource = new TaskCompletionSource();
-
-        using var _semaphore = new SemaphoreSlim(options.MaxThreadCount, options.MaxThreadCount);
 
         using var fileHandle = File.OpenHandle(
             path              : destinationPath,
@@ -43,42 +40,15 @@ public static class S3ClientExtensions
             preallocationSize : total
         );
 
-        int remainingTaskCount = ranges.Length;
+        var parallelOptions = new ParallelOptions {
+            MaxDegreeOfParallelism = options.MaxThreadCount,
+            CancellationToken      = cancellationToken
+        };
 
-        for (int i = 0; i < ranges.Length; i++)
-        {
-            await _semaphore.WaitAsync(cancellationToken);                
-
-            if (exception != null)
-            {
-                throw exception;
-            }
-
-            var range = ranges[i];
-
-            var task = s3Client.DownloadByteRange(bucketName, objectKey, range, fileHandle, cancellationToken).ContinueWith(task => {
-                exception = task.Exception?.InnerException ?? task.Exception;
-
-                _semaphore.Release();
-
-                if (Interlocked.Decrement(ref remainingTaskCount) is 0)
-                {
-                    completedTaskSource.SetResult();
-                }
-            }, cancellationToken);
-        }
-
-        if (exception != null)
-        {
-            throw exception;
-        }
-
-        await completedTaskSource.Task.ConfigureAwait(false);
-
-        if (exception != null)
-        {
-            throw exception;
-        }
+        // Stops on the first failure, and waits for in-flight chunks before the file handle is closed
+        await Parallel.ForEachAsync(ranges, parallelOptions, async (range, token) => {
+            await s3Client.DownloadByteRange(bucketName, objectKey, range, fileHandle, token).ConfigureAwait(false);
+        }).ConfigureAwait(false);
 
         return metadata;
     }
