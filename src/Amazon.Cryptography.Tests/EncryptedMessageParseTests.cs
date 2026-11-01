@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using System.Globalization;
 
 namespace Amazon.Cryptography.Tests;
 
@@ -96,7 +97,7 @@ public class EncryptedMessageParseTests
 
         var e = Assert.Throws<InvalidOperationException>(() => EncryptedMessage.Parse(bytes));
 
-        Assert.Contains(version.ToString(), e.Message);
+        Assert.Contains(version.ToString(CultureInfo.InvariantCulture), e.Message);
     }
 
     [Theory]

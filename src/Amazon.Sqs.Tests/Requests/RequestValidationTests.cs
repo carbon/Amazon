@@ -1,3 +1,4 @@
+using System.Globalization;
 using Amazon.Sqs.Serialization;
 
 namespace Amazon.Sqs.Tests;
@@ -47,7 +48,7 @@ public class RequestValidationTests
     [Fact]
     public void SendMessageBatch_EnforcesTheBatchLimit()
     {
-        var eleven = Enumerable.Range(1, 11).Select(i => i.ToString()).ToArray();
+        var eleven = Enumerable.Range(1, 11).Select(i => i.ToString(CultureInfo.InvariantCulture)).ToArray();
 
         Assert.Throws<ArgumentException>(() => new SendMessageBatchRequest(Url, (IReadOnlyList<string>)eleven));
         Assert.Throws<ArgumentException>(() => new SendMessageBatchRequest(Url, eleven.Select(i => new SendMessageBatchRequestEntry(i, "body")).ToArray()));
@@ -99,7 +100,7 @@ public class RequestValidationTests
     [Fact]
     public void DeleteMessageBatch_EnforcesTheBatchLimit()
     {
-        var handles = Enumerable.Range(1, 11).Select(i => i.ToString()).ToArray();
+        var handles = Enumerable.Range(1, 11).Select(i => i.ToString(CultureInfo.InvariantCulture)).ToArray();
 
         Assert.Throws<ArgumentException>(() => new DeleteMessageBatchRequest(Url, handles));
         Assert.Throws<ArgumentException>(() => new DeleteMessageBatchRequest(Url, handles.Select(h => new DeleteMessageBatchRequestEntry(h, h)).ToArray()));

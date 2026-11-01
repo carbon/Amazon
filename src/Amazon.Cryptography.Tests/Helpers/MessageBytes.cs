@@ -146,7 +146,7 @@ internal sealed class MessageBytes
     public static ECDsa ImportCompressedP384(ReadOnlySpan<byte> point)
     {
         var p = BigInteger.Pow(2, 384) - BigInteger.Pow(2, 128) - BigInteger.Pow(2, 96) + BigInteger.Pow(2, 32) - 1;
-        var b = BigInteger.Parse("0b3312fa7e23ee7e4988e056be3f82d19181d9c6efe8141120314088f5013875ac656398d8a2ed19d2a85c8edd3ec2aef", NumberStyles.HexNumber);
+        var b = BigInteger.Parse("0b3312fa7e23ee7e4988e056be3f82d19181d9c6efe8141120314088f5013875ac656398d8a2ed19d2a85c8edd3ec2aef", NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 
         var x = new BigInteger(point[1..], isUnsigned: true, isBigEndian: true);
         var y = BigInteger.ModPow((((BigInteger.ModPow(x, 3, p) - (3 * x) + b) % p) + p) % p, (p + 1) / 4, p);

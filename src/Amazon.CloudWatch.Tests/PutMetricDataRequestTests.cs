@@ -272,7 +272,7 @@ public class PutMetricDataRequestTests
 
         var sent = await SendAsync(new PutMetricDataRequest { Namespace = "N" }.With(datum));
 
-        Assert.Equal(datum.Timestamp.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"), sent["MetricData.member.1.Timestamp"]);
+        Assert.Equal(datum.Timestamp.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture), sent["MetricData.member.1.Timestamp"]);
     }
 
     [Fact]
