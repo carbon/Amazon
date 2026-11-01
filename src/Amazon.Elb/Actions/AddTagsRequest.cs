@@ -1,9 +1,12 @@
-﻿namespace Amazon.Elb;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Amazon.Elb;
 
 public sealed class AddTagsRequest : IElbRequest
 {
     public AddTagsRequest() { }
 
+    [SetsRequiredMembers]
     public AddTagsRequest(string[] resourceArns, Tag[] tags)
     {
         ArgumentNullException.ThrowIfNull(resourceArns);

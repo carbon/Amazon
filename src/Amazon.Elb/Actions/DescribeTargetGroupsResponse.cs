@@ -13,4 +13,7 @@ public sealed class DescribeTargetGroupsResult
     [XmlArray]
     [XmlArrayItem("member")]
     public required TargetGroup[] TargetGroups { get; init; }
+
+    [XmlElement]
+    public string? NextMarker { get; init; }
 }

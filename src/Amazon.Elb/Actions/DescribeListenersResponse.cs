@@ -15,6 +15,9 @@ public sealed class DescribeListenersResult
     [XmlArray]
     [XmlArrayItem("member")]
     public Listener[] Listeners { get; init; }
+
+    [XmlElement]
+    public string NextMarker { get; init; }
 }
 
 /*

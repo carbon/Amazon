@@ -15,4 +15,7 @@ public sealed class DescribeRulesResult
     [XmlArray]
     [XmlArrayItem("member")]
     public Rule[] Rules { get; init; }
+
+    [XmlElement]
+    public string NextMarker { get; init; }
 }

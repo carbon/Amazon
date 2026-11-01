@@ -15,4 +15,7 @@ public sealed class DescribeSSLPoliciesResult
     [XmlArray]
     [XmlArrayItem("member")]
     public SslPolicy[] SslPolicies { get; init; }
+
+    [XmlElement]
+    public string NextMarker { get; init; }
 }

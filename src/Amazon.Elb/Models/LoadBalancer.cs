@@ -22,7 +22,7 @@ public class LoadBalancer
     public string CanonicalHostedZoneId { get; init; }
 
     [XmlElement]
-    public DateTime CreateTime { get; init; }
+    public DateTime CreatedTime { get; init; }
 
     [XmlArray]
     [XmlArrayItem("member")]
