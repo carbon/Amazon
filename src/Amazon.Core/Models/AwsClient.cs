@@ -50,7 +50,7 @@ public abstract class AwsClient
         Endpoint = $"https://{service.Name}.{region.Name}.amazonaws.com/";
     }
 
-    public string Endpoint { get; }
+    public string Endpoint { get; protected init; }
 
     public AwsRegion Region { get; }
 

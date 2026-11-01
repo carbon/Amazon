@@ -240,24 +240,26 @@ public static class SignerV4
         
         ComputeSigningKey(credential.SecretAccessKey, scope, signingKey);
 
-        SortedDictionary<string, string> queryParameters = requestUri.Query is { Length: > 0 } queryString
+        List<KeyValuePair<string, string>> queryParameters = requestUri.Query is { Length: > 0 } queryString
             ? ParseQueryString(queryString)
             : [];
       
         // 16 chars
         string timestamp = date.ToString(format: isoDateTimeFormat, CultureInfo.InvariantCulture);
 
-        queryParameters[SigningParameterNames.Algorithm]  = algorithmName;
-        queryParameters[SigningParameterNames.Credential] = $"{credential.AccessKeyId}/{scope}";
-        queryParameters[SigningParameterNames.Date]       = timestamp;
-        queryParameters[SigningParameterNames.Expires]    = expires.TotalSeconds.ToString(CultureInfo.InvariantCulture); // in seconds
+        SetParameter(queryParameters, SigningParameterNames.Algorithm, algorithmName);
+        SetParameter(queryParameters, SigningParameterNames.Credential, $"{credential.AccessKeyId}/{scope}");
+        SetParameter(queryParameters, SigningParameterNames.Date, timestamp);
+        SetParameter(queryParameters, SigningParameterNames.Expires, expires.TotalSeconds.ToString(CultureInfo.InvariantCulture)); // in seconds
 
         if (credential.SecurityToken is not null)
         {
-            queryParameters[SigningParameterNames.SecurityToken] = credential.SecurityToken;
+            SetParameter(queryParameters, SigningParameterNames.SecurityToken, credential.SecurityToken);
         }
 
-        queryParameters[SigningParameterNames.SignedHeaders] = signedHeaders;
+        SetParameter(queryParameters, SigningParameterNames.SignedHeaders, signedHeaders);
+
+        List<KeyValuePair<string, string>> encodedParameters = EncodeAndSort(queryParameters);
 
         string canonicalHeaders = requestUri.IsDefaultPort
             ? $"host:{requestUri.Host}"
@@ -266,7 +268,7 @@ public static class SignerV4
         string canonicalRequest = GetCanonicalRequest(
             method               : method,
             canonicalURI         : CanonicalizeUri(requestUri.AbsolutePath),
-            canonicalQueryString : CanonicalizeQueryString(queryParameters),
+            canonicalQueryString : CanonicalizeQueryString(encodedParameters),
             canonicalHeaders     : canonicalHeaders,
             signedHeaders        : signedHeaders,
             payloadHash          : payloadHash
@@ -297,11 +299,11 @@ public static class SignerV4
         urlBuilder.Append(requestUri.AbsolutePath);
         urlBuilder.Append('?');
 
-        foreach (KeyValuePair<string, string> pair in queryParameters)
+        foreach (KeyValuePair<string, string> pair in encodedParameters)
         {
-            urlBuilder.Append(UrlEncoder.Default.Encode(pair.Key));
+            urlBuilder.Append(pair.Key);
             urlBuilder.Append('=');
-            urlBuilder.Append(UrlEncoder.Default.Encode(pair.Value));
+            urlBuilder.Append(pair.Value);
             urlBuilder.Append('&');         
         }
 
@@ -354,20 +356,20 @@ public static class SignerV4
             return string.Empty;
         }
 
-        return CanonicalizeQueryString(ParseQueryString(uri.Query));
+        return CanonicalizeQueryString(EncodeAndSort(ParseQueryString(uri.Query)));
     }
 
     [SkipLocalsInit]
-    private static string CanonicalizeQueryString(SortedDictionary<string, string> sortedValues)
+    private static string CanonicalizeQueryString(List<KeyValuePair<string, string>> encodedValues)
     {
-        if (sortedValues.Count is 0)
+        if (encodedValues.Count is 0)
         {
             return string.Empty;
         }
 
         var output = new ValueStringBuilder(stackalloc char[256]);
 
-        WriteCanonicalQueryString(ref output, sortedValues);
+        WriteCanonicalQueryString(ref output, encodedValues);
 
         return output.ToString();
     }
@@ -379,41 +381,67 @@ public static class SignerV4
             return;
         }
 
-        WriteCanonicalQueryString(ref output, ParseQueryString(uri.Query));
+        WriteCanonicalQueryString(ref output, EncodeAndSort(ParseQueryString(uri.Query)));
     }
 
-    private static void WriteCanonicalQueryString(ref ValueStringBuilder output, SortedDictionary<string, string> sortedValues)
+    private static void WriteCanonicalQueryString(ref ValueStringBuilder output, List<KeyValuePair<string, string>> encodedValues)
     {
         int i = 0;
 
-        foreach (var pair in sortedValues)
+        foreach (var pair in encodedValues)
         {
             if (i > 0)
             {
                 output.Append('&');
             }
 
-            output.Append(UrlEncoder.Default.Encode(pair.Key));
+            output.Append(pair.Key);
             output.Append('=');
-            output.Append(UrlEncoder.Default.Encode(pair.Value));
+            output.Append(pair.Value);
 
             i++;
         }
     }
 
-    private static SortedDictionary<string, string> ParseQueryString(string query)
+    private static void SetParameter(List<KeyValuePair<string, string>> parameters, string name, string value)
+    {
+        parameters.RemoveAll(parameter => parameter.Key == name);
+        parameters.Add(new(name, value));
+    }
+
+    // Parameters are sorted by name and then by value, after encoding. A name may repeat
+    private static List<KeyValuePair<string, string>> EncodeAndSort(List<KeyValuePair<string, string>> parameters)
+    {
+        var result = new List<KeyValuePair<string, string>>(parameters.Count);
+
+        foreach (var (name, value) in parameters)
+        {
+            result.Add(new(UrlEncoder.Default.Encode(name), UrlEncoder.Default.Encode(value)));
+        }
+
+        result.Sort(static (x, y) =>
+        {
+            int order = string.CompareOrdinal(x.Key, y.Key);
+
+            return order is not 0 ? order : string.CompareOrdinal(x.Value, y.Value);
+        });
+
+        return result;
+    }
+
+    private static List<KeyValuePair<string, string>> ParseQueryString(string query)
     {
         return ParseQueryString(query.AsSpan());
     }
 
-    private static SortedDictionary<string, string> ParseQueryString(ReadOnlySpan<char> query)
+    private static List<KeyValuePair<string, string>> ParseQueryString(ReadOnlySpan<char> query)
     {
         if (query.IsEmpty)
         {
             return [];
         }
 
-        var dictionary = new SortedDictionary<string, string>();
+        var parameters = new List<KeyValuePair<string, string>>();
 
         if (query[0] is '?')
         {
@@ -431,12 +459,12 @@ public static class SignerV4
             string lhs  = equalIndex > -1 ? segment.Slice(0, equalIndex).ToString() : segment.ToString();
             string? rhs = equalIndex > -1 ? segment.Slice(equalIndex + 1).ToString() : null;
 
-            dictionary[WebUtility.UrlDecode(lhs)] = rhs is not null
+            parameters.Add(new(WebUtility.UrlDecode(lhs), rhs is not null
                 ? WebUtility.UrlDecode(rhs)
-                : string.Empty;
+                : string.Empty));
         }
 
-        return dictionary;
+        return parameters;
     }
 
     [SkipLocalsInit]

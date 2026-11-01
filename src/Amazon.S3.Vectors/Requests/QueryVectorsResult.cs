@@ -11,4 +11,7 @@ public sealed class QueryVectorsResult
 
     [JsonPropertyName("vectors")]
     public List<QueryOutputVector> Vectors { get; init; } = null!;
+
+    [JsonPropertyName("nextToken")]
+    public string? NextToken { get; init; }
 }

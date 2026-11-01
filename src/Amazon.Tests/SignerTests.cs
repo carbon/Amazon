@@ -517,4 +517,34 @@ public class SignerTests
 
         Assert.Equal("14a1b0cf5748461c63d3a5fee5e42ed623422b7b4fa62a58a57258f1a195cff8", SignerV4.GetPayloadHash(request));
     }
+
+    [Fact]
+    public void RepeatedQueryParametersAreAllCanonicalized()
+    {
+        Assert.Equal("a=1&b=1&b=2&c=3", SignerV4.CanonicalizeQueryString(new Uri("http://a.com/?c=3&b=2&b=1&a=1")));
+        Assert.Equal("a=1&a=1", SignerV4.CanonicalizeQueryString(new Uri("http://a.com/?a=1&a=1")));
+    }
+
+    // Sorted by byte value, so uppercase sorts before lowercase
+    [Fact]
+    public void QueryParametersSortOrdinally()
+    {
+        Assert.Equal("B=1&a=2", SignerV4.CanonicalizeQueryString(new Uri("http://a.com/?a=2&B=1")));
+    }
+
+    [Fact]
+    public void PresignedUrlsKeepRepeatedQueryParameters()
+    {
+        var scope = new CredentialScope(new DateOnly(2012, 02, 15), AwsRegion.USEast1, AwsService.S3);
+
+        string url = SignerV4.GetPresignedUrl(
+            new AwsCredential("carbon", "secret"),
+            scope,
+            new DateTime(2012, 02, 15, 0, 0, 0, DateTimeKind.Utc),
+            TimeSpan.FromMinutes(15),
+            HttpMethod.Get,
+            new Uri("https://example.amazonaws.com/?k=2&k=1"));
+
+        Assert.Contains("k=1&k=2&", url);
+    }
 }
