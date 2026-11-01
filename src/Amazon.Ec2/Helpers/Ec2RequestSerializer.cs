@@ -59,11 +59,6 @@ internal static class Ec2RequestSerializer
 
     private static void AddObject(List<KeyValuePair<string, string>> parameters, string prefix, object instance)
     {
-        if (parameters.Count >= 100)
-        {
-            throw new ArgumentException("Exceeded parameter limit", nameof(parameters));
-        }
-
         var model = InstanceModel.Get(instance.GetType());
 
         foreach (var member in model.Members)

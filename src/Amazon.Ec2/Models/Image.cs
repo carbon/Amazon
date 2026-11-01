@@ -62,7 +62,7 @@ public sealed class Image
     public string Hypervisor { get; init; }
 
 #nullable enable
-    [XmlElement("ramDiskId")]
+    [XmlElement("ramdiskId")]
     public string? RamDiskId { get; init; }
 #nullable disable
 
