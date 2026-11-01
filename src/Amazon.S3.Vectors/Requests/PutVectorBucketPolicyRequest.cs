@@ -11,5 +11,5 @@ public class PutVectorBucketPolicyRequest
     public string? VectorBucketName { get; set; }
 
     [JsonPropertyName("policy")]
-    public string Policy { get; set; } = default!;
+    public required string Policy { get; set; }
 }

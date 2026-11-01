@@ -20,5 +20,12 @@ public enum KeySpec
     HMAC_256 = 12,
     HMAC_384 = 13,
     HMAC_512 = 14,
-    SM2 = 15
+    SM2 = 15,
+    ECC_NIST_EDWARDS25519 = 16,
+    ML_DSA_44 = 17,
+    ML_DSA_65 = 18,
+    ML_DSA_87 = 19,
+    ML_KEM_512 = 20,
+    ML_KEM_768 = 21,
+    ML_KEM_1024 = 22
 }

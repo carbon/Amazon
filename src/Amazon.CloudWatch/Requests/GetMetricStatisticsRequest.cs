@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 
+using Amazon.CloudWatch.Serialization;
+
 namespace Amazon.CloudWatch;
 
 public sealed class GetMetricStatisticsRequest
@@ -44,8 +46,8 @@ public sealed class GetMetricStatisticsRequest
             // Required parameters
             new("Namespace",  Namespace),
             new("MetricName", MetricName),
-            new("StartTime",  StartTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)),
-            new("EndTime",    EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture)),
+            new("StartTime",  CloudWatchTimestamp.Format(StartTime)),
+            new("EndTime",    CloudWatchTimestamp.Format(EndTime)),
             new("Period",     ((int)Period.TotalSeconds).ToString(CultureInfo.InvariantCulture))
         };
 

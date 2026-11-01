@@ -12,16 +12,14 @@ public class GenerateDataKeyRequestTests
     {
         var request = new GenerateDataKeyRequest {
             KeyId = "1",
-            KeySpec = KeySpec.AES_128,
-            NumberOfBytes = 128 // 128, 256, 512, and 1024 
+            NumberOfBytes = 64 // 1 to 1024. Specify either this or KeySpec, not both
         };
 
         Assert.Equal(
             """
             {
               "KeyId": "1",
-              "KeySpec": "AES_128",
-              "NumberOfBytes": 128
+              "NumberOfBytes": 64
             }
             """, JsonSerializer.Serialize(request, JSO.Indented));
     }

@@ -23,7 +23,7 @@ public class StartBuildResultTests
                   "computeType": "BUILD_GENERAL1_LARGE",
                   "environmentVariables": [],
                   "image": "mcr.microsoft.com/dotnet/sdk:8.0",
-                  "type":" LINUX_CONTAINER"
+                  "type":"LINUX_CONTAINER"
                 },
                 "id": "id",
                 "initiator": "initiator",

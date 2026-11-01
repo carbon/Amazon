@@ -23,7 +23,7 @@ public sealed class VerifyRequest : KmsRequest
 
     public required byte[] Message { get; init; }
 
-    // RAW | DIGEST
+    // RAW | DIGEST | EXTERNAL_MU
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public string? MessageType { get; init; }
 

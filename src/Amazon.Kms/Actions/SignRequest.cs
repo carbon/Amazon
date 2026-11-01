@@ -14,7 +14,7 @@ public sealed class SignRequest : KmsRequest
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? KeyId { get; init; }
 
-    // RAW | DIGEST
+    // RAW | DIGEST | EXTERNAL_MU
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public string? MessageType { get; init; }
 

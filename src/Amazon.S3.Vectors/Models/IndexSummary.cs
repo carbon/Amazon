@@ -14,5 +14,6 @@ public class IndexSummary
     public required string IndexArn { get; init; }
 
     [JsonPropertyName("creationTime")]
+    [JsonConverter(typeof(UnixTimestampConverter))]
     public required DateTimeOffset CreationTime { get; init; }
 }

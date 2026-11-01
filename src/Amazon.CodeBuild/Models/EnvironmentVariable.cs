@@ -11,7 +11,7 @@ public sealed class EnvironmentVariable
     public EnvironmentVariable(string name, string value)
     {
         ArgumentException.ThrowIfNullOrEmpty(name);
-        ArgumentException.ThrowIfNullOrEmpty(value);
+        ArgumentNullException.ThrowIfNull(value);
 
         Name = name;
         Value = value;

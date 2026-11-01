@@ -8,5 +8,7 @@ public enum Protocol
     TLS = 4,
     UDP = 5,
     TCP_UDP = 6,
-    GENEVE = 7
+    GENEVE = 7,
+    QUIC = 8,
+    TCP_QUIC = 9
 }

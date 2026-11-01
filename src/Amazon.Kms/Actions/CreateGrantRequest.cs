@@ -8,8 +8,17 @@ public sealed class CreateGrantRequest : KmsRequest
 
     /// <summary>
     /// The principal that is given permission to perform the operations that the grant permits.
+    /// Specify either this or <see cref="GranteeServicePrincipal"/>, but not both.
     /// </summary>
-    public required string GranteePrincipal { get; init; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? GranteePrincipal { get; init; }
+
+    /// <summary>
+    /// The AWS service principal that is given permission to perform the operations that the grant permits.
+    /// Requires a <see cref="GrantConstraints.SourceArn"/> constraint and a retiring principal.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? GranteeServicePrincipal { get; init; }
 
     /// <summary>
     /// There may a slight delay for a grant created in AWS KMS to take effect throughout a region.
@@ -33,4 +42,10 @@ public sealed class CreateGrantRequest : KmsRequest
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? RetiringPrincipal { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? RetiringServicePrincipal { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool DryRun { get; init; }
 }

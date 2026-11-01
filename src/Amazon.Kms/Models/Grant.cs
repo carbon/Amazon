@@ -14,6 +14,8 @@ public sealed class Grant
 
     public string GranteePrincipal { get; init; }
 
+    public string GranteeServicePrincipal { get; init; }
+
     public string IssuingAccount { get; init; }
 
     public string Name { get; init; }
@@ -24,6 +26,8 @@ public sealed class Grant
     public double CreationDate { get; init; }
 
     public string RetiringPrincipal { get; init; }
+
+    public string RetiringServicePrincipal { get; init; }
 }
 
 /*

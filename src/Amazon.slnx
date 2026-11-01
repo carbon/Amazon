@@ -18,6 +18,7 @@
     <Project Path="Amazon.Rekognition.Tests/Amazon.Rekognition.Tests.csproj" />
     <Project Path="Amazon.Route53.Tests/Amazon.Route53.Tests.csproj" />
     <Project Path="Amazon.S3.Tests/Amazon.S3.Tests.csproj" />
+    <Project Path="Amazon.S3.Vectors.Tests/Amazon.S3.Vectors.Tests.csproj" />
     <Project Path="Amazon.Ses.Tests/Amazon.Ses.Tests.csproj" />
     <Project Path="Amazon.Sns.Tests/Amazon.Sns.Tests.csproj" />
     <Project Path="Amazon.Sqs.Tests/Amazon.Sqs.Tests.csproj" />

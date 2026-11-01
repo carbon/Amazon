@@ -20,7 +20,7 @@ public sealed class DescribeImagesRequest : DescribeRequest, IEc2Request
         var parameters = GetParameters("DescribeImages");
 
         AddIds(parameters, "ImageId", ImageIds);
-        AddIds(parameters, "OwnerId", OwnerIds);
+        AddIds(parameters, "Owner", OwnerIds);
 
         return parameters;
     }

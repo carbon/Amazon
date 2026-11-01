@@ -2,8 +2,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
-using Amazon.Sqs.Serialization;
-
 namespace Amazon.Sqs.Tests;
 
 public static class JSO
@@ -17,7 +15,7 @@ public static class JSO
     {
         var utf8 = JsonSerializer.SerializeToUtf8Bytes(instance, jsonTypeInfo);
 
-        var el= JsonSerializer.Deserialize<JsonElement>(utf8);
+        var el= JsonElement.Parse(utf8);
 
         return JsonSerializer.Serialize(el, Indented);
     }

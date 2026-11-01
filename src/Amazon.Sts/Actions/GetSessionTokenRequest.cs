@@ -7,7 +7,7 @@ public sealed class GetSessionTokenRequest : IStsRequest
     string IStsRequest.Action => "GetSessionToken";
 
     [Range(900, 129600)]
-    public int? DurationInSeconds { get; init; }
+    public int? DurationSeconds { get; init; }
 
     [StringLength(256)]
     public string? SerialNumber { get; init; }

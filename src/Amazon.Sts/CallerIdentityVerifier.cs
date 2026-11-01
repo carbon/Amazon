@@ -1,12 +1,13 @@
 ﻿using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using Amazon.Sts.Exceptions;
 using Amazon.Sts.Serialization;
 
 namespace Amazon.Sts;
 
-public sealed class CallerIdentityVerifier 
+public sealed partial class CallerIdentityVerifier 
 {
     private readonly HttpClient _httpClient = new () {
         DefaultRequestHeaders = {
@@ -24,7 +25,7 @@ public sealed class CallerIdentityVerifier
             throw new ArgumentException($"Endpoint scheme be https. Was {url.Scheme}");
         }
 
-        if (!(url.Host.StartsWith("sts.", StringComparison.Ordinal) && url.Host.EndsWith(".amazonaws.com", StringComparison.Ordinal)))
+        if (!StsHostRegex().IsMatch(url.Host))
         {
             throw new Exception($"Must be an STS endpoint: was:{token.Url}");
         }
@@ -53,6 +54,11 @@ public sealed class CallerIdentityVerifier
 
         return StsXmlSerializer<GetCallerIdentityResponse>.Deserialize(responseBytes).GetCallerIdentityResult;
     }
+
+    // sts.amazonaws.com or sts.{region}.amazonaws.com
+    // The region is matched by shape, since other AWS services host customer names under amazonaws.com (e.g. sts.s3.amazonaws.com is an S3 bucket)
+    [GeneratedRegex(@"\Asts(\.[a-z]{2}(-[a-z]+)+-[0-9]+)?\.amazonaws\.com\z", RegexOptions.CultureInvariant)]
+    private static partial Regex StsHostRegex();
 }
 
 // NOTES -------------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 public class StsHelperTests
 {
     [Fact]
-    public void A()
+    public void ToParams_StartsWithAction()
     {
         var request = new GetCallerIdentityRequest();
 
