@@ -5,8 +5,8 @@ namespace Amazon.S3.Vectors;
 public class UntagResourceRequest
 {
     [JsonPropertyName("resourceArn")]
-    public string ResourceArn { get; init; } = default!;
+    public required string ResourceArn { get; init; }
 
     [JsonPropertyName("tagKeys")]
-    public List<string> TagKeys { get; init; } = new();
+    public required List<string> TagKeys { get; init; }
 }

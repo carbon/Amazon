@@ -5,8 +5,8 @@ namespace Amazon.S3.Vectors;
 public class TagResourceRequest
 {
     [JsonPropertyName("resourceArn")]
-    public string ResourceArn { get; set; } = default!;
+    public required string ResourceArn { get; set; }
 
     [JsonPropertyName("tags")]
-    public Dictionary<string, string> Tags { get; set; } = new();
+    public required Dictionary<string, string> Tags { get; set; }
 }

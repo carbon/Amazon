@@ -15,55 +15,64 @@ public class Index
     public required string IndexArn { get; init ; }
 
     [JsonPropertyName("creationTime")]
-    public DateTimeOffset CreationTime { get; init; }
+    [JsonConverter(typeof(UnixTimestampConverter))]
+    public required DateTimeOffset CreationTime { get; init; }
 
     [JsonPropertyName("dataType")]
-    public string DataType { get; init; } = default!;
+    public required string DataType { get; init; }
 
     [JsonPropertyName("dimension")]
-    public int Dimension { get; init; }
+    public required int Dimension { get; init; }
 
     [JsonPropertyName("distanceMetric")]
-    public DistanceMetric DistanceMetric { get; init; }
+    public required DistanceMetric DistanceMetric { get; init; }
 
     [JsonPropertyName("metadataConfiguration")]
     public MetadataConfiguration? MetadataConfiguration { get; init; }
 
     [JsonPropertyName("encryptionConfiguration")]
     public EncryptionConfiguration? EncryptionConfiguration { get; init; }
+
+    [JsonPropertyName("indexMode")]
+    public IndexMode? IndexMode { get; init; }
 }
 
 public class VectorBucketSummary
 {
     [JsonPropertyName("vectorBucketName")]
-    public string VectorBucketName { get; init; } = default!;
+    public required string VectorBucketName { get; init; }
 
     [JsonPropertyName("vectorBucketArn")]
-    public string VectorBucketArn { get; init; } = default!;
+    public required string VectorBucketArn { get; init; }
 
     [JsonPropertyName("creationTime")]
-    public DateTimeOffset CreationTime { get; init; }
+    [JsonConverter(typeof(UnixTimestampConverter))]
+    public required DateTimeOffset CreationTime { get; init; }
 }
 
 public sealed class VectorBucket
 {
     [JsonPropertyName("vectorBucketName")]
-    public string VectorBucketName { get; init; } = default!;
+    public required string VectorBucketName { get; init; }
 
     [JsonPropertyName("vectorBucketArn")]
-    public string VectorBucketArn { get; init; } = default!;
+    public required string VectorBucketArn { get; init; }
 
     [JsonPropertyName("creationTime")]
-    public required DateTime CreationTime { get; init; }
+    [JsonConverter(typeof(UnixTimestampConverter))]
+    public required DateTimeOffset CreationTime { get; init; }
 
     [JsonPropertyName("encryptionConfiguration")]
     public EncryptionConfiguration? EncryptionConfiguration { get; init; }
+
+    [JsonPropertyName("defaultIndexMode")]
+    public IndexMode? DefaultIndexMode { get; init; }
 }
 
 public class GetOutputVector
 {
     [JsonPropertyName("key")]
-    public string Key { get; init; } = default!;
+    public required string Key { get; init; }
 
     [JsonPropertyName("data")]
     public VectorData? Data { get; init; }
@@ -76,7 +85,7 @@ public class GetOutputVector
 public class ListOutputVector
 {
     [JsonPropertyName("key")]
-    public string Key { get; init; } = default!;
+    public required string Key { get; init; }
 
     [JsonPropertyName("data")]
     public VectorData? Data { get; init; }
@@ -100,8 +109,8 @@ public class QueryOutputVector
 public class ValidationExceptionField
 {
     [JsonPropertyName("message")]
-    public string Message { get; init; } = default!;
+    public required string Message { get; init; }
 
     [JsonPropertyName("path")]
-    public string Path { get; init; } = default!;
+    public required string Path { get; init; }
 }
