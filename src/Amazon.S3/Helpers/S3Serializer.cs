@@ -16,6 +16,11 @@ internal static class S3Serializer<T>
         return (T)s_serializer.Deserialize(stream)!;
     }
 
+    public static T Deserialize(Stream stream)
+    {
+        return (T)s_serializer.Deserialize(stream)!;
+    }
+
     public static bool TryDeserialize(byte[] xmlText, [NotNullWhen(true)] out T? result)
     {
         using var reader = new MemoryStream(xmlText);

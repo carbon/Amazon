@@ -93,6 +93,69 @@ public class S3BucketTests
     }
 
     [Fact]
+    public async Task ScanAsync_RequestsOnlyWhatIsLeft()
+    {
+        var handler = FakeS3Handler.Sequence(
+            () => FakeS3.Xml(ListResult("next", "a", "b", "c")),
+            () => FakeS3.Xml(ListResult(null, "d", "e")));
+
+        var keys = await ScanKeysAsync(FakeS3.CreateBucket(handler), null, take: 5);
+
+        Assert.Equal(["a", "b", "c", "d", "e"], keys);
+        Assert.Contains("max-keys=5", handler.Requests[0].Uri);
+        Assert.Contains("max-keys=2", handler.Requests[1].Uri);
+    }
+
+    [Fact]
+    public async Task PutAsync_CanceledBeforeHashing()
+    {
+        var handler = FakeS3Handler.Sequence(() => FakeS3.WithETag("\"a\""));
+
+        using var blob = new Blob("key", new MemoryStream([1]));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => FakeS3.CreateBucket(handler).PutAsync(blob, new CancellationToken(canceled: true)));
+
+        Assert.Empty(handler.Requests);
+    }
+
+    [Fact]
+    public async Task Upload_RetriesWhenResponseBodyFails()
+    {
+        var upload = new InitiateMultipartUploadResult { Bucket = "bucket", Key = "key", UploadId = "u1" };
+
+        var handler = FakeS3Handler.Sequence(
+            () => new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StreamContent(new FakeBodyStream(static _ => throw new IOException("The response ended prematurely")))
+            },
+            () => FakeS3.Xml(CompleteResult()));
+
+        await FakeS3.CreateBucket(handler).FinalizeUploadAsync(upload, []);
+
+        Assert.Equal(2, handler.Requests.Count);
+    }
+
+    [Fact]
+    public async Task ScanAsync_StopsWhenCanceledBetweenPages()
+    {
+        var handler = new FakeS3Handler((_, cancellationToken) => {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return Task.FromResult(FakeS3.Xml(ListResult("next", "a")));
+        });
+
+        using var cts = new CancellationTokenSource();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => {
+            await foreach (var blob in FakeS3.CreateBucket(handler).ScanAsync(null).WithCancellation(cts.Token))
+            {
+                cts.Cancel();
+            }
+        });
+
+        Assert.Equal(2, handler.Requests.Count);
+    }
+
+    [Fact]
     public async Task ScanAsync_LimitsPageSize()
     {
         var handler = FakeS3Handler.Sequence(() => FakeS3.Xml(ListResult(null, "a")));

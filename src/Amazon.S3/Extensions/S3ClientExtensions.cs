@@ -46,8 +46,8 @@ public static class S3ClientExtensions
         };
 
         // Stops on the first failure, and waits for in-flight chunks before the file handle is closed
-        await Parallel.ForEachAsync(ranges, parallelOptions, async (range, token) => {
-            await s3Client.DownloadByteRange(bucketName, objectKey, range, fileHandle, token).ConfigureAwait(false);
+        await Parallel.ForEachAsync(ranges, parallelOptions, (range, token) => {
+            return new ValueTask(s3Client.DownloadByteRange(bucketName, objectKey, metadata.ETag.Value, range, fileHandle, token));
         }).ConfigureAwait(false);
 
         return metadata;
@@ -57,6 +57,7 @@ public static class S3ClientExtensions
         this S3Client s3, 
         string bucketName, 
         string objectKey, 
+        string? eTag,
         ByteRange range, 
         SafeFileHandle fileHandle,
         CancellationToken cancellationToken)
@@ -66,6 +67,12 @@ public static class S3ClientExtensions
         };
 
         request.SetRange(range.Start, range.End);
+
+        // Fails the chunk if the object is replaced during the download, rather than mixing versions in the file
+        if (eTag is not null)
+        {
+            request.IfMatch = eTag;
+        }
 
         // TODO: Retry on failure.
 

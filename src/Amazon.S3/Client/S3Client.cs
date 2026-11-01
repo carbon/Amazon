@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.Buffers;
+using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -36,22 +38,18 @@ public class S3Client : AwsClient
 
     // TODO: CreateBucketAsync
 
-    public async Task<ListBucketResult> ListBucketAsync(string bucketName, ListBucketOptions options)
+    public async Task<ListBucketResult> ListBucketAsync(string bucketName, ListBucketOptions options, CancellationToken cancellationToken = default)
     {
         var request = new ListBucketRequest(Host, bucketName, options);
 
-        byte[] responseBytes = await SendAsync(request).ConfigureAwait(false);
-
-        return S3Serializer<ListBucketResult>.Deserialize(responseBytes);
+        return await SendXmlAsync<ListBucketResult>(request, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<ListVersionsResult> ListObjectVersionsAsync(string bucketName, ListVersionsOptions options)
+    public async Task<ListVersionsResult> ListObjectVersionsAsync(string bucketName, ListVersionsOptions options, CancellationToken cancellationToken = default)
     {
         var request = new ListVersionsRequest(Host, bucketName, options);
 
-        byte[] responseBytes = await SendAsync(request).ConfigureAwait(false);
-
-        return S3Serializer<ListVersionsResult>.Deserialize(responseBytes);
+        return await SendXmlAsync<ListVersionsResult>(request, cancellationToken).ConfigureAwait(false);
     }
 
     #region Multipart Uploads
@@ -79,11 +77,9 @@ public class S3Client : AwsClient
         );
     }
 
-    public async Task<CompleteMultipartUploadResult> CompleteMultipartUploadAsync(CompleteMultipartUploadRequest request)
+    public async Task<CompleteMultipartUploadResult> CompleteMultipartUploadAsync(CompleteMultipartUploadRequest request, CancellationToken cancellationToken = default)
     {
-        byte[] responseBytes = await SendAsync(request).ConfigureAwait(false);
-
-        return S3Serializer<CompleteMultipartUploadResult>.Deserialize(responseBytes);
+        return await SendXmlAsync<CompleteMultipartUploadResult>(request, cancellationToken).ConfigureAwait(false);
     }
 
     #endregion
@@ -100,11 +96,9 @@ public class S3Client : AwsClient
         };
     }
 
-    public async Task<CopyObjectResult> CopyObjectAsync(CopyObjectRequest request)
+    public async Task<CopyObjectResult> CopyObjectAsync(CopyObjectRequest request, CancellationToken cancellationToken = default)
     {
-        byte[] responseBytes = await SendAsync(request).ConfigureAwait(false);
-
-        return S3Serializer<CopyObjectResult>.Deserialize(responseBytes);
+        return await SendXmlAsync<CopyObjectResult>(request, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<DeleteObjectResult> DeleteObjectAsync(DeleteObjectRequest request, CancellationToken cancellationToken = default)
@@ -123,11 +117,9 @@ public class S3Client : AwsClient
         );
     }
 
-    public async Task<DeleteResult> DeleteObjectsAsync(DeleteObjectsRequest request)
+    public async Task<DeleteResult> DeleteObjectsAsync(DeleteObjectsRequest request, CancellationToken cancellationToken = default)
     {
-        var responseBytes = await SendAsync(request).ConfigureAwait(false);
-
-        return S3Serializer<DeleteResult>.Deserialize(responseBytes);
+        return await SendXmlAsync<DeleteResult>(request, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<RestoreObjectResult> RestoreObjectAsync(RestoreObjectRequest request, CancellationToken cancellationToken = default)
@@ -174,6 +166,65 @@ public class S3Client : AwsClient
         }
 
         return response;
+    }
+
+    private async Task<T> SendXmlAsync<T>(HttpRequestMessage request, CancellationToken cancellationToken)
+        where T : class
+    {
+        using HttpResponseMessage response = await SendS3RequestAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(65_536); // 64KiB
+
+        try
+        {
+            int length = 0;
+
+            // HttpClient.Timeout stops applying once the headers are read
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+            timeout.CancelAfter(_httpClient.Timeout);
+
+            try
+            {
+                using Stream stream = await response.Content.ReadAsStreamAsync(timeout.Token).ConfigureAwait(false);
+
+                int read;
+
+                while ((read = await stream.ReadAsync(buffer.AsMemory(length), timeout.Token).ConfigureAwait(false)) > 0)
+                {
+                    length += read;
+
+                    if (length == buffer.Length)
+                    {
+                        byte[] larger = ArrayPool<byte>.Shared.Rent(buffer.Length * 2);
+
+                        Buffer.BlockCopy(buffer, 0, larger, 0, length);
+
+                        ArrayPool<byte>.Shared.Return(buffer);
+
+                        buffer = larger;
+                    }
+                }
+            }
+            catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested)
+            {
+                throw new TaskCanceledException($"The response was not read within the configured HttpClient.Timeout of {_httpClient.Timeout.TotalSeconds} seconds.", new TimeoutException(ex.Message, ex));
+            }
+            catch (IOException ex)
+            {
+                // Matches HttpClient when it buffers the response, which the retry policies rely on
+                throw new HttpRequestException("Error while reading the response content.", ex);
+            }
+
+            // XmlSerializer reads synchronously, so it reads the buffered response rather than the network
+            using var xmlStream = new MemoryStream(buffer, 0, length, writable: false);
+
+            return S3Serializer<T>.Deserialize(xmlStream);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     public string GetPresignedUrl(GetPresignedUrlRequest request)

@@ -118,7 +118,7 @@ public class PutObjectRequest : S3Request
         // TODO: Support chunked streaming...
 
         Headers.TryAddWithoutValidation(S3HeaderNames.ContentSha256, stream.CanSeek
-            ? Convert.ToHexStringLower(StreamHelper.ComputeSHA256(stream))
+            ? StreamHelper.ComputeSHA256Hex(stream)
             : "UNSIGNED-PAYLOAD");
     }
 }
