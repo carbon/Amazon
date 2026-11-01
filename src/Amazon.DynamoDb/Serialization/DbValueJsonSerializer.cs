@@ -167,9 +167,19 @@ internal static class DbValueJsonSerializer
 
             case DbValueType.BS:
                 writer.WriteStartArray(BS);
-                foreach (var bytes in (IEnumerable<byte[]>)dbValue.Value)
+                if (dbValue.Value is string[] base64Values) // Read stores binary sets as base64 strings
                 {
-                    writer.WriteBase64StringValue(bytes);
+                    foreach (string base64Value in base64Values)
+                    {
+                        writer.WriteStringValue(base64Value);
+                    }
+                }
+                else
+                {
+                    foreach (var bytes in (IEnumerable<byte[]>)dbValue.Value)
+                    {
+                        writer.WriteBase64StringValue(bytes);
+                    }
                 }
                 writer.WriteEndArray();
                 break;
