@@ -28,5 +28,7 @@ public class UnsubscribeConfirmationTests
         Assert.Equal("47138184-6831-46b8-8f7c-afc488602d7d", confirmation.MessageId);
         Assert.Equal("arn:aws:sns:us-west-2:123456789012:MyTopic", confirmation.TopicArn);
         Assert.Null(confirmation.Subject);
+        Assert.Equal("2336412f37...", confirmation.Token);
+        Assert.Equal("https://sns.us-west-2.amazonaws.com/?Action=ConfirmSubscription&TopicArn=arn:aws:sns:us-west-2:123456789012:MyTopic&Token=2336412f37fb6...", confirmation.SubscribeURL);
     }
 }

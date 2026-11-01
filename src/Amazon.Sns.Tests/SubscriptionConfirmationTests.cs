@@ -26,6 +26,7 @@ public class SubscriptionConfirmationTests
         var confirmation = (SubscriptionConfirmation)notification!;
 
         Assert.Equal("165545c9-2a5c-472c-8df2-7ff2be2b3b1b", confirmation.MessageId);
+        Assert.Equal("2336412f37f...", confirmation.Token);
         Assert.Equal("arn:aws:sns:us-west-2:123456789012:MyTopic", confirmation.TopicArn);
         Assert.Equal("https://sns.us-west-2.amazonaws.com/?Action=ConfirmSubscription&TopicArn=arn:aws:sns:us-west-2:123456789012:MyTopic&Token=2336412f37...", confirmation.SubscribeURL);
         Assert.Equal("https://sns.us-west-2.amazonaws.com/SimpleNotificationService-f3ecfb7224c7233fe7bb5f59f96de52f.pem", confirmation.SigningCertURL);
@@ -53,6 +54,7 @@ public class SubscriptionConfirmationTests
 
         Assert.NotNull(confirmation);
         Assert.Equal("165545c9-2a5c-472c-8df2-7ff2be2b3b1b", confirmation.MessageId);
+        Assert.Equal("2336412f37f...", confirmation.Token);
         Assert.Equal("arn:aws:sns:us-west-2:123456789012:MyTopic", confirmation.TopicArn);
         Assert.Equal("https://sns.us-west-2.amazonaws.com/?Action=ConfirmSubscription&TopicArn=arn:aws:sns:us-west-2:123456789012:MyTopic&Token=2336412f37...", confirmation.SubscribeURL);
         Assert.Equal("https://sns.us-west-2.amazonaws.com/SimpleNotificationService-f3ecfb7224c7233fe7bb5f59f96de52f.pem", confirmation.SigningCertURL);
