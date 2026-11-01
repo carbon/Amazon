@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
+using System.Globalization;
 using Amazon.Helpers;
 
 namespace Amazon.Route53;
@@ -35,7 +36,7 @@ public sealed class ListResourceRecordSetsRequest
 
         if (MaxItems.HasValue)
         {
-            dic.Add(new("maxitems", MaxItems.Value.ToString()));
+            dic.Add(new("maxitems", MaxItems.Value.ToString(CultureInfo.InvariantCulture)));
         }
 
         if (Name != null)

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Amazon.Exceptions;
 
 namespace Amazon.Scheduling.Tests;
@@ -44,7 +45,7 @@ public class SchedulerTests
         int calls = 0;
 
         var ex = await Assert.ThrowsAsync<ServiceUnavailableException>(() => s_policy.ExecuteAsync<int>(
-            () => throw new ServiceUnavailableException((++calls).ToString())));
+            () => throw new ServiceUnavailableException((++calls).ToString(CultureInfo.InvariantCulture))));
 
         Assert.Equal("3", ex.Message);
         Assert.Equal(3, calls);

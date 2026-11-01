@@ -15,6 +15,8 @@ public class SendMessageBatchRequestEntry
     {
         ArgumentException.ThrowIfNullOrEmpty(id);
         ArgumentException.ThrowIfNullOrEmpty(messageBody);
+        MessageIdentifier.ThrowIfTooLong(messageDeduplicationId);
+        MessageIdentifier.ThrowIfTooLong(messageGroupId);
 
         Id = id;
 

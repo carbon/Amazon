@@ -213,14 +213,29 @@ public class SqsQueueTests
     }
 
     [Fact]
-    public async Task Delete_MoreThanTenIsRejected()
+    public async Task Delete_SplitsIntoBatchesOfTen()
     {
-        // PutAsync chunks, DeleteAsync does not
-        var handler = new FakeSqsHandler(FakeSqs.Empty);
+        var handler = new FakeSqsHandler(FakeSqs.Json("""{"Failed":[],"Successful":[]}"""));
 
-        await Assert.ThrowsAsync<ArgumentException>(() => FakeSqs.CreateQueue(handler).DeleteAsync(Create(11)));
+        await FakeSqs.CreateQueue(handler).DeleteAsync(Create(23));
 
-        Assert.Empty(handler.Requests);
+        var entries = handler.Requests.Select(r => r.Json.GetProperty("Entries").EnumerateArray().ToArray()).ToArray();
+
+        Assert.Equal([10, 10, 3], entries.Select(e => e.Length));
+        Assert.Equal("1", entries[1][0].GetProperty("Id").GetString());
+        Assert.Equal(
+            Enumerable.Range(1, 23).Select(i => $"h{i}"),
+            entries.SelectMany(e => e).Select(e => e.GetProperty("ReceiptHandle").GetString()));
+    }
+
+    [Fact]
+    public async Task Delete_StopsAtTheFirstBatchWithFailures()
+    {
+        var handler = new FakeSqsHandler(FakeSqs.BatchWithFailure);
+
+        await Assert.ThrowsAsync<SqsBatchException>(() => FakeSqs.CreateQueue(handler).DeleteAsync(Create(11)));
+
+        Assert.Single(handler.Requests);
     }
 
     [Fact]

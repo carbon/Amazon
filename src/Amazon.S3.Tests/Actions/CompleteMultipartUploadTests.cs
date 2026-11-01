@@ -3,13 +3,15 @@
 public class CompleteMultipartUploadTests
 {
     [Fact]
-    public void CanSerialize()
+    public async Task CanSerialize()
     {
-        var g = new CompleteMultipartUpload([
+        var request = new CompleteMultipartUploadRequest("s3.amazon.com", "bucket", "key", "uploadId", [
             new UploadPartResult("uploadId", 1, "eTag1"),
             new UploadPartResult("uploadId", 2, "eTag2"),
             new UploadPartResult("uploadId", 3, "eTag3")
         ]);
+
+        byte[] data = await request.Content.ReadAsByteArrayAsync();
 
         Assert.Equal(
             """
@@ -27,6 +29,33 @@ public class CompleteMultipartUploadTests
                 <ETag>eTag3</ETag>
               </Part>
             </CompleteMultipartUpload>
-            """, g.ToXmlString(), ignoreLineEndingDifferences: true);
+            """u8, data);
+    }
+
+    [Fact]
+    public async Task RequestContentIsUtf8()
+    {
+        var request = new CompleteMultipartUploadRequest("s3.amazon.com", "bucket", "key", "uploadId", [
+            new UploadPartResult("uploadId", 9, "é"),
+            new UploadPartResult("uploadId", 10_000, "eTag2")
+        ]);
+
+        byte[] data = await request.Content.ReadAsByteArrayAsync();
+
+        Assert.Equal(
+            """
+            <CompleteMultipartUpload>
+              <Part>
+                <PartNumber>9</PartNumber>
+                <ETag>é</ETag>
+              </Part>
+              <Part>
+                <PartNumber>10000</PartNumber>
+                <ETag>eTag2</ETag>
+              </Part>
+            </CompleteMultipartUpload>
+            """u8, data);
+
+        Assert.Equal("text/xml; charset=utf-8", request.Content.Headers.ContentType.ToString());
     }
 }

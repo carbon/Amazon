@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -97,6 +98,114 @@ public sealed class SqsClient(AwsRegion region, IAwsCredential credential)
         var requestMessage = ConstructPostRequest("DeleteMessageBatch", request, SqsSerializerContext.Default.DeleteMessageBatchRequest);
 
         return SendAsync(requestMessage, SqsSerializerContext.Default.DeleteMessageBatchResult);
+    }
+
+    public Task<GetQueueUrlResult> GetQueueUrlAsync(GetQueueUrlRequest request)
+    {
+        var requestMessage = ConstructPostRequest("GetQueueUrl", request, SqsSerializerContext.Default.GetQueueUrlRequest);
+
+        return SendAsync(requestMessage, SqsSerializerContext.Default.GetQueueUrlResult);
+    }
+
+    public Task<ListQueuesResult> ListQueuesAsync(ListQueuesRequest request)
+    {
+        var requestMessage = ConstructPostRequest("ListQueues", request, SqsSerializerContext.Default.ListQueuesRequest);
+
+        return SendAsync(requestMessage, SqsSerializerContext.Default.ListQueuesResult);
+    }
+
+    public async Task SetQueueAttributesAsync(SetQueueAttributesRequest request)
+    {
+        // empty 200 response on success
+
+        var requestMessage = ConstructPostRequest("SetQueueAttributes", request, SqsSerializerContext.Default.SetQueueAttributesRequest);
+
+        await SendAsync(requestMessage).ConfigureAwait(false);
+    }
+
+    public Task<ListDeadLetterSourceQueuesResult> ListDeadLetterSourceQueuesAsync(ListDeadLetterSourceQueuesRequest request)
+    {
+        var requestMessage = ConstructPostRequest("ListDeadLetterSourceQueues", request, SqsSerializerContext.Default.ListDeadLetterSourceQueuesRequest);
+
+        return SendAsync(requestMessage, SqsSerializerContext.Default.ListDeadLetterSourceQueuesResult);
+    }
+
+    public Task<StartMessageMoveTaskResult> StartMessageMoveTaskAsync(StartMessageMoveTaskRequest request)
+    {
+        var requestMessage = ConstructPostRequest("StartMessageMoveTask", request, SqsSerializerContext.Default.StartMessageMoveTaskRequest);
+
+        return SendAsync(requestMessage, SqsSerializerContext.Default.StartMessageMoveTaskResult);
+    }
+
+    public Task<CancelMessageMoveTaskResult> CancelMessageMoveTaskAsync(CancelMessageMoveTaskRequest request)
+    {
+        var requestMessage = ConstructPostRequest("CancelMessageMoveTask", request, SqsSerializerContext.Default.CancelMessageMoveTaskRequest);
+
+        return SendAsync(requestMessage, SqsSerializerContext.Default.CancelMessageMoveTaskResult);
+    }
+
+    public Task<ListMessageMoveTasksResult> ListMessageMoveTasksAsync(ListMessageMoveTasksRequest request)
+    {
+        var requestMessage = ConstructPostRequest("ListMessageMoveTasks", request, SqsSerializerContext.Default.ListMessageMoveTasksRequest);
+
+        return SendAsync(requestMessage, SqsSerializerContext.Default.ListMessageMoveTasksResult);
+    }
+
+    public async Task AddPermissionAsync(AddPermissionRequest request)
+    {
+        // empty 200 response on success
+
+        var requestMessage = ConstructPostRequest("AddPermission", request, SqsSerializerContext.Default.AddPermissionRequest);
+
+        await SendAsync(requestMessage).ConfigureAwait(false);
+    }
+
+    public async Task RemovePermissionAsync(RemovePermissionRequest request)
+    {
+        // empty 200 response on success
+
+        var requestMessage = ConstructPostRequest("RemovePermission", request, SqsSerializerContext.Default.RemovePermissionRequest);
+
+        await SendAsync(requestMessage).ConfigureAwait(false);
+    }
+
+    public async Task TagQueueAsync(TagQueueRequest request)
+    {
+        // empty 200 response on success
+
+        var requestMessage = ConstructPostRequest("TagQueue", request, SqsSerializerContext.Default.TagQueueRequest);
+
+        await SendAsync(requestMessage).ConfigureAwait(false);
+    }
+
+    public async Task UntagQueueAsync(UntagQueueRequest request)
+    {
+        // empty 200 response on success
+
+        var requestMessage = ConstructPostRequest("UntagQueue", request, SqsSerializerContext.Default.UntagQueueRequest);
+
+        await SendAsync(requestMessage).ConfigureAwait(false);
+    }
+
+    public Task<ListQueueTagsResult> ListQueueTagsAsync(ListQueueTagsRequest request)
+    {
+        var requestMessage = ConstructPostRequest("ListQueueTags", request, SqsSerializerContext.Default.ListQueueTagsRequest);
+
+        return SendAsync(requestMessage, SqsSerializerContext.Default.ListQueueTagsResult);
+    }
+
+    // Stops at the first batch with failures, so that a FIFO queue doesn't receive later messages out of order
+    internal async Task SendInBatchesAsync(string queueUrl, IEnumerable<SendMessageBatchRequestEntry> entries)
+    {
+        foreach (SendMessageBatchRequestEntry[] batch in entries.Chunk(10))
+        {
+            var result = await SendMessageBatchAsync(new SendMessageBatchRequest(queueUrl, batch)).ConfigureAwait(false);
+
+            if (result.Failed is { Length: > 0 } failed)
+            {
+                throw new SqsBatchException(failed);
+            }
+        }
     }
 
     // https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-making-api-requests-json.html

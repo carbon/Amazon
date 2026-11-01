@@ -1,4 +1,5 @@
-﻿using Carbon.Data;
+﻿using System.Globalization;
+using Carbon.Data;
 
 namespace Amazon.DynamoDb.Converters;
 
@@ -10,7 +11,7 @@ internal sealed class EnumConverter : IDbValueConverter
 
     public DbValue FromObject(object value, IMember? member = null)
     {
-        return new DbValue(Convert.ToInt32(value));
+        return new DbValue(Convert.ToInt32(value, CultureInfo.InvariantCulture));
     }
 
     public object ToObject(DbValue item, IMember? member = null)

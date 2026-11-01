@@ -107,6 +107,54 @@ public sealed class S3DownloadTests : IDisposable
     }
 
     [Fact]
+    public async Task Client_SendsETagWithEachChunk()
+    {
+        var data = CreateData(10);
+
+        var handler = new FakeS3Handler((request, _) => {
+            if (request.Method == HttpMethod.Head)
+            {
+                return Task.FromResult(FakeS3.Head(data.Length, "\"abc-2\""));
+            }
+
+            var item = request.Headers.Range!.Ranges.First();
+
+            return Task.FromResult(FakeS3.Blob(data[(int)item.From!.Value..((int)item.To!.Value + 1)], HttpStatusCode.PartialContent));
+        });
+
+        await FakeS3.CreateClient(handler).DownloadAsync("bucket", "key", Destination, new S3DownloadOptions {
+            ChunkSize = 4
+        });
+
+        var chunks = handler.Requests.Where(static request => request.Method == HttpMethod.Get).ToArray();
+
+        Assert.Equal(3, chunks.Length);
+        Assert.All(chunks, static chunk => Assert.Equal("\"abc-2\"", chunk.Headers["If-Match"]));
+    }
+
+    [Fact]
+    public async Task Client_OmitsIfMatchWithoutETag()
+    {
+        var handler = ObjectServer(CreateData(10));
+
+        await FakeS3.CreateClient(handler).DownloadAsync("bucket", "key", Destination);
+
+        Assert.DoesNotContain(handler.Requests, static request => request.Headers.ContainsKey("If-Match"));
+    }
+
+    [Fact]
+    public async Task Client_ThrowsWhenObjectChangesDuringDownload()
+    {
+        var handler = new FakeS3Handler((request, _) => Task.FromResult(request.Method == HttpMethod.Head
+            ? FakeS3.Head(10, "\"abc\"")
+            : FakeS3.Error("PreconditionFailed", HttpStatusCode.PreconditionFailed)));
+
+        var ex = await Assert.ThrowsAsync<S3Exception>(() => FakeS3.CreateClient(handler).DownloadAsync("bucket", "key", Destination).WaitAsync(s_hangTimeout));
+
+        Assert.Equal(HttpStatusCode.PreconditionFailed, ex.HttpStatusCode);
+    }
+
+    [Fact]
     public async Task Client_RejectsTooManyChunks()
     {
         var handler = new FakeS3Handler((_, _) => Task.FromResult(FakeS3.Head(10_001)));

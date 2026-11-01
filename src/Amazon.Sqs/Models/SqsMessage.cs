@@ -47,6 +47,18 @@ public sealed class SqsMessage : IQueueMessage<string>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Dictionary<string, MessageAttributeValue> MessageAttributes { get; init; }
   
+    /// <summary>
+    /// Requires MessageSystemAttributeNames on the receive request
+    /// </summary>
+    [JsonIgnore]
+    public string? MessageGroupId => Attributes?.GetValueOrDefault(MessageAttributeNames.MessageGroupId);
+
+    /// <summary>
+    /// Requires MessageSystemAttributeNames on the receive request
+    /// </summary>
+    [JsonIgnore]
+    public string? MessageDeduplicationId => Attributes?.GetValueOrDefault(MessageAttributeNames.MessageDeduplicationId);
+
     #region IQueueMessage<string>
 
     string IQueueMessage<string>.Id => MessageId;

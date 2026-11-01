@@ -42,6 +42,8 @@ namespace System.Text
 
         public int Capacity => _chars.Length;
 
+        public ReadOnlySpan<char> AsSpan() => _chars.Slice(0, _pos);
+
         public override string ToString()
         {
             string s = _chars.Slice(0, _pos).ToString();

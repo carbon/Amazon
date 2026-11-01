@@ -1,6 +1,5 @@
-using System.Globalization;
 using System.Net.Http;
-using System.Text;
+using System.Net.Http.Headers;
 
 using Amazon.S3.Helpers;
 
@@ -18,11 +17,9 @@ public sealed class CompleteMultipartUploadRequest : S3Request
     {
         CompletionOption = HttpCompletionOption.ResponseContentRead;
 
-        Content = new StringContent(
-            new CompleteMultipartUpload(parts).ToXmlString(),
-            Encoding.UTF8,
-            "text/xml"
-        );
+        Content = new ByteArrayContent(new CompleteMultipartUpload(parts).ToXmlUtf8Bytes()) {
+            Headers = { ContentType = new MediaTypeHeaderValue("text/xml", "utf-8") }
+        };
     }
 }
 
@@ -30,7 +27,7 @@ public sealed class CompleteMultipartUpload(IUploadBlock[] parts)
 {
     public IUploadBlock[] Parts { get; } = parts ?? throw new ArgumentNullException(nameof(parts));
 
-    public string ToXmlString()
+    internal byte[] ToXmlUtf8Bytes()
     {
         var sb = new XmlStringBuilder(true);
 
@@ -40,7 +37,7 @@ public sealed class CompleteMultipartUpload(IUploadBlock[] parts)
             {
                 sb.WriteTagStart("Part");
                 {
-                    sb.WriteTag("PartNumber", part.Number.ToString(CultureInfo.InvariantCulture));
+                    sb.WriteTag("PartNumber", part.Number);
                     sb.WriteTag("ETag", part.BlockId);
                 }
                 sb.WriteTagEnd("Part");
@@ -48,7 +45,7 @@ public sealed class CompleteMultipartUpload(IUploadBlock[] parts)
         }
         sb.WriteTagEnd("CompleteMultipartUpload");
 
-        return sb.ToString();
+        return sb.ToUtf8Bytes();
     }
 }
 

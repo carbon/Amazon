@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -97,7 +98,7 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
 
         if (messages.Length is 0) return;
 
-        // Max payload = 256KB (262,144 bytes)
+        // Max payload = 1 MiB (1,048,576 bytes)
 
         // Convert the message payload to JSON
 
@@ -117,6 +118,47 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
                 throw new SqsBatchException(failed);
             }
         }
+    }
+
+    public async Task<string> PutAsync(T message, SqsSendOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        var result = await _client.SendMessageAsync(new(
+            queueUrl               : _queueUrl,
+            messageBody            : JsonSerializer.Serialize(message, s_jso),
+            delay                  : options.Delay,
+            messageDeduplicationId : options.MessageDeduplicationId,
+            messageGroupId         : options.MessageGroupId
+        )).ConfigureAwait(false);
+
+        return result.MessageId;
+    }
+
+    /// <param name="messages">The messages to send, in order</param>
+    /// <param name="getOptions">Selects the MessageGroupId, MessageDeduplicationId or Delay of a message</param>
+    /// <exception cref="SqsBatchException">SQS rejected entries. Later batches were not sent.</exception>
+    public Task PutAsync(IReadOnlyList<IMessage<T>> messages, Func<IMessage<T>, SqsSendOptions> getOptions)
+    {
+        ArgumentNullException.ThrowIfNull(messages);
+        ArgumentNullException.ThrowIfNull(getOptions);
+
+        var entries = new SendMessageBatchRequestEntry[messages.Count];
+
+        for (int i = 0; i < entries.Length; i++)
+        {
+            var options = getOptions(messages[i]);
+
+            entries[i] = new SendMessageBatchRequestEntry(
+                id                     : ((i % 10) + 1).ToString(CultureInfo.InvariantCulture),
+                messageBody            : JsonSerializer.Serialize(messages[i].Body, s_jso),
+                delay                  : options.Delay,
+                messageDeduplicationId : options.MessageDeduplicationId,
+                messageGroupId         : options.MessageGroupId
+            );
+        }
+
+        return _client.SendInBatchesAsync(_queueUrl, entries);
     }
 
     public async Task UpdateMessageVisibilityAsync(string receiptHandle, TimeSpan duration)
@@ -141,6 +183,14 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
             handles[i] = messages[i].Receipt.Handle;
         }
 
+        foreach (string[] batch in handles.Chunk(10))
+        {
+            await DeleteBatchAsync(batch).ConfigureAwait(false);
+        }
+    }
+
+    private async Task DeleteBatchAsync(string[] handles)
+    {
         var retryCount = 0;
 
         var request = new DeleteMessageBatchRequest(_queueUrl, handles);

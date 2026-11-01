@@ -1,6 +1,5 @@
 ﻿using System.Net.Http;
 using System.Security.Cryptography;
-using System.Text;
 
 using Amazon.S3.Helpers;
 
@@ -16,9 +15,7 @@ public sealed class PutObjectTaggingRequest : S3Request
         IEnumerable<KeyValuePair<string, string>> tagset)
         : base(HttpMethod.Put, host, bucketName, objectName, versionId, actionName: S3ActionName.Tagging)
     {
-        string xmlText = ToXmlString(tagset);
-
-        byte[] data = Encoding.UTF8.GetBytes(xmlText);
+        byte[] data = ToXmlUtf8Bytes(tagset);
 
         Content = new ByteArrayContent(data) {
             Headers = { { "Content-Type", "text/xml" } }
@@ -29,9 +26,9 @@ public sealed class PutObjectTaggingRequest : S3Request
         CompletionOption = HttpCompletionOption.ResponseContentRead;
     }
 
-    private static string ToXmlString(IEnumerable<KeyValuePair<string, string>> tagSet)
+    private static byte[] ToXmlUtf8Bytes(IEnumerable<KeyValuePair<string, string>> tagSet)
     {
-        var writer = new XmlStringBuilder();
+        var writer = new XmlStringBuilder(pretty: false);
 
         writer.WriteTagStart("Tagging");
         {
@@ -52,7 +49,7 @@ public sealed class PutObjectTaggingRequest : S3Request
         }
         writer.WriteTagEnd("Tagging");
 
-        return writer.ToString();
+        return writer.ToUtf8Bytes();
     }
 }
 

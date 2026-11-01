@@ -1,4 +1,6 @@
-﻿using Carbon.Messaging;
+﻿using System.Threading;
+
+using Carbon.Messaging;
 
 namespace Amazon.Sns;
 
@@ -17,18 +19,22 @@ public sealed class SnsTopic
         _client = new SnsClient(region, credential);
     }
 
-    public Task<byte[]> PublishAsync(string message)
+    public string TopicArn => _arn;
+
+    public Task<PublishResult> PublishAsync(string message, string? subject = null, CancellationToken cancellationToken = default)
     {
         // Max payload = 256KB (262,144 bytes)
 
-        var request = new PublishRequest(_arn, message);
+        var request = new PublishRequest(_arn, message, subject);
 
-        return _client.PublishAsync(request);
+        return _client.PublishAsync(request, cancellationToken);
     }
 
-    public Task PublishAsync(IMessage<string> message)
+    public Task<PublishResult> PublishAsync(IMessage<string> message, CancellationToken cancellationToken = default)
     {
-        return PublishAsync(message.Body);
+        ArgumentNullException.ThrowIfNull(message);
+
+        return PublishAsync(message.Body, cancellationToken: cancellationToken);
     }
 
     private static string GetPartition(AwsRegion region)

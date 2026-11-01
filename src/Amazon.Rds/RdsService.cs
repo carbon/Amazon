@@ -22,7 +22,7 @@ public sealed class RdsService(AwsRegion region, IAwsCredential credential)
 
         var scope = new CredentialScope(DateOnly.FromDateTime(date), _region, AwsService.RdsDb);
 
-        var requestUri = new Uri($"https://{request.HostName}:{request.Port}?Action=connect&DBUser={request.UserName}");
+        var requestUri = new Uri($"https://{request.HostName}:{request.Port}?Action=connect&DBUser={Uri.EscapeDataString(request.UserName)}");
 
         var url = new Uri(SignerV4.GetPresignedUrl(_credential, scope, date, request.Expires, HttpMethod.Get, requestUri));
 

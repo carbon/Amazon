@@ -83,6 +83,35 @@ internal sealed class FakeS3Handler(Func<HttpRequestMessage, CancellationToken, 
     }
 }
 
+internal sealed class FakeBodyStream(Func<CancellationToken, ValueTask<int>> read) : Stream
+{
+    public override bool CanRead => true;
+
+    public override bool CanSeek => false;
+
+    public override bool CanWrite => false;
+
+    public override long Length => throw new NotSupportedException();
+
+    public override long Position
+    {
+        get => throw new NotSupportedException();
+        set => throw new NotSupportedException();
+    }
+
+    public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) => read(cancellationToken);
+
+    public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+    public override void Flush() { }
+
+    public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+    public override void SetLength(long value) => throw new NotSupportedException();
+
+    public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+}
+
 internal static class FakeS3
 {
     public static S3Client CreateClient(FakeS3Handler handler)
@@ -141,9 +170,9 @@ internal static class FakeS3
         };
     }
 
-    public static HttpResponseMessage Head(long contentLength)
+    public static HttpResponseMessage Head(long contentLength, string? eTag = null)
     {
-        return new HttpResponseMessage(HttpStatusCode.OK) {
+        var response = new HttpResponseMessage(HttpStatusCode.OK) {
             Content = new ByteArrayContent([]) {
                 Headers = {
                     { "Content-Type", "application/octet-stream" },
@@ -152,5 +181,12 @@ internal static class FakeS3
                 }
             }
         };
+
+        if (eTag is not null)
+        {
+            response.Headers.TryAddWithoutValidation("ETag", eTag);
+        }
+
+        return response;
     }
 }

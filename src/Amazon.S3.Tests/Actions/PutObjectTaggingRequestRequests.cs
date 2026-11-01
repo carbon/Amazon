@@ -18,6 +18,18 @@ public class PutObjectTaggingRequestRequests
     }
 
     [Fact]
+    public async Task EscapesTags()
+    {
+        var request = new PutObjectTaggingRequest("s3.amazon.com", "bucket-name", "object-name", null, [
+            new("a&b", "<c>")
+        ]);
+
+        var data = await request.Content.ReadAsByteArrayAsync();
+
+        Assert.Equal("<Tagging><TagSet><Tag><Key>a&amp;b</Key><Value>&lt;c&gt;</Value></Tag></TagSet></Tagging>", Encoding.UTF8.GetString(data));
+    }
+
+    [Fact]
     public async Task CanConstructWithVersion()
     {
         var request = new PutObjectTaggingRequest("s3.amazon.com", "bucket-name", "object-name", "1", [
