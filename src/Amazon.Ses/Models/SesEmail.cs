@@ -99,7 +99,7 @@ public sealed class SesEmail
 
         if (message.Bcc.Count > 0)
         {
-            doc.Cc = SesHelper.EncodeMailAddressCollection(message.Bcc);
+            doc.Bcc = SesHelper.EncodeMailAddressCollection(message.Bcc);
         }
 
         // Alternate view support

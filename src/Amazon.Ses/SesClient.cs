@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Text.Json;
@@ -102,7 +101,7 @@ public sealed class SesClient(AwsRegion region, IAwsCredential credential)
         {
             var text = await response.Content.ReadAsStringAsync();
 
-            if (response.Content.Headers.GetValues("Content-Type").FirstOrDefault() is "application/json")
+            if (response.Content.Headers.ContentType?.MediaType is "application/json")
             {
                 var error = JsonSerializer.Deserialize<SesError>(text);
 

@@ -20,6 +20,65 @@ public class QuotedPrintableTests
         Assert.Equal("=?utf-8?Q?=E2=98=BB?=", QuotedPrintable.Encode("☻"));
     }
 
+    [Theory]
+    [InlineData("", "")]
+    [InlineData("Subject", "Subject")]
+    [InlineData("a b", "=?utf-8?Q?a_b?=")]
+    [InlineData("a ", "=?utf-8?Q?a=20?=")]
+    [InlineData("a=b", "=?utf-8?Q?a=3Db?=")]
+    [InlineData("a?", "=?utf-8?Q?a=3F?=")]
+    [InlineData("a\tb", "=?utf-8?Q?a=09b?=")]
+    public void Encode_EscapesOnlyWhatIsRequired(string text, string expected)
+    {
+        Assert.Equal(expected, QuotedPrintable.Encode(text));
+    }
+
+    [Theory]
+    [InlineData("☻")]
+    [InlineData("Як ти поживаєш?")]
+    public void EncodedTextRoundTrips(string text)
+    {
+        Assert.Equal(text, QuotedPrintable.Decode(QuotedPrintable.Encode(text)));
+    }
+
+    [Fact]
+    public void Encode_LongText()
+    {
+        // Larger than the stack buffer, and grows the builder past its initial capacity
+        var text = new string('☻', 200);
+
+        var encoded = QuotedPrintable.Encode(text);
+
+        Assert.Equal("=?utf-8?Q?".Length + (200 * 9) + "?=".Length, encoded.Length);
+        Assert.StartsWith("=?utf-8?Q?=E2=98=BB", encoded);
+        Assert.EndsWith("=E2=98=BB?=", encoded);
+    }
+
+    [Fact]
+    public void Decode_ThrowsWhenNull()
+    {
+        Assert.Throws<ArgumentNullException>(() => QuotedPrintable.Decode(null));
+    }
+
+    [Theory]
+    [InlineData(null, 0)]
+    [InlineData("", 0)]
+    [InlineData("abc", 3)]
+    [InlineData("a b", 3)]
+    [InlineData("a ", 4)]
+    [InlineData("a=?", 7)]
+    [InlineData("☻", 9)]
+    public void GetEncodedCharCount(string value, int expected)
+    {
+        Assert.Equal(expected, QuotedPrintable.GetEncodedCharCount(value));
+    }
+
+    [Fact]
+    public void GetEncodedCharCount_LongText()
+    {
+        Assert.Equal(200 * 9, QuotedPrintable.GetEncodedCharCount(new string('☻', 200)));
+    }
+
     [Fact]
     public void DeodeUtf8Code()
     {
