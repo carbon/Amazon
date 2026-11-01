@@ -2,7 +2,7 @@
 
 public sealed class PutItemResult : IConsumedResources
 {
-    public AttributeCollection? Attributes { get; }
+    public AttributeCollection? Attributes { get; init; }
 
-    public ConsumedCapacity? ConsumedCapacity { get; }
+    public ConsumedCapacity? ConsumedCapacity { get; init; }
 }

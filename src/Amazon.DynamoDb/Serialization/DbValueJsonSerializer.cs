@@ -52,6 +52,11 @@ internal static class DbValueJsonSerializer
             reader.Read();
             value = new DbValue(reader.GetBoolean());
         }
+        else if (reader.ValueTextEquals(NULL))
+        {
+            reader.Read();
+            value = DbValue.Null;
+        }
         else if (reader.ValueTextEquals(L))
         {
             value = new DbValue(ReadDbValueArray(ref reader));
@@ -151,6 +156,10 @@ internal static class DbValueJsonSerializer
 
             case DbValueType.BOOL:
                 writer.WriteBoolean(BOOL, dbValue.ToBoolean());
+                break;
+
+            case DbValueType.NULL:
+                writer.WriteBoolean(NULL, true);
                 break;
 
             case DbValueType.BS:

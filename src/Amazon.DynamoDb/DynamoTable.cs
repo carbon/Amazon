@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 
 using Amazon.Scheduling;
 
@@ -132,20 +133,43 @@ public class DynamoTable<T, TKey>
             return [];
         }
 
-        var request = new BatchGetItemRequest(new TableKeys(_tableName, keys));
+        var items = new List<T>(keys.Length);
 
-        var result = await _client.BatchGetItemAsync(request).ConfigureAwait(false);
+        var pending = new TableKeys(_tableName, keys);
 
-        TableItemCollection r0 = result.Responses[0];
+        int retryCount = 0;
 
-        var items = new T[r0.Count];
-
-        for (int i = 0; i < items.Length; i++)
+        while (true)
         {
-            items[i] = r0[i].As<T>(s_metadata);
-        }
+            var result = await _client.BatchGetItemAsync(new BatchGetItemRequest(pending)).ConfigureAwait(false);
 
-        return items;
+            int previousCount = items.Count;
+
+            foreach (TableItemCollection table in result.Responses)
+            {
+                for (int i = 0; i < table.Count; i++)
+                {
+                    items.Add(table[i].As<T>(s_metadata));
+                }
+            }
+
+            if (result.UnprocessedKeys is not { Count: > 0 } unprocessedKeys)
+            {
+                return items;
+            }
+
+            // Only give up when requests stop making progress
+            retryCount = items.Count > previousCount ? 1 : retryCount + 1;
+
+            if (!s_retryPolicy.ShouldRetry(retryCount))
+            {
+                throw new DynamoDbException($"Unprocessed keys remain in '{_tableName}' after retrying", HttpStatusCode.OK);
+            }
+
+            await Task.Delay(s_retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
+
+            pending = unprocessedKeys[0];
+        }
     }
 
     public Task<IReadOnlyList<T>> QueryAsync(params Expression[] expressions)
@@ -196,7 +220,7 @@ public class DynamoTable<T, TKey>
             query.Limit = remaining;
 
         }
-        while (a.LastEvaluatedKey is not null && remaining >= 0);
+        while (a.LastEvaluatedKey is not null && remaining is null or > 0);
 
         return result;
     }
@@ -211,9 +235,26 @@ public class DynamoTable<T, TKey>
         query.TableName = _tableName;
         query.Select = SelectEnum.COUNT;
 
-        var result = await _client.QueryCountAsync(query).ConfigureAwait(false);
+        int count = 0;
 
-        return result.Count;
+        var remaining = query.Limit;
+
+        CountResult result;
+
+        do
+        {
+            result = await _client.QueryCountAsync(query).ConfigureAwait(false);
+
+            count += result.Count;
+
+            remaining -= result.Count;
+
+            query.ExclusiveStartKey = result.LastEvaluatedKey;
+            query.Limit = remaining;
+        }
+        while (result.LastEvaluatedKey is not null && remaining is null or > 0);
+
+        return count;
     }
 
     public async IAsyncEnumerable<T> ScanAsync(params Expression[] conditions) // Scans the entire table

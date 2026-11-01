@@ -12,8 +12,8 @@ internal sealed class TimeSpanConverter : IDbValueConverter
 
         return precision switch
         {
-            TimePrecision.Second => new DbValue((int)time.TotalSeconds),
-            _                    => new DbValue((int)time.TotalMilliseconds)
+            TimePrecision.Second => new DbValue((long)time.TotalSeconds),
+            _                    => new DbValue((long)time.TotalMilliseconds)
         };
     }
 
@@ -23,8 +23,8 @@ internal sealed class TimeSpanConverter : IDbValueConverter
 
         return precision switch
         {
-            TimePrecision.Second => TimeSpan.FromSeconds(item.ToInt()),
-            _                    => TimeSpan.FromMilliseconds(item.ToInt())
+            TimePrecision.Second => TimeSpan.FromSeconds(item.ToInt64()),
+            _                    => TimeSpan.FromMilliseconds(item.ToInt64())
         };
     }
 }

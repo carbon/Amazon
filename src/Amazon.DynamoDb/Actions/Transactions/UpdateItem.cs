@@ -18,13 +18,14 @@ public sealed class UpdateItem
         Key = key;
 
         var attributeNames = new Dictionary<string, string>();
-        var updateExpression = new UpdateExpression(changes, attributeNames, ExpressionAttributeValues);
+        var attributeValues = new AttributeCollection();
+        var updateExpression = new UpdateExpression(changes, attributeNames, attributeValues);
 
         UpdateExpression = updateExpression.ToString();
 
         if (conditions is { Length: > 0 })
         {
-            var expression = new DynamoExpression(attributeNames, ExpressionAttributeValues);
+            var expression = new DynamoExpression(attributeNames, attributeValues);
 
             expression.AddRange(conditions);
 
@@ -34,6 +35,11 @@ public sealed class UpdateItem
         if (attributeNames.Count > 0)
         {
             ExpressionAttributeNames = attributeNames;
+        }
+
+        if (attributeValues.Count > 0)
+        {
+            ExpressionAttributeValues = attributeValues;
         }
     }
 
@@ -47,7 +53,7 @@ public sealed class UpdateItem
 
     public Dictionary<string, string>? ExpressionAttributeNames { get; init; }
 
-    public AttributeCollection ExpressionAttributeValues { get; set; } = new();
+    public AttributeCollection? ExpressionAttributeValues { get; set; }
 
     public ReturnValuesOnConditionCheckFailure? ReturnValuesOnConditionCheckFailure { get; set; }
 }

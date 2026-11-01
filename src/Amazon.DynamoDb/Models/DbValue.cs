@@ -156,10 +156,10 @@ public readonly struct DbValue : IConvertible
                         var result = converter.FromObject(value, null!);
 
                         _value = result.Value;
-                        _kind = result.Kind;                            
+                        _kind = result.Kind;
                     }
 
-                    break;
+                    return;
 				}
 			}
 		}

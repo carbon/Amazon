@@ -239,7 +239,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
         {
             MemberDescriptor member = model[attribute.Key]!;
 
-            if (member is null) continue;
+            if (member is null || attribute.Value.Kind is DbValueType.NULL) continue;
 
             if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter? converter))
             {
@@ -293,7 +293,7 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
         {
             MemberDescriptor? member = model[attribute.Key];
 
-            if (member is null) continue;
+            if (member is null || attribute.Value.Kind is DbValueType.NULL) continue;
 
             if (DbValueConverterFactory.TryGet(member.Type, out IDbValueConverter? converter))
             {

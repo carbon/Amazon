@@ -13,5 +13,6 @@ internal static class DbValueTypeNames
         public static ReadOnlySpan<byte> L    => "L"u8;
         public static ReadOnlySpan<byte> M    => "M"u8;
         public static ReadOnlySpan<byte> BOOL => "BOOL"u8;
+        public static ReadOnlySpan<byte> NULL => "NULL"u8;
     }
 }
