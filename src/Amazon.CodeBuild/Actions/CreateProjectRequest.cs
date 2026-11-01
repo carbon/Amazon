@@ -37,6 +37,6 @@ public sealed class CreateProjectRequest : ICodeBuildRequest
 
     [JsonPropertyName("timeoutInMinutes")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    [Range(5, 480)]
+    [Range(5, 2160)]
     public int? TimeoutInMinutes { get; set; }
 }
