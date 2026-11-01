@@ -99,6 +99,77 @@ public class PutMetricDataRequestTests
         Assert.Contains("InvalidParameterValue", ex.Message);
     }
 
+    // API reference sample "a single metric containing one dimension"
+    [Fact]
+    public async Task MatchesDocumentedSingleDimensionSample()
+    {
+        var sent = await SendAsync(new PutMetricDataRequest { Namespace = "TestNamespace" }.With(new MetricDatum {
+            MetricName = "buffers",
+            Unit = "Bytes",
+            Value = 231434333,
+            Dimensions = [Dim("InstanceType", "m1.small")]
+        }));
+
+        Assert.Equal([
+            new("Action", "PutMetricData"),
+            new("Namespace", "TestNamespace"),
+            new("MetricData.member.1.MetricName", "buffers"),
+            new("MetricData.member.1.Unit", "Bytes"),
+            new("MetricData.member.1.Value", "231434333"),
+            new("MetricData.member.1.Dimensions.member.1.Name", "InstanceType"),
+            new("MetricData.member.1.Dimensions.member.1.Value", "m1.small"),
+            new("Version", "2010-08-01")
+        ], sent.Form);
+    }
+
+    // API reference sample "a single metric containing two dimensions"
+    [Fact]
+    public async Task MatchesDocumentedTwoDimensionSample()
+    {
+        var sent = await SendAsync(new PutMetricDataRequest { Namespace = "TestNamespace" }.With(new MetricDatum {
+            MetricName = "buffers",
+            Unit = "Bytes",
+            Value = 231434333,
+            Dimensions = [Dim("InstanceID", "i-aaba32d4"), Dim("InstanceType", "m1.small")]
+        }));
+
+        Assert.Equal([
+            new("Action", "PutMetricData"),
+            new("Namespace", "TestNamespace"),
+            new("MetricData.member.1.MetricName", "buffers"),
+            new("MetricData.member.1.Unit", "Bytes"),
+            new("MetricData.member.1.Value", "231434333"),
+            new("MetricData.member.1.Dimensions.member.1.Name", "InstanceID"),
+            new("MetricData.member.1.Dimensions.member.1.Value", "i-aaba32d4"),
+            new("MetricData.member.1.Dimensions.member.2.Name", "InstanceType"),
+            new("MetricData.member.1.Dimensions.member.2.Value", "m1.small"),
+            new("Version", "2010-08-01")
+        ], sent.Form);
+    }
+
+    // User guide "Publish statistic sets": a CLI command, so only its values come from the docs
+    [Fact]
+    public async Task EncodesDocumentedStatisticSetSample()
+    {
+        var sent = await SendAsync(new PutMetricDataRequest { Namespace = "MyService" }.With(new MetricDatum {
+            MetricName = "PageViewCount",
+            StatisticValues = new StatisticSet { Sum = 11, Minimum = 2, Maximum = 5, SampleCount = 3 },
+            Timestamp = new DateTime(2016, 10, 14, 12, 00, 00, DateTimeKind.Utc)
+        }));
+
+        Assert.Equal([
+            new("Action", "PutMetricData"),
+            new("Namespace", "MyService"),
+            new("MetricData.member.1.MetricName", "PageViewCount"),
+            new("MetricData.member.1.Timestamp", "2016-10-14T12:00:00Z"),
+            new("MetricData.member.1.StatisticValues.Maximum", "5"),
+            new("MetricData.member.1.StatisticValues.Minimum", "2"),
+            new("MetricData.member.1.StatisticValues.SampleCount", "3"),
+            new("MetricData.member.1.StatisticValues.Sum", "11"),
+            new("Version", "2010-08-01")
+        ], sent.Form);
+    }
+
     // API reference sample "two metrics, each with two dimensions"
     [Fact]
     public async Task MatchesDocumentedSampleRequest()
