@@ -357,11 +357,11 @@ public class DynamoTable<T, TKey>
         return result;
     }
 
-    public async Task<UpdateItemResult> PatchAsync(TKey key, params Change[] changes)
+    public Task<UpdateItemResult> PatchAsync(TKey key, params Change[] changes)
     {
         var request = new UpdateItemRequest(_tableName, Key<T>.FromTuple(key).ToDictionary(), changes);
 
-        return await _client.UpdateItemUsingRetryPolicyAsync(request, s_retryPolicy).ConfigureAwait(false);
+        return _client.UpdateItemUsingRetryPolicyAsync(request, s_retryPolicy);
     }
 
     public Task<UpdateItemResult> PatchAsync(
@@ -465,13 +465,16 @@ public class DynamoTable<T, TKey>
 
     #region Helpers
 
-    private async Task<BatchResult> PutBatch(IEnumerable<T> entities, BatchResult result)
+    private async Task<BatchResult> PutBatch(T[] entities, BatchResult result)
     {
         // Up to 25 items put or delete operations, with the request size not exceeding 1 MB.
 
-        var putRequests = entities
-            .Select(e => (ItemRequest)new PutRequest(AttributeCollection.FromObject(e, s_metadata)))
-            .ToList();
+        var putRequests = new ItemRequest[entities.Length];
+
+        for (int i = 0; i < entities.Length; i++)
+        {
+            putRequests[i] = new PutRequest(AttributeCollection.FromObject(entities[i], s_metadata));
+        }
 
         var tableBatch = new TableRequests(_tableName, putRequests);
 

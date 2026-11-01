@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 
 using Microsoft.Extensions.ObjectPool;
 
@@ -8,6 +9,8 @@ using static DbValueTypeNames.Utf8;
 
 internal static class DbValueJsonSerializer
 {
+    private const int MaxNumberLength = 32; // Longer values fall back to ToString
+
     private static readonly ObjectPool<List<string>> s_stringListPool   = ObjectPool.Create(new ObjectPoolListPolicy<string>());
     private static readonly ObjectPool<List<DbValue>> s_dbValueListPool = ObjectPool.Create(new ObjectPoolListPolicy<DbValue>());
 
@@ -50,7 +53,7 @@ internal static class DbValueJsonSerializer
         else if (reader.ValueTextEquals(BOOL))
         {
             reader.Read();
-            value = new DbValue(reader.GetBoolean());
+            value = reader.GetBoolean() ? DbValue.True : DbValue.False;
         }
         else if (reader.ValueTextEquals(NULL))
         {
@@ -173,9 +176,19 @@ internal static class DbValueJsonSerializer
 
             case DbValueType.L:
                 writer.WriteStartArray(L);
-                foreach (var listDbValue in (IEnumerable<DbValue>)dbValue.Value)
+                if (dbValue.Value is DbValue[] listDbValues)
                 {
-                    Write(writer, listDbValue);
+                    foreach (ref readonly DbValue listDbValue in listDbValues.AsSpan())
+                    {
+                        Write(writer, listDbValue);
+                    }
+                }
+                else
+                {
+                    foreach (var listDbValue in (IEnumerable<DbValue>)dbValue.Value)
+                    {
+                        Write(writer, listDbValue);
+                    }
                 }
                 writer.WriteEndArray();
                 break;
@@ -186,14 +199,24 @@ internal static class DbValueJsonSerializer
                 break;
 
             case DbValueType.N:
-                writer.WriteString(N, dbValue.ToString());
+                WriteNumber(writer, dbValue);
                 break;
 
             case DbValueType.NS:
                 writer.WriteStartArray(NS);
-                foreach (string s in dbValue.ToArray<string>())
+                switch (dbValue.Value)
                 {
-                    writer.WriteStringValue(s);
+                    case short[] values: WriteNumberValues(writer, values); break;
+                    case int[] values: WriteNumberValues(writer, values); break;
+                    case long[] values: WriteNumberValues(writer, values); break;
+                    case float[] values: WriteNumberValues(writer, values); break;
+                    case double[] values: WriteNumberValues(writer, values); break;
+                    default:
+                        foreach (string s in dbValue.ToArray<string>())
+                        {
+                            writer.WriteStringValue(s);
+                        }
+                        break;
                 }
                 writer.WriteEndArray();
                 break;
@@ -216,5 +239,32 @@ internal static class DbValueJsonSerializer
         }
 
         writer.WriteEndObject();
+    }
+
+    private static void WriteNumber(Utf8JsonWriter writer, in DbValue dbValue)
+    {
+        Span<byte> buffer = stackalloc byte[MaxNumberLength];
+
+        if (dbValue.Value is IUtf8SpanFormattable number && number.TryFormat(buffer, out int bytesWritten, default, CultureInfo.InvariantCulture))
+        {
+            writer.WriteString(N, buffer[..bytesWritten]);
+        }
+        else
+        {
+            writer.WriteString(N, dbValue.ToString());
+        }
+    }
+
+    private static void WriteNumberValues<T>(Utf8JsonWriter writer, T[] values)
+        where T : IUtf8SpanFormattable
+    {
+        Span<byte> buffer = stackalloc byte[MaxNumberLength];
+
+        foreach (T value in values)
+        {
+            value.TryFormat(buffer, out int bytesWritten, default, CultureInfo.InvariantCulture);
+
+            writer.WriteStringValue(buffer[..bytesWritten]);
+        }
     }
 }

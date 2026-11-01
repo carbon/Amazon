@@ -127,6 +127,9 @@ public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, DbVal
 
     #region IEnumerable<KeyValuePair<string,DbValue>> Members
 
+    // Lets foreach use the struct enumerator without boxing
+    public Dictionary<string, DbValue>.Enumerator GetEnumerator() => _items.GetEnumerator();
+
     IEnumerator<KeyValuePair<string, DbValue>> IEnumerable<KeyValuePair<string, DbValue>>.GetEnumerator()
         => _items.GetEnumerator();
 

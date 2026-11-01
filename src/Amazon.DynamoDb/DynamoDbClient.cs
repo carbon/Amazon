@@ -93,9 +93,9 @@ public sealed class DynamoDbClient : AwsClient
         return BatchWriteItemResult.Deserialize(json);
     }
 
-    public async Task<PutItemResult> PutItemAsync(PutItemRequest request)
+    public Task<PutItemResult> PutItemAsync(PutItemRequest request)
     {
-        return await HandleRequestAsync<PutItemRequest, PutItemResult>("PutItem", request).ConfigureAwait(false);
+        return HandleRequestAsync<PutItemRequest, PutItemResult>("PutItem", request);
     }
 
     public async Task<PutItemResult> PutItemUsingRetryPolicyAsync(PutItemRequest request, RetryPolicy retryPolicy)
@@ -182,9 +182,9 @@ public sealed class DynamoDbClient : AwsClient
         return HandleRequestAsync<TransactWriteItemsRequest, TransactWriteItemsResult>("TransactWriteItems", request);
     }
 
-    public async Task<UpdateItemResult> UpdateItemAsync(UpdateItemRequest request)
+    public Task<UpdateItemResult> UpdateItemAsync(UpdateItemRequest request)
     {
-        return await HandleRequestAsync<UpdateItemRequest, UpdateItemResult>("UpdateItem", request).ConfigureAwait(false);
+        return HandleRequestAsync<UpdateItemRequest, UpdateItemResult>("UpdateItem", request);
     }
 
     public async Task<UpdateItemResult> UpdateItemUsingRetryPolicyAsync(UpdateItemRequest request, RetryPolicy retryPolicy)

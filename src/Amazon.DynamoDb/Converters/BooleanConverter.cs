@@ -6,7 +6,7 @@ internal sealed class BooleanConverter : IDbValueConverter
 {
     public DbValue FromObject(object value, IMember? member)
     {
-        return new DbValue((bool)value);
+        return (bool)value ? DbValue.True : DbValue.False;
     }
 
     public object ToObject(DbValue item, IMember? member)
