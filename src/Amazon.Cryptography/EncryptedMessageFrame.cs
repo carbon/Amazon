@@ -20,7 +20,7 @@ public sealed class EncryptedMessageFrame
 
     public bool IsFinal { get; init; }
 
-    internal static EncryptedMessageFrame Read(int defaultFrameLength, ref BufferReader reader)
+    internal static EncryptedMessageFrame Read(uint frameLength, ref BufferReader reader)
     {
         var sequenceNumber = reader.ReadUInt32();
         bool isFinal = sequenceNumber is uint.MaxValue; // FFFFFFFF
@@ -33,12 +33,18 @@ public sealed class EncryptedMessageFrame
             sequenceNumber = reader.ReadUInt32();
             iv = reader.ReadBytes(12);
             var encryptedContentLength = reader.ReadUInt32();
+
+            if (encryptedContentLength > frameLength)
+            {
+                throw new FormatException($"Final frame length ({encryptedContentLength}) exceeds the frame length ({frameLength})");
+            }
+
             encryptedContent = reader.ReadBytes((int)encryptedContentLength);
         }
         else
         {
             iv = reader.ReadBytes(12);
-            encryptedContent = reader.ReadBytes(defaultFrameLength);
+            encryptedContent = reader.ReadBytes((int)frameLength);
         }
 
         authenticationTag = reader.ReadBytes(16);

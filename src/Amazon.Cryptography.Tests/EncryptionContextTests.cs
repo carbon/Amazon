@@ -19,8 +19,8 @@ public class EncryptionContextTests
 
         var b = EncryptionContext.Deserialize(writer.WrittenSpan);
 
-        Assert.Single(context);
-        Assert.Equal("accountId", context.GetAt(0).Key);
-        Assert.Equal("1", context.GetAt(0).Value);
+        Assert.Single(b);
+        Assert.Equal("accountId", b.GetAt(0).Key);
+        Assert.Equal("1", b.GetAt(0).Value);
     }
 }

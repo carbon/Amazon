@@ -29,6 +29,14 @@ public readonly struct EncryptedMessageHeader
 
     public void WriteTo(IBufferWriter<byte> writer)
     {
+        WriteBodyTo(writer);
+
+        writer.Write(AuthenticationTag);
+    }
+
+    // Everything the authentication tag covers
+    internal void WriteBodyTo(IBufferWriter<byte> writer)
+    {
         writer.Write([(byte)2]);
         writer.WriteUInt16((ushort)AlgorithmId);
         writer.Write(MessageId);
@@ -50,8 +58,6 @@ public readonly struct EncryptedMessageHeader
         {
             writer.Write(AlgorithmSuiteData);
         }
-
-        writer.Write(AuthenticationTag);        
     }
 
     internal static EncryptedMessageHeader Read(ref BufferReader reader)
@@ -65,6 +71,10 @@ public readonly struct EncryptedMessageHeader
         }
 
         var algorithmId = (AlgorithmSuiteId)reader.ReadUInt16();
+
+        // Throws for an unsupported suite, before any more of the message is processed
+        var suite = AlgorithmSuite.Get(algorithmId);
+
         var messageId = reader.ReadBytes(32).ToArray();
 
         ushort encryptionContextLength = reader.ReadUInt16();
@@ -72,16 +82,15 @@ public readonly struct EncryptedMessageHeader
         var encryptionContext = EncryptionContext.Deserialize(reader.ReadBytes(encryptionContextLength));
         var encryptedDataKeys = ReadEncryptedDataKeys(ref reader);
         var contentType = reader.ReadByte();
-        var frameLength = reader.ReadUInt32();
 
         if (contentType != 2)
         {
             throw new Exception("ContentType must be 2 (framed)");
         }
 
-        byte[]? algorithmSuiteData = null;
+        var frameLength = reader.ReadUInt32();
 
-        var suite = AlgorithmSuite.Get(algorithmId);
+        byte[]? algorithmSuiteData = null;
 
         if (suite.AlgorithmSuiteDataLengthBytes is int algSuiteDataLengthBytes)
         {
@@ -109,6 +118,11 @@ public readonly struct EncryptedMessageHeader
     private static EncryptedDataKey[] ReadEncryptedDataKeys(ref BufferReader reader)
     {
         var count = reader.ReadUInt16();
+
+        if (count is 0)
+        {
+            throw new FormatException("Encrypted data key count must be greater than 0");
+        }
 
         var encryptedDataKeys = new EncryptedDataKey[count];
 
