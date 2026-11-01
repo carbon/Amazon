@@ -22,6 +22,15 @@ public class SignerTests
         Assert.Equal("/%E1%88%B4", SignerV4.CanonicalizeUri("ሴ"));
         Assert.Equal("/frame%3A11", SignerV4.CanonicalizeUri("/frame:11"));
         Assert.Equal("/frame%3A11%4030s", SignerV4.CanonicalizeUri("/frame:11@30s"));
+        Assert.Equal("/%F0%9F%98%80/a", SignerV4.CanonicalizeUri("/😀/a"));
+    }
+
+    [Fact]
+    public void LongUnicodeSegmentsGrowTheOutput()
+    {
+        string segment = "".PadLeft(200, 'ሴ');
+
+        Assert.Equal("/" + string.Concat(Enumerable.Repeat("%E1%88%B4", 200)) + "/a", SignerV4.CanonicalizeUri($"/{segment}/a"));
     }
 
     [Fact]
