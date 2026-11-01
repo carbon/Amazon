@@ -10,7 +10,7 @@ internal static class Ensure
     {
         if (argument < min || argument > max)
         {
-            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, $"Must be between {min} and {max}. Was {argument}."), paramName);
+            throw new ArgumentException(string.Create(CultureInfo.InvariantCulture, $"Must be between {min} and {max}. Was {argument}."), paramName);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Xml.Linq;
 
 namespace Amazon.Sts.Models;
@@ -17,7 +18,7 @@ public sealed class GetSessionTokenResponse
         return new AwsSession(
             sessionToken    : credentialsEl.Element(ns + "SessionToken")!.Value,
             secretAccessKey : credentialsEl.Element(ns + "SecretAccessKey")!.Value,
-            expiration      : DateTime.Parse(credentialsEl.Element(ns + "Expiration")!.Value).ToUniversalTime(),
+            expiration      : DateTime.Parse(credentialsEl.Element(ns + "Expiration")!.Value, CultureInfo.InvariantCulture).ToUniversalTime(),
             accessKeyId     : credentialsEl.Element(ns + "AccessKeyId")!.Value
         );
     }

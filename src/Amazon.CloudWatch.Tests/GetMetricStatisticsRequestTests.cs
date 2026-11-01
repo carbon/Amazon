@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Globalization;
+using System.Net;
 using System.Net.Http;
 
 namespace Amazon.CloudWatch.Tests;
@@ -117,8 +118,8 @@ public class GetMetricStatisticsRequestTests
 
         var sent = await SendAsync(new GetMetricStatisticsRequest("N", "M") { StartTime = start, EndTime = end });
 
-        Assert.Equal(start.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"), sent["StartTime"]);
-        Assert.Equal(end.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"), sent["EndTime"]);
+        Assert.Equal(start.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture), sent["StartTime"]);
+        Assert.Equal(end.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture), sent["EndTime"]);
     }
 
     [Fact]

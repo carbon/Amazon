@@ -226,7 +226,7 @@ public readonly struct DbValue : IConvertible
 
 		foreach (var item in (IEnumerable)_value)
 		{
-			set.Add((T)Convert.ChangeType(item, typeof(T))!);
+			set.Add((T)Convert.ChangeType(item, typeof(T), CultureInfo.InvariantCulture)!);
 		}
 
 		return set;
@@ -247,7 +247,7 @@ public readonly struct DbValue : IConvertible
 			
 		for (int i = 0; i < collection.Count; i++)
 		{
-			array[i] = (T)Convert.ChangeType(collection[i], typeof(T))!;
+			array[i] = (T)Convert.ChangeType(collection[i], typeof(T), CultureInfo.InvariantCulture)!;
 		}
 
 		return array;
@@ -268,19 +268,19 @@ public readonly struct DbValue : IConvertible
         throw new Exception($"Cannot convert '{_value.GetType().Name}' to a Boolean");
 	}
 
-	public readonly float ToSingle() => Convert.ToSingle(_value);
+	public readonly float ToSingle() => Convert.ToSingle(_value, CultureInfo.InvariantCulture);
 
-	public readonly short ToInt16() => Convert.ToInt16(_value);
+	public readonly short ToInt16() => Convert.ToInt16(_value, CultureInfo.InvariantCulture);
 
-	public readonly int ToInt() => Convert.ToInt32(_value);
+	public readonly int ToInt() => Convert.ToInt32(_value, CultureInfo.InvariantCulture);
 
-	public readonly long ToInt64() => Convert.ToInt64(_value);
+	public readonly long ToInt64() => Convert.ToInt64(_value, CultureInfo.InvariantCulture);
 
-	public readonly double ToDouble() => Convert.ToDouble(_value);
+	public readonly double ToDouble() => Convert.ToDouble(_value, CultureInfo.InvariantCulture);
 
-	public readonly decimal ToDecimal() => Convert.ToDecimal(_value);
+	public readonly decimal ToDecimal() => Convert.ToDecimal(_value, CultureInfo.InvariantCulture);
 
-	public readonly uint ToUInt32() => Convert.ToUInt32(_value);
+	public readonly uint ToUInt32() => Convert.ToUInt32(_value, CultureInfo.InvariantCulture);
 
 	public readonly byte[] ToBinary()
 	{
