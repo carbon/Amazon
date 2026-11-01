@@ -49,6 +49,10 @@ public class DbExceptionTests
     [InlineData("InternalFailure")]
     [InlineData("ProvisionedThroughputExceededException")]
     [InlineData("ThrottlingException")]
+    [InlineData("RequestLimitExceeded")]
+    [InlineData("LimitExceededException")]
+    [InlineData("ReplicatedWriteConflictException")]
+    [InlineData("TransactionInProgressException")]
     public async Task TransientTypes(string type)
     {
         var ex = await ParseAsync($$"""{"__type":"com.amazonaws.dynamodb.v20120810#{{type}}","message":"Failed"}""");
