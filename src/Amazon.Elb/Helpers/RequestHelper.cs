@@ -48,6 +48,10 @@ public static class RequestHelper
                 AddValue(parameters, elementKey, list[i]!, depth);
             }
         }
+        else if (value is bool boolean)
+        {
+            parameters.Add(new(key, boolean ? "true" : "false"));
+        }
         else if (Type.GetTypeCode(value.GetType()) is TypeCode.Object)
         {
             AddMembers(parameters, key, value, depth + 1);

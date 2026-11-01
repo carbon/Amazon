@@ -9,4 +9,6 @@ public sealed class DescribeRulesRequest : IElbRequest
     public string[]? RuleArns { get; init; }
 
     public string? Marker { get; init; }
+
+    public int? PageSize { get; init; }
 }

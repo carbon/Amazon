@@ -23,4 +23,7 @@ public sealed class TargetDescription
 
     [Range(1, 65535)]
     public int? Port { get; init; }
+
+    // Required for QUIC and TCP_QUIC target groups
+    public string? QuicServerId { get; init; }
 }
