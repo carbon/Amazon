@@ -107,6 +107,8 @@ public sealed partial class InstanceMetadataService
             return null;
         }
 
+        ThrowIfError(response);
+
         using var responseStream = response.Content.ReadAsStream();
 
         string responseText = GetString(responseStream);
@@ -117,6 +119,8 @@ public sealed partial class InstanceMetadataService
     private string SendAndReadString(HttpRequestMessage request)
     {
         using HttpResponseMessage response = httpClient.Send(request, HttpCompletionOption.ResponseContentRead);
+
+        ThrowIfError(response);
 
         using var responseStream = response.Content.ReadAsStream();
 

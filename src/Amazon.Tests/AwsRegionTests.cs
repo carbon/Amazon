@@ -3,7 +3,7 @@
 public class AwsRegionTests
 {
     [Fact]
-    public void Enum()
+    public void AllRegionsAreUniqueAndResolvable()
     {
         Assert.Equal(27, AwsRegion.All.Length);
 
@@ -12,45 +12,78 @@ public class AwsRegionTests
             Assert.Same(region, AwsRegion.Get(region.Name));
         }
 
-        // Ensure all the regions are unique
         var names = new HashSet<string>(AwsRegion.All.Select(static a => a.Name));
 
         Assert.Equal(AwsRegion.All.Length, names.Count);
     }
 
     [Fact]
-    public void A()
+    public void Get_CreatesUnknownRegions()
     {
-        var usEast1 = AwsRegion.Get("us-east-1");
-        var usEast2 = AwsRegion.Get("us-east-2");
-
-        Assert.Same(AwsRegion.USEast1, usEast1);
-        Assert.Same(AwsRegion.USEast2, usEast2);
-
-        Assert.True(usEast1 != usEast2);
-
-        Assert.Equal("us-east-1", usEast1.ToString());
-        Assert.Equal("us-east-2", usEast2.ToString());
-
-        Assert.Equal("us-east-1"u8, usEast1.Utf8Name);
+        Assert.Equal("xx-east-9", AwsRegion.Get("xx-east-9").Name);
     }
 
     [Fact]
-    public void Equality()
+    public void RequiresName()
     {
-        Assert.True(AwsRegion.USEast1.Equals(AwsRegion.USEast1));
+        Assert.Throws<ArgumentNullException>(() => new AwsRegion(null));
+    }
+
+    [Fact]
+    public void ExposesName()
+    {
+        Assert.Equal("us-east-1", AwsRegion.USEast1.ToString());
+        Assert.Equal("us-east-1"u8, AwsRegion.USEast1.Utf8Name);
+    }
+
+    [Fact]
+    public void ConvertsFromString()
+    {
+        AwsRegion region = "us-east-1";
+
+        Assert.Equal(AwsRegion.USEast1, region);
+        Assert.Throws<ArgumentNullException>(() => { AwsRegion _ = (string)null; });
+        Assert.Throws<ArgumentException>(() => { AwsRegion _ = ""; });
+    }
+
+    [Fact]
+    public void ComparesByName()
+    {
+        AwsRegion region = new("us-east-1");
+
+        Assert.True(region == AwsRegion.USEast1);
+        Assert.False(region != AwsRegion.USEast1);
+        Assert.True(region.Equals((object)AwsRegion.USEast1));
+        Assert.False(region.Equals((object)"us-east-1"));
+        Assert.False(region.Equals(null));
+        Assert.True(AwsRegion.USEast1 != AwsRegion.USEast2);
         Assert.False(AwsRegion.USEast1.Equals(AwsRegion.USEast2));
+        Assert.Equal(AwsRegion.USEast1.GetHashCode(), region.GetHashCode());
     }
 
     [Fact]
-    public void AreSame()
+    public void ComparesWithNull()
     {
-        Assert.Same(AwsRegion.USEast1,      AwsRegion.Get("us-east-1"));
-        Assert.Same(AwsRegion.USEast2,      AwsRegion.Get("us-east-2"));
-        Assert.Same(AwsRegion.USWest1,      AwsRegion.Get("us-west-1"));
-        Assert.Same(AwsRegion.USWest2,      AwsRegion.Get("us-west-2"));
-        Assert.Same(AwsRegion.CACentral1,   AwsRegion.Get("ca-central-1"));
-        Assert.Same(AwsRegion.APSouth1,     AwsRegion.Get("ap-south-1"));
-        Assert.Same(AwsRegion.APSouthEast1, AwsRegion.Get("ap-southeast-1"));
+        AwsRegion region = null;
+
+        Assert.True(region == null);
+        Assert.False(region != null);
+    }
+
+    [Theory]
+    [InlineData("us-east-1a", "us-east-1")]
+    [InlineData("eu-west-2c", "eu-west-2")]
+    [InlineData("us-gov-west-1a", "us-gov-west-1")]
+    [InlineData("us-east-1-wl1-bos-wlz-1", "us-east-1")]
+    [InlineData("xx-east-12b", "xx-east-12")]
+    public void FromAvailabilityZone(string zone, string region)
+    {
+        Assert.Equal(region, AwsRegion.FromAvailabilityZone(zone).Name);
+    }
+
+    [Fact]
+    public void FromAvailabilityZone_LocalZone()
+    {
+        Assert.Same(AwsRegion.USWest2, AwsRegion.FromAvailabilityZone("us-west-2-lax-1a"));
     }
 }

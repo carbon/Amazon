@@ -48,9 +48,9 @@ public sealed class AwsService(string name) : IEquatable<AwsService>
 
     public override bool Equals(object? obj) => obj is AwsService other && Equals(other);
 
-    public static bool operator ==(AwsService lhs, AwsService rhs) => lhs.Equals(rhs);
+    public static bool operator ==(AwsService? lhs, AwsService? rhs) => lhs is null ? rhs is null : lhs.Equals(rhs);
 
-    public static bool operator !=(AwsService lhs, AwsService rhs) => !lhs.Equals(rhs);
+    public static bool operator !=(AwsService? lhs, AwsService? rhs) => !(lhs == rhs);
 
     public override int GetHashCode() => Name.GetHashCode();
 
