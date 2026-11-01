@@ -43,6 +43,17 @@ public sealed class CloudWatchClient(AwsRegion region, IAwsCredential credential
         return GetMetricStatisticsResponse.Deserialize(responseText);
     }
 
+    public async Task<ListMetricsResult> ListMetricsAsync(ListMetricsRequest request)
+    {
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {
+            Content = GetPostContent(request.ToParameters())
+        };
+
+        var responseText = await SendAsync(httpRequest).ConfigureAwait(false);
+
+        return ListMetricsResponse.Deserialize(responseText).ListMetricsResult;
+    }
+
     public async Task<List<Metric>> ListMetricsAsyncAsync(ListMetricsRequest request)
     {
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, Endpoint) {

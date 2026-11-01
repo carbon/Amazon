@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 
 using Amazon.Scheduling;
+using Amazon.Sqs.Exceptions;
 
 using Carbon.Messaging;
 
@@ -109,7 +110,12 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
                 messageBatch[i] = JsonSerializer.Serialize(batch[i].Body, s_jso);
             }
 
-            await _client.SendMessageBatchAsync(new SendMessageBatchRequest(_queueUrl, messageBatch)).ConfigureAwait(false);
+            var result = await _client.SendMessageBatchAsync(new SendMessageBatchRequest(_queueUrl, messageBatch)).ConfigureAwait(false);
+
+            if (result.Failed is { Length: > 0 } failed)
+            {
+                throw new SqsBatchException(failed);
+            }
         }
     }
 
@@ -136,31 +142,31 @@ public sealed class SqsQueue<T> : IMessageQueue<T>
         }
 
         var retryCount = 0;
-        Exception lastError;
 
         var request = new DeleteMessageBatchRequest(_queueUrl, handles);
 
-        do
+        while (true)
         {
             try
             {
-                await _client.DeleteMessageBatchAsync(request).ConfigureAwait(false);
+                var result = await _client.DeleteMessageBatchAsync(request).ConfigureAwait(false);
+
+                if (result.Failed is { Length: > 0 } failed)
+                {
+                    throw new SqsBatchException(failed);
+                }
 
                 return;
             }
-            catch (Exception ex) when (s_retryPolicy.ShouldRetry(retryCount) && ex is IException { IsTransient: true })
+            catch (Exception ex) when (s_retryPolicy.ShouldRetry(retryCount + 1) && ex is IException { IsTransient: true })
             {
-                lastError = ex;
+                // The final attempt doesn't match this filter, so its exception reaches the caller
             }
 
             retryCount++;
 
             await Task.Delay(s_retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
         }
-
-        while (s_retryPolicy.ShouldRetry(retryCount));
-
-        throw lastError;
     }
 
     private static JsonEncodedMessage<T>[] Convert(ReadOnlySpan<SqsMessage> messages)

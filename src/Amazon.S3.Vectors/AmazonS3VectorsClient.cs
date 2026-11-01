@@ -1,4 +1,6 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using Amazon.Exceptions;
 
@@ -6,12 +8,17 @@ namespace Amazon.S3.Vectors;
 
 public class AmazonS3VectorsClient : AwsClient
 {
+    private static readonly JsonSerializerOptions s_requestOptions = new(JsonSerializerDefaults.Web) {
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
+
     private readonly Uri _endpoint;
 
     public AmazonS3VectorsClient(AwsRegion region, IAwsCredential credential)
         : base("s3vectors", region, credential)
     {
-        _endpoint = new Uri($"https://s3vectors.{region.Name}.api.aws");
+        Endpoint = $"https://s3vectors.{region.Name}.api.aws/";
+        _endpoint = new Uri(Endpoint);
     }
 
     public Task<CreateIndexResult> CreateIndexAsync(
@@ -98,7 +105,7 @@ public class AmazonS3VectorsClient : AwsClient
         return SendAsync<ListTagsForResourceRequest, ListTagsForResourceResult>
             (HttpMethod.Get,
             "/tags/" + Uri.EscapeDataString(request.ResourceArn),
-            request,
+            null,
             cancellationToken);
     }
 
@@ -114,6 +121,13 @@ public class AmazonS3VectorsClient : AwsClient
         CancellationToken cancellationToken = default)
     {
         return SendAsync<ListVectorsRequest, ListVectorsResult>(HttpMethod.Post, "/ListVectors", request, cancellationToken);
+    }
+
+    public Task<PutVectorBucketDefaultIndexModeResult> PutVectorBucketDefaultIndexModeAsync(
+        PutVectorBucketDefaultIndexModeRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        return SendAsync<PutVectorBucketDefaultIndexModeRequest, PutVectorBucketDefaultIndexModeResult>(HttpMethod.Post, "/PutVectorBucketDefaultIndexMode", request, cancellationToken);
     }
 
     public Task<PutVectorBucketPolicyResult> PutVectorBucketPolicyAsync(
@@ -141,10 +155,10 @@ public class AmazonS3VectorsClient : AwsClient
         TagResourceRequest request,
         CancellationToken cancellationToken = default)
     {
-        return SendAsync<TagResourceRequest, TagResourceResult>(
+        return SendAsync<TagResourceBody, TagResourceResult>(
             HttpMethod.Post,
             "/tags/" + Uri.EscapeDataString(request.ResourceArn),
-            request,
+            new TagResourceBody(request.Tags),
             cancellationToken);
     }
 
@@ -155,8 +169,15 @@ public class AmazonS3VectorsClient : AwsClient
         return SendAsync<UntagResourceRequest, UntagResourceResult>(
             HttpMethod.Delete,
             "/tags/" + Uri.EscapeDataString(request.ResourceArn) + "?tagKeys=" + string.Join("&tagKeys=", request.TagKeys.Select(Uri.EscapeDataString)),
-            request,
+            null,
             cancellationToken);
+    }
+
+    public Task<UpdateIndexModeResult> UpdateIndexModeAsync(
+        UpdateIndexModeRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        return SendAsync<UpdateIndexModeRequest, UpdateIndexModeResult>(HttpMethod.Post, "/UpdateIndexMode", request, cancellationToken);
     }
 
     // Sender -
@@ -174,7 +195,7 @@ public class AmazonS3VectorsClient : AwsClient
 
         if (request is not null)
         {
-            httpRequest.Content = JsonContent.Create(request);
+            httpRequest.Content = JsonContent.Create(request, options: s_requestOptions);
         }
 
         await SignAsync(httpRequest).ConfigureAwait(false);
@@ -192,16 +213,26 @@ public class AmazonS3VectorsClient : AwsClient
             throw new AwsException(error,response.StatusCode);
         }
 
-        if (response.Content is null ||
-            response.Content.Headers.ContentLength is 0)
+        if (response.Content is null)
         {
             return new TResponse();
         }
 
-        TResponse? result = await response.Content
-            .ReadFromJsonAsync<TResponse>(cancellationToken)
-            .ConfigureAwait(false);
+        // An empty body may arrive without a Content-Length
+        byte[] body = await response.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
 
-        return result ?? new TResponse();
+        if (body.Length is 0)
+        {
+            return new TResponse();
+        }
+
+        return JsonSerializer.Deserialize<TResponse>(body, JsonSerializerOptions.Web) ?? new TResponse();
+    }
+
+    // The ARN is a URI parameter, so the body holds only the tags
+    private sealed class TagResourceBody(Dictionary<string, string> tags)
+    {
+        [JsonPropertyName("tags")]
+        public Dictionary<string, string> Tags { get; } = tags;
     }
 }

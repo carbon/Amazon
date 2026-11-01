@@ -7,7 +7,7 @@ namespace Amazon.Ec2;
 public sealed class SecurityGroup
 {
     [XmlElement("ownerId")]
-    public long OwnerId { get; init; }
+    public string OwnerId { get; init; }
 
     [XmlElement("groupId")]
     public string GroupId { get; init; }

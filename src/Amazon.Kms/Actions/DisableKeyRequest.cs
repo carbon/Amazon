@@ -9,5 +9,5 @@ public sealed class DisableKeyRequest : KmsRequest
         KeyId = keyId;
     }
 
-    public required string KeyId { get; init; }
+    public string KeyId { get; }
 }

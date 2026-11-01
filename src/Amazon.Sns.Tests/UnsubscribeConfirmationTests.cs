@@ -23,8 +23,10 @@ public class UnsubscribeConfirmationTests
             }
             """);
 
-        Assert.True(notification is UnsubscribeConfirmation);
+        var confirmation = Assert.IsType<UnsubscribeConfirmation>(notification);
 
-        Assert.Equal("47138184-6831-46b8-8f7c-afc488602d7d", notification.MessageId);
+        Assert.Equal("47138184-6831-46b8-8f7c-afc488602d7d", confirmation.MessageId);
+        Assert.Equal("arn:aws:sns:us-west-2:123456789012:MyTopic", confirmation.TopicArn);
+        Assert.Null(confirmation.Subject);
     }
 }

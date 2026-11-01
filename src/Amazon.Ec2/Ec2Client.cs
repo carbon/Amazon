@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Text;
 
 using Amazon.Ec2.Exceptions;
 using Amazon.Ec2.Responses;
@@ -66,9 +67,11 @@ public sealed class Ec2Client(AwsRegion region, IAwsCredential credential)
 
     #region Instances
 
-    public Task<DescribeInstancesResponse> DescribeInstancesAsync(DescribeInstancesRequest request)
+    public async Task<DescribeInstancesResponse> DescribeInstancesAsync(DescribeInstancesRequest request)
     {
-        return SendAsync<DescribeInstancesResponse>(request);
+        byte[] responseBytes = await SendAsync(request).ConfigureAwait(false);
+
+        return DescribeInstancesResponse.Deserialize(Encoding.UTF8.GetString(responseBytes));
     }
 
     public Task<RunInstancesResponse> RunInstancesAsync(RunInstancesRequest request)
@@ -211,15 +214,20 @@ public sealed class Ec2Client(AwsRegion region, IAwsCredential credential)
     {
         var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
+        ErrorResponse? errorResponse = null;
+
         try
         {
-            var errorResponse = ErrorResponse.Deserialize(responseText);
-
-            throw new Ec2Exception(errorResponse.Errors, response.StatusCode);            
+            errorResponse = ErrorResponse.Deserialize(responseText);
         }
-        catch { }
+        catch (InvalidOperationException) { } // Not an EC2 error document
 
-        throw new Ec2Exception(responseText, response.StatusCode);
+        if (errorResponse?.Errors is { Length: > 0 } errors)
+        {
+            return new Ec2Exception(errors, response.StatusCode);
+        }
+
+        return new Ec2Exception(responseText, response.StatusCode);
     }
 
     #endregion

@@ -28,9 +28,13 @@ public class NotificationTests
         Assert.Equal("arn:aws:sns:us-west-2:123456789012:MyTopic",  message.TopicArn);
         Assert.Equal("EXAMPLEw6JRN...",                             message.Signature);
         Assert.Equal("1",                                           message.SignatureVersion);
+        Assert.Equal("My First Message",                            message.Subject);
+        Assert.Equal(new DateTimeOffset(2012, 5, 2, 0, 54, 6, 655, TimeSpan.Zero), message.Timestamp);
 
         var notification = (Notification)message;
 
         Assert.Equal("Hello world!", notification.Message);
+        Assert.Equal("https://sns.us-west-2.amazonaws.com/SimpleNotificationService-f3ecfb7224c7233fe7bb5f59f96de52f.pem", notification.SigningCertURL);
+        Assert.Equal("https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:123456789012:MyTopic:c9135db0-26c4-47ec-8998-413945fb5a96", notification.UnsubscribeURL);
     }
 }

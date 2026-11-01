@@ -14,5 +14,8 @@ public enum SigningAlgorithm
     ECDSA_SHA_256,
     ECDSA_SHA_384,
     ECDSA_SHA_512,
-    SM2DSA
+    SM2DSA,
+    ML_DSA_SHAKE_256,
+    ED25519_SHA_512,
+    ED25519_PH_SHA_512
 }

@@ -26,6 +26,9 @@ public sealed class QueryVectorsRequest
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public JsonElement? Filter { get; init; }
 
+    [JsonPropertyName("queryMode")]
+    public IndexMode? QueryMode { get; init; }
+
     [JsonPropertyName("returnDistance")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public bool ReturnDistance { get; init; }
@@ -33,4 +36,8 @@ public sealed class QueryVectorsRequest
     [JsonPropertyName("returnMetadata")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public bool ReturnMetadata { get; init; }
+
+    [JsonPropertyName("nextToken")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? NextToken { get; init; }
 }

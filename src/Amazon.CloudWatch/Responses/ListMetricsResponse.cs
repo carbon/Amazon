@@ -13,9 +13,12 @@ public class ListMetricsResponse
 
     public static List<Metric> Parse(byte[] xmlText)
     {
-        var response = CloudWatchSerializer<ListMetricsResponse>.DeserializeXml(xmlText);
+        return Deserialize(xmlText).ListMetricsResult.Metrics;
+    }
 
-        return response.ListMetricsResult.Metrics;
+    public static ListMetricsResponse Deserialize(byte[] xmlText)
+    {
+        return CloudWatchSerializer<ListMetricsResponse>.DeserializeXml(xmlText);
     }
 }
 
@@ -24,6 +27,12 @@ public sealed class ListMetricsResult
     [XmlArray]
     [XmlArrayItem("member")]
     public List<Metric> Metrics { get; set; }
+
+    /// <summary>
+    /// The token to pass as <see cref="ListMetricsRequest.NextToken"/> for the next page. Null on the last page.
+    /// </summary>
+    [XmlElement]
+    public string NextToken { get; set; }
 }
 
 

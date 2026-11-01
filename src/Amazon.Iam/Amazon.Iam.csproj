@@ -4,6 +4,7 @@
     <AssemblyName>Amazon.Iam</AssemblyName>
     <Version>0.16.0</Version>
     <TargetFramework>net10.0</TargetFramework>
+    <IsAotCompatible>true</IsAotCompatible>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

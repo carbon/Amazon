@@ -61,7 +61,7 @@ public class DescribeSecurityGroupsResponseTest
 
         var group = response.SecurityGroups[0];
 
-        Assert.Equal(123456789012L, group.OwnerId);
+        Assert.Equal("123456789012", group.OwnerId);
         Assert.Equal("sg-9bf6ceff", group.GroupId);
         Assert.Equal("SSHAccess", group.GroupName);
         Assert.Equal("Security group for SSH access", group.GroupDescription);

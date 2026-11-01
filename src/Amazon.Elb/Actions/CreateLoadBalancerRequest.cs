@@ -26,9 +26,14 @@ public sealed class CreateLoadBalancerRequest : IElbRequest
 
     public string[]? SecurityGroups { get; init; }
 
-    // Must specifiy at least 2 subnets
-    [Required]
+    // Specify either SubnetMappings or Subnets, but not both
+    public SubnetMapping[]? SubnetMappings { get; init; }
+
+    // Application Load Balancers must specify subnets from at least 2 Availability Zones
     public string[]? Subnets { get; init; }
 
     public Tag[]? Tags { get; init; }
+
+    // application | network | gateway
+    public string? Type { get; init; }
 }

@@ -15,4 +15,7 @@ public sealed class DescribeLoadBalancersResult
     [XmlArray]
     [XmlArrayItem("member")]
     public LoadBalancer[] LoadBalancers { get; init; }
+
+    [XmlElement]
+    public string NextMarker { get; init; }
 }

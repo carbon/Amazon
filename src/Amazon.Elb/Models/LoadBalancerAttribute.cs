@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Xml.Serialization;
 
 namespace Amazon.Elb;
 
@@ -6,6 +7,7 @@ public sealed class LoadBalancerAttribute
 {
     public LoadBalancerAttribute() { }
 
+    [SetsRequiredMembers]
     public LoadBalancerAttribute(string key, string value)
     {
         Key = key;

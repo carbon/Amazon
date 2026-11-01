@@ -18,6 +18,9 @@ public sealed class TargetDescription
 
     public required string Id { get; init; }
 
+    // An Availability Zone or "all"
+    public string? AvailabilityZone { get; init; }
+
     [Range(1, 65535)]
     public int? Port { get; init; }
 }
