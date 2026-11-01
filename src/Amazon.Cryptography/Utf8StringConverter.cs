@@ -8,6 +8,11 @@ public sealed partial class Utf8StringConverter : JsonConverter<Utf8String>
 {
     public override Utf8String Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
+        if (reader.TokenType is not (JsonTokenType.String or JsonTokenType.PropertyName))
+        {
+            throw new JsonException($"Expected a string. Was {reader.TokenType}");
+        }
+
         if (!reader.HasValueSequence && !reader.ValueIsEscaped)
         {
             return new Utf8String(reader.ValueSpan.ToArray());
