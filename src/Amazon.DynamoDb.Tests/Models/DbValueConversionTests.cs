@@ -21,6 +21,61 @@ public class DbValueConversionTests
     }
 
     [Fact]
+    public void Numbers_SerializeAsStrings()
+    {
+        Assert.Equal("""{"N":"5"}""", JsonSerializer.Serialize(new DbValue(5)));
+        Assert.Equal("""{"N":"-5"}""", JsonSerializer.Serialize(new DbValue(-5L)));
+        Assert.Equal("""{"N":"1.5"}""", JsonSerializer.Serialize(new DbValue(1.5d)));
+        Assert.Equal("""{"N":"79228162514264337593543950335"}""", JsonSerializer.Serialize(new DbValue(decimal.MaxValue)));
+        Assert.Equal("""{"N":"12"}""", JsonSerializer.Serialize(new DbValue("12", DbValueType.N)));
+    }
+
+    [Fact]
+    public void Numbers_SerializeUsingInvariantCulture()
+    {
+        var culture = System.Globalization.CultureInfo.CurrentCulture;
+
+        try
+        {
+            System.Globalization.CultureInfo.CurrentCulture = new System.Globalization.CultureInfo("de-DE");
+
+            Assert.Equal("""{"N":"1.5"}""", JsonSerializer.Serialize(new DbValue(1.5d)));
+            Assert.Equal("""{"NS":["1.5"]}""", JsonSerializer.Serialize(new DbValue(new double[] { 1.5d })));
+        }
+        finally
+        {
+            System.Globalization.CultureInfo.CurrentCulture = culture;
+        }
+    }
+
+    [Fact]
+    public void NumberSets_Serialize()
+    {
+        Assert.Equal("""{"NS":["1","2"]}""", JsonSerializer.Serialize(new DbValue(new short[] { 1, 2 })));
+        Assert.Equal("""{"NS":["1","2"]}""", JsonSerializer.Serialize(new DbValue(new int[] { 1, 2 })));
+        Assert.Equal("""{"NS":["1","2"]}""", JsonSerializer.Serialize(new DbValue(new long[] { 1, 2 })));
+        Assert.Equal("""{"NS":["1.5"]}""", JsonSerializer.Serialize(new DbValue(new float[] { 1.5f })));
+        Assert.Equal("""{"NS":["1","2"]}""", JsonSerializer.Serialize(new DbValue(new string[] { "1", "2" }, DbValueType.NS)));
+    }
+
+    [Fact]
+    public void ListsAndMaps_Serialize()
+    {
+        var map = new AttributeCollection { { "a", 1 }, { "b", new DbValue(true) } };
+
+        Assert.Equal("""{"a":{"N":"1"},"b":{"BOOL":true}}""", JsonSerializer.Serialize(map));
+        Assert.Equal("""{"L":[{"N":"1"},{"S":"a"}]}""", JsonSerializer.Serialize(new DbValue(new DbValue[] { new(1), new("a") })));
+        Assert.Equal("""{"L":[{"N":"1"}]}""", JsonSerializer.Serialize(new DbValue(new List<DbValue> { new(1) })));
+    }
+
+    [Fact]
+    public void Booleans_Deserialize()
+    {
+        Assert.True(JsonSerializer.Deserialize<DbValue>("""{"BOOL":true}""").ToBoolean());
+        Assert.False(JsonSerializer.Deserialize<DbValue>("""{"BOOL":false}""").ToBoolean());
+    }
+
+    [Fact]
     public void Decimal_RoundTrips() => Assert.Equal(1.5m, RoundTrip(1.5m));
 
     [Fact]
