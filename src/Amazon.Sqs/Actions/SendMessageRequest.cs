@@ -14,6 +14,8 @@ public sealed class SendMessageRequest : SqsRequest
         string? messageGroupId = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(messageBody);
+        MessageIdentifier.ThrowIfTooLong(messageDeduplicationId);
+        MessageIdentifier.ThrowIfTooLong(messageGroupId);
 
         QueueUrl = queueUrl;
         MessageBody = messageBody;

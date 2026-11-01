@@ -14,7 +14,7 @@ public sealed class QueueAttributes
 
     /// <summary>
     /// MaximumMessageSize – The limit of how many bytes a message can contain before Amazon SQS rejects it. 
-    /// Valid values: An integer from 1,024 bytes (1 KiB) to 262,144 bytes (256 KiB). Default: 262,144 (256 KiB).
+    /// Valid values: An integer from 1,024 bytes (1 KiB) to 1,048,576 bytes (1 MiB). Default: 1,048,576 (1 MiB).
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonNumberHandling(JsonNumberHandling.WriteAsString)]
@@ -41,4 +41,40 @@ public sealed class QueueAttributes
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? SqsManagedSseEnabled { get; set; }
+
+    /// <summary>
+    /// A JSON object with deadLetterTargetArn and maxReceiveCount
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? RedrivePolicy { get; set; }
+
+    /// <summary>
+    /// A JSON object with redrivePermission and sourceQueueArns
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? RedriveAllowPolicy { get; set; }
+
+    /// <summary>
+    /// "true" for a FIFO queue, whose name must end with .fifo. Can only be set when creating the queue.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? FifoQueue { get; set; }
+
+    /// <summary>
+    /// "true" to derive a MessageDeduplicationId from the message body. FIFO queues only.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? ContentBasedDeduplication { get; set; }
+
+    /// <summary>
+    /// messageGroup or queue. Set to messageGroup, with a FifoThroughputLimit of perMessageGroupId, for high throughput FIFO.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? DeduplicationScope { get; set; }
+
+    /// <summary>
+    /// perQueue or perMessageGroupId
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? FifoThroughputLimit { get; set; }
 }

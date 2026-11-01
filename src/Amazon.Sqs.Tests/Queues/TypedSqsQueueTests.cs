@@ -172,6 +172,30 @@ public class TypedSqsQueueTests
     }
 
     [Fact]
+    public async Task Delete_SplitsIntoBatchesOfTen()
+    {
+        var handler = new FakeSqsHandler(FakeSqs.Json("""{"Failed":[],"Successful":[]}"""));
+
+        await FakeSqs.CreateTypedQueue(handler).DeleteAsync(Create(11));
+
+        Assert.Equal(2, handler.Requests.Count);
+
+        var last = Assert.Single(handler.Requests[1].Json.GetProperty("Entries").EnumerateArray());
+
+        Assert.Equal("h11", last.GetProperty("ReceiptHandle").GetString());
+    }
+
+    [Fact]
+    public async Task Delete_StopsAtTheFirstBatchWithFailures()
+    {
+        var handler = new FakeSqsHandler(FakeSqs.BatchWithFailure);
+
+        await Assert.ThrowsAsync<SqsBatchException>(() => FakeSqs.CreateTypedQueue(handler).DeleteAsync(Create(11)));
+
+        Assert.Single(handler.Requests);
+    }
+
+    [Fact]
     public async Task Delete_ValidatesAndIgnoresEmptyInput()
     {
         var handler = new FakeSqsHandler(FakeSqs.Empty);
