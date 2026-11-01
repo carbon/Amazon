@@ -6,6 +6,8 @@ public abstract class ModelInfo(string id, InferenceProfileRegionFlags inference
 
     public int? MaxInputTokenCount { get; init; }
 
+    public int? MaxOutputTokenCount { get; init; }
+
     public string? InferenceProfile { get; init; }
 
     public InferenceProfileRegionFlags InferenceProfileRegionFlags { get; } = inferenceProfileRegionFlags;
@@ -22,8 +24,10 @@ public abstract class ModelInfo(string id, InferenceProfileRegionFlags inference
 public enum InferenceProfileRegionFlags
 {
     Global = 1 << 1, // global (Global cross-region inference profile)
-    EU     = 1 << 2, // eu
-    US     = 1 << 3, // us
+    AU     = 1 << 2, // au
+    EU     = 1 << 3, // eu
+    JP     = 1 << 4, // jp
+    US     = 1 << 5, // us
 }
 
 // https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html
