@@ -43,5 +43,12 @@ public sealed class DecryptRequest : KmsRequest
     public string[]? GrantTokens { get; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public RecipientInfo[]? Recipient { get; }
+    public RecipientInfo? Recipient { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool DryRun { get; init; }
+
+    // IGNORE_CIPHERTEXT
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string[]? DryRunModifiers { get; init; }
 }
