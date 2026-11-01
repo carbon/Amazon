@@ -332,4 +332,82 @@ public class DynamoDbClientTests
 
         Assert.Equal("a", update.ExpressionAttributeValues[":v0"].ToString());
     }
+
+    private static readonly Change s_add = Change.Add("count", 1);
+
+    private static System.Net.Http.HttpResponseMessage ServerError(string type = "InternalServerError")
+    {
+        return FakeDynamo.Error(type, "Failed", System.Net.HttpStatusCode.InternalServerError);
+    }
+
+    [Fact]
+    public async Task UpdateItemUsingRetryPolicyAsync_DoesNotRepeatAddAfterServerError()
+    {
+        var handler = new FakeDynamoHandler(() => ServerError(), () => FakeDynamo.Json("{}"));
+
+        var request = new UpdateItemRequest("Widgets", Key(1), [s_add]);
+
+        var ex = await Assert.ThrowsAsync<DynamoDbException>(() => FakeDynamo.CreateClient(handler).UpdateItemUsingRetryPolicyAsync(request, s_fastRetries));
+
+        Assert.Equal("InternalServerError", ex.Type);
+        Assert.Single(handler.Requests);
+    }
+
+    [Fact]
+    public async Task UpdateItemUsingRetryPolicyAsync_DoesNotRepeatAddMixedWithOtherChanges()
+    {
+        var handler = new FakeDynamoHandler(() => FakeDynamo.Json("not used", System.Net.HttpStatusCode.ServiceUnavailable));
+
+        var request = new UpdateItemRequest("Widgets", Key(1), [Change.Replace("name", "a"), s_add]);
+
+        await Assert.ThrowsAsync<DynamoDbException>(() => FakeDynamo.CreateClient(handler).UpdateItemUsingRetryPolicyAsync(request, s_fastRetries));
+
+        Assert.Single(handler.Requests);
+    }
+
+    [Fact]
+    public async Task UpdateItemUsingRetryPolicyAsync_RepeatsAddAfterThrottling()
+    {
+        var handler = new FakeDynamoHandler(FakeDynamo.Throttled, () => FakeDynamo.Json("{}"));
+
+        var request = new UpdateItemRequest("Widgets", Key(1), [s_add]);
+
+        await FakeDynamo.CreateClient(handler).UpdateItemUsingRetryPolicyAsync(request, s_fastRetries);
+
+        Assert.Equal(2, handler.Requests.Count);
+    }
+
+    [Fact]
+    public async Task UpdateItemUsingRetryPolicyAsync_RepeatsIdempotentChangesAfterServerError()
+    {
+        var handler = new FakeDynamoHandler(() => ServerError(), () => FakeDynamo.Json("{}"));
+
+        var request = new UpdateItemRequest("Widgets", Key(1), [Change.Replace("name", "a"), Change.Remove("deleted")]);
+
+        await FakeDynamo.CreateClient(handler).UpdateItemUsingRetryPolicyAsync(request, s_fastRetries);
+
+        Assert.Equal(2, handler.Requests.Count);
+    }
+
+    [Fact]
+    public async Task PutItemUsingRetryPolicyAsync_RepeatsAfterServerError()
+    {
+        var handler = new FakeDynamoHandler(() => ServerError(), () => FakeDynamo.Json("{}"));
+
+        await FakeDynamo.CreateClient(handler).PutItemUsingRetryPolicyAsync(new PutItemRequest("Widgets", Item(1)), s_fastRetries);
+
+        Assert.Equal(2, handler.Requests.Count);
+    }
+
+    [Theory]
+    [InlineData("RequestLimitExceeded")]
+    [InlineData("ReplicatedWriteConflictException")]
+    public async Task RetriesDocumentedThrottlingErrors(string type)
+    {
+        var handler = new FakeDynamoHandler(() => FakeDynamo.Error(type), () => FakeDynamo.Json("{}"));
+
+        await FakeDynamo.CreateClient(handler).PutItemUsingRetryPolicyAsync(new PutItemRequest("Widgets", Item(1)), s_fastRetries);
+
+        Assert.Equal(2, handler.Requests.Count);
+    }
 }

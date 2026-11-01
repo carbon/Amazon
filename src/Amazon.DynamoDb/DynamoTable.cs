@@ -482,51 +482,65 @@ public class DynamoTable<T, TKey>
         return result;
     }
 
-    private async Task<BatchWriteItemResult> BatchWriteItem(TableRequests batch, BatchResult info)
+    private async Task BatchWriteItem(TableRequests batch, BatchResult info)
     {
         if (batch.Requests.Count > 25)
             throw new ArgumentException($"Batch must not exceed 25 items. Contained {batch.Requests.Count} items.", nameof(batch));
 
+        TableRequests pending = batch;
+
         int retryCount = 0;
 
-        Exception? lastError;
-
-        do
+        while (true)
         {
             if (retryCount > 0)
             {
                 await Task.Delay(s_retryPolicy.GetDelay(retryCount)).ConfigureAwait(false);
             }
 
+            BatchWriteItemResult result;
+
             try
             {
-                var result = await _client.BatchWriteItemAsync(batch).ConfigureAwait(false);
-
-                info.ItemCount += batch.Requests.Count;
-                info.RequestCount++;
-
-                // Recursively process any item
-                foreach (var unprocessedBatch in result.UnprocessedItems)
-                {
-                    await Task.Delay(Random.Shared.Next(250, 500)).ConfigureAwait(false); // Slow down
-
-                    info.ItemCount -= unprocessedBatch.Requests.Count;
-
-                    result = await BatchWriteItem(unprocessedBatch, info).ConfigureAwait(false);
-                }
-
-                return result;
+                result = await _client.BatchWriteItemAsync(pending).ConfigureAwait(false);
             }
-            catch (DynamoDbException ex) when (ex.IsTransient)
+            catch (DynamoDbException ex) when (ex.IsTransient && s_retryPolicy.ShouldRetry(retryCount + 1))
             {
-                lastError = ex;
+                retryCount++;
+
+                continue;
             }
 
-            retryCount++;
+            info.RequestCount++;
 
-        } while (s_retryPolicy.ShouldRetry(retryCount));
+            int unprocessedCount = 0;
 
-        throw lastError;
+            foreach (TableRequests unprocessed in result.UnprocessedItems)
+            {
+                unprocessedCount += unprocessed.Requests.Count;
+            }
+
+            int processedCount = pending.Requests.Count - unprocessedCount;
+
+            info.ItemCount += processedCount;
+
+            if (unprocessedCount is 0)
+            {
+                return;
+            }
+
+            // Only give up when requests stop making progress
+            retryCount = processedCount > 0 ? 1 : retryCount + 1;
+
+            if (!s_retryPolicy.ShouldRetry(retryCount))
+            {
+                info.ErrorCount += unprocessedCount;
+
+                throw new DynamoDbException($"{unprocessedCount} unprocessed items remain in '{_tableName}' after retrying", HttpStatusCode.OK);
+            }
+
+            pending = result.UnprocessedItems[0];
+        }
     }
 
     #endregion

@@ -203,7 +203,7 @@ public sealed class DynamoDbClient : AwsClient
             {
                 return await UpdateItemAsync(request).ConfigureAwait(false);
             }
-            catch (DynamoDbException ex) when (ex.IsTransient)
+            catch (DynamoDbException ex) when (ex.IsTransient && (request.IsIdempotent || !ex.WriteMayHaveBeenApplied))
             {
                 lastException = ex;
             }

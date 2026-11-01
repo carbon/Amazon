@@ -26,6 +26,8 @@ public sealed class UpdateItemRequest
 
         UpdateExpression = updateExpression.ToString();
 
+        IsIdempotent = !Array.Exists(changes, static change => change.Operation == DataOperation.Add);
+
         if (conditions is { Length: > 0 })
         {
             var expression = new DynamoExpression(attributeNames, attributeValues);
@@ -59,4 +61,9 @@ public sealed class UpdateItemRequest
     public ReturnValues? ReturnValues { get; }
 
     public string UpdateExpression { get; }
+
+    /// <summary>
+    /// Whether applying the update twice gives the same result. An ADD applied twice would count twice.
+    /// </summary>
+    internal bool IsIdempotent { get; }
 }
