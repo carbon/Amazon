@@ -49,7 +49,7 @@ public class CreateRuleResponseTests
         Assert.Equal("/img/*", rule.Conditions[0].Values[0]);
         Assert.Equal("/vid/*", rule.Conditions[0].Values[1]);
 
-        Assert.Equal(10, rule.Priority);
+        Assert.Equal("10", rule.Priority);
         Assert.Equal("forward", rule.Actions[0].Type);
         Assert.Equal("arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-targets/73e2d6bc24d8a067", rule.Actions[0].TargetGroupArn);
     }

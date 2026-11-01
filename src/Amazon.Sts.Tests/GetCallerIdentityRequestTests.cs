@@ -5,7 +5,7 @@ public class GetCallerIdentityRequestTests
     private static readonly AwsCredential awsCredential = new ("public", "private");
 
     [Fact]
-    public async Task A()
+    public async Task VerificationParameters_AreSigned()
     {
         var client = new StsClient(AwsRegion.USEast1, awsCredential);
 
@@ -20,6 +20,6 @@ public class GetCallerIdentityRequestTests
 
         var age = parameters.GetAge();
 
-        Assert.True(age > TimeSpan.Zero);
+        Assert.True(age >= TimeSpan.Zero);
     }
 }

@@ -7,7 +7,7 @@ namespace Amazon.Sqs;
 public sealed class ChangeMessageVisibilityBatchResult
 {
     [JsonPropertyName("Failed")]
-    public ChangeMessageVisibilityBatchResultEntry[] Failed { get; init; }
+    public BatchResultErrorEntry[] Failed { get; init; }
 
     [JsonPropertyName("Successful")]
     public ChangeMessageVisibilityBatchResultEntry[] Successful { get; init; }

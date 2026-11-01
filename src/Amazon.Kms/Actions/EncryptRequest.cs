@@ -55,4 +55,7 @@ public sealed class EncryptRequest : KmsRequest
     // EncryptionAlgorithm
 
     public byte[] Plaintext { get; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool DryRun { get; init; }
 }

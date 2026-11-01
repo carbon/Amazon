@@ -103,6 +103,12 @@ public sealed class SqsClient(AwsRegion region, IAwsCredential credential)
 
     private static readonly MediaTypeHeaderValue s_mediaType_xAmzJson1_0 = new("application/x-amz-json-1.0");
 
+    // The docs name the error text both `message` and `Message`
+    private static readonly JsonSerializerOptions s_errorJso = new() {
+        PropertyNameCaseInsensitive = true,
+        TypeInfoResolver = SqsSerializerContext.Default
+    };
+
     internal HttpRequestMessage ConstructPostRequest<TRequest>(
         [ConstantExpected] string action,
         TRequest request,
@@ -147,15 +153,22 @@ public sealed class SqsClient(AwsRegion region, IAwsCredential credential)
 
         try
         {
-            var errorResult = await response.Content.ReadFromJsonAsync<ErrorResult>(JsonSerializerOptions.Default).ConfigureAwait(false);
+            var errorResult = await response.Content.ReadFromJsonAsync<ErrorResult>(s_errorJso).ConfigureAwait(false);
 
-            return new SqsException(errorResult!);
+            return new SqsException(errorResult!, response.StatusCode);
         }
         catch
         {
             string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            return new QueueException($"status = {response.StatusCode}. response = {responseText}");
+            string message = $"status = {response.StatusCode}. response = {responseText}";
+
+            if ((int)response.StatusCode >= 500)
+            {
+                return new SqsException(new ErrorResult { Message = message }, response.StatusCode);
+            }
+
+            return new QueueException(message);
         }
     }
 

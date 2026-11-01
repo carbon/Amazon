@@ -9,7 +9,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <NoWarn>IDE0057,IDE1006,IDE0130</NoWarn>
-    <IsTrimmable>true</IsTrimmable>
+    <IsAotCompatible>true</IsAotCompatible>
 	  
     <!-- Package Details-->
     <Authors>iamcarbon</Authors>

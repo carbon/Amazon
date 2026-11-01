@@ -16,9 +16,9 @@ public sealed class CreateTargetGroupRequest : IElbRequest
 
     public string? HealthCheckProtocol { get; init; }
 
-    public int HealthCheckTimeoutSeconds { get; init; }
+    public int? HealthCheckTimeoutSeconds { get; init; }
 
-    public int HealthyThresholdCount { get; init; }
+    public int? HealthyThresholdCount { get; init; }
 
     public Matcher? Matcher { get; init; }
 
@@ -30,6 +30,9 @@ public sealed class CreateTargetGroupRequest : IElbRequest
     public string? Protocol { get; init; }
 
     public string? ProtocolVersion { get; init; }
+
+    // instance | ip | lambda | alb
+    public string? TargetType { get; init; }
 
     [Range(2, 10)]
     public int? UnhealthyThresholdCount { get; init; }
