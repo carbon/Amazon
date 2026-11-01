@@ -63,6 +63,8 @@ public sealed partial class InstanceMetadataService
             }
             catch (Exception ex)
             {
+                _token = null;
+
                 lastException = ex;
             }
         }
@@ -73,6 +75,8 @@ public sealed partial class InstanceMetadataService
     public async Task<InstanceIdentity> GetInstanceIdentityAsync()
     {
         using var response = await GetAsync($"http://{ip4Host}/latest/dynamic/instance-identity/document").ConfigureAwait(false);
+
+        ThrowIfError(response);
 
         var result = await response.Content.ReadFromJsonAsync(MetadataSerializerContext.Default.InstanceIdentity).ConfigureAwait(false);
 
@@ -110,6 +114,8 @@ public sealed partial class InstanceMetadataService
     {
         using var response = await GetAsync($"{baseMetadataUri}/user-data").ConfigureAwait(false);
 
+        ThrowIfError(response);
+
         return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
     }
 
@@ -141,6 +147,8 @@ public sealed partial class InstanceMetadataService
         };
 
         using HttpResponseMessage response = await httpClient.SendAsync(request).ConfigureAwait(false);
+
+        ThrowIfError(response);
 
         string responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
@@ -183,6 +191,8 @@ public sealed partial class InstanceMetadataService
             return null;
         }
 
+        ThrowIfError(response);
+
         return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
     }
 
@@ -195,6 +205,8 @@ public sealed partial class InstanceMetadataService
             return null;
         }
 
+        ThrowIfError(response);
+
         return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
     }
 
@@ -202,6 +214,18 @@ public sealed partial class InstanceMetadataService
     {
         using HttpResponseMessage response = await GetAsync(url).ConfigureAwait(false);
 
+        ThrowIfError(response);
+
         return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+    }
+
+    private void ThrowIfError(HttpResponseMessage response)
+    {
+        if (response.IsSuccessStatusCode) return;
+
+        // The token may have expired or been revoked. Get a new one next time.
+        _token = null;
+
+        throw new AwsException($"Unexpected metadata response. StatusCode = {response.StatusCode}", response.StatusCode);
     }
 }

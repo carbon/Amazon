@@ -32,9 +32,9 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
 
     public override bool Equals(object? obj) => Equals(obj as AwsRegion);
 
-    public static bool operator ==(AwsRegion lhs, AwsRegion rhs) => lhs.Equals(rhs);
+    public static bool operator ==(AwsRegion? lhs, AwsRegion? rhs) => lhs is null ? rhs is null : lhs.Equals(rhs);
 
-    public static bool operator !=(AwsRegion lhs, AwsRegion rhs) =>lhs?.Name != rhs?.Name;
+    public static bool operator !=(AwsRegion? lhs, AwsRegion? rhs) => !(lhs == rhs);
         
     public override int GetHashCode() => Name.GetHashCode();
 
@@ -164,9 +164,24 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
 
     public static AwsRegion FromAvailabilityZone(string availabilityZone)
     {
-        string regionName = availabilityZone[0..^1];
+        // The region ends at the first number: us-east-1a, us-gov-west-1a, us-west-2-lax-1a
 
-        return Get(regionName);
+        for (int i = 1; i < availabilityZone.Length; i++)
+        {
+            if (availabilityZone[i - 1] is '-' && char.IsAsciiDigit(availabilityZone[i]))
+            {
+                int end = i + 1;
+
+                while (end < availabilityZone.Length && char.IsAsciiDigit(availabilityZone[end]))
+                {
+                    end++;
+                }
+
+                return Get(availabilityZone[0..end]);
+            }
+        }
+
+        return Get(availabilityZone[0..^1]);
     }
 
     public static implicit operator AwsRegion(string name)
