@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -18,9 +17,12 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
 
     #region Aliases
 
-    public Task<CreateAliasResult> CreateAliasAsync(CreateAliasRequest request)
+    public async Task<CreateAliasResult> CreateAliasAsync(CreateAliasRequest request)
     {
-        return SendAsync("CreateAlias", request, KmsSerializerContext.Default.CreateAliasRequest, KmsSerializerContext.Default.CreateAliasResult);
+        // A successful response has an empty body
+        await SendAsync("CreateAlias", request, KmsSerializerContext.Default.CreateAliasRequest).ConfigureAwait(false);
+
+        return new CreateAliasResult();
     }
 
     #endregion
@@ -116,11 +118,6 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
             throw await GetExceptionFromResponseAsync(response).ConfigureAwait(false);
         }
 
-        if (response.StatusCode is HttpStatusCode.NoContent || response.Content.Headers.ContentLength is 0)
-        {
-            return null!;
-        }
-
         var result = await response.Content.ReadFromJsonAsync(resultJsonType).ConfigureAwait(false);
 
         return result!;
@@ -156,24 +153,55 @@ public sealed class KmsClient(AwsRegion region, IAwsCredential credential)
     {
         byte[] responseBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
-        if (responseBytes.Length > 0 && responseBytes[0] is (byte)'{')
+        if (ParseError(responseBytes) is not { } error)
         {
-            KmsError error = JsonSerializer.Deserialize(responseBytes, KmsSerializerContext.Default.KmsError)!;
+            return new AwsException(Encoding.UTF8.GetString(responseBytes), response.StatusCode);
+        }
 
-            return error.Type switch
-            {
-                "AccessDeniedException"       => new AccessDeniedException(error, response.StatusCode),
-                "ServiceUnavailableException" => new ServiceUnavailableException(), // TODO: Provide the message
-                "KeyUnavailableException"     => new KeyUnavailableException(error, response.StatusCode),
-                "ValidationException"         => new KmsValidationException(error, response.StatusCode),
-                "DryRunOperationException"    => new DryRunOperationException(error),
-                _                             => new KmsException(error, response.StatusCode)
-            };
-        }
-        else
+        return GetErrorCode(error.Type) switch
         {
-            throw new AwsException(Encoding.UTF8.GetString(responseBytes), response.StatusCode);
+            "AccessDeniedException"       => new AccessDeniedException(error, response.StatusCode),
+            "DependencyTimeoutException"  => new DependencyTimeoutException(error, response.StatusCode),
+            "KMSInternalException"        => new KmsInternalException(error, response.StatusCode),
+            "ServiceUnavailableException" => error.Message is null ? new ServiceUnavailableException() : new ServiceUnavailableException(error.Message),
+            "KeyUnavailableException"     => new KeyUnavailableException(error, response.StatusCode),
+            "ValidationException"         => new KmsValidationException(error, response.StatusCode),
+            "DryRunOperationException"    => new DryRunOperationException(error),
+            _                             => new KmsException(error, response.StatusCode)
+        };
+    }
+
+    private static KmsError? ParseError(byte[] responseBytes)
+    {
+        if (responseBytes.Length is 0 || responseBytes[0] is not (byte)'{')
+        {
+            return null;
         }
+
+        try
+        {
+            return JsonSerializer.Deserialize(responseBytes, KmsSerializerContext.Default.KmsError);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
+
+    // __type may be a shape name, a full shape id, or either followed by a colon and a URL
+    // https://smithy.io/2.0/aws/protocols/aws-json-1_1-protocol.html
+    private static string? GetErrorCode(string? type)
+    {
+        if (type is null) return null;
+
+        int colonIndex = type.IndexOf(':');
+
+        if (colonIndex > -1)
+        {
+            type = type[..colonIndex];
+        }
+
+        return type[(type.IndexOf('#') + 1)..];
     }
 
     #endregion

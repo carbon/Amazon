@@ -11,7 +11,7 @@ internal static class Ensure
 
         if (argument.Length < min || argument.Length > max)
         {
-            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, $"Length must be between {min} and {max}. Was {argument}."), paramName);
+            throw new ArgumentException(string.Create(CultureInfo.InvariantCulture, $"Length must be between {min} and {max}. Was {argument.Length}."), paramName);
         }
     }
 }

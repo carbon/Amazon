@@ -1,4 +1,6 @@
-﻿namespace Amazon.Kms;
+﻿#nullable disable
+
+namespace Amazon.Kms;
 
 public sealed class DecryptResult : KmsResult
 {
@@ -7,5 +9,8 @@ public sealed class DecryptResult : KmsResult
     public EncryptionAlgorithm EncryptionAlgorithm { get; set; }
 
     // max length = 4096
-    public required byte[] Plaintext { get; init; }
+    // Null when the request specified a Recipient
+    public byte[] Plaintext { get; init; }
+
+    public byte[] CiphertextForRecipient { get; init; }
 }
