@@ -10,6 +10,11 @@ public sealed class GetAuthenticationTokenRequest
         ArgumentException.ThrowIfNullOrEmpty(hostname);
         ArgumentException.ThrowIfNullOrEmpty(userName);
 
+        if (expires <= TimeSpan.Zero || expires.Ticks % TimeSpan.TicksPerSecond != 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(expires), expires, "Must be a positive, whole number of seconds");
+        }
+
         HostName = hostname;
         Port = port;
         UserName = userName;
