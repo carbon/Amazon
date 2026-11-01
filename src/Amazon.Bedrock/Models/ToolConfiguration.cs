@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Amazon.Bedrock.Models;
 
-public class ToolConfiguration
+public sealed class ToolConfiguration
 {
     [JsonPropertyName("toolChoice")]
     public JsonElement? ToolChoice { get; init; }
