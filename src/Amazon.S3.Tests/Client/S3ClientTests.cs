@@ -34,6 +34,94 @@ public class S3ClientTests
     }
 
     [Fact]
+    public async Task ReadsResponsesLargerThanTheInitialBuffer()
+    {
+        const int count = 5_000;
+
+        var contents = string.Concat(Enumerable.Range(0, count).Select(static i => $"<Contents><Key>{i}.txt</Key><Size>5</Size></Contents>"));
+
+        var handler = FakeS3Handler.Sequence(() => FakeS3.Xml($"<ListBucketResult xmlns=\"{Ns}\"><Name>bucket</Name>{contents}</ListBucketResult>"));
+
+        var result = await FakeS3.CreateClient(handler).ListBucketAsync("bucket", new ListBucketOptions());
+
+        Assert.Equal(count, result.Items.Length);
+        Assert.Equal("4999.txt", result.Items[^1].Key);
+    }
+
+    [Fact]
+    public async Task ThrowsHttpRequestExceptionWhenResponseBodyFails()
+    {
+        var failure = new IOException("The response ended prematurely");
+
+        var handler = FakeS3Handler.Sequence(() => new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new StreamContent(new FakeBodyStream(_ => throw failure))
+        });
+
+        var ex = await Assert.ThrowsAsync<HttpRequestException>(() => FakeS3.CreateClient(handler).ListBucketAsync("bucket", new ListBucketOptions()));
+
+        Assert.Same(failure, ex.InnerException);
+    }
+
+    [Fact]
+    public async Task TimesOutWhenResponseBodyStalls()
+    {
+        var handler = FakeS3Handler.Sequence(() => new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new StreamContent(new FakeBodyStream(static async cancellationToken => {
+                await Task.Delay(Timeout.Infinite, cancellationToken);
+
+                return 0;
+            }))
+        });
+
+        var client = FakeS3.CreateClient(handler).WithTimeout(TimeSpan.FromMilliseconds(100));
+
+        var ex = await Assert.ThrowsAsync<TaskCanceledException>(() => client.ListBucketAsync("bucket", new ListBucketOptions()).WaitAsync(TimeSpan.FromSeconds(5)));
+
+        Assert.IsType<TimeoutException>(ex.InnerException);
+    }
+
+    [Fact]
+    public async Task XmlCallsPassCancellationToHttpClient()
+    {
+        // Honors the token as SocketsHttpHandler does; without it the empty response would fail to deserialize
+        var handler = new FakeS3Handler((_, cancellationToken) => {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return Task.FromResult(FakeS3.Status(HttpStatusCode.OK));
+        });
+
+        var client = FakeS3.CreateClient(handler);
+
+        var canceled = new CancellationToken(canceled: true);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => client.ListBucketAsync("bucket", new ListBucketOptions(), canceled));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => client.ListObjectVersionsAsync("bucket", new ListVersionsOptions(), canceled));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => client.CompleteMultipartUploadAsync(new CompleteMultipartUploadRequest("s3.test", "bucket", "key", "u1", []), canceled));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => client.CopyObjectAsync(new CopyObjectRequest("s3.test", new S3ObjectLocation("bucket", "a"), new S3ObjectLocation("bucket", "b")), canceled));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => client.DeleteObjectsAsync(new DeleteObjectsRequest("s3.test", "bucket", new DeleteBatch(["a"])), canceled));
+    }
+
+    [Fact]
+    public async Task CancelingWhileReadingBodyIsNotReportedAsTimeout()
+    {
+        using var cts = new CancellationTokenSource();
+
+        var handler = FakeS3Handler.Sequence(() => new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new StreamContent(new FakeBodyStream(async cancellationToken => {
+                cts.Cancel();
+
+                await Task.Delay(Timeout.Infinite, cancellationToken);
+
+                return 0;
+            }))
+        });
+
+        var ex = await Assert.ThrowsAnyAsync<OperationCanceledException>(() => FakeS3.CreateClient(handler).ListBucketAsync("bucket", new ListBucketOptions(), cts.Token).WaitAsync(TimeSpan.FromSeconds(5)));
+
+        Assert.IsNotType<TimeoutException>(ex.InnerException);
+    }
+
+    [Fact]
     public async Task SignsRequests()
     {
         var handler = FakeS3Handler.Sequence(() => FakeS3.WithETag("\"a\""));

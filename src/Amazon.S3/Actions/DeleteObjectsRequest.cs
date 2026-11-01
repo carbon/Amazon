@@ -1,6 +1,5 @@
 ﻿using System.Net.Http;
 using System.Security.Cryptography;
-using System.Text;
 
 using Amazon.S3.Helpers;
 
@@ -11,9 +10,7 @@ public sealed class DeleteObjectsRequest : S3Request
     public DeleteObjectsRequest(string host, string bucketName, DeleteBatch batch)
         : base(HttpMethod.Post, host, bucketName, objectName: null, actionName: S3ActionName.Delete)
     {
-        string xmlText = batch.ToXmlString();
-
-        byte[] data = Encoding.UTF8.GetBytes(xmlText);
+        byte[] data = batch.ToXmlUtf8Bytes();
 
         Content = new ByteArrayContent(data) {
             Headers = { { "Content-Type", "text/xml" } }
@@ -46,7 +43,17 @@ public sealed class DeleteBatch
 
     public string ToXmlString(bool pretty = false)
     {
-        using var sb = new XmlStringBuilder(pretty);
+        return Write(pretty).ToString();
+    }
+
+    internal byte[] ToXmlUtf8Bytes()
+    {
+        return Write(pretty: false).ToUtf8Bytes();
+    }
+
+    private XmlStringBuilder Write(bool pretty)
+    {
+        var sb = new XmlStringBuilder(pretty);
 
         sb.WriteTagStart("Delete");
 
@@ -64,7 +71,7 @@ public sealed class DeleteBatch
 
         sb.WriteTagEnd("Delete");
 
-        return sb.ToString();
+        return sb;
     }
 }
 

@@ -19,6 +19,21 @@ public sealed class GetObjectRequest : S3Request
         set => Headers.IfModifiedSince = value;
     }
 
+    public string IfMatch
+    {
+        set
+        {
+            if (value is null)
+            {
+                Headers.IfMatch.Clear();
+            }
+            else
+            {
+                Headers.IfMatch.Add(new EntityTagHeaderValue(value));
+            }
+        }
+    }
+
     public string IfNoneMatch
     {
         set

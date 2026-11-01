@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 using Amazon.S3.Helpers;
@@ -41,7 +42,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         return this;
     }
 
-    public async IAsyncEnumerable<IBlob> ScanAsync(string? prefix, int take = 1_000_000_000)
+    public async IAsyncEnumerable<IBlob> ScanAsync(string? prefix, int take = 1_000_000_000, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(take);
 
@@ -53,10 +54,10 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
             var request = new ListBucketOptions {
                 Prefix = prefix,
                 ContinuationToken = continuationToken,
-                MaxKeys = Math.Min(take, 1_000), // Max 1000
+                MaxKeys = Math.Min(take - count, 1_000), // Max 1000
             };
 
-            var result = await _client.ListBucketAsync(_bucketName, request).ConfigureAwait(false);
+            var result = await _client.ListBucketAsync(_bucketName, request, cancellationToken).ConfigureAwait(false);
 
             foreach (var item in result.Items)
             {
@@ -317,7 +318,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         Exception lastException;
 
         byte[]? sha256Hash = stream.CanSeek
-            ? StreamHelper.ComputeSHA256(stream)
+            ? await StreamHelper.ComputeSHA256Async(stream, cancellationToken).ConfigureAwait(false)
             : null;
             
         do
@@ -447,7 +448,7 @@ public sealed class S3Bucket : IBucket, IReadOnlyBucket
         Exception lastException;
 
         byte[]? sha256Hash = stream.CanSeek
-            ? StreamHelper.ComputeSHA256(stream)
+            ? await StreamHelper.ComputeSHA256Async(stream).ConfigureAwait(false)
             : null;
 
         do

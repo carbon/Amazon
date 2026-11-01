@@ -21,6 +21,22 @@ public class UploadPartRequestTests
     }
 
     [Fact]
+    public void SetStreamWithLengthSetsSha256Header()
+    {
+        var request = new UploadPartRequest("s3.amazon.com", "bucket", "key", "uploadId", 1);
+
+        using var stream = new System.IO.MemoryStream("abc"u8.ToArray());
+
+        request.SetStream(stream, length: 3);
+
+        Assert.Equal(
+            "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+            Assert.Single(request.Headers.GetValues("x-amz-content-sha256")));
+
+        Assert.Equal(0, stream.Position);
+    }
+
+    [Fact]
     public void RequiresUploadId()
     {
         Assert.Throws<ArgumentException>(() => new UploadPartRequest("s3.amazon.com", "bucket", "key", "", 1));
