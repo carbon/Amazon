@@ -1,8 +1,8 @@
 ﻿using System.Buffers;
 using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,6 +23,20 @@ public static class SignerV4
         in CredentialScope scope,
         List<string> signedHeaderNames)
     {
+        var output = new ValueStringBuilder(stackalloc char[256]);  // avg ~138
+
+        WriteStringToSign(ref output, request, scope, signedHeaderNames);
+
+        return output.ToString();
+    }
+
+    [SkipLocalsInit]
+    private static void WriteStringToSign(
+        ref ValueStringBuilder output,
+        HttpRequestMessage request,
+        in CredentialScope scope,
+        List<string> signedHeaderNames)
+    {
         ArgumentNullException.ThrowIfNull(request);
 
         string timestamp = request.Headers.NonValidated.TryGetValues(XAmzHeaderNames.Date, out var xAmzDateHeader)
@@ -33,15 +47,9 @@ public static class SignerV4
 
         WriteCanonicalRequest(ref sb, request, signedHeaderNames);
 
-        var result = GetStringToSign(
-            scope            : scope,
-            timestamp        : timestamp,
-            canonicalRequest : sb.AsSpan()
-        );
+        WriteStringToSign(ref output, scope, timestamp, sb.AsSpan());
 
         sb.Dispose();
-
-        return result;
     }
 
     [SkipLocalsInit]
@@ -49,12 +57,21 @@ public static class SignerV4
     {
         var output = new ValueStringBuilder(stackalloc char[256]);  // avg ~138
 
+        WriteStringToSign(ref output, scope, timestamp, canonicalRequest);
+
+        return output.ToString();
+    }
+
+    private static void WriteStringToSign(
+        ref ValueStringBuilder output,
+        in CredentialScope scope,
+        string timestamp,
+        scoped ReadOnlySpan<char> canonicalRequest)
+    {
         output.Append(algorithmName)  ; output.Append('\n'); // Algorithm + \n
         output.Append(timestamp)      ; output.Append('\n'); // Timestamp + \n
         scope.AppendTo(ref output)    ; output.Append('\n'); // Scope     + \n
         SHA256_Hex(canonicalRequest, output.AppendSpan(64)); // Hex(SHA256(CanonicalRequest))
-
-        return output.ToString();
     }
 
     // Timestamp format: ISO8601 Basic format, YYYYMMDD'T'HHMMSS'Z'
@@ -128,7 +145,12 @@ public static class SignerV4
             }
             else
             {
-                output.Append(Uri.EscapeDataString(segment));
+                // A UTF-16 char escapes to at most 9 chars (3 UTF-8 bytes, each as %XX)
+                Span<char> destination = output.AppendSpan(segment.Length * 9);
+
+                Uri.TryEscapeDataString(segment, destination, out int charsWritten);
+
+                output.Length -= destination.Length - charsWritten;
             }
         }
     }
@@ -329,7 +351,9 @@ public static class SignerV4
 
         var signedHeaderNames = StringListPool.Default.Rent();
 
-        string stringToSign = GetStringToSign(request, scope, signedHeaderNames);
+        var stringToSign = new ValueStringBuilder(stackalloc char[256]); // avg ~138
+
+        WriteStringToSign(ref stringToSign, request, scope, signedHeaderNames);
 
         var sb = new ValueStringBuilder(stackalloc char[512]); // ~235
 
@@ -342,7 +366,9 @@ public static class SignerV4
         sb.Append(",SignedHeaders=");
         sb.AppendJoin(';', signedHeaderNames);
         sb.Append(",Signature=");
-        ComputeAndWriteHMACSHA256Hex(signingKey, stringToSign, sb.AppendSpan(64)); // signature
+        ComputeAndWriteHMACSHA256Hex(signingKey, stringToSign.AsSpan(), sb.AppendSpan(64)); // signature
+
+        stringToSign.Dispose();
 
         StringListPool.Default.Return(signedHeaderNames);
 
@@ -405,7 +431,14 @@ public static class SignerV4
 
     private static void SetParameter(List<KeyValuePair<string, string>> parameters, string name, string value)
     {
-        parameters.RemoveAll(parameter => parameter.Key == name);
+        for (int i = parameters.Count - 1; i >= 0; i--)
+        {
+            if (parameters[i].Key == name)
+            {
+                parameters.RemoveAt(i);
+            }
+        }
+
         parameters.Add(new(name, value));
     }
 
@@ -537,9 +570,26 @@ public static class SignerV4
         // Convert header names to lowercase
         // Order by name
 
-        foreach (var header in request.Headers.NonValidated
-            .Where(static item => item.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
-            .OrderBy(static item => item.Key, StringComparer.OrdinalIgnoreCase))
+        var requestHeaders = request.Headers.NonValidated;
+
+        var headerBuffer = new KeyValuePair<string, HeaderStringValues>[requestHeaders.Count];
+
+        int amzHeaderCount = 0;
+
+        foreach (var header in requestHeaders)
+        {
+            if (header.Key.StartsWith("x-amz-", StringComparison.OrdinalIgnoreCase))
+            {
+                headerBuffer[amzHeaderCount++] = header;
+            }
+        }
+
+        // Header names are unique, so the sort does not need to be stable
+        Span<KeyValuePair<string, HeaderStringValues>> amzHeaders = headerBuffer.AsSpan(0, amzHeaderCount);
+
+        amzHeaders.Sort(static (x, y) => string.Compare(x.Key, y.Key, StringComparison.OrdinalIgnoreCase));
+
+        foreach (var header in amzHeaders)
         {
             string headerName = header.Key.ToLowerInvariant();
 

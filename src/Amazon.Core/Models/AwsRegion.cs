@@ -188,6 +188,6 @@ public sealed class AwsRegion : IEquatable<AwsRegion>
     {
         ArgumentException.ThrowIfNullOrEmpty(name);
 
-        return new AwsRegion(name);
+        return Get(name);
     }
 }
