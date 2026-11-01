@@ -2,7 +2,7 @@
 
 namespace Amazon.Sqs;
 
-[JsonConverter(typeof(JsonStringEnumConverter<MessageAttributeDataType>))]
+[JsonConverter(typeof(Serialization.MessageAttributeDataTypeConverter))]
 public enum MessageAttributeDataType
 {
     String = 1,
