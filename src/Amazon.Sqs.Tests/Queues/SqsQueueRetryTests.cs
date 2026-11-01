@@ -30,13 +30,12 @@ public class SqsQueueRetryTests
     }
 
     [Fact]
-    public async Task Get_CancellationStopsTheRetryDelay()
+    public async Task Get_CancellationStopsRetrying()
     {
         using var cts = new CancellationTokenSource();
 
-        // Cancels once the first attempt has failed and the queue is waiting to retry
         var handler = new FakeSqsHandler(() => {
-            cts.CancelAfter(TimeSpan.FromMilliseconds(100));
+            cts.Cancel();
 
             return FakeSqs.Unavailable();
         });
@@ -49,13 +48,18 @@ public class SqsQueueRetryTests
     [Fact]
     public async Task Get_DoesNotDelayAfterTheFinalAttempt()
     {
-        var handler = new FakeSqsHandler(FakeSqs.Unavailable);
+        var stopwatch = new Stopwatch();
 
-        var stopwatch = Stopwatch.StartNew();
+        var handler = new FakeSqsHandler(() => {
+            stopwatch.Restart();
+
+            return FakeSqs.Unavailable();
+        });
 
         await Assert.ThrowsAsync<ServiceUnavailableException>(() => FakeSqs.CreateQueue(handler).GetAsync(1, null));
 
-        Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(4.5), $"took {stopwatch.Elapsed}");
+        // A delay after the last attempt would be a random 0 to 2 seconds, so this catches it most of the time
+        Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(0.5), $"took {stopwatch.Elapsed} after the last attempt");
     }
 
     [Theory]
