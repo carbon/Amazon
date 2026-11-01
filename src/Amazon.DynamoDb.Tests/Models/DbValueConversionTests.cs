@@ -59,6 +59,57 @@ public class DbValueConversionTests
     }
 
     [Fact]
+    public void BinarySets_SerializeFromBytes()
+    {
+        var value = new DbValue(new byte[][] { [1, 2, 3], [4, 5, 6] });
+
+        Assert.Equal("""{"BS":["AQID","BAUG"]}""", JsonSerializer.Serialize(value));
+    }
+
+    [Fact]
+    public void BinarySets_SerializeFromBase64Strings()
+    {
+        var value = new DbValue(new string[] { "AQID", "BAUG" }, DbValueType.BS);
+
+        Assert.Equal("""{"BS":["AQID","BAUG"]}""", JsonSerializer.Serialize(value));
+    }
+
+    [Fact]
+    public void BinarySets_RoundTripThroughJson()
+    {
+        const string json = """{"BS":["AQID","BAUG"]}""";
+
+        Assert.Equal(json, JsonSerializer.Serialize(JsonSerializer.Deserialize<DbValue>(json)));
+    }
+
+    [Fact]
+    public void BinarySets_RoundTripInsideAttributeCollection()
+    {
+        const string json = """{"id":{"N":"1"},"data":{"BS":["AQID"]}}""";
+
+        Assert.Equal(json, JsonSerializer.Serialize(JsonSerializer.Deserialize<AttributeCollection>(json)));
+    }
+
+    [Fact]
+    public void BinarySets_PreserveBase64SpecialCharacters()
+    {
+        // 0xFB 0xEF 0xFF encodes to "++//", which the JSON writer may escape
+        byte[] bytes = [0xFB, 0xEF, 0xFF];
+
+        var fromBytes = new DbValue(new byte[][] { bytes });
+        var fromJson  = JsonSerializer.Deserialize<DbValue>("""{"BS":["++//"]}""");
+
+        foreach (var value in new[] { fromBytes, fromJson })
+        {
+            using var json = JsonDocument.Parse(JsonSerializer.Serialize(value));
+
+            var item = Assert.Single(json.RootElement.GetProperty("BS").EnumerateArray());
+
+            Assert.Equal(bytes, item.GetBytesFromBase64());
+        }
+    }
+
+    [Fact]
     public void ListsAndMaps_Serialize()
     {
         var map = new AttributeCollection { { "a", 1 }, { "b", new DbValue(true) } };
