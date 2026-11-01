@@ -52,6 +52,16 @@ public sealed class DynamoDbClient : AwsClient
         return HandleRequestAsync<DeleteItemRequest, DeleteItemResult>("DeleteItem", request);
     }
 
+    public Task<ExecuteStatementResult> ExecuteStatementAsync(string statement, params DbValue[] parameters)
+    {
+        return ExecuteStatementAsync(new ExecuteStatementRequest(statement, parameters));
+    }
+
+    public Task<ExecuteStatementResult> ExecuteStatementAsync(ExecuteStatementRequest request)
+    {
+        return HandleRequestAsync<ExecuteStatementRequest, ExecuteStatementResult>("ExecuteStatement", request);
+    }
+
     public Task<GetItemResult> GetItemAsync(GetItemRequest request)
     {
         return HandleRequestAsync<GetItemRequest, GetItemResult>("GetItem", request);
