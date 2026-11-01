@@ -13,6 +13,8 @@ public class PutObjectRequestTests
 
         ms.WriteByte(1);
 
+        ms.Position = 0;
+
         request.SetStream(ms, "image/jpeg");
 
         var sha256 = request.Headers.GetValues("x-amz-content-sha256").First();
@@ -20,11 +22,11 @@ public class PutObjectRequestTests
         Assert.Equal("image/jpeg", string.Join(';', request.Content.Headers.GetValues("Content-Type")));
         Assert.Equal(new Uri("https://s3.amazon.com/bucket/key"), request.RequestUri);
         Assert.Equal("REDUCED_REDUNDANCY", request.Headers.GetValues("x-amz-storage-class").First());
-        Assert.Equal("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", sha256);
+        Assert.Equal("4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a", sha256);
     }
 
     [Fact]
-    public void CanConstruct_2()
+    public void CanConstruct_ThenChangeContentEncoding()
     {
         var request = new PutObjectRequest("s3.amazon.com", "bucket", "key");
 
@@ -57,5 +59,60 @@ public class PutObjectRequestTests
         contentEncoding = request.Content.Headers.NonValidated["Content-Encoding"].ToString();
 
         Assert.Equal("gzip", contentEncoding);
+    }
+
+    [Fact]
+    public void SetStream_ValidatesArguments()
+    {
+        var request = new PutObjectRequest("s3.amazon.com", "bucket", "key");
+
+        Assert.Throws<ArgumentNullException>(() => request.SetStream(null, sha256Hash: null));
+        Assert.Throws<ArgumentNullException>(() => request.SetStream(new MemoryStream([1]), sha256Hash: null, contentType: null));
+        Assert.Throws<ArgumentException>(() => request.SetStream(new MemoryStream([1]), sha256Hash: null, contentType: ""));
+        Assert.Throws<ArgumentException>(() => request.SetStream(new MemoryStream(), sha256Hash: null));
+        Assert.Throws<ArgumentNullException>(() => request.SetStream(null, length: 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => request.SetStream(new MemoryStream([1]), length: 0));
+    }
+
+    [Fact]
+    public void SetStream_WithoutHashIsUnsigned()
+    {
+        var request = new PutObjectRequest("s3.amazon.com", "bucket", "key");
+
+        request.SetStream(new MemoryStream([1]), sha256Hash: null);
+
+        Assert.Equal("UNSIGNED-PAYLOAD", request.Headers.NonValidated["x-amz-content-sha256"].ToString());
+        Assert.Equal("application/octet-stream", request.Content.Headers.NonValidated["Content-Type"].ToString());
+    }
+
+    [Fact]
+    public void SetStream_WithLength_HashesSeekableStream()
+    {
+        var request = new PutObjectRequest("s3.amazon.com", "bucket", "key");
+
+        var stream = new MemoryStream([1]);
+
+        request.SetStream(stream, length: 1, contentType: "image/png");
+
+        Assert.Equal("4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a", request.Headers.NonValidated["x-amz-content-sha256"].ToString());
+        Assert.Equal("image/png", request.Content.Headers.NonValidated["Content-Type"].ToString());
+        Assert.Equal(1, request.Content.Headers.ContentLength);
+        Assert.Equal(0, stream.Position);
+    }
+
+    [Fact]
+    public void SetStream_WithLength_DoesNotHashForwardOnlyStream()
+    {
+        var request = new PutObjectRequest("s3.amazon.com", "bucket", "key");
+
+        request.SetStream(new ForwardOnlyStream(), length: 5);
+
+        Assert.Equal("UNSIGNED-PAYLOAD", request.Headers.NonValidated["x-amz-content-sha256"].ToString());
+        Assert.Equal(5, request.Content.Headers.ContentLength);
+    }
+
+    private sealed class ForwardOnlyStream : MemoryStream
+    {
+        public override bool CanSeek => false;
     }
 }

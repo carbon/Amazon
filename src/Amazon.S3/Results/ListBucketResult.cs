@@ -36,5 +36,11 @@ public sealed class ListBucketResult
 #nullable disable
 
     [XmlElement("Contents")]
-    public ListBucketObject[] Items { get; init; }
+    public ListBucketObject[] Items
+    {
+        get => _items ?? []; // Null when the response has no Contents
+        init => _items = value;
+    }
+
+    private readonly ListBucketObject[] _items;
 }
