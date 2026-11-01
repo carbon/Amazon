@@ -9,4 +9,7 @@ public sealed class DescribeSubnetsResponse : IEc2Response
     [XmlArray("subnetSet")]
     [XmlArrayItem("item")]
     public Subnet[] Subnets { get; init; }
+
+    [XmlElement("nextToken")]
+    public string NextToken { get; init; }
 }

@@ -7,7 +7,7 @@ namespace Amazon.Ec2;
 
 public sealed class Instance
 {
-    [XmlElement("architechure")]
+    [XmlElement("architecture")]
     public string Architecture { get; init; } // i386 | x86_64
 
     [XmlElement("hypervisor")]

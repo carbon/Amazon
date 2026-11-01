@@ -7,4 +7,7 @@ public sealed class DescribeVolumesResponse : IEc2Response
     [XmlArray("volumeSet")]
     [XmlArrayItem("item")]
     public required Volume[] Volumes { get; init; }
+
+    [XmlElement("nextToken")]
+    public string? NextToken { get; init; }
 }

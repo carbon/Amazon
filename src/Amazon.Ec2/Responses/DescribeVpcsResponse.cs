@@ -7,4 +7,7 @@ public sealed class DescribeVpcsResponse : IEc2Response
     [XmlArray("vpcSet")]
     [XmlArrayItem("item")]
     public required Vpc[] Vpcs { get; init; }
+
+    [XmlElement("nextToken")]
+    public string? NextToken { get; init; }
 }
