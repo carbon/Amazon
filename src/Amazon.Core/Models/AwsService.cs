@@ -33,6 +33,7 @@ public sealed class AwsService(string name) : IEquatable<AwsService>
     public static readonly AwsService Ses              = new("email");
     public static readonly AwsService Ssm              = new("ssm"); // Amazon EC2 Systems Manager (SSM)
     public static readonly AwsService S3               = new("s3");
+    public static readonly AwsService S3Vectors        = new("s3vectors");
     public static readonly AwsService Sns              = new("sns");
     public static readonly AwsService Sts              = new("sts");
     public static readonly AwsService Sqs              = new("sqs");
