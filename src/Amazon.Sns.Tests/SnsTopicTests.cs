@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text;
 
 using Carbon.Messaging;
 
@@ -75,7 +74,7 @@ public class SnsTopicTests
     }
 
     [Fact]
-    public async Task PublishAsync_String_SendsMessage_AndReturnsResponseBody()
+    public async Task PublishAsync_String_SendsMessage_AndReturnsResult()
     {
         var handler = Success();
 
@@ -83,7 +82,29 @@ public class SnsTopicTests
 
         Assert.Single(handler.Requests[0].Form, p => p.Key == "Message" && p.Value == "Hello");
         Assert.DoesNotContain(handler.Requests[0].Form, p => p.Key == "Subject");
-        Assert.Equal(FakeSns.PublishResponseXml, Encoding.UTF8.GetString(result));
+        Assert.Equal("94f20ce6-13c5-43a0-9a9e-ca52d816e90b", result.MessageId);
+    }
+
+    [Fact]
+    public async Task PublishAsync_String_SendsSubject()
+    {
+        var handler = Success();
+
+        await CreateTopic(handler).PublishAsync("Hello", "Subject");
+
+        Assert.Single(handler.Requests[0].Form, p => p.Key == "Subject" && p.Value == "Subject");
+    }
+
+    [Fact]
+    public void TopicArn_IsExposed()
+    {
+        Assert.Equal("arn:aws:sns:us-east-1:123456789012:MyTopic", CreateTopic(Success()).TopicArn);
+    }
+
+    [Fact]
+    public void PublishAsync_RejectsNullMessage()
+    {
+        Assert.Throws<ArgumentNullException>(() => { _ = CreateTopic(Success()).PublishAsync((IMessage<string>)null!); });
     }
 
     [Fact]
@@ -91,7 +112,9 @@ public class SnsTopicTests
     {
         var handler = Success();
 
-        await CreateTopic(handler).PublishAsync(new StringMessage("From a message"));
+        var result = await CreateTopic(handler).PublishAsync(new StringMessage("From a message"));
+
+        Assert.Equal("94f20ce6-13c5-43a0-9a9e-ca52d816e90b", result.MessageId);
 
         Assert.Single(handler.Requests[0].Form, p => p.Key == "Message" && p.Value == "From a message");
     }
@@ -113,8 +136,8 @@ public class SnsTopicTests
     {
         var handler = new FakeHandler(() => FakeSns.Xml(FakeSns.NotFoundErrorXml, HttpStatusCode.NotFound));
 
-        var ex = await Assert.ThrowsAsync<Exception>(() => CreateTopic(handler).PublishAsync(new StringMessage("Hello")));
+        var ex = await Assert.ThrowsAsync<SnsException>(() => CreateTopic(handler).PublishAsync(new StringMessage("Hello")));
 
-        Assert.Contains("<Code>NotFound</Code>", ex.Message);
+        Assert.Equal("NotFound", ex.Code);
     }
 }

@@ -103,6 +103,8 @@ internal sealed class FakeHandler(params Func<HttpResponseMessage>[] responses) 
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var body = await request.Content!.ReadAsStringAsync(cancellationToken);
 
         Requests.Add(new RecordedRequest(request, body));

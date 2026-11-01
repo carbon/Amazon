@@ -28,7 +28,7 @@ public class MessageParsingTests
     }
 
     [Fact]
-    public void Notification_IgnoresMessageAttributes()
+    public void Notification_ParsesMessageAttributes()
     {
         var message = Parse(
             $$"""
@@ -39,7 +39,11 @@ public class MessageParsingTests
             }
             """);
 
-        Assert.IsType<Notification>(message);
+        var attribute = Assert.Single(Assert.IsType<Notification>(message).MessageAttributes!);
+
+        Assert.Equal("color",  attribute.Key);
+        Assert.Equal("String", attribute.Value.Type);
+        Assert.Equal("red",    attribute.Value.Value);
     }
 
     [Fact]
@@ -93,12 +97,15 @@ public class MessageParsingTests
         Assert.Contains(field, ex.Message);
     }
 
-    [Fact]
-    public void SubscriptionConfirmation_RequiresSubscribeUrl()
+    [Theory]
+    [InlineData("SubscriptionConfirmation")]
+    [InlineData("UnsubscribeConfirmation")]
+    public void Confirmations_RequireSubscribeUrlAndToken(string type)
     {
-        var ex = Assert.Throws<JsonException>(() => Parse($$"""{ "Type" : "SubscriptionConfirmation", {{CommonFields}} }"""));
+        var ex = Assert.Throws<JsonException>(() => Parse($$"""{ "Type" : "{{type}}", {{CommonFields}} }"""));
 
         Assert.Contains("SubscribeURL", ex.Message);
+        Assert.Contains("Token", ex.Message);
     }
 
     [Fact]
@@ -133,7 +140,8 @@ public class MessageParsingTests
             SignatureVersion = "1",
             Signature        = "abc",
             SigningCertURL   = "https://sns.us-west-2.amazonaws.com/cert.pem",
-            SubscribeURL     = "https://sns.us-west-2.amazonaws.com/?Action=ConfirmSubscription"
+            SubscribeURL     = "https://sns.us-west-2.amazonaws.com/?Action=ConfirmSubscription",
+            Token            = "token"
         };
 
         var json = JsonSerializer.Serialize(message);
@@ -151,6 +159,7 @@ public class MessageParsingTests
         Assert.Equal(message.Signature,        result.Signature);
         Assert.Equal(message.SigningCertURL,   result.SigningCertURL);
         Assert.Equal("https://sns.us-west-2.amazonaws.com/?Action=ConfirmSubscription", result.SubscribeURL);
+        Assert.Equal("token", result.Token);
     }
 
     [Theory]

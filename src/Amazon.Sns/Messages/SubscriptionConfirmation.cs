@@ -3,4 +3,6 @@
 public sealed class SubscriptionConfirmation : SnsMessage
 {
     public required string SubscribeURL { get; init; }
+
+    public required string Token { get; init; }
 }

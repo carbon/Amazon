@@ -21,6 +21,15 @@ public sealed class PublishRequest
 
     public string? Subject { get; }
 
+    // Set to "json" to send a different message per protocol
+    public string? MessageStructure { get; init; }
+
+    public IReadOnlyDictionary<string, MessageAttributeValue>? MessageAttributes { get; init; }
+
+    public string? MessageGroupId { get; init; }
+
+    public string? MessageDeduplicationId { get; init; }
+
     internal List<KeyValuePair<string, string>> ToParams()
     {
         var dic = new List<KeyValuePair<string, string>>(5) {
@@ -32,6 +41,46 @@ public sealed class PublishRequest
         if (Subject is not null)
         {
             dic.Add(new ("Subject", Subject));
+        }
+
+        if (MessageStructure is not null)
+        {
+            dic.Add(new ("MessageStructure", MessageStructure));
+        }
+
+        if (MessageGroupId is not null)
+        {
+            dic.Add(new ("MessageGroupId", MessageGroupId));
+        }
+
+        if (MessageDeduplicationId is not null)
+        {
+            dic.Add(new ("MessageDeduplicationId", MessageDeduplicationId));
+        }
+
+        if (MessageAttributes is not null)
+        {
+            int i = 1;
+
+            foreach (var (name, value) in MessageAttributes)
+            {
+                string prefix = $"MessageAttributes.entry.{i}";
+
+                dic.Add(new ($"{prefix}.Name", name));
+                dic.Add(new ($"{prefix}.Value.DataType", value.DataType));
+
+                if (value.StringValue is not null)
+                {
+                    dic.Add(new ($"{prefix}.Value.StringValue", value.StringValue));
+                }
+
+                if (value.BinaryValue is not null)
+                {
+                    dic.Add(new ($"{prefix}.Value.BinaryValue", Convert.ToBase64String(value.BinaryValue)));
+                }
+
+                i++;
+            }
         }
 
         return dic;
