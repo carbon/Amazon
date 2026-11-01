@@ -25,11 +25,29 @@ public class DynamoDbException : AwsException, IException
 
     public static async Task<DynamoDbException> FromResponseAsync(HttpResponseMessage response)
     {
-        using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        using var doc = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
+        JsonDocument doc;
+
+        try
+        {
+            doc = JsonDocument.Parse(body);
+        }
+        catch (JsonException)
+        {
+            // Not every error comes from DynamoDB itself. e.g. a load balancer's 503
+
+            return new DynamoDbException($"Unexpected response. status = {response.StatusCode} | {body}", response.StatusCode);
+        }
+
+        using var _ = doc;
 
         JsonElement json = doc.RootElement;
+
+        if (json.ValueKind is not JsonValueKind.Object)
+        {
+            return new DynamoDbException($"Unexpected response. status = {response.StatusCode} | {body}", response.StatusCode);
+        }
 
         string type = string.Empty;
         string message = string.Empty;
@@ -68,7 +86,7 @@ public class DynamoDbException : AwsException, IException
             // Client Errors = 4xx (Don't retry)
             // Server Errors = 5xx (Retry)
 
-            return Type
+            return (int)HttpStatusCode >= 500 || Type
                 is "InternalServerError"
                 or "InternalFailure"
                 or "ProvisionedThroughputExceededException"
