@@ -13,7 +13,7 @@ public sealed class SendMessageBatchRequest : SqsRequest
         if (messages.Count > 10)
             throw new ArgumentException("Must be 10 or fewer", nameof(messages));
 
-        // Max payload = 256KB (262,144 bytes)
+        // Max payload = 1 MiB (1,048,576 bytes)
 
         var entries = new SendMessageBatchRequestEntry[messages.Count];
 

@@ -62,6 +62,13 @@ public sealed class ReceiveMessageRequest : SqsRequest
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public string[]? MessageAttributeNames { get; init; }
 
+    /// <summary>
+    /// The system attributes to return with each message, such as MessageGroupId. Replaces AttributeNames, which is deprecated.
+    /// </summary>
+    [JsonPropertyName("MessageSystemAttributeNames")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string[]? MessageSystemAttributeNames { get; init; }
+
     [JsonPropertyName("ReceiveRequestAttemptId")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public string? ReceiveRequestAttemptId { get; init; }

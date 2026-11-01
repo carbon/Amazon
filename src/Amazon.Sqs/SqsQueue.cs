@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using System.Threading;
 
 using Amazon.Scheduling;
@@ -65,7 +66,10 @@ public sealed class SqsQueue : IMessageQueue<string>
             queueUrl            : _queueUrl,
             maxNumberOfMessages : take, 
             visibilityTimeout   : lockTime
-        );
+        ) {
+            // Lets a FIFO queue return the same messages if a retry follows a lost response
+            ReceiveRequestAttemptId = _queueUrl.EndsWith(".fifo", StringComparison.Ordinal) ? Guid.NewGuid().ToString("N") : null
+        };
 
         int retryCount = 0;
 
@@ -90,7 +94,7 @@ public sealed class SqsQueue : IMessageQueue<string>
 
     public async Task PutAsync(params IMessage<string>[] messages)
     {
-        // Max payload = 256KB (262,144 bytes)
+        // Max payload = 1 MiB (1,048,576 bytes)
         // Max batch size = 10
 
         foreach (IMessage<string>[] batch in messages.Chunk(10))
@@ -109,6 +113,47 @@ public sealed class SqsQueue : IMessageQueue<string>
                 throw new SqsBatchException(failed);
             }
         }
+    }
+
+    public async Task<string> PutAsync(string message, SqsSendOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        var result = await _client.SendMessageAsync(new(
+            queueUrl               : _queueUrl,
+            messageBody            : message,
+            delay                  : options.Delay,
+            messageDeduplicationId : options.MessageDeduplicationId,
+            messageGroupId         : options.MessageGroupId
+        )).ConfigureAwait(false);
+
+        return result.MessageId;
+    }
+
+    /// <param name="messages">The messages to send, in order</param>
+    /// <param name="getOptions">Selects the MessageGroupId, MessageDeduplicationId or Delay of a message</param>
+    /// <exception cref="SqsBatchException">SQS rejected entries. Later batches were not sent.</exception>
+    public Task PutAsync(IReadOnlyList<IMessage<string>> messages, Func<IMessage<string>, SqsSendOptions> getOptions)
+    {
+        ArgumentNullException.ThrowIfNull(messages);
+        ArgumentNullException.ThrowIfNull(getOptions);
+
+        var entries = new SendMessageBatchRequestEntry[messages.Count];
+
+        for (int i = 0; i < entries.Length; i++)
+        {
+            var options = getOptions(messages[i]);
+
+            entries[i] = new SendMessageBatchRequestEntry(
+                id                     : ((i % 10) + 1).ToString(CultureInfo.InvariantCulture),
+                messageBody            : messages[i].Body,
+                delay                  : options.Delay,
+                messageDeduplicationId : options.MessageDeduplicationId,
+                messageGroupId         : options.MessageGroupId
+            );
+        }
+
+        return _client.SendInBatchesAsync(_queueUrl, entries);
     }
 
     public async Task UpdateMessageVisibilityAsync(string receiptHandle, TimeSpan visibilityTimeout)
@@ -133,6 +178,14 @@ public sealed class SqsQueue : IMessageQueue<string>
             receiptHandles[i] = messages[i].Receipt.Handle;
         }
 
+        foreach (string[] batch in receiptHandles.Chunk(10))
+        {
+            await DeleteBatchAsync(batch).ConfigureAwait(false);
+        }
+    }
+
+    private async Task DeleteBatchAsync(string[] receiptHandles)
+    {
         int retryCount = 0;
 
         var request = new DeleteMessageBatchRequest(_queueUrl, receiptHandles);

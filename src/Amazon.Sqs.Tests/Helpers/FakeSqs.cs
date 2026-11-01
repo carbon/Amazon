@@ -83,7 +83,7 @@ internal static class FakeSqs
     }
 
     // The queues create their own client
-    private static T UseQueueHandler<T>(T queue, HttpMessageHandler handler)
+    public static T UseQueueHandler<T>(T queue, HttpMessageHandler handler)
         where T : class
     {
         var client = (SqsClient)typeof(T)
