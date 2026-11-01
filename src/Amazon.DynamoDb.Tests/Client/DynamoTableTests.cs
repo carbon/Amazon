@@ -502,4 +502,90 @@ public class DynamoTableTests
         Assert.Equal(5, count);
         Assert.Single(handler.Requests);
     }
+
+    [Fact]
+    public async Task PatchAsync_DoesNotRepeatAddAfterServerError()
+    {
+        var handler = new FakeDynamoHandler(() => FakeDynamo.Error("InternalServerError", "Failed", System.Net.HttpStatusCode.InternalServerError));
+
+        await Assert.ThrowsAsync<DynamoDbException>(() => FakeDynamo.CreateTable(handler).PatchAsync(1, Change.Add("count", 1)));
+
+        Assert.Single(handler.Requests);
+    }
+
+    private static string Unprocessed(params long[] ids)
+    {
+        var requests = string.Join(',', ids.Select(static id => $$$"""{"PutRequest":{"Item":{{{ItemJson(id)}}}}}"""));
+
+        return """{"UnprocessedItems":{"Widgets":[""" + requests + "]}}";
+    }
+
+    private static Widget[] Widgets(int count)
+    {
+        return Enumerable.Range(1, count).Select(static i => new Widget { Id = i, Name = "a" }).ToArray();
+    }
+
+    [Fact]
+    public async Task PutAsync_Batch_GivesUpWhenItemsStayUnprocessed()
+    {
+        var handler = new FakeDynamoHandler(Json(Unprocessed(1, 2)));
+
+        var ex = await Assert.ThrowsAsync<DynamoDbException>(() => FakeDynamo.CreateTable(handler).PutAsync(Widgets(2)));
+
+        Assert.Equal("2 unprocessed items remain in 'Widgets' after retrying", ex.Message);
+        Assert.Equal(5, handler.Requests.Count);
+    }
+
+    [Fact]
+    public async Task PutAsync_Batch_KeepsGoingWhileMakingProgress()
+    {
+        var handler = new FakeDynamoHandler(
+            Json(Unprocessed(2, 3, 4, 5, 6, 7)),
+            Json(Unprocessed(3, 4, 5, 6, 7)),
+            Json(Unprocessed(4, 5, 6, 7)),
+            Json(Unprocessed(5, 6, 7)),
+            Json(Unprocessed(6, 7)),
+            Json(Unprocessed(7)),
+            Json("{}"));
+
+        var result = await FakeDynamo.CreateTable(handler).PutAsync(Widgets(7));
+
+        Assert.Equal(7, handler.Requests.Count);
+        Assert.Equal(7, result.ItemCount);
+        Assert.Equal(7, result.RequestCount);
+        Assert.Equal(1, result.BatchCount);
+    }
+
+    [Fact]
+    public async Task PutAsync_Batch_OnlyResendsUnprocessedItems()
+    {
+        var handler = new FakeDynamoHandler(Json(Unprocessed(2)), Json("{}"));
+
+        await FakeDynamo.CreateTable(handler).PutAsync(Widgets(3));
+
+        var resent = Body(handler.Requests[1]).GetProperty("RequestItems").GetProperty("Widgets");
+
+        Assert.Equal("2", Assert.Single(resent.EnumerateArray()).GetProperty("PutRequest").GetProperty("Item").GetProperty("id").GetProperty("N").GetString());
+    }
+
+    [Fact]
+    public async Task PutAsync_Batch_ThrowsWhenTransientErrorsContinue()
+    {
+        var handler = new FakeDynamoHandler(FakeDynamo.Throttled);
+
+        var ex = await Assert.ThrowsAsync<DynamoDbException>(() => FakeDynamo.CreateTable(handler).PutAsync(Widgets(1)));
+
+        Assert.Equal("ProvisionedThroughputExceededException", ex.Type);
+        Assert.Equal(5, handler.Requests.Count);
+    }
+
+    [Fact]
+    public async Task PutAsync_Batch_DoesNotRetryPermanentErrors()
+    {
+        var handler = new FakeDynamoHandler(() => FakeDynamo.Error("ValidationException"));
+
+        await Assert.ThrowsAsync<DynamoDbException>(() => FakeDynamo.CreateTable(handler).PutAsync(Widgets(1)));
+
+        Assert.Single(handler.Requests);
+    }
 }

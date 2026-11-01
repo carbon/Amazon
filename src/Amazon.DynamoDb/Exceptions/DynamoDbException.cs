@@ -90,9 +90,19 @@ public class DynamoDbException : AwsException, IException
                 is "InternalServerError"
                 or "InternalFailure"
                 or "ProvisionedThroughputExceededException"
-                or "ThrottlingException";
+                or "ThrottlingException"
+                or "RequestLimitExceeded"
+                or "LimitExceededException"
+                or "ReplicatedWriteConflictException"
+                or "TransactionInProgressException";
         }
     }
+
+    /// <summary>
+    /// A write that fails with a server error may still have been applied, so repeating it is only safe if it is idempotent.
+    /// https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Programming.Errors.html
+    /// </summary>
+    internal bool WriteMayHaveBeenApplied => (int)HttpStatusCode >= 500 || Type is "InternalServerError" or "InternalFailure";
 }
 
 /*
