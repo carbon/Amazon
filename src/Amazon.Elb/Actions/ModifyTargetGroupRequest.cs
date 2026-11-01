@@ -8,7 +8,7 @@ public sealed class ModifyTargetGroupRequest : IElbRequest
 
     public string? HealthCheckPath { get; init; }
 
-    public int? HealthCheckPort { get; init; }
+    public string? HealthCheckPort { get; init; }
 
     public string? HealthCheckProtocol { get; init; }
 

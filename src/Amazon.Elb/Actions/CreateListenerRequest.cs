@@ -15,7 +15,8 @@ public sealed class CreateListenerRequest : IElbRequest
     [Range(1, 65535)]
     public ushort? Port { get; init; }
 
-    public required Protocol Protocol { get; init; }
+    // Not specified for a Gateway Load Balancer
+    public Protocol? Protocol { get; init; }
 
     public string? SslPolicy { get; init; }
 

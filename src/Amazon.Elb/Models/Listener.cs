@@ -21,4 +21,11 @@ public sealed class Listener
     [XmlArray]
     [XmlArrayItem("member")]
     public ListenerAction[] DefaultActions { get; init; }
+
+    [XmlArray]
+    [XmlArrayItem("member")]
+    public Certificate[] Certificates { get; init; }
+
+    [XmlElement]
+    public string SslPolicy { get; init; }
 }

@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
 namespace Amazon.Elb;
@@ -18,9 +17,9 @@ public sealed class Rule
     [XmlElement]
     public bool IsDefault { get; init; }
 
-    [Range(1, 50_000)]
+    // 1-50000, or "default" for the default rule
     [XmlElement]
-    public int Priority { get; init; }
+    public string Priority { get; init; }
 
     [XmlElement]
     public string RuleArn { get; init; }
