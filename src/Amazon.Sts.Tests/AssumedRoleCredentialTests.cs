@@ -43,6 +43,48 @@ public class AssumedRoleCredentialTests
         Assert.Equal("900",        form["DurationSeconds"]);
     }
 
+    [Fact]
+    public async Task RenewAsync_OmitsExternalIdByDefault()
+    {
+        var handler = new FakeStsHandler(FakeSts.Xml(FakeSts.AssumeRoleXml(DateTime.UtcNow.AddMinutes(15))));
+
+        await new AssumedRoleCredential(FakeSts.Client(handler), RoleArn, "session").RenewAsync();
+
+        Assert.DoesNotContain("ExternalId", Assert.Single(handler.Requests).Form.Keys);
+    }
+
+    [Fact]
+    public async Task RenewAsync_SendsExternalIdOnEveryRenewal()
+    {
+        var handler = new FakeStsHandler(FakeSts.Xml(FakeSts.AssumeRoleXml(DateTime.UtcNow.AddMinutes(15))));
+
+        var credential = new AssumedRoleCredential(FakeSts.Client(handler), RoleArn, "session", externalId: "fake-external-id");
+
+        await credential.RenewAsync();
+        await credential.RenewAsync();
+
+        Assert.Equal(2, handler.Requests.Count);
+        Assert.All(handler.Requests, static request => Assert.Equal("fake-external-id", request.Form["ExternalId"]));
+    }
+
+    [Fact]
+    public async Task RegionConstructor_SendsExternalId()
+    {
+        var handler = new FakeStsHandler(FakeSts.Xml(FakeSts.AssumeRoleXml(DateTime.UtcNow.AddMinutes(15))));
+
+        var credential = new AssumedRoleCredential(AwsRegion.EUWest1, FakeSts.Credential, RoleArn, "session", externalId: "fake-external-id");
+
+        var client = (StsClient)typeof(AssumedRoleCredential)
+            .GetField("_stsClient", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .GetValue(credential)!;
+
+        FakeSts.Use(client, handler);
+
+        await credential.RenewAsync();
+
+        Assert.Equal("fake-external-id", Assert.Single(handler.Requests).Form["ExternalId"]);
+    }
+
     [Theory]
     [InlineData(-1, true)]
     [InlineData(4, true)]

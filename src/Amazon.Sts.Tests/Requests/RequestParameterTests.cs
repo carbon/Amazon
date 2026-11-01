@@ -57,6 +57,31 @@ public class RequestParameterTests
     }
 
     [Fact]
+    public void AssumeRole_SendsExternalIdAndSourceIdentity()
+    {
+        var parameters = StsRequestHelper.ToParams(new AssumeRoleRequest("arn", "session") {
+            ExternalId     = "fake-external-id",
+            SourceIdentity = "fake-source"
+        });
+
+        Assert.Equal(new("ExternalId", "fake-external-id"), Assert.Single(parameters, static p => p.Key is "ExternalId"));
+        Assert.Equal(new("SourceIdentity", "fake-source"),  Assert.Single(parameters, static p => p.Key is "SourceIdentity"));
+    }
+
+    [Fact]
+    public void AssumeRole_SendsMfaParameters()
+    {
+        // https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
+        var parameters = StsRequestHelper.ToParams(new AssumeRoleRequest("arn", "session") {
+            SerialNumber = "arn:aws:iam::123456789012:mfa/fake",
+            TokenCode    = "123456"
+        });
+
+        Assert.Equal(new("SerialNumber", "arn:aws:iam::123456789012:mfa/fake"), Assert.Single(parameters, static p => p.Key is "SerialNumber"));
+        Assert.Equal(new("TokenCode", "123456"),                                Assert.Single(parameters, static p => p.Key is "TokenCode"));
+    }
+
+    [Fact]
     public void ToParams_DoesNotJsonEscapeValues()
     {
         var parameters = StsRequestHelper.ToParams(new AssumeRoleRequest("arn", "a+b=<c>&'d'"));
