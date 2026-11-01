@@ -13,6 +13,14 @@ public sealed class Action
         Type = type;
     }
 
+    public FixedResponseActionConfig? FixedResponseConfig { get; init; }
+
+    public ForwardActionConfig? ForwardConfig { get; init; }
+
+    public int? Order { get; init; }
+
+    public RedirectActionConfig? RedirectConfig { get; init; }
+
     public string? TargetGroupArn { get; init; }
 
     // forward | authenticate-oidc | authenticate-cognito | redirect | fixed-response
