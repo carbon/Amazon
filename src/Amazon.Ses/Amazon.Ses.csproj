@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Amazon.Ses</AssemblyName>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.36.3</Version>
+    <Version>0.36.4</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <NoWarn>IDE0057;IDE0130</NoWarn>
