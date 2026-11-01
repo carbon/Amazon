@@ -1,5 +1,6 @@
 ﻿using System.Buffers;
 using System.Buffers.Binary;
+using System.Text.Unicode;
 
 using Amazon.Cryptography.Buffers;
 
@@ -11,7 +12,7 @@ public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String
     {
         if (Count is 0) return 0;
 
-        int length = (Count * 4) + 2;
+        long length = (Count * 4L) + 2;
 
         foreach (var entry in this)
         {
@@ -19,7 +20,23 @@ public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String
             length += entry.Value.Length;
         }
 
+        // Also bounds the pair count and each key and value length, which are all 16-bit
+        if (length > ushort.MaxValue)
+        {
+            throw new InvalidOperationException($"Encryption context must not exceed {ushort.MaxValue} bytes. Was {length}");
+        }
+
         return (ushort)length;
+    }
+
+    // Serialized entries must be sorted by key, in ascending order of their UTF-8 bytes
+    private KeyValuePair<Utf8String, Utf8String>[] GetSortedEntries()
+    {
+        var entries = this.ToArray();
+
+        Array.Sort(entries, static (a, b) => a.Key.Utf8Bytes.SequenceCompareTo(b.Key.Utf8Bytes));
+
+        return entries;
     }
 
     public byte[] Serialize()
@@ -38,12 +55,14 @@ public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String
             return;
         }
 
+        GetLength();
+
         int position = 0;
 
         BinaryPrimitives.WriteUInt16BigEndian(destination, (ushort)Count);
         position += 2;
 
-        foreach (var entry in this)
+        foreach (var entry in GetSortedEntries())
         {
             BinaryPrimitives.WriteUInt16BigEndian(destination.Slice(position, 2), (ushort)entry.Key.Length);
             position += 2;
@@ -66,9 +85,11 @@ public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String
             return;
         }
 
+        GetLength();
+
         writer.WriteUInt16((ushort)Count);
 
-        foreach (var entry in this)
+        foreach (var entry in GetSortedEntries())
         {
             writer.WriteUtf8Bytes(entry.Key);
             writer.WriteUtf8Bytes(entry.Value);
@@ -86,6 +107,11 @@ public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String
 
         uint count = reader.ReadUInt16();
 
+        if (count is 0)
+        {
+            throw new FormatException("Key-value pair count must be greater than 0");
+        }
+
         var result = new EncryptionContext();
 
         for (int i = 0; i < count; i++)
@@ -93,7 +119,23 @@ public sealed class EncryptionContext : OrderedDictionary<Utf8String, Utf8String
             var key = reader.ReadUtf8String();
             var value = reader.ReadUtf8String();
 
-            result[key] = value;
+            if (!Utf8.IsValid(key.Utf8Bytes) || !Utf8.IsValid(value.Utf8Bytes))
+            {
+                throw new FormatException("Encryption context keys and values must be valid UTF-8");
+            }
+
+            // Strictly ascending keys rule out duplicates, and keep the serialized bytes identical on rewrite
+            if (i > 0 && result.GetAt(i - 1).Key.Utf8Bytes.SequenceCompareTo(key.Utf8Bytes) >= 0)
+            {
+                throw new FormatException("Encryption context keys must be unique and sorted in ascending order");
+            }
+
+            result.Add(key, value);
+        }
+
+        if (!reader.IsEof)
+        {
+            throw new FormatException("Unexpected data after the encryption context");
         }
 
         return result;
