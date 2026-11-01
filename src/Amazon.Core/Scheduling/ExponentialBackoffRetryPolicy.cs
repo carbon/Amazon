@@ -13,16 +13,19 @@ public sealed class ExponentialBackoffRetryPolicy(
 
     public override TimeSpan GetDelay(int retryCount)
     {
-        // R = A random number between 1 and 2
-        // T = The initial timeout
-        // F = The exponential factor (2)
-        // N = Number of retries so far
-        // M = Max Delay
-        // delay = MIN( R * T * F ^ N , M )
+        // Full jitter, as used by the AWS SDKs:
+        // https://docs.aws.amazon.com/sdkref/latest/guide/feature-retry-behavior.html
 
-        long exponentialDelay = (long)(_initialDelay.Ticks * Math.Pow(retryCount, 2));
+        // R = A random number between 0 and 1
+        // T = The initial delay
+        // N = The retry number, starting at 1
+        // M = The max delay
+        // delay = R * MIN( T * 2 ^ (N - 1) , M )
 
-        long ticks = Math.Min(_maxDelay.Ticks, exponentialDelay);
+        // Compare as doubles, since a large retry count would overflow a long
+        double maxDelay = Math.Min(_maxDelay.Ticks, _initialDelay.Ticks * Math.Pow(2, retryCount - 1));
+
+        long ticks = (long)(Random.Shared.NextDouble() * maxDelay);
 
         return TimeSpan.FromTicks(ticks);
     }

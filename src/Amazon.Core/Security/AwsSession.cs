@@ -11,7 +11,7 @@ public sealed class AwsSession(
 
     public string SecretAccessKey { get; } = secretAccessKey;
 
-    public string? SecurityToken { get; } = securityToken;
+    public string? SecurityToken { get; } = securityToken ?? sessionToken;
 
     public string AccessKeyId { get; } = accessKeyId;
 
