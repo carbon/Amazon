@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
@@ -10,11 +10,11 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Carbon.ProtocolBuffers" Version="0.18.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
-    <PackageReference Include="System.Numerics.Tensors" Version="10.0.5" />
+    <PackageReference Include="Carbon.ProtocolBuffers" Version="0.19.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="System.Numerics.Tensors" Version="10.0.13" />
     <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Amazon.Bedrock\Amazon.Bedrock.csproj" />
+    <ProjectReference Include="..\Amazon.S3.Vectors\Amazon.S3.Vectors.csproj" />
   </ItemGroup>
 
   <ItemGroup>
