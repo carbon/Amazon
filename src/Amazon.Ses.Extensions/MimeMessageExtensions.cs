@@ -1,5 +1,4 @@
-﻿
-using MimeKit;
+﻿using MimeKit;
 
 namespace Amazon.Ses;
 
