@@ -13,7 +13,7 @@ public sealed class SnsTopic
         ArgumentException.ThrowIfNullOrEmpty(accountId);
         ArgumentException.ThrowIfNullOrEmpty(topicName);
 
-        _arn    = $"arn:aws:sns:{region}:{accountId}:{topicName}";
+        _arn    = $"arn:{GetPartition(region)}:sns:{region}:{accountId}:{topicName}";
         _client = new SnsClient(region, credential);
     }
 
@@ -29,5 +29,13 @@ public sealed class SnsTopic
     public Task PublishAsync(IMessage<string> message)
     {
         return PublishAsync(message.Body);
+    }
+
+    private static string GetPartition(AwsRegion region)
+    {
+        if (region.Name.StartsWith("cn-", StringComparison.Ordinal)) return "aws-cn";
+        if (region.Name.StartsWith("us-gov-", StringComparison.Ordinal)) return "aws-us-gov";
+
+        return "aws";
     }
 }

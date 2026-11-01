@@ -6,6 +6,8 @@ public sealed class DescribeInstancesResponse(List<Instance> instances) : IEc2Re
 {
     public IReadOnlyList<Instance> Instances { get; } = instances;
 
+    public string? NextToken { get; init; }
+
     public static DescribeInstancesResponse Deserialize(string text)
     {
         var rootEl = XElement.Parse(text);
@@ -26,6 +28,8 @@ public sealed class DescribeInstancesResponse(List<Instance> instances) : IEc2Re
             }
         }
 
-        return new DescribeInstancesResponse(instances);
+        return new DescribeInstancesResponse(instances) {
+            NextToken = rootEl.Element(ns + "nextToken")?.Value
+        };
     }
 }

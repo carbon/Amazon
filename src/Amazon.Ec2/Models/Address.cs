@@ -9,7 +9,7 @@ public sealed class Address
     [XmlElement("allocationId")]
     public string AllocationId { get; init; }
 
-    [XmlElement("allocationId")]
+    [XmlElement("associationId")]
     public string AssociationId { get; init; }
 
     [XmlElement("domain")]

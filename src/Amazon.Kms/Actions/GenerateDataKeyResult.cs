@@ -8,5 +8,11 @@ public sealed class GenerateDataKeyResult : KmsResult
 
     public byte[] CiphertextBlob { get; init; }
 
+    // Null when the request specified a Recipient
     public byte[] Plaintext { get; init; }
+
+    public byte[] CiphertextForRecipient { get; init; }
+
+    // Omitted when the request specified a Recipient
+    public string KeyMaterialId { get; init; }
 }

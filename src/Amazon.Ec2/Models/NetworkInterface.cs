@@ -28,6 +28,9 @@ public sealed class NetworkInterface
     public string MacAddress { get; init; }
 
     [XmlElement("privateIpAddress")]
+    public string PrivateIpAddress { get; init; }
+
+    [XmlElement("privateDnsName")]
     public string PrivateDnsName { get; init; }
 
     [XmlElement("sourceDestCheck")]

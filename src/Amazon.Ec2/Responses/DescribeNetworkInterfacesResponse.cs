@@ -7,4 +7,7 @@ public sealed class DescribeNetworkInterfacesResponse : IEc2Response
     [XmlArray("networkInterfaceSet")]
     [XmlArrayItem("item")]
     public required NetworkInterface[] NetworkInterfaces { get; init; }
+
+    [XmlElement("nextToken")]
+    public string? NextToken { get; init; }
 }
