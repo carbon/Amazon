@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace Amazon.Sts;
 
@@ -37,9 +38,21 @@ public sealed class AssumeRoleRequest : IStsRequest
 
     public int? DurationSeconds { get; }
 
+    [StringLength(1224, MinimumLength = 2)]
+    public string? ExternalId { get; init; }
+
     public string RoleArn { get; }
 
     public string RoleSessionName { get; }
 
     public JsonElement? Policy { get; }
+
+    [StringLength(256, MinimumLength = 9)]
+    public string? SerialNumber { get; init; }
+
+    [StringLength(64, MinimumLength = 2)]
+    public string? SourceIdentity { get; init; }
+
+    [StringLength(6)]
+    public string? TokenCode { get; init; }
 }
